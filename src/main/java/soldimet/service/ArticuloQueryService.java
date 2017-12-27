@@ -75,8 +75,23 @@ public class ArticuloQueryService extends QueryService<Articulo> {
             if (criteria.getDescripcion() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescripcion(), Articulo_.descripcion));
             }
+            if (criteria.getCodigoArticuloProveedor() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCodigoArticuloProveedor(), Articulo_.codigoArticuloProveedor));
+            }
             if (criteria.getEstadoId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getEstadoId(), Articulo_.estado, EstadoArticulo_.id));
+            }
+            if (criteria.getRubroId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getRubroId(), Articulo_.rubro, Rubro_.id));
+            }
+            if (criteria.getMarcaId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getMarcaId(), Articulo_.marca, Marca_.id));
+            }
+            if (criteria.getProveedorId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getProveedorId(), Articulo_.proveedor, Proveedor_.id));
+            }
+            if (criteria.getTipoRepuestoId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getTipoRepuestoId(), Articulo_.tipoRepuesto, TipoRepuesto_.id));
             }
         }
         return specification;
