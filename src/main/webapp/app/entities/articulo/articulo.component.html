@@ -18,7 +18,12 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="descripcion"><span>Descripcion</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="codigoArticuloProveedor"><span>Codigo Articulo Proveedor</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="estado.nombreEstado"><span>Estado</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="rubro.nombreRubro"><span>Rubro</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="marca.nombreMarca"><span>Marca</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="proveedor.id"><span>Proveedor</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="tipoRepuesto.nombreTipoRepuesto"><span>Tipo Repuesto</span> <span class="fa fa-sort"></span></th>
             <th></th>
             </tr>
             </thead>
@@ -26,9 +31,30 @@
             <tr *ngFor="let articulo of articulos ;trackBy: trackId">
                 <td><a [routerLink]="['../articulo', articulo.id ]">{{articulo.id}}</a></td>
                 <td>{{articulo.descripcion}}</td>
+                <td>{{articulo.codigoArticuloProveedor}}</td>
                 <td>
                     <div *ngIf="articulo.estado">
                         <a [routerLink]="['../estado-articulo', articulo.estado?.id ]" >{{articulo.estado?.nombreEstado}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="articulo.rubro">
+                        <a [routerLink]="['../rubro', articulo.rubro?.id ]" >{{articulo.rubro?.nombreRubro}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="articulo.marca">
+                        <a [routerLink]="['../marca', articulo.marca?.id ]" >{{articulo.marca?.nombreMarca}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="articulo.proveedor">
+                        <a [routerLink]="['../proveedor', articulo.proveedor?.id ]" >{{articulo.proveedor?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="articulo.tipoRepuesto">
+                        <a [routerLink]="['../tipo-repuesto', articulo.tipoRepuesto?.id ]" >{{articulo.tipoRepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </td>
                 <td class="text-right">

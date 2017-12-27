@@ -9,6 +9,48 @@
                 "required"
             ],
             "otherEntityField": "nombreEstado"
+        },
+        {
+            "relationshipName": "rubro",
+            "otherEntityName": "rubro",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreRubro"
+        },
+        {
+            "relationshipName": "marca",
+            "otherEntityName": "marca",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreMarca"
+        },
+        {
+            "relationshipName": "historialPrecio",
+            "otherEntityName": "historialPrecio",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "articulo"
+        },
+        {
+            "relationshipName": "proveedor",
+            "otherEntityName": "proveedor",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "tipoRepuesto",
+            "otherEntityName": "tipoRepuesto",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoRepuesto"
         }
     ],
     "fields": [
@@ -18,6 +60,16 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "codigoArticuloProveedor",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": "2",
+            "fieldValidateRulesMaxlength": 20
         }
     ],
     "changelogDate": "20171213233426",

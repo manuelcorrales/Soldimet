@@ -4,6 +4,10 @@ import soldimet.SoldimetApp;
 
 import soldimet.domain.Articulo;
 import soldimet.domain.EstadoArticulo;
+import soldimet.domain.Rubro;
+import soldimet.domain.Marca;
+import soldimet.domain.Proveedor;
+import soldimet.domain.TipoRepuesto;
 import soldimet.repository.ArticuloRepository;
 import soldimet.service.ArticuloService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -43,6 +47,9 @@ public class ArticuloResourceIntTest {
 
     private static final String DEFAULT_DESCRIPCION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPCION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CODIGO_ARTICULO_PROVEEDOR = "AAAAAAAAAA";
+    private static final String UPDATED_CODIGO_ARTICULO_PROVEEDOR = "BBBBBBBBBB";
 
     @Autowired
     private ArticuloRepository articuloRepository;
@@ -87,12 +94,33 @@ public class ArticuloResourceIntTest {
      */
     public static Articulo createEntity(EntityManager em) {
         Articulo articulo = new Articulo()
-            .descripcion(DEFAULT_DESCRIPCION);
+            .descripcion(DEFAULT_DESCRIPCION)
+            .codigoArticuloProveedor(DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
         // Add required entity
         EstadoArticulo estado = EstadoArticuloResourceIntTest.createEntity(em);
         em.persist(estado);
         em.flush();
         articulo.setEstado(estado);
+        // Add required entity
+        Rubro rubro = RubroResourceIntTest.createEntity(em);
+        em.persist(rubro);
+        em.flush();
+        articulo.setRubro(rubro);
+        // Add required entity
+        Marca marca = MarcaResourceIntTest.createEntity(em);
+        em.persist(marca);
+        em.flush();
+        articulo.setMarca(marca);
+        // Add required entity
+        Proveedor proveedor = ProveedorResourceIntTest.createEntity(em);
+        em.persist(proveedor);
+        em.flush();
+        articulo.setProveedor(proveedor);
+        // Add required entity
+        TipoRepuesto tipoRepuesto = TipoRepuestoResourceIntTest.createEntity(em);
+        em.persist(tipoRepuesto);
+        em.flush();
+        articulo.setTipoRepuesto(tipoRepuesto);
         return articulo;
     }
 
@@ -117,6 +145,7 @@ public class ArticuloResourceIntTest {
         assertThat(articuloList).hasSize(databaseSizeBeforeCreate + 1);
         Articulo testArticulo = articuloList.get(articuloList.size() - 1);
         assertThat(testArticulo.getDescripcion()).isEqualTo(DEFAULT_DESCRIPCION);
+        assertThat(testArticulo.getCodigoArticuloProveedor()).isEqualTo(DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
     }
 
     @Test
@@ -167,7 +196,8 @@ public class ArticuloResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(articulo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION.toString())));
+            .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION.toString())))
+            .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString())));
     }
 
     @Test
@@ -181,7 +211,8 @@ public class ArticuloResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(articulo.getId().intValue()))
-            .andExpect(jsonPath("$.descripcion").value(DEFAULT_DESCRIPCION.toString()));
+            .andExpect(jsonPath("$.descripcion").value(DEFAULT_DESCRIPCION.toString()))
+            .andExpect(jsonPath("$.codigoArticuloProveedor").value(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString()));
     }
 
     @Test
@@ -223,6 +254,45 @@ public class ArticuloResourceIntTest {
         defaultArticuloShouldNotBeFound("descripcion.specified=false");
     }
 
+    @Test
+    @Transactional
+    public void getAllArticulosByCodigoArticuloProveedorIsEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where codigoArticuloProveedor equals to DEFAULT_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldBeFound("codigoArticuloProveedor.equals=" + DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
+
+        // Get all the articuloList where codigoArticuloProveedor equals to UPDATED_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("codigoArticuloProveedor.equals=" + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCodigoArticuloProveedorIsInShouldWork() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where codigoArticuloProveedor in DEFAULT_CODIGO_ARTICULO_PROVEEDOR or UPDATED_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldBeFound("codigoArticuloProveedor.in=" + DEFAULT_CODIGO_ARTICULO_PROVEEDOR + "," + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+
+        // Get all the articuloList where codigoArticuloProveedor equals to UPDATED_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("codigoArticuloProveedor.in=" + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCodigoArticuloProveedorIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where codigoArticuloProveedor is not null
+        defaultArticuloShouldBeFound("codigoArticuloProveedor.specified=true");
+
+        // Get all the articuloList where codigoArticuloProveedor is null
+        defaultArticuloShouldNotBeFound("codigoArticuloProveedor.specified=false");
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -231,7 +301,8 @@ public class ArticuloResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(articulo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION.toString())));
+            .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION.toString())))
+            .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString())));
     }
 
     /**
@@ -265,7 +336,8 @@ public class ArticuloResourceIntTest {
         // Update the articulo
         Articulo updatedArticulo = articuloRepository.findOne(articulo.getId());
         updatedArticulo
-            .descripcion(UPDATED_DESCRIPCION);
+            .descripcion(UPDATED_DESCRIPCION)
+            .codigoArticuloProveedor(UPDATED_CODIGO_ARTICULO_PROVEEDOR);
 
         restArticuloMockMvc.perform(put("/api/articulos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -277,6 +349,7 @@ public class ArticuloResourceIntTest {
         assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
         Articulo testArticulo = articuloList.get(articuloList.size() - 1);
         assertThat(testArticulo.getDescripcion()).isEqualTo(UPDATED_DESCRIPCION);
+        assertThat(testArticulo.getCodigoArticuloProveedor()).isEqualTo(UPDATED_CODIGO_ARTICULO_PROVEEDOR);
     }
 
     @Test
