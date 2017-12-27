@@ -1,0 +1,60 @@
+<div>
+    <h2>
+        <span>Pago Efectivos</span>
+        <button class="btn btn-primary float-right jh-create-entity create-pago-efectivo" [routerLink]="['/', { outlets: { popup: ['pago-efectivo-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Pago Efectivo
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="pagoEfectivos">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Forma De Pago</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let pagoEfectivo of pagoEfectivos ;trackBy: trackId">
+                <td><a [routerLink]="['../pago-efectivo', pagoEfectivo.id ]">{{pagoEfectivo.id}}</a></td>
+                <td>
+                    <div *ngIf="pagoEfectivo.formaDePago">
+                        <a [routerLink]="['../forma-de-pago', pagoEfectivo.formaDePago?.id ]" >{{pagoEfectivo.formaDePago?.nombreFormaDePago}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../pago-efectivo', pagoEfectivo.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'pago-efectivo/'+ pagoEfectivo.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'pago-efectivo/'+ pagoEfectivo.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

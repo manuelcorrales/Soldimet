@@ -1,0 +1,43 @@
+
+<div *ngIf="pagoTarjeta">
+    <h2><span>Pago Tarjeta</span> {{pagoTarjeta.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Numero Tarjeta</span></dt>
+        <dd>
+            <span>{{pagoTarjeta.numeroTarjeta}}</span>
+        </dd>
+        <dt><span>Forma De Pago</span></dt>
+        <dd>
+            <div *ngIf="pagoTarjeta.formaDePago">
+                <a [routerLink]="['/forma-de-pago', pagoTarjeta.formaDePago?.id]">{{pagoTarjeta.formaDePago?.nombreFormaDePago}}</a>
+            </div>
+        </dd>
+        <dt><span>Tarjeta</span></dt>
+        <dd>
+            <div *ngIf="pagoTarjeta.tarjeta">
+                <a [routerLink]="['/tarjeta', pagoTarjeta.tarjeta?.id]">{{pagoTarjeta.tarjeta?.nombreTarjeta}}</a>
+            </div>
+        </dd>
+        <dt><span>Tipo Tarjeta</span></dt>
+        <dd>
+            <div *ngIf="pagoTarjeta.tipoTarjeta">
+                <a [routerLink]="['/tipo-tarjeta', pagoTarjeta.tipoTarjeta?.id]">{{pagoTarjeta.tipoTarjeta?.nombreTipoTarjeta}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'pago-tarjeta/'+ pagoTarjeta.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

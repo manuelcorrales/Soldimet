@@ -1,0 +1,44 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "costoOperacion",
+            "otherEntityName": "costoOperacion",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fechaVigenciaDesde",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fechaVigenciaHasta",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "numeroGrupo",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1",
+            "fieldValidateRulesMax": "25"
+        }
+    ],
+    "changelogDate": "20171214004029",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "lista_precio_rectificacioncram",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

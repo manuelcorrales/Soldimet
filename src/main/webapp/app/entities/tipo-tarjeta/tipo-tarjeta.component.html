@@ -1,0 +1,56 @@
+<div>
+    <h2>
+        <span>Tipo Tarjetas</span>
+        <button class="btn btn-primary float-right jh-create-entity create-tipo-tarjeta" [routerLink]="['/', { outlets: { popup: ['tipo-tarjeta-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Tipo Tarjeta
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="tipoTarjetas">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Nombre Tipo Tarjeta</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let tipoTarjeta of tipoTarjetas ;trackBy: trackId">
+                <td><a [routerLink]="['../tipo-tarjeta', tipoTarjeta.id ]">{{tipoTarjeta.id}}</a></td>
+                <td>{{tipoTarjeta.nombreTipoTarjeta}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../tipo-tarjeta', tipoTarjeta.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'tipo-tarjeta/'+ tipoTarjeta.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'tipo-tarjeta/'+ tipoTarjeta.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

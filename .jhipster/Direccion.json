@@ -1,0 +1,40 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "localidad",
+            "otherEntityName": "localidad",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreLocalidad"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "calle",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": "3"
+        },
+        {
+            "fieldName": "numero",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20171214001005",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "direccion",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

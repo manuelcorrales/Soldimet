@@ -1,0 +1,56 @@
+<div>
+    <h2>
+        <span>Sub Categorias</span>
+        <button class="btn btn-primary float-right jh-create-entity create-sub-categoria" [routerLink]="['/', { outlets: { popup: ['sub-categoria-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Sub Categoria
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="subCategorias">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Nombre Sub Categoria</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let subCategoria of subCategorias ;trackBy: trackId">
+                <td><a [routerLink]="['../sub-categoria', subCategoria.id ]">{{subCategoria.id}}</a></td>
+                <td>{{subCategoria.nombreSubCategoria}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../sub-categoria', subCategoria.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'sub-categoria/'+ subCategoria.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'sub-categoria/'+ subCategoria.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

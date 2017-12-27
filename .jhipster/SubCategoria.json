@@ -1,0 +1,19 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "nombreSubCategoria",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20171213234116",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "sub_categoria",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

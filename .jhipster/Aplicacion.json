@@ -1,0 +1,30 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "nombreAplicacion",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "numeroGrupo",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1",
+            "fieldValidateRulesMax": 100
+        }
+    ],
+    "changelogDate": "20171213225248",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "aplicacion",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

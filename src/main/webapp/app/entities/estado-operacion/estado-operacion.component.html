@@ -1,0 +1,56 @@
+<div>
+    <h2>
+        <span>Estado Operacions</span>
+        <button class="btn btn-primary float-right jh-create-entity create-estado-operacion" [routerLink]="['/', { outlets: { popup: ['estado-operacion-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Estado Operacion
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="estadoOperacions">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Nombre Estado</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let estadoOperacion of estadoOperacions ;trackBy: trackId">
+                <td><a [routerLink]="['../estado-operacion', estadoOperacion.id ]">{{estadoOperacion.id}}</a></td>
+                <td>{{estadoOperacion.nombreEstado}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../estado-operacion', estadoOperacion.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'estado-operacion/'+ estadoOperacion.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'estado-operacion/'+ estadoOperacion.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

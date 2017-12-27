@@ -1,0 +1,21 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "nombreTarjeta",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": "3"
+        }
+    ],
+    "changelogDate": "20171214021929",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "tarjeta",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

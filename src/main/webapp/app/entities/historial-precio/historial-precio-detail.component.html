@@ -1,0 +1,31 @@
+
+<div *ngIf="historialPrecio">
+    <h2><span>Historial Precio</span> {{historialPrecio.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Fecha Historial</span></dt>
+        <dd>
+            <span>{{historialPrecio.fechaHistorial | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Precio Repuesto</span></dt>
+        <dd>
+            <div *ngIf="historialPrecio.precioRepuesto">
+                <a [routerLink]="['/precio-repuesto', historialPrecio.precioRepuesto?.id]">{{historialPrecio.precioRepuesto?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'historial-precio/'+ historialPrecio.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

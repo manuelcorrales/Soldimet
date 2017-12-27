@@ -1,0 +1,38 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "tipoParteMotor",
+            "otherEntityName": "tipoParteMotor",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoParteMotor"
+        },
+        {
+            "relationshipName": "estadoOperacion",
+            "otherEntityName": "estadoOperacion",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreEstado"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nombreOperacion",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20171214014359",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "operacion",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

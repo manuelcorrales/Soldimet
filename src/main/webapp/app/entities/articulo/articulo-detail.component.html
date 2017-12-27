@@ -1,0 +1,31 @@
+
+<div *ngIf="articulo">
+    <h2><span>Articulo</span> {{articulo.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Descripcion</span></dt>
+        <dd>
+            <span>{{articulo.descripcion}}</span>
+        </dd>
+        <dt><span>Estado</span></dt>
+        <dd>
+            <div *ngIf="articulo.estado">
+                <a [routerLink]="['/estado-articulo', articulo.estado?.id]">{{articulo.estado?.nombreEstado}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'articulo/'+ articulo.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

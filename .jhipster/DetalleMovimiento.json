@@ -1,0 +1,27 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "tipoDetalleMovimiento",
+            "otherEntityName": "tipoDetalleMovimiento",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoDetalle"
+        },
+        {
+            "relationshipName": "presupuesto",
+            "otherEntityName": "presupuesto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20171220194500",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "detalle_movimiento",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

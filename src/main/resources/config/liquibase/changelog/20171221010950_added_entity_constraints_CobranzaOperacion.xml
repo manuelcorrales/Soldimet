@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity CobranzaOperacion.
+    -->
+    <changeSet id="20171221010950-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="estado_cobranza_operacion_id"
+                                 baseTableName="cobranza_operacion"
+                                 constraintName="fk_cobranza_operacion_estado_cobranza_operacion_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="estado_cobranza_operacion"/>
+
+        <addForeignKeyConstraint baseColumnNames="operacion_id"
+                                 baseTableName="cobranza_operacion"
+                                 constraintName="fk_cobranza_operacion_operacion_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="operacion"/>
+
+    </changeSet>
+</databaseChangeLog>

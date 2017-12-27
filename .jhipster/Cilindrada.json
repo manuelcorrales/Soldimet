@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "cantidadDeCilindros",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1",
+            "fieldValidateRulesMax": "20"
+        }
+    ],
+    "changelogDate": "20171213234455",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "cilindrada",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

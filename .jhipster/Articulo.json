@@ -1,0 +1,29 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "estado",
+            "otherEntityName": "estadoArticulo",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreEstado"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "descripcion",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20171213233426",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "articulo",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

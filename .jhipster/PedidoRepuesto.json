@@ -1,0 +1,52 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "estadoPedidoRepuesto",
+            "otherEntityName": "estadoPedidoRepuesto",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreEstado"
+        },
+        {
+            "relationshipName": "detallePedido",
+            "otherEntityName": "detallePedido",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "pedidoRepuesto"
+        },
+        {
+            "relationshipName": "presupuesto",
+            "otherEntityName": "presupuesto",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fechaCreacion",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fechaPedido",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "fechaRecibo",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20171214015748",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "pedido_repuesto",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

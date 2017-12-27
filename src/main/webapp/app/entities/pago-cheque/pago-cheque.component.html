@@ -1,0 +1,74 @@
+<div>
+    <h2>
+        <span>Pago Cheques</span>
+        <button class="btn btn-primary float-right jh-create-entity create-pago-cheque" [routerLink]="['/', { outlets: { popup: ['pago-cheque-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Pago Cheque
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="pagoCheques">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Fecha Cobro</span></th>
+            <th><span>Fecha Recibo</span></th>
+            <th><span>Numero Cheque</span></th>
+            <th><span>Numero Cuenta</span></th>
+            <th><span>Banco</span></th>
+            <th><span>Forma De Pago</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let pagoCheque of pagoCheques ;trackBy: trackId">
+                <td><a [routerLink]="['../pago-cheque', pagoCheque.id ]">{{pagoCheque.id}}</a></td>
+                <td>{{pagoCheque.fechaCobro | date:'mediumDate'}}</td>
+                <td>{{pagoCheque.fechaRecibo | date:'mediumDate'}}</td>
+                <td>{{pagoCheque.numeroCheque}}</td>
+                <td>{{pagoCheque.numeroCuenta}}</td>
+                <td>
+                    <div *ngIf="pagoCheque.banco">
+                        <a [routerLink]="['../banco', pagoCheque.banco?.id ]" >{{pagoCheque.banco?.nombreBanco}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="pagoCheque.formaDePago">
+                        <a [routerLink]="['../forma-de-pago', pagoCheque.formaDePago?.id ]" >{{pagoCheque.formaDePago?.nombreFormaDePago}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../pago-cheque', pagoCheque.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'pago-cheque/'+ pagoCheque.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'pago-cheque/'+ pagoCheque.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

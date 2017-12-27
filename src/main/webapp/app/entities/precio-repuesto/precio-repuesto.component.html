@@ -1,0 +1,60 @@
+<div>
+    <h2>
+        <span>Precio Repuestos</span>
+        <button class="btn btn-primary float-right jh-create-entity create-precio-repuesto" [routerLink]="['/', { outlets: { popup: ['precio-repuesto-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Precio Repuesto
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="precioRepuestos">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Fecha</span></th>
+            <th><span>Precio Privado</span></th>
+            <th><span>Precio Publico</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let precioRepuesto of precioRepuestos ;trackBy: trackId">
+                <td><a [routerLink]="['../precio-repuesto', precioRepuesto.id ]">{{precioRepuesto.id}}</a></td>
+                <td>{{precioRepuesto.fecha | date:'mediumDate'}}</td>
+                <td>{{precioRepuesto.precioPrivado}}</td>
+                <td>{{precioRepuesto.precioPublico}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../precio-repuesto', precioRepuesto.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'precio-repuesto/'+ precioRepuesto.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'precio-repuesto/'+ precioRepuesto.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

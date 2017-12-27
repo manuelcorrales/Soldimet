@@ -1,0 +1,66 @@
+<div>
+    <h2>
+        <span>Detalle Movimientos</span>
+        <button class="btn btn-primary float-right jh-create-entity create-detalle-movimiento" [routerLink]="['/', { outlets: { popup: ['detalle-movimiento-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Detalle Movimiento
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="detalleMovimientos">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Tipo Detalle Movimiento</span></th>
+            <th><span>Presupuesto</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let detalleMovimiento of detalleMovimientos ;trackBy: trackId">
+                <td><a [routerLink]="['../detalle-movimiento', detalleMovimiento.id ]">{{detalleMovimiento.id}}</a></td>
+                <td>
+                    <div *ngIf="detalleMovimiento.tipoDetalleMovimiento">
+                        <a [routerLink]="['../tipo-detalle-movimiento', detalleMovimiento.tipoDetalleMovimiento?.id ]" >{{detalleMovimiento.tipoDetalleMovimiento?.nombreTipoDetalle}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="detalleMovimiento.presupuesto">
+                        <a [routerLink]="['../presupuesto', detalleMovimiento.presupuesto?.id ]" >{{detalleMovimiento.presupuesto?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../detalle-movimiento', detalleMovimiento.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'detalle-movimiento/'+ detalleMovimiento.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'detalle-movimiento/'+ detalleMovimiento.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

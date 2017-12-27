@@ -1,0 +1,81 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "cliente",
+            "otherEntityName": "cliente",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "apellido"
+        },
+        {
+            "relationshipName": "estadoPresupuesto",
+            "otherEntityName": "estadoPresupuesto",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreEstado"
+        },
+        {
+            "relationshipName": "detallePresupuesto",
+            "otherEntityName": "detallePresupuesto",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "presupuesto"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "descripcionDescuento",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": "5"
+        },
+        {
+            "fieldName": "descuento",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "fechaCreacion",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fechaAceptado",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "fechaEntregado",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "importeTotal",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "observaciones",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171214020915",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "presupuesto",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

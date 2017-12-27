@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "persona",
+            "otherEntityName": "persona",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombre",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "proveedor"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20171214021518",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "proveedor",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

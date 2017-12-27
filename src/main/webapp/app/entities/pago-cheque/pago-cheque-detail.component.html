@@ -1,0 +1,49 @@
+
+<div *ngIf="pagoCheque">
+    <h2><span>Pago Cheque</span> {{pagoCheque.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Fecha Cobro</span></dt>
+        <dd>
+            <span>{{pagoCheque.fechaCobro | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Fecha Recibo</span></dt>
+        <dd>
+            <span>{{pagoCheque.fechaRecibo | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Numero Cheque</span></dt>
+        <dd>
+            <span>{{pagoCheque.numeroCheque}}</span>
+        </dd>
+        <dt><span>Numero Cuenta</span></dt>
+        <dd>
+            <span>{{pagoCheque.numeroCuenta}}</span>
+        </dd>
+        <dt><span>Banco</span></dt>
+        <dd>
+            <div *ngIf="pagoCheque.banco">
+                <a [routerLink]="['/banco', pagoCheque.banco?.id]">{{pagoCheque.banco?.nombreBanco}}</a>
+            </div>
+        </dd>
+        <dt><span>Forma De Pago</span></dt>
+        <dd>
+            <div *ngIf="pagoCheque.formaDePago">
+                <a [routerLink]="['/forma-de-pago', pagoCheque.formaDePago?.id]">{{pagoCheque.formaDePago?.nombreFormaDePago}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'pago-cheque/'+ pagoCheque.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

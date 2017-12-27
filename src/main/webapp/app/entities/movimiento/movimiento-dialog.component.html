@@ -1,0 +1,149 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myMovimientoLabel">Create or edit a Movimiento</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!movimiento.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="movimiento.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_fecha">Fecha</label>
+            <div class="input-group">
+                <input id="field_fecha" type="text" class="form-control" name="fecha" ngbDatepicker  #fechaDp="ngbDatepicker" [(ngModel)]="movimiento.fecha"
+                required/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" (click)="fechaDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+            <div [hidden]="!(editForm.controls.fecha?.dirty && editForm.controls.fecha?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.fecha?.errors?.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_hora">Hora</label>
+            <div class="d-flex">
+                <input id="field_hora" type="datetime-local" class="form-control" name="hora" [(ngModel)]="movimiento.hora"
+                required  />
+            </div>
+            <div [hidden]="!(editForm.controls.hora?.dirty && editForm.controls.hora?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.hora?.errors?.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.hora?.errors?.ZonedDateTimelocal">
+                    This field should be a date and time.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_importe">Importe</label>
+            <input type="number" class="form-control" name="importe" id="field_importe"
+                [(ngModel)]="movimiento.importe" required min="0" />
+            <div [hidden]="!(editForm.controls.importe?.dirty && editForm.controls.importe?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.importe?.errors?.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.importe?.errors?.min">
+                    This field should be at least 0.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.importe?.errors?.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" for="field_estado">Estado</label>
+            <select class="form-control" id="field_estado" name="estado" [(ngModel)]="movimiento.estado"  required>
+                <option *ngIf="!editForm.value.estado" [ngValue]="null" selected></option>
+                <option [ngValue]="estadoMovimientoOption.id === movimiento.estado?.id ? movimiento.estado : estadoMovimientoOption" *ngFor="let estadoMovimientoOption of estadomovimientos; trackBy: trackEstadoMovimientoById">{{estadoMovimientoOption.nombreEstado}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.estado?.dirty && editForm.controls.estado?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.estado?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_formaDePago">Forma De Pago</label>
+            <select class="form-control" id="field_formaDePago" name="formaDePago" [(ngModel)]="movimiento.formaDePago"  required>
+                <option *ngIf="!editForm.value.formaDePago" [ngValue]="null" selected></option>
+                <option [ngValue]="formaDePagoOption.id === movimiento.formaDePago?.id ? movimiento.formaDePago : formaDePagoOption" *ngFor="let formaDePagoOption of formadepagos; trackBy: trackFormaDePagoById">{{formaDePagoOption.nombreFormaDePago}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.formaDePago?.dirty && editForm.controls.formaDePago?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.formaDePago?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_tipoMovimiento">Tipo Movimiento</label>
+            <select class="form-control" id="field_tipoMovimiento" name="tipoMovimiento" [(ngModel)]="movimiento.tipoMovimiento"  required>
+                <option *ngIf="!editForm.value.tipoMovimiento" [ngValue]="null" selected></option>
+                <option [ngValue]="tipoMovimientoOption.id === movimiento.tipoMovimiento?.id ? movimiento.tipoMovimiento : tipoMovimientoOption" *ngFor="let tipoMovimientoOption of tipomovimientos; trackBy: trackTipoMovimientoById">{{tipoMovimientoOption.nombreTipoMovimiento}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.tipoMovimiento?.dirty && editForm.controls.tipoMovimiento?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.tipoMovimiento?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_empleado">Empleado</label>
+            <select class="form-control" id="field_empleado" name="empleado" [(ngModel)]="movimiento.empleado"  required>
+                <option *ngIf="!editForm.value.empleado" [ngValue]="null" selected></option>
+                <option [ngValue]="empleadoOption.id === movimiento.empleado?.id ? movimiento.empleado : empleadoOption" *ngFor="let empleadoOption of empleados; trackBy: trackEmpleadoById">{{empleadoOption.usuario}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.empleado?.dirty && editForm.controls.empleado?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.empleado?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_persona">Persona</label>
+            <select class="form-control" id="field_persona" name="persona" [(ngModel)]="movimiento.persona"  required>
+                <option *ngIf="!editForm.value.persona" [ngValue]="null" selected></option>
+                <option [ngValue]="personaOption.id === movimiento.persona?.id ? movimiento.persona : personaOption" *ngFor="let personaOption of personas; trackBy: trackPersonaById">{{personaOption.nombre}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.persona?.dirty && editForm.controls.persona?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.persona?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_subCategoria">Sub Categoria</label>
+            <select class="form-control" id="field_subCategoria" name="subCategoria" [(ngModel)]="movimiento.subCategoria" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="subCategoriaOption.id === movimiento.subCategoria?.id ? movimiento.subCategoria : subCategoriaOption" *ngFor="let subCategoriaOption of subcategorias; trackBy: trackSubCategoriaById">{{subCategoriaOption.nombreSubCategoria}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

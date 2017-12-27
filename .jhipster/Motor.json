@@ -1,0 +1,18 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "aplicacion",
+            "otherEntityName": "aplicacion",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "motor"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20171214012206",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "motor",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

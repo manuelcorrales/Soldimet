@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "formaDePago",
+            "otherEntityName": "formaDePago",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreFormaDePago",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "pagoEfectivo"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20171214014825",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "pago_efectivo",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

@@ -1,0 +1,66 @@
+<div>
+    <h2>
+        <span>Lista Precio Rectificacion CRAMS</span>
+        <button class="btn btn-primary float-right jh-create-entity create-lista-precio-rectificacion-cram" [routerLink]="['/', { outlets: { popup: ['lista-precio-rectificacion-cram-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Lista Precio Rectificacion CRAM
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="listaPrecioRectificacionCRAMS">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Fecha Vigencia Desde</span></th>
+            <th><span>Fecha Vigencia Hasta</span></th>
+            <th><span>Numero Grupo</span></th>
+            <th><span>Costo Operacion</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let listaPrecioRectificacionCRAM of listaPrecioRectificacionCRAMS ;trackBy: trackId">
+                <td><a [routerLink]="['../lista-precio-rectificacion-cram', listaPrecioRectificacionCRAM.id ]">{{listaPrecioRectificacionCRAM.id}}</a></td>
+                <td>{{listaPrecioRectificacionCRAM.fechaVigenciaDesde | date:'mediumDate'}}</td>
+                <td>{{listaPrecioRectificacionCRAM.fechaVigenciaHasta | date:'mediumDate'}}</td>
+                <td>{{listaPrecioRectificacionCRAM.numeroGrupo}}</td>
+                <td>
+                    <div *ngIf="listaPrecioRectificacionCRAM.costoOperacion">
+                        <a [routerLink]="['../costo-operacion', listaPrecioRectificacionCRAM.costoOperacion?.id ]" >{{listaPrecioRectificacionCRAM.costoOperacion?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../lista-precio-rectificacion-cram', listaPrecioRectificacionCRAM.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'lista-precio-rectificacion-cram/'+ listaPrecioRectificacionCRAM.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'lista-precio-rectificacion-cram/'+ listaPrecioRectificacionCRAM.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

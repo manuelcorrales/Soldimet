@@ -1,0 +1,49 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "cilindrada",
+            "otherEntityName": "cilindrada",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "cantidadDeCilindros"
+        },
+        {
+            "relationshipName": "operacion",
+            "otherEntityName": "operacion",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreOperacion"
+        },
+        {
+            "relationshipName": "tipoParteMotor",
+            "otherEntityName": "tipoParteMotor",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoParteMotor"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "costoOperacion",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20171214000229",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "costo_operacion",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

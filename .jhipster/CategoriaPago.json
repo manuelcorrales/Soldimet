@@ -1,0 +1,19 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "nombreCategoriaPago",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20171213234316",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "categoria_pago",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

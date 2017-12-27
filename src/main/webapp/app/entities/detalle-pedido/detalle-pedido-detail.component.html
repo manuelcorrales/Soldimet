@@ -1,0 +1,35 @@
+
+<div *ngIf="detallePedido">
+    <h2><span>Detalle Pedido</span> {{detallePedido.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Cantidad Articulo</span></dt>
+        <dd>
+            <span>{{detallePedido.cantidadArticulo}}</span>
+        </dd>
+        <dt><span>Precio Respuesto</span></dt>
+        <dd>
+            <span>{{detallePedido.precioRespuesto}}</span>
+        </dd>
+        <dt><span>Articulo</span></dt>
+        <dd>
+            <div *ngIf="detallePedido.articulo">
+                <a [routerLink]="['/articulo', detallePedido.articulo?.id]">{{detallePedido.articulo?.descripcion}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'detalle-pedido/'+ detallePedido.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

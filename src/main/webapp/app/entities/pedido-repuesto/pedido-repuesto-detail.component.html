@@ -1,0 +1,45 @@
+
+<div *ngIf="pedidoRepuesto">
+    <h2><span>Pedido Repuesto</span> {{pedidoRepuesto.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Fecha Creacion</span></dt>
+        <dd>
+            <span>{{pedidoRepuesto.fechaCreacion | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Fecha Pedido</span></dt>
+        <dd>
+            <span>{{pedidoRepuesto.fechaPedido | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Fecha Recibo</span></dt>
+        <dd>
+            <span>{{pedidoRepuesto.fechaRecibo | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Estado Pedido Repuesto</span></dt>
+        <dd>
+            <div *ngIf="pedidoRepuesto.estadoPedidoRepuesto">
+                <a [routerLink]="['/estado-pedido-repuesto', pedidoRepuesto.estadoPedidoRepuesto?.id]">{{pedidoRepuesto.estadoPedidoRepuesto?.nombreEstado}}</a>
+            </div>
+        </dd>
+        <dt><span>Presupuesto</span></dt>
+        <dd>
+            <div *ngIf="pedidoRepuesto.presupuesto">
+                <a [routerLink]="['/presupuesto', pedidoRepuesto.presupuesto?.id]">{{pedidoRepuesto.presupuesto?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'pedido-repuesto/'+ pedidoRepuesto.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

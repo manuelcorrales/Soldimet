@@ -1,0 +1,58 @@
+<div>
+    <h2>
+        <span>Lista Precio Desde Hastas</span>
+        <button class="btn btn-primary float-right jh-create-entity create-lista-precio-desde-hasta" [routerLink]="['/', { outlets: { popup: ['lista-precio-desde-hasta-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Lista Precio Desde Hasta
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="listaPrecioDesdeHastas">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Fecha Desde</span></th>
+            <th><span>Fecha Hasta</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let listaPrecioDesdeHasta of listaPrecioDesdeHastas ;trackBy: trackId">
+                <td><a [routerLink]="['../lista-precio-desde-hasta', listaPrecioDesdeHasta.id ]">{{listaPrecioDesdeHasta.id}}</a></td>
+                <td>{{listaPrecioDesdeHasta.fechaDesde | date:'mediumDate'}}</td>
+                <td>{{listaPrecioDesdeHasta.fechaHasta | date:'mediumDate'}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../lista-precio-desde-hasta', listaPrecioDesdeHasta.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'lista-precio-desde-hasta/'+ listaPrecioDesdeHasta.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'lista-precio-desde-hasta/'+ listaPrecioDesdeHasta.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

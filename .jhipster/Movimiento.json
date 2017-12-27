@@ -1,0 +1,93 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "estado",
+            "otherEntityName": "estadoMovimiento",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreEstado"
+        },
+        {
+            "relationshipName": "formaDePago",
+            "otherEntityName": "formaDePago",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreFormaDePago"
+        },
+        {
+            "relationshipName": "tipoMovimiento",
+            "otherEntityName": "tipoMovimiento",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoMovimiento"
+        },
+        {
+            "relationshipName": "detalleMovimiento",
+            "otherEntityName": "detalleMovimiento",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "movimiento"
+        },
+        {
+            "relationshipName": "empleado",
+            "otherEntityName": "empleado",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "usuario"
+        },
+        {
+            "relationshipName": "persona",
+            "otherEntityName": "persona",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombre"
+        },
+        {
+            "relationshipName": "subCategoria",
+            "otherEntityName": "subCategoria",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nombreSubCategoria"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fecha",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "hora",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "importe",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20171214012446",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "movimiento",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

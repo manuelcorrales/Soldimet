@@ -1,0 +1,37 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "movimiento",
+            "otherEntityName": "movimiento",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "caja"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fecha",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "horaApertura",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "horaCierre",
+            "fieldType": "Instant"
+        }
+    ],
+    "changelogDate": "20171213233926",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "caja",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

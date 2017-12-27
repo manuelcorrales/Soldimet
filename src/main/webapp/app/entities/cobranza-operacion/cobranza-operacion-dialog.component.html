@@ -1,0 +1,70 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myCobranzaOperacionLabel">Create or edit a Cobranza Operacion</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!cobranzaOperacion.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="cobranzaOperacion.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_cobranzaOperacion">Cobranza Operacion</label>
+            <input type="number" class="form-control" name="cobranzaOperacion" id="field_cobranzaOperacion"
+                [(ngModel)]="cobranzaOperacion.cobranzaOperacion" required min="0" />
+            <div [hidden]="!(editForm.controls.cobranzaOperacion?.dirty && editForm.controls.cobranzaOperacion?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.cobranzaOperacion?.errors?.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.cobranzaOperacion?.errors?.min">
+                    This field should be at least 0.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.cobranzaOperacion?.errors?.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" for="field_estadoCobranzaOperacion">Estado Cobranza Operacion</label>
+            <select class="form-control" id="field_estadoCobranzaOperacion" name="estadoCobranzaOperacion" [(ngModel)]="cobranzaOperacion.estadoCobranzaOperacion"  required>
+                <option *ngIf="!editForm.value.estadoCobranzaOperacion" [ngValue]="null" selected></option>
+                <option [ngValue]="estadoCobranzaOperacionOption.id === cobranzaOperacion.estadoCobranzaOperacion?.id ? cobranzaOperacion.estadoCobranzaOperacion : estadoCobranzaOperacionOption" *ngFor="let estadoCobranzaOperacionOption of estadocobranzaoperacions; trackBy: trackEstadoCobranzaOperacionById">{{estadoCobranzaOperacionOption.nombreEstado}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.estadoCobranzaOperacion?.dirty && editForm.controls.estadoCobranzaOperacion?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.estadoCobranzaOperacion?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_operacion">Operacion</label>
+            <select class="form-control" id="field_operacion" name="operacion" [(ngModel)]="cobranzaOperacion.operacion"  required>
+                <option *ngIf="!editForm.value.operacion" [ngValue]="null" selected></option>
+                <option [ngValue]="operacionOption.id === cobranzaOperacion.operacion?.id ? cobranzaOperacion.operacion : operacionOption" *ngFor="let operacionOption of operacions; trackBy: trackOperacionById">{{operacionOption.nombreOperacion}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.operacion?.dirty && editForm.controls.operacion?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.operacion?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

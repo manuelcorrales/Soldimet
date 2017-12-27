@@ -1,0 +1,21 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "nombreEstado",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": "3"
+        }
+    ],
+    "changelogDate": "20171214002845",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "estado_persona",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

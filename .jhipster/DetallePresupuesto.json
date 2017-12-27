@@ -1,0 +1,64 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "aplicacion",
+            "otherEntityName": "aplicacion",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreAplicacion"
+        },
+        {
+            "relationshipName": "cilindrada",
+            "otherEntityName": "cilindrada",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "cantidadDeCilindros"
+        },
+        {
+            "relationshipName": "motor",
+            "otherEntityName": "motor",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "cobranzaOperacion",
+            "otherEntityName": "cobranzaOperacion",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "detallePresupuesto"
+        },
+        {
+            "relationshipName": "tipoParteMotor",
+            "otherEntityName": "tipoParteMotor",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoParteMotor"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "importe",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20171214000831",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "detalle_presupuesto",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}
