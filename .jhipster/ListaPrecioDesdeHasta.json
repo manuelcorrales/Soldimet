@@ -4,13 +4,8 @@
         {
             "relationshipName": "costoOperacion",
             "otherEntityName": "costoOperacion",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "listaPrecioDesdeHasta"
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "lista"
         }
     ],
     "fields": [
