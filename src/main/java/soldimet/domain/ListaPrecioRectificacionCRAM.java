@@ -1,10 +1,13 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -36,6 +39,10 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     private CostoOperacion costoOperacion;
+
+    @OneToMany(mappedBy = "lista")
+    @JsonIgnore
+    private Set<ListaPrecioDesdeHasta> fechas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -96,6 +103,31 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
 
     public void setCostoOperacion(CostoOperacion costoOperacion) {
         this.costoOperacion = costoOperacion;
+    }
+
+    public Set<ListaPrecioDesdeHasta> getFechas() {
+        return fechas;
+    }
+
+    public ListaPrecioRectificacionCRAM fechas(Set<ListaPrecioDesdeHasta> listaPrecioDesdeHastas) {
+        this.fechas = listaPrecioDesdeHastas;
+        return this;
+    }
+
+    public ListaPrecioRectificacionCRAM addFechas(ListaPrecioDesdeHasta listaPrecioDesdeHasta) {
+        this.fechas.add(listaPrecioDesdeHasta);
+        listaPrecioDesdeHasta.setLista(this);
+        return this;
+    }
+
+    public ListaPrecioRectificacionCRAM removeFechas(ListaPrecioDesdeHasta listaPrecioDesdeHasta) {
+        this.fechas.remove(listaPrecioDesdeHasta);
+        listaPrecioDesdeHasta.setLista(null);
+        return this;
+    }
+
+    public void setFechas(Set<ListaPrecioDesdeHasta> listaPrecioDesdeHastas) {
+        this.fechas = listaPrecioDesdeHastas;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
