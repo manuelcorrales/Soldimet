@@ -11,6 +11,7 @@ import { PersonaPopupService } from './persona-popup.service';
 import { PersonaService } from './persona.service';
 import { Direccion, DireccionService } from '../direccion';
 import { EstadoPersona, EstadoPersonaService } from '../estado-persona';
+import { User, UserService } from '../../shared';
 import { ResponseWrapper } from '../../shared';
 
 @Component({
@@ -26,12 +27,15 @@ export class PersonaDialogComponent implements OnInit {
 
     estadopersonas: EstadoPersona[];
 
+    users: User[];
+
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private personaService: PersonaService,
         private direccionService: DireccionService,
         private estadoPersonaService: EstadoPersonaService,
+        private userService: UserService,
         private eventManager: JhiEventManager
     ) {
     }
@@ -53,6 +57,8 @@ export class PersonaDialogComponent implements OnInit {
             }, (res: ResponseWrapper) => this.onError(res.json));
         this.estadoPersonaService.query()
             .subscribe((res: ResponseWrapper) => { this.estadopersonas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.userService.query()
+            .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {
@@ -94,6 +100,10 @@ export class PersonaDialogComponent implements OnInit {
     }
 
     trackEstadoPersonaById(index: number, item: EstadoPersona) {
+        return item.id;
+    }
+
+    trackUserById(index: number, item: User) {
         return item.id;
     }
 }

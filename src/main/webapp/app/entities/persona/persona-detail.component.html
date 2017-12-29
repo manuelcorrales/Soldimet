@@ -24,6 +24,10 @@
                 <a [routerLink]="['/estado-persona', persona.estadoPersona?.id]">{{persona.estadoPersona?.nombreEstado}}</a>
             </div>
         </dd>
+        <dt><span>User</span></dt>
+        <dd>
+            {{persona.user?.login}}
+        </dd>
     </dl>
 
     <button type="submit"
