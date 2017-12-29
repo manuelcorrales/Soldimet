@@ -84,6 +84,9 @@ public class PersonaQueryService extends QueryService<Persona> {
             if (criteria.getEstadoPersonaId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getEstadoPersonaId(), Persona_.estadoPersona, EstadoPersona_.id));
             }
+            if (criteria.getUserId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getUserId(), Persona_.user, User_.id));
+            }
         }
         return specification;
     }

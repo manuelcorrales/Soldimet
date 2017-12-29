@@ -20,5 +20,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="estado_persona"/>
 
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="persona"
+                                 constraintName="fk_persona_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
     </changeSet>
 </databaseChangeLog>
