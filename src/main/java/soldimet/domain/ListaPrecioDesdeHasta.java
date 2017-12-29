@@ -1,13 +1,10 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -30,10 +27,10 @@ public class ListaPrecioDesdeHasta implements Serializable {
     @Column(name = "fecha_hasta")
     private LocalDate fechaHasta;
 
-    @OneToMany
-    @JoinColumn(name= "listaPrecioDesdeHasta")
-    @JsonIgnore
-    private Set<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAMS = new HashSet<>();
+    @OneToOne(optional = false)
+    @NotNull
+    @JoinColumn(unique = true)
+    private CostoOperacion costoOperacion;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -70,27 +67,17 @@ public class ListaPrecioDesdeHasta implements Serializable {
         this.fechaHasta = fechaHasta;
     }
 
-    public Set<ListaPrecioRectificacionCRAM> getListaPrecioRectificacionCRAMS() {
-        return listaPrecioRectificacionCRAMS;
+    public CostoOperacion getCostoOperacion() {
+        return costoOperacion;
     }
 
-    public ListaPrecioDesdeHasta listaPrecioRectificacionCRAMS(Set<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAMS) {
-        this.listaPrecioRectificacionCRAMS = listaPrecioRectificacionCRAMS;
+    public ListaPrecioDesdeHasta costoOperacion(CostoOperacion costoOperacion) {
+        this.costoOperacion = costoOperacion;
         return this;
     }
 
-    public ListaPrecioDesdeHasta addListaPrecioRectificacionCRAM(ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM) {
-        this.listaPrecioRectificacionCRAMS.add(listaPrecioRectificacionCRAM);
-        return this;
-    }
-
-    public ListaPrecioDesdeHasta removeListaPrecioRectificacionCRAM(ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM) {
-        this.listaPrecioRectificacionCRAMS.remove(listaPrecioRectificacionCRAM);
-        return this;
-    }
-
-    public void setListaPrecioRectificacionCRAMS(Set<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAMS) {
-        this.listaPrecioRectificacionCRAMS = listaPrecioRectificacionCRAMS;
+    public void setCostoOperacion(CostoOperacion costoOperacion) {
+        this.costoOperacion = costoOperacion;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

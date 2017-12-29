@@ -9,6 +9,8 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { ListaPrecioDesdeHasta } from './lista-precio-desde-hasta.model';
 import { ListaPrecioDesdeHastaPopupService } from './lista-precio-desde-hasta-popup.service';
 import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service';
+import { CostoOperacion, CostoOperacionService } from '../costo-operacion';
+import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-lista-precio-desde-hasta-dialog',
@@ -18,6 +20,8 @@ export class ListaPrecioDesdeHastaDialogComponent implements OnInit {
 
     listaPrecioDesdeHasta: ListaPrecioDesdeHasta;
     isSaving: boolean;
+
+    costooperacions: CostoOperacion[];
     fechaDesdeDp: any;
     fechaHastaDp: any;
 
@@ -25,12 +29,26 @@ export class ListaPrecioDesdeHastaDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private listaPrecioDesdeHastaService: ListaPrecioDesdeHastaService,
+        private costoOperacionService: CostoOperacionService,
         private eventManager: JhiEventManager
     ) {
     }
 
     ngOnInit() {
         this.isSaving = false;
+        this.costoOperacionService
+            .query({filter: 'listapreciodesdehasta-is-null'})
+            .subscribe((res: ResponseWrapper) => {
+                if (!this.listaPrecioDesdeHasta.costoOperacion || !this.listaPrecioDesdeHasta.costoOperacion.id) {
+                    this.costooperacions = res.json;
+                } else {
+                    this.costoOperacionService
+                        .find(this.listaPrecioDesdeHasta.costoOperacion.id)
+                        .subscribe((subRes: CostoOperacion) => {
+                            this.costooperacions = [subRes].concat(res.json);
+                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                }
+            }, (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {
@@ -65,6 +83,10 @@ export class ListaPrecioDesdeHastaDialogComponent implements OnInit {
 
     private onError(error: any) {
         this.jhiAlertService.error(error.message, null, null);
+    }
+
+    trackCostoOperacionById(index: number, item: CostoOperacion) {
+        return item.id;
     }
 }
 

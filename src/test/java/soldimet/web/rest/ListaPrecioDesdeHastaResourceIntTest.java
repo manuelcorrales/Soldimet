@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 
 import soldimet.domain.ListaPrecioDesdeHasta;
+import soldimet.domain.CostoOperacion;
 import soldimet.repository.ListaPrecioDesdeHastaRepository;
 import soldimet.service.ListaPrecioDesdeHastaService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -88,6 +89,11 @@ public class ListaPrecioDesdeHastaResourceIntTest {
         ListaPrecioDesdeHasta listaPrecioDesdeHasta = new ListaPrecioDesdeHasta()
             .fechaDesde(DEFAULT_FECHA_DESDE)
             .fechaHasta(DEFAULT_FECHA_HASTA);
+        // Add required entity
+        CostoOperacion costoOperacion = CostoOperacionResourceIntTest.createEntity(em);
+        em.persist(costoOperacion);
+        em.flush();
+        listaPrecioDesdeHasta.setCostoOperacion(costoOperacion);
         return listaPrecioDesdeHasta;
     }
 

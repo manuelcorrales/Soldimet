@@ -39,6 +39,19 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class="form-control-label" for="field_costoOperacion">Costo Operacion</label>
+            <select class="form-control" id="field_costoOperacion" name="costoOperacion" [(ngModel)]="listaPrecioDesdeHasta.costoOperacion" required>
+                <option *ngIf="!editForm.value.costoOperacion" [ngValue]="null" selected></option>
+                <option [ngValue]="costoOperacionOption.id === listaPrecioDesdeHasta.costoOperacion?.id ? listaPrecioDesdeHasta.costoOperacion : costoOperacionOption" *ngFor="let costoOperacionOption of costooperacions; trackBy: trackCostoOperacionById">{{costoOperacionOption.id}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.costoOperacion?.dirty && editForm.controls.costoOperacion?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.costoOperacion?.errors?.required">
+                This field is required.
+            </small>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
