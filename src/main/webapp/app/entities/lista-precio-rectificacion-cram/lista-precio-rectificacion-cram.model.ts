@@ -7,6 +7,7 @@ export class ListaPrecioRectificacionCRAM implements BaseEntity {
         public fechaVigenciaHasta?: any,
         public numeroGrupo?: number,
         public costoOperacion?: BaseEntity,
+        public fechas?: BaseEntity[],
     ) {
     }
 }

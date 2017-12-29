@@ -9,6 +9,12 @@
                 "required"
             ],
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "fechas",
+            "otherEntityName": "listaPrecioDesdeHasta",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "lista"
         }
     ],
     "fields": [
