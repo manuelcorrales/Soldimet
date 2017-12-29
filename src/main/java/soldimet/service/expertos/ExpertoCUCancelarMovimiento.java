@@ -5,9 +5,13 @@
  */
 package soldimet.service.expertos;
 
-import ModeloDeClases.EstadoMovimiento;
-import ModeloDeClases.Movimiento;
-import indireccion.IndireccionPersistencia;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import soldimet.constant.Globales;
+import soldimet.domain.EstadoMovimiento;
+import soldimet.domain.Movimiento;
+import soldimet.repository.EstadoMovimientoRepository;
+import soldimet.repository.MovimientoRepository;
 
 /**
  *
@@ -15,23 +19,29 @@ import indireccion.IndireccionPersistencia;
  */
 public class ExpertoCUCancelarMovimiento {
 
+    @Autowired
+    private MovimientoRepository movimientoRepository;
 
-    public void eliminarMovimiento(String movimiento){
+    @Autowired
+    private EstadoMovimientoRepository estadoMovimientoRepository;
+
+    @Autowired
+    private Globales globales;
 
 
-        EstadoMovimiento estadoBaja = (EstadoMovimiento)IndireccionPersistencia.getInstance()
-                .Buscar("*","EstadoMovimiento", "nombreEstadoMovimiento= Baja");
+    public void eliminarMovimiento(Long movimiento){
 
-        EstadoMovimiento estadoAlta = (EstadoMovimiento)IndireccionPersistencia.getInstance()
-                .Buscar("*","EstadoMovimiento", "nombreEstadoMovimiento= Alta");
 
-        Movimiento mov = (Movimiento)IndireccionPersistencia.getInstance()
-                .Buscar("*","Movimiento", "movimientoID= "+movimiento+" and estado= "+estadoAlta);
+        EstadoMovimiento estadoBaja = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_BAJA);
+
+        EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+
+        Movimiento mov =movimientoRepository.findOne(movimiento);
 
         mov.setEstado(estadoBaja);
 
         //GUARDAR MOVIMIENDO CAMBIADO
-        IndireccionPersistencia.getInstance().update(mov);
+        movimientoRepository.save(mov);
 
     }
 

@@ -5,15 +5,24 @@
  */
 package soldimet.service.expertos;
 
-import Exceptions.ExceptionStringSimple;
-import ModeloDeClases.DetallePedido;
-import ModeloDeClases.EstadoPedidoRepuesto;
-import ModeloDeClases.EstadoPersona;
-import ModeloDeClases.PedidoRepuesto;
-import ModeloDeClases.Proveedor;
-import indireccion.IndireccionPersistencia;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import soldimet.constant.Globales;
+import soldimet.domain.DetallePedido;
+import soldimet.domain.EstadoPedidoRepuesto;
+import soldimet.domain.EstadoPersona;
+import soldimet.domain.PedidoRepuesto;
+import soldimet.domain.Proveedor;
+import soldimet.repository.EstadoPedidoRepuestoRepository;
+import soldimet.repository.EstadoPersonaRepository;
+import soldimet.repository.PedidoRepuestoRepository;
+import soldimet.repository.PersonaRepository;
+import soldimet.repository.ProveedorRepository;
+import soldimet.service.dto.DTODetallePedidoRepuesto;
+import soldimet.service.dto.DTOPedidoRepuesto;
+import soldimet.service.dto.DTOProveedor;
 
 /**
  *
@@ -21,13 +30,29 @@ import java.util.List;
  */
 public class ExpertoCUBuscarPedidoDeRepuestos {
 
-    private final String errorNoHayProveedoresAlta ="No se encontraron proveedores dados de Alta.";
+    @Autowired
+    private Globales globales;
+
+    @Autowired
+    private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
+
+    @Autowired
+    private PedidoRepuestoRepository pedidoRepuestoRepository;
+
+    @Autowired
+    private EstadoPersonaRepository estadoPersonaRepository;
+
+    @Autowired
+    private PersonaRepository personaRepository;
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
 
     //busco los pedidos que no han sido cobrados y que fueron pedidos o recibidos
     //solo los que estan en estado PEDIDO o RECIBIDO
-    public ArrayList<DTOPedidoRepuesto> buscarPedidosACobrar(){
-        ArrayList<DTOPedidoRepuesto> listaPedidoRepuesto = new ArrayList();
-        ArrayList<PedidoRepuesto> pedidos;
+    public List<DTOPedidoRepuesto> buscarPedidosACobrar(){
+        List<DTOPedidoRepuesto> listaPedidoRepuesto = new ArrayList();
+        List<PedidoRepuesto> pedidos;
 
         //busco los pedidos en estado Pedido
         pedidos = buscarPedidos("Pedido");
@@ -44,10 +69,10 @@ public class ExpertoCUBuscarPedidoDeRepuestos {
     }
 
     //busco todos los pedidos posibles
-    public ArrayList<DTOPedidoRepuesto> buscarPedidos(){
+    public List<DTOPedidoRepuesto> buscarPedidos(){
 
-        ArrayList<DTOPedidoRepuesto> listaPedidoRepuesto = new ArrayList();
-        ArrayList<PedidoRepuesto> pedidos;
+        List<DTOPedidoRepuesto> listaPedidoRepuesto = new ArrayList();
+        List<PedidoRepuesto> pedidos;
 
         //Busco los pedidos en estado pendiente
         pedidos = buscarPedidos("Pendiente de Pedido");
@@ -69,9 +94,9 @@ public class ExpertoCUBuscarPedidoDeRepuestos {
     }
 
     //busco los pedidos en estado que le indico
-    public ArrayList<DTOPedidoRepuesto> buscoPedido(String estado){
-        ArrayList<DTOPedidoRepuesto> listaPedidoRepuesto = new ArrayList();
-        ArrayList<PedidoRepuesto> pedidos;
+    public List<DTOPedidoRepuesto> buscoPedido(String estado){
+        List<DTOPedidoRepuesto> listaPedidoRepuesto = new ArrayList();
+        List<PedidoRepuesto> pedidos;
 
         //busco los pedidos en estado Recibidos
         pedidos = buscarPedidos(estado);
@@ -83,43 +108,41 @@ public class ExpertoCUBuscarPedidoDeRepuestos {
     }
 
     //metodo que hace las busquedas
-    private ArrayList<PedidoRepuesto> buscarPedidos(String estadoPedido){
+    private List<PedidoRepuesto> buscarPedidos(String estadoPedido){
 
-        EstadoPedidoRepuesto estado =(EstadoPedidoRepuesto)indireccion.IndireccionPersistencia.getInstance()
-                .Buscar("*", "EstadoPedidoRepuesto as est", "est.nombreEstadoPedidoRepuesto= '"+estadoPedido+"'");
+        EstadoPedidoRepuesto estado =estadoPedidoRepuestoRepository.findByNombreEstado(estadoPedido);
 
-        return (ArrayList<PedidoRepuesto>)IndireccionPersistencia.getInstance()
-                .Buscar("*", "PedidoRepuesto as ped", "ped.estado= '"+estado.getOidEstadoPedidorepuesto()+"'");
+        return pedidoRepuestoRepository.findByEstadoPedidoRepuesto(estado);
     }
 
     //armo el dto con los pedidos
-    private void agregarPedidosALista(ArrayList<DTOPedidoRepuesto> listaDTO,ArrayList<PedidoRepuesto> pedidos){
+    private void agregarPedidosALista(List<DTOPedidoRepuesto> listaDTO,List<PedidoRepuesto> pedidos){
         for(PedidoRepuesto pedido:pedidos){
             DTOPedidoRepuesto dtoPedido = new DTOPedidoRepuesto();
-            dtoPedido.setEstadoPedidoRepuesto(pedido.getEstado().getnombreEstadoPedidoRepuesto());
-            dtoPedido.setFechaCreacion(pedido.getfechaCreacion());
-            dtoPedido.setFechaPedido(pedido.getfechaPedido());
-            dtoPedido.setFechaRecibo(pedido.getfechaRecibo());
-            dtoPedido.setIdPedidoRepuesto(pedido.getIdPedidoRepuesto());
-            dtoPedido.setIdPresupuesto(pedido.getPresupuesto().getPresupuestoId());
+            dtoPedido.setEstadoPedidoRepuesto(pedido.getEstadoPedidoRepuesto().getNombreEstado());
+            dtoPedido.setFechaCreacion(pedido.getFechaCreacion());
+            dtoPedido.setFechaPedido(pedido.getFechaPedido());
+            dtoPedido.setFechaRecibo(pedido.getFechaRecibo());
+            dtoPedido.setIdPedidoRepuesto(pedido.getId());
+            dtoPedido.setIdPresupuesto(pedido.getPresupuesto().getId());
 
 
-            List<DetallePedido> detalles = pedido.getDetallePedido();
+            Set<DetallePedido> detalles = pedido.getDetallePedidos();
 
             for(DetallePedido detalle:detalles){
 
                 DTODetallePedidoRepuesto dtoDetalle = new DTODetallePedidoRepuesto();
-                dtoDetalle.setArticulo(detalle.getArticulo().getDescripcionArticulo());
+                dtoDetalle.setArticulo(detalle.getArticulo().getDescripcion());
                 dtoDetalle.setCantidadArticulo(detalle.getCantidadArticulo());
                 dtoDetalle.setCodigoArticuloProveedor(detalle.getArticulo().getCodigoArticuloProveedor());
-                dtoDetalle.setEstadoDetallePedido(detalle.getEstado().getnombreEstadoDetallePedidoRepuesto());
-                dtoDetalle.setMarca(detalle.getArticulo().getMarca().getnombreMarca());
-                dtoDetalle.setPrecioRepuesto(detalle.getPrecioRepuesto());
+                //dtoDetalle.setEstadoDetallePedido(detalle.getEstado().getnombreEstadoDetallePedidoRepuesto());
+                dtoDetalle.setMarca(detalle.getArticulo().getMarca().getNombreMarca());
+                dtoDetalle.setPrecioRepuesto(detalle.getPrecioRespuesto());
                 dtoDetalle.setRubro(detalle.getArticulo().getRubro().getNombreRubro());
                 dtoDetalle.setTipoRepuesto(detalle.getArticulo().getTipoRepuesto().getNombreTipoRepuesto());
-                dtoDetalle.setDetallePedidoID(String.valueOf(detalle.getIdDetallePedido()));
-                dtoDetalle.setProveedor(detalle.getArticulo().getProveedor().getNombre());
-                dtoDetalle.setIdProveedor(detalle.getArticulo().getProveedor().getPersonaId());
+                dtoDetalle.setDetallePedidoID(String.valueOf(detalle.getId()));
+                dtoDetalle.setProveedor(detalle.getArticulo().getProveedor().getPersona().getNombre());
+                dtoDetalle.setIdProveedor(detalle.getArticulo().getProveedor().getId());
                 dtoPedido.agregarDetallePedidoRepuesto(dtoDetalle);
 
             }
@@ -130,23 +153,30 @@ public class ExpertoCUBuscarPedidoDeRepuestos {
     }
 
     //busco los proveedores
-    private ArrayList<DTOProveedor> buscarProveedores() throws ExceptionStringSimple{
+    private List<DTOProveedor> buscarProveedores() throws Exception{
 
-        ArrayList<DTOProveedor> listaProveedores = new ArrayList();
+        List<DTOProveedor> listaProveedores = new ArrayList();
 
-        EstadoPersona estadoAlta =(EstadoPersona)indireccion.IndireccionPersistencia.getInstance()
-                .Buscar("*", "EstadoPersona as est", "est.nombreEstadoPersona= Alta");
+        EstadoPersona estadoAlta = estadoPersonaRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_ALTA);
 
-        ArrayList<Proveedor> proveedores =(ArrayList<Proveedor>)indireccion.IndireccionPersistencia.getInstance()
-                .Buscar("*", "Proveedor as prov", "prov.estado= "+estadoAlta.getOidEstadoPersona());
+        List<Proveedor> proveedoresEncontrados =proveedorRepository.findAll();
+        List<Proveedor> proveedores = new ArrayList<>();
+
+        for(Proveedor proveedor:proveedoresEncontrados){
+
+            if(proveedor.getPersona().getEstadoPersona().equals(estadoAlta)){
+                proveedores.add(proveedor);
+            }
+
+        }
 
         if(proveedores.isEmpty()){
             //DAR AVISO DE QUE NO HAY PROVEEDORES
-            throw new ExceptionStringSimple(errorNoHayProveedoresAlta,this.getClass().getName());
+            throw new Exception(globales.NO_HAY_PROVEEDORES_DADOS_DE_ALTA);
         }else{
             for(Proveedor proveedor:proveedores){
                 DTOProveedor dto = new DTOProveedor();
-                dto.setNombreProveedor(proveedor.getNombre());
+                dto.setNombreProveedor(proveedor.getPersona().getNombre());
                 listaProveedores.add(dto);
             }
         }

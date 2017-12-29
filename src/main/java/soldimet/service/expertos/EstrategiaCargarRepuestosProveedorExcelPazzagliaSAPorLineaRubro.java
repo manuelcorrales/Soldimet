@@ -5,26 +5,16 @@
  */
 package soldimet.service.expertos;
 
-import ControladoresCU.ControladorErroresConBarraDeProgreso;
-import ControladoresCU.ControladorErroresSimple;
-import ControladoresCU.ControladorEstrategiaAsignarTipoParteMotorATiporepuesto;
-import Exceptions.ExceptionStringSimple;
-import ModeloDeClases.Articulo;
-import ModeloDeClases.EstadoArticuloProveedor;
-import ModeloDeClases.HistorialPrecio;
-import ModeloDeClases.Marca;
-import ModeloDeClases.PrecioRepuesto;
-import ModeloDeClases.Proveedor;
-import ModeloDeClases.Rubro;
-import ModeloDeClases.TipoParteMotor;
-import ModeloDeClases.TipoRepuesto;
-import indireccion.IndireccionPersistencia;
+
+import com.netflix.discovery.converters.Auto;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import org.apache.poi.hssf.usermodel.*;
+import java.util.List;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
@@ -32,18 +22,75 @@ import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellReference;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.constant.Globales;
+import soldimet.domain.Articulo;
+import soldimet.domain.EstadoArticulo;
+import soldimet.domain.HistorialPrecio;
+import soldimet.domain.Marca;
+import soldimet.domain.Persona;
+import soldimet.domain.PrecioRepuesto;
+import soldimet.domain.Proveedor;
+import soldimet.domain.Rubro;
+import soldimet.domain.TipoParteMotor;
+import soldimet.domain.TipoRepuesto;
+import soldimet.repository.ArticuloRepository;
+import soldimet.repository.EstadoArticuloRepository;
+import soldimet.repository.EstadoPedidoRepuestoRepository;
+import soldimet.repository.HistorialPrecioRepository;
+import soldimet.repository.PersonaRepository;
+import soldimet.repository.PrecioRepuestoRepository;
+import soldimet.repository.ProveedorRepository;
+import soldimet.repository.RubroRepository;
+import soldimet.repository.TipoParteMotorRepository;
+import soldimet.repository.TipoRepuestoRepository;
+
 
 /**
  *
  * @author Manu
  */
-public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro extends ObservableParaBarraDeProgreso implements EstrategiaCargarRepuestosProveedor {
+@Service
+@Transactional
+public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro implements EstrategiaCargarRepuestosProveedor {
 
     //Array que contiene todos los tipo de repuesto que no se le asigna un tipo motor hasta el ultimo paso
     private final ArrayList<TipoRepuesto> listaDeTipoRepuestosSinParteMotor = new ArrayList();
 
-    //nombre dle proveedor
-    private final String pazzaglia = "PAZZAGLIA S.A.";
+    @Autowired
+    private Globales globales;
+
+    @Autowired
+    private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private TipoRepuestoRepository tipoRepuestoRepository;
+
+    @Autowired
+    private RubroRepository rubroRepository;
+
+    @Autowired
+    private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
+
+    @Autowired
+    private EstadoArticuloRepository estadoArticuloRepository;
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
+
+    @Autowired
+    private HistorialPrecioRepository historialPrecioRepository;
+
+    @Autowired
+    private PrecioRepuestoRepository precioRepuestoRepository;
+
+    @Autowired
+    private TipoParteMotorRepository tipoParteMotorRepository;
+
+    @Autowired
+    private PersonaRepository personaRepository;
 
     private HSSFWorkbook libro;
 
@@ -63,9 +110,6 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
     private final String mensajeCanceladoPorElUsuario = "Operación cancelada por el usuario.";
     private final String mensajeNoEsUnArchvioDePazzaglia = " El archivo indicado no pertenece al proveedor Pazzaglia";
 
-    public EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro(ControladorErroresSimple observador) {
-        super((ControladorErroresConBarraDeProgreso) observador);
-    }
 
     //Defino una lista de String con los nombres de los rubros de pazzaglia por que estan ordenados asi
     @Override
@@ -75,7 +119,6 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
         try {
             File archivo = new File(ubicacion);
             cargarArchivo(archivo, prov);
-            IndireccionPersistencia.getInstance().iniciarTransaccion();
             Sheet hoja = libro.getSheetAt(0);
 
             //primero itero en la primer hoja para definir cuantas categorias se van a mirar
@@ -106,8 +149,6 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
                     //obtengo la hoja donde apunta el hipervinculo
                     Sheet hojaMotor = obtenerHojaDeHipervinculo(link);
                     String nombreCheckPointCategoria = celda.getStringCellValue();
-                    avisarEventoABarraDeProgreso(nombreCheckPointCategoria);
-                    avisarEventoABarraDeProgreso(totalCategoriasCheckPoint);
                     iterarCategoria(hojaMotor);
                     totalCategoriasCheckPoint = -1;
 
@@ -115,23 +156,14 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
 
             }
 
-            //si esta lista no esta vacia, hay tipos de repuestos que no tienen un tipo de parte de motor asignado ,lo hago ahora
-            if (!listaDeTipoRepuestosSinParteMotor.isEmpty()) {
-                avisarInexistenciaDeRelacionEntreTipoRepuestoYTipoMotor();
-                avisarEventoABarraDeProgreso(cadenaFinalizando);
-            }
-
-            IndireccionPersistencia.getInstance().commit();
         } catch (NullPointerException e) {
-            avisarExceptionAObservadores(e);
-            IndireccionPersistencia.getInstance().rollback();
-        } catch (ExceptionStringSimple e) {
-            avisarExceptionAObservadores(e);
-            IndireccionPersistencia.getInstance().rollback();
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void iterarCategoria(Sheet hojaMotor) throws ExceptionStringSimple {
+    private void iterarCategoria(Sheet hojaMotor) throws Exception {
 
         /*
          Comienzo a pasar rubro por rubro y voy agregando o modificando
@@ -139,8 +171,7 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
          */
         Iterator rows = hojaMotor.rowIterator();//iterador de filas
         //busco todos los tipos de repuesto para comparar mas adelante
-        ArrayList<TipoRepuesto> listaTipoRepuestos = (ArrayList<TipoRepuesto>) IndireccionPersistencia.getInstance()
-                .Buscar("*", "TipoRepuesto as tip", "tip.oid=tip.oid");
+        List<TipoRepuesto> listaTipoRepuestos = tipoRepuestoRepository.findAll();
 
         while (rows.hasNext()) {
             HSSFRow row = (HSSFRow) rows.next(); //fila actual
@@ -153,20 +184,14 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
             }
 
             //busco si el rubo ya existe
-            this.rubro = (Rubro) IndireccionPersistencia.getInstance()
-                    .Buscar("*", "Rubro as rub", "rub.nombreRubro like '" + nombreRubroEnCelda + "'");
+            this.rubro = rubroRepository.findByNombreRubro(nombreRubroEnCelda);
 
             if (this.rubro == null) {
                 //si el rubro no existe creo uno nuevo
-                Integer ultimoID = (Integer) IndireccionPersistencia.getInstance()
-                        .Buscar("rub.rubroID", "Rubro as rub", "rub.rubroID=rub.rubroID Order By rubroID DESC LIMIT 1");
-                if (ultimoID == null) {
-                    ultimoID = 1;
-                } else {
-                    ultimoID = ultimoID + 1;
-                }
-
-                this.rubro = new Rubro(nombreRubroEnCelda, ultimoID);
+                Rubro rubro = new Rubro();
+                rubro.setNombreRubro(nombreRubroEnCelda);
+                this.rubro = rubro;
+                this.rubroRepository.save(rubro);
             }
 
             /*
@@ -191,13 +216,7 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
 
             //para definir la MARCA busco la primer palabra
             Marca marc = new Marca();
-            Integer marcaID = (Integer) IndireccionPersistencia.getInstance()
-                    .Buscar("mar.marcaID", "Marca as mar", "mar.marcaID=mar.marcaID Order By mar.marcaID DESC LIMIT 1");
-            if (marcaID == null) {
-                marcaID = 1;
-            } else {
-                marcaID = marcaID + 1;
-            }
+
             String nombreMarca = "";
             //hago un bucle en el conjunto de palabras y despues otro bucle en cada caracter de la palabra
             for (int indice = 0; indice < nombres.length; indice++) {
@@ -215,15 +234,14 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
 
             }
             if (nombreMarca.isEmpty()) {
-                throw new ExceptionStringSimple(mensajeNoSePudoFormarLaCadenaMarca + nombreRub, this.toString());
+                throw new Exception(mensajeNoSePudoFormarLaCadenaMarca + nombreRub);
             } else {
-                marca.setnombreMarca(nombreMarca);
+                marc.setNombreMarca(nombreMarca);
             }
 
-            marc.setMarcaId(marcaID);
             this.marca = marc;
 
-            //para definir el tipo de repuesto debo buscar todo o que sobro del rubro que no es la marca, borrando (,),*,-
+            //para definir el tipo de repuesto debo buscar todo lo que sobro del rubro que no es la marca, borrando (,),*,-
             //y agrego espacios entre cada palabra
             //en otra iteración voy a buscar la cadena completa sin la marca en un archivo de texto o en la BD
             //para cambiarlo por el nombre correcto
@@ -240,24 +258,17 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
             String replaceAll2 = replaceAll1.replaceAll("\\)", "");
             tipo = replaceAll2.replaceAll("\\-", "");
 
-            TipoRepuesto tipoExistente = (TipoRepuesto) IndireccionPersistencia.getInstance()
-                    .Buscar("*", "TipoRepuesto as tipo", "tipo.nombreTipoRepuesto= '" + tipo + "'");
+            TipoRepuesto tipoExistente = tipoRepuestoRepository.findByNombreTipoRepuesto(tipo);
+
             if (tipoExistente == null) {
-                Integer tipoRepID = (Integer) IndireccionPersistencia.getInstance()
-                        .Buscar("tipo.tipoRepuestoID", "TipoRepuesto as tipo", "tipo.tipoRepuestoID=tipo.tipoRepuestoID Order By tipo.tipoRepuestoID DESC LIMIT 1");
-                if (tipoRepID == null) {
-                    tipoRepID = 1;
-                } else {
-                    tipoRepID = tipoRepID + 1;
-                }
 
                 TipoRepuesto tipoRepuesto = new TipoRepuesto();
                 tipoRepuesto.setNombreTipoRepuesto(tipo);
-                tipoRepuesto.setTipoRepuestoId(tipoRepID);
 
                 postergarAsignacionDeTipoMotorATipoRepuesto(tipoRepuesto);
 
                 this.tipoRep = tipoRepuesto;
+                tipoRepuestoRepository.save(tipoRepuesto);
             } else {
                 this.tipoRep = tipoExistente;
             }
@@ -306,12 +317,11 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
             NPOIFSFileSystem fs = new NPOIFSFileSystem(archivo);
             libro = new HSSFWorkbook(fs.getRoot(), true);
             corroborarPrecedencia();
+
         } catch (IOException | NullPointerException ex) {
-            avisarExceptionAObservadores(ex);
-            IndireccionPersistencia.getInstance().rollback();
-        } catch (ExceptionStringSimple e) {
-            avisarExceptionAObservadores(e);
-            IndireccionPersistencia.getInstance().rollback();
+            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -329,29 +339,26 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
     }
 
     //verifico si el archivo es de pazzaglia
-    private void corroborarPrecedencia() throws ExceptionStringSimple {
+    private void corroborarPrecedencia() throws Exception {
         Sheet primeraHoja = libro.getSheetAt(0);
 
         Row row = primeraHoja.getRow(0);
         Cell celda = row.getCell(1);
         String nombre = celda.getStringCellValue();
-        if (!nombre.contentEquals(pazzaglia)) {
+        if (!nombre.contentEquals(globales.PAZZAGLIA)) {
             //no es de pazzaglia
             //DAR AVISO DE QUE NO ES UN ARCHIVO DE PAZZAGLIA
             //FIN CU
-            throw new ExceptionStringSimple(mensajeNoEsUnArchvioDePazzaglia, this.toString());
+            throw new Exception(mensajeNoEsUnArchvioDePazzaglia);
         } else {
-
-            this.proveedor = (Proveedor) IndireccionPersistencia.getInstance()
-                    .Buscar("*", "Proveedor as prov, Persona as per", "prov.oid=per.oid and per.nombre = '" + pazzaglia + "'");
+            Persona persona = personaRepository.findPersonaByNombre(globales.PAZZAGLIA);
+            this.proveedor = proveedorRepository.findByPersona (persona);
         }
 
     }
 
     private void buscarArticulos(Hyperlink link) {
         try {
-
-            IndireccionPersistencia.getInstance().iniciarTransaccion();
             Sheet hoja = obtenerHojaDeHipervinculo(link);
 
             /*
@@ -365,8 +372,7 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
             int columnaFecMod = 8;
 
             //busco el estado de alta
-            EstadoArticuloProveedor estadoAlta = (EstadoArticuloProveedor) IndireccionPersistencia.getInstance()
-                    .Buscar("*", "EstadoArticuloProveedor as est", "est.nombreEstadoArticuloProveedor= 'Alta");
+            EstadoArticulo estadoAlta = estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);
 
             //paso fila a fila y voy viendo si creo o modifico el precio de articulos
             for (int i = 7; i < hoja.getLastRowNum(); i++) {
@@ -377,83 +383,57 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
                 String codArtProv = celda.getStringCellValue();
 
                 //me fijo si existe el articulo
-                Articulo articulo = (Articulo) IndireccionPersistencia.getInstance()
-                        .Buscar("*", "Articulo as art", "art.codigoArticuloProveedor= '" + codArtProv + "'");
+                Articulo articulo = articuloRepository.findByCodigoArticuloProveedor(codArtProv);
 
                 if (articulo == null) {
                     //si no existe creo un articulo nuevo
                     articulo = new Articulo();
-                    Integer ultimoID = (Integer) IndireccionPersistencia.getInstance()
-                            .Buscar("art.articuloID", "Articulo as art", "art.oid=art.oid order by articuloID desc limit 1");
-                    if (ultimoID == null) {
-                        ultimoID = 1;
-                    } else {
-                        ultimoID = ultimoID + 1;
-                    }
-                    articulo.setIdArticulo(ultimoID);
-                    articulo.setCodigoArticuloProveedor(codArtProv);
 
+                    articulo.setCodigoArticuloProveedor(codArtProv);
                     articulo.setMarca(marca);
                     articulo.setRubro(rubro);
                     articulo.setTipoRepuesto(tipoRep);
+                    articuloRepository.save(articulo);
 
                 }
                 //obtengo la descripcion del articulo
                 String descripcion = fila.getCell(columnaDescripcionArt).getStringCellValue();
 
                 //me fijo si ya hay un precio y le doy de baja
-                if (!articulo.getHistorial().isEmpty()) {
-                    for (HistorialPrecio historia : articulo.getHistorial()) {
-                        if (historia.getPrecio().getFechaHasta() == null) {
-                            historia.getPrecio().setFechaHasta(new Date());//le pongo fecha final
+                if (!articulo.getHistorialPrecios().isEmpty()) {
+                    for (HistorialPrecio historia : articulo.getHistorialPrecios()) {
+                        if (historia.getPrecioRepuesto().getFecha() == null) {
+                            historia.getPrecioRepuesto().setFecha(LocalDate.now());//le pongo fecha final
                         }
                     }
                 }
 
-                //creo el precio
-                Integer ultimoID = IndireccionPersistencia.getInstance()
-                        .buscarUltimoID("preciorepuestoID", "PrecioRepuesto");
-
-                if (ultimoID == null) {
-                    ultimoID = 1;
-                } else {
-                    ultimoID = ultimoID + 1;
-                }
-
                 PrecioRepuesto precio = new PrecioRepuesto();
 
-                precio.setprecioRepuestoPublico(Float.valueOf(fila.getCell(columnaPrecioAlPublico).getStringCellValue()));
-                precio.setPrecioRespuestoPrivado(Float.valueOf(fila.getCell(columnaPrecioAlPrivado).getStringCellValue()));
-                precio.setPrecioRepuestoId(ultimoID);
-                precio.setFechaHasta(null);
+                precio.setPrecioPublico(Float.valueOf(fila.getCell(columnaPrecioAlPublico).getStringCellValue()));
+                precio.setPrecioPrivado(Float.valueOf(fila.getCell(columnaPrecioAlPrivado).getStringCellValue()));
+                //precio.setPrecioRepuestoId(ultimoID);
+                precio.setFecha(null);
+                precioRepuestoRepository.save(precio);
 
                 //el historial
                 HistorialPrecio historia = new HistorialPrecio();
-                historia.setFechadesde(new Date());
-                ultimoID = IndireccionPersistencia.getInstance()
-                        .buscarUltimoID("hist.historialprecioID", "HistorialPrecio as hist");
-                if (ultimoID == null) {
-                    ultimoID = 1;
-                } else {
-                    ultimoID = ultimoID + 1;
-                }
-                historia.setHistorialPrecioId(ultimoID);
-                historia.setPrecio(precio);
+                historia.setFechaHistorial(LocalDate.now());
+                //historia.setHistorialPrecioId(ultimoID);
+                historia.setPrecioRepuesto(precio);
+                historialPrecioRepository.save(historia);
 
                 //asigno
                 articulo.setEstado(estadoAlta);
-                articulo.agregarHistorial(historia);
+                articulo.getHistorialPrecios().add(historia);
                 articulo.setProveedor(proveedor);
-                articulo.setDescripcionArticulo(descripcion);
-                IndireccionPersistencia.getInstance().guardar(articulo);
+                articulo.setDescripcion(descripcion);
+                articuloRepository.save(articulo);
 
             }
 
         } catch (NullPointerException e) {
-
-            avisarExceptionAObservadores(e);
-            IndireccionPersistencia.getInstance().rollback();
-
+             e.printStackTrace();
         }
 
     }
@@ -473,45 +453,18 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro ext
 
     }
 
-    private void avisarInexistenciaDeRelacionEntreTipoRepuestoYTipoMotor() throws ExceptionStringSimple {
-
-        ArrayList<TipoParteMotor> listaTipoParteMotor = (ArrayList<TipoParteMotor>) IndireccionPersistencia.getInstance()
-                .Buscar("*", "TipoParteMotor as tip", "tip.oid=tip.oid");
-
-        ArrayList<DTOTipoParteMotor> listaDTO = new ArrayList();
-
-        for (TipoParteMotor tipoParteMot : listaTipoParteMotor) {
-
-            DTOTipoParteMotor dto = new DTOTipoParteMotor(tipoParteMot.getnombreTipoParteMotor(), tipoParteMot.getOid());
-
-            listaDTO.add(dto);
-        }
-
-        ArrayList<String> listaTipoRepuestos = new ArrayList();
-        for (TipoRepuesto tipoRepues : listaDeTipoRepuestosSinParteMotor) {
-            listaTipoRepuestos.add(tipoRepues.getNombreTipoRepuesto());
-        }
-
-        Boolean resultado = new ControladorEstrategiaAsignarTipoParteMotorATiporepuesto().avisarRelacionesNoAsignadas(this, listaTipoRepuestos, listaDTO);
-
-        if (!resultado) {
-            throw new ExceptionStringSimple(mensajeCanceladoPorElUsuario, this.toString());
-        }
-
-    }
-
     //recibo la posicion del array que contiene el tipo de repuesto
     //y el tipo parte de motor para asignarlo y terminar de guardarlo
     public void asignarTipoMotorATipoRepuesto(String tipoMotorOID, Integer numeroEnArray) {
 
-        Integer idParteMotor = Integer.valueOf(tipoMotorOID);
+        Long idParteMotor = Long.valueOf(tipoMotorOID);
 
-        TipoParteMotor parteMotor = (TipoParteMotor) IndireccionPersistencia.getInstance().Buscar(idParteMotor, new TipoParteMotor());
+        TipoParteMotor parteMotor = tipoParteMotorRepository.findOne(idParteMotor);
 
         TipoRepuesto tipoRepuesto = listaDeTipoRepuestosSinParteMotor.get(numeroEnArray);
         tipoRepuesto.setTipoParte(parteMotor);
 
-        IndireccionPersistencia.getInstance().guardar(tipoRepuesto);
+        tipoRepuestoRepository.save(tipoRepuesto);
 
     }
 

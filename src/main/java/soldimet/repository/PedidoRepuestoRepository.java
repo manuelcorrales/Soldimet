@@ -1,9 +1,12 @@
 package soldimet.repository;
 
+import java.util.List;
+import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.PedidoRepuesto;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
+import soldimet.domain.Presupuesto;
 
 
 /**
@@ -13,4 +16,7 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface PedidoRepuestoRepository extends JpaRepository<PedidoRepuesto, Long>, JpaSpecificationExecutor<PedidoRepuesto> {
 
+    public List<PedidoRepuesto> findByPresupuesto(Presupuesto presupuesto);
+
+    public List<PedidoRepuesto> findByEstadoPedidoRepuesto( EstadoPedidoRepuesto estadoPedidoRepuesto);
 }

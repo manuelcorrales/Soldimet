@@ -5,107 +5,122 @@
  */
 package soldimet.service.expertos;
 
-import ControladoresCU.ControladorErroresSimple;
-import ModeloDeClases.Articulo;
-import ModeloDeClases.EstadoArticuloProveedor;
-import ModeloDeClases.HistorialPrecio;
-import ModeloDeClases.Marca;
-import ModeloDeClases.PrecioRepuesto;
-import ModeloDeClases.Proveedor;
-import ModeloDeClases.Rubro;
-import ModeloDeClases.TipoRepuesto;
-import indireccion.IndireccionPersistencia;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.constant.Globales;
+import soldimet.domain.Articulo;
+import soldimet.domain.EstadoArticulo;
+import soldimet.domain.HistorialPrecio;
+import soldimet.domain.Marca;
+import soldimet.domain.Persona;
+import soldimet.domain.PrecioRepuesto;
+import soldimet.domain.Rubro;
+import soldimet.domain.TipoRepuesto;
+import soldimet.domain.Proveedor;
+import soldimet.repository.ArticuloRepository;
+import soldimet.repository.EstadoArticuloRepository;
+import soldimet.repository.EstadoPedidoRepuestoRepository;
+import soldimet.repository.HistorialPrecioRepository;
+import soldimet.repository.MarcaRepository;
+import soldimet.repository.PersonaRepository;
+import soldimet.repository.PrecioRepuestoRepository;
+import soldimet.repository.ProveedorRepository;
+import soldimet.repository.RubroRepository;
+import soldimet.repository.TipoParteMotorRepository;
+import soldimet.repository.TipoRepuestoRepository;
 
 
 /**
  *
  * @author Manu
  */
-public class EstrategiaCargarRepuestosProveedorManual  extends ObservableSimple implements EstrategiaCargarRepuestosProveedor {
+@Service
+@Transactional
+public class EstrategiaCargarRepuestosProveedorManual  implements EstrategiaCargarRepuestosProveedor {
 
-    public EstrategiaCargarRepuestosProveedorManual(ControladorErroresSimple observador) {
-        super(observador);
-    }
+    @Autowired
+    private Globales globales;
 
+    @Autowired
+    private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private TipoRepuestoRepository tipoRepuestoRepository;
+
+    @Autowired
+    private RubroRepository rubroRepository;
+
+    @Autowired
+    private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
+
+    @Autowired
+    private EstadoArticuloRepository estadoArticuloRepository;
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
+
+    @Autowired
+    private HistorialPrecioRepository historialPrecioRepository;
+
+    @Autowired
+    private PrecioRepuestoRepository precioRepuestoRepository;
+
+    @Autowired
+    private TipoParteMotorRepository tipoParteMotorRepository;
+
+    @Autowired
+    private PersonaRepository personaRepository;
+
+    @Autowired
+    private MarcaRepository marcaRepository;
 
     @Override
-    public void cargarRepuestos(String fuente, String Proveedor, String rubro, String descripcion,
+    public void cargarRepuestos(String fuente, String nombreProveedor, String rubro, String descripcion,
             String marca, String tiporepuesto, float precio,String codigoArticuloProveedor, String ubicacion){
-        IndireccionPersistencia.getInstance().iniciarTransaccion();
 
-        ArrayList<HistorialPrecio> historiales = new ArrayList();
+        Set<HistorialPrecio> historiales = new HashSet();
         HistorialPrecio historial = new HistorialPrecio();
         PrecioRepuesto prec = new PrecioRepuesto();
-        historial.setPrecio(prec);
-        historial.setFechadesde(new Date());
-        prec.setprecioRepuestoPublico(precio);
+        historial.setPrecioRepuesto(prec);
+        historial.setFechaHistorial(LocalDate.now());
+        prec.setPrecioPublico(precio);
 
         try{
-            Proveedor prov = (Proveedor)IndireccionPersistencia.getInstance()
-                    .Buscar("*", "Persona as per, Proveedor as prov", "prov.oid=per.oid and per.nombre= '"+Proveedor+"'");
-            Rubro rub = (Rubro)IndireccionPersistencia.getInstance()
-                    .Buscar("*", "Rubro as rub", "rub.nombreRubro= '"+rubro+"'");
-            Marca marc = (Marca)IndireccionPersistencia.getInstance()
-                    .Buscar("*", "Marca as marc", "marc.nombreMarca= '"+marca+"'");
-            TipoRepuesto tipoRep = (TipoRepuesto)IndireccionPersistencia.getInstance()
-                    .Buscar("*", "tipoRep as tip", "tip.nombreTipoRepuesto= '"+tiporepuesto+"'");
-            Integer artID=(Integer)IndireccionPersistencia.getInstance()
-                    .Buscar("art.articuloID", "Articulo as art", "art.oid=art.oid ORDER BY articuloID DESC limit 1");
-            EstadoArticuloProveedor estadoAlta =(EstadoArticuloProveedor)IndireccionPersistencia.getInstance()
-                    .Buscar("*", "EstadoArticuloProveedor as est", "est.nombreEstadoArticuloProveedor = 'Alta'");
+            Persona personaProveedor = personaRepository.findPersonaByNombre(nombreProveedor);
+            Proveedor prov = proveedorRepository.findByPersona(personaProveedor);
 
-            Integer histID=(Integer)IndireccionPersistencia.getInstance()
-                    .Buscar("his.historialPrecioID", "HistorialPrecio as his", "his.oid=his.oid ORDER BY historialPrecioID DESC limit 1");
-            Integer precID=(Integer)IndireccionPersistencia.getInstance()
-                    .Buscar("pre.precioRepuestoID", "PrecioRepuesto as pre", "pre.oid=pre.oid ORDER BY precioRepuestoID DESC limit 1");
+            Rubro rub = rubroRepository.findByNombreRubro(rubro);
 
-            if (artID == null) {
-                artID = 1;
+            Marca marc = marcaRepository.findByNombreMarca(marca);
 
-            } else {
+            TipoRepuesto tipoRep = tipoRepuestoRepository.findByNombreTipoRepuesto(tiporepuesto);
 
-                artID = artID + 1;
-            }
-            if (histID == null) {
+            EstadoArticulo estadoAlta =estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);
 
-                histID = 1;
 
-            } else {
+            Articulo articulo = new Articulo();
 
-                histID = histID + 1;
-            }
-            if (precID == null) {
+            articulo.setMarca(marc);
+            articulo.setDescripcion(descripcion);
+            articulo.setEstado(estadoAlta);
+            articulo.setCodigoArticuloProveedor(codigoArticuloProveedor);
+            articulo.setHistorialPrecios(historiales);
+            articulo.setProveedor(prov);
+            articulo.setRubro(rub);
+            articulo.setTipoRepuesto(tipoRep);
 
-                precID = 1;
-
-            } else {
-                precID = precID + 1;
-            }
-            prec.setPrecioRepuestoId(precID);
-            historial.setHistorialPrecioId(histID);
-
-            Articulo articulo = new Articulo(
-                        artID,
-                        codigoArticuloProveedor,
-                        descripcion,
-                        rub,
-                        prov,
-                        marc,
-                        estadoAlta,
-                        tipoRep,
-                        historiales);
-
-            IndireccionPersistencia.getInstance().guardar(articulo);
-            IndireccionPersistencia.getInstance().commit();
+            articuloRepository.save(articulo);
 
         }catch(NullPointerException e){
 
-            avisarExceptionAObservadores(e);
-            IndireccionPersistencia.getInstance().rollback();
-
-
+    e.printStackTrace();
         }
 
 

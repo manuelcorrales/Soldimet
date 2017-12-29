@@ -17,12 +17,14 @@
             <thead>
             <tr>
             <th><span>ID</span></th>
+            <th><span>Marca Motor</span></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let motor of motors ;trackBy: trackId">
                 <td><a [routerLink]="['../motor', motor.id ]">{{motor.id}}</a></td>
+                <td>{{motor.marcaMotor}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

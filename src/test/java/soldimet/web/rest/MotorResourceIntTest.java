@@ -38,6 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class MotorResourceIntTest {
 
+    private static final String DEFAULT_MARCA_MOTOR = "AAAAAAAAAA";
+    private static final String UPDATED_MARCA_MOTOR = "BBBBBBBBBB";
+
     @Autowired
     private MotorRepository motorRepository;
 
@@ -77,7 +80,8 @@ public class MotorResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Motor createEntity(EntityManager em) {
-        Motor motor = new Motor();
+        Motor motor = new Motor()
+            .marcaMotor(DEFAULT_MARCA_MOTOR);
         return motor;
     }
 
@@ -101,6 +105,7 @@ public class MotorResourceIntTest {
         List<Motor> motorList = motorRepository.findAll();
         assertThat(motorList).hasSize(databaseSizeBeforeCreate + 1);
         Motor testMotor = motorList.get(motorList.size() - 1);
+        assertThat(testMotor.getMarcaMotor()).isEqualTo(DEFAULT_MARCA_MOTOR);
     }
 
     @Test
@@ -124,6 +129,24 @@ public class MotorResourceIntTest {
 
     @Test
     @Transactional
+    public void checkMarcaMotorIsRequired() throws Exception {
+        int databaseSizeBeforeTest = motorRepository.findAll().size();
+        // set the field null
+        motor.setMarcaMotor(null);
+
+        // Create the Motor, which fails.
+
+        restMotorMockMvc.perform(post("/api/motors")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(motor)))
+            .andExpect(status().isBadRequest());
+
+        List<Motor> motorList = motorRepository.findAll();
+        assertThat(motorList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllMotors() throws Exception {
         // Initialize the database
         motorRepository.saveAndFlush(motor);
@@ -132,7 +155,8 @@ public class MotorResourceIntTest {
         restMotorMockMvc.perform(get("/api/motors?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(motor.getId().intValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(motor.getId().intValue())))
+            .andExpect(jsonPath("$.[*].marcaMotor").value(hasItem(DEFAULT_MARCA_MOTOR.toString())));
     }
 
     @Test
@@ -145,7 +169,8 @@ public class MotorResourceIntTest {
         restMotorMockMvc.perform(get("/api/motors/{id}", motor.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(motor.getId().intValue()));
+            .andExpect(jsonPath("$.id").value(motor.getId().intValue()))
+            .andExpect(jsonPath("$.marcaMotor").value(DEFAULT_MARCA_MOTOR.toString()));
     }
 
     @Test
@@ -166,6 +191,8 @@ public class MotorResourceIntTest {
 
         // Update the motor
         Motor updatedMotor = motorRepository.findOne(motor.getId());
+        updatedMotor
+            .marcaMotor(UPDATED_MARCA_MOTOR);
 
         restMotorMockMvc.perform(put("/api/motors")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -176,6 +203,7 @@ public class MotorResourceIntTest {
         List<Motor> motorList = motorRepository.findAll();
         assertThat(motorList).hasSize(databaseSizeBeforeUpdate);
         Motor testMotor = motorList.get(motorList.size() - 1);
+        assertThat(testMotor.getMarcaMotor()).isEqualTo(UPDATED_MARCA_MOTOR);
     }
 
     @Test

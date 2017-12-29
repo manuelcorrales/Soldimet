@@ -3,29 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModeloDeComportamiento;package soldimet.service.expertos;
-import ModeloDeClases.Movimiento;
-import indireccion.IndireccionPersistencia;
+package soldimet.service.expertos;
+
 import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import soldimet.domain.Caja;
+import soldimet.domain.Movimiento;
+import soldimet.repository.CajaRepository;
+import soldimet.repository.MovimientoRepository;
 
 /**
  *
  * @author Manu
  */
+@Service
 public class EstrategiaMovimientoUltimosCliente extends EstrategiaMovimiento {
+
+    @Autowired
+    private CajaRepository cajaRepository;
 
 
     @Override
-    public  ArrayList<Movimiento> buscarMovimientos(){
-
-        ArrayList<DTOMovimientos> listaDTO = new ArrayList();
+    public List<Caja> buscarMovimientos(){
 
         //busco todos los movimientos
-        ArrayList<Movimiento> listaMovimientos = (ArrayList<Movimiento>)IndireccionPersistencia.getInstance()
-                .Buscar("*", "Movimiento as mov", "mov.oid= mov.oid");
+        List<Caja> listaCaja= cajaRepository.findAll();
 
-
-        return listaMovimientos;
+        return listaCaja;
 
     }
 

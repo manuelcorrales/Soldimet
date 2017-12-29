@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -42,7 +43,7 @@ public class MotorResource {
      */
     @PostMapping("/motors")
     @Timed
-    public ResponseEntity<Motor> createMotor(@RequestBody Motor motor) throws URISyntaxException {
+    public ResponseEntity<Motor> createMotor(@Valid @RequestBody Motor motor) throws URISyntaxException {
         log.debug("REST request to save Motor : {}", motor);
         if (motor.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new motor cannot already have an ID")).body(null);
@@ -64,7 +65,7 @@ public class MotorResource {
      */
     @PutMapping("/motors")
     @Timed
-    public ResponseEntity<Motor> updateMotor(@RequestBody Motor motor) throws URISyntaxException {
+    public ResponseEntity<Motor> updateMotor(@Valid @RequestBody Motor motor) throws URISyntaxException {
         log.debug("REST request to update Motor : {}", motor);
         if (motor.getId() == null) {
             return createMotor(motor);

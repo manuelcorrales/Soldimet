@@ -5,7 +5,6 @@
  */
 package soldimet.service.expertos;
 
-import ModeloDeClases.Cliente;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,6 +13,13 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.ArrayList;
+import soldimet.domain.Cliente;
+import soldimet.domain.Persona;
+import soldimet.service.dto.DTOCabeceraImpresionPresupuesto;
+import soldimet.service.dto.DTOCobroOperacionCUHacerPresupuesto;
+import soldimet.service.dto.DTOImpresionCadena;
+import soldimet.service.dto.DTOPresupuestoFinal;
+import soldimet.service.dto.DtoRepuestosElegidos;
 
 /**
  *
@@ -334,10 +340,11 @@ public final class ExpertoImpresionPresupuesto implements Printable{
         //Organizo la cabecera
         DTOCabeceraImpresionPresupuesto dtoCabecera = new DTOCabeceraImpresionPresupuesto();
 
-        dtoCabecera.setCliente(client.getApellido() + ", " + client.getNombre());
-        dtoCabecera.setDomicilio(client.getDireccion().getCalle());
-        dtoCabecera.setLocalidad(client.getDireccion().getLocalidad().getNombreDepartamento());
-        dtoCabecera.setTelefono(client.getTelefonos().get(0).getTelefono());
+        Persona persona = client.getPersona();
+        dtoCabecera.setCliente(client.getApellido() + ", " + persona.getNombre());
+        dtoCabecera.setDomicilio(persona.getDireccion().getCalle());
+        dtoCabecera.setLocalidad(persona.getDireccion().getLocalidad().getNombreLocalidad());
+        dtoCabecera.setTelefono(persona.getNumeroTelefono());
         dtoCabecera.setFecha(null);
 
         //organizo el cuerpo del presupuesto

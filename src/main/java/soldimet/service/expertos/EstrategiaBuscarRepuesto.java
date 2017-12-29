@@ -1,21 +1,36 @@
 package soldimet.service.expertos;
 
-import ModeloDeClases.Aplicacion;
-import ModeloDeClases.Articulo;
-import ModeloDeClases.Cilindrada;
-import ModeloDeClases.EstadoArticuloProveedor;
-import ModeloDeClases.Motor;
-import ModeloDeClases.Operacion;
-import ModeloDeClases.TipoParteMotor;
-import indireccion.IndireccionPersistencia;
+
 import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import soldimet.constant.Globales;
+import soldimet.domain.Aplicacion;
+import soldimet.domain.Articulo;
+import soldimet.domain.Cilindrada;
+import soldimet.domain.EstadoArticulo;
+import soldimet.domain.Motor;
+import soldimet.domain.TipoParteMotor;
+import soldimet.repository.ArticuloRepository;
+import soldimet.repository.EstadoArticuloRepository;
 
 /**
  * @author Manu
  * @version 1.0
  * @created 04-ene-2016 12:39:42 p.m.
  */
+@Service
 public abstract class EstrategiaBuscarRepuesto {
+
+    @Autowired
+    private EstadoArticuloRepository estadoArticuloRepository;
+
+    @Autowired
+    private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private Globales globales;
 
 	public EstrategiaBuscarRepuesto(){
 
@@ -25,10 +40,10 @@ public abstract class EstrategiaBuscarRepuesto {
 
 	}
 
-        public ArrayList<Articulo> buscarRepuesto(TipoParteMotor tipoParte, Cilindrada cilindrada,
+        public List<Articulo> buscarRepuesto(TipoParteMotor tipoParte, Cilindrada cilindrada,
                 Motor motor, Aplicacion aplicacion){
 
-            ArrayList<Articulo> listaArticulo = new ArrayList();
+            List<Articulo> listaArticulo = new ArrayList();
             /*En una futura opcion otra estrategia va a buscar presupuestos anteriores e indicar
             posibles repuestos o tipos de repuestos marcados.
             en la busqueda busco SIEMPRE la MARCA
@@ -36,18 +51,14 @@ public abstract class EstrategiaBuscarRepuesto {
             El tipo repuesto lo tengo en una clase aparte*/
 
             //busco el estado del articulo proveedor en Alta
-            EstadoArticuloProveedor estado =(EstadoArticuloProveedor)IndireccionPersistencia.getInstance()
-                    .Buscar("*", "EstadoArtculoProveedor","nombreEstadoArticuloProveedor= Alta");
+            EstadoArticulo estado =estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);
 
-            ArrayList<Articulo> listaArticulos = (ArrayList<Articulo>)IndireccionPersistencia.getInstance()
-                    .Buscar("*",
-                            "Articulo as art, TipoParteMotor as tipo, EstadoArticuloProveedor as est",
-                            "estado= "+estado.getOid()+" and tipoRepuesto= "+tipoParte.getOid());
+            List<Articulo> listaArticulos = articuloRepository.findByEstado(estado);
 
             listaArticulo = filtrarRepuestos(listaArticulos,cilindrada,motor, aplicacion);
 
             return listaArticulo;
 	}
-        protected abstract ArrayList<Articulo> filtrarRepuestos(ArrayList<Articulo> articulos,Cilindrada cilindrada,
+        protected abstract List<Articulo> filtrarRepuestos(List<Articulo> articulos,Cilindrada cilindrada,
                 Motor motor, Aplicacion aplicacion);
 }

@@ -5,88 +5,80 @@
  */
 package soldimet.service.expertos;
 
-import ControladoresCU.ControladorErroresSimple;
-import Exceptions.ExceptionStringSimple;
-import ModeloDeClases.CostoOperacion;
-import ModeloDeClases.ListaPrecioDesdeHastaCRAM;
-import ModeloDeClases.ListaPrecioRectificacionCRAM;
-import indireccion.IndireccionPersistencia;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import soldimet.domain.CostoOperacion;
+import soldimet.domain.ListaPrecioDesdeHasta;
+import soldimet.domain.ListaPrecioRectificacionCRAM;
+import soldimet.repository.ListaPrecioDesdeHastaRepository;
+import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
+import soldimet.service.dto.DTOListaPrecioManoDeObra;
 
 /**
  *
  * @author Manu
  */
-public class ExpertoCUModificarCostosDeManoDeObra extends ObservableSimple {
+public class ExpertoCUModificarCostosDeManoDeObra {
 
     private final String errorPermisoInsuficiente = "No tiene permisos suficientes para modificar estos valores";
 
+    @Autowired
+    private ListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
 
-    private ArrayList<ListaPrecioRectificacionCRAM> listaNumeroLista;
+    @Autowired
+    private ListaPrecioDesdeHastaRepository listaPrecioDesdeHastaRepository;
 
-    public ExpertoCUModificarCostosDeManoDeObra(ControladorErroresSimple observador) {
-        super(observador);
-    }
+    private List<ListaPrecioRectificacionCRAM> listaNumeroLista;
+
 
     public void modificarCostos(String porcentaje) {
         //busco en la lista identificada por numero la lista que contiene el ultimo valor todo de nuevo
         //y despues sigo modificando valores y todo
 
         try {
-            verificarPermisos();
 
             //por cada lista identificada por su numero
             for (ListaPrecioRectificacionCRAM listaPrecio : listaNumeroLista) {
 
                 //obtengo las listas
-                List<ListaPrecioDesdeHastaCRAM> listaDesde = listaPrecio.getFechas();
+                Set<ListaPrecioDesdeHasta> listaDesde = listaPrecio.getFechas();
 
                 //inicializo el apuntador a la ultima lista de precios con el primero que sale
-                ListaPrecioDesdeHastaCRAM ultimaListaPrecios = listaDesde.get(0);
+                ListaPrecioDesdeHasta ultimaListaPrecios = listaDesde.iterator().next();
 
                 //verifico cual tiene la ultima fecha y lo dejo en el apuntador de la ultima lista
                 //y veo que tampoco este cerrada la lista
-                for (ListaPrecioDesdeHastaCRAM lista : listaDesde) {
+                for (ListaPrecioDesdeHasta lista : listaDesde) {
 
-                    if (lista.getFechaDesde().after(ultimaListaPrecios.getFechaDesde())
+                    if (lista.getFechaDesde().isAfter(ultimaListaPrecios.getFechaDesde())
                             && lista.getFechaHasta() != null) {
                         ultimaListaPrecios = lista;
                     }
                 }
 
                 //le indico la fecha de finalizacion de uso y creo otro nuevo con los nuevos valores
-                ultimaListaPrecios.setFechaHasta(new Date());
-                List<CostoOperacion> costoOperacionvieja = ultimaListaPrecios.getCostoOperacion();
+                ultimaListaPrecios.setFechaHasta(LocalDate.now());
+                Set<CostoOperacion> costoOperacionvieja = ultimaListaPrecios.getCostoOperacions();
 
                 //proceso de creacion de la nueva lista
-                ListaPrecioDesdeHastaCRAM listaPreciosNueva = new ListaPrecioDesdeHastaCRAM();
-                listaPreciosNueva.setFechaDesde(new Date());
-                int nuevoIDListaPrecio = (int) IndireccionPersistencia.getInstance()
-                        .buscarUltimoID("lista.ListaPrecioDesdeHastaCRAMID", "ListaPrecioDesdeHastaCRAM as lista");
-
-                nuevoIDListaPrecio = nuevoIDListaPrecio + 1;
-                listaPreciosNueva.setListaPrecioDesdeHastaCRAMId(nuevoIDListaPrecio);
+                ListaPrecioDesdeHasta listaPreciosNueva = new ListaPrecioDesdeHasta();
+                listaPreciosNueva.setFechaDesde(LocalDate.now());
 
                 //creo los nuevos valores y se los asigno a la lista nueva
-                ArrayList<CostoOperacion> costosNuevos = new ArrayList();
+                Set<CostoOperacion> costosNuevos = new HashSet<>();
                 for (CostoOperacion costo : costoOperacionvieja) {
 
                     CostoOperacion nuevoCosto = new CostoOperacion();
 
                     nuevoCosto.setCilindrada(costo.getCilindrada());
-                    nuevoCosto.setTipoParte(costo.getTipoParte());
+                    nuevoCosto.setTipoParteMotor(costo.getTipoParteMotor());
                     nuevoCosto.setOperacion(costo.getOperacion());
 
-                    Integer nuevoCostoID =IndireccionPersistencia.getInstance()
-                            .buscarUltimoID("c.costoOperacionID", "CostoOperacion as c");
-                    if(nuevoCostoID==null){
-                        nuevoCostoID=1;
-                    }else{
-                        nuevoCostoID= nuevoCostoID+1;
-                    }
-                    nuevoCosto.setCostoOperacionIdNegocio(nuevoCostoID);
                     float precio = costo.getCostoOperacion();
                     float calculoNuevoValor;
                     Float porciento = Float.valueOf(porcentaje);
@@ -101,56 +93,51 @@ public class ExpertoCUModificarCostosDeManoDeObra extends ObservableSimple {
                     costosNuevos.add(nuevoCosto);
 
                 }
-                listaPreciosNueva.setCostoOperacion(costosNuevos);
+                listaPreciosNueva.setCostoOperacions(costosNuevos);
 
-                IndireccionPersistencia.getInstance().guardar(listaNumeroLista);
-                IndireccionPersistencia.getInstance().guardar(listaPreciosNueva);
-                IndireccionPersistencia.getInstance().commit();
+                listaPrecio.getFechas().add(listaPreciosNueva);
+
+                listaPrecioDesdeHastaRepository.save(listaPreciosNueva);
+                listaPrecioRectificacionCRAMRepository.save(listaPrecio);
 
             }
 
         } catch (NullPointerException e) {
-            avisarExceptionAObservadores(e);
-            IndireccionPersistencia.getInstance().rollback();
-        }catch(ExceptionStringSimple e){
-            avisarExceptionAObservadores(e);
-            IndireccionPersistencia.getInstance().rollback();
+            e.printStackTrace();
         }
 
     }
 
 
-    public ArrayList<DTOListaPrecioManoDeObra> buscarCostos() {
+    public List<DTOListaPrecioManoDeObra> buscarCostos() {
 
-        indireccion.IndireccionPersistencia.getInstance().iniciarTransaccion();
-        ArrayList<DTOListaPrecioManoDeObra> listaDTO = new ArrayList();
+        List<DTOListaPrecioManoDeObra> listaDTO = new ArrayList();
         try {
             //busco la lista que contiene el numero de lista
-             listaNumeroLista = (ArrayList<ListaPrecioRectificacionCRAM>) indireccion.IndireccionPersistencia.getInstance()
-                    .Buscar("*", "ListaPrecioRectificacionCRAM as list", "list.oid=list.oid");
+             listaNumeroLista = listaPrecioRectificacionCRAMRepository.findAll();
 
             //por cada lista identificada por su numero
             for (ListaPrecioRectificacionCRAM listaPrecio : listaNumeroLista) {
 
                 //obtengo las listas
-                List<ListaPrecioDesdeHastaCRAM> listaDesde = listaPrecio.getFechas();
+                Set<ListaPrecioDesdeHasta> listaDesde = listaPrecio.getFechas();
                 //inicializo el apuntador a la ultima lista de precios con el primero que sale
-                ListaPrecioDesdeHastaCRAM ultimaListaPrecios = listaDesde.get(0);
+                ListaPrecioDesdeHasta ultimaListaPrecios = listaDesde.iterator().next();
 
                 //verifico cual tiene la ultima fecha y lo dejo en el apuntador de la ultima lista
                 //y veo que tampoco este cerrada la lista
-                for (ListaPrecioDesdeHastaCRAM lista : listaDesde) {
+                for (ListaPrecioDesdeHasta lista : listaDesde) {
 
-                    if (lista.getFechaDesde().after(ultimaListaPrecios.getFechaDesde())
+                    if (lista.getFechaDesde().isAfter(ultimaListaPrecios.getFechaDesde())
                             && lista.getFechaHasta() != null) {
                         ultimaListaPrecios = lista;
                     }
                 }
 
                 //Por cada operacion y su costo creo un dto y lo agrego a la lista
-                for (CostoOperacion costoOp : ultimaListaPrecios.getCostoOperacion()) {
+                for (CostoOperacion costoOp : ultimaListaPrecios.getCostoOperacions()) {
                     DTOListaPrecioManoDeObra dto = new DTOListaPrecioManoDeObra();
-                    dto.setNumeroLista(listaPrecio.getNumeroGrupoLista());
+                    dto.setNumeroLista(listaPrecio.getNumeroGrupo());
                     dto.agregarOperacionYPrecio(costoOp.getOperacion().getNombreOperacion(),
                             costoOp.getCostoOperacion());
                     listaDTO.add(dto);
@@ -160,27 +147,10 @@ public class ExpertoCUModificarCostosDeManoDeObra extends ObservableSimple {
             }
             return listaDTO;
         } catch (NullPointerException e) {
-
-            IndireccionPersistencia.getInstance().rollback();
-            avisarExceptionAObservadores(e);
+            e.printStackTrace();
             return null;
         }
     }
 
 
-    private void verificarPermisos () throws ExceptionStringSimple{
-
-        if(new ExpertoPermisos().verificarPermisosModificarCostosManoObra()){
-
-            //el usuario puede modificar los costos
-            //no hago nada
-
-        }else{
-
-            //no tiene suficientes permisos, anulo y aviso por pantalla
-
-            throw new ExceptionStringSimple(errorPermisoInsuficiente,this.getClass().getName());
-        }
-
-    }
 }

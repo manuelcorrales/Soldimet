@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface MarcaRepository extends JpaRepository<Marca, Long> {
 
+    public Marca findByNombreMarca( String nombreMarca);
 }

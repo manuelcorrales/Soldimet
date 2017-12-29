@@ -42,7 +42,8 @@ public class Articulo implements Serializable {
     @NotNull
     private Marca marca;
 
-    @OneToMany(mappedBy = "articulo")
+    @OneToMany
+    @JoinColumn(name = "articulo")
     @JsonIgnore
     private Set<HistorialPrecio> historialPrecios = new HashSet<>();
 

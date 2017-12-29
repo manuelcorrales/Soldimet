@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModeloDeComportamiento;package soldimet.service.expertos;
+package soldimet.service.expertos;
 /**
  *
  * @author Manu

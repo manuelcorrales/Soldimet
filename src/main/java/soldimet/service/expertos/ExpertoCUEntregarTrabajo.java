@@ -4,53 +4,49 @@
  * and open the template in the editor.
  */
 package soldimet.service.expertos;
-import ControladoresCU.ControladorErroresSimple;
-import ModeloDeClases.EstadoPresupuesto;
-import ModeloDeClases.Presupuesto;
-import indireccion.IndireccionPersistencia;
-import Exceptions.ExceptionStringSimple;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import soldimet.constant.Globales;
+import soldimet.domain.EstadoPresupuesto;
+import soldimet.domain.Presupuesto;
+import soldimet.repository.EstadoPresupuestoRepository;
+import soldimet.repository.PresupuestoRepository;
 
 /**
  *
  * @author Manu
  */
-public class ExpertoCUEntregarTrabajo extends ObservableSimple{
+public class ExpertoCUEntregarTrabajo {
 
-    private final String noExistePresupuesto = "No existe un presupuesto con ese número, no se puede realizar la operación";
+    @Autowired
+    private EstadoPresupuestoRepository estadoPresupuestoRepository;
 
-    public ExpertoCUEntregarTrabajo(ControladorErroresSimple observador) {
-        super(observador);
-    }
+    @Autowired
+    private PresupuestoRepository presupuestoRepository;
 
+    @Autowired
+    private Globales globales;
 
-
-    public void entregarTrabajo(String idPresupuesto) {
-        IndireccionPersistencia.getInstance().iniciarTransaccion();
+    public Boolean entregarTrabajo(Long idPresupuesto) {
 
         try {
             //verifico ademas que no este en estado baja
-            EstadoPresupuesto estadoEntregado = (EstadoPresupuesto) IndireccionPersistencia.getInstance()
-                    .Buscar("*", "EstadoPresupuesto", "nombreEstadoPresupuesto= Entregado");
-            EstadoPresupuesto estadoBaja = (EstadoPresupuesto) IndireccionPersistencia.getInstance()
-                    .Buscar("*", "EstadoPresupuesto", "nombreEstadoPresupuesto= Baja");
+            EstadoPresupuesto estadoEntregado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO);
 
-            Presupuesto presupuesto = (Presupuesto) IndireccionPersistencia.getInstance()
-                    .Buscar("*", "Presupuesto", "presupuestoId= " + idPresupuesto + " "
-                            + "and estadoPresupuesto != " + estadoBaja.getOid());
+            EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
 
-            if (presupuesto == null) {
-            //NO EXISTE ESTE PRESUPUESTO
-              throw new ExceptionStringSimple(noExistePresupuesto,this.getClass().getName());
-            } else {
+            Presupuesto presupuesto = presupuestoRepository.findOne(idPresupuesto);
 
+            if (presupuesto != null && !presupuesto.getEstadoPresupuesto().equals(estadoAceptado)) {
                 //modifico y guardo el presupuesto
-                presupuesto.setEstado(estadoEntregado);
-                IndireccionPersistencia.getInstance().guardar(presupuesto);
-                IndireccionPersistencia.getInstance().commit();
+                presupuesto.setEstadoPresupuesto(estadoEntregado);
+                presupuestoRepository.save(presupuesto);
+                return true;
             }
-        } catch (NullPointerException | ExceptionStringSimple e) {
-            IndireccionPersistencia.getInstance().rollback();
-            avisarExceptionAObservadores(e);
+            return false;
+        } catch (NullPointerException e) {
+            return false;
         }
 
     }

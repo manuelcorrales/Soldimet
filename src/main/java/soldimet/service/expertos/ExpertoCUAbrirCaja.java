@@ -1,16 +1,29 @@
 package soldimet.service.expertos;
 
-import ModeloDeClases.Caja;
-import indireccion.IndireccionPersistencia;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import soldimet.constant.Globales;
+import soldimet.domain.Caja;
+import soldimet.repository.CajaRepository;
+import soldimet.service.dto.DTOMensajeAbrirCaja;
 
 /**
  * @author Manu
  * @version 1.0
  * @created 04-ene-2016 12:39:43 p.m.
  */
+@Service
 public class ExpertoCUAbrirCaja {
+
+    @Autowired
+    private CajaRepository cajaRepository;
+
+    @Autowired
+    private Globales globales;
 
     private Caja cajaDia;
 
@@ -21,14 +34,13 @@ public class ExpertoCUAbrirCaja {
     public Boolean cajaEstaAbierta() {
         try {
             if (cajaDia == null) {
-                IndireccionPersistencia.getInstance().iniciarTransaccion();
 
                 //creo una fecha actual y le doy formato (puede ser yyyy/MM/dd HH:mm:ss)
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 Date date = new Date();
 
-                cajaDia = (Caja) IndireccionPersistencia.getInstance().Buscar("*", "Caja as caj", "caj.fecha= " + dateFormat.format(date));
-                IndireccionPersistencia.getInstance().cerrarTransaccion();
+
+                cajaDia = cajaRepository.findByFecha(LocalDate.now());
 
                 return cajaDia!=null;
 
@@ -42,6 +54,7 @@ public class ExpertoCUAbrirCaja {
     }
 
     public DTOMensajeAbrirCaja verEstadoCaja() {
+
         DTOMensajeAbrirCaja mensaje = new DTOMensajeAbrirCaja();
 
         if (cajaEstaAbierta()) {
@@ -51,14 +64,17 @@ public class ExpertoCUAbrirCaja {
                 //La caja se abrio a X hora y ahora se encuentra cerrada
                 //preguntar si la quiere re abrir
 
-                mensaje.setMensaje("La caja se abrio el día de hoy a las " + dateFormat.format(cajaDia.getHoraApertura())
-                        + " y se cerro a las " + dateFormat.format(cajaDia.getHoraCierre()) + ". Desea volverla a abrir?");
+                String mensajeConFecha1 = globales.MENSAJE_CAJA_CERRADA_VOLVER_A_ABRIR.replaceFirst(globales.SIMBOLO_REEMPLAZAR,dateFormat.format(cajaDia.getHoraApertura()).toString());
+
+                String mensajeConFecha2 = mensajeConFecha1.replaceFirst(globales.SIMBOLO_REEMPLAZAR,dateFormat.format(cajaDia.getHoraCierre()).toString());
+
+                mensaje.setMensaje(mensajeConFecha2);
                 return mensaje;
 
             } else {
 
                 //la caja ya esta abierta y no se ha cerrado
-                mensaje.setMensaje("La caja ya se encuentra abierta.");
+                mensaje.setMensaje(globales.MENSAJE_CAJA_YA_ABIERTA);
                 return mensaje;
 
             }
@@ -66,7 +82,7 @@ public class ExpertoCUAbrirCaja {
         } else {
             //la caja esta cerrada
 
-            mensaje.setMensaje("La caja se encuentra cerrada. No puede realizar movimientos");
+            mensaje.setMensaje(globales.MENSAJE_CAJA_CERRADA_SIN_MOVIMIENTOS);
             return mensaje;
         }
 
@@ -92,12 +108,13 @@ public class ExpertoCUAbrirCaja {
         //creo una fecha actual y le doy formato (puede ser yyyy/MM/dd HH:mm:ss)
         Caja cajaDiaHoy = new Caja();
 
-        cajaDiaHoy.setFecha(new Date());
+        cajaDiaHoy.setFecha(LocalDate.now());
 
-        cajaDiaHoy.setHoraApertura(new Date());
+        cajaDiaHoy.setHoraApertura(Instant.now());
 
         //GUARDO LA CAJA
-        IndireccionPersistencia.getInstance().guardar(cajaDiaHoy);
+        cajaRepository.save(cajaDiaHoy);
+
 
     }
 

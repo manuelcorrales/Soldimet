@@ -1,36 +1,27 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                package soldimet.service.expertos;
+package soldimet.service.expertos;
 
-import ControladoresCU.ControladorErroresConBarraDeProgreso;
-import factoria.FactoriaEstrategiaCargarRepuestos;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import soldimet.service.abstractFactory.FactoriaEstrategiaCargarRepuestos;
 
 /**
  *
  * @author Manu
  */
+@Service
 public class ExpertoCUCargarRepuestosDeProveedor extends ExpertoCUManejoRepuestoYArticulo{
+
 
     EstrategiaCargarRepuestosProveedor estrategia;
 
-    public ExpertoCUCargarRepuestosDeProveedor(ControladorErroresConBarraDeProgreso observador) {
-        super(observador);
-    }
-
-
-
-
+    @Autowired
+    private FactoriaEstrategiaCargarRepuestos factoriaEstrategiaCargarRepuestos;
 
 
     public void cargarRepuestosDeProveedor(String fuente, String Proveedor, String rubro, String descripcion,
             String marca, String tiporepuesto, float precio,String codigoArticuloProveedor, String ubicacion){
 
-        estrategia = FactoriaEstrategiaCargarRepuestos.getInstance()
-                .getEstrategia(Proveedor, fuente, this.getPrimerObservador());
+        estrategia = factoriaEstrategiaCargarRepuestos.getEstrategia(Proveedor, fuente);
 
         estrategia.cargarRepuestos(fuente, Proveedor, rubro, descripcion, marca, tiporepuesto, precio, codigoArticuloProveedor, ubicacion);
 

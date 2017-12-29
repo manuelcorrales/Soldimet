@@ -40,7 +40,8 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
     @NotNull
     private CostoOperacion costoOperacion;
 
-    @OneToMany(mappedBy = "lista")
+    @OneToMany
+        @JoinColumn(name= "lista")
     @JsonIgnore
     private Set<ListaPrecioDesdeHasta> fechas = new HashSet<>();
 

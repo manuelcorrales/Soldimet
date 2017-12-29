@@ -1,17 +1,21 @@
 package soldimet.service.expertos;
-import ModeloDeClases.Aplicacion;
-import ModeloDeClases.Cilindrada;
-import ModeloDeClases.CostoOperacion;
-import ModeloDeClases.Motor;
-import ModeloDeClases.TipoParteMotor;
+
+
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
+import soldimet.domain.Aplicacion;
+import soldimet.domain.Cilindrada;
+import soldimet.domain.CostoOperacion;
+import soldimet.domain.Motor;
+import soldimet.domain.TipoParteMotor;
 
 /**
  * @author Manu
  * @version 1.0
  * @created 04-ene-2016 12:39:42 p.m.
  */
+@Service
 public abstract class EstrategiaPresupuestoRectificacionCRAM {
 
 	public EstrategiaPresupuestoRectificacionCRAM(){

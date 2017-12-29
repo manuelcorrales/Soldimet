@@ -30,7 +30,8 @@ public class ListaPrecioDesdeHasta implements Serializable {
     @Column(name = "fecha_hasta")
     private LocalDate fechaHasta;
 
-    @OneToMany(mappedBy = "lista")
+    @OneToMany
+    @JoinColumn(name = "lista")
     @JsonIgnore
     private Set<CostoOperacion> costoOperacions = new HashSet<>();
 
@@ -80,13 +81,11 @@ public class ListaPrecioDesdeHasta implements Serializable {
 
     public ListaPrecioDesdeHasta addCostoOperacion(CostoOperacion costoOperacion) {
         this.costoOperacions.add(costoOperacion);
-        costoOperacion.setLista(this);
         return this;
     }
 
     public ListaPrecioDesdeHasta removeCostoOperacion(CostoOperacion costoOperacion) {
         this.costoOperacions.remove(costoOperacion);
-        costoOperacion.setLista(null);
         return this;
     }
 

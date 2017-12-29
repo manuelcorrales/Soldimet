@@ -1,25 +1,36 @@
 package soldimet.service.expertos;
-import ModeloDeClases.Caja;
 
-import indireccion.IndireccionPersistencia;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import org.joda.time.Days;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.constant.Globales;
+import soldimet.domain.Caja;
+import soldimet.repository.CajaRepository;
+import soldimet.service.dto.DTOMensajeCerrarCaja;
 
 /**
  * @author Manu
  * @version 1.0
  * @created 04-ene-2016 12:39:44 p.m.
  */
+@Service
+@Transactional
 public class ExpertoCerrarCaja {
 
     private Caja cajaDia;
     public Boolean cajaAbierta;
 
+    @Autowired
+    private CajaRepository cajaRepository;
+
+    @Autowired
+    private Globales globales;
+
 	public ExpertoCerrarCaja(){
-
-	}
-
-	public void finalize() throws Throwable {
 
 	}
 
@@ -34,21 +45,16 @@ public class ExpertoCerrarCaja {
 
 
 	public DTOMensajeCerrarCaja VerEstadoCaja(){
-            IndireccionPersistencia.getInstance().iniciarTransaccion();
+
             DTOMensajeCerrarCaja mensaje = new DTOMensajeCerrarCaja();
-            //creo una instancia fecha del dia de hoy con formato yyyy/MM/dd
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            Date date = new Date();
 
             //busco si existe una instancia caja con la fecha del dia
-            cajaDia = (Caja)IndireccionPersistencia.getInstance()
-                    .Buscar("*","Caja as caj", "caj.fecha="+dateFormat.format(date));
-            IndireccionPersistencia.getInstance().cerrarTransaccion();
+            cajaDia = cajaRepository.findByFecha(LocalDate.now());
             if(cajaDia==null){
 
                 //si no existe una instancia de caja
                 //Dar aviso por pantalla que no se ha abierto aun la caja del dia
-                mensaje.setMensaje("La caja hoy no se ha abierto.");
+                mensaje.setMensaje(globales.MENSAJE_CAJA_AUN_CERRADA);
                 cajaAbierta = false;
 
             }else{
@@ -56,17 +62,14 @@ public class ExpertoCerrarCaja {
 
                 if(cajaDia.getHoraCierre()==null){//reviso que aun no se haya cerrado la caja
 
-                    //FALTA QUE SE CONECTE A INTERNET Y HAGA EL BACKUP DEL DIA
-                    respaldar();
-
-                    mensaje.setMensaje("Caja cerrada");
+                    mensaje.setMensaje(globales.MENSAJE_CAJA_CERRADA);
                     cajaAbierta = true;
                     return mensaje;
                 }else{
 
                     //la caja ya esta cerrada
                     cajaAbierta= false;
-                    mensaje.setMensaje("La caja ya esta cerrada");
+                    mensaje.setMensaje(globales.MENSAJE_CAJA_YA_CERRADA);
                 }
 
 
@@ -76,21 +79,10 @@ public class ExpertoCerrarCaja {
         }
 
         public void cerrarCaja(){
-
             //creo una nueva hora con la hora a la que cierro la caja
-            Date horaCierre = new Date();
-
-            this.cajaDia.setHoraCierre(horaCierre);
-
-            IndireccionPersistencia.getInstance().iniciarTransaccion();
-            IndireccionPersistencia.getInstance().guardar(this.cajaDia);
-
+            this.cajaDia.setHoraCierre(Instant.now());
 
         }
-
-    private void respaldar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 
 
