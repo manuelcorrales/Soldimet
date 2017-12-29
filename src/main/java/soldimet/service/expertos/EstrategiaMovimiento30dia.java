@@ -41,7 +41,7 @@ public class EstrategiaMovimiento30dia extends EstrategiaMovimiento{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         */
         //formateo la fecha despues que restarle los 30 dias y  busco--dateFormat.format(calendar.getTime())
-        List<Caja> listaCaja = cajaRepository.findByFechaGreatherThan(fechaPasada);
+        List<Caja> listaCaja = cajaRepository.findByFechaGreaterThanEqual(fechaPasada);
 
     return listaCaja;
 }

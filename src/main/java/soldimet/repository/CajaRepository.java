@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface CajaRepository extends JpaRepository<Caja, Long>, JpaSpecificationExecutor<Caja> {
 
-    public List<Caja> findByFechaGreatherThan(LocalDate fecha);
+    public List<Caja> findByFechaGreaterThanEqual(LocalDate fecha);
 
     public Caja findByFecha(LocalDate fechaInicio);
 }
