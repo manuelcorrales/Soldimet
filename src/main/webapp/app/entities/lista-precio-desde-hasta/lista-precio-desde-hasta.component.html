@@ -19,6 +19,7 @@
             <th><span>ID</span></th>
             <th><span>Fecha Desde</span></th>
             <th><span>Fecha Hasta</span></th>
+            <th><span>Costo Operacion</span></th>
             <th></th>
             </tr>
             </thead>
@@ -27,6 +28,11 @@
                 <td><a [routerLink]="['../lista-precio-desde-hasta', listaPrecioDesdeHasta.id ]">{{listaPrecioDesdeHasta.id}}</a></td>
                 <td>{{listaPrecioDesdeHasta.fechaDesde | date:'mediumDate'}}</td>
                 <td>{{listaPrecioDesdeHasta.fechaHasta | date:'mediumDate'}}</td>
+                <td>
+                    <div *ngIf="listaPrecioDesdeHasta.costoOperacion">
+                        <a [routerLink]="['../costo-operacion', listaPrecioDesdeHasta.costoOperacion?.id ]" >{{listaPrecioDesdeHasta.costoOperacion?.id}}</a>
+                    </div>
+                </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

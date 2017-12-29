@@ -5,7 +5,7 @@ export class ListaPrecioDesdeHasta implements BaseEntity {
         public id?: number,
         public fechaDesde?: any,
         public fechaHasta?: any,
-        public listaPrecioRectificacionCRAMS?: BaseEntity[],
+        public costoOperacion?: BaseEntity,
     ) {
     }
 }

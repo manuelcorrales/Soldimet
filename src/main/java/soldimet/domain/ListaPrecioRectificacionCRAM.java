@@ -116,13 +116,11 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
 
     public ListaPrecioRectificacionCRAM addFechas(ListaPrecioDesdeHasta listaPrecioDesdeHasta) {
         this.fechas.add(listaPrecioDesdeHasta);
-        listaPrecioDesdeHasta.setLista(this);
         return this;
     }
 
     public ListaPrecioRectificacionCRAM removeFechas(ListaPrecioDesdeHasta listaPrecioDesdeHasta) {
         this.fechas.remove(listaPrecioDesdeHasta);
-        listaPrecioDesdeHasta.setLista(null);
         return this;
     }
 
