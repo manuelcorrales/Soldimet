@@ -1,10 +1,13 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -27,10 +30,9 @@ public class ListaPrecioDesdeHasta implements Serializable {
     @Column(name = "fecha_hasta")
     private LocalDate fechaHasta;
 
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
-    private CostoOperacion costoOperacion;
+    @OneToMany(mappedBy = "lista")
+    @JsonIgnore
+    private Set<CostoOperacion> costoOperacions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -67,17 +69,29 @@ public class ListaPrecioDesdeHasta implements Serializable {
         this.fechaHasta = fechaHasta;
     }
 
-    public CostoOperacion getCostoOperacion() {
-        return costoOperacion;
+    public Set<CostoOperacion> getCostoOperacions() {
+        return costoOperacions;
     }
 
-    public ListaPrecioDesdeHasta costoOperacion(CostoOperacion costoOperacion) {
-        this.costoOperacion = costoOperacion;
+    public ListaPrecioDesdeHasta costoOperacions(Set<CostoOperacion> costoOperacions) {
+        this.costoOperacions = costoOperacions;
         return this;
     }
 
-    public void setCostoOperacion(CostoOperacion costoOperacion) {
-        this.costoOperacion = costoOperacion;
+    public ListaPrecioDesdeHasta addCostoOperacion(CostoOperacion costoOperacion) {
+        this.costoOperacions.add(costoOperacion);
+        costoOperacion.setLista(this);
+        return this;
+    }
+
+    public ListaPrecioDesdeHasta removeCostoOperacion(CostoOperacion costoOperacion) {
+        this.costoOperacions.remove(costoOperacion);
+        costoOperacion.setLista(null);
+        return this;
+    }
+
+    public void setCostoOperacions(Set<CostoOperacion> costoOperacions) {
+        this.costoOperacions = costoOperacions;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
