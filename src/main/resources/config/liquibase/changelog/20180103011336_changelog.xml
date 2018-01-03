@@ -1,0 +1,642 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="Manu (generated)" id="1514942074613-1">
+        <createTable tableName="cobranza_operacion">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="cobranza_operacionPK"/>
+            </column>
+            <column name="cobranza_operacion" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado_cobranza_operacion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operacion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="detalle_presupuesto" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-2">
+        <createTable tableName="detalle_movimiento">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="detalle_movimientoPK"/>
+            </column>
+            <column name="presupuesto_id" type="BIGINT"/>
+            <column name="tipo_detalle_movimiento_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movimiento" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-3">
+        <createTable tableName="persona">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="personaPK"/>
+            </column>
+            <column name="nombre" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="numero_telefono" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="direccion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado_persona_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-4">
+        <createTable tableName="precio_repuesto">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="precio_repuestoPK"/>
+            </column>
+            <column name="fecha" type="TINYBLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="precio_privado" type="FLOAT"/>
+            <column name="precio_publico" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-5">
+        <createTable tableName="presupuesto">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="presupuestoPK"/>
+            </column>
+            <column name="descripcion_descuento" type="VARCHAR(255)"/>
+            <column name="descuento" type="FLOAT"/>
+            <column name="fecha_aceptado" type="TINYBLOB"/>
+            <column name="fecha_creacion" type="TINYBLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_entregado" type="TINYBLOB"/>
+            <column name="importe_total" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="observaciones" type="VARCHAR(255)"/>
+            <column name="cliente_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado_presupuesto_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-6">
+        <createTable tableName="proveedor">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="proveedorPK"/>
+            </column>
+            <column name="persona_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-7">
+        <createTable tableName="rubro">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="rubroPK"/>
+            </column>
+            <column name="nombre_rubro" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-8">
+        <createTable tableName="tarjeta">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tarjetaPK"/>
+            </column>
+            <column name="nombre_tarjeta" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-9">
+        <createTable tableName="tipo_detalle_movimiento">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tipo_detalle_movimientoPK"/>
+            </column>
+            <column name="nombre_tipo_detalle" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-10">
+        <createTable tableName="tipo_movimiento">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tipo_movimientoPK"/>
+            </column>
+            <column name="nombre_tipo_movimiento" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-11">
+        <createTable tableName="tipo_parte_motor">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tipo_parte_motorPK"/>
+            </column>
+            <column name="nombre_tipo_parte_motor" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-12">
+        <createTable tableName="tipo_repuesto">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tipo_repuestoPK"/>
+            </column>
+            <column name="nombre_tipo_repuesto" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_parte_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-13">
+        <createTable tableName="tipo_tarjeta">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tipo_tarjetaPK"/>
+            </column>
+            <column name="nombre_tipo_tarjeta" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-14">
+        <addColumn tableName="detalle_presupuesto">
+            <column name="aplicacion_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-15">
+        <addColumn tableName="historial_precio">
+            <column name="articulo" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-16">
+        <addColumn tableName="detalle_pedido">
+            <column name="articulo_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-17">
+        <addColumn tableName="pago_cheque">
+            <column name="banco_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-18">
+        <addColumn tableName="movimiento">
+            <column name="caja" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-19">
+        <addColumn tableName="costo_operacion">
+            <column name="cilindrada_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-20">
+        <addColumn tableName="detalle_presupuesto">
+            <column name="cilindrada_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-21">
+        <addColumn tableName="articulo">
+            <column name="codigo_articulo_proveedor" type="varchar(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-22">
+        <addColumn tableName="lista_precio_rectificacioncram">
+            <column name="costo_operacion_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-23">
+        <addColumn tableName="movimiento">
+            <column name="empleado_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-24">
+        <addColumn tableName="articulo">
+            <column name="estado_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-25">
+        <addColumn tableName="movimiento">
+            <column name="estado_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-26">
+        <addColumn tableName="operacion">
+            <column name="estado_operacion_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-27">
+        <addColumn tableName="pedido_repuesto">
+            <column name="estado_pedido_repuesto_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-28">
+        <addColumn tableName="movimiento">
+            <column name="forma_de_pago_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-29">
+        <addColumn tableName="pago_cheque">
+            <column name="forma_de_pago_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-30">
+        <addColumn tableName="pago_efectivo">
+            <column name="forma_de_pago_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-31">
+        <addColumn tableName="pago_tarjeta">
+            <column name="forma_de_pago_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-32">
+        <addColumn tableName="costo_operacion">
+            <column name="lista" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-33">
+        <addColumn tableName="lista_precio_desde_hasta">
+            <column name="lista" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-34">
+        <addColumn tableName="direccion">
+            <column name="localidad_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-35">
+        <addColumn tableName="articulo">
+            <column name="marca_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-36">
+        <addColumn tableName="motor">
+            <column name="marca_motor" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-37">
+        <addColumn tableName="aplicacion">
+            <column name="motor" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-38">
+        <addColumn tableName="detalle_presupuesto">
+            <column name="motor_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-39">
+        <addColumn tableName="costo_operacion">
+            <column name="operacion_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-40">
+        <addColumn tableName="detalle_pedido">
+            <column name="pedido_repuesto" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-41">
+        <addColumn tableName="cliente">
+            <column name="persona_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-42">
+        <addColumn tableName="empleado">
+            <column name="persona_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-43">
+        <addColumn tableName="movimiento">
+            <column name="persona_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-44">
+        <addColumn tableName="historial_precio">
+            <column name="precio_repuesto_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-45">
+        <addColumn tableName="detalle_presupuesto">
+            <column name="presupuesto" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-46">
+        <addColumn tableName="pedido_repuesto">
+            <column name="presupuesto_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-47">
+        <addColumn tableName="articulo">
+            <column name="proveedor_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-48">
+        <addColumn tableName="articulo">
+            <column name="rubro_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-49">
+        <addColumn tableName="movimiento">
+            <column name="sub_categoria_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-50">
+        <addColumn tableName="pago_tarjeta">
+            <column name="tarjeta_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-51">
+        <addColumn tableName="movimiento">
+            <column name="tipo_movimiento_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-52">
+        <addColumn tableName="costo_operacion">
+            <column name="tipo_parte_motor_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-53">
+        <addColumn tableName="detalle_presupuesto">
+            <column name="tipo_parte_motor_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-54">
+        <addColumn tableName="operacion">
+            <column name="tipo_parte_motor_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-55">
+        <addColumn tableName="articulo">
+            <column name="tipo_repuesto_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-56">
+        <addColumn tableName="pago_tarjeta">
+            <column name="tipo_tarjeta_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-57">
+        <addUniqueConstraint columnNames="forma_de_pago_id" constraintName="UK_16sr08pudj2a5n102ne89ywm5" tableName="pago_efectivo"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-58">
+        <addUniqueConstraint columnNames="forma_de_pago_id" constraintName="UK_5a26dbwnbvfrgfw93lfvafuj2" tableName="pago_tarjeta"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-59">
+        <addUniqueConstraint columnNames="direccion_id" constraintName="UK_5r4ylkylsvg36w6r55caym9vw" tableName="persona"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-60">
+        <addUniqueConstraint columnNames="persona_id" constraintName="UK_9igyu8v4epvafsscjf3giv33g" tableName="proveedor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-61">
+        <addUniqueConstraint columnNames="persona_id" constraintName="UK_fp4oq6jpmv4n8xirq1dt5910b" tableName="cliente"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-62">
+        <addUniqueConstraint columnNames="precio_repuesto_id" constraintName="UK_m6vju7oie3p04shon1x0drdqm" tableName="historial_precio"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-63">
+        <addUniqueConstraint columnNames="forma_de_pago_id" constraintName="UK_mrbcjyg3hru7i0cmrud8kky2l" tableName="pago_cheque"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-64">
+        <addUniqueConstraint columnNames="persona_id" constraintName="UK_pjv6m14uotxloxlv04buynykk" tableName="empleado"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-65">
+        <addForeignKeyConstraint baseColumnNames="tipo_parte_motor_id" baseTableName="costo_operacion" constraintName="FK2bdgxwtf18svreoqlhfa2kka8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_parte_motor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-66">
+        <addForeignKeyConstraint baseColumnNames="operacion_id" baseTableName="cobranza_operacion" constraintName="FK2cv2bkdg3dr6akunorpiafjti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="operacion"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-67">
+        <addForeignKeyConstraint baseColumnNames="movimiento" baseTableName="detalle_movimiento" constraintName="FK5avbui5jrok7evoiyfxtt3cac" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="movimiento"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-68">
+        <addForeignKeyConstraint baseColumnNames="estado_presupuesto_id" baseTableName="presupuesto" constraintName="FK5fbbia9je3nyxnb62yeh398lw" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_presupuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-69">
+        <addForeignKeyConstraint baseColumnNames="tipo_detalle_movimiento_id" baseTableName="detalle_movimiento" constraintName="FK6eyl9sff24sotrh991lri81sy" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_detalle_movimiento"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-70">
+        <addForeignKeyConstraint baseColumnNames="direccion_id" baseTableName="persona" constraintName="FK78198ggd6thip6qloht9ho248" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="direccion"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-71">
+        <addForeignKeyConstraint baseColumnNames="pedido_repuesto" baseTableName="detalle_pedido" constraintName="FK7ndejgkc40kkwcpwgskp6rvot" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="pedido_repuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-72">
+        <addForeignKeyConstraint baseColumnNames="aplicacion_id" baseTableName="detalle_presupuesto" constraintName="FK7wgmf6dd4mc7poreccjdwvgtc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="aplicacion"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-73">
+        <addForeignKeyConstraint baseColumnNames="persona_id" baseTableName="proveedor" constraintName="FK81d03xpq8njpllg5gs7ojdv0s" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="persona"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-74">
+        <addForeignKeyConstraint baseColumnNames="presupuesto_id" baseTableName="pedido_repuesto" constraintName="FK82btw1vgiyy04s6a5n378tcyp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="presupuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-75">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="persona" constraintName="FKa86ccjvq4hheyrxvjqvaoyj8l" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-76">
+        <addForeignKeyConstraint baseColumnNames="proveedor_id" baseTableName="articulo" constraintName="FKajm7mehj7lk16db680ka0hawi" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="proveedor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-77">
+        <addForeignKeyConstraint baseColumnNames="articulo_id" baseTableName="detalle_pedido" constraintName="FKblwfjfeyou4u7hae0gcngweeu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="articulo"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-78">
+        <addForeignKeyConstraint baseColumnNames="localidad_id" baseTableName="direccion" constraintName="FKbrm0ogdtkt096len14mgaaau7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="localidad"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-79">
+        <addForeignKeyConstraint baseColumnNames="lista" baseTableName="lista_precio_desde_hasta" constraintName="FKbv2rbr83g4nc1rlhsnad731gg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="lista_precio_rectificacioncram"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-80">
+        <addForeignKeyConstraint baseColumnNames="motor_id" baseTableName="detalle_presupuesto" constraintName="FKc5vg9sf2q7w5jm8m7kr2pmlhf" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="motor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-81">
+        <addForeignKeyConstraint baseColumnNames="forma_de_pago_id" baseTableName="pago_cheque" constraintName="FKc6eb7wal1rf0wfcv31qaokn8d" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="forma_de_pago"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-82">
+        <addForeignKeyConstraint baseColumnNames="persona_id" baseTableName="empleado" constraintName="FKdhbbr9aelopf2vxil3qh9d0d" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="persona"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-83">
+        <addForeignKeyConstraint baseColumnNames="tipo_parte_motor_id" baseTableName="operacion" constraintName="FKdmuv90co3l7ynlb55yjttkm15" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_parte_motor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-84">
+        <addForeignKeyConstraint baseColumnNames="tipo_movimiento_id" baseTableName="movimiento" constraintName="FKed4i2byimxwenxxw6d3adslc3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_movimiento"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-85">
+        <addForeignKeyConstraint baseColumnNames="presupuesto_id" baseTableName="detalle_movimiento" constraintName="FKewljpkbwvsg7e7gfdjotcmse0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="presupuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-86">
+        <addForeignKeyConstraint baseColumnNames="banco_id" baseTableName="pago_cheque" constraintName="FKflu9medbftqr0f6pn3nfv8065" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="banco"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-87">
+        <addForeignKeyConstraint baseColumnNames="forma_de_pago_id" baseTableName="movimiento" constraintName="FKfwcjg0xtm1dixl57s9fe2t39y" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="forma_de_pago"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-88">
+        <addForeignKeyConstraint baseColumnNames="precio_repuesto_id" baseTableName="historial_precio" constraintName="FKfwg3nuvd94yfcajow7qevocn4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="precio_repuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-89">
+        <addForeignKeyConstraint baseColumnNames="persona_id" baseTableName="movimiento" constraintName="FKh1rkxdsleledfmsrqokcryqbe" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="persona"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-90">
+        <addForeignKeyConstraint baseColumnNames="cilindrada_id" baseTableName="detalle_presupuesto" constraintName="FKha8tfyi55yh6kj5k8q4d7pvhd" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="cilindrada"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-91">
+        <addForeignKeyConstraint baseColumnNames="motor" baseTableName="aplicacion" constraintName="FKi2i6yfspph00ttrbpbrv2iah1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="motor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-92">
+        <addForeignKeyConstraint baseColumnNames="operacion_id" baseTableName="costo_operacion" constraintName="FKix4qn34w4eau0avaujbufnhdd" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="operacion"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-93">
+        <addForeignKeyConstraint baseColumnNames="detalle_presupuesto" baseTableName="cobranza_operacion" constraintName="FKjrvnnuhw4b11q9irj2avcnlvq" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="detalle_presupuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-94">
+        <addForeignKeyConstraint baseColumnNames="lista" baseTableName="costo_operacion" constraintName="FKkbgjd3sm3sreov78wvwxc09me" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="lista_precio_desde_hasta"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-95">
+        <addForeignKeyConstraint baseColumnNames="marca_id" baseTableName="articulo" constraintName="FKkc7g1efsj3815e1bgrsyl1p6w" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="marca"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-96">
+        <addForeignKeyConstraint baseColumnNames="cilindrada_id" baseTableName="costo_operacion" constraintName="FKke8ns9j6skes4i8hst8dawc8g" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="cilindrada"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-97">
+        <addForeignKeyConstraint baseColumnNames="forma_de_pago_id" baseTableName="pago_tarjeta" constraintName="FKkhs9ht35dgsgubxpl4mlrvo1e" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="forma_de_pago"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-98">
+        <addForeignKeyConstraint baseColumnNames="tarjeta_id" baseTableName="pago_tarjeta" constraintName="FKln7os4wjnu9quj034b91dnyod" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tarjeta"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-99">
+        <addForeignKeyConstraint baseColumnNames="caja" baseTableName="movimiento" constraintName="FKlo7omej6ohfl1q7r53fd71tl7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="caja"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-100">
+        <addForeignKeyConstraint baseColumnNames="estado_operacion_id" baseTableName="operacion" constraintName="FKlum3npr77knsj69bcxdyqmg89" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_operacion"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-101">
+        <addForeignKeyConstraint baseColumnNames="estado_persona_id" baseTableName="persona" constraintName="FKlwbi0js1rqo3ooue0nh88qv14" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_persona"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-102">
+        <addForeignKeyConstraint baseColumnNames="persona_id" baseTableName="cliente" constraintName="FKmc52upywn8gona2iiwwwphb92" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="persona"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-103">
+        <addForeignKeyConstraint baseColumnNames="tipo_tarjeta_id" baseTableName="pago_tarjeta" constraintName="FKmo008wsc2v6flccqe0o05gfef" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_tarjeta"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-104">
+        <addForeignKeyConstraint baseColumnNames="articulo" baseTableName="historial_precio" constraintName="FKmwj1st380tsc65v3b0mowk47n" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="articulo"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-105">
+        <addForeignKeyConstraint baseColumnNames="tipo_parte_id" baseTableName="tipo_repuesto" constraintName="FKmxrttt962thvx6j5afkifgowt" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_parte_motor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-106">
+        <addForeignKeyConstraint baseColumnNames="tipo_parte_motor_id" baseTableName="detalle_presupuesto" constraintName="FKnw6dscctyn35vrnlb4sw9q1uu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_parte_motor"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-107">
+        <addForeignKeyConstraint baseColumnNames="costo_operacion_id" baseTableName="lista_precio_rectificacioncram" constraintName="FKo21scwtfkvdtuht6af7dq7ldk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="costo_operacion"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-108">
+        <addForeignKeyConstraint baseColumnNames="sub_categoria_id" baseTableName="movimiento" constraintName="FKouifmucvf8cbyn1556a4ldbuq" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sub_categoria"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-109">
+        <addForeignKeyConstraint baseColumnNames="tipo_repuesto_id" baseTableName="articulo" constraintName="FKppbaf4n7x8d8vadoe54bq102l" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_repuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-110">
+        <addForeignKeyConstraint baseColumnNames="estado_id" baseTableName="articulo" constraintName="FKpvdvmjbb5hk6oiteyux6g48hq" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_articulo"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-111">
+        <addForeignKeyConstraint baseColumnNames="forma_de_pago_id" baseTableName="pago_efectivo" constraintName="FKrac72xyoiutotyw5q51dqdf3a" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="forma_de_pago"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-112">
+        <addForeignKeyConstraint baseColumnNames="presupuesto" baseTableName="detalle_presupuesto" constraintName="FKrdcly5b042f8fqncuij84grkc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="presupuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-113">
+        <addForeignKeyConstraint baseColumnNames="cliente_id" baseTableName="presupuesto" constraintName="FKrk2dr9sk2ukvud57mp4pxbgic" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="cliente"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-114">
+        <addForeignKeyConstraint baseColumnNames="estado_id" baseTableName="movimiento" constraintName="FKs8162c8tq90innplgdrxrffa3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_movimiento"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-115">
+        <addForeignKeyConstraint baseColumnNames="rubro_id" baseTableName="articulo" constraintName="FKs90nu8meysg24ocgu0t9aod0i" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="rubro"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-116">
+        <addForeignKeyConstraint baseColumnNames="estado_pedido_repuesto_id" baseTableName="pedido_repuesto" constraintName="FKsxrcl5gv322l13w4nwvq8fup2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_pedido_repuesto"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-117">
+        <addForeignKeyConstraint baseColumnNames="empleado_id" baseTableName="movimiento" constraintName="FKtfi7voygdfn3le7lj6xrkqmag" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="empleado"/>
+    </changeSet>
+    <changeSet author="Manu (generated)" id="1514942074613-118">
+        <addForeignKeyConstraint baseColumnNames="estado_cobranza_operacion_id" baseTableName="cobranza_operacion" constraintName="FKtoyajd68jqd2yql6d7easr16l" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_cobranza_operacion"/>
+    </changeSet>
+</databaseChangeLog>

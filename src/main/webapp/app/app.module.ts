@@ -23,6 +23,11 @@ import {
     PageRibbonComponent,
     ErrorComponent
 } from './layouts';
+import {PresupuestosModule} from "./presupuestos/presupuestos.module";
+import {CajaModule} from "./caja/caja.module";
+import {ClientesModule} from "./clientes/clientes.module";
+import {OperacionesModule} from "./operaciones/operaciones.module";
+import {RepuestosModule} from "./repuestos/repuestos.module";
 
 @NgModule({
     imports: [
@@ -34,6 +39,11 @@ import {
         SoldimetAdminModule,
         SoldimetAccountModule,
         SoldimetEntityModule,
+        PresupuestosModule,
+        CajaModule,
+        ClientesModule,
+        OperacionesModule,
+        RepuestosModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
