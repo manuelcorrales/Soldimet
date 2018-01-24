@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientesComponent } from './clientes.component';
 import {RouterModule} from "@angular/router";
@@ -12,6 +12,10 @@ import {CLIENTES_ROUTE} from "./clientes.route";
     exports:[
         RouterModule,
     ],
-  declarations: [ClientesComponent]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  declarations: [ClientesComponent],
+    entryComponents: [
+        ClientesComponent
+    ],
 })
 export class ClientesModule { }

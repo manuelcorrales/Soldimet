@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package soldimet.service.dto;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.ArrayList;
 
@@ -12,97 +13,71 @@ import java.util.ArrayList;
  * @author Manu
  */
 public class DTOPresupuesto {
-    private String nombreCliente;
-    private int idCliente;
-    private int idPresupuesto;
-    private Date fechaAceptado;
-    private Date fechaCreado;
-    private Date fechaEntregado;
-    private double importeTotal;
-    private ArrayList<DTODetallePresupuesto> detalles;
-    private DTOPedidoRepuesto pedido;
+
+    private String cliente;
+    private String estado;
+    private Long codigo;
+    private LocalDate fecha;
+    private String motor;
+    private double importe;
+    private String sucursal;
 
     public DTOPresupuesto() {
     }
-    public void agregarDetalle(DTODetallePresupuesto unDetalle){
 
-        this.detalles.add(unDetalle);
+    public String getCliente() {
+        return cliente;
     }
 
-    public String getNombreCliente() {
-        return nombreCliente;
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
     }
 
-    public void setNombreCliente(String nombreCliente) {
-        this.nombreCliente = nombreCliente;
+    public String getEstado() {
+        return estado;
     }
 
-
-    public Date getFechaAceptado() {
-        return fechaAceptado;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
-    public void setFechaAceptado(Date fechaAceptado) {
-        this.fechaAceptado = fechaAceptado;
+    public Long getCodigo() {
+        return codigo;
     }
 
-    public Date getFechaCreado() {
-        return fechaCreado;
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
     }
 
-    public void setFechaCreado(Date fechaCreado) {
-        this.fechaCreado = fechaCreado;
+    public LocalDate getFecha() {
+        return fecha;
     }
 
-    public Date getFechaEntregado() {
-        return fechaEntregado;
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
-    public void setFechaEntregado(Date fechaEntregado) {
-        this.fechaEntregado = fechaEntregado;
+    public String getMotor() {
+        return motor;
     }
 
-    public double getImporteTotal() {
-        return importeTotal;
+    public void setMotor(String motor) {
+        this.motor = motor;
     }
 
-    public void setImporteTotal(double importeTotal) {
-        this.importeTotal = importeTotal;
+    public double getImporte() {
+        return importe;
     }
 
-    public ArrayList<DTODetallePresupuesto> getDetalles() {
-        return detalles;
+    public void setImporte(double importe) {
+        this.importe = importe;
     }
 
-    public void setDetalles(ArrayList<DTODetallePresupuesto> detalles) {
-        this.detalles = detalles;
+    public String getSucursal() {
+        return sucursal;
     }
 
-    public DTOPedidoRepuesto getPedido() {
-        return pedido;
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
-
-    public void setPedido(DTOPedidoRepuesto pedido) {
-        this.pedido = pedido;
-    }
-
-    public int getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
-    }
-
-    public int getIdPresupuesto() {
-        return idPresupuesto;
-    }
-
-    public void setIdPresupuesto(int idPresupuesto) {
-        this.idPresupuesto = idPresupuesto;
-    }
-
-
-
-
 }

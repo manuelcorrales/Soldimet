@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 
-import { PresupuestosComponent } from "./presupuestos.component";
+import { PresupuestosComponent } from './presupuestos.component';
 import { UserRouteAccessService } from '../shared';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 
 export const PRESUPUESTOS_ROUTE: Route = {
     path: 'presupuestos',
@@ -12,5 +12,6 @@ export const PRESUPUESTOS_ROUTE: Route = {
         authorities: ['ROLE_USUARIO'],
         pageTitle: 'Presupuestos'
     },
-    canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService],
+
 };
