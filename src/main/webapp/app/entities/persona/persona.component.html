@@ -21,6 +21,7 @@
             <th jhiSortBy="numeroTelefono"><span>Numero Telefono</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="direccion.id"><span>Direccion</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="estadoPersona.nombreEstado"><span>Estado Persona</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="user.login"><span>User</span> <span class="fa fa-sort"></span></th>
             <th></th>
             </tr>
             </thead>
@@ -38,6 +39,9 @@
                     <div *ngIf="persona.estadoPersona">
                         <a [routerLink]="['../estado-persona', persona.estadoPersona?.id ]" >{{persona.estadoPersona?.nombreEstado}}</a>
                     </div>
+                </td>
+                <td>
+                    {{persona.user?.login}}
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">

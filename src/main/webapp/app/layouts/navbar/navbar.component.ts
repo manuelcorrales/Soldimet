@@ -66,4 +66,8 @@ export class NavbarComponent implements OnInit {
     getImageUrl() {
         return this.isAuthenticated() ? this.principal.getImageUrl() : null;
     }
+
+    log(){
+       console.log("presionado");
+    }
 }

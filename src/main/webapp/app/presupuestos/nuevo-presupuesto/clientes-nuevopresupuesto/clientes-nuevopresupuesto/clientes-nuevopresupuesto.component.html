@@ -1,0 +1,12 @@
+<div class="container card jh-card">
+    <h2>Datos del cliente</h2>
+    <div>
+        <input type="text" [(ngModel)]="cliente" placement="right"
+               ngbTooltip="Ingresar nombre del cliente" (select)="elegirCliente()">
+        <div *ngFor="let cliente of clientes |filter:cliente">
+            <p>
+                Cliente: {{cliente?.apellido}} {{cliente?.persona?.nombre}} N°:{{cliente?.id}}
+            </p>
+        </div>
+    </div>
+</div>

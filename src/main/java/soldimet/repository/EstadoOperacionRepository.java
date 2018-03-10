@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface EstadoOperacionRepository extends JpaRepository<EstadoOperacion, Long> {
 
+    EstadoOperacion findByNombreEstado(String nombreEstado);
 }

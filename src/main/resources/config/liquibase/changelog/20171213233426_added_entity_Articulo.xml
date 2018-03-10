@@ -26,7 +26,27 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="codigo_articulo_proveedor" type="varchar(20)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="estado_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="rubro_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="marca_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="proveedor_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="tipo_repuesto_id" type="bigint">
                 <constraints nullable="false" />
             </column>
 

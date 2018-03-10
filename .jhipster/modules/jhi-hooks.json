@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Compodoc generator",
+        "npmPackageName": "generator-jhipster-compodoc",
+        "description": "JHipster module, additional compodoc support in your JHipster application",
+        "hookFor": "entity",
+        "hookType": "post",
+        "generatorCallback": "jhipster-compodoc:app"
+    }
+]

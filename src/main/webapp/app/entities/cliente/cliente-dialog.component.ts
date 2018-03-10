@@ -20,7 +20,6 @@ export class ClienteDialogComponent implements OnInit {
 
     cliente: Cliente;
     isSaving: boolean;
-
     personas: Persona[];
 
     constructor(

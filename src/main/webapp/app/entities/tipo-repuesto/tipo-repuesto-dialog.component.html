@@ -28,6 +28,19 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class="form-control-label" for="field_tipoParte">Tipo Parte</label>
+            <select class="form-control" id="field_tipoParte" name="tipoParte" [(ngModel)]="tipoRepuesto.tipoParte"  required>
+                <option *ngIf="!editForm.value.tipoParte" [ngValue]="null" selected></option>
+                <option [ngValue]="tipoParteMotorOption.id === tipoRepuesto.tipoParte?.id ? tipoRepuesto.tipoParte : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.tipoParte?.dirty && editForm.controls.tipoParte?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.tipoParte?.errors?.required">
+                This field is required.
+            </small>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">

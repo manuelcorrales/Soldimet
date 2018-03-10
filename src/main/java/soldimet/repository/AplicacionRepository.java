@@ -1,5 +1,6 @@
 package soldimet.repository;
 
+import java.util.List;
 import soldimet.domain.Aplicacion;
 import org.springframework.stereotype.Repository;
 

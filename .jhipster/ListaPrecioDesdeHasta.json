@@ -2,10 +2,10 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "listaPrecioRectificacionCRAM",
-            "otherEntityName": "listaPrecioRectificacionCRAM",
+            "relationshipName": "costoOperacion",
+            "otherEntityName": "costoOperacion",
             "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "listaPrecioDesdeHasta"
+            "otherEntityRelationshipName": "lista"
         }
     ],
     "fields": [

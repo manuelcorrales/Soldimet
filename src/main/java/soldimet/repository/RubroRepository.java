@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface RubroRepository extends JpaRepository<Rubro, Long> {
 
+    public Rubro findByNombreRubro(String nombreRubro);
 }

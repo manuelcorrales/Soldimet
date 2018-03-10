@@ -30,7 +30,17 @@ public class ArticuloCriteria implements Serializable {
 
     private StringFilter descripcion;
 
+    private StringFilter codigoArticuloProveedor;
+
     private LongFilter estadoId;
+
+    private LongFilter rubroId;
+
+    private LongFilter marcaId;
+
+    private LongFilter proveedorId;
+
+    private LongFilter tipoRepuestoId;
 
     public ArticuloCriteria() {
     }
@@ -51,6 +61,14 @@ public class ArticuloCriteria implements Serializable {
         this.descripcion = descripcion;
     }
 
+    public StringFilter getCodigoArticuloProveedor() {
+        return codigoArticuloProveedor;
+    }
+
+    public void setCodigoArticuloProveedor(StringFilter codigoArticuloProveedor) {
+        this.codigoArticuloProveedor = codigoArticuloProveedor;
+    }
+
     public LongFilter getEstadoId() {
         return estadoId;
     }
@@ -59,12 +77,49 @@ public class ArticuloCriteria implements Serializable {
         this.estadoId = estadoId;
     }
 
+    public LongFilter getRubroId() {
+        return rubroId;
+    }
+
+    public void setRubroId(LongFilter rubroId) {
+        this.rubroId = rubroId;
+    }
+
+    public LongFilter getMarcaId() {
+        return marcaId;
+    }
+
+    public void setMarcaId(LongFilter marcaId) {
+        this.marcaId = marcaId;
+    }
+
+    public LongFilter getProveedorId() {
+        return proveedorId;
+    }
+
+    public void setProveedorId(LongFilter proveedorId) {
+        this.proveedorId = proveedorId;
+    }
+
+    public LongFilter getTipoRepuestoId() {
+        return tipoRepuestoId;
+    }
+
+    public void setTipoRepuestoId(LongFilter tipoRepuestoId) {
+        this.tipoRepuestoId = tipoRepuestoId;
+    }
+
     @Override
     public String toString() {
         return "ArticuloCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (descripcion != null ? "descripcion=" + descripcion + ", " : "") +
+                (codigoArticuloProveedor != null ? "codigoArticuloProveedor=" + codigoArticuloProveedor + ", " : "") +
                 (estadoId != null ? "estadoId=" + estadoId + ", " : "") +
+                (rubroId != null ? "rubroId=" + rubroId + ", " : "") +
+                (marcaId != null ? "marcaId=" + marcaId + ", " : "") +
+                (proveedorId != null ? "proveedorId=" + proveedorId + ", " : "") +
+                (tipoRepuestoId != null ? "tipoRepuestoId=" + tipoRepuestoId + ", " : "") +
             "}";
     }
 

@@ -45,7 +45,7 @@ public class PersonaQueryService extends QueryService<Persona> {
      */
     @Transactional(readOnly = true)
     public List<Persona> findByCriteria(PersonaCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        log.debug("findPresupuestoCabecera by criteria : {}", criteria);
         final Specifications<Persona> specification = createSpecification(criteria);
         return personaRepository.findAll(specification);
     }
@@ -58,7 +58,7 @@ public class PersonaQueryService extends QueryService<Persona> {
      */
     @Transactional(readOnly = true)
     public Page<Persona> findByCriteria(PersonaCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        log.debug("findPresupuestoCabecera by criteria : {}, page: {}", criteria, page);
         final Specifications<Persona> specification = createSpecification(criteria);
         return personaRepository.findAll(specification, page);
     }
@@ -83,6 +83,9 @@ public class PersonaQueryService extends QueryService<Persona> {
             }
             if (criteria.getEstadoPersonaId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getEstadoPersonaId(), Persona_.estadoPersona, EstadoPersona_.id));
+            }
+            if (criteria.getUserId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getUserId(), Persona_.user, User_.id));
             }
         }
         return specification;

@@ -45,7 +45,7 @@ public class CajaQueryService extends QueryService<Caja> {
      */
     @Transactional(readOnly = true)
     public List<Caja> findByCriteria(CajaCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        log.debug("findPresupuestoCabecera by criteria : {}", criteria);
         final Specifications<Caja> specification = createSpecification(criteria);
         return cajaRepository.findAll(specification);
     }
@@ -58,7 +58,7 @@ public class CajaQueryService extends QueryService<Caja> {
      */
     @Transactional(readOnly = true)
     public Page<Caja> findByCriteria(CajaCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        log.debug("findPresupuestoCabecera by criteria : {}, page: {}", criteria, page);
         final Specifications<Caja> specification = createSpecification(criteria);
         return cajaRepository.findAll(specification, page);
     }

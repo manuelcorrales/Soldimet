@@ -8,7 +8,19 @@
             "otherEntityRelationshipName": "motor"
         }
     ],
-    "fields": [],
+    "fields": [
+        {
+            "fieldName": "marcaMotor",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": "2",
+            "fieldValidateRulesMaxlength": "25"
+        }
+    ],
     "changelogDate": "20171214012206",
     "dto": "no",
     "service": "serviceClass",

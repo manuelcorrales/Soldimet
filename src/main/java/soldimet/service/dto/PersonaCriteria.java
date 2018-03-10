@@ -36,6 +36,8 @@ public class PersonaCriteria implements Serializable {
 
     private LongFilter estadoPersonaId;
 
+    private LongFilter userId;
+
     public PersonaCriteria() {
     }
 
@@ -79,6 +81,14 @@ public class PersonaCriteria implements Serializable {
         this.estadoPersonaId = estadoPersonaId;
     }
 
+    public LongFilter getUserId() {
+        return userId;
+    }
+
+    public void setUserId(LongFilter userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return "PersonaCriteria{" +
@@ -87,6 +97,7 @@ public class PersonaCriteria implements Serializable {
                 (numeroTelefono != null ? "numeroTelefono=" + numeroTelefono + ", " : "") +
                 (direccionId != null ? "direccionId=" + direccionId + ", " : "") +
                 (estadoPersonaId != null ? "estadoPersonaId=" + estadoPersonaId + ", " : "") +
+                (userId != null ? "userId=" + userId + ", " : "") +
             "}";
     }
 
