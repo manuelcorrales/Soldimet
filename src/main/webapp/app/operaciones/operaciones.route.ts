@@ -9,7 +9,7 @@ export const OPERACIONES_ROUTE: Route = {
     path: 'operaciones',
     component: OperacionesComponent,
     data: {
-        authorities: ['ROLE_USUARIO'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'Operaciones'
     },
     canActivate: [UserRouteAccessService]

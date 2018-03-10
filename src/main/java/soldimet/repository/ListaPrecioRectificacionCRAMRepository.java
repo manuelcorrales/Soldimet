@@ -15,4 +15,5 @@ import org.springframework.data.jpa.repository.*;
 public interface ListaPrecioRectificacionCRAMRepository extends JpaRepository<ListaPrecioRectificacionCRAM, Long> {
 
     public ListaPrecioRectificacionCRAM findByNumeroGrupo( Integer numeroGrupo);
+
 }

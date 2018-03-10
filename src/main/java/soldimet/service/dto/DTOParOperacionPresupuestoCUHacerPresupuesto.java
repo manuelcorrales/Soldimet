@@ -7,49 +7,35 @@ package soldimet.service.dto;
  */
 public class DTOParOperacionPresupuestoCUHacerPresupuesto {
 
-	private float costoOperacion;
+	private Float costoOperacion;
 	private String nombreOperacion;
-        private String operacionID;
+        private Long operacionID;
 
 	public DTOParOperacionPresupuestoCUHacerPresupuesto(){
 
 	}
 
-	public void finalize() throws Throwable {
+    public Float getCostoOperacion() {
+        return costoOperacion;
+    }
 
-	}
+    public void setCostoOperacion(Float costoOperacion) {
+        this.costoOperacion = costoOperacion;
+    }
 
-    public String getOperacionID() {
+    public String getNombreOperacion() {
+        return nombreOperacion;
+    }
+
+    public void setNombreOperacion(String nombreOperacion) {
+        this.nombreOperacion = nombreOperacion;
+    }
+
+    public Long getOperacionID() {
         return operacionID;
     }
 
-    public void setOperacionID(String operacionID) {
+    public void setOperacionID(Long operacionID) {
         this.operacionID = operacionID;
     }
-
-
-	public float getcostoOperacion(){
-		return costoOperacion;
-	}
-
-	public String getnombreOperacion(){
-		return nombreOperacion;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setcostoOperacion(float newVal){
-		costoOperacion = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreOperacion(String newVal){
-		nombreOperacion = newVal;
-	}
-
 }

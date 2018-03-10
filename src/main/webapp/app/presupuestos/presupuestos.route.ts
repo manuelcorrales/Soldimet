@@ -1,17 +1,31 @@
-import { Route } from '@angular/router';
+import {Routes} from '@angular/router';
 
-import { PresupuestosComponent } from './presupuestos.component';
-import { UserRouteAccessService } from '../shared';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {PresupuestosComponent} from './presupuestos.component';
+import {UserRouteAccessService} from '../shared';
+import {NuevoPresupuestoComponent} from "./nuevo-presupuesto/nuevo-presupuesto.component";
 
 
-export const PRESUPUESTOS_ROUTE: Route = {
+export const PRESUPUESTOS_ROUTES: Routes = [{
     path: 'presupuestos',
-    component: PresupuestosComponent,
     data: {
-        authorities: ['ROLE_USUARIO'],
-        pageTitle: 'Presupuestos'
+        authorities: ['ROLE_USER'],
     },
     canActivate: [UserRouteAccessService],
+    children:
+        [{
+            path: '',
+            component: PresupuestosComponent,
+            data: {
+                pageTitle: 'Presupuestos'
+            },
+        },
+            {
+                path: 'nuevo',
+                component: NuevoPresupuestoComponent,
+                data: {
+                    pageTitle: 'Nuevo Presupuesto'
+                },
+            }]
+},
 
-};
+];

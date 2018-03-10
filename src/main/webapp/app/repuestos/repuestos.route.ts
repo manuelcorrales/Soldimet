@@ -9,7 +9,7 @@ export const REPUESTOS_ROUTE: Route = {
     path: 'repuestos',
     component: RepuestosComponent,
     data: {
-        authorities: ['ROLE_USUARIO'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'Repuestos'
     },
     canActivate: [UserRouteAccessService]

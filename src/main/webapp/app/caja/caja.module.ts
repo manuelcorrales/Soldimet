@@ -4,13 +4,11 @@ import { CajaComponent } from './caja.component';
 import { CAJA_ROUTE } from "./caja.route";
 import { RouterModule } from "@angular/router";
 import {BrowserModule} from "@angular/platform-browser";
-import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {SoldimetSharedModule} from "../shared/shared.module";
 
 @NgModule({
   imports: [
     CommonModule,
-      NgxDatatableModule,
       BrowserModule,
       SoldimetSharedModule,
       RouterModule.forRoot([ CAJA_ROUTE ], { useHash: true })

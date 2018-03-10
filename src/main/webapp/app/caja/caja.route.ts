@@ -9,7 +9,7 @@ export const CAJA_ROUTE: Route = {
     path: 'cajas',
     component: CajaComponent,
     data: {
-        authorities: ['ROLE_USUARIO'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'Caja'
     },
     canActivate: [UserRouteAccessService]

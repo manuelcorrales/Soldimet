@@ -1,5 +1,7 @@
 package soldimet.service.dto;
 
+import java.util.List;
+
 /**
  * @author Manu
  * @version 1.0
@@ -7,65 +9,45 @@ package soldimet.service.dto;
  */
 public class DTODatosMotorCUHacerPresupuesto {
 
-	private int cilindrada;
-	private String nombreAplicacion;
-	private String nombreMotor;
-	private String tipoParteMotor;
+	private Long idCilindrada;
+	private Long idAplicacion;
+	private Long idMotor;
+	private List<Long> idTiposPartesMotores;
 
 	public DTODatosMotorCUHacerPresupuesto(){
 
 	}
 
-	public void finalize() throws Throwable {
 
-	}
+    public Long getIdCilindrada() {
+        return idCilindrada;
+    }
 
-	public int getcilindrada(){
-		return cilindrada;
-	}
+    public void setIdCilindrada(Long idCilindrada) {
+        this.idCilindrada = idCilindrada;
+    }
 
-	public String getnombreAplicacion(){
-		return nombreAplicacion;
-	}
+    public Long getIdAplicacion() {
+        return idAplicacion;
+    }
 
-	public String getnombreMotor(){
-		return nombreMotor;
-	}
+    public void setIdAplicacion(Long idAplicacion) {
+        this.idAplicacion = idAplicacion;
+    }
 
-	public String gettipoParteMotor(){
-		return tipoParteMotor;
-	}
+    public Long getIdMotor() {
+        return idMotor;
+    }
 
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setcilindrada(int newVal){
-		cilindrada = newVal;
-	}
+    public void setIdMotor(Long idMotor) {
+        this.idMotor = idMotor;
+    }
 
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreAplicacion(String newVal){
-		nombreAplicacion = newVal;
-	}
+    public List<Long> getIdTiposPartesMotores() {
+        return idTiposPartesMotores;
+    }
 
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreMotor(String newVal){
-		nombreMotor = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void settipoParteMotor(String newVal){
-		tipoParteMotor = newVal;
-	}
-
+    public void setIdTiposPartesMotores(List<Long> idTiposPartesMotores) {
+        this.idTiposPartesMotores = idTiposPartesMotores;
+    }
 }

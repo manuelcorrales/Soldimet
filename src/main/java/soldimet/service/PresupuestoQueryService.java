@@ -45,7 +45,7 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
      */
     @Transactional(readOnly = true)
     public List<Presupuesto> findByCriteria(PresupuestoCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        log.debug("findPresupuestoCabecera by criteria : {}", criteria);
         final Specifications<Presupuesto> specification = createSpecification(criteria);
         return presupuestoRepository.findAll(specification);
     }
@@ -58,7 +58,7 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
      */
     @Transactional(readOnly = true)
     public Page<Presupuesto> findByCriteria(PresupuestoCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        log.debug("findPresupuestoCabecera by criteria : {}, page: {}", criteria, page);
         final Specifications<Presupuesto> specification = createSpecification(criteria);
         return presupuestoRepository.findAll(specification, page);
     }

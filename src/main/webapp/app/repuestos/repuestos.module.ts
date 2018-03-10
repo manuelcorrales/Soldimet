@@ -4,12 +4,10 @@ import { RepuestosComponent } from './repuestos.component';
 import {REPUESTOS_ROUTE} from "./repuestos.route";
 import {RouterModule} from "@angular/router";
 import {BrowserModule} from "@angular/platform-browser";
-import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 
 @NgModule({
   imports: [
     CommonModule,
-      NgxDatatableModule,
       BrowserModule,
       RouterModule.forRoot([ REPUESTOS_ROUTE ], { useHash: true })
   ],

@@ -845,6 +845,9 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 .btn {
     border-radius: 3px;
 }
+.btn-right{
+    margin-right: 15px;
+}
 .float-e-margins .btn {
     margin-bottom: 5px;
 }
@@ -8778,4 +8781,5 @@ body.md-skin {
         margin: 0;
     }
 }
+
 

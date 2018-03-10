@@ -1,36 +1,52 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PresupuestosComponent } from './presupuestos.component';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { PRESUPUESTOS_ROUTE } from './presupuestos.route';
-import { RouterModule } from '@angular/router';
-import { NuevoPresupuestoComponent } from './nuevo-presupuesto/nuevo-presupuesto.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { SoldimetSharedModule } from '../shared/shared.module';
-import { PresupuestosService } from "./presupuestos.service";
-
-
+import {CommonModule} from '@angular/common';
+import {PresupuestosComponent} from './presupuestos.component';
+import {PRESUPUESTOS_ROUTES} from './presupuestos.route';
+import {RouterModule} from '@angular/router';
+import {NuevoPresupuestoComponent} from './nuevo-presupuesto/nuevo-presupuesto.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {SoldimetSharedModule} from '../shared/shared.module';
+import {PresupuestosService} from "./presupuestos.service";
+import {DataTablesModule} from "angular-datatables";
+import {ClientesNuevopresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto.component';
+import {OperacionesNuevopresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto.component';
+import {RepuestosNuevopresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto.component';
+import {Ng2SearchPipeModule} from 'ng2-search-filter';
+import {MotorNuevoPresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/motor-nuevo-presupuesto/motor-nuevo-presupuesto.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
-  imports: [
-      CommonModule,
-      BrowserModule,
-      NgxDatatableModule,
-      SoldimetSharedModule,
-      RouterModule.forRoot([ PRESUPUESTOS_ROUTE ], { useHash: true })
-
-  ],
-  declarations: [
-      PresupuestosComponent,
-      NuevoPresupuestoComponent,
-  ],
-    entryComponents: [
+    imports: [
+        DataTablesModule,
+        FormsModule,
+        Ng2SearchPipeModule,
+        SoldimetSharedModule,
+        BrowserModule,
+        CommonModule,
+        RouterModule.forChild(PRESUPUESTOS_ROUTES),
 
     ],
-  providers: [
-      PresupuestosService
-  ],
-    exports:[
+    declarations: [
+        PresupuestosComponent,
+        NuevoPresupuestoComponent,
+        ClientesNuevopresupuestoComponent,
+        OperacionesNuevopresupuestoComponent,
+        RepuestosNuevopresupuestoComponent,
+        MotorNuevoPresupuestoComponent,
+    ],
+    entryComponents: [
+        PresupuestosComponent,
+        NuevoPresupuestoComponent,
+        ClientesNuevopresupuestoComponent,
+        OperacionesNuevopresupuestoComponent,
+        RepuestosNuevopresupuestoComponent,
+        MotorNuevoPresupuestoComponent,
+    ],
+    providers: [
+        PresupuestosService,
+
+    ],
+    exports: [
         RouterModule,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
