@@ -1,16 +1,6 @@
 {
     "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "tipoParte",
-            "otherEntityName": "tipoParteMotor",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoParteMotor"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
             "fieldName": "nombreTipoRepuesto",

@@ -1,7 +1,7 @@
-import {Component, OnInit, Output} from '@angular/core';
-import {DetallePresupuesto} from "../../entities/detalle-presupuesto/detalle-presupuesto.model";
-import {TipoParteMotor} from "../../entities/tipo-parte-motor/tipo-parte-motor.model";
-import {Cliente} from "../../entities/cliente/cliente.model";
+import { Component, OnInit, Output } from '@angular/core';
+import { DetallePresupuesto } from "../../entities/detalle-presupuesto/detalle-presupuesto.model";
+import { TipoParteMotor } from "../../entities/tipo-parte-motor/tipo-parte-motor.model";
+import { Cliente } from "../../entities/cliente/cliente.model";
 
 @Component({
     selector: 'jhi-nuevo-presupuesto',

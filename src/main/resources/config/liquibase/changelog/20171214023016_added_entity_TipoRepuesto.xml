@@ -26,10 +26,6 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="tipo_parte_id" type="bigint">
-                <constraints nullable="false" />
-            </column>
-
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         

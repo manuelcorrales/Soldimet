@@ -1,12 +1,14 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {PresupuestoService} from "../entities/presupuesto/presupuesto.service";
-import {DataTableDirective} from 'angular-datatables';
 import {Page} from "../dto/page/Page";
 import {ITEMS_PER_PAGE} from "../shared/constants/pagination.constants";
 import {FILTRO_PRESUPUESTO} from "../shared/constants/filter.constants";
 import {DT_OPTIONS} from "../shared/constants/datatable.configuration";
 import {Subject} from "rxjs/Subject";
 import {DtoPresupuestoCabeceraComponent} from "../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component";
+import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
+import { PresupuestosService } from './presupuestos.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'jhi-presupuestos',
@@ -16,10 +18,8 @@ import {DtoPresupuestoCabeceraComponent} from "../dto/dto-presupuesto-cabecera/d
 export class PresupuestosComponent implements OnInit {
 
     @ViewChild('toastr', {read: ViewContainerRef}) toastrContainer: ViewContainerRef;
-    @ViewChild(DataTableDirective)
     @Output() contarCheck = new EventEmitter<number>();
 
-    dtElement: DataTableDirective;
     dtOptions: any = {};
     dtTrigger = new Subject();
 
@@ -27,14 +27,70 @@ export class PresupuestosComponent implements OnInit {
     page = new Page();
     presupuestos: DtoPresupuestoCabeceraComponent[] = [];
 
+    settings = {
+        sort: true,
+        noDataMessage: 'No se encontraron presupuestos para mostrar',
+        actions:{
+            add: false
+        },
+        pager:{
+            perPage: 25
+        },
 
-    constructor(private _presupuestoService: PresupuestoService) {
+        delete: {
+            confirmDelete: true,
+          },
+          add: {
+            confirmCreate: true,
+          },
+          edit: {
+            confirmSave: true,
+         },
+        columns: {
+            codigo: {
+            title: 'Número'
+          },
+          motor: {
+            title: 'Motor'
+          },
+          cliente: {
+              title: 'cliente'
+          },
+          importe: {
+            title: 'Importe'
+          },
+          fecha: {
+            title: 'Fecha',
+            valuePrepareFunction: (date) => {
+                var raw = new Date(date);
+
+                var formatted = this.datePipe.transform(raw, 'dd MMM yyyy');
+                return formatted;
+              }
+          },
+          estado: {
+              title: 'Estado'
+          },
+          sucursal: {
+              title: 'Sucursal'
+          }
+
+        }
+      };
+
+      source: LocalDataSource; // add a property to the component
+
+    constructor(private _presupuestoService: PresupuestoService,
+                private _presupuestosService: PresupuestosService,
+                private datePipe: DatePipe) {
+        this.source = new LocalDataSource(); // create the source
     }
 
-    ngOnInit() {
-        this.dtOptions = DT_OPTIONS;
 
-        //this.llamarConFiltro(0);
+    ngOnInit() {
+        this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos)=>{
+            this.source = new LocalDataSource(presupuestos);
+        })
     }
 
     updateFilter(event) {
@@ -48,9 +104,6 @@ export class PresupuestosComponent implements OnInit {
         }
     }
 
-    setPage(pageInfo) {
-        this.llamarConFiltro(pageInfo.offset);
-    }
 
     llamarConFiltro(numeroPagina: number) {
         this._presupuestoService.query(this.page).subscribe(pagedData => {
@@ -67,4 +120,5 @@ export class PresupuestosComponent implements OnInit {
         }
         return filtros;
     }
+
 }

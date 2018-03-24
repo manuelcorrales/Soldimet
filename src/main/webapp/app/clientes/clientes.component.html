@@ -25,7 +25,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let cliente of clientes ;trackBy: trackId">
+            <!--tr *ngFor="let cliente of clientes ;trackBy: trackId">
                 <td><a [routerLink]="['../cliente', cliente.id ]">{{cliente.id}}</a></td>
                 <td [routerLink]="['../persona', cliente.persona?.id ]">{{cliente.apellido}}, {{cliente.persona?.nombre}}</td>
                 <td [routerLink]="['../direccion', cliente.persona?.direccion.id]">{{cliente.persona?.direccion?.calle}} {{cliente.persona?.direccion?.numero}}
@@ -50,7 +50,7 @@
                         </button>
                     </div>
                 </td>
-            </tr>
+            </tr-->
             </tbody>
         </table>
     </div>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import soldimet.constant.Globales;
 import soldimet.converter.PresupuestoConverter;
 import soldimet.domain.Aplicacion;
+import soldimet.domain.Articulo;
 import soldimet.domain.Cilindrada;
 import soldimet.domain.Cliente;
 import soldimet.domain.CostoOperacion;
@@ -22,7 +23,9 @@ import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Persona;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.TipoParteMotor;
+import soldimet.domain.TipoRepuesto;
 import soldimet.repository.AplicacionRepository;
+import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CilindradaRepository;
 import soldimet.repository.ClienteRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
@@ -33,6 +36,7 @@ import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.repository.PersonaRepository;
 import soldimet.repository.PresupuestoRepository;
 import soldimet.repository.TipoParteMotorRepository;
+import soldimet.repository.TipoRepuestoRepository;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
 import soldimet.service.dto.DTOParOperacionPresupuestoCUHacerPresupuesto;
 import soldimet.service.dto.DTOPresupuesto;
@@ -43,6 +47,11 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private Globales globales;
+
+    @Autowired
+    private TipoRepuestoRepository tipoRepuestoRepository;
+    @Autowired
+    private ArticuloRepository articuloRepository;
 
     @Autowired
     private EstadoPresupuestoRepository estadoPresupuestoRepository;
@@ -179,34 +188,35 @@ public class ExpertoPresupuesto {
             Motor motor = motorRepository.findOne(dtoDatosMotor.getIdMotor());
             Cilindrada cilindrada = cilindradaRepository.findOne(dtoDatosMotor.getIdCilindrada());
             List<TipoParteMotor> tiposPartesMotores = new ArrayList<>();
-            for (Long idTipoParteMotor : dtoDatosMotor.getIdTiposPartesMotores()) {
-                tiposPartesMotores.add(tipoParteMotorRepository.findOne(idTipoParteMotor));
-            }
+            tiposPartesMotores.add(tipoParteMotorRepository.findOne(dtoDatosMotor.getIdTiposPartesMotores()));
+
 
             ListaPrecioRectificacionCRAM listaPrecio = listaPrecioRectificacionCRAMRepository
                 .findByNumeroGrupo(aplicacion.getNumeroGrupo());
 
-            ListaPrecioDesdeHasta ultimaListaPrecio = null; //listaPrecio.getFechas().iterator().next();
-            for (ListaPrecioDesdeHasta listaPrecioDesde : listaPrecio.getFechas()) {
-                if (listaPrecioDesde.getFechaHasta() == null) {
-                    ultimaListaPrecio = listaPrecioDesde;
+            if(listaPrecio != null){
+                ListaPrecioDesdeHasta ultimaListaPrecio = null; //listaPrecio.getFechas().iterator().next();
+                for (ListaPrecioDesdeHasta listaPrecioDesde : listaPrecio.getFechas()) {
+                    if (listaPrecioDesde.getFechaHasta() == null) {
+                        ultimaListaPrecio = listaPrecioDesde;
+                    }
                 }
-            }
-            for (CostoOperacion costoOperacion : ultimaListaPrecio.getCostoOperacions()) {
+                for (CostoOperacion costoOperacion : ultimaListaPrecio.getCostoOperacions()) {
 
-                TipoParteMotor tipoParteMotorEnLista = costoOperacion.getTipoParteMotor();
-                Cilindrada cilindradaEnLista = costoOperacion.getCilindrada();
-                if (tiposPartesMotores.contains(tipoParteMotorEnLista) &&
-                    cilindrada.equals(cilindradaEnLista)) {
-                    Operacion operacion = costoOperacion.getOperacion();
-                    Float valorOperacion = costoOperacion.getCostoOperacion();
-                    DTOParOperacionPresupuestoCUHacerPresupuesto dto = new DTOParOperacionPresupuestoCUHacerPresupuesto();
-                    dto.setCostoOperacion(valorOperacion);
-                    dto.setNombreOperacion(operacion.getNombreOperacion());
-                    dto.setOperacionID(operacion.getId());
-                    listaDTO.add(dto);
+                    TipoParteMotor tipoParteMotorEnLista = costoOperacion.getTipoParteMotor();
+                    Cilindrada cilindradaEnLista = costoOperacion.getCilindrada();
+                    if (tiposPartesMotores.contains(tipoParteMotorEnLista) &&
+                        cilindrada.equals(cilindradaEnLista)) {
+                        Operacion operacion = costoOperacion.getOperacion();
+                        Float valorOperacion = costoOperacion.getCostoOperacion();
+                        DTOParOperacionPresupuestoCUHacerPresupuesto dto = new DTOParOperacionPresupuestoCUHacerPresupuesto();
+                        dto.setCostoOperacion(valorOperacion);
+                        dto.setNombreOperacion(operacion.getNombreOperacion());
+                        dto.setOperacionID(operacion.getId());
+                        listaDTO.add(dto);
+                    }
                 }
-            }
+        }
 
         } catch (NullPointerException e) {
 
@@ -227,5 +237,11 @@ public class ExpertoPresupuesto {
 
         return clientes;
     }
+
+	public List<Articulo> buscarRepuestos() {
+
+        TipoRepuesto tipoRepuesto = tipoRepuestoRepository.findByNombreTipoRepuesto(globales.nombre_Tipo_Repuesto_Repuesto);
+		return articuloRepository.findArticuloByTipoRepuesto(tipoRepuesto);
+	}
 
 }

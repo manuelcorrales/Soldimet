@@ -1,3 +1,18 @@
 <div class="container card jh-card">
     <h2>Operaciones</h2>
+    <ul class="list-group">
+    <div class="row" *ngFor="let operacion of operaciones" >
+         <li class="list-group-item">
+                <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <input type="checkbox" aria-label="Seleccionar">
+                          </div>
+                        </div>
+                        <label>{{operacion?.nombreOperacion}}</label>
+                        <input type="number" class="form-control" aria-label="Ingrese un nuevo valor" [value]="operacion?.costoOperacion">
+                      </div>
+            </li>
+    </div>
+    </ul>
 </div>

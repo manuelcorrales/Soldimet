@@ -13,5 +13,6 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface TipoRepuestoRepository extends JpaRepository<TipoRepuesto, Long> {
 
-    public TipoRepuesto findByNombreTipoRepuesto(String nombreTipoRepuesto);
+    TipoRepuesto findByNombreTipoRepuesto(String nombreTipoRepuesto);
+
 }

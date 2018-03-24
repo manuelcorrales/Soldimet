@@ -17,6 +17,7 @@ import {Cilindrada} from "../entities/cilindrada/cilindrada.model";
 import {TipoParteMotor} from "../entities/tipo-parte-motor/tipo-parte-motor.model";
 import {ResponseWrapper} from "../shared/model/response-wrapper.model";
 import {HttpClient} from "@angular/common/http";
+import { Articulo } from '../entities/articulo';
 
 @Injectable()
 export class PresupuestosService {
@@ -26,6 +27,7 @@ export class PresupuestosService {
     private urlPresupuestoAplicaciones = '/getAplicacionByMotor/';
     private urlPresupuestoOperacionesCosto = '/getOperacionesPresupuesto';
     private urlPresupuestoClientesFiltro = '/presupuestos/getClientesByNombre/';
+    private urlPresupuestoRepuestos = '/getRepuestos';
 
     constructor(private http: Http,
                 private httpNuevo: HttpClient,
@@ -36,7 +38,7 @@ export class PresupuestosService {
                 private cilindradaService: CilindradaService) {
     }
 
-    findPresupuestoCabecera(id: number): Observable<DtoPresupuestoCabeceraComponent[]> {
+    findPresupuestoCabecera(): Observable<DtoPresupuestoCabeceraComponent[]> {
         return this.http.get(`${this.resourceUrlPresupuestos}` + this.urlPresupuestoCabecera).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertJsonAPresupuestoCabecera(jsonResponse);
@@ -56,7 +58,9 @@ export class PresupuestosService {
 
     findOperacionesPresupuesto(datos: DTODatosMotorComponent): Observable<DTOParOperacionPresupuestoComponent[]> {
         let body = JSON.stringify(datos);
-        return this.http.get(`${this.resourceUrlPresupuestos}` + this.urlPresupuestoOperacionesCosto, body).map((res: Response) => {
+        const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoOperacionesCosto}?idMotor=${datos.idMotor}&idCilindrada=${datos.idCilindrada}&idAplicacion=${datos.idAplicacion}&idTiposPartesMotores=${datos.idTiposPartesMotores}`;
+        console.log("LLAMADO: "+urlLlamada)
+        return this.http.get(urlLlamada).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertJsonAPArejaCostoOperacion(jsonResponse);
         });
@@ -92,6 +96,15 @@ export class PresupuestosService {
             arreglo.push(...this.convertJsonATipoParteMotor(res))
         });
         return arreglo;
+    }
+
+    buscarRepuestos(): Observable<Articulo[]> {
+        const url = `${this.resourceUrlPresupuestos}` + this.urlPresupuestoRepuestos;
+        console.log( url)
+        return this.http.get(url).map((res: Response) => {
+            const jsonResponse = res.json();
+            return this.convertJsonAArticulo(jsonResponse);
+        });
     }
 
 
@@ -184,6 +197,17 @@ export class PresupuestosService {
                 Object.assign(new Cilindrada(), elemento);
             arreglo.push(entity);
         })
+        return arreglo || [];
+    }
+
+    convertJsonAArticulo(json: any): Articulo[] {
+        var arreglo: Articulo[] = [];
+        json.forEach((elemento) => {
+            const entity: Articulo =
+                Object.assign(new Articulo(), json);
+            arreglo.push(entity);
+        })
+
         return arreglo || [];
     }
 }

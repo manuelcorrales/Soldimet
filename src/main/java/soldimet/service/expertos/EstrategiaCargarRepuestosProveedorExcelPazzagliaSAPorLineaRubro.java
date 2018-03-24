@@ -459,10 +459,7 @@ public class EstrategiaCargarRepuestosProveedorExcelPazzagliaSAPorLineaRubro imp
 
         Long idParteMotor = Long.valueOf(tipoMotorOID);
 
-        TipoParteMotor parteMotor = tipoParteMotorRepository.findOne(idParteMotor);
-
         TipoRepuesto tipoRepuesto = listaDeTipoRepuestosSinParteMotor.get(numeroEnArray);
-        tipoRepuesto.setTipoParte(parteMotor);
 
         tipoRepuestoRepository.save(tipoRepuesto);
 

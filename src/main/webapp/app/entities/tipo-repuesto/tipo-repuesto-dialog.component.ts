@@ -9,8 +9,6 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { TipoRepuesto } from './tipo-repuesto.model';
 import { TipoRepuestoPopupService } from './tipo-repuesto-popup.service';
 import { TipoRepuestoService } from './tipo-repuesto.service';
-import { TipoParteMotor, TipoParteMotorService } from '../tipo-parte-motor';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-tipo-repuesto-dialog',
@@ -21,21 +19,16 @@ export class TipoRepuestoDialogComponent implements OnInit {
     tipoRepuesto: TipoRepuesto;
     isSaving: boolean;
 
-    tipopartemotors: TipoParteMotor[];
-
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private tipoRepuestoService: TipoRepuestoService,
-        private tipoParteMotorService: TipoParteMotorService,
         private eventManager: JhiEventManager
     ) {
     }
 
     ngOnInit() {
         this.isSaving = false;
-        this.tipoParteMotorService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipopartemotors = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {
@@ -70,10 +63,6 @@ export class TipoRepuestoDialogComponent implements OnInit {
 
     private onError(error: any) {
         this.jhiAlertService.error(error.message, null, null);
-    }
-
-    trackTipoParteMotorById(index: number, item: TipoParteMotor) {
-        return item.id;
     }
 }
 

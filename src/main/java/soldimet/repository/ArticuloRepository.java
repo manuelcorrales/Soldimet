@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.*;
 import soldimet.domain.EstadoArticulo;
 import soldimet.domain.Proveedor;
+import soldimet.domain.TipoRepuesto;
 
 
 /**
@@ -21,4 +22,6 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSp
     public Articulo findByCodigoArticuloProveedor(String codigoArticuloProveedor);
 
     public List<Articulo> findByProveedor( Proveedor proveedor);
+
+    public List<Articulo> findArticuloByTipoRepuesto( TipoRepuesto tipoRepuesto);
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import soldimet.domain.Aplicacion;
+import soldimet.domain.Articulo;
 import soldimet.domain.Cliente;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
 import soldimet.service.dto.DTOParOperacionPresupuestoCUHacerPresupuesto;
@@ -57,6 +58,12 @@ public class PresupuestoController {
         @RequestParam("nombreCliente") String nombreCliente) {
 
         return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
+    }
+
+    @GetMapping("/presupuestos/getRepuestos")
+    public List<Articulo> buscarRepuestosPresupuesto() {
+
+        return expertoPresupuesto.buscarRepuestos();
     }
 
 }

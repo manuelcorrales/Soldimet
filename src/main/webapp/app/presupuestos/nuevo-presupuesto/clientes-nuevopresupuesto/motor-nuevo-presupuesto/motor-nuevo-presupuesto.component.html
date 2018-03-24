@@ -4,8 +4,7 @@
         <!-- Seleccion Motores-->
         <div class="col-md-auto col-sm-3 col-xs-3">
             <label class="form-control-label">Motor: </label>
-            <select class="custom-select" [(ngModel)]="motor" name="motor"
-                    (change)="buscarAplicaciones()">
+            <select class="custom-select" [(ngModel)]="motor" name="motor" (change)="buscarAplicaciones()">
                 <option selected disabled>Elija un motor</option>
                 <option *ngFor="let motor of motores" [ngValue]="motor">
                     {{motor?.marcaMotor}}
@@ -25,19 +24,16 @@
         <div class="form-inline col-md-auto col-xs-2">
             <label class="form-control-label">Cilindrada: </label>
             <div class=" form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
-                <input class="form-check-input" type="radio"
-                       [(ngModel)]="cilindrada" name="cilindrada">
+                <input class="form-check-input" type="radio">
                 <label class="form-check-label"> {{cilindrada?.cantidadDeCilindros}}</label>
             </div>
         </div>
         <!-- Seleccion Tipo partes-->
         <div class="form-inline col-md-auto col-xs-3">
             <label class="form-control-label">Presupuestar:</label>
-            <div class="form-check form-check-inline"
-                 *ngFor="let tipoParte of tiposPartesMotores">
+            <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
                 <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input"
-                           (onchange)="crearDetalle(tipoParte)">
+                    <input type="checkbox" class="form-check-input" (onchange)="crearDetalle(tipoParte)">
                     <span disabled *ngIf="aplicacion"></span>
                     {{tipoParte?.nombreTipoParteMotor}}
                 </label>

@@ -24,10 +24,6 @@ public class TipoRepuesto implements Serializable {
     @Column(name = "nombre_tipo_repuesto", nullable = false)
     private String nombreTipoRepuesto;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    private TipoParteMotor tipoParte;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -48,19 +44,6 @@ public class TipoRepuesto implements Serializable {
 
     public void setNombreTipoRepuesto(String nombreTipoRepuesto) {
         this.nombreTipoRepuesto = nombreTipoRepuesto;
-    }
-
-    public TipoParteMotor getTipoParte() {
-        return tipoParte;
-    }
-
-    public TipoRepuesto tipoParte(TipoParteMotor tipoParteMotor) {
-        this.tipoParte = tipoParteMotor;
-        return this;
-    }
-
-    public void setTipoParte(TipoParteMotor tipoParteMotor) {
-        this.tipoParte = tipoParteMotor;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

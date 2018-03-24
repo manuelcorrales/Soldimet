@@ -3,7 +3,6 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 
 import soldimet.domain.TipoRepuesto;
-import soldimet.domain.TipoParteMotor;
 import soldimet.repository.TipoRepuestoRepository;
 import soldimet.service.TipoRepuestoService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -83,11 +82,6 @@ public class TipoRepuestoResourceIntTest {
     public static TipoRepuesto createEntity(EntityManager em) {
         TipoRepuesto tipoRepuesto = new TipoRepuesto()
             .nombreTipoRepuesto(DEFAULT_NOMBRE_TIPO_REPUESTO);
-        // Add required entity
-        TipoParteMotor tipoParte = TipoParteMotorResourceIntTest.createEntity(em);
-        em.persist(tipoParte);
-        em.flush();
-        tipoRepuesto.setTipoParte(tipoParte);
         return tipoRepuesto;
     }
 

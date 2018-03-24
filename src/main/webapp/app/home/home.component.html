@@ -1,4 +1,4 @@
-<div class="row">
+<!--div class="row">
     <div class="col-md-3">
         <span class="hipster img-fluid rounded"></span>
     </div>
@@ -8,13 +8,15 @@
 
         <div [ngSwitch]="isAuthenticated()">
             <div class="alert alert-success" *ngSwitchCase="true">
-                <span *ngIf="account"
-                   > You are logged in as user "{{account.login}}". </span>
+                <span *ngIf="account"> You are logged in as user "{{account.login}}". </span>
             </div>
 
             <div class="alert alert-warning" *ngSwitchCase="false">
                 <span>If you want to </span>
-                <a class="alert-link" (click)="login()">sign in</a><span>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").</span>
+                <a class="alert-link" (click)="login()">sign in</a>
+                <span>, you can try the default accounts:
+                    <br/>- Administrator (login="admin" and password="admin")
+                    <br/>- User (login="user" and password="user").</span>
             </div>
 
             <div class="alert alert-warning" *ngSwitchCase="false">
@@ -28,15 +30,158 @@
         </p>
 
         <ul>
-            <li><a href="http://www.jhipster.tech/" target="_blank" rel="noopener">JHipster homepage</a></li>
-            <li><a href="http://stackoverflow.com/tags/jhipster/info" target="_blank" rel="noopener">JHipster on Stack Overflow</a></li>
-            <li><a href="https://github.com/jhipster/generator-jhipster/issues?state=open" target="_blank" rel="noopener">JHipster bug tracker</a></li>
-            <li><a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" rel="noopener">JHipster public chat room</a></li>
-            <li><a href="https://twitter.com/java_hipster" target="_blank" rel="noopener">follow @java_hipster on Twitter</a></li>
+            <li>
+                <a href="http://www.jhipster.tech/" target="_blank" rel="noopener">JHipster homepage</a>
+            </li>
+            <li>
+                <a href="http://stackoverflow.com/tags/jhipster/info" target="_blank" rel="noopener">JHipster on Stack Overflow</a>
+            </li>
+            <li>
+                <a href="https://github.com/jhipster/generator-jhipster/issues?state=open" target="_blank" rel="noopener">JHipster bug tracker</a>
+            </li>
+            <li>
+                <a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" rel="noopener">JHipster public chat room</a>
+            </li>
+            <li>
+                <a href="https://twitter.com/java_hipster" target="_blank" rel="noopener">follow @java_hipster on Twitter</a>
+            </li>
         </ul>
 
         <p>
-            <span>If you like JHipster, don't forget to give us a star on</span> <a href="https://github.com/jhipster/generator-jhipster" target="_blank" rel="noopener">GitHub</a>!
+            <span>If you like JHipster, don't forget to give us a star on</span>
+            <a href="https://github.com/jhipster/generator-jhipster"
+                target="_blank" rel="noopener">GitHub</a>!
         </p>
     </div>
+</div-->
+<div [ngSwitch]="isAuthenticated()">
+    <div class="alert alert-success" *ngSwitchCase="true">
+        <span *ngIf="account"> Has ingresado como: "{{account.login}}". </span>
+    </div>
+</div>
+<div class = "container card">
+    <div id="header-image-wrapper-1">
+        <img src="http://static.websguru.com.ar/var/m_0/05/050/32330/1622768-banner.jpg"/>
+    </div>
+    <div class="widget-wrapper widget-element free-text diy-resizable ">
+
+            <div id="widget-id-1064813" class="widget-body">
+                <div class="freetextarea">
+                    <h1 style="text-align:center">
+                        <span style="font-size:28px"></span>
+                        <br>
+                        <span style="font-size:28px">Rectificación de motores en Guaymallen y San Martín</span>
+                        <br>
+                        <span style="font-size:28px"></span>
+                    </h1>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="row">
+                <div class="card col-md-3 ml-3">
+                    <div class="diy-f-spot  " style="margin: 0px 5px 0px 5px;background-image: url('http://hibult-static.websplanetdemo.com/var/m_0/05/050/32330/516329-fondo1.png?1448404720183');padding: 0px 0px 10px 0px;">
+                        <div class="diy-f-spot-inner">
+                                <div id="widget-id-1066025" class="widget-body " style="">
+                                    <div class="freetext-image " style=" margin:auto; text-align:center;">
+                                        <div class="image_wrapper diy-icss-target" style="">
+                                            <div class="diy-fi-container diy-fi-effect-0">
+                                                <img id="516311" style="max-width:100%" data-original="http://static.websguru.com.ar/var/m_0/05/050/32330/516311-soldimet-motor.png"
+                                                    alt="Soldimet pieza mecánica" class="image lazy"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="widget-id-1064826" class="widget-body " style="margin: 0px 5px 0px 5px">
+                                    <div class="freetextarea">
+                                        <div>
+                                            <div style="text-align:center">
+                                                <div>Somos
+                                                    <strong>Soldimet</strong>, un taller de amplia experiencia
+                                                    en el rubro de las
+                                                    <strong>rectificaciones de motores</strong>.</div>
+                                                <div>
+                                                    <br>
+                                                </div>
+                                                <div>Tenemos las tecnologías, herramientas y utillajes
+                                                    de última generación para la realización de buenos
+                                                    trabajos.</div>
+                                                <div>
+                                                    <br>Lo esperamos en la localidad de
+                                                    <strong>Guaymallen y en San Martín</strong>.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="card col-md-3 ml-3">
+                    <div class="diy-f-spot  " style="background-image: url('http://hibult-static.websplanetdemo.com/var/m_0/05/050/32330/516329-fondo1.png?1448404776575');padding: 0px 0px 52px 0px;">
+                        <div class="diy-f-spot-inner">
+                            <div class="widget-wrapper widget-element free-image diy-resizable ">
+
+                                <div id="widget-id-1066026" class="widget-body " style="">
+                                    <div class="freetext-image " style=" margin:auto; text-align:center;">
+                                        <div class="image_wrapper diy-icss-target" style="margin: 0px 5px 0px 5px">
+                                            <div class="diy-fi-container diy-fi-effect-0">
+                                                <img id="516312" style="max-width:100%" data-original="http://static.websguru.com.ar/var/m_0/05/050/32330/516312-soldimet-motor-de-vehiculo.png"
+                                                    alt="Soldimet motor de vehículo" class="image lazy"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="widget-wrapper widget-element free-text diy-resizable ">
+
+                                <div id="widget-id-1064817" class="widget-body " style="">
+                                    <div class="freetextarea">
+                                        <h2 style="text-align:center">
+                                            <span style="font-size:20px">Personal calificado</span>
+                                        </h2>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="widget-wrapper widget-element free-text diy-resizable ">
+
+                                <div id="widget-id-1064835" class="widget-body " style="margin: 0px 5px 0px 5px">
+                                    <div class="freetextarea">
+                                        <div>
+                                            <div>
+                                                <div style="text-align:center">
+                                                    <div>Contamos con personal técnico experto en
+                                                        <strong>rectificación</strong>
+                                                        <strong>de</strong>
+                                                        <strong>block</strong> y
+                                                        <strong>tapas</strong>. Asimismo, trabajamos con
+                                                        profesionales mecánicos para realizar todo
+                                                        tipo
+                                                        <strong>soldaduras</strong>
+                                                        <strong>de</strong>
+                                                        <strong>fundición</strong> o
+                                                        <strong>aluminio</strong> para su vehículo.</div>
+                                                    <div>
+                                                        <br>
+                                                    </div>Visítenos, ofrecemos garantía en todos nuestros
+                                                    trabajos.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
 </div>

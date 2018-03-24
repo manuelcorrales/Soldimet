@@ -67,10 +67,10 @@
         <!-- Dirección-->
         <div class="form-group form-inline">
             <!-- Calle -->
-            <div class="col-md-auto">
+            <!--div class="col-md-auto">
                 <label class="form-control-label" for="field_calle">Calle</label>
                 <input type="text" class="form-control" name="direccion" id="field_calle"
-                       [(ngModel)]="direccion.direccion" required minlength="3" maxlength="30"/>
+                       [(ngModel)]="direccion.calle" required minlength="3" maxlength="30"/>
                 <div
                     [hidden]="!(editForm.controls.direccion?.dirty && editForm.controls.direccion?.invalid)">
                     <small class="form-text text-danger"
@@ -86,9 +86,9 @@
                         Este campo no puede contener más de 30 caracteres.
                     </small>
                 </div>
-            </div>
+            </div-->
             <!-- Número -->
-            <div class="col-md-auto">
+            <!--div class="col-md-auto">
                 <label class="form-control-label" for="field_numero">Número</label>
                 <input type="number" class="form-control" name="direccion" id="field_numero"
                        [(ngModel)]="direccion.numero" required minlength="3" maxlength="30"/>
@@ -107,9 +107,9 @@
                         Este campo no puede contener más de 30 caracteres.
                     </small>
                 </div>
-            </div>
+            </div-->
             <!-- Departamento-->
-            <div class="col-md-auto">
+            <!--div class="col-md-auto">
                 <label class="form-control-label" for="field_localidad">Departamento</label>
                 <select class="form-control" id="field_localidad" name="localidad"
                         [(ngModel)]="localidades" required>
@@ -127,7 +127,7 @@
                         Requerido.
                     </small>
                 </div>
-            </div>
+            </div-->
         </div>
 
     </div>

@@ -7,17 +7,17 @@ import {NuevoPresupuestoComponent} from './nuevo-presupuesto/nuevo-presupuesto.c
 import {BrowserModule} from '@angular/platform-browser';
 import {SoldimetSharedModule} from '../shared/shared.module';
 import {PresupuestosService} from "./presupuestos.service";
-import {DataTablesModule} from "angular-datatables";
 import {ClientesNuevopresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto.component';
 import {OperacionesNuevopresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto.component';
 import {RepuestosNuevopresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto.component';
 import {Ng2SearchPipeModule} from 'ng2-search-filter';
 import {MotorNuevoPresupuestoComponent} from './nuevo-presupuesto/clientes-nuevopresupuesto/motor-nuevo-presupuesto/motor-nuevo-presupuesto.component';
 import {FormsModule} from "@angular/forms";
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 @NgModule({
     imports: [
-        DataTablesModule,
+        Ng2SmartTableModule,
         FormsModule,
         Ng2SearchPipeModule,
         SoldimetSharedModule,

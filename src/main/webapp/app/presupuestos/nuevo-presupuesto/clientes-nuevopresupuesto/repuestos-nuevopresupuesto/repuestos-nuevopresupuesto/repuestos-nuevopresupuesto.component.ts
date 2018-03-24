@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PresupuestosService } from '../../../../presupuestos.service';
+import { Articulo } from '../../../../../entities/articulo';
 
 @Component({
   selector: 'jhi-repuestos-nuevopresupuesto',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RepuestosNuevopresupuestoComponent implements OnInit {
 
-  constructor() { }
+    repuestos: Articulo[] = [];
+
+  constructor(private _presupuestoService: PresupuestosService) { }
 
   ngOnInit() {
+      this._presupuestoService.buscarRepuestos().subscribe((repuestos)=>{
+        this.repuestos.push(...repuestos);
+        this.repuestos = repuestos;
+        console.log(this.repuestos)
+      })
   }
 
 }

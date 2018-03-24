@@ -27,7 +27,7 @@ public class Motor implements Serializable {
     @Column(name = "marca_motor", length = 25, nullable = false)
     private String marcaMotor;
 
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name= "motor")
     @JsonIgnore
     private Set<Aplicacion> aplicacions = new HashSet<>();

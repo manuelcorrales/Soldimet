@@ -35,6 +35,8 @@ public class Globales {
     public final String NOMBRE_ESTADO_PEDIDO_PENDIENTE_RECIBO = "Pendiente de Recibo";
     public final String NOMBRE_ESTADO_PEDIDO_RECIBIDO = "Recibido";
 
+    //---------------------------------Tipo Articulos------------------------
+    public final String nombre_Tipo_Repuesto_Repuesto = "Repuesto";
     //----------------------------Nombre proveedor----------------------
 
     public final String PAZZAGLIA = "PAZZAGLIA S.A.";
