@@ -1,6 +1,6 @@
 <div class="container card jh-card">
     <h2>Datos del Motor</h2>
-    <div class="form-group row">
+    <div class="form-group form-row">
         <!-- Seleccion Motores-->
         <div class="col-md-auto col-sm-3 col-xs-3">
             <label class="form-control-label">Motor: </label>
@@ -21,11 +21,14 @@
                 </option>
             </select>
         </div>
+        <!-- Seleccion Cilindrada-->
         <div class="form-inline col-md-auto col-xs-2">
             <label class="form-control-label">Cilindrada: </label>
-            <div class=" form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
-                <input class="form-check-input" type="radio">
-                <label class="form-check-label"> {{cilindrada?.cantidadDeCilindros}}</label>
+            <div>
+                <div class=" form-check" *ngFor="let cilindrada of cilindradas">
+                    <input class="form-check-input" type="radio" name="groupCilindrada" (change)="onSelectionChange(cilindrada)" id="cilindrada_{{cilindrada.id}}">
+                    <label class="form-check-label" for="groupCilindrada"> {{cilindrada?.cantidadDeCilindros}}</label>
+                </div>
             </div>
         </div>
         <!-- Seleccion Tipo partes-->
@@ -33,7 +36,7 @@
             <label class="form-control-label">Presupuestar:</label>
             <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
                 <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" (onchange)="crearDetalle(tipoParte)">
+                    <input type="checkbox" class="form-check-input" (change)="crearDetalle(tipoParte, $event)">
                     <span disabled *ngIf="aplicacion"></span>
                     {{tipoParte?.nombreTipoParteMotor}}
                 </label>

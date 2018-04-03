@@ -21,6 +21,8 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
     aplicaciones: Aplicacion[];
     tiposPartesMotores: TipoParteMotor[] = [];
 
+
+
     @Output() eventoDetallePresupuesto = new EventEmitter<DetallePresupuesto>();
 
     constructor(private _presupuestosService: PresupuestosService,) {
@@ -38,27 +40,19 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
     }
 
     buscarAplicaciones() {
-        /*
-        for (let i = 0; this.motores.length > i; i++) {
-            if (this.motores[i].id == this.motorID) {
-
-                this.aplicaciones = this._presupuestosService.findAplicacionesPorMotor(this.motores[i]);
-            }
-        }
-*/
         this._presupuestosService.findAplicacionesPorMotor(this.motor).subscribe((datos) => {
             this.aplicaciones = datos;
         });
-        //this._presupuestosService.findAplicacionesPorMotor(this.motor).subscribe((data) => {
-        //    this.aplicaciones = data;
-
-        //});
-
     }
 
-    crearDetalle(tipoParteMotor: TipoParteMotor, valor: boolean) {
+    onSelectionChange(cilindrada: Cilindrada){
+        this.cilindrada = cilindrada;
+    }
 
-        if (valor) {
+    crearDetalle(tipoParteMotor: TipoParteMotor, event) {
+        console.log("ejecuto evento")
+        if (event.target.checked === true) {
+            console.log("mando mensaje")
             let detallePresupuesto = new DetallePresupuesto();
             detallePresupuesto.tipoParteMotor = tipoParteMotor;
             detallePresupuesto.motor = this.motor;
@@ -68,4 +62,6 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
             this.eventoDetallePresupuesto.emit(detallePresupuesto);
         }
     }
+
+
 }

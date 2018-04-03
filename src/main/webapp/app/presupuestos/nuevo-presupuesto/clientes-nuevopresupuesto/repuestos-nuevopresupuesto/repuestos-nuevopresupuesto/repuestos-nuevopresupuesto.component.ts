@@ -17,7 +17,6 @@ export class RepuestosNuevopresupuestoComponent implements OnInit {
       this._presupuestoService.buscarRepuestos().subscribe((repuestos)=>{
         this.repuestos.push(...repuestos);
         this.repuestos = repuestos;
-        console.log(this.repuestos)
       })
   }
 
