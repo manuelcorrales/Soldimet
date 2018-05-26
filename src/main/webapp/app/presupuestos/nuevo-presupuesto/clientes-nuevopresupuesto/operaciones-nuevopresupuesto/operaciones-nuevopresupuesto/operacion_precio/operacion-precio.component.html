@@ -1,0 +1,9 @@
+<div class="col">
+    <input class="form-check-input" type="checkbox" [defaultValue]=seleccionado [(ngModel)]="seleccionado">
+    <label class="form-check-label">
+        {{operacion.nombreOperacion}}
+    </label>
+</div>
+<div class=" col">
+    <input type="number" class="form-control" aria-label="Ingrese un nuevo valor" [value]="operacion.costoOperacion" [disabled]="!seleccionado">
+</div>

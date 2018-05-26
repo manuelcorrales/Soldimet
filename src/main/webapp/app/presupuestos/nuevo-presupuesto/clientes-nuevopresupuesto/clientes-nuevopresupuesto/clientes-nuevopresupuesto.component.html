@@ -1,12 +1,30 @@
-<div class="container card jh-card">
-    <h2>Datos del cliente</h2>
-    <div>
-        <input type="text" [(ngModel)]="cliente" placement="right"
-               ngbTooltip="Ingresar nombre del cliente" (select)="elegirCliente()">
-        <div *ngFor="let cliente of clientes |filter:cliente">
-            <p>
-                Cliente: {{cliente?.apellido}} {{cliente?.persona?.nombre}} N°:{{cliente?.id}}
-            </p>
+<div class="card jh-card border-info mb-3">
+    <div class="card-header card-header text-white bg-info mb-3">
+        Cliente
+    </div>
+    <div class="card-body" style="padding-top: 0px;">
+        <ng-select [loadingText]='textSearching' [items]='clientes' [loading]= 'buscandoClientes'
+         [notFoundText]='textNoResults' [(ngModel)]="clienteElegido" [searchFN]="filtrarClientes">
+         <ng-template ng-label-tmp let-item="item">
+                {{item.persona.nombre}}, {{item.apellido}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" >
+                    {{item.persona.nombre}}, {{item.apellido}}
+            </ng-template>
+        </ng-select>
+        <div class="row" *ngIf="clienteElegido?.persona" style="padding-top: 15px;">
+            <div class="col">
+                <span [routerLink]="['/persona', clienteElegido.persona?.id]"><strong>Nombre:</strong> {{clienteElegido.persona?.nombre}},{{clienteElegido.apellido}}</span>
+            </div>
+            <div class="col">
+                <strong>Número de cliente:</strong> {{clienteElegido?.id}}
+            </div>
+            <div class="col">
+                    <strong>Teléfono:</strong> {{clienteElegido?.persona?.numeroTelefono}}
+            </div>
+            <div class="col">
+                    <strong>Dirección:</strong> {{clienteElegido?.persona?.direccion?.calle}} {{clienteElegido?.persona?.direccion?.numero}}, {{clienteElegido?.persona?.direccion?.localidad?.nombreLocalidad}}
+            </div>
         </div>
     </div>
 </div>

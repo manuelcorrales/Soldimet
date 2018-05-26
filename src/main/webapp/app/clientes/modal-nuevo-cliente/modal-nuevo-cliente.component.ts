@@ -161,6 +161,10 @@ export class ModalNuevoClienteComponent implements OnInit {
     trackById(index: number, item: Localidad) {
         return item.id;
     }
+
+    trackLocalidadById(index: number, item: Localidad) {
+        return item.id;
+    }
 }
 
 @Component({

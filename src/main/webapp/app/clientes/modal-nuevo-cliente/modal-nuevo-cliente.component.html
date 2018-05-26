@@ -1,8 +1,7 @@
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
     <div class="modal-header">
         <h4 class="modal-title" id="myClienteLabel">Crear o editar un cliente</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                (click)="clear()">&times;
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;
         </button>
     </div>
     <div class="modal-body ">
@@ -10,28 +9,23 @@
         <!-- ID CLIENTE-->
         <div class="form-group" [hidden]="!cliente?.id">
             <label for="id">Número de cliente</label>
-            <input type="text" class="form-control" id="id" name="id"
-                   [(ngModel)]="cliente.id" readonly/>
+            <input type="text" class="form-control" id="id" name="id" [(ngModel)]="cliente.id" readonly/>
         </div>
         <!-- Apellido-->
         <div class="form-group form-inline">
             <div class="col-md-auto">
 
                 <label class="form-control-label" for="field_apellido">Apellido</label>
-                <input type="text" class="form-control" name="apellido" id="field_apellido"
-                       [(ngModel)]="cliente.apellido" required minlength="3" maxlength="30"/>
-                <div
-                    [hidden]="!(editForm.controls.apellido?.dirty && editForm.controls.apellido?.invalid)">
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.apellido?.errors?.required">
+                <input type="text" class="form-control" name="apellido" id="field_apellido" [(ngModel)]="cliente.apellido" required minlength="3"
+                    maxlength="30" />
+                <div [hidden]="!(editForm.controls.apellido?.dirty && editForm.controls.apellido?.invalid)">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.apellido?.errors?.required">
                         Campo requerido.
                     </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.apellido?.errors?.minlength">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.apellido?.errors?.minlength">
                         Este campo debe contener al menos 3 Caracteres.
                     </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.apellido?.errors?.maxlength">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.apellido?.errors?.maxlength">
                         Este campo no puede contener más de 30 caracteres.
                     </small>
                 </div>
@@ -39,20 +33,16 @@
             <!-- Nombre-->
             <div class="col-md-auto">
                 <label class="form-control-label" for="field_nombre">Nombre</label>
-                <input type="text" class="form-control" name="nombre" id="field_nombre"
-                       [(ngModel)]="persona.nombre" required minlength="3" maxlength="30"/>
-                <div
-                    [hidden]="!(editForm.controls.nombre?.dirty && editForm.controls.nombre?.invalid)">
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.nombre?.errors?.required">
+                <input type="text" class="form-control" name="nombre" id="field_nombre" [(ngModel)]="persona.nombre" required minlength="3"
+                    maxlength="30" />
+                <div [hidden]="!(editForm.controls.nombre?.dirty && editForm.controls.nombre?.invalid)">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.nombre?.errors?.required">
                         Campo requerido.
                     </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.nombre?.errors?.minlength">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.nombre?.errors?.minlength">
                         Este campo debe contener al menos 3 Caracteres.
                     </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.nombre?.errors?.maxlength">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.nombre?.errors?.maxlength">
                         Este campo no puede contener más de 30 caracteres.
                     </small>
                 </div>
@@ -60,84 +50,67 @@
             <!-- Teléfono-->
             <div class="col-md-auto">
                 <label class="form-control-label" for="field_telefono">Teléfono</label>
-                <input type="text" class="form-control" name="telefono" id="field_telefono"
-                       [(ngModel)]="persona.numeroTelefono" required minlength="3" maxlength="30"/>
+                <input type="text" class="form-control" name="telefono" id="field_telefono" [(ngModel)]="persona.numeroTelefono" required
+                    minlength="3" maxlength="30" />
             </div>
         </div>
         <!-- Dirección-->
         <div class="form-group form-inline">
             <!-- Calle -->
-            <!--div class="col-md-auto">
+            <div class="form-group">
                 <label class="form-control-label" for="field_calle">Calle</label>
-                <input type="text" class="form-control" name="direccion" id="field_calle"
-                       [(ngModel)]="direccion.calle" required minlength="3" maxlength="30"/>
-                <div
-                    [hidden]="!(editForm.controls.direccion?.dirty && editForm.controls.direccion?.invalid)">
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.apellido?.errors?.required">
+                <input type="text" class="form-control" name="calle" id="field_calle" [(ngModel)]="direccion.calle" required minlength="3"
+                />
+                <div [hidden]="!(editForm.controls.calle?.dirty && editForm.controls.calle?.invalid)">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.calle?.errors?.required">
                         Campo requerido.
                     </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.direccion?.errors?.minlength">
-                        Este campo debe contener al menos 3 Caracteres.
-                    </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.direccion?.errors?.maxlength">
-                        Este campo no puede contener más de 30 caracteres.
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.calle?.errors?.minlength">
+                            Este campo debe contener al menos 3 Caracteres.
                     </small>
                 </div>
-            </div-->
+            </div>
             <!-- Número -->
-            <!--div class="col-md-auto">
-                <label class="form-control-label" for="field_numero">Número</label>
-                <input type="number" class="form-control" name="direccion" id="field_numero"
-                       [(ngModel)]="direccion.numero" required minlength="3" maxlength="30"/>
-                <div
-                    [hidden]="!(editForm.controls.numero?.dirty && editForm.controls.numero?.invalid)">
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.apellido?.errors?.required">
+            <div class="form-group">
+                <label class="form-control-label" for="field_numero">Numero</label>
+                <input type="number" class="form-control" name="numero" id="field_numero" [(ngModel)]="direccion.numero" required min="0"
+                />
+                <div [hidden]="!(editForm.controls.numero?.dirty && editForm.controls.numero?.invalid)">
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.numero?.errors?.required">
                         Campo requerido.
                     </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.numero?.errors?.minlength">
-                        Este campo debe contener al menos 3 Caracteres.
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.numero?.errors?.min">
+                            Este campo debe contener al menos 3 Caracteres.
                     </small>
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.numero?.errors?.maxlength">
-                        Este campo no puede contener más de 30 caracteres.
+                    <small class="form-text text-danger" [hidden]="!editForm.controls.numero?.errors?.number">
+                        Este campo debe ser numérico
                     </small>
                 </div>
-            </div-->
+            </div>
             <!-- Departamento-->
-            <!--div class="col-md-auto">
-                <label class="form-control-label" for="field_localidad">Departamento</label>
-                <select class="form-control" id="field_localidad" name="localidad"
-                        [(ngModel)]="localidades" required>
-                    <option *ngIf="!editForm.value?.localidades" [ngValue]="null" selected></option>
-                    <option
-                        [ngValue]="localidadOption.id === direccion?.localidad?.id ? direccion?.localidad: localidadOption"
-                        *ngFor="let localidadOption of localidades; trackBy: trackById">
-                        {{localidadOption?.nombreLocalidad}}
-                    </option>
+            <div class="form-group">
+                <label class="form-control-label" for="field_localidad">Localidad</label>
+                <select class="form-control" id="field_localidad" name="localidad" [(ngModel)]="direccion.localidad" required>
+                    <option *ngIf="!editForm.value.localidad" [ngValue]="null" selected></option>
+                    <option [ngValue]="localidadOption.id === direccion.localidad?.id ? direccion.localidad : localidadOption" *ngFor="let localidadOption of localidades; trackBy: trackLocalidadById">{{localidadOption.nombreLocalidad}}</option>
                 </select>
-                <div
-                    [hidden]="!(editForm.controls.localidad?.dirty && editForm.controls.localidad?.invalid)">
-                    <small class="form-text text-danger"
-                           [hidden]="!editForm.controls.localidad?.errors?.required">
-                        Requerido.
-                    </small>
-                </div>
-            </div-->
+            </div>
+            <div [hidden]="!(editForm.controls.localidad?.dirty && editForm.controls.localidad?.invalid)">
+                <small class="form-text text-danger" [hidden]="!editForm.controls.localidad?.errors?.required">
+                    This field is required.
+                </small>
+            </div>
         </div>
 
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
-            <span class="fa fa-ban"></span>&nbsp;<span>Cancelar</span>
+            <span class="fa fa-ban"></span>&nbsp;
+            <span>Cancelar</span>
         </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving"
-                class="btn btn-primary">
-            <span class="fa fa-save"></span>&nbsp;<span>Guardar</span>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;
+            <span>Guardar</span>
         </button>
     </div>
 </form>

@@ -1,10 +1,13 @@
-<form class="h-100">
-    <div class="col-md-10 align-center container card jh-card">
-        <jhi-clientes-nuevopresupuesto (eventoDetallePresupuesto)="recibirCliente($event)"></jhi-clientes-nuevopresupuesto>
+<form class="container-fluid jh-create-entity">
+    <div class="col-auto align-center container jh-card">
+        <h3>Nuevo Presupuesto</h3>
+        <jhi-clientes-nuevopresupuesto></jhi-clientes-nuevopresupuesto>
         <jhi-motor-nuevo-presupuesto (eventoDetallePresupuesto)="recibirDetalle($event)"></jhi-motor-nuevo-presupuesto>
-        <div class="row">
+        <div class="row row-eq-height">
             <div class="col-md-6">
-                <jhi-operaciones-nuevopresupuesto [operaciones]="operaciones"></jhi-operaciones-nuevopresupuesto>
+                <jhi-operaciones-nuevopresupuesto [operaciones]="operaciones">
+
+                </jhi-operaciones-nuevopresupuesto>
             </div>
             <div class="col-md-6">
                 <jhi-repuestos-nuevopresupuesto></jhi-repuestos-nuevopresupuesto>
@@ -14,7 +17,8 @@
             <button type="submit" class="btn btn-primary btn-right" (click)="guardarPresupuesto()" [routerLink]="['/presupuestos']">
                 Crear
             </button>
-            <button type="submit" class="btn btn-danger btn-right" [routerLink]="['/presupuestos']">Cancelar</button>
+            <button type="submit" class="btn btn-danger btn-right" [routerLink]="['/presupuestos']">
+                Cancelar</button>
         </div>
     </div>
 </form>

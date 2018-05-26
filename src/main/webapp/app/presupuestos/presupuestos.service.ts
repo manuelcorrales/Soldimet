@@ -26,8 +26,9 @@ export class PresupuestosService {
     private urlPresupuestoCabecera = '/getPresupuestos';
     private urlPresupuestoAplicaciones = '/getAplicacionByMotor/';
     private urlPresupuestoOperacionesCosto = '/getOperacionesPresupuesto';
-    private urlPresupuestoClientesFiltro = '/presupuestos/getClientesByNombre/';
+    private urlPresupuestoClientesFiltro = '/getClientesByNombre/';
     private urlPresupuestoRepuestos = '/getRepuestos';
+    private urlPresupuestoClientesAll = '/getAllClientes';
 
     constructor(private http: Http,
         private httpNuevo: HttpClient,
@@ -64,9 +65,16 @@ export class PresupuestosService {
     }
 
     findClientesByNombre(nombre: string): Observable<Cliente[]> {
-        return this.http.get(`${this.resourceUrlPresupuestos}` + this.urlPresupuestoClientesFiltro + '{' + nombre + '}').map((res: Response) => {
+        return this.http.get(`${this.resourceUrlPresupuestos}${this.urlPresupuestoClientesFiltro}${nombre}`).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertJsonACliente(jsonResponse);
+        });
+    }
+
+    findAllClientes(): Observable<Cliente[]>{
+        return this.http.get(`${this.resourceUrlPresupuestos}${this.urlPresupuestoClientesAll}`)
+            .map((res: Response) => {
+                return <Cliente[]> res.json();
         });
     }
 
@@ -138,7 +146,7 @@ export class PresupuestosService {
         let arreglo: Cliente[] = [];
         json.forEach((elemento) => {
             const entity: Cliente =
-                Object.assign(new Cliente(), json);
+                Object.assign(new Cliente(), elemento);
             arreglo.push(entity);
         })
         return arreglo || [];

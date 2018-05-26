@@ -1,10 +1,16 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { DetallePresupuesto } from "../../entities/detalle-presupuesto/detalle-presupuesto.model";
 import { TipoParteMotor } from "../../entities/tipo-parte-motor/tipo-parte-motor.model";
 import { Cliente } from "../../entities/cliente/cliente.model";
 import { DTODatosMotorComponent } from '../../dto/dto-presupuesto-cabecera/DTODatosMotor';
 import { PresupuestosService } from '../presupuestos.service';
 import { DTOParOperacionPresupuestoComponent } from '../../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto';
+import { Presupuesto, PresupuestoService } from '../../entities/presupuesto';
+import { JhiEventManager } from 'ng-jhipster';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Operacion } from '../../entities/operacion';
 
 @Component({
     selector: 'jhi-nuevo-presupuesto',
@@ -13,23 +19,53 @@ import { DTOParOperacionPresupuestoComponent } from '../../dto/dto-presupuesto-c
 })
 export class NuevoPresupuestoComponent implements OnInit {
 
-
-    cliente: Cliente;
-
+    presupuesto: Presupuesto;
     detallesPresupuestos: DetallePresupuesto[] = [];
-    @Output() operaciones: DTOParOperacionPresupuestoComponent[] = [];
+    operaciones: DTOParOperacionPresupuestoComponent[] = [];
 
-    constructor(private presupuestosService: PresupuestosService) {
+    private subscription: Subscription;
+    private eventSubscriber: Subscription;
+
+    constructor(private presupuestosService: PresupuestosService,
+                private eventManager: JhiEventManager,
+                private presupuestoService: PresupuestoService,
+                private route: ActivatedRoute,
+               ) {
     }
 
     ngOnInit() {
+        this.consultarPresupuesto();
+    }
 
+
+    consultarPresupuesto(){
+        this.subscription = this.route.params.subscribe((params) => {
+            if(params['id']){
+                this.load(params['id']);
+                this.registerChangeInPresupuestos();
+            }
+        });
+
+    }
+
+    load(id) {
+        this.presupuestoService.find(id).subscribe((presupuesto) => {
+            this.presupuesto = presupuesto;
+        });
+    }
+
+    registerChangeInPresupuestos() {
+        this.eventSubscriber = this.eventManager.subscribe(
+            'presupuestoListModification',
+            (response) => this.load(this.presupuesto.id)
+        );
     }
 
 
     guardarPresupuesto() {
 
     }
+
 
     @Input()
     recibirDetalle(detalle: DetallePresupuesto) {
@@ -51,18 +87,15 @@ export class NuevoPresupuestoComponent implements OnInit {
             this.presupuestosService.findOperacionesPresupuesto(dto).subscribe(
                 (result) => {
                     this.operaciones.push(...result);
-                    console.log("responde la busqueda de operaciones y precios")
-                    console.log(result)
                 }
             );
 
 
+        }else{
+            //eliminar las operaciones de la lista
         }
 
 
     }
 
-    recibirCliente($event: Cliente) {
-        this.cliente = $event;
-    }
 }

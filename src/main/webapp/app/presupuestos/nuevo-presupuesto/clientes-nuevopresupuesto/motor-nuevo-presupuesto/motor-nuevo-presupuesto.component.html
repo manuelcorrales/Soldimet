@@ -1,45 +1,50 @@
-<div class="container card jh-card">
-    <h2>Datos del Motor</h2>
-    <div class="form-group form-row">
-        <!-- Seleccion Motores-->
-        <div class="col-md-auto col-sm-3 col-xs-3">
-            <label class="form-control-label">Motor: </label>
-            <select class="custom-select" [(ngModel)]="motor" name="motor" (change)="buscarAplicaciones()">
-                <option selected disabled>Elija un motor</option>
-                <option *ngFor="let motor of motores" [ngValue]="motor">
-                    {{motor?.marcaMotor}}
-                </option>
-            </select>
-        </div>
-        <!-- Seleccion Aplicacion-->
-        <div class="col-md-auto col-sm-4 col-xs-4">
-            <label class="form-control-label">Aplicación: </label>
-            <select class="custom-select" [(ngModel)]="aplicacion" name="aplicacion">
-                <option selected disabled>Elija una aplicación</option>
-                <option *ngFor="let aplicacion of aplicaciones" [ngValue]="aplicacion">
-                    {{aplicacion?.nombreAplicacion| json}}
-                </option>
-            </select>
-        </div>
-        <!-- Seleccion Cilindrada-->
-        <div class="form-inline col-md-auto col-xs-2">
-            <label class="form-control-label">Cilindrada: </label>
-            <div>
-                <div class=" form-check" *ngFor="let cilindrada of cilindradas">
-                    <input class="form-check-input" type="radio" name="groupCilindrada" (change)="onSelectionChange(cilindrada)" id="cilindrada_{{cilindrada.id}}">
-                    <label class="form-check-label" for="groupCilindrada"> {{cilindrada?.cantidadDeCilindros}}</label>
+<div class="card jh-card border-info mb-3">
+    <div class="card-header card-header text-white bg-info mb-3">
+        Datos del motor
+    </div>
+    <div class="card-body" style="padding-top: 0px;">
+        <div class="row">
+            <!-- Seleccion Motores-->
+            <div class="form-group col">
+                <p class="form-control-label"><strong>Motor:</strong> </p>
+                <select class="custom-select" [(ngModel)]="motor" name="motor" (change)="buscarAplicaciones()" [disabled]="detalleCreado">
+                    <span disabled *ngIf="detalleCreado"></span>
+                    <option selected disabled>Elija un motor</option>
+                    <option *ngFor="let motor of motores" [ngValue]="motor">
+                        {{motor?.marcaMotor}}
+                    </option>
+                </select>
+            </div>
+            <!-- Seleccion Aplicacion-->
+            <div class="form-group col">
+                <p class="form-control-label"><strong>Aplicación:</strong> </p>
+                <select class="custom-select" [(ngModel)]="aplicacion" name="aplicacion" [disabled]="detalleCreado">
+                    <span disabled *ngIf="detalleCreado"></span>
+                    <option selected disabled>Elija una aplicación</option>
+                    <option *ngFor="let aplicacion of aplicaciones" [ngValue]="aplicacion">
+                        {{aplicacion?.nombreAplicacion| json}}
+                    </option>
+                </select>
+            </div>
+            <!-- Seleccion Cilindrada-->
+            <div class="col">
+                <p class="form-control-label"><strong>Cilindrada: </strong></p>
+                <div class="d-inline">
+                    <div class=" form-check" *ngFor="let cilindrada of cilindradas">
+                        <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida" [(ngModel)]="cilindradaElegida"
+                            [disabled]="detalleCreado">
+                        <label class="form-check-label"> {{cilindrada?.cantidadDeCilindros}} cilindros</label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Seleccion Tipo partes-->
-        <div class="form-inline col-md-auto col-xs-3">
-            <label class="form-control-label">Presupuestar:</label>
-            <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
-                <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" (change)="crearDetalle(tipoParte, $event)">
-                    <span disabled *ngIf="aplicacion"></span>
-                    {{tipoParte?.nombreTipoParteMotor}}
-                </label>
+            <!--Seleccion Tipo partes-->
+            <div class="col">
+                <p class="form-control-label"><strong>Presupuestar:</strong></p>
+                <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
+                    <label class="form-check-label" style="padding-left: 1px">
+                        <input type="checkbox" class="form-check-input" (change)="crearDetalle(tipoParte, $event.target.checked)"> {{tipoParte?.nombreTipoParteMotor}}
+                    </label>
+                </div>
             </div>
         </div>
     </div>

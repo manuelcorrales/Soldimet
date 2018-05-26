@@ -54,10 +54,16 @@ public class PresupuestoController {
     }
 
     @GetMapping("/presupuestos/getClientesByNombre/{nombreCliente}")
-    public List<Cliente> buscarOperacionesPresupuesto(
-        @RequestParam("nombreCliente") String nombreCliente) {
+    public List<Cliente> buscarClientesPorNombre(
+        @PathVariable("nombreCliente") String nombreCliente) {
 
         return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
+    }
+
+    @GetMapping("/presupuestos/getAllClientes")
+    public List<Cliente> buscarTodosLosclientes() {
+
+        return expertoPresupuesto.buscarTodosLosClientes();
     }
 
     @GetMapping("/presupuestos/getRepuestos")

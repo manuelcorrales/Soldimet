@@ -242,6 +242,10 @@ public class ExpertoPresupuesto {
 
         TipoRepuesto tipoRepuesto = tipoRepuestoRepository.findByNombreTipoRepuesto(globales.nombre_Tipo_Repuesto_Repuesto);
 		return articuloRepository.findArticuloByTipoRepuesto(tipoRepuesto);
-	}
+    }
+
+    public List<Cliente> buscarTodosLosClientes(){
+        return clienteRepository.findAll();
+    }
 
 }

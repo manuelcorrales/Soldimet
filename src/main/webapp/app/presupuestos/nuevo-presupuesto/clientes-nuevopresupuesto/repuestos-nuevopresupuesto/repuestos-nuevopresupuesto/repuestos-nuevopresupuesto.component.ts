@@ -3,21 +3,21 @@ import { PresupuestosService } from '../../../../presupuestos.service';
 import { Articulo } from '../../../../../entities/articulo';
 
 @Component({
-  selector: 'jhi-repuestos-nuevopresupuesto',
-  templateUrl: './repuestos-nuevopresupuesto.component.html',
-  styles: []
+    selector: 'jhi-repuestos-nuevopresupuesto',
+    templateUrl: './repuestos-nuevopresupuesto.component.html',
+    styles: []
 })
 export class RepuestosNuevopresupuestoComponent implements OnInit {
 
     repuestos: Articulo[] = [];
 
-  constructor(private _presupuestoService: PresupuestosService) { }
+    constructor(private _presupuestoService: PresupuestosService) { }
 
-  ngOnInit() {
-      this._presupuestoService.buscarRepuestos().subscribe((repuestos)=>{
-        this.repuestos.push(...repuestos);
-        this.repuestos = repuestos;
-      })
-  }
+    ngOnInit() {
+        this._presupuestoService.buscarRepuestos().subscribe((repuestos) => {
+            this.repuestos.push(...repuestos);
+            this.repuestos = repuestos;
+        })
+    }
 
 }
