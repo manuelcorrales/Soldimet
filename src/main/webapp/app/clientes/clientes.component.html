@@ -1,6 +1,56 @@
 <div class="card jh-card">
-        <button class="btn btn-primary float-right jh-create-entity create-cliente" [routerLink]="['/', { outlets: { popup: ['nuevo-cliente'] } }]">
-            <span class="fa fa-plus">Nuevo Cliente</span>
-        </button>
+    <button class="btn btn-primary float-right jh-create-entity create-cliente" [routerLink]="['/', { outlets: { popup: ['nuevo-cliente'] } }]">
+        <span class="fa fa-plus">Nuevo Cliente</span>
+    </button>
     <jhi-alert></jhi-alert>
+    <div class="table" *ngIf="clientes">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Dirección</th>
+                    <th scope="col">Departamento</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Operaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cliente of clientes">
+                    <th>
+                        {{cliente.persona?.nombre}}
+                    </th>
+                    <td>{{cliente.apellido}}</td>
+                    <td>{{cliente.persona?.numeroTelefono}}</td>
+                    <td>{{cliente?.persona?.direccion?.calle}}, {{cliente?.persona?.direccion?.numero}}</td>
+                    <td>{{cliente?.persona?.direccion?.localidad?.nombreLocalidad}}</td>
+                    <td>
+                        <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
+                                <div class="alert alert-success" style="padding: 0px;" role="alert">
+                                        Alta
+                                </div>
+                        </div>
+                        <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-center">
+                                <div class="alert alert-warning" role="alert" style="padding: 0px;" >
+                                        Baja
+                                </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'cliente/'+ cliente.id + '/edit'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
+                                <span class="fa fa-pencil"></span>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'cliente/'+ cliente.id + '/delete'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
+                                <span class="fa fa-remove"></span>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -2,7 +2,7 @@ import {Routes} from '@angular/router';
 
 import {PresupuestosComponent} from './presupuestos.component';
 import {UserRouteAccessService} from '../shared';
-import {NuevoPresupuestoComponent} from "./nuevo-presupuesto/nuevo-presupuesto.component";
+import {NuevoPresupuestoComponent} from './nuevo-presupuesto/nuevo-presupuesto.component';
 
 
 export const PRESUPUESTOS_ROUTES: Routes = [{

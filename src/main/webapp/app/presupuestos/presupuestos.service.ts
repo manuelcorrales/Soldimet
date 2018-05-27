@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { SERVER_API_URL } from "../app.constants";
+import { SERVER_API_URL } from '../app.constants';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils } from "ng-jhipster";
-import { DtoPresupuestoCabeceraComponent } from "../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component";
-import { Aplicacion } from "../entities/aplicacion/aplicacion.model";
-import { Motor } from "../entities/motor/motor.model";
+import { JhiDateUtils } from 'ng-jhipster';
+import { DtoPresupuestoCabeceraComponent } from '../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
+import { Aplicacion } from '../entities/aplicacion/aplicacion.model';
+import { Motor } from '../entities/motor/motor.model';
 import { DTODatosMotorComponent } from '../dto/dto-presupuesto-cabecera/DTODatosMotor';
-import { DTOParOperacionPresupuestoComponent } from "../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto";
-import { Cliente } from "../entities/cliente/cliente.model";
-import { MotorService } from "../entities/motor/motor.service";
-import { AplicacionService } from "../entities/aplicacion/aplicacion.service";
-import { TipoParteMotorService } from "../entities/tipo-parte-motor/tipo-parte-motor.service";
-import { CilindradaService } from "../entities/cilindrada/cilindrada.service";
-import { Cilindrada } from "../entities/cilindrada/cilindrada.model";
-import { TipoParteMotor } from "../entities/tipo-parte-motor/tipo-parte-motor.model";
-import { ResponseWrapper } from "../shared/model/response-wrapper.model";
-import { HttpClient } from "@angular/common/http";
+import { DTOParOperacionPresupuestoComponent } from '../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto';
+import { Cliente } from '../entities/cliente/cliente.model';
+import { MotorService } from '../entities/motor/motor.service';
+import { AplicacionService } from '../entities/aplicacion/aplicacion.service';
+import { TipoParteMotorService } from '../entities/tipo-parte-motor/tipo-parte-motor.service';
+import { CilindradaService } from '../entities/cilindrada/cilindrada.service';
+import { Cilindrada } from '../entities/cilindrada/cilindrada.model';
+import { TipoParteMotor } from '../entities/tipo-parte-motor/tipo-parte-motor.model';
+import { ResponseWrapper } from '../shared/model/response-wrapper.model';
+import { HttpClient } from '@angular/common/http';
 import { Articulo } from '../entities/articulo';
 
 @Injectable()

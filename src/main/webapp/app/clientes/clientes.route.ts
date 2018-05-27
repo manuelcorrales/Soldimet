@@ -1,13 +1,10 @@
-import {Route, Routes} from '@angular/router';
+import { Route, Routes } from '@angular/router';
 
 import { UserRouteAccessService } from '../shared';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import {ClientesComponent} from "./clientes.component";
-import {ModalNuevoClienteComponent} from "./modal-nuevo-cliente/modal-nuevo-cliente.component";
-
-
-
+import { ClientesComponent } from './clientes.component';
+import { ClienteModalPopupComponent } from './modal-nuevo-cliente/modal-nuevo-cliente.component'
 
 export const CLIENTES_ROUTE: Routes = [{
     path: 'clientes',
@@ -22,7 +19,7 @@ export const CLIENTES_ROUTE: Routes = [{
 export const CLIENTES_POPUP_ROUTE: Routes = [
     {
         path: 'nuevo-cliente',
-        component: ModalNuevoClienteComponent,
+        component: ClienteModalPopupComponent,
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Nuevo Cliente'

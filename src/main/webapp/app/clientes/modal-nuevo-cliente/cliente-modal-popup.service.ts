@@ -1,9 +1,8 @@
-import {Component, Injectable} from "@angular/core";
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
-import {Router} from "@angular/router";
-import {ClienteService} from "../../entities/cliente/cliente.service";
-import {Cliente} from "../../entities/cliente/cliente.model";
-
+import { Component, Injectable } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { ClienteService } from '../../entities/cliente/cliente.service';
+import { Cliente } from '../../entities/cliente/cliente.model';
 
 @Injectable()
 export class ClienteModalPopupService {
@@ -43,13 +42,13 @@ export class ClienteModalPopupService {
     }
 
     clienteModalRef(component: Component, cliente: Cliente): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.cliente = cliente;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
             this.ngbModalRef = null;
         });
         return modalRef;

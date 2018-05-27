@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DetallePresupuesto } from "../../entities/detalle-presupuesto/detalle-presupuesto.model";
-import { TipoParteMotor } from "../../entities/tipo-parte-motor/tipo-parte-motor.model";
-import { Cliente } from "../../entities/cliente/cliente.model";
+import { DetallePresupuesto } from '../../entities/detalle-presupuesto/detalle-presupuesto.model';
+import { TipoParteMotor } from '../../entities/tipo-parte-motor/tipo-parte-motor.model';
+import { Cliente } from '../../entities/cliente/cliente.model';
 import { DTODatosMotorComponent } from '../../dto/dto-presupuesto-cabecera/DTODatosMotor';
 import { PresupuestosService } from '../presupuestos.service';
 import { DTOParOperacionPresupuestoComponent } from '../../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto';

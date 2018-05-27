@@ -1,18 +1,19 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Cliente} from "../../entities/cliente/cliente.model";
-import {Persona} from "../../entities/persona/persona.model";
-import {Direccion} from "../../entities/direccion/direccion.model";
-import {Localidad} from "../../entities/localidad/localidad.model";
-import {LocalidadService} from "../../entities/localidad/localidad.service";
-import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs/Observable";
-import {ResponseWrapper} from "../../shared/model/response-wrapper.model";
-import {JhiAlertService, JhiEventManager} from "ng-jhipster";
-import {PersonaService} from "../../entities/persona/persona.service";
-import { NgbModal,NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {ClienteService} from "../../entities/cliente/cliente.service";
-import {ClienteModalPopupService} from "./cliente-modal-popup.service";
-import {DireccionService} from "../../entities/direccion/direccion.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Cliente } from '../../entities/cliente/cliente.model';
+import { Persona } from '../../entities/persona/persona.model';
+import { Direccion } from '../../entities/direccion/direccion.model';
+import { Localidad } from '../../entities/localidad/localidad.model';
+import { LocalidadService } from '../../entities/localidad/localidad.service';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { ResponseWrapper } from '../../shared/model/response-wrapper.model';
+import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
+import { PersonaService } from '../../entities/persona/persona.service';
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ClienteService } from '../../entities/cliente/cliente.service';
+import { ClienteModalPopupService } from './cliente-modal-popup.service';
+import { DireccionService } from '../../entities/direccion/direccion.service';
+import { EstadoPersonaService, EstadoPersona } from '../../entities/estado-persona';
 
 @Component({
     selector: 'jhi-modal-nuevo-cliente',
@@ -21,62 +22,61 @@ import {DireccionService} from "../../entities/direccion/direccion.service";
 })
 export class ModalNuevoClienteComponent implements OnInit {
 
-
     cliente: Cliente;
     persona: Persona;
     direccion: Direccion;
     isSaving: boolean;
-    personas: Persona[];
     localidades: Localidad[];
+    personas: Persona[];
 
     constructor(public activeModal: NgbActiveModal,
-                private jhiAlertService: JhiAlertService,
-                private clienteService: ClienteService,
-                private personaService: PersonaService,
-                private eventManager: JhiEventManager,
-                private localidadService: LocalidadService,
-                private direccionService: DireccionService,) {
+        private jhiAlertService: JhiAlertService,
+        private clienteService: ClienteService,
+        private personaService: PersonaService,
+        private eventManager: JhiEventManager,
+        private localidadService: LocalidadService,
+        private direccionService: DireccionService,
+        private estadoPersonaService: EstadoPersonaService,
+    ) {
     }
 
     ngOnInit() {
         this.isSaving = false;
         if (this.cliente === undefined || this.cliente.id === undefined) {
-            console.log("*************CLIENTE NULO***************");
+            console.log('*************CLIENTE NULO***************');
             this.cliente = new Cliente();
             this.persona = new Persona();
             this.direccion = new Direccion();
+        } else {
+            console.log('************CLIENTE CREADO******************');
+            this.personaService
+                .query({ filter: 'cliente-is-null' })
+                .subscribe((res: ResponseWrapper) => {
+                    if (!this.cliente.persona || !this.cliente.persona.id) {
+                        this.personas = res.json;
+                    } else {
+                        this.personaService
+                            .find(this.cliente.persona.id)
+                            .subscribe((subRes: Persona) => {
+                                this.personas = [subRes].concat(res.json);
+                            }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                    }
+                }, (res: ResponseWrapper) => this.onError(res.json));
 
         }
-        else {
-            console.log("************CLIENTE CREADO******************");
-            this.personaService
-            .query({filter: 'cliente-is-null'})
-            .subscribe((res: ResponseWrapper) => {
-                if (!this.cliente.persona || !this.cliente.persona.id) {
-                    this.personas = res.json;
+
+        this.localidadService.query({ filter: 'localidad-is-null' })
+            .subscribe((response: ResponseWrapper) => {
+                if (!this.direccion.localidad || !this.direccion.localidad.id) {
+                    this.localidades = response.json;
                 } else {
-                    this.personaService
-                    .find(this.cliente.persona.id)
-                    .subscribe((subRes: Persona) => {
-                        this.personas = [subRes].concat(res.json);
-                    }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                    this.localidadService
+                        .find(this.direccion.localidad.id)
+                        .subscribe((subRes: Localidad) => {
+                            this.personas = [subRes].concat(response.json);
+                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
                 }
             }, (res: ResponseWrapper) => this.onError(res.json));
-
-        }
-
-        this.localidadService.query({filter: 'localidad-is-null'})
-        .subscribe((response: ResponseWrapper) => {
-            if (!this.direccion.localidad || !this.direccion.localidad.id) {
-                this.localidades = response.json;
-            } else {
-                this.localidadService
-                .find(this.direccion.localidad.id)
-                .subscribe((subRes: Localidad) => {
-                    this.personas = [subRes].concat(response.json);
-                }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-            }
-        }, (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {
@@ -92,23 +92,6 @@ export class ModalNuevoClienteComponent implements OnInit {
             this.subscribeToSaveDireccionResponse(
                 this.direccionService.create(this.direccion));
         }
-
-        if (this.persona.id !== undefined) {
-            this.subscribeToSavePersonaResponse(
-                this.personaService.update(this.persona));
-        } else {
-            this.subscribeToSavePersonaResponse(
-                this.personaService.create(this.persona));
-        }
-
-        if (this.cliente.id !== undefined) {
-
-            this.subscribeToSaveClienteResponse(
-                this.clienteService.update(this.cliente));
-        } else {
-            this.subscribeToSaveClienteResponse(
-                this.clienteService.create(this.cliente));
-        }
     }
 
     private subscribeToSaveDireccionResponse(result: Observable<Direccion>) {
@@ -118,6 +101,17 @@ export class ModalNuevoClienteComponent implements OnInit {
 
     private onSaveDireccionSuccess(result: Direccion) {
         this.persona.direccion = result;
+        this.estadoPersonaService.find(1).subscribe(
+            (estado: EstadoPersona) => {
+                this.persona.estadoPersona = estado;
+                if (this.persona.id !== undefined) {
+                    this.subscribeToSavePersonaResponse(
+                        this.personaService.update(this.persona));
+                } else {
+                    this.subscribeToSavePersonaResponse(
+                        this.personaService.create(this.persona));
+                }
+            });
     }
 
     private onSaveDireccionError() {
@@ -130,13 +124,19 @@ export class ModalNuevoClienteComponent implements OnInit {
     }
 
     private onSavePersonaSuccess(result: Persona) {
-        this.persona.direccion = result;
+        this.cliente.persona = result;
+        if (this.cliente.id !== undefined) {
+            this.subscribeToSaveClienteResponse(
+                this.clienteService.update(this.cliente));
+        } else {
+            this.subscribeToSaveClienteResponse(
+                this.clienteService.create(this.cliente));
+        }
     }
 
     private onSavePersonaError() {
         this.isSaving = false;
     }
-
 
     private subscribeToSaveClienteResponse(result: Observable<Cliente>) {
         result.subscribe((res: Cliente) =>
@@ -144,7 +144,7 @@ export class ModalNuevoClienteComponent implements OnInit {
     }
 
     private onSaveClienteSuccess(result: Cliente) {
-        this.eventManager.broadcast({name: 'clienteListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'clienteListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -157,7 +157,6 @@ export class ModalNuevoClienteComponent implements OnInit {
         this.jhiAlertService.error(error.message, null, null);
     }
 
-
     trackById(index: number, item: Localidad) {
         return item.id;
     }
@@ -168,7 +167,7 @@ export class ModalNuevoClienteComponent implements OnInit {
 }
 
 @Component({
-    selector: 'jhi-cliente-nuevo-popup',
+    selector: '',
     template: ''
 })
 export class ClienteModalPopupComponent implements OnInit, OnDestroy {
@@ -176,17 +175,17 @@ export class ClienteModalPopupComponent implements OnInit, OnDestroy {
     routeSub: any;
 
     constructor(private route: ActivatedRoute,
-                private clientePopupService: ClienteModalPopupService) {
+        private clientePopupService: ClienteModalPopupService) {
     }
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
             if (params['id']) {
                 this.clientePopupService
-                .open(ModalNuevoClienteComponent as Component, params['id']);
+                    .open(ModalNuevoClienteComponent as Component, params['id']);
             } else {
                 this.clientePopupService
-                .open(ModalNuevoClienteComponent as Component);
+                    .open(ModalNuevoClienteComponent as Component);
             }
         });
     }

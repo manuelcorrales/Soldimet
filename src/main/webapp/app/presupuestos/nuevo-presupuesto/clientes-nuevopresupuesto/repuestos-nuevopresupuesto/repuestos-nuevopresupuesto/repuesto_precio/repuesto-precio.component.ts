@@ -9,8 +9,8 @@ import { Articulo } from '../../../../../../entities/articulo';
 export class RepuestoPrecioComponent implements OnInit {
     @Input()
     repuesto: Articulo;
-    seleccionado: boolean = false;
-    precio: number = 0;
+    seleccionado = false;
+    precio = 0;
 
   constructor( ) {
    }

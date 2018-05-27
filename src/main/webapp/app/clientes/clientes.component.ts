@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import {Cliente} from "../entities/cliente/cliente.model";
-import {ResponseWrapper} from "../shared/model/response-wrapper.model";
-import {ClienteService} from "../entities/cliente/cliente.service";
-import {JhiAlertService, JhiEventManager} from "ng-jhipster";
-import {Principal} from "../shared/auth/principal.service";
-import {Subscription} from "rxjs/Subscription";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Cliente} from '../entities/cliente/cliente.model';
+import {ResponseWrapper} from '../shared/model/response-wrapper.model';
+import {ClienteService} from '../entities/cliente/cliente.service';
+import {JhiAlertService, JhiEventManager} from 'ng-jhipster';
+import {Principal} from '../shared/auth/principal.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'jhi-clientes',
   templateUrl: './clientes.component.html',
   styles: []
 })
-export class ClientesComponent implements OnInit {
+export class ClientesComponent implements OnInit, OnDestroy  {
 
     clientes: Cliente[];
     currentAccount: any;

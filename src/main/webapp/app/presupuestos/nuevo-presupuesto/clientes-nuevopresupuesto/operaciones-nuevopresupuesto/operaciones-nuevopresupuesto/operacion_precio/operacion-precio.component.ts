@@ -9,7 +9,7 @@ import { DTOParOperacionPresupuestoComponent } from '../../../../../../dto/dto-p
 export class OperacionPrecioComponent implements OnInit {
     @Input()
     operacion: DTOParOperacionPresupuestoComponent;
-    seleccionado: boolean = false;
+    seleccionado = false;
 
   constructor( ) {
    }

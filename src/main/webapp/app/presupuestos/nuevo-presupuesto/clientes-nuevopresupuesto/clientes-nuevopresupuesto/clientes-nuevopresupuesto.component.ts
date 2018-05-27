@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
-import { Cliente } from "../../../../entities/cliente/cliente.model";
-import { PresupuestosService } from "../../../presupuestos.service";
+import { Cliente } from '../../../../entities/cliente/cliente.model';
+import { PresupuestosService } from '../../../presupuestos.service';
 import { ClienteService } from '../../../../entities/cliente';
 import { PersonaService, Persona } from '../../../../entities/persona';
 import { ResponseWrapper } from '../../../../shared';

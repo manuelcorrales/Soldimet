@@ -1,11 +1,11 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Cilindrada } from "../../../../entities/cilindrada/cilindrada.model";
-import { Motor } from "../../../../entities/motor/motor.model";
-import { Aplicacion } from "../../../../entities/aplicacion/aplicacion.model";
-import { TipoParteMotor } from "../../../../entities/tipo-parte-motor/tipo-parte-motor.model";
-import { PresupuestosService } from "../../../presupuestos.service";
-import { DetallePresupuesto } from "../../../../entities/detalle-presupuesto/detalle-presupuesto.model";
+import { Cilindrada } from '../../../../entities/cilindrada/cilindrada.model';
+import { Motor } from '../../../../entities/motor/motor.model';
+import { Aplicacion } from '../../../../entities/aplicacion/aplicacion.model';
+import { TipoParteMotor } from '../../../../entities/tipo-parte-motor/tipo-parte-motor.model';
+import { PresupuestosService } from '../../../presupuestos.service';
+import { DetallePresupuesto } from '../../../../entities/detalle-presupuesto/detalle-presupuesto.model';
 import { JhiEventManager } from 'ng-jhipster';
 import { DetallePresupuestoService } from '../../../../entities/detalle-presupuesto';
 import { Subscription } from 'rxjs';
