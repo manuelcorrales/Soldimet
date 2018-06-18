@@ -40,13 +40,18 @@ public class DetallePresupuesto implements Serializable {
     private Motor motor;
 
     @OneToMany
-    @JoinColumn(name= "detalle_presupuesto")
+    @JoinColumn(name= "detallePresupuesto")
     @JsonIgnore
     private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
     private TipoParteMotor tipoParteMotor;
+
+    @OneToMany
+    @JoinColumn(name= "detallePresupuesto")
+    @JsonIgnore
+    private Set<CobranzaRepuesto> cobranzaRepuestos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -143,6 +148,29 @@ public class DetallePresupuesto implements Serializable {
 
     public void setTipoParteMotor(TipoParteMotor tipoParteMotor) {
         this.tipoParteMotor = tipoParteMotor;
+    }
+
+    public Set<CobranzaRepuesto> getCobranzaRepuestos() {
+        return cobranzaRepuestos;
+    }
+
+    public DetallePresupuesto cobranzaRepuestos(Set<CobranzaRepuesto> cobranzaRepuestos) {
+        this.cobranzaRepuestos = cobranzaRepuestos;
+        return this;
+    }
+
+    public DetallePresupuesto addCobranzaRepuesto(CobranzaRepuesto cobranzaRepuesto) {
+        this.cobranzaRepuestos.add(cobranzaRepuesto);
+        return this;
+    }
+
+    public DetallePresupuesto removeCobranzaRepuesto(CobranzaRepuesto cobranzaRepuesto) {
+        this.cobranzaRepuestos.remove(cobranzaRepuesto);
+        return this;
+    }
+
+    public void setCobranzaRepuestos(Set<CobranzaRepuesto> cobranzaRepuestos) {
+        this.cobranzaRepuestos = cobranzaRepuestos;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

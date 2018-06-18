@@ -9,6 +9,7 @@ export class DetallePresupuesto implements BaseEntity {
         public motor?: BaseEntity,
         public cobranzaOperacions?: BaseEntity[],
         public tipoParteMotor?: BaseEntity,
+        public cobranzaRepuestos?: BaseEntity[],
     ) {
     }
 }

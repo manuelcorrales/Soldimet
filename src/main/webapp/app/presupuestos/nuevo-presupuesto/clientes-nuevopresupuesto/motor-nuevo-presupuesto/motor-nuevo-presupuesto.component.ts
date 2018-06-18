@@ -27,7 +27,7 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
     motor: Motor;
     aplicacion: Aplicacion;
     cilindradaElegida: Cilindrada;
-    detalleCreado: boolean = false;
+    detalleCreado = false;
 
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -56,7 +56,7 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
 
     crearDetalle(tipoParteMotor: TipoParteMotor, valor: boolean) {
         this.detalleCreado = true;
-        let detallePresupuesto = new DetallePresupuesto();
+        const detallePresupuesto = new DetallePresupuesto();
         detallePresupuesto.tipoParteMotor = tipoParteMotor;
         detallePresupuesto.motor = this.motor;
         detallePresupuesto.cilindrada = this.cilindradaElegida;

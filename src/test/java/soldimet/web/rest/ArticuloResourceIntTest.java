@@ -4,9 +4,7 @@ import soldimet.SoldimetApp;
 
 import soldimet.domain.Articulo;
 import soldimet.domain.EstadoArticulo;
-import soldimet.domain.Rubro;
 import soldimet.domain.Marca;
-import soldimet.domain.Proveedor;
 import soldimet.domain.TipoRepuesto;
 import soldimet.repository.ArticuloRepository;
 import soldimet.service.ArticuloService;
@@ -102,20 +100,10 @@ public class ArticuloResourceIntTest {
         em.flush();
         articulo.setEstado(estado);
         // Add required entity
-        Rubro rubro = RubroResourceIntTest.createEntity(em);
-        em.persist(rubro);
-        em.flush();
-        articulo.setRubro(rubro);
-        // Add required entity
         Marca marca = MarcaResourceIntTest.createEntity(em);
         em.persist(marca);
         em.flush();
         articulo.setMarca(marca);
-        // Add required entity
-        Proveedor proveedor = ProveedorResourceIntTest.createEntity(em);
-        em.persist(proveedor);
-        em.flush();
-        articulo.setProveedor(proveedor);
         // Add required entity
         TipoRepuesto tipoRepuesto = TipoRepuestoResourceIntTest.createEntity(em);
         em.persist(tipoRepuesto);

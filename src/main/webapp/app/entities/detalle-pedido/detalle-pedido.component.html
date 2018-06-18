@@ -17,20 +17,16 @@
             <thead>
             <tr>
             <th><span>ID</span></th>
-            <th><span>Cantidad Articulo</span></th>
-            <th><span>Precio Respuesto</span></th>
-            <th><span>Articulo</span></th>
+            <th><span>Detalle Presupuesto</span></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let detallePedido of detallePedidos ;trackBy: trackId">
                 <td><a [routerLink]="['../detalle-pedido', detallePedido.id ]">{{detallePedido.id}}</a></td>
-                <td>{{detallePedido.cantidadArticulo}}</td>
-                <td>{{detallePedido.precioRespuesto}}</td>
                 <td>
-                    <div *ngIf="detallePedido.articulo">
-                        <a [routerLink]="['../articulo', detallePedido.articulo?.id ]" >{{detallePedido.articulo?.descripcion}}</a>
+                    <div *ngIf="detallePedido.detallePresupuesto">
+                        <a [routerLink]="['../detalle-presupuesto', detallePedido.detallePresupuesto?.id ]" >{{detallePedido.detallePresupuesto?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">

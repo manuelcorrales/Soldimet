@@ -3,6 +3,15 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <include file="config/liquibase/changelog/20180615000159_added_entity_constraints_CobranzaRepuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171214000831_added_entity_constraints_DetallePresupuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171213233426_added_entity_constraints_Articulo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171214023016_added_entity_constraints_TipoRepuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180616204734_added_entity_constraints_CostoRepuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171214000606_added_entity_constraints_DetallePedido.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180616212130_added_entity_constraints_MovimientoArticulo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180616212814_added_entity_constraints_MovimientoPresupuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180617234431_added_entity_constraints_MovimientoPedido.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 <include file="classpath:config/liquibase/changelog/20180313004956_changelog.xml" 
     relativeToChangelogFile="false"/>

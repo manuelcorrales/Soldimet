@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity CostoRepuesto.
+    -->
+    <changeSet id="20180616204734-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="tipo_repuesto_id"
+                                 baseTableName="costo_repuesto"
+                                 constraintName="fk_costo_repuesto_tipo_repuesto_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tipo_repuesto"/>
+
+        <addForeignKeyConstraint baseColumnNames="articulo_id"
+                                 baseTableName="costo_repuesto"
+                                 constraintName="fk_costo_repuesto_articulo_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="articulo"/>
+
+        <addForeignKeyConstraint baseColumnNames="proveedor_id"
+                                 baseTableName="costo_repuesto"
+                                 constraintName="fk_costo_repuesto_proveedor_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="proveedor"/>
+
+    </changeSet>
+</databaseChangeLog>

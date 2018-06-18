@@ -1,0 +1,42 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "articulo",
+            "otherEntityName": "articulo",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "descripcion"
+        },
+        {
+            "relationshipName": "movimiento",
+            "otherEntityName": "movimiento",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "movimientoArticulo"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "cantidad",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": "1"
+        }
+    ],
+    "changelogDate": "20180616212130",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "movimiento_articulo",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

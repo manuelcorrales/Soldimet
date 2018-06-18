@@ -2,35 +2,24 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "articulo",
-            "otherEntityName": "articulo",
-            "relationshipType": "many-to-one",
+            "relationshipName": "detallePresupuesto",
+            "otherEntityName": "detallePresupuesto",
+            "relationshipType": "one-to-one",
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "descripcion"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "cantidadArticulo",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": "1"
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "detallePedido"
         },
         {
-            "fieldName": "precioRespuesto",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": "0"
+            "relationshipName": "costoRepuesto",
+            "otherEntityName": "costoRepuesto",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "detallePedido"
         }
     ],
+    "fields": [],
     "changelogDate": "20171214000606",
     "dto": "no",
     "service": "serviceClass",

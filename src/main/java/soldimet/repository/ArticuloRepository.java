@@ -1,13 +1,13 @@
 package soldimet.repository;
 
-import java.util.List;
 import soldimet.domain.Articulo;
+import soldimet.domain.TipoRepuesto;
+
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.*;
-import soldimet.domain.EstadoArticulo;
-import soldimet.domain.Proveedor;
-import soldimet.domain.TipoRepuesto;
 
 
 /**
@@ -17,11 +17,5 @@ import soldimet.domain.TipoRepuesto;
 @Repository
 public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {
 
-    public List<Articulo> findByEstado(EstadoArticulo estadoArticulo);
-
-    public Articulo findByCodigoArticuloProveedor(String codigoArticuloProveedor);
-
-    public List<Articulo> findByProveedor( Proveedor proveedor);
-
-    public List<Articulo> findArticuloByTipoRepuesto( TipoRepuesto tipoRepuesto);
+    List<Articulo> findArticuloByTipoRepuesto(TipoRepuesto tipo);
 }

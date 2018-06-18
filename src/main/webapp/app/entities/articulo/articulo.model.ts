@@ -6,10 +6,7 @@ export class Articulo implements BaseEntity {
         public descripcion?: string,
         public codigoArticuloProveedor?: string,
         public estado?: BaseEntity,
-        public rubro?: BaseEntity,
         public marca?: BaseEntity,
-        public historialPrecios?: BaseEntity[],
-        public proveedor?: BaseEntity,
         public tipoRepuesto?: BaseEntity,
     ) {
     }

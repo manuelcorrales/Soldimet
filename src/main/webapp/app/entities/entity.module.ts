@@ -47,6 +47,11 @@ import { SoldimetTipoRepuestoModule } from './tipo-repuesto/tipo-repuesto.module
 import { SoldimetTipoTarjetaModule } from './tipo-tarjeta/tipo-tarjeta.module';
 import { SoldimetDetalleMovimientoModule } from './detalle-movimiento/detalle-movimiento.module';
 import { SoldimetCobranzaOperacionModule } from './cobranza-operacion/cobranza-operacion.module';
+import { SoldimetCobranzaRepuestoModule } from './cobranza-repuesto/cobranza-repuesto.module';
+import { SoldimetCostoRepuestoModule } from './costo-repuesto/costo-repuesto.module';
+import { SoldimetMovimientoArticuloModule } from './movimiento-articulo/movimiento-articulo.module';
+import { SoldimetMovimientoPresupuestoModule } from './movimiento-presupuesto/movimiento-presupuesto.module';
+import { SoldimetMovimientoPedidoModule } from './movimiento-pedido/movimiento-pedido.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -98,6 +103,11 @@ import { SoldimetCobranzaOperacionModule } from './cobranza-operacion/cobranza-o
         SoldimetTipoTarjetaModule,
         SoldimetDetalleMovimientoModule,
         SoldimetCobranzaOperacionModule,
+        SoldimetCobranzaRepuestoModule,
+        SoldimetCostoRepuestoModule,
+        SoldimetMovimientoArticuloModule,
+        SoldimetMovimientoPresupuestoModule,
+        SoldimetMovimientoPedidoModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

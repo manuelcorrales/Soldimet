@@ -1,16 +1,16 @@
 <form class="container-fluid jh-create-entity">
     <div class="col-auto align-center container jh-card">
         <h3>Nuevo Presupuesto</h3>
-        <jhi-clientes-nuevopresupuesto></jhi-clientes-nuevopresupuesto>
+        <jhi-clientes-nuevopresupuesto #cliente></jhi-clientes-nuevopresupuesto>
         <jhi-motor-nuevo-presupuesto (eventoDetallePresupuesto)="recibirDetalle($event)"></jhi-motor-nuevo-presupuesto>
         <div class="row row-eq-height">
             <div class="col-md-6">
-                <jhi-operaciones-nuevopresupuesto [operaciones]="operaciones">
+                <jhi-operaciones-nuevopresupuesto #operaciones [operaciones]="operaciones">
 
                 </jhi-operaciones-nuevopresupuesto>
             </div>
             <div class="col-md-6">
-                <jhi-repuestos-nuevopresupuesto></jhi-repuestos-nuevopresupuesto>
+                <jhi-repuestos-nuevopresupuesto #repuestos></jhi-repuestos-nuevopresupuesto>
             </div>
         </div>
         <div class="card-footer ">

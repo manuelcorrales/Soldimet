@@ -4,7 +4,7 @@
     </div>
     <div class="card-body" style="padding-top: 0px;">
         <div *ngFor="let operacion of operaciones" class="container">
-            <jhi-operacion-precio [operacion]="operacion" class="row align-items-center top-buffer"></jhi-operacion-precio>
+            <jhi-operacion-precio #operacion [operacion]="operacion" class="row align-items-center top-buffer"></jhi-operacion-precio>
         </div>
     </div>
 </div>

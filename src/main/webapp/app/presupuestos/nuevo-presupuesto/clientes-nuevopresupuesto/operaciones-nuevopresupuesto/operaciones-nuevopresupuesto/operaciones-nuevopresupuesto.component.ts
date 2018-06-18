@@ -1,10 +1,12 @@
-import { Component, Input, Output, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { DetallePresupuesto } from '../../../../../entities/detalle-presupuesto/detalle-presupuesto.model';
 import { DTOParOperacionPresupuestoComponent } from '../../../../../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto';
 import { PresupuestosService } from '../../../../presupuestos.service';
 import { DTODatosMotorComponent } from '../../../../../dto/dto-presupuesto-cabecera/DTODatosMotor';
 import { CobranzaOperacion } from '../../../../../entities/cobranza-operacion';
 import { BaseEntity } from './../../../../../shared';
+import { Operacion } from '../../../../../entities/operacion';
+import { OperacionPrecioComponent } from './operacion_precio/operacion-precio.component';
 
 @Component({
     selector: 'jhi-operaciones-nuevopresupuesto',
@@ -12,11 +14,9 @@ import { BaseEntity } from './../../../../../shared';
     styles: []
 })
 export class OperacionesNuevopresupuestoComponent implements OnInit {
-    detalles: DetallePresupuesto[] = [];
     @Input() operaciones: DTOParOperacionPresupuestoComponent[] = [];
-    @Output() operacionesACobrar: CobranzaOperacion[] = []
-
-
+    @Output() operacionesACobrar: DTOParOperacionPresupuestoComponent[] = []
+    @ViewChildren('operacion') children: QueryList<OperacionPrecioComponent>;
     constructor(private presupuestosService: PresupuestosService) {
     }
 
@@ -25,19 +25,25 @@ export class OperacionesNuevopresupuestoComponent implements OnInit {
 
     elegirOperacion(operacion: DTOParOperacionPresupuestoComponent, elegido: boolean) {
 
-        let nuevaOperacionACobrar: CobranzaOperacion = new CobranzaOperacion();
-        nuevaOperacionACobrar.cobranzaOperacion = operacion.costoOperacion;
-        nuevaOperacionACobrar.operacion = operacion.operacionID as BaseEntity;
-        if (!this.operacionesACobrar.some(x =>
-            x === nuevaOperacionACobrar
+        if (!this.operacionesACobrar.some((x) =>
+            x === operacion
         ) && elegido
         ) {
-            this.operacionesACobrar.push(nuevaOperacionACobrar);
+            this.operacionesACobrar.push(operacion);
         } else {
-            this.operacionesACobrar = this.operacionesACobrar.filter(obj => obj !== nuevaOperacionACobrar);
+            this.operacionesACobrar = this.operacionesACobrar.filter((obj) => obj !== operacion);
         }
 
     }
 
+    getOperacionesACobrar(): CobranzaOperacion[] {
+        const listaOperacionesAcobrar: CobranzaOperacion[] = [];
+        this.children.forEach((operacionPrecioComponent) => {
+            if (operacionPrecioComponent.getSeleccionado()) {
+                listaOperacionesAcobrar.push(operacionPrecioComponent.getOperacionAcobrar());
+            }
+        })
+        return listaOperacionesAcobrar;
+    }
 
 }

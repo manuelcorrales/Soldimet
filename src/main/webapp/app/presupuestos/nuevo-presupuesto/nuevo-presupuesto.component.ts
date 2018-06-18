@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DetallePresupuesto } from '../../entities/detalle-presupuesto/detalle-presupuesto.model';
 import { TipoParteMotor } from '../../entities/tipo-parte-motor/tipo-parte-motor.model';
@@ -11,6 +11,7 @@ import { JhiEventManager } from 'ng-jhipster';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Operacion } from '../../entities/operacion';
+import { ClientesNuevopresupuestoComponent } from './clientes-nuevopresupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto.component';
 
 @Component({
     selector: 'jhi-nuevo-presupuesto',
@@ -22,6 +23,7 @@ export class NuevoPresupuestoComponent implements OnInit {
     presupuesto: Presupuesto;
     detallesPresupuestos: DetallePresupuesto[] = [];
     operaciones: DTOParOperacionPresupuestoComponent[] = [];
+    @ViewChild('cliente')clientesComponent: ClientesNuevopresupuestoComponent;
 
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -37,12 +39,13 @@ export class NuevoPresupuestoComponent implements OnInit {
         this.consultarPresupuesto();
     }
 
-
-    consultarPresupuesto(){
+    consultarPresupuesto() {
         this.subscription = this.route.params.subscribe((params) => {
-            if(params['id']){
+            if ( params['id']) {
                 this.load(params['id']);
                 this.registerChangeInPresupuestos();
+            }else {
+                this.presupuesto = new Presupuesto();
             }
         });
 
@@ -61,17 +64,20 @@ export class NuevoPresupuestoComponent implements OnInit {
         );
     }
 
-
     guardarPresupuesto() {
-
+        // Busco el cliente
+        this.presupuesto.cliente = this.clientesComponent.getCliente();
+        // Busco los datos del motor
+        this.presupuesto.detallePresupuestos = this.detallesPresupuestos;
+        // Busco las operaciones
+        // busco los repuestos
     }
-
 
     @Input()
     recibirDetalle(detalle: DetallePresupuesto) {
 
-        let tipoParteMotor: TipoParteMotor = detalle.tipoParteMotor;
-        var detalleNuevo = true;
+        const tipoParteMotor: TipoParteMotor = detalle.tipoParteMotor;
+        let detalleNuevo = true;
         this.detallesPresupuestos.forEach((detallePresupuestoCreado) => {
             if (detallePresupuestoCreado.tipoParteMotor === tipoParteMotor) {
                 detalleNuevo = false;
@@ -79,7 +85,7 @@ export class NuevoPresupuestoComponent implements OnInit {
         });
         if (detalleNuevo) {
             this.detallesPresupuestos.push(detalle);
-            let dto: DTODatosMotorComponent = new DTODatosMotorComponent();
+            const dto: DTODatosMotorComponent = new DTODatosMotorComponent();
             dto.idAplicacion = detalle.aplicacion.id;
             dto.idCilindrada = detalle.cilindrada.id;
             dto.idMotor = detalle.motor.id;
@@ -90,11 +96,9 @@ export class NuevoPresupuestoComponent implements OnInit {
                 }
             );
 
-
-        }else{
+        }else {
             //eliminar las operaciones de la lista
         }
-
 
     }
 

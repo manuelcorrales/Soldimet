@@ -18,32 +18,30 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
     clientes: Cliente[] = [];
     clienteElegido: Cliente;
     // configuración autocompleter
-    //Seleccionar el elemento al hacer click sobre la sugerencia
-    protected elegirConClick: boolean = true;
-    //abrir/cerrar el dropwdown al hacer click
-    protected abrirDropEnclick: boolean = true;
-    //cantidad de caracteres ingresados como mínimo al hacer la búsqueda
-    protected cantidadCaracteresMinimos: number = 2;
-    //numero en milisegundos de espera antes de realizar la búsqueda
-    protected milisegundos: number = 100;
-    //Auto elegir una coincidencia
-    protected resaltarCoincidencia: boolean = false;//recomendado
+    // Seleccionar el elemento al hacer click sobre la sugerencia
+    protected elegirConClick = true;
+    // abrir/cerrar el dropwdown al hacer click
+    protected abrirDropEnclick = true;
+    // cantidad de caracteres ingresados como mínimo al hacer la búsqueda
+    protected cantidadCaracteresMinimos = 2;
+    // numero en milisegundos de espera antes de realizar la búsqueda
+    protected milisegundos = 100;
+    // Auto elegir una coincidencia
+    protected resaltarCoincidencia = false; //recomendado
     // enfocar automaticamente cuando carga la página
-    protected autofocus: boolean = true;
+    protected autofocus = true;
     // mensaje 'sin resultados'
-    protected textNoResults: string = "No se encontraron resultados";
+    protected textNoResults = 'No se encontraron resultados';
     // texto durante la busqueda
-    protected textSearching: string = "buscando clientes...";
+    protected textSearching = 'buscando clientes...';
     // titulo
-    protected titleField: string = "Cliente";
+    protected titleField = 'Cliente';
     // limpiar lista de busqueda
-    protected clearSelected: boolean = true;
-    //controlando estado del buscador
-    protected buscandoClientes: boolean = false;
-
+    protected clearSelected = true;
+    // controlando estado del buscador
+    protected buscandoClientes = false;
 
     constructor(private _presupuestosService: PresupuestosService,
-        //private completerService: CompleterService,
         private _clienteService: ClienteService,
         private _personaService: PersonaService,
     ) {
@@ -69,5 +67,8 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
         return (item.appelido.match(term) || item.persona.nombre.match(term))
     }
 
+    getCliente() {
+        return this.clienteElegido;
+    }
 
 }

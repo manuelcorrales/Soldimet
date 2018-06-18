@@ -1,0 +1,77 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myCostoRepuestoLabel">Create or edit a Costo Repuesto</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!costoRepuesto.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="costoRepuesto.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_valor">Valor</label>
+            <input type="number" class="form-control" name="valor" id="field_valor"
+                [(ngModel)]="costoRepuesto.valor" required min="0" />
+            <div [hidden]="!(editForm.controls.valor?.dirty && editForm.controls.valor?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.valor?.errors?.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.valor?.errors?.min">
+                    This field should be at least 0.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.valor?.errors?.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" for="field_tipoRepuesto">Tipo Repuesto</label>
+            <select class="form-control" id="field_tipoRepuesto" name="tipoRepuesto" [(ngModel)]="costoRepuesto.tipoRepuesto"  required>
+                <option *ngIf="!editForm.value.tipoRepuesto" [ngValue]="null" selected></option>
+                <option [ngValue]="tipoRepuestoOption.id === costoRepuesto.tipoRepuesto?.id ? costoRepuesto.tipoRepuesto : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tiporepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.tipoRepuesto?.dirty && editForm.controls.tipoRepuesto?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.tipoRepuesto?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_articulo">Articulo</label>
+            <select class="form-control" id="field_articulo" name="articulo" [(ngModel)]="costoRepuesto.articulo"  required>
+                <option *ngIf="!editForm.value.articulo" [ngValue]="null" selected></option>
+                <option [ngValue]="articuloOption.id === costoRepuesto.articulo?.id ? costoRepuesto.articulo : articuloOption" *ngFor="let articuloOption of articulos; trackBy: trackArticuloById">{{articuloOption.descripcion}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.articulo?.dirty && editForm.controls.articulo?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.articulo?.errors?.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_proveedor">Proveedor</label>
+            <select class="form-control" id="field_proveedor" name="proveedor" [(ngModel)]="costoRepuesto.proveedor" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="proveedorOption.id === costoRepuesto.proveedor?.id ? costoRepuesto.proveedor : proveedorOption" *ngFor="let proveedorOption of proveedors; trackBy: trackProveedorById">{{proveedorOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

@@ -27,18 +27,18 @@ export const CLIENTES_POPUP_ROUTE: Routes = [
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
     },
-    /*{
-        path: 'clientes/:id/edit',
-        component: ClientePopupComponent,
+    {
+        path: 'cliente/:id/edit',
+        component: ClienteModalPopupComponent,
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Clientes'
+            pageTitle: 'Editar Cliente'
         },
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
-    },
+    },/*
     {
-        path: 'clientes/:id/delete',
+        path: 'cliente/:id/delete',
         component: ClienteDeletePopupComponent,
         data: {
             authorities: ['ROLE_USER'],

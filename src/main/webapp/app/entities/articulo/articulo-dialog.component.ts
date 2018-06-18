@@ -10,9 +10,7 @@ import { Articulo } from './articulo.model';
 import { ArticuloPopupService } from './articulo-popup.service';
 import { ArticuloService } from './articulo.service';
 import { EstadoArticulo, EstadoArticuloService } from '../estado-articulo';
-import { Rubro, RubroService } from '../rubro';
 import { Marca, MarcaService } from '../marca';
-import { Proveedor, ProveedorService } from '../proveedor';
 import { TipoRepuesto, TipoRepuestoService } from '../tipo-repuesto';
 import { ResponseWrapper } from '../../shared';
 
@@ -27,11 +25,7 @@ export class ArticuloDialogComponent implements OnInit {
 
     estadoarticulos: EstadoArticulo[];
 
-    rubros: Rubro[];
-
     marcas: Marca[];
-
-    proveedors: Proveedor[];
 
     tiporepuestos: TipoRepuesto[];
 
@@ -40,9 +34,7 @@ export class ArticuloDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private articuloService: ArticuloService,
         private estadoArticuloService: EstadoArticuloService,
-        private rubroService: RubroService,
         private marcaService: MarcaService,
-        private proveedorService: ProveedorService,
         private tipoRepuestoService: TipoRepuestoService,
         private eventManager: JhiEventManager
     ) {
@@ -52,12 +44,8 @@ export class ArticuloDialogComponent implements OnInit {
         this.isSaving = false;
         this.estadoArticuloService.query()
             .subscribe((res: ResponseWrapper) => { this.estadoarticulos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.rubroService.query()
-            .subscribe((res: ResponseWrapper) => { this.rubros = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.marcaService.query()
             .subscribe((res: ResponseWrapper) => { this.marcas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.proveedorService.query()
-            .subscribe((res: ResponseWrapper) => { this.proveedors = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.tipoRepuestoService.query()
             .subscribe((res: ResponseWrapper) => { this.tiporepuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
     }
@@ -100,15 +88,7 @@ export class ArticuloDialogComponent implements OnInit {
         return item.id;
     }
 
-    trackRubroById(index: number, item: Rubro) {
-        return item.id;
-    }
-
     trackMarcaById(index: number, item: Marca) {
-        return item.id;
-    }
-
-    trackProveedorById(index: number, item: Proveedor) {
         return item.id;
     }
 

@@ -37,46 +37,15 @@ export class ModalNuevoClienteComponent implements OnInit {
         private localidadService: LocalidadService,
         private direccionService: DireccionService,
         private estadoPersonaService: EstadoPersonaService,
+        private route: ActivatedRoute,
     ) {
     }
 
     ngOnInit() {
         this.isSaving = false;
-        if (this.cliente === undefined || this.cliente.id === undefined) {
-            console.log('*************CLIENTE NULO***************');
-            this.cliente = new Cliente();
-            this.persona = new Persona();
-            this.direccion = new Direccion();
-        } else {
-            console.log('************CLIENTE CREADO******************');
-            this.personaService
-                .query({ filter: 'cliente-is-null' })
-                .subscribe((res: ResponseWrapper) => {
-                    if (!this.cliente.persona || !this.cliente.persona.id) {
-                        this.personas = res.json;
-                    } else {
-                        this.personaService
-                            .find(this.cliente.persona.id)
-                            .subscribe((subRes: Persona) => {
-                                this.personas = [subRes].concat(res.json);
-                            }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-                    }
-                }, (res: ResponseWrapper) => this.onError(res.json));
+        this.localidadService.query()
+            .subscribe((res: ResponseWrapper) => { this.localidades = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
 
-        }
-
-        this.localidadService.query({ filter: 'localidad-is-null' })
-            .subscribe((response: ResponseWrapper) => {
-                if (!this.direccion.localidad || !this.direccion.localidad.id) {
-                    this.localidades = response.json;
-                } else {
-                    this.localidadService
-                        .find(this.direccion.localidad.id)
-                        .subscribe((subRes: Localidad) => {
-                            this.personas = [subRes].concat(response.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-                }
-            }, (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {

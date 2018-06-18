@@ -1,0 +1,46 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "tipoRepuesto",
+            "otherEntityName": "tipoRepuesto",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoRepuesto"
+        },
+        {
+            "relationshipName": "articulo",
+            "otherEntityName": "articulo",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "descripcion"
+        },
+        {
+            "relationshipName": "proveedor",
+            "otherEntityName": "proveedor",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "valor",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20180616204734",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "costo_repuesto",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}
