@@ -1,3 +1,8 @@
-<div class="container card jh-card">
-    <h2>Operaciones</h2>
+<div class="card-body" style="padding-top: 0px;">
+    <div *ngFor="let operacion of operaciones" class="container">
+        <jhi-operacion-precio #operaciones [costoOperacion]="operacion"
+        class="row align-items-center top-buffer"
+        (eventoCambioValor)="cambioTotalOperaciones()">
+        </jhi-operacion-precio>
+    </div>
 </div>

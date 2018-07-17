@@ -1,9 +1,12 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -19,19 +22,15 @@ public class DetallePedido implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(optional = false)
     @NotNull
-    @Min(value = 1)
-    @Column(name = "cantidad_articulo", nullable = false)
-    private Integer cantidadArticulo;
+    @JoinColumn(unique = true)
+    private DetallePresupuesto detallePresupuesto;
 
-    @NotNull
-    @DecimalMin(value = "0")
-    @Column(name = "precio_respuesto", nullable = false)
-    private Float precioRespuesto;
-
-    @ManyToOne(optional = false)
-    @NotNull
-    private Articulo articulo;
+    @OneToMany
+    @JoinColumn(name="detallePedido")
+    @JsonIgnore
+    private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -42,43 +41,40 @@ public class DetallePedido implements Serializable {
         this.id = id;
     }
 
-    public Integer getCantidadArticulo() {
-        return cantidadArticulo;
+    public DetallePresupuesto getDetallePresupuesto() {
+        return detallePresupuesto;
     }
 
-    public DetallePedido cantidadArticulo(Integer cantidadArticulo) {
-        this.cantidadArticulo = cantidadArticulo;
+    public DetallePedido detallePresupuesto(DetallePresupuesto detallePresupuesto) {
+        this.detallePresupuesto = detallePresupuesto;
         return this;
     }
 
-    public void setCantidadArticulo(Integer cantidadArticulo) {
-        this.cantidadArticulo = cantidadArticulo;
+    public void setDetallePresupuesto(DetallePresupuesto detallePresupuesto) {
+        this.detallePresupuesto = detallePresupuesto;
     }
 
-    public Float getPrecioRespuesto() {
-        return precioRespuesto;
+    public Set<CostoRepuesto> getCostoRepuestos() {
+        return costoRepuestos;
     }
 
-    public DetallePedido precioRespuesto(Float precioRespuesto) {
-        this.precioRespuesto = precioRespuesto;
+    public DetallePedido costoRepuestos(Set<CostoRepuesto> costoRepuestos) {
+        this.costoRepuestos = costoRepuestos;
         return this;
     }
 
-    public void setPrecioRespuesto(Float precioRespuesto) {
-        this.precioRespuesto = precioRespuesto;
-    }
-
-    public Articulo getArticulo() {
-        return articulo;
-    }
-
-    public DetallePedido articulo(Articulo articulo) {
-        this.articulo = articulo;
+    public DetallePedido addCostoRepuesto(CostoRepuesto costoRepuesto) {
+        this.costoRepuestos.add(costoRepuesto);
         return this;
     }
 
-    public void setArticulo(Articulo articulo) {
-        this.articulo = articulo;
+    public DetallePedido removeCostoRepuesto(CostoRepuesto costoRepuesto) {
+        this.costoRepuestos.remove(costoRepuesto);
+        return this;
+    }
+
+    public void setCostoRepuestos(Set<CostoRepuesto> costoRepuestos) {
+        this.costoRepuestos = costoRepuestos;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -106,8 +102,6 @@ public class DetallePedido implements Serializable {
     public String toString() {
         return "DetallePedido{" +
             "id=" + getId() +
-            ", cantidadArticulo='" + getCantidadArticulo() + "'" +
-            ", precioRespuesto='" + getPrecioRespuesto() + "'" +
             "}";
     }
 }

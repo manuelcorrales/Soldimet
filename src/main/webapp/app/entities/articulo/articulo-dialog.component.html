@@ -53,19 +53,6 @@
             </small>
         </div>
         <div class="form-group">
-            <label class="form-control-label" for="field_rubro">Rubro</label>
-            <select class="form-control" id="field_rubro" name="rubro" [(ngModel)]="articulo.rubro"  required>
-                <option *ngIf="!editForm.value.rubro" [ngValue]="null" selected></option>
-                <option [ngValue]="rubroOption.id === articulo.rubro?.id ? articulo.rubro : rubroOption" *ngFor="let rubroOption of rubros; trackBy: trackRubroById">{{rubroOption.nombreRubro}}</option>
-            </select>
-        </div>
-        <div [hidden]="!(editForm.controls.rubro?.dirty && editForm.controls.rubro?.invalid)">
-            <small class="form-text text-danger"
-                [hidden]="!editForm.controls.rubro?.errors?.required">
-                This field is required.
-            </small>
-        </div>
-        <div class="form-group">
             <label class="form-control-label" for="field_marca">Marca</label>
             <select class="form-control" id="field_marca" name="marca" [(ngModel)]="articulo.marca"  required>
                 <option *ngIf="!editForm.value.marca" [ngValue]="null" selected></option>
@@ -75,19 +62,6 @@
         <div [hidden]="!(editForm.controls.marca?.dirty && editForm.controls.marca?.invalid)">
             <small class="form-text text-danger"
                 [hidden]="!editForm.controls.marca?.errors?.required">
-                This field is required.
-            </small>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" for="field_proveedor">Proveedor</label>
-            <select class="form-control" id="field_proveedor" name="proveedor" [(ngModel)]="articulo.proveedor"  required>
-                <option *ngIf="!editForm.value.proveedor" [ngValue]="null" selected></option>
-                <option [ngValue]="proveedorOption.id === articulo.proveedor?.id ? articulo.proveedor : proveedorOption" *ngFor="let proveedorOption of proveedors; trackBy: trackProveedorById">{{proveedorOption.id}}</option>
-            </select>
-        </div>
-        <div [hidden]="!(editForm.controls.proveedor?.dirty && editForm.controls.proveedor?.invalid)">
-            <small class="form-text text-danger"
-                [hidden]="!editForm.controls.proveedor?.errors?.required">
                 This field is required.
             </small>
         </div>

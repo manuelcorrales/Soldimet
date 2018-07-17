@@ -1,5 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {DetallePresupuesto} from "../../../../../entities/detalle-presupuesto/detalle-presupuesto.model";
+import { Component, Input, Output, OnInit, ViewChildren, QueryList, EventEmitter } from '@angular/core';
+import { DetallePresupuesto } from '../../../../../entities/detalle-presupuesto/detalle-presupuesto.model';
+import { PresupuestosService } from '../../../../presupuestos.service';
+import { DTODatosMotorComponent } from '../../../../../dto/dto-presupuesto-cabecera/DTODatosMotor';
+import { CobranzaOperacion } from '../../../../../entities/cobranza-operacion';
+import { OperacionPrecioComponent } from './operacion_precio/operacion-precio.component';
+import { Operacion } from '../../../../../entities/operacion';
+import { CostoOperacion } from '../../../../../entities/costo-operacion';
 
 @Component({
     selector: 'jhi-operaciones-nuevopresupuesto',
@@ -7,13 +13,48 @@ import {DetallePresupuesto} from "../../../../../entities/detalle-presupuesto/de
     styles: []
 })
 export class OperacionesNuevopresupuestoComponent implements OnInit {
+    @Input() detalle: DetallePresupuesto;
+    operaciones: CostoOperacion[] = [];
+    total = 0;
+    @ViewChildren('operaciones') children: QueryList<OperacionPrecioComponent>;
+    @Output() eventoTotalOperaciones = new EventEmitter<number>();
 
-    @Input() detallesPresupuestos: DetallePresupuesto[];
-
-    constructor() {
+    constructor(private presupuestosService: PresupuestosService) {
     }
 
     ngOnInit() {
+        this.update()
     }
 
+    completarDetalle() {
+        const cobranzaOperaciones: CobranzaOperacion[] = [];
+        this.children.forEach( (componente) => {
+            if (componente.seleccionado) {
+                cobranzaOperaciones.push(componente.getOperacionAcobrar());
+            }
+        })
+        this.detalle.cobranzaOperacions = cobranzaOperaciones;
+    }
+
+    update() {
+        const dto: DTODatosMotorComponent = new DTODatosMotorComponent();
+            dto.idAplicacion = this.detalle.aplicacion.id;
+            dto.idCilindrada = this.detalle.cilindrada.id;
+            dto.idMotor = this.detalle.motor.id;
+            dto.idTiposPartesMotores = this.detalle.tipoParteMotor.id;
+            this.presupuestosService.findOperacionesPresupuesto(dto).subscribe(
+                (result) => {
+                    this.operaciones.push(...result);
+                }
+            );
+    }
+
+    @Input()
+    cambioTotalOperaciones() {
+        this.total = 0
+        this.children.forEach((componente) => {
+            this.total = this.total + componente.getPrecio()
+        })
+        this.eventoTotalOperaciones.emit();
+    }
 }

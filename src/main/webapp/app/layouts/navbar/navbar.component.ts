@@ -68,6 +68,6 @@ export class NavbarComponent implements OnInit {
     }
 
     log(){
-       console.log("presionado");
+       console.log('presionado');
     }
 }

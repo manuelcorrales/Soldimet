@@ -18,22 +18,10 @@
                 <a [routerLink]="['/estado-articulo', articulo.estado?.id]">{{articulo.estado?.nombreEstado}}</a>
             </div>
         </dd>
-        <dt><span>Rubro</span></dt>
-        <dd>
-            <div *ngIf="articulo.rubro">
-                <a [routerLink]="['/rubro', articulo.rubro?.id]">{{articulo.rubro?.nombreRubro}}</a>
-            </div>
-        </dd>
         <dt><span>Marca</span></dt>
         <dd>
             <div *ngIf="articulo.marca">
                 <a [routerLink]="['/marca', articulo.marca?.id]">{{articulo.marca?.nombreMarca}}</a>
-            </div>
-        </dd>
-        <dt><span>Proveedor</span></dt>
-        <dd>
-            <div *ngIf="articulo.proveedor">
-                <a [routerLink]="['/proveedor', articulo.proveedor?.id]">{{articulo.proveedor?.id}}</a>
             </div>
         </dd>
         <dt><span>Tipo Repuesto</span></dt>

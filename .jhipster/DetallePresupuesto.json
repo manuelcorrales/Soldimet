@@ -42,6 +42,12 @@
                 "required"
             ],
             "otherEntityField": "nombreTipoParteMotor"
+        },
+        {
+            "relationshipName": "cobranzaRepuesto",
+            "otherEntityName": "cobranzaRepuesto",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "detallePresupuesto"
         }
     ],
     "fields": [

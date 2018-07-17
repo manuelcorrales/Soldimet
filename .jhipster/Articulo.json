@@ -11,15 +11,6 @@
             "otherEntityField": "nombreEstado"
         },
         {
-            "relationshipName": "rubro",
-            "otherEntityName": "rubro",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreRubro"
-        },
-        {
             "relationshipName": "marca",
             "otherEntityName": "marca",
             "relationshipType": "many-to-one",
@@ -27,21 +18,6 @@
                 "required"
             ],
             "otherEntityField": "nombreMarca"
-        },
-        {
-            "relationshipName": "historialPrecio",
-            "otherEntityName": "historialPrecio",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "articulo"
-        },
-        {
-            "relationshipName": "proveedor",
-            "otherEntityName": "proveedor",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id"
         },
         {
             "relationshipName": "tipoRepuesto",

@@ -1,0 +1,31 @@
+
+<div *ngIf="cobranzaRepuesto">
+    <h2><span>Cobranza Repuesto</span> {{cobranzaRepuesto.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Valor</span></dt>
+        <dd>
+            <span>{{cobranzaRepuesto.valor}}</span>
+        </dd>
+        <dt><span>Tipo Repuesto</span></dt>
+        <dd>
+            <div *ngIf="cobranzaRepuesto.tipoRepuesto">
+                <a [routerLink]="['/tipo-repuesto', cobranzaRepuesto.tipoRepuesto?.id]">{{cobranzaRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'cobranza-repuesto/'+ cobranzaRepuesto.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

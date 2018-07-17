@@ -18,7 +18,7 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Nombre Tipo Repuesto</span></th>
-            <th><span>Tipo Parte</span></th>
+            <th><span>Tipo Parte Motor</span></th>
             <th></th>
             </tr>
             </thead>
@@ -27,8 +27,8 @@
                 <td><a [routerLink]="['../tipo-repuesto', tipoRepuesto.id ]">{{tipoRepuesto.id}}</a></td>
                 <td>{{tipoRepuesto.nombreTipoRepuesto}}</td>
                 <td>
-                    <div *ngIf="tipoRepuesto.tipoParte">
-                        <a [routerLink]="['../tipo-parte-motor', tipoRepuesto.tipoParte?.id ]" >{{tipoRepuesto.tipoParte?.nombreTipoParteMotor}}</a>
+                    <div *ngIf="tipoRepuesto.tipoParteMotor">
+                        <a [routerLink]="['../tipo-parte-motor', tipoRepuesto.tipoParteMotor?.id ]" >{{tipoRepuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td class="text-right">

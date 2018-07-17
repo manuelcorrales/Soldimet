@@ -9,7 +9,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { DetallePedido } from './detalle-pedido.model';
 import { DetallePedidoPopupService } from './detalle-pedido-popup.service';
 import { DetallePedidoService } from './detalle-pedido.service';
-import { Articulo, ArticuloService } from '../articulo';
+import { DetallePresupuesto, DetallePresupuestoService } from '../detalle-presupuesto';
 import { ResponseWrapper } from '../../shared';
 
 @Component({
@@ -21,21 +21,32 @@ export class DetallePedidoDialogComponent implements OnInit {
     detallePedido: DetallePedido;
     isSaving: boolean;
 
-    articulos: Articulo[];
+    detallepresupuestos: DetallePresupuesto[];
 
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private detallePedidoService: DetallePedidoService,
-        private articuloService: ArticuloService,
+        private detallePresupuestoService: DetallePresupuestoService,
         private eventManager: JhiEventManager
     ) {
     }
 
     ngOnInit() {
         this.isSaving = false;
-        this.articuloService.query()
-            .subscribe((res: ResponseWrapper) => { this.articulos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.detallePresupuestoService
+            .query({filter: 'detallepedido-is-null'})
+            .subscribe((res: ResponseWrapper) => {
+                if (!this.detallePedido.detallePresupuesto || !this.detallePedido.detallePresupuesto.id) {
+                    this.detallepresupuestos = res.json;
+                } else {
+                    this.detallePresupuestoService
+                        .find(this.detallePedido.detallePresupuesto.id)
+                        .subscribe((subRes: DetallePresupuesto) => {
+                            this.detallepresupuestos = [subRes].concat(res.json);
+                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                }
+            }, (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {
@@ -72,7 +83,7 @@ export class DetallePedidoDialogComponent implements OnInit {
         this.jhiAlertService.error(error.message, null, null);
     }
 
-    trackArticuloById(index: number, item: Articulo) {
+    trackDetallePresupuestoById(index: number, item: DetallePresupuesto) {
         return item.id;
     }
 }

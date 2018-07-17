@@ -34,11 +34,7 @@ public class ArticuloCriteria implements Serializable {
 
     private LongFilter estadoId;
 
-    private LongFilter rubroId;
-
     private LongFilter marcaId;
-
-    private LongFilter proveedorId;
 
     private LongFilter tipoRepuestoId;
 
@@ -77,28 +73,12 @@ public class ArticuloCriteria implements Serializable {
         this.estadoId = estadoId;
     }
 
-    public LongFilter getRubroId() {
-        return rubroId;
-    }
-
-    public void setRubroId(LongFilter rubroId) {
-        this.rubroId = rubroId;
-    }
-
     public LongFilter getMarcaId() {
         return marcaId;
     }
 
     public void setMarcaId(LongFilter marcaId) {
         this.marcaId = marcaId;
-    }
-
-    public LongFilter getProveedorId() {
-        return proveedorId;
-    }
-
-    public void setProveedorId(LongFilter proveedorId) {
-        this.proveedorId = proveedorId;
     }
 
     public LongFilter getTipoRepuestoId() {
@@ -116,9 +96,7 @@ public class ArticuloCriteria implements Serializable {
                 (descripcion != null ? "descripcion=" + descripcion + ", " : "") +
                 (codigoArticuloProveedor != null ? "codigoArticuloProveedor=" + codigoArticuloProveedor + ", " : "") +
                 (estadoId != null ? "estadoId=" + estadoId + ", " : "") +
-                (rubroId != null ? "rubroId=" + rubroId + ", " : "") +
                 (marcaId != null ? "marcaId=" + marcaId + ", " : "") +
-                (proveedorId != null ? "proveedorId=" + proveedorId + ", " : "") +
                 (tipoRepuestoId != null ? "tipoRepuestoId=" + tipoRepuestoId + ", " : "") +
             "}";
     }

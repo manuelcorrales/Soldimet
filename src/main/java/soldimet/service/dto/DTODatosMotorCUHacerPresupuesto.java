@@ -12,7 +12,7 @@ public class DTODatosMotorCUHacerPresupuesto {
 	private Long idCilindrada;
 	private Long idAplicacion;
 	private Long idMotor;
-	private List<Long> idTiposPartesMotores;
+	private Long idTiposPartesMotores;
 
 	public DTODatosMotorCUHacerPresupuesto(){
 
@@ -43,11 +43,11 @@ public class DTODatosMotorCUHacerPresupuesto {
         this.idMotor = idMotor;
     }
 
-    public List<Long> getIdTiposPartesMotores() {
+    public Long getIdTiposPartesMotores() {
         return idTiposPartesMotores;
     }
 
-    public void setIdTiposPartesMotores(List<Long> idTiposPartesMotores) {
+    public void setIdTiposPartesMotores(Long idTiposPartesMotores) {
         this.idTiposPartesMotores = idTiposPartesMotores;
     }
 }

@@ -29,15 +29,15 @@
         </div>
 
         <div class="form-group">
-            <label class="form-control-label" for="field_tipoParte">Tipo Parte</label>
-            <select class="form-control" id="field_tipoParte" name="tipoParte" [(ngModel)]="tipoRepuesto.tipoParte"  required>
-                <option *ngIf="!editForm.value.tipoParte" [ngValue]="null" selected></option>
-                <option [ngValue]="tipoParteMotorOption.id === tipoRepuesto.tipoParte?.id ? tipoRepuesto.tipoParte : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
+            <label class="form-control-label" for="field_tipoParteMotor">Tipo Parte Motor</label>
+            <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" [(ngModel)]="tipoRepuesto.tipoParteMotor"  required>
+                <option *ngIf="!editForm.value.tipoParteMotor" [ngValue]="null" selected></option>
+                <option [ngValue]="tipoParteMotorOption.id === tipoRepuesto.tipoParteMotor?.id ? tipoRepuesto.tipoParteMotor : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
             </select>
         </div>
-        <div [hidden]="!(editForm.controls.tipoParte?.dirty && editForm.controls.tipoParte?.invalid)">
+        <div [hidden]="!(editForm.controls.tipoParteMotor?.dirty && editForm.controls.tipoParteMotor?.invalid)">
             <small class="form-text text-danger"
-                [hidden]="!editForm.controls.tipoParte?.errors?.required">
+                [hidden]="!editForm.controls.tipoParteMotor?.errors?.required">
                 This field is required.
             </small>
         </div>

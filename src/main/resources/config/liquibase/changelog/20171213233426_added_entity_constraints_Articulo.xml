@@ -14,23 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="estado_articulo"/>
 
-        <addForeignKeyConstraint baseColumnNames="rubro_id"
-                                 baseTableName="articulo"
-                                 constraintName="fk_articulo_rubro_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="rubro"/>
-
         <addForeignKeyConstraint baseColumnNames="marca_id"
                                  baseTableName="articulo"
                                  constraintName="fk_articulo_marca_id"
                                  referencedColumnNames="id"
                                  referencedTableName="marca"/>
-
-        <addForeignKeyConstraint baseColumnNames="proveedor_id"
-                                 baseTableName="articulo"
-                                 constraintName="fk_articulo_proveedor_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="proveedor"/>
 
         <addForeignKeyConstraint baseColumnNames="tipo_repuesto_id"
                                  baseTableName="articulo"

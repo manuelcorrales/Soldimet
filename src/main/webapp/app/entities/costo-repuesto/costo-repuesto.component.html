@@ -1,0 +1,74 @@
+<div>
+    <h2>
+        <span>Costo Repuestos</span>
+        <button class="btn btn-primary float-right jh-create-entity create-costo-repuesto" [routerLink]="['/', { outlets: { popup: ['costo-repuesto-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Costo Repuesto
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="costoRepuestos">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Valor</span></th>
+            <th><span>Tipo Repuesto</span></th>
+            <th><span>Articulo</span></th>
+            <th><span>Proveedor</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let costoRepuesto of costoRepuestos ;trackBy: trackId">
+                <td><a [routerLink]="['../costo-repuesto', costoRepuesto.id ]">{{costoRepuesto.id}}</a></td>
+                <td>{{costoRepuesto.valor}}</td>
+                <td>
+                    <div *ngIf="costoRepuesto.tipoRepuesto">
+                        <a [routerLink]="['../tipo-repuesto', costoRepuesto.tipoRepuesto?.id ]" >{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="costoRepuesto.articulo">
+                        <a [routerLink]="['../articulo', costoRepuesto.articulo?.id ]" >{{costoRepuesto.articulo?.descripcion}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="costoRepuesto.proveedor">
+                        <a [routerLink]="['../proveedor', costoRepuesto.proveedor?.id ]" >{{costoRepuesto.proveedor?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../costo-repuesto', costoRepuesto.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'costo-repuesto/'+ costoRepuesto.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'costo-repuesto/'+ costoRepuesto.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

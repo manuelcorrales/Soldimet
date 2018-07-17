@@ -1,57 +1,60 @@
-<div>
-    <h2>
-        <span>Clientes</span>
-        <button class="btn btn-primary float-right jh-create-entity create-cliente" [routerLink]="['/', { outlets: { popup: ['nuevo-cliente'] } }]">
-            <span class="fa fa-plus"></span>
-            <span >
-            Create new Cliente
-            </span>
-        </button>
-    </h2>
+<div class="container-fluid card jh-card">
     <jhi-alert></jhi-alert>
-    <div class="row">
+    <div>
+        <button class="btn btn-primary float-right" [routerLink]="['/', { outlets: { popup: ['nuevo-cliente'] } }]">
+            <span class="fa fa-plus">Nuevo Cliente</span>
+        </button>
     </div>
-    <br/>
-    <div class="table-responsive" *ngIf="clientes">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th><span>Número de cliente</span></th>
-                <th><span>Nombre</span></th>
-                <th><span>Dirección</span></th>
-                <th><span>Teléfono</span></th>
-                <th><span>Estado</span></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let cliente of clientes ;trackBy: trackId">
-                <td><a [routerLink]="['../cliente', cliente.id ]">{{cliente.id}}</a></td>
-                <td [routerLink]="['../persona', cliente.persona?.id ]">{{cliente.apellido}}, {{cliente.persona?.nombre}}</td>
-                <td [routerLink]="['../direccion', cliente.persona?.direccion.id]">{{cliente.persona?.direccion?.calle}} {{cliente.persona?.direccion?.numero}}
-                <span [routerLink]="['../localidad', cliente.persona?.direccion.localidad.id]">{{cliente.persona?.direccion?.localidad?.nombreLocalidad}}</span></td>
-                <td>{{cliente.persona?.numeroTelefono}}</td>
-                <td [routerLink]="['../estadoPersona', cliente.persona?.estadoPersona.id]">{{cliente.persona?.estadoPersona.nombreEstado}}</td>
-                <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/edit'} }]"
-                                replaceUrl="true"
-                                class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
-                            <span class="d-none d-md-inline">Modificar</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/delete'} }]"
-                                replaceUrl="true"
-                                class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
-                            <span class="d-none d-md-inline">Borrar</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="">
+        <div class="row" *ngIf="clientes">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Operaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cliente of clientes">
+                        <th>
+                            {{cliente.persona?.nombre}}
+                        </th>
+                        <td>{{cliente.apellido}}</td>
+                        <td>{{cliente.persona?.numeroTelefono}}</td>
+                        <td>{{cliente?.persona?.direccion?.calle}}, {{cliente?.persona?.direccion?.numero}}</td>
+                        <td>{{cliente?.persona?.direccion?.localidad?.nombreLocalidad}}</td>
+                        <td>
+                            <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
+                                <div class="alert alert-success" style="padding: 0px;" role="alert">
+                                    Alta
+                                </div>
+                            </div>
+                            <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-center">
+                                <div class="alert alert-warning" role="alert" style="padding: 0px;">
+                                    Baja
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group flex-btn-group-container">
+                                <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/editar'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
+                                    <span class="fa fa-pencil"></span>
+                                    <span class="d-none d-md-inline">Edit</span>
+                                </button>
+                                <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/eliminar'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
+                                    <span class="fa fa-remove"></span>
+                                    <span class="d-none d-md-inline">Delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

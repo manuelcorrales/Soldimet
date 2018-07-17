@@ -1,22 +1,40 @@
 package soldimet.controller;
 
-import com.codahale.metrics.annotation.Timed;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.List;
+
+import javax.validation.Valid;
+
+import com.codahale.metrics.annotation.Timed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import soldimet.domain.Aplicacion;
 import soldimet.domain.Cliente;
+import soldimet.domain.CostoOperacion;
+import soldimet.domain.EstadoPresupuesto;
+import soldimet.domain.Presupuesto;
+import soldimet.domain.TipoRepuesto;
+import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
-import soldimet.service.dto.DTOParOperacionPresupuestoCUHacerPresupuesto;
 import soldimet.service.dto.DTOPresupuesto;
 import soldimet.service.expertos.ExpertoPresupuesto;
+import soldimet.web.rest.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -34,29 +52,118 @@ public class PresupuestoController {
     @GetMapping("/presupuestos/getPresupuestos")
     public List<DTOPresupuesto> buscarPresupuestos() {
 
-        return expertoPresupuesto.buscarPresupuestos();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getAuthorities().contains(AuthoritiesConstants.ADMIN)) {
+            return expertoPresupuesto.buscarPresupuestos();
+        } else {
+            if (authentication.getAuthorities().contains(AuthoritiesConstants.EMPLOYEE)) {
+                return expertoPresupuesto.buscarPresupuestos();
+            } else {
+                if (authentication.getAuthorities().contains(AuthoritiesConstants.ENCARGADO_TALLER)) {
+                    return expertoPresupuesto.buscarPresupuestos();
+                } else {
+                    return expertoPresupuesto.buscarPresupuestos();
+                }
+            }
+        }
+
     }
 
     @GetMapping("/presupuestos/getAplicacionByMotor/{motorId}")
     public List<Aplicacion> buscarPresupuestos(@PathVariable("motorId") Long motorId) {
 
-        System.out
-            .println("------------------------------ID: " + motorId + "-----------------------");
+        System.out.println("------------------------------ID: " + motorId + "-----------------------");
         return expertoPresupuesto.buscarAplicacionPorMotor(motorId);
     }
 
     @GetMapping("/presupuestos/getOperacionesPresupuesto")
-    public List<DTOParOperacionPresupuestoCUHacerPresupuesto> buscarOperacionesPresupuesto(
-        DTODatosMotorCUHacerPresupuesto dtoDatosMotor) {
+    public List<CostoOperacion> buscarOperacionesPresupuesto(DTODatosMotorCUHacerPresupuesto dtoDatosMotor) {
 
         return expertoPresupuesto.buscarOperacionesPresupuesto(dtoDatosMotor);
     }
 
     @GetMapping("/presupuestos/getClientesByNombre/{nombreCliente}")
-    public List<Cliente> buscarOperacionesPresupuesto(
-        @RequestParam("nombreCliente") String nombreCliente) {
+    public List<Cliente> buscarClientesPorNombre(@PathVariable("nombreCliente") String nombreCliente) {
 
         return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
     }
 
+    @GetMapping("/presupuestos/getAllClientes")
+    public List<Cliente> buscarTodosLosclientes() {
+
+        return expertoPresupuesto.buscarTodosLosClientes();
+    }
+
+    @GetMapping("/presupuestos/getRepuestos/{idTipoParteMotor}")
+    public List<TipoRepuesto> buscarRepuestosPresupuesto(@PathVariable("idTipoParteMotor") Long idTipoParteMotor) {
+
+        return expertoPresupuesto.buscarRepuestos(idTipoParteMotor);
+    }
+
+    @GetMapping("/presupuestos/getEstadoPresupuestoCreado")
+    public EstadoPresupuesto buscarEstadoPresupuestoCreado() {
+
+        return expertoPresupuesto.buscarEstadoPresupuestoCreado();
+    }
+
+    @PostMapping("/presupuestos/save")
+    public ResponseEntity<Presupuesto> savePresupuesto(@Valid @RequestBody Presupuesto presupuesto)
+            throws URISyntaxException {
+        log.debug("REST request to save Presupuesto : {}", presupuesto);
+        Presupuesto result = expertoPresupuesto.savePresupuesto(presupuesto);
+        return ResponseEntity.created(new URI("/api/presupuestos/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+    }
+
+    @PostMapping("/presupuestos/aceptar")
+    public ResponseEntity<DTOPresupuesto> aceptarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
+        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        DTOPresupuesto result = expertoPresupuesto.aceptarPresupuesto(dtoPresupuesto);
+        if (result != null) {
+            return ResponseEntity.accepted().headers(HeaderUtil
+                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .body(result);
+        } else {
+            return ResponseEntity.status(500).body(dtoPresupuesto);
+        }
+    }
+
+    @PostMapping("/presupuestos/cancelar")
+    public ResponseEntity<DTOPresupuesto> cancelarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
+        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
+        if (result != null) {
+            return ResponseEntity.accepted().headers(HeaderUtil
+                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .body(result);
+        } else {
+            return ResponseEntity.status(500).body(dtoPresupuesto);
+        }
+    }
+
+    @PostMapping("/presupuestos/entregar")
+    public ResponseEntity<DTOPresupuesto> entregarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
+        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        DTOPresupuesto result = expertoPresupuesto.entregarPresupuesto(dtoPresupuesto);
+        if (result != null) {
+            return ResponseEntity.accepted().headers(HeaderUtil
+                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .body(result);
+        } else {
+            return ResponseEntity.status(500).body(dtoPresupuesto);
+        }
+    }
+
+    @PostMapping("/presupuestos/terminar")
+    public ResponseEntity<DTOPresupuesto> terminarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
+        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        DTOPresupuesto result = expertoPresupuesto.terminarPresupuesto(dtoPresupuesto);
+        if (result != null) {
+            return ResponseEntity.accepted().headers(HeaderUtil
+                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .body(result);
+        } else {
+            return ResponseEntity.status(500).body(dtoPresupuesto);
+        }
+    }
 }

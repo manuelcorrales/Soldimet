@@ -3,7 +3,7 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 
 import soldimet.domain.DetallePedido;
-import soldimet.domain.Articulo;
+import soldimet.domain.DetallePresupuesto;
 import soldimet.repository.DetallePedidoRepository;
 import soldimet.service.DetallePedidoService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -38,12 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SoldimetApp.class)
 public class DetallePedidoResourceIntTest {
-
-    private static final Integer DEFAULT_CANTIDAD_ARTICULO = 1;
-    private static final Integer UPDATED_CANTIDAD_ARTICULO = 2;
-
-    private static final Float DEFAULT_PRECIO_RESPUESTO = 0F;
-    private static final Float UPDATED_PRECIO_RESPUESTO = 1F;
 
     @Autowired
     private DetallePedidoRepository detallePedidoRepository;
@@ -84,14 +78,12 @@ public class DetallePedidoResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static DetallePedido createEntity(EntityManager em) {
-        DetallePedido detallePedido = new DetallePedido()
-            .cantidadArticulo(DEFAULT_CANTIDAD_ARTICULO)
-            .precioRespuesto(DEFAULT_PRECIO_RESPUESTO);
+        DetallePedido detallePedido = new DetallePedido();
         // Add required entity
-        Articulo articulo = ArticuloResourceIntTest.createEntity(em);
-        em.persist(articulo);
+        DetallePresupuesto detallePresupuesto = DetallePresupuestoResourceIntTest.createEntity(em);
+        em.persist(detallePresupuesto);
         em.flush();
-        detallePedido.setArticulo(articulo);
+        detallePedido.setDetallePresupuesto(detallePresupuesto);
         return detallePedido;
     }
 
@@ -115,8 +107,6 @@ public class DetallePedidoResourceIntTest {
         List<DetallePedido> detallePedidoList = detallePedidoRepository.findAll();
         assertThat(detallePedidoList).hasSize(databaseSizeBeforeCreate + 1);
         DetallePedido testDetallePedido = detallePedidoList.get(detallePedidoList.size() - 1);
-        assertThat(testDetallePedido.getCantidadArticulo()).isEqualTo(DEFAULT_CANTIDAD_ARTICULO);
-        assertThat(testDetallePedido.getPrecioRespuesto()).isEqualTo(DEFAULT_PRECIO_RESPUESTO);
     }
 
     @Test
@@ -140,42 +130,6 @@ public class DetallePedidoResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCantidadArticuloIsRequired() throws Exception {
-        int databaseSizeBeforeTest = detallePedidoRepository.findAll().size();
-        // set the field null
-        detallePedido.setCantidadArticulo(null);
-
-        // Create the DetallePedido, which fails.
-
-        restDetallePedidoMockMvc.perform(post("/api/detalle-pedidos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(detallePedido)))
-            .andExpect(status().isBadRequest());
-
-        List<DetallePedido> detallePedidoList = detallePedidoRepository.findAll();
-        assertThat(detallePedidoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkPrecioRespuestoIsRequired() throws Exception {
-        int databaseSizeBeforeTest = detallePedidoRepository.findAll().size();
-        // set the field null
-        detallePedido.setPrecioRespuesto(null);
-
-        // Create the DetallePedido, which fails.
-
-        restDetallePedidoMockMvc.perform(post("/api/detalle-pedidos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(detallePedido)))
-            .andExpect(status().isBadRequest());
-
-        List<DetallePedido> detallePedidoList = detallePedidoRepository.findAll();
-        assertThat(detallePedidoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllDetallePedidos() throws Exception {
         // Initialize the database
         detallePedidoRepository.saveAndFlush(detallePedido);
@@ -184,9 +138,7 @@ public class DetallePedidoResourceIntTest {
         restDetallePedidoMockMvc.perform(get("/api/detalle-pedidos?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(detallePedido.getId().intValue())))
-            .andExpect(jsonPath("$.[*].cantidadArticulo").value(hasItem(DEFAULT_CANTIDAD_ARTICULO)))
-            .andExpect(jsonPath("$.[*].precioRespuesto").value(hasItem(DEFAULT_PRECIO_RESPUESTO.doubleValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(detallePedido.getId().intValue())));
     }
 
     @Test
@@ -199,9 +151,7 @@ public class DetallePedidoResourceIntTest {
         restDetallePedidoMockMvc.perform(get("/api/detalle-pedidos/{id}", detallePedido.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(detallePedido.getId().intValue()))
-            .andExpect(jsonPath("$.cantidadArticulo").value(DEFAULT_CANTIDAD_ARTICULO))
-            .andExpect(jsonPath("$.precioRespuesto").value(DEFAULT_PRECIO_RESPUESTO.doubleValue()));
+            .andExpect(jsonPath("$.id").value(detallePedido.getId().intValue()));
     }
 
     @Test
@@ -222,9 +172,6 @@ public class DetallePedidoResourceIntTest {
 
         // Update the detallePedido
         DetallePedido updatedDetallePedido = detallePedidoRepository.findOne(detallePedido.getId());
-        updatedDetallePedido
-            .cantidadArticulo(UPDATED_CANTIDAD_ARTICULO)
-            .precioRespuesto(UPDATED_PRECIO_RESPUESTO);
 
         restDetallePedidoMockMvc.perform(put("/api/detalle-pedidos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -235,8 +182,6 @@ public class DetallePedidoResourceIntTest {
         List<DetallePedido> detallePedidoList = detallePedidoRepository.findAll();
         assertThat(detallePedidoList).hasSize(databaseSizeBeforeUpdate);
         DetallePedido testDetallePedido = detallePedidoList.get(detallePedidoList.size() - 1);
-        assertThat(testDetallePedido.getCantidadArticulo()).isEqualTo(UPDATED_CANTIDAD_ARTICULO);
-        assertThat(testDetallePedido.getPrecioRespuesto()).isEqualTo(UPDATED_PRECIO_RESPUESTO);
     }
 
     @Test

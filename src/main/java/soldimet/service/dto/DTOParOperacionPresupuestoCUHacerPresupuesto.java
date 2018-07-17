@@ -1,5 +1,7 @@
 package soldimet.service.dto;
 
+import soldimet.domain.Operacion;
+
 /**
  * @author Manu
  * @version 1.0
@@ -8,8 +10,7 @@ package soldimet.service.dto;
 public class DTOParOperacionPresupuestoCUHacerPresupuesto {
 
 	private Float costoOperacion;
-	private String nombreOperacion;
-        private Long operacionID;
+	private Operacion nombreOperacion;
 
 	public DTOParOperacionPresupuestoCUHacerPresupuesto(){
 
@@ -23,19 +24,18 @@ public class DTOParOperacionPresupuestoCUHacerPresupuesto {
         this.costoOperacion = costoOperacion;
     }
 
-    public String getNombreOperacion() {
+    /**
+     * @return Operacion return the nombreOperacion
+     */
+    public Operacion getNombreOperacion() {
         return nombreOperacion;
     }
 
-    public void setNombreOperacion(String nombreOperacion) {
+    /**
+     * @param nombreOperacion the nombreOperacion to set
+     */
+    public void setNombreOperacion(Operacion nombreOperacion) {
         this.nombreOperacion = nombreOperacion;
     }
 
-    public Long getOperacionID() {
-        return operacionID;
-    }
-
-    public void setOperacionID(Long operacionID) {
-        this.operacionID = operacionID;
-    }
 }

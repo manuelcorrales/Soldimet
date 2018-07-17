@@ -12,7 +12,7 @@ import {SoldimetEntityModule} from './entities/entity.module';
 import {customHttpProvider} from './blocks/interceptor/http.provider';
 import {PaginationConfig} from './blocks/config/uib-pagination.config';
 
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from '@angular/common/http';
 import {
     ErrorComponent,
     FooterComponent,
@@ -22,24 +22,26 @@ import {
     PageRibbonComponent,
     ProfileService
 } from './layouts';
-import {PresupuestosModule} from './presupuestos/presupuestos.module';
-import {CajaModule} from './caja/caja.module';
-import {ClientesModule} from './clientes/clientes.module';
-import {OperacionesModule} from './operaciones/operaciones.module';
-import {RepuestosModule} from './repuestos/repuestos.module';
-import {DtoModule} from './dto/dto.module';
+import { PresupuestosModule } from './presupuestos/presupuestos.module';
+import { CajaModule } from './caja/caja.module';
+import { ClientesModule } from './clientes/clientes.module';
+import { OperacionesModule } from './operaciones/operaciones.module';
+import {  PedidosModule } from './pedidos/pedidos.module';
+import { DtoModule} from './dto/dto.module';
+import {  Ng2SmartTableModule } from 'ng2-smart-table';
 
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 
 @NgModule({
     imports: [
+        Ng2SmartTableModule,
         BrowserModule,
         HttpClientModule,
         PresupuestosModule,
         CajaModule,
         ClientesModule,
         OperacionesModule,
-        RepuestosModule,
+        PedidosModule,
         DtoModule,
         LayoutRoutingModule,
         Ng2Webstorage.forRoot({prefix: 'jhi', separator: '-'}),

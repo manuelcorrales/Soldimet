@@ -2,7 +2,7 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "tipoParte",
+            "relationshipName": "tipoParteMotor",
             "otherEntityName": "tipoParteMotor",
             "relationshipType": "many-to-one",
             "relationshipValidateRules": [

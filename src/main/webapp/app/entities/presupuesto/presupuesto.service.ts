@@ -76,12 +76,18 @@ export class PresupuestoService {
      */
     private convert(presupuesto: Presupuesto): Presupuesto {
         const copy: Presupuesto = Object.assign({}, presupuesto);
+        if ( presupuesto.fechaCreacion) {
         copy.fechaCreacion = this.dateUtils
             .convertLocalDateToServer(presupuesto.fechaCreacion);
+        }
+        if ( presupuesto.fechaAceptado) {
         copy.fechaAceptado = this.dateUtils
             .convertLocalDateToServer(presupuesto.fechaAceptado);
+        }
+        if ( presupuesto.fechaEntregado) {
         copy.fechaEntregado = this.dateUtils
             .convertLocalDateToServer(presupuesto.fechaEntregado);
+        }
         return copy;
     }
 }

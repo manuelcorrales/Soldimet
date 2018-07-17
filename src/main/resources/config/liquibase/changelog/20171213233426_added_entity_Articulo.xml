@@ -34,15 +34,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="rubro_id" type="bigint">
-                <constraints nullable="false" />
-            </column>
-
             <column name="marca_id" type="bigint">
-                <constraints nullable="false" />
-            </column>
-
-            <column name="proveedor_id" type="bigint">
                 <constraints nullable="false" />
             </column>
 

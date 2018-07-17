@@ -1,8 +1,9 @@
 package soldimet.repository;
 
+import soldimet.domain.TipoParteMotor;
 import soldimet.domain.TipoRepuesto;
 import org.springframework.stereotype.Repository;
-
+import java.util.List;
 import org.springframework.data.jpa.repository.*;
 
 
@@ -13,5 +14,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface TipoRepuestoRepository extends JpaRepository<TipoRepuesto, Long> {
 
-    public TipoRepuesto findByNombreTipoRepuesto(String nombreTipoRepuesto);
+    List<TipoRepuesto> findByTipoParteMotor(TipoParteMotor tipoParteMotor);
 }

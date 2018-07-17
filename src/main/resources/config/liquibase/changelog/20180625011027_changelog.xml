@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="manuelc (generated)" id="1529889035662-1">
+        <addForeignKeyConstraint baseColumnNames="detalle_presupuesto" baseTableName="cobranza_repuesto" constraintName="FKqesn4bfxnqb3eby1vyytfup5q" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="detalle_presupuesto"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-2">
+        <dropForeignKeyConstraint baseTableName="articulo" constraintName="FKajm7mehj7lk16db680ka0hawi"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-3">
+        <dropForeignKeyConstraint baseTableName="detalle_pedido" constraintName="FKblwfjfeyou4u7hae0gcngweeu"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-4">
+        <dropForeignKeyConstraint baseTableName="historial_precio" constraintName="FKmwj1st380tsc65v3b0mowk47n"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-5">
+        <dropForeignKeyConstraint baseTableName="tipo_repuesto" constraintName="FKmxrttt962thvx6j5afkifgowt"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-6">
+        <dropForeignKeyConstraint baseTableName="articulo" constraintName="FKs90nu8meysg24ocgu0t9aod0i"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-7">
+        <dropColumn columnName="articulo" tableName="historial_precio"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-8">
+        <dropColumn columnName="articulo_id" tableName="detalle_pedido"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-9">
+        <dropColumn columnName="cantidad_articulo" tableName="detalle_pedido"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-10">
+        <dropColumn columnName="precio_respuesto" tableName="detalle_pedido"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-11">
+        <dropColumn columnName="proveedor_id" tableName="articulo"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-12">
+        <dropColumn columnName="rubro_id" tableName="articulo"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1529889035662-13">
+        <dropColumn columnName="tipo_parte_id" tableName="tipo_repuesto"/>
+    </changeSet>
+</databaseChangeLog>

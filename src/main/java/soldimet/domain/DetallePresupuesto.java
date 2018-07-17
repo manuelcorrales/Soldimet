@@ -1,9 +1,8 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,14 +38,17 @@ public class DetallePresupuesto implements Serializable {
     @NotNull
     private Motor motor;
 
-    @OneToMany
-    @JoinColumn(name= "detalle_presupuesto")
-    @JsonIgnore
-    private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<>();
+    @OneToMany(cascade = { CascadeType.ALL })
+    @JoinColumn(name= "detallePresupuesto")
+    private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<CobranzaOperacion>();
 
     @ManyToOne(optional = false)
     @NotNull
     private TipoParteMotor tipoParteMotor;
+
+    @OneToMany(cascade = { CascadeType.ALL })
+    @JoinColumn(name= "detallePresupuesto")
+    private Set<CobranzaRepuesto> cobranzaRepuestos = new HashSet<CobranzaRepuesto>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -143,6 +145,29 @@ public class DetallePresupuesto implements Serializable {
 
     public void setTipoParteMotor(TipoParteMotor tipoParteMotor) {
         this.tipoParteMotor = tipoParteMotor;
+    }
+
+    public Set<CobranzaRepuesto> getCobranzaRepuestos() {
+        return cobranzaRepuestos;
+    }
+
+    public DetallePresupuesto cobranzaRepuestos(Set<CobranzaRepuesto> cobranzaRepuestos) {
+        this.cobranzaRepuestos = cobranzaRepuestos;
+        return this;
+    }
+
+    public DetallePresupuesto addCobranzaRepuesto(CobranzaRepuesto cobranzaRepuesto) {
+        this.cobranzaRepuestos.add(cobranzaRepuesto);
+        return this;
+    }
+
+    public DetallePresupuesto removeCobranzaRepuesto(CobranzaRepuesto cobranzaRepuesto) {
+        this.cobranzaRepuestos.remove(cobranzaRepuesto);
+        return this;
+    }
+
+    public void setCobranzaRepuestos(Set<CobranzaRepuesto> cobranzaRepuestos) {
+        this.cobranzaRepuestos = cobranzaRepuestos;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

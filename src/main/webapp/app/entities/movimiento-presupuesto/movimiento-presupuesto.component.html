@@ -1,0 +1,66 @@
+<div>
+    <h2>
+        <span>Movimiento Presupuestos</span>
+        <button class="btn btn-primary float-right jh-create-entity create-movimiento-presupuesto" [routerLink]="['/', { outlets: { popup: ['movimiento-presupuesto-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new Movimiento Presupuesto
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="movimientoPresupuestos">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Presupuesto</span></th>
+            <th><span>Movimiento</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let movimientoPresupuesto of movimientoPresupuestos ;trackBy: trackId">
+                <td><a [routerLink]="['../movimiento-presupuesto', movimientoPresupuesto.id ]">{{movimientoPresupuesto.id}}</a></td>
+                <td>
+                    <div *ngIf="movimientoPresupuesto.presupuesto">
+                        <a [routerLink]="['../presupuesto', movimientoPresupuesto.presupuesto?.id ]" >{{movimientoPresupuesto.presupuesto?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="movimientoPresupuesto.movimiento">
+                        <a [routerLink]="['../movimiento', movimientoPresupuesto.movimiento?.id ]" >{{movimientoPresupuesto.movimiento?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../movimiento-presupuesto', movimientoPresupuesto.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'movimiento-presupuesto/'+ movimientoPresupuesto.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'movimiento-presupuesto/'+ movimientoPresupuesto.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

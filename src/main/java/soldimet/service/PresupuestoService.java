@@ -1,9 +1,15 @@
 package soldimet.service;
 
+import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
+import soldimet.repository.EstadoPresupuestoRepository;
 import soldimet.repository.PresupuestoRepository;
+
+import java.time.LocalDate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class PresupuestoService {
+
+    @Autowired
+    private EstadoPresupuestoRepository estadoRepository;
 
     private final Logger log = LoggerFactory.getLogger(PresupuestoService.class);
 
@@ -33,6 +42,8 @@ public class PresupuestoService {
      */
     public Presupuesto save(Presupuesto presupuesto) {
         log.debug("Request to save Presupuesto : {}", presupuesto);
+        presupuesto.setEstadoPresupuesto(estadoRepository.findByNombreEstado("Creado"));
+        presupuesto.setFechaCreacion(LocalDate.now());
         return presupuestoRepository.save(presupuesto);
     }
 

@@ -26,7 +26,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="tipo_parte_id" type="bigint">
+            <column name="tipo_parte_motor_id" type="bigint">
                 <constraints nullable="false" />
             </column>
 

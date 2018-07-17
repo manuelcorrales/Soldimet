@@ -84,10 +84,10 @@ public class TipoRepuestoResourceIntTest {
         TipoRepuesto tipoRepuesto = new TipoRepuesto()
             .nombreTipoRepuesto(DEFAULT_NOMBRE_TIPO_REPUESTO);
         // Add required entity
-        TipoParteMotor tipoParte = TipoParteMotorResourceIntTest.createEntity(em);
-        em.persist(tipoParte);
+        TipoParteMotor tipoParteMotor = TipoParteMotorResourceIntTest.createEntity(em);
+        em.persist(tipoParteMotor);
         em.flush();
-        tipoRepuesto.setTipoParte(tipoParte);
+        tipoRepuesto.setTipoParteMotor(tipoParteMotor);
         return tipoRepuesto;
     }
 

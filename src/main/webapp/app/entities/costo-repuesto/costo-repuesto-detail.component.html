@@ -1,0 +1,43 @@
+
+<div *ngIf="costoRepuesto">
+    <h2><span>Costo Repuesto</span> {{costoRepuesto.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Valor</span></dt>
+        <dd>
+            <span>{{costoRepuesto.valor}}</span>
+        </dd>
+        <dt><span>Tipo Repuesto</span></dt>
+        <dd>
+            <div *ngIf="costoRepuesto.tipoRepuesto">
+                <a [routerLink]="['/tipo-repuesto', costoRepuesto.tipoRepuesto?.id]">{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
+            </div>
+        </dd>
+        <dt><span>Articulo</span></dt>
+        <dd>
+            <div *ngIf="costoRepuesto.articulo">
+                <a [routerLink]="['/articulo', costoRepuesto.articulo?.id]">{{costoRepuesto.articulo?.descripcion}}</a>
+            </div>
+        </dd>
+        <dt><span>Proveedor</span></dt>
+        <dd>
+            <div *ngIf="costoRepuesto.proveedor">
+                <a [routerLink]="['/proveedor', costoRepuesto.proveedor?.id]">{{costoRepuesto.proveedor?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'costo-repuesto/'+ costoRepuesto.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

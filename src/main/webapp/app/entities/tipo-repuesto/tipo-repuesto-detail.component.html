@@ -8,10 +8,10 @@
         <dd>
             <span>{{tipoRepuesto.nombreTipoRepuesto}}</span>
         </dd>
-        <dt><span>Tipo Parte</span></dt>
+        <dt><span>Tipo Parte Motor</span></dt>
         <dd>
-            <div *ngIf="tipoRepuesto.tipoParte">
-                <a [routerLink]="['/tipo-parte-motor', tipoRepuesto.tipoParte?.id]">{{tipoRepuesto.tipoParte?.nombreTipoParteMotor}}</a>
+            <div *ngIf="tipoRepuesto.tipoParteMotor">
+                <a [routerLink]="['/tipo-parte-motor', tipoRepuesto.tipoParteMotor?.id]">{{tipoRepuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
             </div>
         </dd>
     </dl>
