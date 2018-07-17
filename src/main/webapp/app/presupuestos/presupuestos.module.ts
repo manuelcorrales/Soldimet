@@ -12,7 +12,6 @@ import { OperacionesNuevopresupuestoComponent } from './nuevo-presupuesto/client
 import { RepuestosNuevopresupuestoComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto.component';
 import { MotorNuevoPresupuestoComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/motor-nuevo-presupuesto/motor-nuevo-presupuesto.component';
 import { FormsModule } from '@angular/forms';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OperacionPrecioComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operacion_precio/operacion-precio.component';
 import { RepuestoPrecioComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuesto_precio/repuesto-precio.component';
@@ -20,7 +19,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports: [
-        Ng2SmartTableModule,
         NgSelectModule,
         BrowserModule,
         FormsModule,

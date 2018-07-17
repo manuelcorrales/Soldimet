@@ -28,13 +28,11 @@ import { ClientesModule } from './clientes/clientes.module';
 import { OperacionesModule } from './operaciones/operaciones.module';
 import {  PedidosModule } from './pedidos/pedidos.module';
 import { DtoModule} from './dto/dto.module';
-import {  Ng2SmartTableModule } from 'ng2-smart-table';
 
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 
 @NgModule({
     imports: [
-        Ng2SmartTableModule,
         BrowserModule,
         HttpClientModule,
         PresupuestosModule,

@@ -26,7 +26,7 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
     // numero en milisegundos de espera antes de realizar la búsqueda
     protected milisegundos = 100;
     // Auto elegir una coincidencia
-    protected resaltarCoincidencia = false; //recomendado
+    protected resaltarCoincidencia = false;
     // enfocar automaticamente cuando carga la página
     protected autofocus = true;
     // mensaje 'sin resultados'
@@ -60,7 +60,7 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
         );
     }
 
-    filtrarClientes(term: string, item: any): boolean{
+    filtrarClientes(term: string, item: any): boolean {
         console.log(term)
         console.log(item)
         return (item.appelido.match(term) || item.persona.nombre.match(term))

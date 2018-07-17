@@ -6,7 +6,6 @@ import { FILTRO_PRESUPUESTO } from '../shared/constants/filter.constants';
 import { DT_OPTIONS } from '../shared/constants/datatable.configuration';
 import { Subject } from 'rxjs/Subject';
 import { DtoPresupuestoCabeceraComponent } from '../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
-import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import { PresupuestosService } from './presupuestos.service';
 import { DatePipe } from '@angular/common';
 
