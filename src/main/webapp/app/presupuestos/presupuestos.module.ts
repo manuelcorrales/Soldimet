@@ -16,6 +16,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OperacionPrecioComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operacion_precio/operacion-precio.component';
 import { RepuestoPrecioComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuesto_precio/repuesto-precio.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports: [
@@ -48,7 +49,7 @@ import { RepuestoPrecioComponent } from './nuevo-presupuesto/clientes-nuevopresu
     ],
     providers: [
         PresupuestosService,
-
+        NgbActiveModal,
     ],
     exports: [
         RouterModule,

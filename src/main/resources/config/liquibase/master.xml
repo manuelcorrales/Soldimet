@@ -12,7 +12,9 @@
     <include file="config/liquibase/changelog/20180616212130_added_entity_constraints_MovimientoArticulo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180616212814_added_entity_constraints_MovimientoPresupuesto.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180617234431_added_entity_constraints_MovimientoPedido.xml" relativeToChangelogFile="false"/>
-    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
-<include file="classpath:config/liquibase/changelog/20180313004956_changelog.xml" 
+    <!--jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+    <include file="classpath:config/liquibase/changelog/20180313004956_changelog.xml"
+    relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180625011027_changelog.xml"
     relativeToChangelogFile="false"/>
 </databaseChangeLog>

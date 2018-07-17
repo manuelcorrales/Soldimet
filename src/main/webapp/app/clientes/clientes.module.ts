@@ -1,5 +1,4 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ClientesComponent } from './clientes.component';
 import { RouterModule } from '@angular/router';
 import { CLIENTES_POPUP_ROUTE, CLIENTES_ROUTE } from './clientes.route';
@@ -8,9 +7,11 @@ import {
     ModalNuevoClienteComponent, ClienteModalPopupComponent
 } from './modal-nuevo-cliente/modal-nuevo-cliente.component';
 import { ClienteService } from '../entities/cliente/cliente.service';
-import { NgbActiveModal, } from '@ng-bootstrap/ng-bootstrap';
-import { ClienteModalPopupService } from './modal-nuevo-cliente/cliente-modal-popup.service';
+import { ClienteBorrarPopupService } from './modal-borrar-cliente/cliente-modal-popup.service';
 import { BrowserModule } from '@angular/platform-browser';
+import { ClienteBorrarDialogComponent, ClienteBorrarPopupComponent } from './modal-borrar-cliente/cliente-borrar-dialog.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ClienteModalPopupService } from './modal-nuevo-cliente/cliente-nuevo-popup-service';
 
 const CLIENTES_ROUTES_ALL = [
     ...CLIENTES_ROUTE,
@@ -31,18 +32,20 @@ const CLIENTES_ROUTES_ALL = [
         ClientesComponent,
         ModalNuevoClienteComponent,
         ClienteModalPopupComponent,
-
+        ClienteBorrarPopupComponent,
+        ClienteBorrarDialogComponent,
     ],
     entryComponents: [
         ClientesComponent,
         ModalNuevoClienteComponent,
         ClienteModalPopupComponent,
-
+        ClienteBorrarPopupComponent,
+        ClienteBorrarDialogComponent,
     ],
     providers: [
         ClienteService,
         ClienteModalPopupService,
-        NgbActiveModal,
+        ClienteBorrarPopupService
     ],
 })
 export class ClientesModule { }

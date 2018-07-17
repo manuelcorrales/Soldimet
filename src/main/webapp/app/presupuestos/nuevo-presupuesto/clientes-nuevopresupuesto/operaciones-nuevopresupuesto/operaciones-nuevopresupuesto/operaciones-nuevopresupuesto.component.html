@@ -1,10 +1,8 @@
-<div class="card jh-card border-info mb-3">
-    <div class="card-header card-header text-white bg-info mb-3">
-        Operaciones
-    </div>
-    <div class="card-body" style="padding-top: 0px;">
-        <div *ngFor="let operacion of operaciones" class="container">
-            <jhi-operacion-precio #operacion [operacion]="operacion" class="row align-items-center top-buffer"></jhi-operacion-precio>
-        </div>
+<div class="card-body" style="padding-top: 0px;">
+    <div *ngFor="let operacion of operaciones" class="container">
+        <jhi-operacion-precio #operaciones [costoOperacion]="operacion"
+        class="row align-items-center top-buffer"
+        (eventoCambioValor)="cambioTotalOperaciones()">
+        </jhi-operacion-precio>
     </div>
 </div>

@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Response } from '@angular/http';
 import { Cliente } from '../../entities/cliente/cliente.model';
 import { Persona } from '../../entities/persona/persona.model';
 import { Direccion } from '../../entities/direccion/direccion.model';
@@ -9,23 +10,21 @@ import { Observable } from 'rxjs/Observable';
 import { ResponseWrapper } from '../../shared/model/response-wrapper.model';
 import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 import { PersonaService } from '../../entities/persona/persona.service';
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ClienteService } from '../../entities/cliente/cliente.service';
-import { ClienteModalPopupService } from './cliente-modal-popup.service';
 import { DireccionService } from '../../entities/direccion/direccion.service';
 import { EstadoPersonaService, EstadoPersona } from '../../entities/estado-persona';
+import { ClienteModalPopupService } from './cliente-nuevo-popup-service';
 
 @Component({
     selector: 'jhi-modal-nuevo-cliente',
     templateUrl: './modal-nuevo-cliente.component.html',
-    styles: []
 })
 export class ModalNuevoClienteComponent implements OnInit {
-
     cliente: Cliente;
     persona: Persona;
     direccion: Direccion;
-    isSaving: boolean;
+    isSaving = false;
     localidades: Localidad[];
     personas: Persona[];
 
@@ -37,15 +36,19 @@ export class ModalNuevoClienteComponent implements OnInit {
         private localidadService: LocalidadService,
         private direccionService: DireccionService,
         private estadoPersonaService: EstadoPersonaService,
-        private route: ActivatedRoute,
     ) {
+        this.cliente = new Cliente();
+        this.persona = new Persona();
+        this.direccion = new Direccion();
+        this.persona.direccion = this.direccion;
+        this.cliente.persona = this.persona;
     }
 
     ngOnInit() {
         this.isSaving = false;
         this.localidadService.query()
-            .subscribe((res: ResponseWrapper) => { this.localidades = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-
+            .subscribe((res: ResponseWrapper) => { this.localidades = res.json; },
+            (res: ResponseWrapper) => this.onError(res.json));
     }
 
     clear() {
@@ -126,17 +129,13 @@ export class ModalNuevoClienteComponent implements OnInit {
         this.jhiAlertService.error(error.message, null, null);
     }
 
-    trackById(index: number, item: Localidad) {
-        return item.id;
-    }
-
     trackLocalidadById(index: number, item: Localidad) {
         return item.id;
     }
 }
 
 @Component({
-    selector: '',
+    selector: 'jhi-cliente-modal-popup',
     template: ''
 })
 export class ClienteModalPopupComponent implements OnInit, OnDestroy {

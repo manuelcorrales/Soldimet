@@ -11,7 +11,6 @@ import { DetallePresupuestoService } from '../../../../entities/detalle-presupue
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
-
 @Component({
     selector: 'jhi-motor-nuevo-presupuesto',
     templateUrl: './motor-nuevo-presupuesto.component.html',
@@ -38,7 +37,6 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
         private detalleService: DetallePresupuestoService,
         private route: ActivatedRoute,
     ) {
-
 
     }
 

@@ -1,24 +1,56 @@
-<form class="container-fluid jh-create-entity">
+<jhi-alert></jhi-alert>
+<form role="form" class="container-fluid jh-create-entity" (ngSubmit)="guardarPresupuesto()">
     <div class="col-auto align-center container jh-card">
         <h3>Nuevo Presupuesto</h3>
         <jhi-clientes-nuevopresupuesto #cliente></jhi-clientes-nuevopresupuesto>
         <jhi-motor-nuevo-presupuesto (eventoDetallePresupuesto)="recibirDetalle($event)"></jhi-motor-nuevo-presupuesto>
         <div class="row row-eq-height">
             <div class="col-md-6">
-                <jhi-operaciones-nuevopresupuesto #operaciones [operaciones]="operaciones">
-
-                </jhi-operaciones-nuevopresupuesto>
+                <div class="card jh-card border-info mb-3">
+                    <div class="card-header card-header text-white bg-info mb-3">
+                        Operaciones
+                    </div>
+                    <div *ngFor="let detalle of detallesPresupuestos">
+                        <jhi-operaciones-nuevopresupuesto (eventoTotalOperaciones)="setTotalOperaciones()" #operaciones [detalle]="detalle">
+                        </jhi-operaciones-nuevopresupuesto>
+                    </div>
+                    <div class="card-footer">
+                        <div>
+                            <label>Total Operaciones: ${{totalOperaciones}}</label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <jhi-repuestos-nuevopresupuesto #repuestos></jhi-repuestos-nuevopresupuesto>
+                <div class="card jh-card border-info mb-3">
+                    <div class="card-header card-header text-white bg-info mb-3">
+                        Repuestos
+                    </div>
+                    <div *ngFor="let detalle of detallesPresupuestos">
+                        <jhi-repuestos-nuevopresupuesto (eventoTotalRepuestos)="setTotalRepuestos()" #repuestos [detalle]="detalle">
+                        </jhi-repuestos-nuevopresupuesto>
+                    </div>
+                    <div class="card-footer">
+                        <div>
+                            <label>Total Repuestos: ${{totalRepuestos}}</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-footer ">
-            <button type="submit" class="btn btn-primary btn-right" (click)="guardarPresupuesto()" [routerLink]="['/presupuestos']">
+    </div>
+    <div class="card-footer">
+        <div class="align-center">
+            <label>Total Presupuesto: ${{presupuesto.importeTotal}}</label>
+        </div>
+        <div class="text-right">
+            <button [disabled]="isSaving" type="submit" class="btn btn-primary" >
                 Crear
             </button>
-            <button type="submit" class="btn btn-danger btn-right" [routerLink]="['/presupuestos']">
-                Cancelar</button>
+            <button type="button" class="btn btn-danger" [routerLink]="['/presupuestos']">
+                Cancelar
+            </button>
         </div>
+
     </div>
 </form>

@@ -1,12 +1,11 @@
-import { Component, Input, Output, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChildren, QueryList, EventEmitter } from '@angular/core';
 import { DetallePresupuesto } from '../../../../../entities/detalle-presupuesto/detalle-presupuesto.model';
-import { DTOParOperacionPresupuestoComponent } from '../../../../../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto';
 import { PresupuestosService } from '../../../../presupuestos.service';
 import { DTODatosMotorComponent } from '../../../../../dto/dto-presupuesto-cabecera/DTODatosMotor';
 import { CobranzaOperacion } from '../../../../../entities/cobranza-operacion';
-import { BaseEntity } from './../../../../../shared';
-import { Operacion } from '../../../../../entities/operacion';
 import { OperacionPrecioComponent } from './operacion_precio/operacion-precio.component';
+import { Operacion } from '../../../../../entities/operacion';
+import { CostoOperacion } from '../../../../../entities/costo-operacion';
 
 @Component({
     selector: 'jhi-operaciones-nuevopresupuesto',
@@ -14,36 +13,48 @@ import { OperacionPrecioComponent } from './operacion_precio/operacion-precio.co
     styles: []
 })
 export class OperacionesNuevopresupuestoComponent implements OnInit {
-    @Input() operaciones: DTOParOperacionPresupuestoComponent[] = [];
-    @Output() operacionesACobrar: DTOParOperacionPresupuestoComponent[] = []
-    @ViewChildren('operacion') children: QueryList<OperacionPrecioComponent>;
+    @Input() detalle: DetallePresupuesto;
+    operaciones: CostoOperacion[] = [];
+    total = 0;
+    @ViewChildren('operaciones') children: QueryList<OperacionPrecioComponent>;
+    @Output() eventoTotalOperaciones = new EventEmitter<number>();
+
     constructor(private presupuestosService: PresupuestosService) {
     }
 
     ngOnInit() {
+        this.update()
     }
 
-    elegirOperacion(operacion: DTOParOperacionPresupuestoComponent, elegido: boolean) {
-
-        if (!this.operacionesACobrar.some((x) =>
-            x === operacion
-        ) && elegido
-        ) {
-            this.operacionesACobrar.push(operacion);
-        } else {
-            this.operacionesACobrar = this.operacionesACobrar.filter((obj) => obj !== operacion);
-        }
-
-    }
-
-    getOperacionesACobrar(): CobranzaOperacion[] {
-        const listaOperacionesAcobrar: CobranzaOperacion[] = [];
-        this.children.forEach((operacionPrecioComponent) => {
-            if (operacionPrecioComponent.getSeleccionado()) {
-                listaOperacionesAcobrar.push(operacionPrecioComponent.getOperacionAcobrar());
+    completarDetalle() {
+        const cobranzaOperaciones: CobranzaOperacion[] = [];
+        this.children.forEach( (componente) => {
+            if (componente.seleccionado) {
+                cobranzaOperaciones.push(componente.getOperacionAcobrar());
             }
         })
-        return listaOperacionesAcobrar;
+        this.detalle.cobranzaOperacions = cobranzaOperaciones;
     }
 
+    update() {
+        const dto: DTODatosMotorComponent = new DTODatosMotorComponent();
+            dto.idAplicacion = this.detalle.aplicacion.id;
+            dto.idCilindrada = this.detalle.cilindrada.id;
+            dto.idMotor = this.detalle.motor.id;
+            dto.idTiposPartesMotores = this.detalle.tipoParteMotor.id;
+            this.presupuestosService.findOperacionesPresupuesto(dto).subscribe(
+                (result) => {
+                    this.operaciones.push(...result);
+                }
+            );
+    }
+
+    @Input()
+    cambioTotalOperaciones() {
+        this.total = 0
+        this.children.forEach((componente) => {
+            this.total = this.total + componente.getPrecio()
+        })
+        this.eventoTotalOperaciones.emit();
+    }
 }

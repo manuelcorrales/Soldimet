@@ -16,8 +16,13 @@ import { CilindradaService } from '../entities/cilindrada/cilindrada.service';
 import { Cilindrada } from '../entities/cilindrada/cilindrada.model';
 import { TipoParteMotor } from '../entities/tipo-parte-motor/tipo-parte-motor.model';
 import { ResponseWrapper } from '../shared/model/response-wrapper.model';
-import { HttpClient } from '@angular/common/http';
-import { Articulo } from '../entities/articulo';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { RequestOptions } from '@angular/http';
+import { DetallePresupuesto } from '../entities/detalle-presupuesto';
+import { TipoRepuesto } from '../entities/tipo-repuesto';
+import { EstadoPresupuesto } from '../entities/estado-presupuesto';
+import { Presupuesto } from '../entities/presupuesto';
+import { CostoOperacion } from '../entities/costo-operacion';
 
 @Injectable()
 export class PresupuestosService {
@@ -29,14 +34,43 @@ export class PresupuestosService {
     private urlPresupuestoClientesFiltro = '/getClientesByNombre/';
     private urlPresupuestoRepuestos = '/getRepuestos';
     private urlPresupuestoClientesAll = '/getAllClientes';
+    private urlEstadoPrespuestoCreado = '/getEstadoPresupuestoCreado';
+    private urlSavePresupuesto = '/save';
+    private urlAceptarPresupuesto = '/aceptar';
+    private urlCancelarPresupuesto = '/cancelar';
 
     constructor(private http: Http,
-        private httpNuevo: HttpClient,
         private dateUtils: JhiDateUtils,
         private motorService: MotorService,
-        private aplicacionService: AplicacionService,
         private tipoParteService: TipoParteMotorService,
         private cilindradaService: CilindradaService) {
+    }
+
+    savePresupuesto(presupuesto: Presupuesto): Observable<Presupuesto> {
+        const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlSavePresupuesto}`;
+        console.log(presupuesto)
+        return this.http.post(urlLlamada, presupuesto)
+            .map((res: Response) => {
+                const jsonResponse = res.json();
+                console.log(res)
+                return this.convertJsonAPresupuesto(jsonResponse);
+            });
+    }
+
+    aceptarPresupuesto( dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
+        const url = `${this.resourceUrlPresupuestos}${this.urlAceptarPresupuesto}` ;
+        return this.http.post(url, dtoPresupuesto).map((res: Response) => {
+            const jsonResponse = res.json();
+            return this.convertJsonAPresupuestoCabecera([jsonResponse])[0];
+        });
+    }
+
+    cancelarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
+        const url = `${this.resourceUrlPresupuestos}${this.urlCancelarPresupuesto}`;
+        return this.http.post(url, dtoPresupuesto).map((res: Response) => {
+            const jsonResponse = res.json();
+            return this.convertJsonAPresupuestoCabecera([jsonResponse])[0];
+        });
     }
 
     findPresupuestoCabecera(): Observable<DtoPresupuestoCabeceraComponent[]> {
@@ -55,12 +89,19 @@ export class PresupuestosService {
 
     }
 
-    findOperacionesPresupuesto(datos: DTODatosMotorComponent): Observable<DTOParOperacionPresupuestoComponent[]> {
-        let body = JSON.stringify(datos);
+    findOperacionesPresupuesto(datos: DTODatosMotorComponent): Observable<CostoOperacion[]> {
         const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoOperacionesCosto}?idMotor=${datos.idMotor}&idCilindrada=${datos.idCilindrada}&idAplicacion=${datos.idAplicacion}&idTiposPartesMotores=${datos.idTiposPartesMotores}`;
         return this.http.get(urlLlamada).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertJsonAPArejaCostoOperacion(jsonResponse);
+        });
+    }
+
+    buscarEstadoCreado(): Observable<EstadoPresupuesto> {
+        const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlEstadoPrespuestoCreado}`
+        return this.http.get(urlLlamada).map((res: Response) => {
+            const jsonResponse = res.json();
+            return this.convertJsonAEstadoPresupuesto(jsonResponse);
         });
     }
 
@@ -71,15 +112,15 @@ export class PresupuestosService {
         });
     }
 
-    findAllClientes(): Observable<Cliente[]>{
+    findAllClientes(): Observable<Cliente[]> {
         return this.http.get(`${this.resourceUrlPresupuestos}${this.urlPresupuestoClientesAll}`)
             .map((res: Response) => {
-                return <Cliente[]> res.json();
-        });
+                return <Cliente[]>res.json();
+            });
     }
 
     buscarMotores(): Motor[] {
-        let arreglo: Motor[] = [];
+        const arreglo: Motor[] = [];
         this.motorService.query().subscribe((res: ResponseWrapper) => {
             arreglo.push(...this.convertJsonAMotor(res))
         });
@@ -87,7 +128,7 @@ export class PresupuestosService {
     }
 
     buscarCilindradas(): Cilindrada[] {
-        let arreglo: Cilindrada[] = [];
+        const arreglo: Cilindrada[] = [];
         this.cilindradaService.query().subscribe((res: ResponseWrapper) => {
             arreglo.push(...this.convertJsonACilindrada(res))
         });
@@ -95,35 +136,35 @@ export class PresupuestosService {
     }
 
     buscarTiposPartes(): TipoParteMotor[] {
-        let arreglo: TipoParteMotor[] = [];
+        const arreglo: TipoParteMotor[] = [];
         this.tipoParteService.query().subscribe((res: ResponseWrapper) => {
             arreglo.push(...this.convertJsonATipoParteMotor(res))
         });
         return arreglo;
     }
 
-    buscarRepuestos(): Observable<Articulo[]> {
-        const url = `${this.resourceUrlPresupuestos}` + this.urlPresupuestoRepuestos;
+    buscarRepuestos(detalle: DetallePresupuesto): Observable<TipoRepuesto[]> {
+        const url = `${this.resourceUrlPresupuestos}${this.urlPresupuestoRepuestos}/${detalle.tipoParteMotor.id}`;
         return this.http.get(url).map((res: Response) => {
             const jsonResponse = res.json();
-            return this.convertJsonAArticulo(jsonResponse);
+            return this.convertJsonToTipoRepuesto(jsonResponse);
         });
     }
 
     convertJsonAPresupuestoCabecera(json: any): DtoPresupuestoCabeceraComponent[] {
-        let arreglo: DtoPresupuestoCabeceraComponent[] = [];
+        const arreglo: DtoPresupuestoCabeceraComponent[] = [];
         json.forEach((elemento) => {
             const entity: DtoPresupuestoCabeceraComponent =
-                Object.assign(new DtoPresupuestoCabeceraComponent(), json);
-            entity.fecha = this.dateUtils
-                .convertLocalDateFromServer(json.fecha);
+                Object.assign(new DtoPresupuestoCabeceraComponent(), elemento);
+            // entity.fecha = this.dateUtils
+            //     .convertLocalDateFromServer(json.fecha);
             arreglo.push(entity);
         })
         return arreglo || [];
     }
 
     convertJsonAAplicacion(json: any): Aplicacion[] {
-        let arreglo: Aplicacion[] = [];
+        const arreglo: Aplicacion[] = [];
         json.forEach((elemento) => {
             const entity: Aplicacion =
                 Object.assign(new Aplicacion(), elemento);
@@ -132,18 +173,18 @@ export class PresupuestosService {
         return arreglo;
     }
 
-    convertJsonAPArejaCostoOperacion(json: any): DTOParOperacionPresupuestoComponent[] {
-        let arreglo: DTOParOperacionPresupuestoComponent[] = [];
+    convertJsonAPArejaCostoOperacion(json: any): CostoOperacion[] {
+        const arreglo: CostoOperacion[] = [];
         json.forEach((elemento) => {
-            const entity: DTOParOperacionPresupuestoComponent =
-                Object.assign(new DTOParOperacionPresupuestoComponent(), elemento);
+            const entity: CostoOperacion =
+                Object.assign(new CostoOperacion(), elemento);
             arreglo.push(entity);
         })
         return arreglo;
     }
 
     convertJsonACliente(json: any): Cliente[] {
-        let arreglo: Cliente[] = [];
+        const arreglo: Cliente[] = [];
         json.forEach((elemento) => {
             const entity: Cliente =
                 Object.assign(new Cliente(), elemento);
@@ -153,7 +194,7 @@ export class PresupuestosService {
     }
 
     convertJsonAMotor(res: ResponseWrapper): Motor[] {
-        let arreglo: Motor[] = [];
+        const arreglo: Motor[] = [];
         res.json.forEach((elemento) => {
             const entity: Motor =
                 Object.assign(new Motor(), elemento);
@@ -163,7 +204,7 @@ export class PresupuestosService {
     }
 
     convertJsonATipoParteMotor(res: ResponseWrapper): TipoParteMotor[] {
-        let arreglo: TipoParteMotor[] = [];
+        const arreglo: TipoParteMotor[] = [];
         res.json.forEach((elemento) => {
             const entity: TipoParteMotor =
                 Object.assign(new TipoParteMotor(), elemento);
@@ -173,7 +214,7 @@ export class PresupuestosService {
     }
 
     convertJsonACilindrada(res: ResponseWrapper): Cilindrada[] {
-        let arreglo: Cilindrada[] = [];
+        const arreglo: Cilindrada[] = [];
         res.json.forEach((elemento) => {
             const entity: Cilindrada =
                 Object.assign(new Cilindrada(), elemento);
@@ -182,13 +223,45 @@ export class PresupuestosService {
         return arreglo || [];
     }
 
-    convertJsonAArticulo(json: any): Articulo[] {
-        let arreglo: Articulo[] = [];
+    convertJsonToTipoRepuesto(json: any): TipoRepuesto[] {
+        const arreglo: TipoRepuesto[] = [];
         json.forEach((elemento) => {
-            const entity: Articulo =
-                Object.assign(new Articulo(), elemento);
+            const entity: TipoRepuesto =
+                Object.assign(new TipoRepuesto(), elemento);
             arreglo.push(entity);
         })
         return arreglo;
+    }
+
+    convertJsonAEstadoPresupuesto(json: any): EstadoPresupuesto {
+        return Object.assign(new EstadoPresupuesto(), json);
+    }
+
+    private convertPresupuestoAJson(presupuesto: Presupuesto): Presupuesto {
+        const copy: Presupuesto = Object.assign({}, presupuesto);
+        if (presupuesto.fechaCreacion) {
+            copy.fechaCreacion = this.dateUtils
+                .convertLocalDateToServer(presupuesto.fechaCreacion);
+        }
+        if (presupuesto.fechaAceptado) {
+            copy.fechaAceptado = this.dateUtils
+                .convertLocalDateToServer(presupuesto.fechaAceptado);
+        }
+        if (presupuesto.fechaEntregado) {
+            copy.fechaEntregado = this.dateUtils
+                .convertLocalDateToServer(presupuesto.fechaEntregado);
+        }
+        return copy;
+    }
+
+    private convertJsonAPresupuesto(json: any): Presupuesto {
+        const entity: Presupuesto = Object.assign(new Presupuesto(), json);
+        entity.fechaCreacion = this.dateUtils
+            .convertLocalDateFromServer(json.fechaCreacion);
+        entity.fechaAceptado = this.dateUtils
+            .convertLocalDateFromServer(json.fechaAceptado);
+        entity.fechaEntregado = this.dateUtils
+            .convertLocalDateFromServer(json.fechaEntregado);
+        return entity;
     }
 }

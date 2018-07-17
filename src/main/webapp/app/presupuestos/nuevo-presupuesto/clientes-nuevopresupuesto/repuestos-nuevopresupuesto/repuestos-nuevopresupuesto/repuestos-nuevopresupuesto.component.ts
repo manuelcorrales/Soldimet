@@ -1,8 +1,9 @@
-import { Component, OnInit, Output, Input, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Output, Input, ViewChildren, QueryList, EventEmitter } from '@angular/core';
 import { PresupuestosService } from '../../../../presupuestos.service';
 import { CobranzaRepuesto } from '../../../../../entities/cobranza-repuesto';
 import { RepuestoPrecioComponent } from './repuesto_precio/repuesto-precio.component';
 import { TipoRepuesto } from '../../../../../entities/tipo-repuesto';
+import { DetallePresupuesto } from '../../../../../entities/detalle-presupuesto';
 
 @Component({
     selector: 'jhi-repuestos-nuevopresupuesto',
@@ -11,39 +12,57 @@ import { TipoRepuesto } from '../../../../../entities/tipo-repuesto';
 })
 export class RepuestosNuevopresupuestoComponent implements OnInit {
 
-    @Input() repuestos: TipoRepuesto[] = [];
-    @Output() repuestosACobrar: TipoRepuesto[] = [];
-    @ViewChildren('repuesto') children: QueryList<RepuestoPrecioComponent>;
+    @Input() detalle: DetallePresupuesto;
+    repuestos: TipoRepuesto[] = [];
+    total = 0;
+    @ViewChildren('repuestoComponents') children: QueryList<RepuestoPrecioComponent>;
+    @Output() eventoTotalRepuestos = new EventEmitter<number>();
     constructor(private _presupuestoService: PresupuestosService) { }
 
     ngOnInit() {
-        this._presupuestoService.buscarRepuestos().subscribe((repuestos) => {
-            this.repuestos.push(...repuestos);
-            this.repuestos = repuestos;
+        this.update()
+    }
+
+    update() {
+        this._presupuestoService.buscarRepuestos(this.detalle).subscribe((repuestos: TipoRepuesto[]) => {
+            this.repuestos = repuestos
         })
     }
 
     elegirRepuesto(repuesto: TipoRepuesto, elegido: boolean) {
 
-        if (!this.repuestosACobrar.some((x) =>
+        if (!this.detalle.cobranzaRepuestos.some((x) =>
             x === repuesto
         ) && elegido
         ) {
-            this.repuestosACobrar.push(repuesto);
+            this.detalle.cobranzaRepuestos.push(repuesto);
         } else {
-            this.repuestosACobrar = this.repuestosACobrar.filter((obj) => obj !== repuesto);
+            this.detalle.cobranzaRepuestos = this.detalle.cobranzaRepuestos.filter((obj) => obj !== repuesto);
         }
 
     }
 
-    getRepuestosACobrar(): CobranzaRepuesto[] {
-        const listaRepuestosAcobrar: CobranzaRepuesto[] = [];
-        this.children.forEach((repuestoPrecioComponent) => {
-            if (repuestoPrecioComponent.getSeleccionado()) {
-                listaRepuestosAcobrar.push(repuestoPrecioComponent.getArticuloAcobrar());
+    completarDetalle() {
+        const cobranzaRepuesto: CobranzaRepuesto[] = [];
+        this.children.forEach((componente) => {
+            if (componente.seleccionado) {
+                cobranzaRepuesto.push(componente.getArticuloAcobrar());
             }
-        });
-        return listaRepuestosAcobrar;
+        })
+        this.detalle.cobranzaRepuestos = cobranzaRepuesto;
+    }
+
+    getDetalle(): DetallePresupuesto {
+        return this.detalle;
+    }
+
+    @Input()
+    cambioTotalRepuestos() {
+        this.total = 0
+        this.children.forEach((componente) => {
+            this.total = this.total + componente.getPrecio()
+        })
+        this.eventoTotalRepuestos.emit();
     }
 
 }

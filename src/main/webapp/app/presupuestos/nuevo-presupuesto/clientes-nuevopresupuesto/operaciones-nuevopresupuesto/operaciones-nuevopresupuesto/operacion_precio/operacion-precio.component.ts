@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { DTOParOperacionPresupuestoComponent } from '../../../../../../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { CobranzaOperacion } from '../../../../../../entities/cobranza-operacion';
-import { Operacion } from '../../../../../../entities/operacion';
+import { Operacion, OperacionService } from '../../../../../../entities/operacion';
+import { CostoOperacion } from '../../../../../../entities/costo-operacion';
 
 @Component({
     selector: 'jhi-operacion-precio',
@@ -9,9 +9,9 @@ import { Operacion } from '../../../../../../entities/operacion';
     styles: []
 })
 export class OperacionPrecioComponent implements OnInit {
-    @Input()
-    operacion: DTOParOperacionPresupuestoComponent;
+    @Input() costoOperacion: CostoOperacion = null;
     seleccionado = false;
+    @Output() eventoCambioValor = new EventEmitter<number>();
 
     constructor() {
     }
@@ -19,16 +19,23 @@ export class OperacionPrecioComponent implements OnInit {
     ngOnInit() {
     }
 
-    getSeleccionado(): Boolean {
-        return this.seleccionado;
+    getOperacionAcobrar(): CobranzaOperacion {
+        const nuevaCobranzaRepuesto = new CobranzaOperacion();
+        nuevaCobranzaRepuesto.cobranzaOperacion = this.costoOperacion.costoOperacion;
+        nuevaCobranzaRepuesto.operacion = this.costoOperacion.operacion;
+        return nuevaCobranzaRepuesto;
     }
 
-    getOperacionAcobrar(): CobranzaOperacion {
+    cambioValor() {
+        this.eventoCambioValor.emit();
+    }
 
-        const nuevaCobranzaRepuesto = new CobranzaOperacion();
-        nuevaCobranzaRepuesto.cobranzaOperacion = this.operacion.costoOperacion;
-        nuevaCobranzaRepuesto.operacion = this.operacion.operacionID as Operacion;
-        return nuevaCobranzaRepuesto;
+    getPrecio() {
+        if ( this.seleccionado) {
+            return this.costoOperacion.costoOperacion;
+        }else {
+            return 0;
+        }
     }
 
 }

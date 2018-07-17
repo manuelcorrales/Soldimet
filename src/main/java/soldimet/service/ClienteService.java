@@ -1,9 +1,13 @@
 package soldimet.service;
 
 import soldimet.domain.Cliente;
+import soldimet.domain.EstadoPersona;
 import soldimet.repository.ClienteRepository;
+import soldimet.repository.EstadoPersonaRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,9 @@ public class ClienteService {
     private final Logger log = LoggerFactory.getLogger(ClienteService.class);
 
     private final ClienteRepository clienteRepository;
+
+    @Autowired
+    private EstadoPersonaRepository estadoPersonaRepository;
 
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
@@ -65,6 +72,9 @@ public class ClienteService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Cliente : {}", id);
-        clienteRepository.delete(id);
+        EstadoPersona estadoBaja = estadoPersonaRepository.findByNombreEstado("Baja");
+        Cliente cliente = clienteRepository.findOne(id);
+        cliente.getPersona().setEstadoPersona(estadoBaja);
+        clienteRepository.save(cliente);
     }
 }

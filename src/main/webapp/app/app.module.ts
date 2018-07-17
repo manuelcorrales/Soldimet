@@ -12,7 +12,7 @@ import {SoldimetEntityModule} from './entities/entity.module';
 import {customHttpProvider} from './blocks/interceptor/http.provider';
 import {PaginationConfig} from './blocks/config/uib-pagination.config';
 
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from '@angular/common/http';
 import {
     ErrorComponent,
     FooterComponent,

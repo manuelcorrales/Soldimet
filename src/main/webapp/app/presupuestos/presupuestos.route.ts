@@ -4,7 +4,6 @@ import {PresupuestosComponent} from './presupuestos.component';
 import {UserRouteAccessService} from '../shared';
 import {NuevoPresupuestoComponent} from './nuevo-presupuesto/nuevo-presupuesto.component';
 
-
 export const PRESUPUESTOS_ROUTES: Routes = [{
     path: 'presupuestos',
     data: {

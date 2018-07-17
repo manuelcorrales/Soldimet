@@ -1,6 +1,6 @@
-<div class=".container-fluid card jh-card">
+<div class="container-fluid card jh-card">
     <jhi-alert></jhi-alert>
-    <div class="row">
+    <div class="">
         <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['nuevo']">
             <span class="fa fa-plus"></span>
             <span>
@@ -11,9 +11,51 @@
     <div class="row">
     </div>
     <br/>
-    <div class="table-responsive">
-        <div class="container">
-            <ng2-smart-table [settings]="settings"></ng2-smart-table>
+    <div class="">
+        <div class="">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Número</th>
+                        <th scope="col">Motor</th>
+                        <th scope="col">cliente</th>
+                        <th scope="col">Importe</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Sucursal</th>
+                        <th scope="col">Operaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let presupuesto of presupuestos">
+                        <th>{{presupuesto.codigo}}</th>
+                        <td>{{presupuesto.motor}}</td>
+                        <td>{{presupuesto.cliente}} </td>
+                        <td>{{presupuesto.importe}}</td>
+                        <td>{{presupuesto.fecha}}</td>
+                        <td>{{presupuesto.estado}}</td>
+                        <td>{{presupuesto.sucursal}}</td>
+                        <td>
+
+                            <button class="btn btn-success" *ngIf="presupuesto.estado == 'Creado'" (click)="aceptarPresupuesto(presupuesto)" placement="top"
+                                ngbTooltip="Aceptar presupuesto">
+                                <i class="fa fa-check-square"></i>
+                            </button>
+                            <button class="btn btn-info" *ngIf="presupuesto.estado == 'Aceptado'" placement="top" ngbTooltip="Terminar trabajo">
+                                <i class="fa fa-check-square"></i>
+                            </button>
+                            <button class="btn btn-primary" *ngIf="presupuesto.estado == 'Terminado'" placement="top" ngbTooltip="Entregar trabajo">
+                                <i class="fa fa-check-square"></i>
+                            </button>
+                            <button class="btn btn-danger" *ngIf="presupuesto.estado != 'Cancelado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"
+                                ngbTooltip="Eliminar">
+                                <i class="fa fa-close"></i>
+                            </button>
+                            <p *ngIf="presupuesto.estado == 'Cancelado'">No hay operaciones</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

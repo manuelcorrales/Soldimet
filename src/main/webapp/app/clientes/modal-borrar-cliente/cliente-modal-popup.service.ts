@@ -1,18 +1,17 @@
 import { Component, Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { ClienteService } from '../../entities/cliente/cliente.service';
-import { Cliente } from '../../entities/cliente/cliente.model';
+import { ClienteService, Cliente } from '../../entities/cliente';
 
 @Injectable()
-export class ClienteModalPopupService {
+export class ClienteBorrarPopupService {
 
     private ngbModalRef: NgbModalRef;
 
     constructor(
         private modalService: NgbModal,
         private router: Router,
-        private clienteService: ClienteService
+        private clienteService: ClienteService,
 
     ) {
         this.ngbModalRef = null;
@@ -24,19 +23,16 @@ export class ClienteModalPopupService {
             if (isOpen) {
                 resolve(this.ngbModalRef);
             }
-
             if (id) {
                 this.clienteService.find(id).subscribe((cliente) => {
                     this.ngbModalRef = this.clienteModalRef(component, cliente);
                     resolve(this.ngbModalRef);
                 });
             } else {
-                // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
-
                     this.ngbModalRef = this.clienteModalRef(component, new Cliente());
                     resolve(this.ngbModalRef);
-                }, 1);
+                }, 0);
             }
         });
     }

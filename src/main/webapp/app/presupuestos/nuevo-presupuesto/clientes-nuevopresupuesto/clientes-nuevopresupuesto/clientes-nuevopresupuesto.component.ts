@@ -7,7 +7,6 @@ import { ResponseWrapper } from '../../../../shared';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
     selector: 'jhi-clientes-nuevopresupuesto',
     templateUrl: './clientes-nuevopresupuesto.component.html',

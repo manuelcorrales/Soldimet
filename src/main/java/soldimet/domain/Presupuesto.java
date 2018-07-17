@@ -1,7 +1,5 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -31,8 +29,7 @@ public class Presupuesto implements Serializable {
     @Column(name = "descuento")
     private Float descuento;
 
-    @NotNull
-    @Column(name = "fecha_creacion", nullable = false)
+    @Column(name = "fecha_creacion")
     private LocalDate fechaCreacion;
 
     @Column(name = "fecha_aceptado")
@@ -57,10 +54,9 @@ public class Presupuesto implements Serializable {
     @NotNull
     private EstadoPresupuesto estadoPresupuesto;
 
-    @OneToMany
+    @OneToMany(cascade = { CascadeType.ALL })
     @JoinColumn(name= "presupuesto")
-    @JsonIgnore
-    private Set<DetallePresupuesto> detallePresupuestos = new HashSet<>();
+    private Set<DetallePresupuesto> detallePresupuestos = new HashSet<DetallePresupuesto>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

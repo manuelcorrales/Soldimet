@@ -24,7 +24,7 @@ export class PedidosComponent implements OnInit {
         // Footer total message
         totalMessage: 'total'};
     limit = 25;
-    selectionType = "single";
+    selectionType = 'single';
 
   constructor() { }
 
