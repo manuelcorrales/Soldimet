@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,6 +53,8 @@ public class ArticuloResourceIntTest {
 
     @Autowired
     private ArticuloRepository articuloRepository;
+
+    
 
     @Autowired
     private ArticuloService articuloService;
@@ -81,6 +85,7 @@ public class ArticuloResourceIntTest {
         this.restArticuloMockMvc = MockMvcBuilders.standaloneSetup(articuloResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -95,10 +100,10 @@ public class ArticuloResourceIntTest {
             .descripcion(DEFAULT_DESCRIPCION)
             .codigoArticuloProveedor(DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
         // Add required entity
-        EstadoArticulo estado = EstadoArticuloResourceIntTest.createEntity(em);
-        em.persist(estado);
+        EstadoArticulo estadoArticulo = EstadoArticuloResourceIntTest.createEntity(em);
+        em.persist(estadoArticulo);
         em.flush();
-        articulo.setEstado(estado);
+        articulo.setEstado(estadoArticulo);
         // Add required entity
         Marca marca = MarcaResourceIntTest.createEntity(em);
         em.persist(marca);
@@ -187,6 +192,7 @@ public class ArticuloResourceIntTest {
             .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION.toString())))
             .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -281,6 +287,62 @@ public class ArticuloResourceIntTest {
         defaultArticuloShouldNotBeFound("codigoArticuloProveedor.specified=false");
     }
 
+    @Test
+    @Transactional
+    public void getAllArticulosByEstadoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        EstadoArticulo estado = EstadoArticuloResourceIntTest.createEntity(em);
+        em.persist(estado);
+        em.flush();
+        articulo.setEstado(estado);
+        articuloRepository.saveAndFlush(articulo);
+        Long estadoId = estado.getId();
+
+        // Get all the articuloList where estado equals to estadoId
+        defaultArticuloShouldBeFound("estadoId.equals=" + estadoId);
+
+        // Get all the articuloList where estado equals to estadoId + 1
+        defaultArticuloShouldNotBeFound("estadoId.equals=" + (estadoId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllArticulosByMarcaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Marca marca = MarcaResourceIntTest.createEntity(em);
+        em.persist(marca);
+        em.flush();
+        articulo.setMarca(marca);
+        articuloRepository.saveAndFlush(articulo);
+        Long marcaId = marca.getId();
+
+        // Get all the articuloList where marca equals to marcaId
+        defaultArticuloShouldBeFound("marcaId.equals=" + marcaId);
+
+        // Get all the articuloList where marca equals to marcaId + 1
+        defaultArticuloShouldNotBeFound("marcaId.equals=" + (marcaId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllArticulosByTipoRepuestoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        TipoRepuesto tipoRepuesto = TipoRepuestoResourceIntTest.createEntity(em);
+        em.persist(tipoRepuesto);
+        em.flush();
+        articulo.setTipoRepuesto(tipoRepuesto);
+        articuloRepository.saveAndFlush(articulo);
+        Long tipoRepuestoId = tipoRepuesto.getId();
+
+        // Get all the articuloList where tipoRepuesto equals to tipoRepuestoId
+        defaultArticuloShouldBeFound("tipoRepuestoId.equals=" + tipoRepuestoId);
+
+        // Get all the articuloList where tipoRepuesto equals to tipoRepuestoId + 1
+        defaultArticuloShouldNotBeFound("tipoRepuestoId.equals=" + (tipoRepuestoId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -304,7 +366,6 @@ public class ArticuloResourceIntTest {
             .andExpect(jsonPath("$").isEmpty());
     }
 
-
     @Test
     @Transactional
     public void getNonExistingArticulo() throws Exception {
@@ -322,7 +383,9 @@ public class ArticuloResourceIntTest {
         int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
 
         // Update the articulo
-        Articulo updatedArticulo = articuloRepository.findOne(articulo.getId());
+        Articulo updatedArticulo = articuloRepository.findById(articulo.getId()).get();
+        // Disconnect from session so that the updates on updatedArticulo are not directly saved in db
+        em.detach(updatedArticulo);
         updatedArticulo
             .descripcion(UPDATED_DESCRIPCION)
             .codigoArticuloProveedor(UPDATED_CODIGO_ARTICULO_PROVEEDOR);
@@ -351,11 +414,11 @@ public class ArticuloResourceIntTest {
         restArticuloMockMvc.perform(put("/api/articulos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(articulo)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Articulo in the database
         List<Articulo> articuloList = articuloRepository.findAll();
-        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

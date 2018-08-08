@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class EstadoPersonaResourceIntTest {
 
     @Autowired
     private EstadoPersonaRepository estadoPersonaRepository;
+
+    
 
     @Autowired
     private EstadoPersonaService estadoPersonaService;
@@ -70,6 +74,7 @@ public class EstadoPersonaResourceIntTest {
         this.restEstadoPersonaMockMvc = MockMvcBuilders.standaloneSetup(estadoPersonaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class EstadoPersonaResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoPersona.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class EstadoPersonaResourceIntTest {
             .andExpect(jsonPath("$.id").value(estadoPersona.getId().intValue()))
             .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEstadoPersona() throws Exception {
@@ -190,7 +195,9 @@ public class EstadoPersonaResourceIntTest {
         int databaseSizeBeforeUpdate = estadoPersonaRepository.findAll().size();
 
         // Update the estadoPersona
-        EstadoPersona updatedEstadoPersona = estadoPersonaRepository.findOne(estadoPersona.getId());
+        EstadoPersona updatedEstadoPersona = estadoPersonaRepository.findById(estadoPersona.getId()).get();
+        // Disconnect from session so that the updates on updatedEstadoPersona are not directly saved in db
+        em.detach(updatedEstadoPersona);
         updatedEstadoPersona
             .nombreEstado(UPDATED_NOMBRE_ESTADO);
 
@@ -217,11 +224,11 @@ public class EstadoPersonaResourceIntTest {
         restEstadoPersonaMockMvc.perform(put("/api/estado-personas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(estadoPersona)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EstadoPersona in the database
         List<EstadoPersona> estadoPersonaList = estadoPersonaRepository.findAll();
-        assertThat(estadoPersonaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(estadoPersonaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class BancoResourceIntTest {
 
     @Autowired
     private BancoRepository bancoRepository;
+
+    
 
     @Autowired
     private BancoService bancoService;
@@ -70,6 +74,7 @@ public class BancoResourceIntTest {
         this.restBancoMockMvc = MockMvcBuilders.standaloneSetup(bancoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class BancoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(banco.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreBanco").value(hasItem(DEFAULT_NOMBRE_BANCO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class BancoResourceIntTest {
             .andExpect(jsonPath("$.id").value(banco.getId().intValue()))
             .andExpect(jsonPath("$.nombreBanco").value(DEFAULT_NOMBRE_BANCO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingBanco() throws Exception {
@@ -190,7 +195,9 @@ public class BancoResourceIntTest {
         int databaseSizeBeforeUpdate = bancoRepository.findAll().size();
 
         // Update the banco
-        Banco updatedBanco = bancoRepository.findOne(banco.getId());
+        Banco updatedBanco = bancoRepository.findById(banco.getId()).get();
+        // Disconnect from session so that the updates on updatedBanco are not directly saved in db
+        em.detach(updatedBanco);
         updatedBanco
             .nombreBanco(UPDATED_NOMBRE_BANCO);
 
@@ -217,11 +224,11 @@ public class BancoResourceIntTest {
         restBancoMockMvc.perform(put("/api/bancos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(banco)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Banco in the database
         List<Banco> bancoList = bancoRepository.findAll();
-        assertThat(bancoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(bancoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

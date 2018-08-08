@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class EstadoArticuloResourceIntTest {
 
     @Autowired
     private EstadoArticuloRepository estadoArticuloRepository;
+
+    
 
     @Autowired
     private EstadoArticuloService estadoArticuloService;
@@ -70,6 +74,7 @@ public class EstadoArticuloResourceIntTest {
         this.restEstadoArticuloMockMvc = MockMvcBuilders.standaloneSetup(estadoArticuloResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class EstadoArticuloResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoArticulo.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class EstadoArticuloResourceIntTest {
             .andExpect(jsonPath("$.id").value(estadoArticulo.getId().intValue()))
             .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEstadoArticulo() throws Exception {
@@ -190,7 +195,9 @@ public class EstadoArticuloResourceIntTest {
         int databaseSizeBeforeUpdate = estadoArticuloRepository.findAll().size();
 
         // Update the estadoArticulo
-        EstadoArticulo updatedEstadoArticulo = estadoArticuloRepository.findOne(estadoArticulo.getId());
+        EstadoArticulo updatedEstadoArticulo = estadoArticuloRepository.findById(estadoArticulo.getId()).get();
+        // Disconnect from session so that the updates on updatedEstadoArticulo are not directly saved in db
+        em.detach(updatedEstadoArticulo);
         updatedEstadoArticulo
             .nombreEstado(UPDATED_NOMBRE_ESTADO);
 
@@ -217,11 +224,11 @@ public class EstadoArticuloResourceIntTest {
         restEstadoArticuloMockMvc.perform(put("/api/estado-articulos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(estadoArticulo)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EstadoArticulo in the database
         List<EstadoArticulo> estadoArticuloList = estadoArticuloRepository.findAll();
-        assertThat(estadoArticuloList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(estadoArticuloList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -12,7 +12,6 @@ export class EstadoCobranzaOperacionPopupService {
         private modalService: NgbModal,
         private router: Router,
         private estadoCobranzaOperacionService: EstadoCobranzaOperacionService
-
     ) {
         this.ngbModalRef = null;
     }
@@ -25,7 +24,7 @@ export class EstadoCobranzaOperacionPopupService {
             }
 
             if (id) {
-                this.estadoCobranzaOperacionService.find(id).subscribe((estadoCobranzaOperacion) => {
+                this.estadoCobranzaOperacionService.find(id).subscribe(estadoCobranzaOperacion => {
                     this.ngbModalRef = this.estadoCobranzaOperacionModalRef(component, estadoCobranzaOperacion);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +39,18 @@ export class EstadoCobranzaOperacionPopupService {
     }
 
     estadoCobranzaOperacionModalRef(component: Component, estadoCobranzaOperacion: EstadoCobranzaOperacion): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.estadoCobranzaOperacion = estadoCobranzaOperacion;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

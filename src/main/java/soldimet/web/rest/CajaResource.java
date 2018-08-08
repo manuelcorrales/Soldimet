@@ -3,11 +3,11 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Caja;
 import soldimet.service.CajaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import soldimet.web.rest.util.PaginationUtil;
 import soldimet.service.dto.CajaCriteria;
 import soldimet.service.CajaQueryService;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class CajaResource {
     public ResponseEntity<Caja> createCaja(@Valid @RequestBody Caja caja) throws URISyntaxException {
         log.debug("REST request to save Caja : {}", caja);
         if (caja.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new caja cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new caja cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Caja result = cajaService.save(caja);
         return ResponseEntity.created(new URI("/api/cajas/" + result.getId()))
@@ -79,7 +79,7 @@ public class CajaResource {
     public ResponseEntity<Caja> updateCaja(@Valid @RequestBody Caja caja) throws URISyntaxException {
         log.debug("REST request to update Caja : {}", caja);
         if (caja.getId() == null) {
-            return createCaja(caja);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Caja result = cajaService.save(caja);
         return ResponseEntity.ok()
@@ -96,7 +96,7 @@ public class CajaResource {
      */
     @GetMapping("/cajas")
     @Timed
-    public ResponseEntity<List<Caja>> getAllCajas(CajaCriteria criteria,@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Caja>> getAllCajas(CajaCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Cajas by criteria: {}", criteria);
         Page<Caja> page = cajaQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/cajas");
@@ -113,8 +113,8 @@ public class CajaResource {
     @Timed
     public ResponseEntity<Caja> getCaja(@PathVariable Long id) {
         log.debug("REST request to get Caja : {}", id);
-        Caja caja = cajaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(caja));
+        Optional<Caja> caja = cajaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(caja);
     }
 
     /**

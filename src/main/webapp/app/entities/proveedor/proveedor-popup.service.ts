@@ -8,12 +8,7 @@ import { ProveedorService } from './proveedor.service';
 export class ProveedorPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private proveedorService: ProveedorService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private proveedorService: ProveedorService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class ProveedorPopupService {
             }
 
             if (id) {
-                this.proveedorService.find(id).subscribe((proveedor) => {
+                this.proveedorService.find(id).subscribe(proveedor => {
                     this.ngbModalRef = this.proveedorModalRef(component, proveedor);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class ProveedorPopupService {
     }
 
     proveedorModalRef(component: Component, proveedor: Proveedor): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.proveedor = proveedor;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

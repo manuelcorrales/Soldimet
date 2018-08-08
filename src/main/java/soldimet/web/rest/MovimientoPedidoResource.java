@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.MovimientoPedido;
 import soldimet.service.MovimientoPedidoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class MovimientoPedidoResource {
     public ResponseEntity<MovimientoPedido> createMovimientoPedido(@Valid @RequestBody MovimientoPedido movimientoPedido) throws URISyntaxException {
         log.debug("REST request to save MovimientoPedido : {}", movimientoPedido);
         if (movimientoPedido.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new movimientoPedido cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new movimientoPedido cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MovimientoPedido result = movimientoPedidoService.save(movimientoPedido);
         return ResponseEntity.created(new URI("/api/movimiento-pedidos/" + result.getId()))
@@ -68,7 +69,7 @@ public class MovimientoPedidoResource {
     public ResponseEntity<MovimientoPedido> updateMovimientoPedido(@Valid @RequestBody MovimientoPedido movimientoPedido) throws URISyntaxException {
         log.debug("REST request to update MovimientoPedido : {}", movimientoPedido);
         if (movimientoPedido.getId() == null) {
-            return createMovimientoPedido(movimientoPedido);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         MovimientoPedido result = movimientoPedidoService.save(movimientoPedido);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class MovimientoPedidoResource {
     public List<MovimientoPedido> getAllMovimientoPedidos() {
         log.debug("REST request to get all MovimientoPedidos");
         return movimientoPedidoService.findAll();
-        }
+    }
 
     /**
      * GET  /movimiento-pedidos/:id : get the "id" movimientoPedido.
@@ -98,8 +99,8 @@ public class MovimientoPedidoResource {
     @Timed
     public ResponseEntity<MovimientoPedido> getMovimientoPedido(@PathVariable Long id) {
         log.debug("REST request to get MovimientoPedido : {}", id);
-        MovimientoPedido movimientoPedido = movimientoPedidoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(movimientoPedido));
+        Optional<MovimientoPedido> movimientoPedido = movimientoPedidoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(movimientoPedido);
     }
 
     /**

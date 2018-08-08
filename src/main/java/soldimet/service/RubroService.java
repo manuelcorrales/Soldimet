@@ -4,11 +4,13 @@ import soldimet.domain.Rubro;
 import soldimet.repository.RubroRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing Rubro.
  */
@@ -31,14 +33,13 @@ public class RubroService {
      * @return the persisted entity
      */
     public Rubro save(Rubro rubro) {
-        log.debug("Request to save Rubro : {}", rubro);
-        return rubroRepository.save(rubro);
+        log.debug("Request to save Rubro : {}", rubro);        return rubroRepository.save(rubro);
     }
 
     /**
-     *  Get all the rubros.
+     * Get all the rubros.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Rubro> findAll() {
@@ -46,25 +47,26 @@ public class RubroService {
         return rubroRepository.findAll();
     }
 
+
     /**
-     *  Get one rubro by id.
+     * Get one rubro by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Rubro findOne(Long id) {
+    public Optional<Rubro> findOne(Long id) {
         log.debug("Request to get Rubro : {}", id);
-        return rubroRepository.findOne(id);
+        return rubroRepository.findById(id);
     }
 
     /**
-     *  Delete the  rubro by id.
+     * Delete the rubro by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Rubro : {}", id);
-        rubroRepository.delete(id);
+        rubroRepository.deleteById(id);
     }
 }

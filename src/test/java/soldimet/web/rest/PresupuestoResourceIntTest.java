@@ -5,10 +5,10 @@ import soldimet.SoldimetApp;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.Cliente;
 import soldimet.domain.EstadoPresupuesto;
+import soldimet.domain.DetallePresupuesto;
 import soldimet.repository.PresupuestoRepository;
 import soldimet.service.PresupuestoService;
 import soldimet.web.rest.errors.ExceptionTranslator;
-import soldimet.service.dto.PresupuestoCriteria;
 import soldimet.service.PresupuestoQueryService;
 
 import org.junit.Before;
@@ -30,6 +30,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -68,6 +70,8 @@ public class PresupuestoResourceIntTest {
     @Autowired
     private PresupuestoRepository presupuestoRepository;
 
+
+
     @Autowired
     private PresupuestoService presupuestoService;
 
@@ -97,6 +101,7 @@ public class PresupuestoResourceIntTest {
         this.restPresupuestoMockMvc = MockMvcBuilders.standaloneSetup(presupuestoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -231,6 +236,7 @@ public class PresupuestoResourceIntTest {
             .andExpect(jsonPath("$.[*].importeTotal").value(hasItem(DEFAULT_IMPORTE_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES.toString())));
     }
+
 
     @Test
     @Transactional
@@ -606,6 +612,62 @@ public class PresupuestoResourceIntTest {
         defaultPresupuestoShouldNotBeFound("observaciones.specified=false");
     }
 
+    @Test
+    @Transactional
+    public void getAllPresupuestosByClienteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Cliente cliente = ClienteResourceIntTest.createEntity(em);
+        em.persist(cliente);
+        em.flush();
+        presupuesto.setCliente(cliente);
+        presupuestoRepository.saveAndFlush(presupuesto);
+        Long clienteId = cliente.getId();
+
+        // Get all the presupuestoList where cliente equals to clienteId
+        defaultPresupuestoShouldBeFound("clienteId.equals=" + clienteId);
+
+        // Get all the presupuestoList where cliente equals to clienteId + 1
+        defaultPresupuestoShouldNotBeFound("clienteId.equals=" + (clienteId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllPresupuestosByEstadoPresupuestoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        EstadoPresupuesto estadoPresupuesto = EstadoPresupuestoResourceIntTest.createEntity(em);
+        em.persist(estadoPresupuesto);
+        em.flush();
+        presupuesto.setEstadoPresupuesto(estadoPresupuesto);
+        presupuestoRepository.saveAndFlush(presupuesto);
+        Long estadoPresupuestoId = estadoPresupuesto.getId();
+
+        // Get all the presupuestoList where estadoPresupuesto equals to estadoPresupuestoId
+        defaultPresupuestoShouldBeFound("estadoPresupuestoId.equals=" + estadoPresupuestoId);
+
+        // Get all the presupuestoList where estadoPresupuesto equals to estadoPresupuestoId + 1
+        defaultPresupuestoShouldNotBeFound("estadoPresupuestoId.equals=" + (estadoPresupuestoId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllPresupuestosByDetallePresupuestoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        DetallePresupuesto detallePresupuesto = DetallePresupuestoResourceIntTest.createEntity(em);
+        em.persist(detallePresupuesto);
+        em.flush();
+        presupuesto.addDetallePresupuesto(detallePresupuesto);
+        presupuestoRepository.saveAndFlush(presupuesto);
+        Long detallePresupuestoId = detallePresupuesto.getId();
+
+        // Get all the presupuestoList where detallePresupuesto equals to detallePresupuestoId
+        defaultPresupuestoShouldBeFound("detallePresupuestoId.equals=" + detallePresupuestoId);
+
+        // Get all the presupuestoList where detallePresupuesto equals to detallePresupuestoId + 1
+        defaultPresupuestoShouldNotBeFound("detallePresupuestoId.equals=" + (detallePresupuestoId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -634,7 +696,6 @@ public class PresupuestoResourceIntTest {
             .andExpect(jsonPath("$").isEmpty());
     }
 
-
     @Test
     @Transactional
     public void getNonExistingPresupuesto() throws Exception {
@@ -652,7 +713,9 @@ public class PresupuestoResourceIntTest {
         int databaseSizeBeforeUpdate = presupuestoRepository.findAll().size();
 
         // Update the presupuesto
-        Presupuesto updatedPresupuesto = presupuestoRepository.findOne(presupuesto.getId());
+        Presupuesto updatedPresupuesto = presupuestoRepository.findById(presupuesto.getId()).get();
+        // Disconnect from session so that the updates on updatedPresupuesto are not directly saved in db
+        em.detach(updatedPresupuesto);
         updatedPresupuesto
             .descripcionDescuento(UPDATED_DESCRIPCION_DESCUENTO)
             .descuento(UPDATED_DESCUENTO)
@@ -691,11 +754,11 @@ public class PresupuestoResourceIntTest {
         restPresupuestoMockMvc.perform(put("/api/presupuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(presupuesto)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Presupuesto in the database
         List<Presupuesto> presupuestoList = presupuestoRepository.findAll();
-        assertThat(presupuestoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(presupuestoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

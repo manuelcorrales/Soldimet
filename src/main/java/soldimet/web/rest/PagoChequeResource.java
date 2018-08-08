@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.PagoCheque;
 import soldimet.service.PagoChequeService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class PagoChequeResource {
     public ResponseEntity<PagoCheque> createPagoCheque(@Valid @RequestBody PagoCheque pagoCheque) throws URISyntaxException {
         log.debug("REST request to save PagoCheque : {}", pagoCheque);
         if (pagoCheque.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new pagoCheque cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new pagoCheque cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PagoCheque result = pagoChequeService.save(pagoCheque);
         return ResponseEntity.created(new URI("/api/pago-cheques/" + result.getId()))
@@ -68,7 +69,7 @@ public class PagoChequeResource {
     public ResponseEntity<PagoCheque> updatePagoCheque(@Valid @RequestBody PagoCheque pagoCheque) throws URISyntaxException {
         log.debug("REST request to update PagoCheque : {}", pagoCheque);
         if (pagoCheque.getId() == null) {
-            return createPagoCheque(pagoCheque);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         PagoCheque result = pagoChequeService.save(pagoCheque);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class PagoChequeResource {
     public List<PagoCheque> getAllPagoCheques() {
         log.debug("REST request to get all PagoCheques");
         return pagoChequeService.findAll();
-        }
+    }
 
     /**
      * GET  /pago-cheques/:id : get the "id" pagoCheque.
@@ -98,8 +99,8 @@ public class PagoChequeResource {
     @Timed
     public ResponseEntity<PagoCheque> getPagoCheque(@PathVariable Long id) {
         log.debug("REST request to get PagoCheque : {}", id);
-        PagoCheque pagoCheque = pagoChequeService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(pagoCheque));
+        Optional<PagoCheque> pagoCheque = pagoChequeService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(pagoCheque);
     }
 
     /**

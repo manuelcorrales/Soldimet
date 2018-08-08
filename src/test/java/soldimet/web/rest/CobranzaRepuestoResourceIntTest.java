@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,6 +46,8 @@ public class CobranzaRepuestoResourceIntTest {
 
     @Autowired
     private CobranzaRepuestoRepository cobranzaRepuestoRepository;
+
+    
 
     @Autowired
     private CobranzaRepuestoService cobranzaRepuestoService;
@@ -71,6 +75,7 @@ public class CobranzaRepuestoResourceIntTest {
         this.restCobranzaRepuestoMockMvc = MockMvcBuilders.standaloneSetup(cobranzaRepuestoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -164,6 +169,7 @@ public class CobranzaRepuestoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(cobranzaRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())));
     }
+    
 
     @Test
     @Transactional
@@ -178,7 +184,6 @@ public class CobranzaRepuestoResourceIntTest {
             .andExpect(jsonPath("$.id").value(cobranzaRepuesto.getId().intValue()))
             .andExpect(jsonPath("$.valor").value(DEFAULT_VALOR.doubleValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingCobranzaRepuesto() throws Exception {
@@ -196,7 +201,9 @@ public class CobranzaRepuestoResourceIntTest {
         int databaseSizeBeforeUpdate = cobranzaRepuestoRepository.findAll().size();
 
         // Update the cobranzaRepuesto
-        CobranzaRepuesto updatedCobranzaRepuesto = cobranzaRepuestoRepository.findOne(cobranzaRepuesto.getId());
+        CobranzaRepuesto updatedCobranzaRepuesto = cobranzaRepuestoRepository.findById(cobranzaRepuesto.getId()).get();
+        // Disconnect from session so that the updates on updatedCobranzaRepuesto are not directly saved in db
+        em.detach(updatedCobranzaRepuesto);
         updatedCobranzaRepuesto
             .valor(UPDATED_VALOR);
 
@@ -223,11 +230,11 @@ public class CobranzaRepuestoResourceIntTest {
         restCobranzaRepuestoMockMvc.perform(put("/api/cobranza-repuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cobranzaRepuesto)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the CobranzaRepuesto in the database
         List<CobranzaRepuesto> cobranzaRepuestoList = cobranzaRepuestoRepository.findAll();
-        assertThat(cobranzaRepuestoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(cobranzaRepuestoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

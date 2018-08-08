@@ -4,12 +4,14 @@ import soldimet.domain.Articulo;
 import soldimet.repository.ArticuloRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Optional;
 /**
  * Service Implementation for managing Articulo.
  */
@@ -32,15 +34,14 @@ public class ArticuloService {
      * @return the persisted entity
      */
     public Articulo save(Articulo articulo) {
-        log.debug("Request to save Articulo : {}", articulo);
-        return articuloRepository.save(articulo);
+        log.debug("Request to save Articulo : {}", articulo);        return articuloRepository.save(articulo);
     }
 
     /**
-     *  Get all the articulos.
+     * Get all the articulos.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<Articulo> findAll(Pageable pageable) {
@@ -48,25 +49,26 @@ public class ArticuloService {
         return articuloRepository.findAll(pageable);
     }
 
+
     /**
-     *  Get one articulo by id.
+     * Get one articulo by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Articulo findOne(Long id) {
+    public Optional<Articulo> findOne(Long id) {
         log.debug("Request to get Articulo : {}", id);
-        return articuloRepository.findOne(id);
+        return articuloRepository.findById(id);
     }
 
     /**
-     *  Delete the  articulo by id.
+     * Delete the articulo by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Articulo : {}", id);
-        articuloRepository.delete(id);
+        articuloRepository.deleteById(id);
     }
 }

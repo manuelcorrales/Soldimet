@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    TipoDetalleMovimientoService,
-    TipoDetalleMovimientoPopupService,
     TipoDetalleMovimientoComponent,
     TipoDetalleMovimientoDetailComponent,
-    TipoDetalleMovimientoDialogComponent,
-    TipoDetalleMovimientoPopupComponent,
+    TipoDetalleMovimientoUpdateComponent,
     TipoDetalleMovimientoDeletePopupComponent,
     TipoDetalleMovimientoDeleteDialogComponent,
     tipoDetalleMovimientoRoute,
-    tipoDetalleMovimientoPopupRoute,
+    tipoDetalleMovimientoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...tipoDetalleMovimientoRoute,
-    ...tipoDetalleMovimientoPopupRoute,
-];
+const ENTITY_STATES = [...tipoDetalleMovimientoRoute, ...tipoDetalleMovimientoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         TipoDetalleMovimientoComponent,
         TipoDetalleMovimientoDetailComponent,
-        TipoDetalleMovimientoDialogComponent,
+        TipoDetalleMovimientoUpdateComponent,
         TipoDetalleMovimientoDeleteDialogComponent,
-        TipoDetalleMovimientoPopupComponent,
-        TipoDetalleMovimientoDeletePopupComponent,
+        TipoDetalleMovimientoDeletePopupComponent
     ],
     entryComponents: [
         TipoDetalleMovimientoComponent,
-        TipoDetalleMovimientoDialogComponent,
-        TipoDetalleMovimientoPopupComponent,
+        TipoDetalleMovimientoUpdateComponent,
         TipoDetalleMovimientoDeleteDialogComponent,
-        TipoDetalleMovimientoDeletePopupComponent,
-    ],
-    providers: [
-        TipoDetalleMovimientoService,
-        TipoDetalleMovimientoPopupService,
+        TipoDetalleMovimientoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

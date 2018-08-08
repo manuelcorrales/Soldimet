@@ -8,12 +8,7 @@ import { CostoRepuestoService } from './costo-repuesto.service';
 export class CostoRepuestoPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private costoRepuestoService: CostoRepuestoService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private costoRepuestoService: CostoRepuestoService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class CostoRepuestoPopupService {
             }
 
             if (id) {
-                this.costoRepuestoService.find(id).subscribe((costoRepuesto) => {
+                this.costoRepuestoService.find(id).subscribe(costoRepuesto => {
                     this.ngbModalRef = this.costoRepuestoModalRef(component, costoRepuesto);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class CostoRepuestoPopupService {
     }
 
     costoRepuestoModalRef(component: Component, costoRepuesto: CostoRepuesto): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.costoRepuesto = costoRepuesto;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

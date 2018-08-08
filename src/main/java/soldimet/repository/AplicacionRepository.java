@@ -1,14 +1,12 @@
 package soldimet.repository;
 
-import java.util.List;
 import soldimet.domain.Aplicacion;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the Aplicacion entity.
+ * Spring Data  repository for the Aplicacion entity.
  */
 @SuppressWarnings("unused")
 @Repository

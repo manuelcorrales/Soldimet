@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 
 import soldimet.domain.Caja;
+import soldimet.domain.Movimiento;
 import soldimet.repository.CajaRepository;
 import soldimet.service.CajaService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -30,6 +31,8 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,6 +58,8 @@ public class CajaResourceIntTest {
 
     @Autowired
     private CajaRepository cajaRepository;
+
+    
 
     @Autowired
     private CajaService cajaService;
@@ -85,6 +90,7 @@ public class CajaResourceIntTest {
         this.restCajaMockMvc = MockMvcBuilders.standaloneSetup(cajaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -197,6 +203,7 @@ public class CajaResourceIntTest {
             .andExpect(jsonPath("$.[*].horaApertura").value(hasItem(DEFAULT_HORA_APERTURA.toString())))
             .andExpect(jsonPath("$.[*].horaCierre").value(hasItem(DEFAULT_HORA_CIERRE.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -358,6 +365,24 @@ public class CajaResourceIntTest {
         defaultCajaShouldNotBeFound("horaCierre.specified=false");
     }
 
+    @Test
+    @Transactional
+    public void getAllCajasByMovimientoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Movimiento movimiento = MovimientoResourceIntTest.createEntity(em);
+        em.persist(movimiento);
+        em.flush();
+        caja.addMovimiento(movimiento);
+        cajaRepository.saveAndFlush(caja);
+        Long movimientoId = movimiento.getId();
+
+        // Get all the cajaList where movimiento equals to movimientoId
+        defaultCajaShouldBeFound("movimientoId.equals=" + movimientoId);
+
+        // Get all the cajaList where movimiento equals to movimientoId + 1
+        defaultCajaShouldNotBeFound("movimientoId.equals=" + (movimientoId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -382,7 +407,6 @@ public class CajaResourceIntTest {
             .andExpect(jsonPath("$").isEmpty());
     }
 
-
     @Test
     @Transactional
     public void getNonExistingCaja() throws Exception {
@@ -400,7 +424,9 @@ public class CajaResourceIntTest {
         int databaseSizeBeforeUpdate = cajaRepository.findAll().size();
 
         // Update the caja
-        Caja updatedCaja = cajaRepository.findOne(caja.getId());
+        Caja updatedCaja = cajaRepository.findById(caja.getId()).get();
+        // Disconnect from session so that the updates on updatedCaja are not directly saved in db
+        em.detach(updatedCaja);
         updatedCaja
             .fecha(UPDATED_FECHA)
             .horaApertura(UPDATED_HORA_APERTURA)
@@ -431,11 +457,11 @@ public class CajaResourceIntTest {
         restCajaMockMvc.perform(put("/api/cajas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(caja)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Caja in the database
         List<Caja> cajaList = cajaRepository.findAll();
-        assertThat(cajaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(cajaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

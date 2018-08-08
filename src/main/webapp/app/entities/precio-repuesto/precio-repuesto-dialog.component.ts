@@ -15,7 +15,6 @@ import { PrecioRepuestoService } from './precio-repuesto.service';
     templateUrl: './precio-repuesto-dialog.component.html'
 })
 export class PrecioRepuestoDialogComponent implements OnInit {
-
     precioRepuesto: PrecioRepuesto;
     isSaving: boolean;
     fechaDp: any;
@@ -25,8 +24,7 @@ export class PrecioRepuestoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private precioRepuestoService: PrecioRepuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -39,21 +37,18 @@ export class PrecioRepuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.precioRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.precioRepuestoService.update(this.precioRepuesto));
+            this.subscribeToSaveResponse(this.precioRepuestoService.update(this.precioRepuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.precioRepuestoService.create(this.precioRepuesto));
+            this.subscribeToSaveResponse(this.precioRepuestoService.create(this.precioRepuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<PrecioRepuesto>) {
-        result.subscribe((res: PrecioRepuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: PrecioRepuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: PrecioRepuesto) {
-        this.eventManager.broadcast({ name: 'precioRepuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'precioRepuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -72,22 +67,16 @@ export class PrecioRepuestoDialogComponent implements OnInit {
     template: ''
 })
 export class PrecioRepuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private precioRepuestoPopupService: PrecioRepuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private precioRepuestoPopupService: PrecioRepuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.precioRepuestoPopupService
-                    .open(PrecioRepuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.precioRepuestoPopupService.open(PrecioRepuestoDialogComponent as Component, params['id']);
             } else {
-                this.precioRepuestoPopupService
-                    .open(PrecioRepuestoDialogComponent as Component);
+                this.precioRepuestoPopupService.open(PrecioRepuestoDialogComponent as Component);
             }
         });
     }

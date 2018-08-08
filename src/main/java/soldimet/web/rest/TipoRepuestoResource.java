@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.TipoRepuesto;
 import soldimet.service.TipoRepuestoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class TipoRepuestoResource {
     public ResponseEntity<TipoRepuesto> createTipoRepuesto(@Valid @RequestBody TipoRepuesto tipoRepuesto) throws URISyntaxException {
         log.debug("REST request to save TipoRepuesto : {}", tipoRepuesto);
         if (tipoRepuesto.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoRepuesto cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tipoRepuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoRepuesto result = tipoRepuestoService.save(tipoRepuesto);
         return ResponseEntity.created(new URI("/api/tipo-repuestos/" + result.getId()))
@@ -68,7 +69,7 @@ public class TipoRepuestoResource {
     public ResponseEntity<TipoRepuesto> updateTipoRepuesto(@Valid @RequestBody TipoRepuesto tipoRepuesto) throws URISyntaxException {
         log.debug("REST request to update TipoRepuesto : {}", tipoRepuesto);
         if (tipoRepuesto.getId() == null) {
-            return createTipoRepuesto(tipoRepuesto);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TipoRepuesto result = tipoRepuestoService.save(tipoRepuesto);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class TipoRepuestoResource {
     public List<TipoRepuesto> getAllTipoRepuestos() {
         log.debug("REST request to get all TipoRepuestos");
         return tipoRepuestoService.findAll();
-        }
+    }
 
     /**
      * GET  /tipo-repuestos/:id : get the "id" tipoRepuesto.
@@ -98,8 +99,8 @@ public class TipoRepuestoResource {
     @Timed
     public ResponseEntity<TipoRepuesto> getTipoRepuesto(@PathVariable Long id) {
         log.debug("REST request to get TipoRepuesto : {}", id);
-        TipoRepuesto tipoRepuesto = tipoRepuestoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoRepuesto));
+        Optional<TipoRepuesto> tipoRepuesto = tipoRepuestoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(tipoRepuesto);
     }
 
     /**

@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Direccion;
 import soldimet.service.DireccionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class DireccionResource {
     public ResponseEntity<Direccion> createDireccion(@Valid @RequestBody Direccion direccion) throws URISyntaxException {
         log.debug("REST request to save Direccion : {}", direccion);
         if (direccion.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new direccion cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new direccion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Direccion result = direccionService.save(direccion);
         return ResponseEntity.created(new URI("/api/direccions/" + result.getId()))
@@ -68,7 +69,7 @@ public class DireccionResource {
     public ResponseEntity<Direccion> updateDireccion(@Valid @RequestBody Direccion direccion) throws URISyntaxException {
         log.debug("REST request to update Direccion : {}", direccion);
         if (direccion.getId() == null) {
-            return createDireccion(direccion);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Direccion result = direccionService.save(direccion);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class DireccionResource {
     public List<Direccion> getAllDireccions() {
         log.debug("REST request to get all Direccions");
         return direccionService.findAll();
-        }
+    }
 
     /**
      * GET  /direccions/:id : get the "id" direccion.
@@ -98,8 +99,8 @@ public class DireccionResource {
     @Timed
     public ResponseEntity<Direccion> getDireccion(@PathVariable Long id) {
         log.debug("REST request to get Direccion : {}", id);
-        Direccion direccion = direccionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(direccion));
+        Optional<Direccion> direccion = direccionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(direccion);
     }
 
     /**

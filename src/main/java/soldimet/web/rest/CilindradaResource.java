@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Cilindrada;
 import soldimet.service.CilindradaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class CilindradaResource {
     public ResponseEntity<Cilindrada> createCilindrada(@Valid @RequestBody Cilindrada cilindrada) throws URISyntaxException {
         log.debug("REST request to save Cilindrada : {}", cilindrada);
         if (cilindrada.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new cilindrada cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new cilindrada cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Cilindrada result = cilindradaService.save(cilindrada);
         return ResponseEntity.created(new URI("/api/cilindradas/" + result.getId()))
@@ -68,7 +69,7 @@ public class CilindradaResource {
     public ResponseEntity<Cilindrada> updateCilindrada(@Valid @RequestBody Cilindrada cilindrada) throws URISyntaxException {
         log.debug("REST request to update Cilindrada : {}", cilindrada);
         if (cilindrada.getId() == null) {
-            return createCilindrada(cilindrada);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Cilindrada result = cilindradaService.save(cilindrada);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class CilindradaResource {
     public List<Cilindrada> getAllCilindradas() {
         log.debug("REST request to get all Cilindradas");
         return cilindradaService.findAll();
-        }
+    }
 
     /**
      * GET  /cilindradas/:id : get the "id" cilindrada.
@@ -98,8 +99,8 @@ public class CilindradaResource {
     @Timed
     public ResponseEntity<Cilindrada> getCilindrada(@PathVariable Long id) {
         log.debug("REST request to get Cilindrada : {}", id);
-        Cilindrada cilindrada = cilindradaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(cilindrada));
+        Optional<Cilindrada> cilindrada = cilindradaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(cilindrada);
     }
 
     /**

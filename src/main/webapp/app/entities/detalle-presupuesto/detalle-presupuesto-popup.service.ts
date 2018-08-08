@@ -8,12 +8,7 @@ import { DetallePresupuestoService } from './detalle-presupuesto.service';
 export class DetallePresupuestoPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private detallePresupuestoService: DetallePresupuestoService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private detallePresupuestoService: DetallePresupuestoService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class DetallePresupuestoPopupService {
             }
 
             if (id) {
-                this.detallePresupuestoService.find(id).subscribe((detallePresupuesto) => {
+                this.detallePresupuestoService.find(id).subscribe(detallePresupuesto => {
                     this.ngbModalRef = this.detallePresupuestoModalRef(component, detallePresupuesto);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class DetallePresupuestoPopupService {
     }
 
     detallePresupuestoModalRef(component: Component, detallePresupuesto: DetallePresupuesto): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.detallePresupuesto = detallePresupuesto;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

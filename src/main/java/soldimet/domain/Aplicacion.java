@@ -3,6 +3,7 @@ package soldimet.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -90,7 +91,7 @@ public class Aplicacion implements Serializable {
         return "Aplicacion{" +
             "id=" + getId() +
             ", nombreAplicacion='" + getNombreAplicacion() + "'" +
-            ", numeroGrupo='" + getNumeroGrupo() + "'" +
+            ", numeroGrupo=" + getNumeroGrupo() +
             "}";
     }
 }

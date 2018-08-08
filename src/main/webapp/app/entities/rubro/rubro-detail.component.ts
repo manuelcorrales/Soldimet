@@ -1,53 +1,24 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager } from 'ng-jhipster';
 
-import { Rubro } from './rubro.model';
-import { RubroService } from './rubro.service';
+import { IRubro } from 'app/shared/model/rubro.model';
 
 @Component({
     selector: 'jhi-rubro-detail',
     templateUrl: './rubro-detail.component.html'
 })
-export class RubroDetailComponent implements OnInit, OnDestroy {
+export class RubroDetailComponent implements OnInit {
+    rubro: IRubro;
 
-    rubro: Rubro;
-    private subscription: Subscription;
-    private eventSubscriber: Subscription;
-
-    constructor(
-        private eventManager: JhiEventManager,
-        private rubroService: RubroService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
-        });
-        this.registerChangeInRubros();
-    }
-
-    load(id) {
-        this.rubroService.find(id).subscribe((rubro) => {
+        this.activatedRoute.data.subscribe(({ rubro }) => {
             this.rubro = rubro;
         });
     }
+
     previousState() {
         window.history.back();
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-
-    registerChangeInRubros() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'rubroListModification',
-            (response) => this.load(this.rubro.id)
-        );
     }
 }

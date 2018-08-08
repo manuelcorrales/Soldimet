@@ -1,13 +1,12 @@
 package soldimet.repository;
 
 import soldimet.domain.EstadoCobranzaOperacion;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the EstadoCobranzaOperacion entity.
+ * Spring Data  repository for the EstadoCobranzaOperacion entity.
  */
 @SuppressWarnings("unused")
 @Repository

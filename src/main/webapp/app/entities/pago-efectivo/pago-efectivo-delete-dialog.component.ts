@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { PagoEfectivo } from './pago-efectivo.model';
-import { PagoEfectivoPopupService } from './pago-efectivo-popup.service';
+import { IPagoEfectivo } from 'app/shared/model/pago-efectivo.model';
 import { PagoEfectivoService } from './pago-efectivo.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { PagoEfectivoService } from './pago-efectivo.service';
     templateUrl: './pago-efectivo-delete-dialog.component.html'
 })
 export class PagoEfectivoDeleteDialogComponent {
-
-    pagoEfectivo: PagoEfectivo;
+    pagoEfectivo: IPagoEfectivo;
 
     constructor(
         private pagoEfectivoService: PagoEfectivoService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.pagoEfectivoService.delete(id).subscribe((response) => {
+        this.pagoEfectivoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'pagoEfectivoListModification',
                 content: 'Deleted an pagoEfectivo'
@@ -43,22 +40,33 @@ export class PagoEfectivoDeleteDialogComponent {
     template: ''
 })
 export class PagoEfectivoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private pagoEfectivoPopupService: PagoEfectivoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.pagoEfectivoPopupService
-                .open(PagoEfectivoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ pagoEfectivo }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(PagoEfectivoDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.pagoEfectivo = pagoEfectivo;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

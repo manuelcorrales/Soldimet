@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class MotorResourceIntTest {
 
     @Autowired
     private MotorRepository motorRepository;
+
+    
 
     @Autowired
     private MotorService motorService;
@@ -70,6 +74,7 @@ public class MotorResourceIntTest {
         this.restMotorMockMvc = MockMvcBuilders.standaloneSetup(motorResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class MotorResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(motor.getId().intValue())))
             .andExpect(jsonPath("$.[*].marcaMotor").value(hasItem(DEFAULT_MARCA_MOTOR.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class MotorResourceIntTest {
             .andExpect(jsonPath("$.id").value(motor.getId().intValue()))
             .andExpect(jsonPath("$.marcaMotor").value(DEFAULT_MARCA_MOTOR.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingMotor() throws Exception {
@@ -190,7 +195,9 @@ public class MotorResourceIntTest {
         int databaseSizeBeforeUpdate = motorRepository.findAll().size();
 
         // Update the motor
-        Motor updatedMotor = motorRepository.findOne(motor.getId());
+        Motor updatedMotor = motorRepository.findById(motor.getId()).get();
+        // Disconnect from session so that the updates on updatedMotor are not directly saved in db
+        em.detach(updatedMotor);
         updatedMotor
             .marcaMotor(UPDATED_MARCA_MOTOR);
 
@@ -217,11 +224,11 @@ public class MotorResourceIntTest {
         restMotorMockMvc.perform(put("/api/motors")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(motor)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Motor in the database
         List<Motor> motorList = motorRepository.findAll();
-        assertThat(motorList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(motorList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

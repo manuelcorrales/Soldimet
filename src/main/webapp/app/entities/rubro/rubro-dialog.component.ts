@@ -15,7 +15,6 @@ import { RubroService } from './rubro.service';
     templateUrl: './rubro-dialog.component.html'
 })
 export class RubroDialogComponent implements OnInit {
-
     rubro: Rubro;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class RubroDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private rubroService: RubroService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class RubroDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.rubro.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.rubroService.update(this.rubro));
+            this.subscribeToSaveResponse(this.rubroService.update(this.rubro));
         } else {
-            this.subscribeToSaveResponse(
-                this.rubroService.create(this.rubro));
+            this.subscribeToSaveResponse(this.rubroService.create(this.rubro));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Rubro>) {
-        result.subscribe((res: Rubro) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Rubro) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Rubro) {
-        this.eventManager.broadcast({ name: 'rubroListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'rubroListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class RubroDialogComponent implements OnInit {
     template: ''
 })
 export class RubroPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private rubroPopupService: RubroPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private rubroPopupService: RubroPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.rubroPopupService
-                    .open(RubroDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.rubroPopupService.open(RubroDialogComponent as Component, params['id']);
             } else {
-                this.rubroPopupService
-                    .open(RubroDialogComponent as Component);
+                this.rubroPopupService.open(RubroDialogComponent as Component);
             }
         });
     }

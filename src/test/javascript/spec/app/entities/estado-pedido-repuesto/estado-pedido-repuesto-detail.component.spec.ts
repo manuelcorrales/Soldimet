@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { EstadoPedidoRepuestoDetailComponent } from '../../../../../../main/webapp/app/entities/estado-pedido-repuesto/estado-pedido-repuesto-detail.component';
-import { EstadoPedidoRepuestoService } from '../../../../../../main/webapp/app/entities/estado-pedido-repuesto/estado-pedido-repuesto.service';
-import { EstadoPedidoRepuesto } from '../../../../../../main/webapp/app/entities/estado-pedido-repuesto/estado-pedido-repuesto.model';
+import { EstadoPedidoRepuestoDetailComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto-detail.component';
+import { EstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
 
 describe('Component Tests', () => {
-
     describe('EstadoPedidoRepuesto Management Detail Component', () => {
         let comp: EstadoPedidoRepuestoDetailComponent;
         let fixture: ComponentFixture<EstadoPedidoRepuestoDetailComponent>;
-        let service: EstadoPedidoRepuestoService;
+        const route = ({ data: of({ estadoPedidoRepuesto: new EstadoPedidoRepuesto(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [EstadoPedidoRepuestoDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    EstadoPedidoRepuestoService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(EstadoPedidoRepuestoDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(EstadoPedidoRepuestoDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(EstadoPedidoRepuestoDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(EstadoPedidoRepuestoService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new EstadoPedidoRepuesto(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.estadoPedidoRepuesto).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.estadoPedidoRepuesto).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

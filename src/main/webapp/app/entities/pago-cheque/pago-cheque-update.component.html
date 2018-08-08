@@ -1,0 +1,102 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-pago-cheque-heading">Create or edit a Pago Cheque</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!pagoCheque.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="pagoCheque.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fechaCobro">Fecha Cobro</label>
+                    <div class="input-group">
+                        <input id="field_fechaCobro" type="text" class="form-control" name="fechaCobro" ngbDatepicker  #fechaCobroDp="ngbDatepicker" [(ngModel)]="pagoCheque.fechaCobro"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaCobroDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.fechaCobro?.dirty && editForm.controls.fechaCobro?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.fechaCobro?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fechaRecibo">Fecha Recibo</label>
+                    <div class="input-group">
+                        <input id="field_fechaRecibo" type="text" class="form-control" name="fechaRecibo" ngbDatepicker  #fechaReciboDp="ngbDatepicker" [(ngModel)]="pagoCheque.fechaRecibo"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaReciboDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.fechaRecibo?.dirty && editForm.controls.fechaRecibo?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.fechaRecibo?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_numeroCheque">Numero Cheque</label>
+                    <input type="text" class="form-control" name="numeroCheque" id="field_numeroCheque"
+                        [(ngModel)]="pagoCheque.numeroCheque" required minlength="3"/>
+                    <div [hidden]="!(editForm.controls.numeroCheque?.dirty && editForm.controls.numeroCheque?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.numeroCheque?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.numeroCheque?.errors?.minlength">
+                        This field is required to be at least 3 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_numeroCuenta">Numero Cuenta</label>
+                    <input type="text" class="form-control" name="numeroCuenta" id="field_numeroCuenta"
+                        [(ngModel)]="pagoCheque.numeroCuenta" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_banco">Banco</label>
+                    <select class="form-control" id="field_banco" name="banco" [(ngModel)]="pagoCheque.banco"  required>
+                        <option *ngIf="!editForm.value.banco" [ngValue]="null" selected></option>
+                        <option [ngValue]="bancoOption.id === pagoCheque.banco?.id ? pagoCheque.banco : bancoOption" *ngFor="let bancoOption of bancos; trackBy: trackBancoById">{{bancoOption.nombreBanco}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.banco?.dirty && editForm.controls.banco?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.banco?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_formaDePago">Forma De Pago</label>
+                    <select class="form-control" id="field_formaDePago" name="formaDePago" [(ngModel)]="pagoCheque.formaDePago" required>
+                        <option *ngIf="!editForm.value.formaDePago" [ngValue]="null" selected></option>
+                        <option [ngValue]="formaDePagoOption.id === pagoCheque.formaDePago?.id ? pagoCheque.formaDePago : formaDePagoOption" *ngFor="let formaDePagoOption of formadepagos; trackBy: trackFormaDePagoById">{{formaDePagoOption.nombreFormaDePago}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.formaDePago?.dirty && editForm.controls.formaDePago?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.formaDePago?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

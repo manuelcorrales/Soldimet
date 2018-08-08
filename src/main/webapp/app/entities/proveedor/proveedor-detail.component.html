@@ -1,27 +1,29 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="proveedor">
+            <h2><span>Proveedor</span> {{proveedor.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Persona</span></dt>
+                <dd>
+                    <div *ngIf="proveedor.persona">
+                        <a [routerLink]="['/persona', proveedor.persona?.id, 'view']">{{proveedor.persona?.nombre}}</a>
+                    </div>
+                </dd>
+            </dl>
 
-<div *ngIf="proveedor">
-    <h2><span>Proveedor</span> {{proveedor.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span>Persona</span></dt>
-        <dd>
-            <div *ngIf="proveedor.persona">
-                <a [routerLink]="['/persona', proveedor.persona?.id]">{{proveedor.persona?.nombre}}</a>
-            </div>
-        </dd>
-    </dl>
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
-
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'proveedor/'+ proveedor.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
-    </button>
+            <button type="button"
+                    [routerLink]="['/proveedor', proveedor.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
 </div>

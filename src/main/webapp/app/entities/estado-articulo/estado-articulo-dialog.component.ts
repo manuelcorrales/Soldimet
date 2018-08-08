@@ -15,7 +15,6 @@ import { EstadoArticuloService } from './estado-articulo.service';
     templateUrl: './estado-articulo-dialog.component.html'
 })
 export class EstadoArticuloDialogComponent implements OnInit {
-
     estadoArticulo: EstadoArticulo;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoArticuloDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoArticuloService: EstadoArticuloService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoArticuloDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoArticulo.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoArticuloService.update(this.estadoArticulo));
+            this.subscribeToSaveResponse(this.estadoArticuloService.update(this.estadoArticulo));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoArticuloService.create(this.estadoArticulo));
+            this.subscribeToSaveResponse(this.estadoArticuloService.create(this.estadoArticulo));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoArticulo>) {
-        result.subscribe((res: EstadoArticulo) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoArticulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoArticulo) {
-        this.eventManager.broadcast({ name: 'estadoArticuloListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoArticuloListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoArticuloDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoArticuloPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoArticuloPopupService: EstadoArticuloPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoArticuloPopupService: EstadoArticuloPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoArticuloPopupService
-                    .open(EstadoArticuloDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoArticuloPopupService.open(EstadoArticuloDialogComponent as Component, params['id']);
             } else {
-                this.estadoArticuloPopupService
-                    .open(EstadoArticuloDialogComponent as Component);
+                this.estadoArticuloPopupService.open(EstadoArticuloDialogComponent as Component);
             }
         });
     }

@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Articulo } from 'app/shared/model/articulo.model';
+import { ArticuloService } from './articulo.service';
 import { ArticuloComponent } from './articulo.component';
 import { ArticuloDetailComponent } from './articulo-detail.component';
-import { ArticuloPopupComponent } from './articulo-dialog.component';
+import { ArticuloUpdateComponent } from './articulo-update.component';
 import { ArticuloDeletePopupComponent } from './articulo-delete-dialog.component';
+import { IArticulo } from 'app/shared/model/articulo.model';
 
-@Injectable()
-export class ArticuloResolvePagingParams implements Resolve<any> {
-
-    constructor(private paginationUtil: JhiPaginationUtil) {}
+@Injectable({ providedIn: 'root' })
+export class ArticuloResolve implements Resolve<IArticulo> {
+    constructor(private service: ArticuloService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
-        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
-        return {
-            page: this.paginationUtil.parsePage(page),
-            predicate: this.paginationUtil.parsePredicate(sort),
-            ascending: this.paginationUtil.parseAscending(sort)
-      };
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((articulo: HttpResponse<Articulo>) => articulo.body));
+        }
+        return of(new Articulo());
     }
 }
 
@@ -30,16 +31,45 @@ export const articuloRoute: Routes = [
         path: 'articulo',
         component: ArticuloComponent,
         resolve: {
-            'pagingParams': ArticuloResolvePagingParams
+            pagingParams: JhiResolvePagingParams
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            defaultSort: 'id,asc',
+            pageTitle: 'Articulos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'articulo/:id/view',
+        component: ArticuloDetailComponent,
+        resolve: {
+            articulo: ArticuloResolve
         },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Articulos'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'articulo/:id',
-        component: ArticuloDetailComponent,
+    },
+    {
+        path: 'articulo/new',
+        component: ArticuloUpdateComponent,
+        resolve: {
+            articulo: ArticuloResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Articulos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'articulo/:id/edit',
+        component: ArticuloUpdateComponent,
+        resolve: {
+            articulo: ArticuloResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Articulos'
@@ -50,28 +80,11 @@ export const articuloRoute: Routes = [
 
 export const articuloPopupRoute: Routes = [
     {
-        path: 'articulo-new',
-        component: ArticuloPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Articulos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'articulo/:id/edit',
-        component: ArticuloPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Articulos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'articulo/:id/delete',
         component: ArticuloDeletePopupComponent,
+        resolve: {
+            articulo: ArticuloResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Articulos'

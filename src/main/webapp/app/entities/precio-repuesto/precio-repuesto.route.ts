@@ -1,13 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { PrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
+import { PrecioRepuestoService } from './precio-repuesto.service';
 import { PrecioRepuestoComponent } from './precio-repuesto.component';
 import { PrecioRepuestoDetailComponent } from './precio-repuesto-detail.component';
-import { PrecioRepuestoPopupComponent } from './precio-repuesto-dialog.component';
+import { PrecioRepuestoUpdateComponent } from './precio-repuesto-update.component';
 import { PrecioRepuestoDeletePopupComponent } from './precio-repuesto-delete-dialog.component';
+import { IPrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
+
+@Injectable({ providedIn: 'root' })
+export class PrecioRepuestoResolve implements Resolve<IPrecioRepuesto> {
+    constructor(private service: PrecioRepuestoService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((precioRepuesto: HttpResponse<PrecioRepuesto>) => precioRepuesto.body));
+        }
+        return of(new PrecioRepuesto());
+    }
+}
 
 export const precioRepuestoRoute: Routes = [
     {
@@ -18,9 +34,37 @@ export const precioRepuestoRoute: Routes = [
             pageTitle: 'PrecioRepuestos'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'precio-repuesto/:id',
+    },
+    {
+        path: 'precio-repuesto/:id/view',
         component: PrecioRepuestoDetailComponent,
+        resolve: {
+            precioRepuesto: PrecioRepuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'PrecioRepuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'precio-repuesto/new',
+        component: PrecioRepuestoUpdateComponent,
+        resolve: {
+            precioRepuesto: PrecioRepuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'PrecioRepuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'precio-repuesto/:id/edit',
+        component: PrecioRepuestoUpdateComponent,
+        resolve: {
+            precioRepuesto: PrecioRepuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'PrecioRepuestos'
@@ -31,28 +75,11 @@ export const precioRepuestoRoute: Routes = [
 
 export const precioRepuestoPopupRoute: Routes = [
     {
-        path: 'precio-repuesto-new',
-        component: PrecioRepuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'PrecioRepuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'precio-repuesto/:id/edit',
-        component: PrecioRepuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'PrecioRepuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'precio-repuesto/:id/delete',
         component: PrecioRepuestoDeletePopupComponent,
+        resolve: {
+            precioRepuesto: PrecioRepuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'PrecioRepuestos'

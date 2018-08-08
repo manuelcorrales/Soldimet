@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.DetalleMovimiento;
 import soldimet.service.DetalleMovimientoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class DetalleMovimientoResource {
     public ResponseEntity<DetalleMovimiento> createDetalleMovimiento(@Valid @RequestBody DetalleMovimiento detalleMovimiento) throws URISyntaxException {
         log.debug("REST request to save DetalleMovimiento : {}", detalleMovimiento);
         if (detalleMovimiento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new detalleMovimiento cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new detalleMovimiento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         DetalleMovimiento result = detalleMovimientoService.save(detalleMovimiento);
         return ResponseEntity.created(new URI("/api/detalle-movimientos/" + result.getId()))
@@ -68,7 +69,7 @@ public class DetalleMovimientoResource {
     public ResponseEntity<DetalleMovimiento> updateDetalleMovimiento(@Valid @RequestBody DetalleMovimiento detalleMovimiento) throws URISyntaxException {
         log.debug("REST request to update DetalleMovimiento : {}", detalleMovimiento);
         if (detalleMovimiento.getId() == null) {
-            return createDetalleMovimiento(detalleMovimiento);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         DetalleMovimiento result = detalleMovimientoService.save(detalleMovimiento);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class DetalleMovimientoResource {
     public List<DetalleMovimiento> getAllDetalleMovimientos() {
         log.debug("REST request to get all DetalleMovimientos");
         return detalleMovimientoService.findAll();
-        }
+    }
 
     /**
      * GET  /detalle-movimientos/:id : get the "id" detalleMovimiento.
@@ -98,8 +99,8 @@ public class DetalleMovimientoResource {
     @Timed
     public ResponseEntity<DetalleMovimiento> getDetalleMovimiento(@PathVariable Long id) {
         log.debug("REST request to get DetalleMovimiento : {}", id);
-        DetalleMovimiento detalleMovimiento = detalleMovimientoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(detalleMovimiento));
+        Optional<DetalleMovimiento> detalleMovimiento = detalleMovimientoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(detalleMovimiento);
     }
 
     /**

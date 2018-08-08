@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.*;
 
 
 /**
- * Spring Data JPA repository for the TipoRepuesto entity.
+ * Spring Data  repository for the TipoRepuesto entity.
  */
 @SuppressWarnings("unused")
 @Repository

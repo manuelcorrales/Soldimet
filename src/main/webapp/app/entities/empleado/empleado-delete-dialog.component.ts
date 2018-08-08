@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Empleado } from './empleado.model';
-import { EmpleadoPopupService } from './empleado-popup.service';
+import { IEmpleado } from 'app/shared/model/empleado.model';
 import { EmpleadoService } from './empleado.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { EmpleadoService } from './empleado.service';
     templateUrl: './empleado-delete-dialog.component.html'
 })
 export class EmpleadoDeleteDialogComponent {
+    empleado: IEmpleado;
 
-    empleado: Empleado;
-
-    constructor(
-        private empleadoService: EmpleadoService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private empleadoService: EmpleadoService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.empleadoService.delete(id).subscribe((response) => {
+        this.empleadoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'empleadoListModification',
                 content: 'Deleted an empleado'
@@ -43,22 +36,30 @@ export class EmpleadoDeleteDialogComponent {
     template: ''
 })
 export class EmpleadoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private empleadoPopupService: EmpleadoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.empleadoPopupService
-                .open(EmpleadoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ empleado }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(EmpleadoDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.empleado = empleado;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

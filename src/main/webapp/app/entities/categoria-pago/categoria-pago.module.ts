@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    CategoriaPagoService,
-    CategoriaPagoPopupService,
     CategoriaPagoComponent,
     CategoriaPagoDetailComponent,
-    CategoriaPagoDialogComponent,
-    CategoriaPagoPopupComponent,
+    CategoriaPagoUpdateComponent,
     CategoriaPagoDeletePopupComponent,
     CategoriaPagoDeleteDialogComponent,
     categoriaPagoRoute,
-    categoriaPagoPopupRoute,
+    categoriaPagoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...categoriaPagoRoute,
-    ...categoriaPagoPopupRoute,
-];
+const ENTITY_STATES = [...categoriaPagoRoute, ...categoriaPagoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CategoriaPagoComponent,
         CategoriaPagoDetailComponent,
-        CategoriaPagoDialogComponent,
+        CategoriaPagoUpdateComponent,
         CategoriaPagoDeleteDialogComponent,
-        CategoriaPagoPopupComponent,
-        CategoriaPagoDeletePopupComponent,
+        CategoriaPagoDeletePopupComponent
     ],
     entryComponents: [
         CategoriaPagoComponent,
-        CategoriaPagoDialogComponent,
-        CategoriaPagoPopupComponent,
+        CategoriaPagoUpdateComponent,
         CategoriaPagoDeleteDialogComponent,
-        CategoriaPagoDeletePopupComponent,
-    ],
-    providers: [
-        CategoriaPagoService,
-        CategoriaPagoPopupService,
+        CategoriaPagoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

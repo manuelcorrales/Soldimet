@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Motor } from './motor.model';
-import { MotorPopupService } from './motor-popup.service';
+import { IMotor } from 'app/shared/model/motor.model';
 import { MotorService } from './motor.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { MotorService } from './motor.service';
     templateUrl: './motor-delete-dialog.component.html'
 })
 export class MotorDeleteDialogComponent {
+    motor: IMotor;
 
-    motor: Motor;
-
-    constructor(
-        private motorService: MotorService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private motorService: MotorService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.motorService.delete(id).subscribe((response) => {
+        this.motorService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'motorListModification',
                 content: 'Deleted an motor'
@@ -43,22 +36,30 @@ export class MotorDeleteDialogComponent {
     template: ''
 })
 export class MotorDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private motorPopupService: MotorPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.motorPopupService
-                .open(MotorDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ motor }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(MotorDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.motor = motor;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

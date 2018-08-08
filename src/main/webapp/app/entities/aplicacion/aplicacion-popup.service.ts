@@ -8,12 +8,7 @@ import { AplicacionService } from './aplicacion.service';
 export class AplicacionPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private aplicacionService: AplicacionService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private aplicacionService: AplicacionService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class AplicacionPopupService {
             }
 
             if (id) {
-                this.aplicacionService.find(id).subscribe((aplicacion) => {
+                this.aplicacionService.find(id).subscribe(aplicacion => {
                     this.ngbModalRef = this.aplicacionModalRef(component, aplicacion);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class AplicacionPopupService {
     }
 
     aplicacionModalRef(component: Component, aplicacion: Aplicacion): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.aplicacion = aplicacion;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

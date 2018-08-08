@@ -15,7 +15,6 @@ import { EstadoPersonaService } from './estado-persona.service';
     templateUrl: './estado-persona-dialog.component.html'
 })
 export class EstadoPersonaDialogComponent implements OnInit {
-
     estadoPersona: EstadoPersona;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoPersonaDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoPersonaService: EstadoPersonaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoPersonaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoPersona.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoPersonaService.update(this.estadoPersona));
+            this.subscribeToSaveResponse(this.estadoPersonaService.update(this.estadoPersona));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoPersonaService.create(this.estadoPersona));
+            this.subscribeToSaveResponse(this.estadoPersonaService.create(this.estadoPersona));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoPersona>) {
-        result.subscribe((res: EstadoPersona) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoPersona) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoPersona) {
-        this.eventManager.broadcast({ name: 'estadoPersonaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoPersonaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoPersonaDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoPersonaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoPersonaPopupService: EstadoPersonaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoPersonaPopupService: EstadoPersonaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoPersonaPopupService
-                    .open(EstadoPersonaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoPersonaPopupService.open(EstadoPersonaDialogComponent as Component, params['id']);
             } else {
-                this.estadoPersonaPopupService
-                    .open(EstadoPersonaDialogComponent as Component);
+                this.estadoPersonaPopupService.open(EstadoPersonaDialogComponent as Component);
             }
         });
     }

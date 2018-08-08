@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { Aplicacion } from './aplicacion.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IAplicacion } from 'app/shared/model/aplicacion.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IAplicacion>;
+type EntityArrayResponseType = HttpResponse<IAplicacion[]>;
+
+@Injectable({ providedIn: 'root' })
 export class AplicacionService {
-
     private resourceUrl = SERVER_API_URL + 'api/aplicacions';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(aplicacion: Aplicacion): Observable<Aplicacion> {
-        const copy = this.convert(aplicacion);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(aplicacion: IAplicacion): Observable<EntityResponseType> {
+        return this.http.post<IAplicacion>(this.resourceUrl, aplicacion, { observe: 'response' });
     }
 
-    update(aplicacion: Aplicacion): Observable<Aplicacion> {
-        const copy = this.convert(aplicacion);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(aplicacion: IAplicacion): Observable<EntityResponseType> {
+        return this.http.put<IAplicacion>(this.resourceUrl, aplicacion, { observe: 'response' });
     }
 
-    find(id: number): Observable<Aplicacion> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IAplicacion>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IAplicacion[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Aplicacion.
-     */
-    private convertItemFromServer(json: any): Aplicacion {
-        const entity: Aplicacion = Object.assign(new Aplicacion(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a Aplicacion to a JSON which can be sent to the server.
-     */
-    private convert(aplicacion: Aplicacion): Aplicacion {
-        const copy: Aplicacion = Object.assign({}, aplicacion);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

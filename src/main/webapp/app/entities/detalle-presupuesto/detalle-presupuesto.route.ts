@@ -1,13 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
+import { DetallePresupuestoService } from './detalle-presupuesto.service';
 import { DetallePresupuestoComponent } from './detalle-presupuesto.component';
 import { DetallePresupuestoDetailComponent } from './detalle-presupuesto-detail.component';
-import { DetallePresupuestoPopupComponent } from './detalle-presupuesto-dialog.component';
+import { DetallePresupuestoUpdateComponent } from './detalle-presupuesto-update.component';
 import { DetallePresupuestoDeletePopupComponent } from './detalle-presupuesto-delete-dialog.component';
+import { IDetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
+
+@Injectable({ providedIn: 'root' })
+export class DetallePresupuestoResolve implements Resolve<IDetallePresupuesto> {
+    constructor(private service: DetallePresupuestoService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((detallePresupuesto: HttpResponse<DetallePresupuesto>) => detallePresupuesto.body));
+        }
+        return of(new DetallePresupuesto());
+    }
+}
 
 export const detallePresupuestoRoute: Routes = [
     {
@@ -18,9 +34,37 @@ export const detallePresupuestoRoute: Routes = [
             pageTitle: 'DetallePresupuestos'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'detalle-presupuesto/:id',
+    },
+    {
+        path: 'detalle-presupuesto/:id/view',
         component: DetallePresupuestoDetailComponent,
+        resolve: {
+            detallePresupuesto: DetallePresupuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'DetallePresupuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'detalle-presupuesto/new',
+        component: DetallePresupuestoUpdateComponent,
+        resolve: {
+            detallePresupuesto: DetallePresupuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'DetallePresupuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'detalle-presupuesto/:id/edit',
+        component: DetallePresupuestoUpdateComponent,
+        resolve: {
+            detallePresupuesto: DetallePresupuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'DetallePresupuestos'
@@ -31,28 +75,11 @@ export const detallePresupuestoRoute: Routes = [
 
 export const detallePresupuestoPopupRoute: Routes = [
     {
-        path: 'detalle-presupuesto-new',
-        component: DetallePresupuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'DetallePresupuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'detalle-presupuesto/:id/edit',
-        component: DetallePresupuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'DetallePresupuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'detalle-presupuesto/:id/delete',
         component: DetallePresupuestoDeletePopupComponent,
+        resolve: {
+            detallePresupuesto: DetallePresupuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'DetallePresupuestos'

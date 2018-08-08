@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './pago-efectivo-dialog.component.html'
 })
 export class PagoEfectivoDialogComponent implements OnInit {
-
     pagoEfectivo: PagoEfectivo;
     isSaving: boolean;
 
@@ -29,24 +28,25 @@ export class PagoEfectivoDialogComponent implements OnInit {
         private pagoEfectivoService: PagoEfectivoService,
         private formaDePagoService: FormaDePagoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.formaDePagoService
-            .query({filter: 'pagoefectivo-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.formaDePagoService.query({ filter: 'pagoefectivo-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.pagoEfectivo.formaDePago || !this.pagoEfectivo.formaDePago.id) {
                     this.formadepagos = res.json;
                 } else {
-                    this.formaDePagoService
-                        .find(this.pagoEfectivo.formaDePago.id)
-                        .subscribe((subRes: FormaDePago) => {
+                    this.formaDePagoService.find(this.pagoEfectivo.formaDePago.id).subscribe(
+                        (subRes: FormaDePago) => {
                             this.formadepagos = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -56,21 +56,18 @@ export class PagoEfectivoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.pagoEfectivo.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.pagoEfectivoService.update(this.pagoEfectivo));
+            this.subscribeToSaveResponse(this.pagoEfectivoService.update(this.pagoEfectivo));
         } else {
-            this.subscribeToSaveResponse(
-                this.pagoEfectivoService.create(this.pagoEfectivo));
+            this.subscribeToSaveResponse(this.pagoEfectivoService.create(this.pagoEfectivo));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<PagoEfectivo>) {
-        result.subscribe((res: PagoEfectivo) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: PagoEfectivo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: PagoEfectivo) {
-        this.eventManager.broadcast({ name: 'pagoEfectivoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'pagoEfectivoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -93,22 +90,16 @@ export class PagoEfectivoDialogComponent implements OnInit {
     template: ''
 })
 export class PagoEfectivoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private pagoEfectivoPopupService: PagoEfectivoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private pagoEfectivoPopupService: PagoEfectivoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.pagoEfectivoPopupService
-                    .open(PagoEfectivoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.pagoEfectivoPopupService.open(PagoEfectivoDialogComponent as Component, params['id']);
             } else {
-                this.pagoEfectivoPopupService
-                    .open(PagoEfectivoDialogComponent as Component);
+                this.pagoEfectivoPopupService.open(PagoEfectivoDialogComponent as Component);
             }
         });
     }

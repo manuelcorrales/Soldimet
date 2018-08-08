@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './empleado-dialog.component.html'
 })
 export class EmpleadoDialogComponent implements OnInit {
-
     empleado: Empleado;
     isSaving: boolean;
 
@@ -29,24 +28,25 @@ export class EmpleadoDialogComponent implements OnInit {
         private empleadoService: EmpleadoService,
         private personaService: PersonaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.personaService
-            .query({filter: 'empleado-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.personaService.query({ filter: 'empleado-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.empleado.persona || !this.empleado.persona.id) {
                     this.personas = res.json;
                 } else {
-                    this.personaService
-                        .find(this.empleado.persona.id)
-                        .subscribe((subRes: Persona) => {
+                    this.personaService.find(this.empleado.persona.id).subscribe(
+                        (subRes: Persona) => {
                             this.personas = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -56,21 +56,18 @@ export class EmpleadoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.empleado.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.empleadoService.update(this.empleado));
+            this.subscribeToSaveResponse(this.empleadoService.update(this.empleado));
         } else {
-            this.subscribeToSaveResponse(
-                this.empleadoService.create(this.empleado));
+            this.subscribeToSaveResponse(this.empleadoService.create(this.empleado));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Empleado>) {
-        result.subscribe((res: Empleado) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Empleado) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Empleado) {
-        this.eventManager.broadcast({ name: 'empleadoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'empleadoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -93,22 +90,16 @@ export class EmpleadoDialogComponent implements OnInit {
     template: ''
 })
 export class EmpleadoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private empleadoPopupService: EmpleadoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private empleadoPopupService: EmpleadoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.empleadoPopupService
-                    .open(EmpleadoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.empleadoPopupService.open(EmpleadoDialogComponent as Component, params['id']);
             } else {
-                this.empleadoPopupService
-                    .open(EmpleadoDialogComponent as Component);
+                this.empleadoPopupService.open(EmpleadoDialogComponent as Component);
             }
         });
     }

@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Localidad;
 import soldimet.service.LocalidadService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class LocalidadResource {
     public ResponseEntity<Localidad> createLocalidad(@Valid @RequestBody Localidad localidad) throws URISyntaxException {
         log.debug("REST request to save Localidad : {}", localidad);
         if (localidad.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new localidad cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new localidad cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Localidad result = localidadService.save(localidad);
         return ResponseEntity.created(new URI("/api/localidads/" + result.getId()))
@@ -68,7 +69,7 @@ public class LocalidadResource {
     public ResponseEntity<Localidad> updateLocalidad(@Valid @RequestBody Localidad localidad) throws URISyntaxException {
         log.debug("REST request to update Localidad : {}", localidad);
         if (localidad.getId() == null) {
-            return createLocalidad(localidad);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Localidad result = localidadService.save(localidad);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class LocalidadResource {
     public List<Localidad> getAllLocalidads() {
         log.debug("REST request to get all Localidads");
         return localidadService.findAll();
-        }
+    }
 
     /**
      * GET  /localidads/:id : get the "id" localidad.
@@ -98,8 +99,8 @@ public class LocalidadResource {
     @Timed
     public ResponseEntity<Localidad> getLocalidad(@PathVariable Long id) {
         log.debug("REST request to get Localidad : {}", id);
-        Localidad localidad = localidadService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(localidad));
+        Optional<Localidad> localidad = localidadService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(localidad);
     }
 
     /**

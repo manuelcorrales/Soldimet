@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { CobranzaOperacion } from '../../../../../../entities/cobranza-operacion';
-import { Operacion, OperacionService } from '../../../../../../entities/operacion';
-import { CostoOperacion } from '../../../../../../entities/costo-operacion';
+import { CostoOperacion } from 'app/entities/costo-operacion/costo-operacion.model';
+import { CobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 
 @Component({
     selector: 'jhi-operacion-precio',
@@ -13,11 +12,9 @@ export class OperacionPrecioComponent implements OnInit {
     seleccionado = false;
     @Output() eventoCambioValor = new EventEmitter<number>();
 
-    constructor() {
-    }
+    constructor() {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     getOperacionAcobrar(): CobranzaOperacion {
         const nuevaCobranzaRepuesto = new CobranzaOperacion();
@@ -31,11 +28,10 @@ export class OperacionPrecioComponent implements OnInit {
     }
 
     getPrecio() {
-        if ( this.seleccionado) {
+        if (this.seleccionado) {
             return this.costoOperacion.costoOperacion;
-        }else {
+        } else {
             return 0;
         }
     }
-
 }

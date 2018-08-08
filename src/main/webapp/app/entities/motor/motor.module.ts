@@ -1,49 +1,23 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    MotorService,
-    MotorPopupService,
     MotorComponent,
     MotorDetailComponent,
-    MotorDialogComponent,
-    MotorPopupComponent,
+    MotorUpdateComponent,
     MotorDeletePopupComponent,
     MotorDeleteDialogComponent,
     motorRoute,
-    motorPopupRoute,
+    motorPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...motorRoute,
-    ...motorPopupRoute,
-];
+const ENTITY_STATES = [...motorRoute, ...motorPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
-    declarations: [
-        MotorComponent,
-        MotorDetailComponent,
-        MotorDialogComponent,
-        MotorDeleteDialogComponent,
-        MotorPopupComponent,
-        MotorDeletePopupComponent,
-    ],
-    entryComponents: [
-        MotorComponent,
-        MotorDialogComponent,
-        MotorPopupComponent,
-        MotorDeleteDialogComponent,
-        MotorDeletePopupComponent,
-    ],
-    providers: [
-        MotorService,
-        MotorPopupService,
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    declarations: [MotorComponent, MotorDetailComponent, MotorUpdateComponent, MotorDeleteDialogComponent, MotorDeletePopupComponent],
+    entryComponents: [MotorComponent, MotorUpdateComponent, MotorDeleteDialogComponent, MotorDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetMotorModule {}

@@ -4,11 +4,13 @@ import soldimet.domain.PagoCheque;
 import soldimet.repository.PagoChequeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing PagoCheque.
  */
@@ -31,14 +33,13 @@ public class PagoChequeService {
      * @return the persisted entity
      */
     public PagoCheque save(PagoCheque pagoCheque) {
-        log.debug("Request to save PagoCheque : {}", pagoCheque);
-        return pagoChequeRepository.save(pagoCheque);
+        log.debug("Request to save PagoCheque : {}", pagoCheque);        return pagoChequeRepository.save(pagoCheque);
     }
 
     /**
-     *  Get all the pagoCheques.
+     * Get all the pagoCheques.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<PagoCheque> findAll() {
@@ -46,25 +47,26 @@ public class PagoChequeService {
         return pagoChequeRepository.findAll();
     }
 
+
     /**
-     *  Get one pagoCheque by id.
+     * Get one pagoCheque by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public PagoCheque findOne(Long id) {
+    public Optional<PagoCheque> findOne(Long id) {
         log.debug("Request to get PagoCheque : {}", id);
-        return pagoChequeRepository.findOne(id);
+        return pagoChequeRepository.findById(id);
     }
 
     /**
-     *  Delete the  pagoCheque by id.
+     * Delete the pagoCheque by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete PagoCheque : {}", id);
-        pagoChequeRepository.delete(id);
+        pagoChequeRepository.deleteById(id);
     }
 }

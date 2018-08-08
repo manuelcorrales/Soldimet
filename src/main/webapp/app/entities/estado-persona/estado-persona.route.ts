@@ -1,13 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EstadoPersona } from 'app/shared/model/estado-persona.model';
+import { EstadoPersonaService } from './estado-persona.service';
 import { EstadoPersonaComponent } from './estado-persona.component';
 import { EstadoPersonaDetailComponent } from './estado-persona-detail.component';
-import { EstadoPersonaPopupComponent } from './estado-persona-dialog.component';
+import { EstadoPersonaUpdateComponent } from './estado-persona-update.component';
 import { EstadoPersonaDeletePopupComponent } from './estado-persona-delete-dialog.component';
+import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
+
+@Injectable({ providedIn: 'root' })
+export class EstadoPersonaResolve implements Resolve<IEstadoPersona> {
+    constructor(private service: EstadoPersonaService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((estadoPersona: HttpResponse<EstadoPersona>) => estadoPersona.body));
+        }
+        return of(new EstadoPersona());
+    }
+}
 
 export const estadoPersonaRoute: Routes = [
     {
@@ -18,9 +34,37 @@ export const estadoPersonaRoute: Routes = [
             pageTitle: 'EstadoPersonas'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'estado-persona/:id',
+    },
+    {
+        path: 'estado-persona/:id/view',
         component: EstadoPersonaDetailComponent,
+        resolve: {
+            estadoPersona: EstadoPersonaResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoPersonas'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-persona/new',
+        component: EstadoPersonaUpdateComponent,
+        resolve: {
+            estadoPersona: EstadoPersonaResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoPersonas'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-persona/:id/edit',
+        component: EstadoPersonaUpdateComponent,
+        resolve: {
+            estadoPersona: EstadoPersonaResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoPersonas'
@@ -31,28 +75,11 @@ export const estadoPersonaRoute: Routes = [
 
 export const estadoPersonaPopupRoute: Routes = [
     {
-        path: 'estado-persona-new',
-        component: EstadoPersonaPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoPersonas'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'estado-persona/:id/edit',
-        component: EstadoPersonaPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoPersonas'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'estado-persona/:id/delete',
         component: EstadoPersonaDeletePopupComponent,
+        resolve: {
+            estadoPersona: EstadoPersonaResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoPersonas'

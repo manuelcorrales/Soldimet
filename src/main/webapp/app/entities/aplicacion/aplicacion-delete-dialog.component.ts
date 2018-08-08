@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Aplicacion } from './aplicacion.model';
-import { AplicacionPopupService } from './aplicacion-popup.service';
+import { IAplicacion } from 'app/shared/model/aplicacion.model';
 import { AplicacionService } from './aplicacion.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { AplicacionService } from './aplicacion.service';
     templateUrl: './aplicacion-delete-dialog.component.html'
 })
 export class AplicacionDeleteDialogComponent {
+    aplicacion: IAplicacion;
 
-    aplicacion: Aplicacion;
-
-    constructor(
-        private aplicacionService: AplicacionService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private aplicacionService: AplicacionService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.aplicacionService.delete(id).subscribe((response) => {
+        this.aplicacionService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'aplicacionListModification',
                 content: 'Deleted an aplicacion'
@@ -43,22 +36,30 @@ export class AplicacionDeleteDialogComponent {
     template: ''
 })
 export class AplicacionDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private aplicacionPopupService: AplicacionPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.aplicacionPopupService
-                .open(AplicacionDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ aplicacion }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(AplicacionDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.aplicacion = aplicacion;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

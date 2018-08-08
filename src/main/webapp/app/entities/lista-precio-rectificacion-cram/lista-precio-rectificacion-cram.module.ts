@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    ListaPrecioRectificacionCRAMService,
-    ListaPrecioRectificacionCRAMPopupService,
     ListaPrecioRectificacionCRAMComponent,
     ListaPrecioRectificacionCRAMDetailComponent,
-    ListaPrecioRectificacionCRAMDialogComponent,
-    ListaPrecioRectificacionCRAMPopupComponent,
+    ListaPrecioRectificacionCRAMUpdateComponent,
     ListaPrecioRectificacionCRAMDeletePopupComponent,
     ListaPrecioRectificacionCRAMDeleteDialogComponent,
     listaPrecioRectificacionCRAMRoute,
-    listaPrecioRectificacionCRAMPopupRoute,
+    listaPrecioRectificacionCRAMPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...listaPrecioRectificacionCRAMRoute,
-    ...listaPrecioRectificacionCRAMPopupRoute,
-];
+const ENTITY_STATES = [...listaPrecioRectificacionCRAMRoute, ...listaPrecioRectificacionCRAMPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         ListaPrecioRectificacionCRAMComponent,
         ListaPrecioRectificacionCRAMDetailComponent,
-        ListaPrecioRectificacionCRAMDialogComponent,
+        ListaPrecioRectificacionCRAMUpdateComponent,
         ListaPrecioRectificacionCRAMDeleteDialogComponent,
-        ListaPrecioRectificacionCRAMPopupComponent,
-        ListaPrecioRectificacionCRAMDeletePopupComponent,
+        ListaPrecioRectificacionCRAMDeletePopupComponent
     ],
     entryComponents: [
         ListaPrecioRectificacionCRAMComponent,
-        ListaPrecioRectificacionCRAMDialogComponent,
-        ListaPrecioRectificacionCRAMPopupComponent,
+        ListaPrecioRectificacionCRAMUpdateComponent,
         ListaPrecioRectificacionCRAMDeleteDialogComponent,
-        ListaPrecioRectificacionCRAMDeletePopupComponent,
-    ],
-    providers: [
-        ListaPrecioRectificacionCRAMService,
-        ListaPrecioRectificacionCRAMPopupService,
+        ListaPrecioRectificacionCRAMDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

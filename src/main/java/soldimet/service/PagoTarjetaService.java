@@ -4,11 +4,13 @@ import soldimet.domain.PagoTarjeta;
 import soldimet.repository.PagoTarjetaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing PagoTarjeta.
  */
@@ -31,14 +33,13 @@ public class PagoTarjetaService {
      * @return the persisted entity
      */
     public PagoTarjeta save(PagoTarjeta pagoTarjeta) {
-        log.debug("Request to save PagoTarjeta : {}", pagoTarjeta);
-        return pagoTarjetaRepository.save(pagoTarjeta);
+        log.debug("Request to save PagoTarjeta : {}", pagoTarjeta);        return pagoTarjetaRepository.save(pagoTarjeta);
     }
 
     /**
-     *  Get all the pagoTarjetas.
+     * Get all the pagoTarjetas.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<PagoTarjeta> findAll() {
@@ -46,25 +47,26 @@ public class PagoTarjetaService {
         return pagoTarjetaRepository.findAll();
     }
 
+
     /**
-     *  Get one pagoTarjeta by id.
+     * Get one pagoTarjeta by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public PagoTarjeta findOne(Long id) {
+    public Optional<PagoTarjeta> findOne(Long id) {
         log.debug("Request to get PagoTarjeta : {}", id);
-        return pagoTarjetaRepository.findOne(id);
+        return pagoTarjetaRepository.findById(id);
     }
 
     /**
-     *  Delete the  pagoTarjeta by id.
+     * Delete the pagoTarjeta by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete PagoTarjeta : {}", id);
-        pagoTarjetaRepository.delete(id);
+        pagoTarjetaRepository.deleteById(id);
     }
 }

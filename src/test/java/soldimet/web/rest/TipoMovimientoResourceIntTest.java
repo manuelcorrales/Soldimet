@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class TipoMovimientoResourceIntTest {
 
     @Autowired
     private TipoMovimientoRepository tipoMovimientoRepository;
+
+    
 
     @Autowired
     private TipoMovimientoService tipoMovimientoService;
@@ -70,6 +74,7 @@ public class TipoMovimientoResourceIntTest {
         this.restTipoMovimientoMockMvc = MockMvcBuilders.standaloneSetup(tipoMovimientoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class TipoMovimientoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoMovimiento.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreTipoMovimiento").value(hasItem(DEFAULT_NOMBRE_TIPO_MOVIMIENTO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class TipoMovimientoResourceIntTest {
             .andExpect(jsonPath("$.id").value(tipoMovimiento.getId().intValue()))
             .andExpect(jsonPath("$.nombreTipoMovimiento").value(DEFAULT_NOMBRE_TIPO_MOVIMIENTO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingTipoMovimiento() throws Exception {
@@ -190,7 +195,9 @@ public class TipoMovimientoResourceIntTest {
         int databaseSizeBeforeUpdate = tipoMovimientoRepository.findAll().size();
 
         // Update the tipoMovimiento
-        TipoMovimiento updatedTipoMovimiento = tipoMovimientoRepository.findOne(tipoMovimiento.getId());
+        TipoMovimiento updatedTipoMovimiento = tipoMovimientoRepository.findById(tipoMovimiento.getId()).get();
+        // Disconnect from session so that the updates on updatedTipoMovimiento are not directly saved in db
+        em.detach(updatedTipoMovimiento);
         updatedTipoMovimiento
             .nombreTipoMovimiento(UPDATED_NOMBRE_TIPO_MOVIMIENTO);
 
@@ -217,11 +224,11 @@ public class TipoMovimientoResourceIntTest {
         restTipoMovimientoMockMvc.perform(put("/api/tipo-movimientos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tipoMovimiento)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the TipoMovimiento in the database
         List<TipoMovimiento> tipoMovimientoList = tipoMovimientoRepository.findAll();
-        assertThat(tipoMovimientoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(tipoMovimientoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

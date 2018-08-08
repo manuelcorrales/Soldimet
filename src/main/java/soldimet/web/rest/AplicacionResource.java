@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Aplicacion;
 import soldimet.service.AplicacionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class AplicacionResource {
     public ResponseEntity<Aplicacion> createAplicacion(@Valid @RequestBody Aplicacion aplicacion) throws URISyntaxException {
         log.debug("REST request to save Aplicacion : {}", aplicacion);
         if (aplicacion.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new aplicacion cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new aplicacion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Aplicacion result = aplicacionService.save(aplicacion);
         return ResponseEntity.created(new URI("/api/aplicacions/" + result.getId()))
@@ -68,7 +69,7 @@ public class AplicacionResource {
     public ResponseEntity<Aplicacion> updateAplicacion(@Valid @RequestBody Aplicacion aplicacion) throws URISyntaxException {
         log.debug("REST request to update Aplicacion : {}", aplicacion);
         if (aplicacion.getId() == null) {
-            return createAplicacion(aplicacion);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Aplicacion result = aplicacionService.save(aplicacion);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class AplicacionResource {
     public List<Aplicacion> getAllAplicacions() {
         log.debug("REST request to get all Aplicacions");
         return aplicacionService.findAll();
-        }
+    }
 
     /**
      * GET  /aplicacions/:id : get the "id" aplicacion.
@@ -98,8 +99,8 @@ public class AplicacionResource {
     @Timed
     public ResponseEntity<Aplicacion> getAplicacion(@PathVariable Long id) {
         log.debug("REST request to get Aplicacion : {}", id);
-        Aplicacion aplicacion = aplicacionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(aplicacion));
+        Optional<Aplicacion> aplicacion = aplicacionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(aplicacion);
     }
 
     /**

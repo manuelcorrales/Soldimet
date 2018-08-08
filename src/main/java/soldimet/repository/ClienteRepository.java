@@ -8,7 +8,7 @@ import soldimet.domain.Persona;
 
 
 /**
- * Spring Data JPA repository for the Cliente entity.
+ * Spring Data  repository for the Cliente entity.
  */
 @SuppressWarnings("unused")
 @Repository

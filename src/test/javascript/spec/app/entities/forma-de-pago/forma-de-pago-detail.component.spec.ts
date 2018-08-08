@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { FormaDePagoDetailComponent } from '../../../../../../main/webapp/app/entities/forma-de-pago/forma-de-pago-detail.component';
-import { FormaDePagoService } from '../../../../../../main/webapp/app/entities/forma-de-pago/forma-de-pago.service';
-import { FormaDePago } from '../../../../../../main/webapp/app/entities/forma-de-pago/forma-de-pago.model';
+import { FormaDePagoDetailComponent } from 'app/entities/forma-de-pago/forma-de-pago-detail.component';
+import { FormaDePago } from 'app/shared/model/forma-de-pago.model';
 
 describe('Component Tests', () => {
-
     describe('FormaDePago Management Detail Component', () => {
         let comp: FormaDePagoDetailComponent;
         let fixture: ComponentFixture<FormaDePagoDetailComponent>;
-        let service: FormaDePagoService;
+        const route = ({ data: of({ formaDePago: new FormaDePago(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [FormaDePagoDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    FormaDePagoService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(FormaDePagoDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(FormaDePagoDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(FormaDePagoDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(FormaDePagoService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new FormaDePago(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.formaDePago).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.formaDePago).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

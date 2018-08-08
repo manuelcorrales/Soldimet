@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { EstadoCobranzaOperacion } from './estado-cobranza-operacion.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IEstadoCobranzaOperacion>;
+type EntityArrayResponseType = HttpResponse<IEstadoCobranzaOperacion[]>;
+
+@Injectable({ providedIn: 'root' })
 export class EstadoCobranzaOperacionService {
-
     private resourceUrl = SERVER_API_URL + 'api/estado-cobranza-operacions';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(estadoCobranzaOperacion: EstadoCobranzaOperacion): Observable<EstadoCobranzaOperacion> {
-        const copy = this.convert(estadoCobranzaOperacion);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(estadoCobranzaOperacion: IEstadoCobranzaOperacion): Observable<EntityResponseType> {
+        return this.http.post<IEstadoCobranzaOperacion>(this.resourceUrl, estadoCobranzaOperacion, { observe: 'response' });
     }
 
-    update(estadoCobranzaOperacion: EstadoCobranzaOperacion): Observable<EstadoCobranzaOperacion> {
-        const copy = this.convert(estadoCobranzaOperacion);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(estadoCobranzaOperacion: IEstadoCobranzaOperacion): Observable<EntityResponseType> {
+        return this.http.put<IEstadoCobranzaOperacion>(this.resourceUrl, estadoCobranzaOperacion, { observe: 'response' });
     }
 
-    find(id: number): Observable<EstadoCobranzaOperacion> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IEstadoCobranzaOperacion>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IEstadoCobranzaOperacion[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to EstadoCobranzaOperacion.
-     */
-    private convertItemFromServer(json: any): EstadoCobranzaOperacion {
-        const entity: EstadoCobranzaOperacion = Object.assign(new EstadoCobranzaOperacion(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a EstadoCobranzaOperacion to a JSON which can be sent to the server.
-     */
-    private convert(estadoCobranzaOperacion: EstadoCobranzaOperacion): EstadoCobranzaOperacion {
-        const copy: EstadoCobranzaOperacion = Object.assign({}, estadoCobranzaOperacion);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

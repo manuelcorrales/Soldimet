@@ -1,33 +1,35 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="movimientoPedido">
+            <h2><span>Movimiento Pedido</span> {{movimientoPedido.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Pedido Repuesto</span></dt>
+                <dd>
+                    <div *ngIf="movimientoPedido.pedidoRepuesto">
+                        <a [routerLink]="['/pedido-repuesto', movimientoPedido.pedidoRepuesto?.id, 'view']">{{movimientoPedido.pedidoRepuesto?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Movimiento</span></dt>
+                <dd>
+                    <div *ngIf="movimientoPedido.movimiento">
+                        <a [routerLink]="['/movimiento', movimientoPedido.movimiento?.id, 'view']">{{movimientoPedido.movimiento?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
 
-<div *ngIf="movimientoPedido">
-    <h2><span>Movimiento Pedido</span> {{movimientoPedido.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span>Pedido Repuesto</span></dt>
-        <dd>
-            <div *ngIf="movimientoPedido.pedidoRepuesto">
-                <a [routerLink]="['/pedido-repuesto', movimientoPedido.pedidoRepuesto?.id]">{{movimientoPedido.pedidoRepuesto?.id}}</a>
-            </div>
-        </dd>
-        <dt><span>Movimiento</span></dt>
-        <dd>
-            <div *ngIf="movimientoPedido.movimiento">
-                <a [routerLink]="['/movimiento', movimientoPedido.movimiento?.id]">{{movimientoPedido.movimiento?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
-
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'movimiento-pedido/'+ movimientoPedido.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
-    </button>
+            <button type="button"
+                    [routerLink]="['/movimiento-pedido', movimientoPedido.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
 </div>

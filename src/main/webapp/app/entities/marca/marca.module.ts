@@ -1,49 +1,23 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    MarcaService,
-    MarcaPopupService,
     MarcaComponent,
     MarcaDetailComponent,
-    MarcaDialogComponent,
-    MarcaPopupComponent,
+    MarcaUpdateComponent,
     MarcaDeletePopupComponent,
     MarcaDeleteDialogComponent,
     marcaRoute,
-    marcaPopupRoute,
+    marcaPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...marcaRoute,
-    ...marcaPopupRoute,
-];
+const ENTITY_STATES = [...marcaRoute, ...marcaPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
-    declarations: [
-        MarcaComponent,
-        MarcaDetailComponent,
-        MarcaDialogComponent,
-        MarcaDeleteDialogComponent,
-        MarcaPopupComponent,
-        MarcaDeletePopupComponent,
-    ],
-    entryComponents: [
-        MarcaComponent,
-        MarcaDialogComponent,
-        MarcaPopupComponent,
-        MarcaDeleteDialogComponent,
-        MarcaDeletePopupComponent,
-    ],
-    providers: [
-        MarcaService,
-        MarcaPopupService,
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    declarations: [MarcaComponent, MarcaDetailComponent, MarcaUpdateComponent, MarcaDeleteDialogComponent, MarcaDeletePopupComponent],
+    entryComponents: [MarcaComponent, MarcaUpdateComponent, MarcaDeleteDialogComponent, MarcaDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetMarcaModule {}

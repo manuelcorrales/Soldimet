@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { HistorialPrecio } from './historial-precio.model';
+import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
+import { Principal } from 'app/core';
 import { HistorialPrecioService } from './historial-precio.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-historial-precio',
     templateUrl: './historial-precio.component.html'
 })
 export class HistorialPrecioComponent implements OnInit, OnDestroy {
-historialPrecios: HistorialPrecio[];
+    historialPrecios: IHistorialPrecio[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ historialPrecios: HistorialPrecio[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.historialPrecioService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.historialPrecios = res.json;
+            (res: HttpResponse<IHistorialPrecio[]>) => {
+                this.historialPrecios = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInHistorialPrecios();
@@ -45,14 +44,15 @@ historialPrecios: HistorialPrecio[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: HistorialPrecio) {
+    trackId(index: number, item: IHistorialPrecio) {
         return item.id;
     }
+
     registerChangeInHistorialPrecios() {
-        this.eventSubscriber = this.eventManager.subscribe('historialPrecioListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('historialPrecioListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,6 +43,8 @@ public class ProveedorResourceIntTest {
 
     @Autowired
     private ProveedorRepository proveedorRepository;
+
+    
 
     @Autowired
     private ProveedorService proveedorService;
@@ -68,6 +72,7 @@ public class ProveedorResourceIntTest {
         this.restProveedorMockMvc = MockMvcBuilders.standaloneSetup(proveedorResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -140,6 +145,7 @@ public class ProveedorResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(proveedor.getId().intValue())));
     }
+    
 
     @Test
     @Transactional
@@ -153,7 +159,6 @@ public class ProveedorResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(proveedor.getId().intValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingProveedor() throws Exception {
@@ -171,7 +176,9 @@ public class ProveedorResourceIntTest {
         int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
 
         // Update the proveedor
-        Proveedor updatedProveedor = proveedorRepository.findOne(proveedor.getId());
+        Proveedor updatedProveedor = proveedorRepository.findById(proveedor.getId()).get();
+        // Disconnect from session so that the updates on updatedProveedor are not directly saved in db
+        em.detach(updatedProveedor);
 
         restProveedorMockMvc.perform(put("/api/proveedors")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -195,11 +202,11 @@ public class ProveedorResourceIntTest {
         restProveedorMockMvc.perform(put("/api/proveedors")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(proveedor)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Proveedor in the database
         List<Proveedor> proveedorList = proveedorRepository.findAll();
-        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

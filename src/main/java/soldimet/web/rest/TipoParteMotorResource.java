@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.TipoParteMotor;
 import soldimet.service.TipoParteMotorService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class TipoParteMotorResource {
     public ResponseEntity<TipoParteMotor> createTipoParteMotor(@Valid @RequestBody TipoParteMotor tipoParteMotor) throws URISyntaxException {
         log.debug("REST request to save TipoParteMotor : {}", tipoParteMotor);
         if (tipoParteMotor.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoParteMotor cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tipoParteMotor cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoParteMotor result = tipoParteMotorService.save(tipoParteMotor);
         return ResponseEntity.created(new URI("/api/tipo-parte-motors/" + result.getId()))
@@ -68,7 +69,7 @@ public class TipoParteMotorResource {
     public ResponseEntity<TipoParteMotor> updateTipoParteMotor(@Valid @RequestBody TipoParteMotor tipoParteMotor) throws URISyntaxException {
         log.debug("REST request to update TipoParteMotor : {}", tipoParteMotor);
         if (tipoParteMotor.getId() == null) {
-            return createTipoParteMotor(tipoParteMotor);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TipoParteMotor result = tipoParteMotorService.save(tipoParteMotor);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class TipoParteMotorResource {
     public List<TipoParteMotor> getAllTipoParteMotors() {
         log.debug("REST request to get all TipoParteMotors");
         return tipoParteMotorService.findAll();
-        }
+    }
 
     /**
      * GET  /tipo-parte-motors/:id : get the "id" tipoParteMotor.
@@ -98,8 +99,8 @@ public class TipoParteMotorResource {
     @Timed
     public ResponseEntity<TipoParteMotor> getTipoParteMotor(@PathVariable Long id) {
         log.debug("REST request to get TipoParteMotor : {}", id);
-        TipoParteMotor tipoParteMotor = tipoParteMotorService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoParteMotor));
+        Optional<TipoParteMotor> tipoParteMotor = tipoParteMotorService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(tipoParteMotor);
     }
 
     /**

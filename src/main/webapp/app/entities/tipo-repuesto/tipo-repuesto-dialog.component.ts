@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './tipo-repuesto-dialog.component.html'
 })
 export class TipoRepuestoDialogComponent implements OnInit {
-
     tipoRepuesto: TipoRepuesto;
     isSaving: boolean;
 
@@ -29,13 +28,16 @@ export class TipoRepuestoDialogComponent implements OnInit {
         private tipoRepuestoService: TipoRepuestoService,
         private tipoParteMotorService: TipoParteMotorService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.tipoParteMotorService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipopartemotors = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.tipoParteMotorService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tipopartemotors = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -45,21 +47,18 @@ export class TipoRepuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.tipoRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.tipoRepuestoService.update(this.tipoRepuesto));
+            this.subscribeToSaveResponse(this.tipoRepuestoService.update(this.tipoRepuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.tipoRepuestoService.create(this.tipoRepuesto));
+            this.subscribeToSaveResponse(this.tipoRepuestoService.create(this.tipoRepuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<TipoRepuesto>) {
-        result.subscribe((res: TipoRepuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: TipoRepuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: TipoRepuesto) {
-        this.eventManager.broadcast({ name: 'tipoRepuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'tipoRepuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -82,22 +81,16 @@ export class TipoRepuestoDialogComponent implements OnInit {
     template: ''
 })
 export class TipoRepuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private tipoRepuestoPopupService: TipoRepuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private tipoRepuestoPopupService: TipoRepuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.tipoRepuestoPopupService
-                    .open(TipoRepuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.tipoRepuestoPopupService.open(TipoRepuestoDialogComponent as Component, params['id']);
             } else {
-                this.tipoRepuestoPopupService
-                    .open(TipoRepuestoDialogComponent as Component);
+                this.tipoRepuestoPopupService.open(TipoRepuestoDialogComponent as Component);
             }
         });
     }

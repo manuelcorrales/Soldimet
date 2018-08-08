@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { CobranzaRepuesto } from './cobranza-repuesto.model';
-import { CobranzaRepuestoPopupService } from './cobranza-repuesto-popup.service';
+import { ICobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 import { CobranzaRepuestoService } from './cobranza-repuesto.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { CobranzaRepuestoService } from './cobranza-repuesto.service';
     templateUrl: './cobranza-repuesto-delete-dialog.component.html'
 })
 export class CobranzaRepuestoDeleteDialogComponent {
-
-    cobranzaRepuesto: CobranzaRepuesto;
+    cobranzaRepuesto: ICobranzaRepuesto;
 
     constructor(
         private cobranzaRepuestoService: CobranzaRepuestoService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.cobranzaRepuestoService.delete(id).subscribe((response) => {
+        this.cobranzaRepuestoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'cobranzaRepuestoListModification',
                 content: 'Deleted an cobranzaRepuesto'
@@ -43,22 +40,33 @@ export class CobranzaRepuestoDeleteDialogComponent {
     template: ''
 })
 export class CobranzaRepuestoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private cobranzaRepuestoPopupService: CobranzaRepuestoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.cobranzaRepuestoPopupService
-                .open(CobranzaRepuestoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ cobranzaRepuesto }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(CobranzaRepuestoDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.cobranzaRepuesto = cobranzaRepuesto;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

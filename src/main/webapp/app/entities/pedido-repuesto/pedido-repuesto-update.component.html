@@ -1,0 +1,86 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-pedido-repuesto-heading">Create or edit a Pedido Repuesto</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!pedidoRepuesto.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="pedidoRepuesto.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fechaCreacion">Fecha Creacion</label>
+                    <div class="input-group">
+                        <input id="field_fechaCreacion" type="text" class="form-control" name="fechaCreacion" ngbDatepicker  #fechaCreacionDp="ngbDatepicker" [(ngModel)]="pedidoRepuesto.fechaCreacion"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaCreacionDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.fechaCreacion?.dirty && editForm.controls.fechaCreacion?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.fechaCreacion?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fechaPedido">Fecha Pedido</label>
+                    <div class="input-group">
+                        <input id="field_fechaPedido" type="text" class="form-control" name="fechaPedido" ngbDatepicker  #fechaPedidoDp="ngbDatepicker" [(ngModel)]="pedidoRepuesto.fechaPedido"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaPedidoDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fechaRecibo">Fecha Recibo</label>
+                    <div class="input-group">
+                        <input id="field_fechaRecibo" type="text" class="form-control" name="fechaRecibo" ngbDatepicker  #fechaReciboDp="ngbDatepicker" [(ngModel)]="pedidoRepuesto.fechaRecibo"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaReciboDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_estadoPedidoRepuesto">Estado Pedido Repuesto</label>
+                    <select class="form-control" id="field_estadoPedidoRepuesto" name="estadoPedidoRepuesto" [(ngModel)]="pedidoRepuesto.estadoPedidoRepuesto"  required>
+                        <option *ngIf="!editForm.value.estadoPedidoRepuesto" [ngValue]="null" selected></option>
+                        <option [ngValue]="estadoPedidoRepuestoOption.id === pedidoRepuesto.estadoPedidoRepuesto?.id ? pedidoRepuesto.estadoPedidoRepuesto : estadoPedidoRepuestoOption" *ngFor="let estadoPedidoRepuestoOption of estadopedidorepuestos; trackBy: trackEstadoPedidoRepuestoById">{{estadoPedidoRepuestoOption.nombreEstado}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.estadoPedidoRepuesto?.dirty && editForm.controls.estadoPedidoRepuesto?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.estadoPedidoRepuesto?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_presupuesto">Presupuesto</label>
+                    <select class="form-control" id="field_presupuesto" name="presupuesto" [(ngModel)]="pedidoRepuesto.presupuesto"  required>
+                        <option *ngIf="!editForm.value.presupuesto" [ngValue]="null" selected></option>
+                        <option [ngValue]="presupuestoOption.id === pedidoRepuesto.presupuesto?.id ? pedidoRepuesto.presupuesto : presupuestoOption" *ngFor="let presupuestoOption of presupuestos; trackBy: trackPresupuestoById">{{presupuestoOption.id}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.presupuesto?.dirty && editForm.controls.presupuesto?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.presupuesto?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

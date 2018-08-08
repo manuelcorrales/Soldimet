@@ -1,53 +1,24 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager } from 'ng-jhipster';
 
-import { Persona } from './persona.model';
-import { PersonaService } from './persona.service';
+import { IPersona } from 'app/shared/model/persona.model';
 
 @Component({
     selector: 'jhi-persona-detail',
     templateUrl: './persona-detail.component.html'
 })
-export class PersonaDetailComponent implements OnInit, OnDestroy {
+export class PersonaDetailComponent implements OnInit {
+    persona: IPersona;
 
-    persona: Persona;
-    private subscription: Subscription;
-    private eventSubscriber: Subscription;
-
-    constructor(
-        private eventManager: JhiEventManager,
-        private personaService: PersonaService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
-        });
-        this.registerChangeInPersonas();
-    }
-
-    load(id) {
-        this.personaService.find(id).subscribe((persona) => {
+        this.activatedRoute.data.subscribe(({ persona }) => {
             this.persona = persona;
         });
     }
+
     previousState() {
         window.history.back();
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-
-    registerChangeInPersonas() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'personaListModification',
-            (response) => this.load(this.persona.id)
-        );
     }
 }

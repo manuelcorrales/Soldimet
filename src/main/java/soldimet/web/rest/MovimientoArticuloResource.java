@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.MovimientoArticulo;
 import soldimet.service.MovimientoArticuloService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class MovimientoArticuloResource {
     public ResponseEntity<MovimientoArticulo> createMovimientoArticulo(@Valid @RequestBody MovimientoArticulo movimientoArticulo) throws URISyntaxException {
         log.debug("REST request to save MovimientoArticulo : {}", movimientoArticulo);
         if (movimientoArticulo.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new movimientoArticulo cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new movimientoArticulo cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MovimientoArticulo result = movimientoArticuloService.save(movimientoArticulo);
         return ResponseEntity.created(new URI("/api/movimiento-articulos/" + result.getId()))
@@ -68,7 +69,7 @@ public class MovimientoArticuloResource {
     public ResponseEntity<MovimientoArticulo> updateMovimientoArticulo(@Valid @RequestBody MovimientoArticulo movimientoArticulo) throws URISyntaxException {
         log.debug("REST request to update MovimientoArticulo : {}", movimientoArticulo);
         if (movimientoArticulo.getId() == null) {
-            return createMovimientoArticulo(movimientoArticulo);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         MovimientoArticulo result = movimientoArticuloService.save(movimientoArticulo);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class MovimientoArticuloResource {
     public List<MovimientoArticulo> getAllMovimientoArticulos() {
         log.debug("REST request to get all MovimientoArticulos");
         return movimientoArticuloService.findAll();
-        }
+    }
 
     /**
      * GET  /movimiento-articulos/:id : get the "id" movimientoArticulo.
@@ -98,8 +99,8 @@ public class MovimientoArticuloResource {
     @Timed
     public ResponseEntity<MovimientoArticulo> getMovimientoArticulo(@PathVariable Long id) {
         log.debug("REST request to get MovimientoArticulo : {}", id);
-        MovimientoArticulo movimientoArticulo = movimientoArticuloService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(movimientoArticulo));
+        Optional<MovimientoArticulo> movimientoArticulo = movimientoArticuloService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(movimientoArticulo);
     }
 
     /**

@@ -4,11 +4,13 @@ import soldimet.domain.EstadoArticulo;
 import soldimet.repository.EstadoArticuloRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing EstadoArticulo.
  */
@@ -31,14 +33,13 @@ public class EstadoArticuloService {
      * @return the persisted entity
      */
     public EstadoArticulo save(EstadoArticulo estadoArticulo) {
-        log.debug("Request to save EstadoArticulo : {}", estadoArticulo);
-        return estadoArticuloRepository.save(estadoArticulo);
+        log.debug("Request to save EstadoArticulo : {}", estadoArticulo);        return estadoArticuloRepository.save(estadoArticulo);
     }
 
     /**
-     *  Get all the estadoArticulos.
+     * Get all the estadoArticulos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<EstadoArticulo> findAll() {
@@ -46,25 +47,26 @@ public class EstadoArticuloService {
         return estadoArticuloRepository.findAll();
     }
 
+
     /**
-     *  Get one estadoArticulo by id.
+     * Get one estadoArticulo by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public EstadoArticulo findOne(Long id) {
+    public Optional<EstadoArticulo> findOne(Long id) {
         log.debug("Request to get EstadoArticulo : {}", id);
-        return estadoArticuloRepository.findOne(id);
+        return estadoArticuloRepository.findById(id);
     }
 
     /**
-     *  Delete the  estadoArticulo by id.
+     * Delete the estadoArticulo by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoArticulo : {}", id);
-        estadoArticuloRepository.delete(id);
+        estadoArticuloRepository.deleteById(id);
     }
 }

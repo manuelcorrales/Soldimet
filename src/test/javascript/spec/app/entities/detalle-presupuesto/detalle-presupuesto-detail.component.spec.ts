@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { DetallePresupuestoDetailComponent } from '../../../../../../main/webapp/app/entities/detalle-presupuesto/detalle-presupuesto-detail.component';
-import { DetallePresupuestoService } from '../../../../../../main/webapp/app/entities/detalle-presupuesto/detalle-presupuesto.service';
-import { DetallePresupuesto } from '../../../../../../main/webapp/app/entities/detalle-presupuesto/detalle-presupuesto.model';
+import { DetallePresupuestoDetailComponent } from 'app/entities/detalle-presupuesto/detalle-presupuesto-detail.component';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 
 describe('Component Tests', () => {
-
     describe('DetallePresupuesto Management Detail Component', () => {
         let comp: DetallePresupuestoDetailComponent;
         let fixture: ComponentFixture<DetallePresupuestoDetailComponent>;
-        let service: DetallePresupuestoService;
+        const route = ({ data: of({ detallePresupuesto: new DetallePresupuesto(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [DetallePresupuestoDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    DetallePresupuestoService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(DetallePresupuestoDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(DetallePresupuestoDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(DetallePresupuestoDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(DetallePresupuestoService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new DetallePresupuesto(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.detallePresupuesto).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.detallePresupuesto).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

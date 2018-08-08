@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { HistorialPrecio } from './historial-precio.model';
-import { HistorialPrecioPopupService } from './historial-precio-popup.service';
+import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
 import { HistorialPrecioService } from './historial-precio.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { HistorialPrecioService } from './historial-precio.service';
     templateUrl: './historial-precio-delete-dialog.component.html'
 })
 export class HistorialPrecioDeleteDialogComponent {
-
-    historialPrecio: HistorialPrecio;
+    historialPrecio: IHistorialPrecio;
 
     constructor(
         private historialPrecioService: HistorialPrecioService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.historialPrecioService.delete(id).subscribe((response) => {
+        this.historialPrecioService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'historialPrecioListModification',
                 content: 'Deleted an historialPrecio'
@@ -43,22 +40,33 @@ export class HistorialPrecioDeleteDialogComponent {
     template: ''
 })
 export class HistorialPrecioDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private historialPrecioPopupService: HistorialPrecioPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.historialPrecioPopupService
-                .open(HistorialPrecioDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ historialPrecio }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(HistorialPrecioDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.historialPrecio = historialPrecio;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

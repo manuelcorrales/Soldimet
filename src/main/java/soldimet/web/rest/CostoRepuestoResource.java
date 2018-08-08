@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.CostoRepuesto;
 import soldimet.service.CostoRepuestoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class CostoRepuestoResource {
     public ResponseEntity<CostoRepuesto> createCostoRepuesto(@Valid @RequestBody CostoRepuesto costoRepuesto) throws URISyntaxException {
         log.debug("REST request to save CostoRepuesto : {}", costoRepuesto);
         if (costoRepuesto.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new costoRepuesto cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new costoRepuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CostoRepuesto result = costoRepuestoService.save(costoRepuesto);
         return ResponseEntity.created(new URI("/api/costo-repuestos/" + result.getId()))
@@ -68,7 +69,7 @@ public class CostoRepuestoResource {
     public ResponseEntity<CostoRepuesto> updateCostoRepuesto(@Valid @RequestBody CostoRepuesto costoRepuesto) throws URISyntaxException {
         log.debug("REST request to update CostoRepuesto : {}", costoRepuesto);
         if (costoRepuesto.getId() == null) {
-            return createCostoRepuesto(costoRepuesto);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CostoRepuesto result = costoRepuestoService.save(costoRepuesto);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class CostoRepuestoResource {
     public List<CostoRepuesto> getAllCostoRepuestos() {
         log.debug("REST request to get all CostoRepuestos");
         return costoRepuestoService.findAll();
-        }
+    }
 
     /**
      * GET  /costo-repuestos/:id : get the "id" costoRepuesto.
@@ -98,8 +99,8 @@ public class CostoRepuestoResource {
     @Timed
     public ResponseEntity<CostoRepuesto> getCostoRepuesto(@PathVariable Long id) {
         log.debug("REST request to get CostoRepuesto : {}", id);
-        CostoRepuesto costoRepuesto = costoRepuestoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(costoRepuesto));
+        Optional<CostoRepuesto> costoRepuesto = costoRepuestoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(costoRepuesto);
     }
 
     /**

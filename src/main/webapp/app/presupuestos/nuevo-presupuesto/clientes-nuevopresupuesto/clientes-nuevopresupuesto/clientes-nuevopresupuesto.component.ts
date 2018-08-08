@@ -1,11 +1,9 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
-import { Cliente } from '../../../../entities/cliente/cliente.model';
 import { PresupuestosService } from '../../../presupuestos.service';
 import { ClienteService } from '../../../../entities/cliente';
-import { PersonaService, Persona } from '../../../../entities/persona';
-import { ResponseWrapper } from '../../../../shared';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { PersonaService } from '../../../../entities/persona';
 import { FormsModule } from '@angular/forms';
+import { Cliente } from 'app/shared/model/cliente.model';
 
 @Component({
     selector: 'jhi-clientes-nuevopresupuesto',
@@ -13,7 +11,6 @@ import { FormsModule } from '@angular/forms';
     styles: []
 })
 export class ClientesNuevopresupuestoComponent implements OnInit {
-
     clientes: Cliente[] = [];
     clienteElegido: Cliente;
     // configuración autocompleter
@@ -40,11 +37,11 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
     // controlando estado del buscador
     protected buscandoClientes = false;
 
-    constructor(private _presupuestosService: PresupuestosService,
+    constructor(
+        private _presupuestosService: PresupuestosService,
         private _clienteService: ClienteService,
-        private _personaService: PersonaService,
-    ) {
-    }
+        private _personaService: PersonaService
+    ) {}
 
     ngOnInit() {
         this.buscarTodoscliente();
@@ -52,22 +49,18 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
 
     buscarTodoscliente() {
         this.buscandoClientes = true;
-        this._presupuestosService.findAllClientes().subscribe(
-            (res: Cliente[]) => {
-                this.buscandoClientes = false,
-                this.clientes = [...res];
-            },
-        );
+        this._presupuestosService.findAllClientes().subscribe((res: Cliente[]) => {
+            (this.buscandoClientes = false), (this.clientes = [...res]);
+        });
     }
 
     filtrarClientes(term: string, item: any): boolean {
-        console.log(term)
-        console.log(item)
-        return (item.appelido.match(term) || item.persona.nombre.match(term))
+        console.log(term);
+        console.log(item);
+        return item.appelido.match(term) || item.persona.nombre.match(term);
     }
 
     getCliente() {
         return this.clienteElegido;
     }
-
 }

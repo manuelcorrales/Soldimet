@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.*;
 
 
 /**
- * Spring Data JPA repository for the Articulo entity.
+ * Spring Data  repository for the Articulo entity.
  */
 @SuppressWarnings("unused")
 @Repository

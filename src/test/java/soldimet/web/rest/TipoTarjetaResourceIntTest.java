@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class TipoTarjetaResourceIntTest {
 
     @Autowired
     private TipoTarjetaRepository tipoTarjetaRepository;
+
+    
 
     @Autowired
     private TipoTarjetaService tipoTarjetaService;
@@ -70,6 +74,7 @@ public class TipoTarjetaResourceIntTest {
         this.restTipoTarjetaMockMvc = MockMvcBuilders.standaloneSetup(tipoTarjetaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class TipoTarjetaResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoTarjeta.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreTipoTarjeta").value(hasItem(DEFAULT_NOMBRE_TIPO_TARJETA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class TipoTarjetaResourceIntTest {
             .andExpect(jsonPath("$.id").value(tipoTarjeta.getId().intValue()))
             .andExpect(jsonPath("$.nombreTipoTarjeta").value(DEFAULT_NOMBRE_TIPO_TARJETA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingTipoTarjeta() throws Exception {
@@ -190,7 +195,9 @@ public class TipoTarjetaResourceIntTest {
         int databaseSizeBeforeUpdate = tipoTarjetaRepository.findAll().size();
 
         // Update the tipoTarjeta
-        TipoTarjeta updatedTipoTarjeta = tipoTarjetaRepository.findOne(tipoTarjeta.getId());
+        TipoTarjeta updatedTipoTarjeta = tipoTarjetaRepository.findById(tipoTarjeta.getId()).get();
+        // Disconnect from session so that the updates on updatedTipoTarjeta are not directly saved in db
+        em.detach(updatedTipoTarjeta);
         updatedTipoTarjeta
             .nombreTipoTarjeta(UPDATED_NOMBRE_TIPO_TARJETA);
 
@@ -217,11 +224,11 @@ public class TipoTarjetaResourceIntTest {
         restTipoTarjetaMockMvc.perform(put("/api/tipo-tarjetas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tipoTarjeta)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the TipoTarjeta in the database
         List<TipoTarjeta> tipoTarjetaList = tipoTarjetaRepository.findAll();
-        assertThat(tipoTarjetaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(tipoTarjetaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

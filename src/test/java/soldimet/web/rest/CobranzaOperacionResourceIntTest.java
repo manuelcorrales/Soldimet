@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,6 +47,8 @@ public class CobranzaOperacionResourceIntTest {
 
     @Autowired
     private CobranzaOperacionRepository cobranzaOperacionRepository;
+
+    
 
     @Autowired
     private CobranzaOperacionService cobranzaOperacionService;
@@ -72,6 +76,7 @@ public class CobranzaOperacionResourceIntTest {
         this.restCobranzaOperacionMockMvc = MockMvcBuilders.standaloneSetup(cobranzaOperacionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -170,6 +175,7 @@ public class CobranzaOperacionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(cobranzaOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].cobranzaOperacion").value(hasItem(DEFAULT_COBRANZA_OPERACION.doubleValue())));
     }
+    
 
     @Test
     @Transactional
@@ -184,7 +190,6 @@ public class CobranzaOperacionResourceIntTest {
             .andExpect(jsonPath("$.id").value(cobranzaOperacion.getId().intValue()))
             .andExpect(jsonPath("$.cobranzaOperacion").value(DEFAULT_COBRANZA_OPERACION.doubleValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingCobranzaOperacion() throws Exception {
@@ -202,7 +207,9 @@ public class CobranzaOperacionResourceIntTest {
         int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
 
         // Update the cobranzaOperacion
-        CobranzaOperacion updatedCobranzaOperacion = cobranzaOperacionRepository.findOne(cobranzaOperacion.getId());
+        CobranzaOperacion updatedCobranzaOperacion = cobranzaOperacionRepository.findById(cobranzaOperacion.getId()).get();
+        // Disconnect from session so that the updates on updatedCobranzaOperacion are not directly saved in db
+        em.detach(updatedCobranzaOperacion);
         updatedCobranzaOperacion
             .cobranzaOperacion(UPDATED_COBRANZA_OPERACION);
 
@@ -229,11 +236,11 @@ public class CobranzaOperacionResourceIntTest {
         restCobranzaOperacionMockMvc.perform(put("/api/cobranza-operacions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the CobranzaOperacion in the database
         List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
-        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class LocalidadResourceIntTest {
 
     @Autowired
     private LocalidadRepository localidadRepository;
+
+    
 
     @Autowired
     private LocalidadService localidadService;
@@ -70,6 +74,7 @@ public class LocalidadResourceIntTest {
         this.restLocalidadMockMvc = MockMvcBuilders.standaloneSetup(localidadResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class LocalidadResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(localidad.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreLocalidad").value(hasItem(DEFAULT_NOMBRE_LOCALIDAD.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class LocalidadResourceIntTest {
             .andExpect(jsonPath("$.id").value(localidad.getId().intValue()))
             .andExpect(jsonPath("$.nombreLocalidad").value(DEFAULT_NOMBRE_LOCALIDAD.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingLocalidad() throws Exception {
@@ -190,7 +195,9 @@ public class LocalidadResourceIntTest {
         int databaseSizeBeforeUpdate = localidadRepository.findAll().size();
 
         // Update the localidad
-        Localidad updatedLocalidad = localidadRepository.findOne(localidad.getId());
+        Localidad updatedLocalidad = localidadRepository.findById(localidad.getId()).get();
+        // Disconnect from session so that the updates on updatedLocalidad are not directly saved in db
+        em.detach(updatedLocalidad);
         updatedLocalidad
             .nombreLocalidad(UPDATED_NOMBRE_LOCALIDAD);
 
@@ -217,11 +224,11 @@ public class LocalidadResourceIntTest {
         restLocalidadMockMvc.perform(put("/api/localidads")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(localidad)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Localidad in the database
         List<Localidad> localidadList = localidadRepository.findAll();
-        assertThat(localidadList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(localidadList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

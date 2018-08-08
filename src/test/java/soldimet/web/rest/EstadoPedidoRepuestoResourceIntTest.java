@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class EstadoPedidoRepuestoResourceIntTest {
 
     @Autowired
     private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
+
+    
 
     @Autowired
     private EstadoPedidoRepuestoService estadoPedidoRepuestoService;
@@ -70,6 +74,7 @@ public class EstadoPedidoRepuestoResourceIntTest {
         this.restEstadoPedidoRepuestoMockMvc = MockMvcBuilders.standaloneSetup(estadoPedidoRepuestoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class EstadoPedidoRepuestoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoPedidoRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class EstadoPedidoRepuestoResourceIntTest {
             .andExpect(jsonPath("$.id").value(estadoPedidoRepuesto.getId().intValue()))
             .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEstadoPedidoRepuesto() throws Exception {
@@ -190,7 +195,9 @@ public class EstadoPedidoRepuestoResourceIntTest {
         int databaseSizeBeforeUpdate = estadoPedidoRepuestoRepository.findAll().size();
 
         // Update the estadoPedidoRepuesto
-        EstadoPedidoRepuesto updatedEstadoPedidoRepuesto = estadoPedidoRepuestoRepository.findOne(estadoPedidoRepuesto.getId());
+        EstadoPedidoRepuesto updatedEstadoPedidoRepuesto = estadoPedidoRepuestoRepository.findById(estadoPedidoRepuesto.getId()).get();
+        // Disconnect from session so that the updates on updatedEstadoPedidoRepuesto are not directly saved in db
+        em.detach(updatedEstadoPedidoRepuesto);
         updatedEstadoPedidoRepuesto
             .nombreEstado(UPDATED_NOMBRE_ESTADO);
 
@@ -217,11 +224,11 @@ public class EstadoPedidoRepuestoResourceIntTest {
         restEstadoPedidoRepuestoMockMvc.perform(put("/api/estado-pedido-repuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(estadoPedidoRepuesto)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EstadoPedidoRepuesto in the database
         List<EstadoPedidoRepuesto> estadoPedidoRepuestoList = estadoPedidoRepuestoRepository.findAll();
-        assertThat(estadoPedidoRepuestoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(estadoPedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

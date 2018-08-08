@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Cobranza Repuestos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-cobranza-repuesto" [routerLink]="['/', { outlets: { popup: ['cobranza-repuesto-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-cobranza-repuesto" [routerLink]="['/cobranza-repuesto/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Cobranza Repuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="cobranzaRepuestos">
         <table class="table table-striped">
@@ -24,33 +22,33 @@
             </thead>
             <tbody>
             <tr *ngFor="let cobranzaRepuesto of cobranzaRepuestos ;trackBy: trackId">
-                <td><a [routerLink]="['../cobranza-repuesto', cobranzaRepuesto.id ]">{{cobranzaRepuesto.id}}</a></td>
+                <td><a [routerLink]="['/cobranza-repuesto', cobranzaRepuesto.id, 'view' ]">{{cobranzaRepuesto.id}}</a></td>
                 <td>{{cobranzaRepuesto.valor}}</td>
                 <td>
                     <div *ngIf="cobranzaRepuesto.tipoRepuesto">
-                        <a [routerLink]="['../tipo-repuesto', cobranzaRepuesto.tipoRepuesto?.id ]" >{{cobranzaRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
+                        <a [routerLink]="['../tipo-repuesto', cobranzaRepuesto.tipoRepuesto?.id, 'view' ]" >{{cobranzaRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../cobranza-repuesto', cobranzaRepuesto.id ]"
+                                [routerLink]="['/cobranza-repuesto', cobranzaRepuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'cobranza-repuesto/'+ cobranzaRepuesto.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/cobranza-repuesto', cobranzaRepuesto.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'cobranza-repuesto/'+ cobranzaRepuesto.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

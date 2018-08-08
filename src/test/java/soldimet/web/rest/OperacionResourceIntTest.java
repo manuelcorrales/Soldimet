@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,6 +47,8 @@ public class OperacionResourceIntTest {
 
     @Autowired
     private OperacionRepository operacionRepository;
+
+    
 
     @Autowired
     private OperacionService operacionService;
@@ -72,6 +76,7 @@ public class OperacionResourceIntTest {
         this.restOperacionMockMvc = MockMvcBuilders.standaloneSetup(operacionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -170,6 +175,7 @@ public class OperacionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(operacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreOperacion").value(hasItem(DEFAULT_NOMBRE_OPERACION.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -184,7 +190,6 @@ public class OperacionResourceIntTest {
             .andExpect(jsonPath("$.id").value(operacion.getId().intValue()))
             .andExpect(jsonPath("$.nombreOperacion").value(DEFAULT_NOMBRE_OPERACION.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingOperacion() throws Exception {
@@ -202,7 +207,9 @@ public class OperacionResourceIntTest {
         int databaseSizeBeforeUpdate = operacionRepository.findAll().size();
 
         // Update the operacion
-        Operacion updatedOperacion = operacionRepository.findOne(operacion.getId());
+        Operacion updatedOperacion = operacionRepository.findById(operacion.getId()).get();
+        // Disconnect from session so that the updates on updatedOperacion are not directly saved in db
+        em.detach(updatedOperacion);
         updatedOperacion
             .nombreOperacion(UPDATED_NOMBRE_OPERACION);
 
@@ -229,11 +236,11 @@ public class OperacionResourceIntTest {
         restOperacionMockMvc.perform(put("/api/operacions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(operacion)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Operacion in the database
         List<Operacion> operacionList = operacionRepository.findAll();
-        assertThat(operacionList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(operacionList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

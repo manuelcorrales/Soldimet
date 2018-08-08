@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.SubCategoria;
 import soldimet.service.SubCategoriaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class SubCategoriaResource {
     public ResponseEntity<SubCategoria> createSubCategoria(@Valid @RequestBody SubCategoria subCategoria) throws URISyntaxException {
         log.debug("REST request to save SubCategoria : {}", subCategoria);
         if (subCategoria.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new subCategoria cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new subCategoria cannot already have an ID", ENTITY_NAME, "idexists");
         }
         SubCategoria result = subCategoriaService.save(subCategoria);
         return ResponseEntity.created(new URI("/api/sub-categorias/" + result.getId()))
@@ -68,7 +69,7 @@ public class SubCategoriaResource {
     public ResponseEntity<SubCategoria> updateSubCategoria(@Valid @RequestBody SubCategoria subCategoria) throws URISyntaxException {
         log.debug("REST request to update SubCategoria : {}", subCategoria);
         if (subCategoria.getId() == null) {
-            return createSubCategoria(subCategoria);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         SubCategoria result = subCategoriaService.save(subCategoria);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class SubCategoriaResource {
     public List<SubCategoria> getAllSubCategorias() {
         log.debug("REST request to get all SubCategorias");
         return subCategoriaService.findAll();
-        }
+    }
 
     /**
      * GET  /sub-categorias/:id : get the "id" subCategoria.
@@ -98,8 +99,8 @@ public class SubCategoriaResource {
     @Timed
     public ResponseEntity<SubCategoria> getSubCategoria(@PathVariable Long id) {
         log.debug("REST request to get SubCategoria : {}", id);
-        SubCategoria subCategoria = subCategoriaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(subCategoria));
+        Optional<SubCategoria> subCategoria = subCategoriaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(subCategoria);
     }
 
     /**

@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.CobranzaOperacion;
 import soldimet.service.CobranzaOperacionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class CobranzaOperacionResource {
     public ResponseEntity<CobranzaOperacion> createCobranzaOperacion(@Valid @RequestBody CobranzaOperacion cobranzaOperacion) throws URISyntaxException {
         log.debug("REST request to save CobranzaOperacion : {}", cobranzaOperacion);
         if (cobranzaOperacion.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new cobranzaOperacion cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new cobranzaOperacion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CobranzaOperacion result = cobranzaOperacionService.save(cobranzaOperacion);
         return ResponseEntity.created(new URI("/api/cobranza-operacions/" + result.getId()))
@@ -68,7 +69,7 @@ public class CobranzaOperacionResource {
     public ResponseEntity<CobranzaOperacion> updateCobranzaOperacion(@Valid @RequestBody CobranzaOperacion cobranzaOperacion) throws URISyntaxException {
         log.debug("REST request to update CobranzaOperacion : {}", cobranzaOperacion);
         if (cobranzaOperacion.getId() == null) {
-            return createCobranzaOperacion(cobranzaOperacion);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CobranzaOperacion result = cobranzaOperacionService.save(cobranzaOperacion);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class CobranzaOperacionResource {
     public List<CobranzaOperacion> getAllCobranzaOperacions() {
         log.debug("REST request to get all CobranzaOperacions");
         return cobranzaOperacionService.findAll();
-        }
+    }
 
     /**
      * GET  /cobranza-operacions/:id : get the "id" cobranzaOperacion.
@@ -98,8 +99,8 @@ public class CobranzaOperacionResource {
     @Timed
     public ResponseEntity<CobranzaOperacion> getCobranzaOperacion(@PathVariable Long id) {
         log.debug("REST request to get CobranzaOperacion : {}", id);
-        CobranzaOperacion cobranzaOperacion = cobranzaOperacionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(cobranzaOperacion));
+        Optional<CobranzaOperacion> cobranzaOperacion = cobranzaOperacionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(cobranzaOperacion);
     }
 
     /**

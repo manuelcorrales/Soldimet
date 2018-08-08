@@ -15,7 +15,6 @@ import { TipoParteMotorService } from './tipo-parte-motor.service';
     templateUrl: './tipo-parte-motor-dialog.component.html'
 })
 export class TipoParteMotorDialogComponent implements OnInit {
-
     tipoParteMotor: TipoParteMotor;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class TipoParteMotorDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private tipoParteMotorService: TipoParteMotorService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class TipoParteMotorDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.tipoParteMotor.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.tipoParteMotorService.update(this.tipoParteMotor));
+            this.subscribeToSaveResponse(this.tipoParteMotorService.update(this.tipoParteMotor));
         } else {
-            this.subscribeToSaveResponse(
-                this.tipoParteMotorService.create(this.tipoParteMotor));
+            this.subscribeToSaveResponse(this.tipoParteMotorService.create(this.tipoParteMotor));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<TipoParteMotor>) {
-        result.subscribe((res: TipoParteMotor) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: TipoParteMotor) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: TipoParteMotor) {
-        this.eventManager.broadcast({ name: 'tipoParteMotorListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'tipoParteMotorListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class TipoParteMotorDialogComponent implements OnInit {
     template: ''
 })
 export class TipoParteMotorPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private tipoParteMotorPopupService: TipoParteMotorPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private tipoParteMotorPopupService: TipoParteMotorPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.tipoParteMotorPopupService
-                    .open(TipoParteMotorDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.tipoParteMotorPopupService.open(TipoParteMotorDialogComponent as Component, params['id']);
             } else {
-                this.tipoParteMotorPopupService
-                    .open(TipoParteMotorDialogComponent as Component);
+                this.tipoParteMotorPopupService.open(TipoParteMotorDialogComponent as Component);
             }
         });
     }

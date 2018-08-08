@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.PagoEfectivo;
 import soldimet.service.PagoEfectivoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class PagoEfectivoResource {
     public ResponseEntity<PagoEfectivo> createPagoEfectivo(@Valid @RequestBody PagoEfectivo pagoEfectivo) throws URISyntaxException {
         log.debug("REST request to save PagoEfectivo : {}", pagoEfectivo);
         if (pagoEfectivo.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new pagoEfectivo cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new pagoEfectivo cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PagoEfectivo result = pagoEfectivoService.save(pagoEfectivo);
         return ResponseEntity.created(new URI("/api/pago-efectivos/" + result.getId()))
@@ -68,7 +69,7 @@ public class PagoEfectivoResource {
     public ResponseEntity<PagoEfectivo> updatePagoEfectivo(@Valid @RequestBody PagoEfectivo pagoEfectivo) throws URISyntaxException {
         log.debug("REST request to update PagoEfectivo : {}", pagoEfectivo);
         if (pagoEfectivo.getId() == null) {
-            return createPagoEfectivo(pagoEfectivo);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         PagoEfectivo result = pagoEfectivoService.save(pagoEfectivo);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class PagoEfectivoResource {
     public List<PagoEfectivo> getAllPagoEfectivos() {
         log.debug("REST request to get all PagoEfectivos");
         return pagoEfectivoService.findAll();
-        }
+    }
 
     /**
      * GET  /pago-efectivos/:id : get the "id" pagoEfectivo.
@@ -98,8 +99,8 @@ public class PagoEfectivoResource {
     @Timed
     public ResponseEntity<PagoEfectivo> getPagoEfectivo(@PathVariable Long id) {
         log.debug("REST request to get PagoEfectivo : {}", id);
-        PagoEfectivo pagoEfectivo = pagoEfectivoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(pagoEfectivo));
+        Optional<PagoEfectivo> pagoEfectivo = pagoEfectivoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(pagoEfectivo);
     }
 
     /**

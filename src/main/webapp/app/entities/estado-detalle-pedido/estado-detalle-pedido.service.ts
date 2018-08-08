@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { EstadoDetallePedido } from './estado-detalle-pedido.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IEstadoDetallePedido } from 'app/shared/model/estado-detalle-pedido.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IEstadoDetallePedido>;
+type EntityArrayResponseType = HttpResponse<IEstadoDetallePedido[]>;
+
+@Injectable({ providedIn: 'root' })
 export class EstadoDetallePedidoService {
-
     private resourceUrl = SERVER_API_URL + 'api/estado-detalle-pedidos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(estadoDetallePedido: EstadoDetallePedido): Observable<EstadoDetallePedido> {
-        const copy = this.convert(estadoDetallePedido);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(estadoDetallePedido: IEstadoDetallePedido): Observable<EntityResponseType> {
+        return this.http.post<IEstadoDetallePedido>(this.resourceUrl, estadoDetallePedido, { observe: 'response' });
     }
 
-    update(estadoDetallePedido: EstadoDetallePedido): Observable<EstadoDetallePedido> {
-        const copy = this.convert(estadoDetallePedido);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(estadoDetallePedido: IEstadoDetallePedido): Observable<EntityResponseType> {
+        return this.http.put<IEstadoDetallePedido>(this.resourceUrl, estadoDetallePedido, { observe: 'response' });
     }
 
-    find(id: number): Observable<EstadoDetallePedido> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IEstadoDetallePedido>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IEstadoDetallePedido[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to EstadoDetallePedido.
-     */
-    private convertItemFromServer(json: any): EstadoDetallePedido {
-        const entity: EstadoDetallePedido = Object.assign(new EstadoDetallePedido(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a EstadoDetallePedido to a JSON which can be sent to the server.
-     */
-    private convert(estadoDetallePedido: EstadoDetallePedido): EstadoDetallePedido {
-        const copy: EstadoDetallePedido = Object.assign({}, estadoDetallePedido);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

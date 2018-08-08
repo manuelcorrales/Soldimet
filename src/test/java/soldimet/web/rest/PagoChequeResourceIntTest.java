@@ -28,6 +28,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -57,6 +59,8 @@ public class PagoChequeResourceIntTest {
     @Autowired
     private PagoChequeRepository pagoChequeRepository;
 
+    
+
     @Autowired
     private PagoChequeService pagoChequeService;
 
@@ -83,6 +87,7 @@ public class PagoChequeResourceIntTest {
         this.restPagoChequeMockMvc = MockMvcBuilders.standaloneSetup(pagoChequeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -226,6 +231,7 @@ public class PagoChequeResourceIntTest {
             .andExpect(jsonPath("$.[*].numeroCheque").value(hasItem(DEFAULT_NUMERO_CHEQUE.toString())))
             .andExpect(jsonPath("$.[*].numeroCuenta").value(hasItem(DEFAULT_NUMERO_CUENTA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -243,7 +249,6 @@ public class PagoChequeResourceIntTest {
             .andExpect(jsonPath("$.numeroCheque").value(DEFAULT_NUMERO_CHEQUE.toString()))
             .andExpect(jsonPath("$.numeroCuenta").value(DEFAULT_NUMERO_CUENTA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingPagoCheque() throws Exception {
@@ -261,7 +266,9 @@ public class PagoChequeResourceIntTest {
         int databaseSizeBeforeUpdate = pagoChequeRepository.findAll().size();
 
         // Update the pagoCheque
-        PagoCheque updatedPagoCheque = pagoChequeRepository.findOne(pagoCheque.getId());
+        PagoCheque updatedPagoCheque = pagoChequeRepository.findById(pagoCheque.getId()).get();
+        // Disconnect from session so that the updates on updatedPagoCheque are not directly saved in db
+        em.detach(updatedPagoCheque);
         updatedPagoCheque
             .fechaCobro(UPDATED_FECHA_COBRO)
             .fechaRecibo(UPDATED_FECHA_RECIBO)
@@ -294,11 +301,11 @@ public class PagoChequeResourceIntTest {
         restPagoChequeMockMvc.perform(put("/api/pago-cheques")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(pagoCheque)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the PagoCheque in the database
         List<PagoCheque> pagoChequeList = pagoChequeRepository.findAll();
-        assertThat(pagoChequeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(pagoChequeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -22,7 +22,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './movimiento-dialog.component.html'
 })
 export class MovimientoDialogComponent implements OnInit {
-
     movimiento: Movimiento;
     isSaving: boolean;
 
@@ -50,23 +49,46 @@ export class MovimientoDialogComponent implements OnInit {
         private personaService: PersonaService,
         private subCategoriaService: SubCategoriaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.estadoMovimientoService.query()
-            .subscribe((res: ResponseWrapper) => { this.estadomovimientos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.formaDePagoService.query()
-            .subscribe((res: ResponseWrapper) => { this.formadepagos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.tipoMovimientoService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipomovimientos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.empleadoService.query()
-            .subscribe((res: ResponseWrapper) => { this.empleados = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.personaService.query()
-            .subscribe((res: ResponseWrapper) => { this.personas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.subCategoriaService.query()
-            .subscribe((res: ResponseWrapper) => { this.subcategorias = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.estadoMovimientoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.estadomovimientos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.formaDePagoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.formadepagos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.tipoMovimientoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tipomovimientos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.empleadoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.empleados = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.personaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.personas = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.subCategoriaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.subcategorias = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -76,21 +98,18 @@ export class MovimientoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.movimiento.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.movimientoService.update(this.movimiento));
+            this.subscribeToSaveResponse(this.movimientoService.update(this.movimiento));
         } else {
-            this.subscribeToSaveResponse(
-                this.movimientoService.create(this.movimiento));
+            this.subscribeToSaveResponse(this.movimientoService.create(this.movimiento));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Movimiento>) {
-        result.subscribe((res: Movimiento) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Movimiento) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Movimiento) {
-        this.eventManager.broadcast({ name: 'movimientoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'movimientoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -133,22 +152,16 @@ export class MovimientoDialogComponent implements OnInit {
     template: ''
 })
 export class MovimientoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private movimientoPopupService: MovimientoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private movimientoPopupService: MovimientoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.movimientoPopupService
-                    .open(MovimientoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.movimientoPopupService.open(MovimientoDialogComponent as Component, params['id']);
             } else {
-                this.movimientoPopupService
-                    .open(MovimientoDialogComponent as Component);
+                this.movimientoPopupService.open(MovimientoDialogComponent as Component);
             }
         });
     }

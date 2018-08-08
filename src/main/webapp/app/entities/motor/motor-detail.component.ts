@@ -1,53 +1,24 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager } from 'ng-jhipster';
 
-import { Motor } from './motor.model';
-import { MotorService } from './motor.service';
+import { IMotor } from 'app/shared/model/motor.model';
 
 @Component({
     selector: 'jhi-motor-detail',
     templateUrl: './motor-detail.component.html'
 })
-export class MotorDetailComponent implements OnInit, OnDestroy {
+export class MotorDetailComponent implements OnInit {
+    motor: IMotor;
 
-    motor: Motor;
-    private subscription: Subscription;
-    private eventSubscriber: Subscription;
-
-    constructor(
-        private eventManager: JhiEventManager,
-        private motorService: MotorService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
-        });
-        this.registerChangeInMotors();
-    }
-
-    load(id) {
-        this.motorService.find(id).subscribe((motor) => {
+        this.activatedRoute.data.subscribe(({ motor }) => {
             this.motor = motor;
         });
     }
+
     previousState() {
         window.history.back();
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-
-    registerChangeInMotors() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'motorListModification',
-            (response) => this.load(this.motor.id)
-        );
     }
 }

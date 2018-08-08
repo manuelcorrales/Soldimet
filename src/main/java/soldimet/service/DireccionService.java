@@ -4,11 +4,13 @@ import soldimet.domain.Direccion;
 import soldimet.repository.DireccionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing Direccion.
  */
@@ -31,14 +33,13 @@ public class DireccionService {
      * @return the persisted entity
      */
     public Direccion save(Direccion direccion) {
-        log.debug("Request to save Direccion : {}", direccion);
-        return direccionRepository.save(direccion);
+        log.debug("Request to save Direccion : {}", direccion);        return direccionRepository.save(direccion);
     }
 
     /**
-     *  Get all the direccions.
+     * Get all the direccions.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Direccion> findAll() {
@@ -46,25 +47,26 @@ public class DireccionService {
         return direccionRepository.findAll();
     }
 
+
     /**
-     *  Get one direccion by id.
+     * Get one direccion by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Direccion findOne(Long id) {
+    public Optional<Direccion> findOne(Long id) {
         log.debug("Request to get Direccion : {}", id);
-        return direccionRepository.findOne(id);
+        return direccionRepository.findById(id);
     }
 
     /**
-     *  Delete the  direccion by id.
+     * Delete the direccion by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Direccion : {}", id);
-        direccionRepository.delete(id);
+        direccionRepository.deleteById(id);
     }
 }

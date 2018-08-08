@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,6 +49,8 @@ public class DetallePresupuestoResourceIntTest {
 
     @Autowired
     private DetallePresupuestoRepository detallePresupuestoRepository;
+
+    
 
     @Autowired
     private DetallePresupuestoService detallePresupuestoService;
@@ -74,6 +78,7 @@ public class DetallePresupuestoResourceIntTest {
         this.restDetallePresupuestoMockMvc = MockMvcBuilders.standaloneSetup(detallePresupuestoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -182,6 +187,7 @@ public class DetallePresupuestoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(detallePresupuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].importe").value(hasItem(DEFAULT_IMPORTE.doubleValue())));
     }
+    
 
     @Test
     @Transactional
@@ -196,7 +202,6 @@ public class DetallePresupuestoResourceIntTest {
             .andExpect(jsonPath("$.id").value(detallePresupuesto.getId().intValue()))
             .andExpect(jsonPath("$.importe").value(DEFAULT_IMPORTE.doubleValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingDetallePresupuesto() throws Exception {
@@ -214,7 +219,9 @@ public class DetallePresupuestoResourceIntTest {
         int databaseSizeBeforeUpdate = detallePresupuestoRepository.findAll().size();
 
         // Update the detallePresupuesto
-        DetallePresupuesto updatedDetallePresupuesto = detallePresupuestoRepository.findOne(detallePresupuesto.getId());
+        DetallePresupuesto updatedDetallePresupuesto = detallePresupuestoRepository.findById(detallePresupuesto.getId()).get();
+        // Disconnect from session so that the updates on updatedDetallePresupuesto are not directly saved in db
+        em.detach(updatedDetallePresupuesto);
         updatedDetallePresupuesto
             .importe(UPDATED_IMPORTE);
 
@@ -241,11 +248,11 @@ public class DetallePresupuestoResourceIntTest {
         restDetallePresupuestoMockMvc.perform(put("/api/detalle-presupuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(detallePresupuesto)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the DetallePresupuesto in the database
         List<DetallePresupuesto> detallePresupuestoList = detallePresupuestoRepository.findAll();
-        assertThat(detallePresupuestoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(detallePresupuestoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

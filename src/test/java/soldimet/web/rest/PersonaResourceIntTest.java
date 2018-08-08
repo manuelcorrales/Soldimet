@@ -5,6 +5,7 @@ import soldimet.SoldimetApp;
 import soldimet.domain.Persona;
 import soldimet.domain.Direccion;
 import soldimet.domain.EstadoPersona;
+import soldimet.domain.User;
 import soldimet.repository.PersonaRepository;
 import soldimet.service.PersonaService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -28,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,6 +53,8 @@ public class PersonaResourceIntTest {
 
     @Autowired
     private PersonaRepository personaRepository;
+
+    
 
     @Autowired
     private PersonaService personaService;
@@ -80,6 +85,7 @@ public class PersonaResourceIntTest {
         this.restPersonaMockMvc = MockMvcBuilders.standaloneSetup(personaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -199,6 +205,7 @@ public class PersonaResourceIntTest {
             .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE.toString())))
             .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -293,6 +300,62 @@ public class PersonaResourceIntTest {
         defaultPersonaShouldNotBeFound("numeroTelefono.specified=false");
     }
 
+    @Test
+    @Transactional
+    public void getAllPersonasByDireccionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Direccion direccion = DireccionResourceIntTest.createEntity(em);
+        em.persist(direccion);
+        em.flush();
+        persona.setDireccion(direccion);
+        personaRepository.saveAndFlush(persona);
+        Long direccionId = direccion.getId();
+
+        // Get all the personaList where direccion equals to direccionId
+        defaultPersonaShouldBeFound("direccionId.equals=" + direccionId);
+
+        // Get all the personaList where direccion equals to direccionId + 1
+        defaultPersonaShouldNotBeFound("direccionId.equals=" + (direccionId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllPersonasByEstadoPersonaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        EstadoPersona estadoPersona = EstadoPersonaResourceIntTest.createEntity(em);
+        em.persist(estadoPersona);
+        em.flush();
+        persona.setEstadoPersona(estadoPersona);
+        personaRepository.saveAndFlush(persona);
+        Long estadoPersonaId = estadoPersona.getId();
+
+        // Get all the personaList where estadoPersona equals to estadoPersonaId
+        defaultPersonaShouldBeFound("estadoPersonaId.equals=" + estadoPersonaId);
+
+        // Get all the personaList where estadoPersona equals to estadoPersonaId + 1
+        defaultPersonaShouldNotBeFound("estadoPersonaId.equals=" + (estadoPersonaId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllPersonasByUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        User user = UserResourceIntTest.createEntity(em);
+        em.persist(user);
+        em.flush();
+        persona.setUser(user);
+        personaRepository.saveAndFlush(persona);
+        Long userId = user.getId();
+
+        // Get all the personaList where user equals to userId
+        defaultPersonaShouldBeFound("userId.equals=" + userId);
+
+        // Get all the personaList where user equals to userId + 1
+        defaultPersonaShouldNotBeFound("userId.equals=" + (userId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -316,7 +379,6 @@ public class PersonaResourceIntTest {
             .andExpect(jsonPath("$").isEmpty());
     }
 
-
     @Test
     @Transactional
     public void getNonExistingPersona() throws Exception {
@@ -334,7 +396,9 @@ public class PersonaResourceIntTest {
         int databaseSizeBeforeUpdate = personaRepository.findAll().size();
 
         // Update the persona
-        Persona updatedPersona = personaRepository.findOne(persona.getId());
+        Persona updatedPersona = personaRepository.findById(persona.getId()).get();
+        // Disconnect from session so that the updates on updatedPersona are not directly saved in db
+        em.detach(updatedPersona);
         updatedPersona
             .nombre(UPDATED_NOMBRE)
             .numeroTelefono(UPDATED_NUMERO_TELEFONO);
@@ -363,11 +427,11 @@ public class PersonaResourceIntTest {
         restPersonaMockMvc.perform(put("/api/personas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(persona)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Persona in the database
         List<Persona> personaList = personaRepository.findAll();
-        assertThat(personaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

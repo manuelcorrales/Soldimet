@@ -1,13 +1,12 @@
 package soldimet.repository;
 
 import soldimet.domain.Marca;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the Marca entity.
+ * Spring Data  repository for the Marca entity.
  */
 @SuppressWarnings("unused")
 @Repository

@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class FormaDePagoResourceIntTest {
 
     @Autowired
     private FormaDePagoRepository formaDePagoRepository;
+
+    
 
     @Autowired
     private FormaDePagoService formaDePagoService;
@@ -70,6 +74,7 @@ public class FormaDePagoResourceIntTest {
         this.restFormaDePagoMockMvc = MockMvcBuilders.standaloneSetup(formaDePagoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class FormaDePagoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(formaDePago.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreFormaDePago").value(hasItem(DEFAULT_NOMBRE_FORMA_DE_PAGO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class FormaDePagoResourceIntTest {
             .andExpect(jsonPath("$.id").value(formaDePago.getId().intValue()))
             .andExpect(jsonPath("$.nombreFormaDePago").value(DEFAULT_NOMBRE_FORMA_DE_PAGO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingFormaDePago() throws Exception {
@@ -190,7 +195,9 @@ public class FormaDePagoResourceIntTest {
         int databaseSizeBeforeUpdate = formaDePagoRepository.findAll().size();
 
         // Update the formaDePago
-        FormaDePago updatedFormaDePago = formaDePagoRepository.findOne(formaDePago.getId());
+        FormaDePago updatedFormaDePago = formaDePagoRepository.findById(formaDePago.getId()).get();
+        // Disconnect from session so that the updates on updatedFormaDePago are not directly saved in db
+        em.detach(updatedFormaDePago);
         updatedFormaDePago
             .nombreFormaDePago(UPDATED_NOMBRE_FORMA_DE_PAGO);
 
@@ -217,11 +224,11 @@ public class FormaDePagoResourceIntTest {
         restFormaDePagoMockMvc.perform(put("/api/forma-de-pagos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(formaDePago)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the FormaDePago in the database
         List<FormaDePago> formaDePagoList = formaDePagoRepository.findAll();
-        assertThat(formaDePagoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(formaDePagoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

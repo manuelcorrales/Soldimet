@@ -1,83 +1,74 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { map } from 'rxjs/operators';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IPagoCheque } from 'app/shared/model/pago-cheque.model';
 
-import { PagoCheque } from './pago-cheque.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+type EntityResponseType = HttpResponse<IPagoCheque>;
+type EntityArrayResponseType = HttpResponse<IPagoCheque[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PagoChequeService {
-
     private resourceUrl = SERVER_API_URL + 'api/pago-cheques';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient) {}
 
-    create(pagoCheque: PagoCheque): Observable<PagoCheque> {
-        const copy = this.convert(pagoCheque);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(pagoCheque: IPagoCheque): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(pagoCheque);
+        return this.http
+            .post<IPagoCheque>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(pagoCheque: PagoCheque): Observable<PagoCheque> {
-        const copy = this.convert(pagoCheque);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(pagoCheque: IPagoCheque): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(pagoCheque);
+        return this.http
+            .put<IPagoCheque>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<PagoCheque> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<IPagoCheque>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http
+            .get<IPagoCheque[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to PagoCheque.
-     */
-    private convertItemFromServer(json: any): PagoCheque {
-        const entity: PagoCheque = Object.assign(new PagoCheque(), json);
-        entity.fechaCobro = this.dateUtils
-            .convertLocalDateFromServer(json.fechaCobro);
-        entity.fechaRecibo = this.dateUtils
-            .convertLocalDateFromServer(json.fechaRecibo);
-        return entity;
-    }
-
-    /**
-     * Convert a PagoCheque to a JSON which can be sent to the server.
-     */
-    private convert(pagoCheque: PagoCheque): PagoCheque {
-        const copy: PagoCheque = Object.assign({}, pagoCheque);
-        copy.fechaCobro = this.dateUtils
-            .convertLocalDateToServer(pagoCheque.fechaCobro);
-        copy.fechaRecibo = this.dateUtils
-            .convertLocalDateToServer(pagoCheque.fechaRecibo);
+    private convertDateFromClient(pagoCheque: IPagoCheque): IPagoCheque {
+        const copy: IPagoCheque = Object.assign({}, pagoCheque, {
+            fechaCobro: pagoCheque.fechaCobro != null && pagoCheque.fechaCobro.isValid() ? pagoCheque.fechaCobro.format(DATE_FORMAT) : null,
+            fechaRecibo:
+                pagoCheque.fechaRecibo != null && pagoCheque.fechaRecibo.isValid() ? pagoCheque.fechaRecibo.format(DATE_FORMAT) : null
+        });
         return copy;
+    }
+
+    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        res.body.fechaCobro = res.body.fechaCobro != null ? moment(res.body.fechaCobro) : null;
+        res.body.fechaRecibo = res.body.fechaRecibo != null ? moment(res.body.fechaRecibo) : null;
+        return res;
+    }
+
+    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        res.body.forEach((pagoCheque: IPagoCheque) => {
+            pagoCheque.fechaCobro = pagoCheque.fechaCobro != null ? moment(pagoCheque.fechaCobro) : null;
+            pagoCheque.fechaRecibo = pagoCheque.fechaRecibo != null ? moment(pagoCheque.fechaRecibo) : null;
+        });
+        return res;
     }
 }

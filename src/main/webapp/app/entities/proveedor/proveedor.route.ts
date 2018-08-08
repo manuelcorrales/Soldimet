@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Proveedor } from 'app/shared/model/proveedor.model';
+import { ProveedorService } from './proveedor.service';
 import { ProveedorComponent } from './proveedor.component';
 import { ProveedorDetailComponent } from './proveedor-detail.component';
-import { ProveedorPopupComponent } from './proveedor-dialog.component';
+import { ProveedorUpdateComponent } from './proveedor-update.component';
 import { ProveedorDeletePopupComponent } from './proveedor-delete-dialog.component';
+import { IProveedor } from 'app/shared/model/proveedor.model';
 
-@Injectable()
-export class ProveedorResolvePagingParams implements Resolve<any> {
-
-    constructor(private paginationUtil: JhiPaginationUtil) {}
+@Injectable({ providedIn: 'root' })
+export class ProveedorResolve implements Resolve<IProveedor> {
+    constructor(private service: ProveedorService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
-        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
-        return {
-            page: this.paginationUtil.parsePage(page),
-            predicate: this.paginationUtil.parsePredicate(sort),
-            ascending: this.paginationUtil.parseAscending(sort)
-      };
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((proveedor: HttpResponse<Proveedor>) => proveedor.body));
+        }
+        return of(new Proveedor());
     }
 }
 
@@ -30,16 +31,45 @@ export const proveedorRoute: Routes = [
         path: 'proveedor',
         component: ProveedorComponent,
         resolve: {
-            'pagingParams': ProveedorResolvePagingParams
+            pagingParams: JhiResolvePagingParams
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            defaultSort: 'id,asc',
+            pageTitle: 'Proveedors'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'proveedor/:id/view',
+        component: ProveedorDetailComponent,
+        resolve: {
+            proveedor: ProveedorResolve
         },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Proveedors'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'proveedor/:id',
-        component: ProveedorDetailComponent,
+    },
+    {
+        path: 'proveedor/new',
+        component: ProveedorUpdateComponent,
+        resolve: {
+            proveedor: ProveedorResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Proveedors'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'proveedor/:id/edit',
+        component: ProveedorUpdateComponent,
+        resolve: {
+            proveedor: ProveedorResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Proveedors'
@@ -50,28 +80,11 @@ export const proveedorRoute: Routes = [
 
 export const proveedorPopupRoute: Routes = [
     {
-        path: 'proveedor-new',
-        component: ProveedorPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Proveedors'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'proveedor/:id/edit',
-        component: ProveedorPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Proveedors'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'proveedor/:id/delete',
         component: ProveedorDeletePopupComponent,
+        resolve: {
+            proveedor: ProveedorResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Proveedors'

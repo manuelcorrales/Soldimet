@@ -15,7 +15,6 @@ import { TipoMovimientoService } from './tipo-movimiento.service';
     templateUrl: './tipo-movimiento-dialog.component.html'
 })
 export class TipoMovimientoDialogComponent implements OnInit {
-
     tipoMovimiento: TipoMovimiento;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class TipoMovimientoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private tipoMovimientoService: TipoMovimientoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class TipoMovimientoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.tipoMovimiento.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.tipoMovimientoService.update(this.tipoMovimiento));
+            this.subscribeToSaveResponse(this.tipoMovimientoService.update(this.tipoMovimiento));
         } else {
-            this.subscribeToSaveResponse(
-                this.tipoMovimientoService.create(this.tipoMovimiento));
+            this.subscribeToSaveResponse(this.tipoMovimientoService.create(this.tipoMovimiento));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<TipoMovimiento>) {
-        result.subscribe((res: TipoMovimiento) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: TipoMovimiento) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: TipoMovimiento) {
-        this.eventManager.broadcast({ name: 'tipoMovimientoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'tipoMovimientoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class TipoMovimientoDialogComponent implements OnInit {
     template: ''
 })
 export class TipoMovimientoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private tipoMovimientoPopupService: TipoMovimientoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private tipoMovimientoPopupService: TipoMovimientoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.tipoMovimientoPopupService
-                    .open(TipoMovimientoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.tipoMovimientoPopupService.open(TipoMovimientoDialogComponent as Component, params['id']);
             } else {
-                this.tipoMovimientoPopupService
-                    .open(TipoMovimientoDialogComponent as Component);
+                this.tipoMovimientoPopupService.open(TipoMovimientoDialogComponent as Component);
             }
         });
     }

@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Marcas</span>
-        <button class="btn btn-primary float-right jh-create-entity create-marca" [routerLink]="['/', { outlets: { popup: ['marca-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-marca" [routerLink]="['/marca/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Marca
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="marcas">
         <table class="table table-striped">
@@ -23,28 +21,28 @@
             </thead>
             <tbody>
             <tr *ngFor="let marca of marcas ;trackBy: trackId">
-                <td><a [routerLink]="['../marca', marca.id ]">{{marca.id}}</a></td>
+                <td><a [routerLink]="['/marca', marca.id, 'view' ]">{{marca.id}}</a></td>
                 <td>{{marca.nombreMarca}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../marca', marca.id ]"
+                                [routerLink]="['/marca', marca.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'marca/'+ marca.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/marca', marca.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'marca/'+ marca.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

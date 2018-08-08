@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Empleado;
 import soldimet.service.EmpleadoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EmpleadoResource {
     public ResponseEntity<Empleado> createEmpleado(@Valid @RequestBody Empleado empleado) throws URISyntaxException {
         log.debug("REST request to save Empleado : {}", empleado);
         if (empleado.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new empleado cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new empleado cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Empleado result = empleadoService.save(empleado);
         return ResponseEntity.created(new URI("/api/empleados/" + result.getId()))
@@ -68,7 +69,7 @@ public class EmpleadoResource {
     public ResponseEntity<Empleado> updateEmpleado(@Valid @RequestBody Empleado empleado) throws URISyntaxException {
         log.debug("REST request to update Empleado : {}", empleado);
         if (empleado.getId() == null) {
-            return createEmpleado(empleado);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Empleado result = empleadoService.save(empleado);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EmpleadoResource {
     public List<Empleado> getAllEmpleados() {
         log.debug("REST request to get all Empleados");
         return empleadoService.findAll();
-        }
+    }
 
     /**
      * GET  /empleados/:id : get the "id" empleado.
@@ -98,8 +99,8 @@ public class EmpleadoResource {
     @Timed
     public ResponseEntity<Empleado> getEmpleado(@PathVariable Long id) {
         log.debug("REST request to get Empleado : {}", id);
-        Empleado empleado = empleadoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(empleado));
+        Optional<Empleado> empleado = empleadoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(empleado);
     }
 
     /**

@@ -4,11 +4,13 @@ import soldimet.domain.CategoriaPago;
 import soldimet.repository.CategoriaPagoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing CategoriaPago.
  */
@@ -31,14 +33,13 @@ public class CategoriaPagoService {
      * @return the persisted entity
      */
     public CategoriaPago save(CategoriaPago categoriaPago) {
-        log.debug("Request to save CategoriaPago : {}", categoriaPago);
-        return categoriaPagoRepository.save(categoriaPago);
+        log.debug("Request to save CategoriaPago : {}", categoriaPago);        return categoriaPagoRepository.save(categoriaPago);
     }
 
     /**
-     *  Get all the categoriaPagos.
+     * Get all the categoriaPagos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<CategoriaPago> findAll() {
@@ -46,25 +47,26 @@ public class CategoriaPagoService {
         return categoriaPagoRepository.findAll();
     }
 
+
     /**
-     *  Get one categoriaPago by id.
+     * Get one categoriaPago by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public CategoriaPago findOne(Long id) {
+    public Optional<CategoriaPago> findOne(Long id) {
         log.debug("Request to get CategoriaPago : {}", id);
-        return categoriaPagoRepository.findOne(id);
+        return categoriaPagoRepository.findById(id);
     }
 
     /**
-     *  Delete the  categoriaPago by id.
+     * Delete the categoriaPago by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete CategoriaPago : {}", id);
-        categoriaPagoRepository.delete(id);
+        categoriaPagoRepository.deleteById(id);
     }
 }

@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Operacion } from './operacion.model';
-import { OperacionPopupService } from './operacion-popup.service';
+import { IOperacion } from 'app/shared/model/operacion.model';
 import { OperacionService } from './operacion.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { OperacionService } from './operacion.service';
     templateUrl: './operacion-delete-dialog.component.html'
 })
 export class OperacionDeleteDialogComponent {
+    operacion: IOperacion;
 
-    operacion: Operacion;
-
-    constructor(
-        private operacionService: OperacionService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private operacionService: OperacionService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.operacionService.delete(id).subscribe((response) => {
+        this.operacionService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'operacionListModification',
                 content: 'Deleted an operacion'
@@ -43,22 +36,30 @@ export class OperacionDeleteDialogComponent {
     template: ''
 })
 export class OperacionDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private operacionPopupService: OperacionPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.operacionPopupService
-                .open(OperacionDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ operacion }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(OperacionDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.operacion = operacion;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

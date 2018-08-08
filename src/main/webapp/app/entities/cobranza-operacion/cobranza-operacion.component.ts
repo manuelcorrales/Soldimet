@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { CobranzaOperacion } from './cobranza-operacion.model';
+import { ICobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
+import { Principal } from 'app/core';
 import { CobranzaOperacionService } from './cobranza-operacion.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-cobranza-operacion',
     templateUrl: './cobranza-operacion.component.html'
 })
 export class CobranzaOperacionComponent implements OnInit, OnDestroy {
-cobranzaOperacions: CobranzaOperacion[];
+    cobranzaOperacions: ICobranzaOperacion[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ cobranzaOperacions: CobranzaOperacion[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.cobranzaOperacionService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.cobranzaOperacions = res.json;
+            (res: HttpResponse<ICobranzaOperacion[]>) => {
+                this.cobranzaOperacions = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInCobranzaOperacions();
@@ -45,14 +44,15 @@ cobranzaOperacions: CobranzaOperacion[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: CobranzaOperacion) {
+    trackId(index: number, item: ICobranzaOperacion) {
         return item.id;
     }
+
     registerChangeInCobranzaOperacions() {
-        this.eventSubscriber = this.eventManager.subscribe('cobranzaOperacionListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('cobranzaOperacionListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

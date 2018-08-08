@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,6 +43,8 @@ public class DetallePedidoResourceIntTest {
 
     @Autowired
     private DetallePedidoRepository detallePedidoRepository;
+
+    
 
     @Autowired
     private DetallePedidoService detallePedidoService;
@@ -68,6 +72,7 @@ public class DetallePedidoResourceIntTest {
         this.restDetallePedidoMockMvc = MockMvcBuilders.standaloneSetup(detallePedidoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -140,6 +145,7 @@ public class DetallePedidoResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(detallePedido.getId().intValue())));
     }
+    
 
     @Test
     @Transactional
@@ -153,7 +159,6 @@ public class DetallePedidoResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(detallePedido.getId().intValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingDetallePedido() throws Exception {
@@ -171,7 +176,9 @@ public class DetallePedidoResourceIntTest {
         int databaseSizeBeforeUpdate = detallePedidoRepository.findAll().size();
 
         // Update the detallePedido
-        DetallePedido updatedDetallePedido = detallePedidoRepository.findOne(detallePedido.getId());
+        DetallePedido updatedDetallePedido = detallePedidoRepository.findById(detallePedido.getId()).get();
+        // Disconnect from session so that the updates on updatedDetallePedido are not directly saved in db
+        em.detach(updatedDetallePedido);
 
         restDetallePedidoMockMvc.perform(put("/api/detalle-pedidos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -195,11 +202,11 @@ public class DetallePedidoResourceIntTest {
         restDetallePedidoMockMvc.perform(put("/api/detalle-pedidos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(detallePedido)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the DetallePedido in the database
         List<DetallePedido> detallePedidoList = detallePedidoRepository.findAll();
-        assertThat(detallePedidoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(detallePedidoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

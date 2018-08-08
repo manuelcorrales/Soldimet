@@ -1,9 +1,11 @@
 package soldimet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -241,7 +243,7 @@ public class Movimiento implements Serializable {
             "id=" + getId() +
             ", fecha='" + getFecha() + "'" +
             ", hora='" + getHora() + "'" +
-            ", importe='" + getImporte() + "'" +
+            ", importe=" + getImporte() +
             "}";
     }
 }

@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { TarjetaDetailComponent } from '../../../../../../main/webapp/app/entities/tarjeta/tarjeta-detail.component';
-import { TarjetaService } from '../../../../../../main/webapp/app/entities/tarjeta/tarjeta.service';
-import { Tarjeta } from '../../../../../../main/webapp/app/entities/tarjeta/tarjeta.model';
+import { TarjetaDetailComponent } from 'app/entities/tarjeta/tarjeta-detail.component';
+import { Tarjeta } from 'app/shared/model/tarjeta.model';
 
 describe('Component Tests', () => {
-
     describe('Tarjeta Management Detail Component', () => {
         let comp: TarjetaDetailComponent;
         let fixture: ComponentFixture<TarjetaDetailComponent>;
-        let service: TarjetaService;
+        const route = ({ data: of({ tarjeta: new Tarjeta(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [TarjetaDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    TarjetaService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(TarjetaDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(TarjetaDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(TarjetaDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(TarjetaService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new Tarjeta(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.tarjeta).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.tarjeta).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

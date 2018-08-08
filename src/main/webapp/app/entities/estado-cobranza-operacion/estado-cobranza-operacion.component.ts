@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { EstadoCobranzaOperacion } from './estado-cobranza-operacion.model';
+import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
+import { Principal } from 'app/core';
 import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-estado-cobranza-operacion',
     templateUrl: './estado-cobranza-operacion.component.html'
 })
 export class EstadoCobranzaOperacionComponent implements OnInit, OnDestroy {
-estadoCobranzaOperacions: EstadoCobranzaOperacion[];
+    estadoCobranzaOperacions: IEstadoCobranzaOperacion[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ estadoCobranzaOperacions: EstadoCobranzaOperacion[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.estadoCobranzaOperacionService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.estadoCobranzaOperacions = res.json;
+            (res: HttpResponse<IEstadoCobranzaOperacion[]>) => {
+                this.estadoCobranzaOperacions = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInEstadoCobranzaOperacions();
@@ -45,14 +44,15 @@ estadoCobranzaOperacions: EstadoCobranzaOperacion[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: EstadoCobranzaOperacion) {
+    trackId(index: number, item: IEstadoCobranzaOperacion) {
         return item.id;
     }
+
     registerChangeInEstadoCobranzaOperacions() {
-        this.eventSubscriber = this.eventManager.subscribe('estadoCobranzaOperacionListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('estadoCobranzaOperacionListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

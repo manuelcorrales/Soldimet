@@ -15,7 +15,6 @@ import { EstadoDetallePedidoService } from './estado-detalle-pedido.service';
     templateUrl: './estado-detalle-pedido-dialog.component.html'
 })
 export class EstadoDetallePedidoDialogComponent implements OnInit {
-
     estadoDetallePedido: EstadoDetallePedido;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoDetallePedidoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoDetallePedidoService: EstadoDetallePedidoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoDetallePedidoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoDetallePedido.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoDetallePedidoService.update(this.estadoDetallePedido));
+            this.subscribeToSaveResponse(this.estadoDetallePedidoService.update(this.estadoDetallePedido));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoDetallePedidoService.create(this.estadoDetallePedido));
+            this.subscribeToSaveResponse(this.estadoDetallePedidoService.create(this.estadoDetallePedido));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoDetallePedido>) {
-        result.subscribe((res: EstadoDetallePedido) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoDetallePedido) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoDetallePedido) {
-        this.eventManager.broadcast({ name: 'estadoDetallePedidoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoDetallePedidoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoDetallePedidoDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoDetallePedidoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoDetallePedidoPopupService: EstadoDetallePedidoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoDetallePedidoPopupService: EstadoDetallePedidoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoDetallePedidoPopupService
-                    .open(EstadoDetallePedidoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoDetallePedidoPopupService.open(EstadoDetallePedidoDialogComponent as Component, params['id']);
             } else {
-                this.estadoDetallePedidoPopupService
-                    .open(EstadoDetallePedidoDialogComponent as Component);
+                this.estadoDetallePedidoPopupService.open(EstadoDetallePedidoDialogComponent as Component);
             }
         });
     }

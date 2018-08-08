@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Pago Efectivos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-pago-efectivo" [routerLink]="['/', { outlets: { popup: ['pago-efectivo-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-pago-efectivo" [routerLink]="['/pago-efectivo/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Pago Efectivo
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="pagoEfectivos">
         <table class="table table-striped">
@@ -23,32 +21,32 @@
             </thead>
             <tbody>
             <tr *ngFor="let pagoEfectivo of pagoEfectivos ;trackBy: trackId">
-                <td><a [routerLink]="['../pago-efectivo', pagoEfectivo.id ]">{{pagoEfectivo.id}}</a></td>
+                <td><a [routerLink]="['/pago-efectivo', pagoEfectivo.id, 'view' ]">{{pagoEfectivo.id}}</a></td>
                 <td>
                     <div *ngIf="pagoEfectivo.formaDePago">
-                        <a [routerLink]="['../forma-de-pago', pagoEfectivo.formaDePago?.id ]" >{{pagoEfectivo.formaDePago?.nombreFormaDePago}}</a>
+                        <a [routerLink]="['../forma-de-pago', pagoEfectivo.formaDePago?.id, 'view' ]" >{{pagoEfectivo.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../pago-efectivo', pagoEfectivo.id ]"
+                                [routerLink]="['/pago-efectivo', pagoEfectivo.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'pago-efectivo/'+ pagoEfectivo.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/pago-efectivo', pagoEfectivo.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'pago-efectivo/'+ pagoEfectivo.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

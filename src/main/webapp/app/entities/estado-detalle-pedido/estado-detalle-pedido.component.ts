@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { EstadoDetallePedido } from './estado-detalle-pedido.model';
+import { IEstadoDetallePedido } from 'app/shared/model/estado-detalle-pedido.model';
+import { Principal } from 'app/core';
 import { EstadoDetallePedidoService } from './estado-detalle-pedido.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-estado-detalle-pedido',
     templateUrl: './estado-detalle-pedido.component.html'
 })
 export class EstadoDetallePedidoComponent implements OnInit, OnDestroy {
-estadoDetallePedidos: EstadoDetallePedido[];
+    estadoDetallePedidos: IEstadoDetallePedido[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ estadoDetallePedidos: EstadoDetallePedido[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.estadoDetallePedidoService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.estadoDetallePedidos = res.json;
+            (res: HttpResponse<IEstadoDetallePedido[]>) => {
+                this.estadoDetallePedidos = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInEstadoDetallePedidos();
@@ -45,14 +44,15 @@ estadoDetallePedidos: EstadoDetallePedido[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: EstadoDetallePedido) {
+    trackId(index: number, item: IEstadoDetallePedido) {
         return item.id;
     }
+
     registerChangeInEstadoDetallePedidos() {
-        this.eventSubscriber = this.eventManager.subscribe('estadoDetallePedidoListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('estadoDetallePedidoListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

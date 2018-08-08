@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { EstadoArticulo } from './estado-articulo.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IEstadoArticulo>;
+type EntityArrayResponseType = HttpResponse<IEstadoArticulo[]>;
+
+@Injectable({ providedIn: 'root' })
 export class EstadoArticuloService {
-
     private resourceUrl = SERVER_API_URL + 'api/estado-articulos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(estadoArticulo: EstadoArticulo): Observable<EstadoArticulo> {
-        const copy = this.convert(estadoArticulo);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(estadoArticulo: IEstadoArticulo): Observable<EntityResponseType> {
+        return this.http.post<IEstadoArticulo>(this.resourceUrl, estadoArticulo, { observe: 'response' });
     }
 
-    update(estadoArticulo: EstadoArticulo): Observable<EstadoArticulo> {
-        const copy = this.convert(estadoArticulo);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(estadoArticulo: IEstadoArticulo): Observable<EntityResponseType> {
+        return this.http.put<IEstadoArticulo>(this.resourceUrl, estadoArticulo, { observe: 'response' });
     }
 
-    find(id: number): Observable<EstadoArticulo> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IEstadoArticulo>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IEstadoArticulo[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to EstadoArticulo.
-     */
-    private convertItemFromServer(json: any): EstadoArticulo {
-        const entity: EstadoArticulo = Object.assign(new EstadoArticulo(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a EstadoArticulo to a JSON which can be sent to the server.
-     */
-    private convert(estadoArticulo: EstadoArticulo): EstadoArticulo {
-        const copy: EstadoArticulo = Object.assign({}, estadoArticulo);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

@@ -1,51 +1,23 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    CajaService,
-    CajaPopupService,
     CajaComponent,
     CajaDetailComponent,
-    CajaDialogComponent,
-    CajaPopupComponent,
+    CajaUpdateComponent,
     CajaDeletePopupComponent,
     CajaDeleteDialogComponent,
     cajaRoute,
-    cajaPopupRoute,
-    CajaResolvePagingParams,
+    cajaPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...cajaRoute,
-    ...cajaPopupRoute,
-];
+const ENTITY_STATES = [...cajaRoute, ...cajaPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
-    declarations: [
-        CajaComponent,
-        CajaDetailComponent,
-        CajaDialogComponent,
-        CajaDeleteDialogComponent,
-        CajaPopupComponent,
-        CajaDeletePopupComponent,
-    ],
-    entryComponents: [
-        CajaComponent,
-        CajaDialogComponent,
-        CajaPopupComponent,
-        CajaDeleteDialogComponent,
-        CajaDeletePopupComponent,
-    ],
-    providers: [
-        CajaService,
-        CajaPopupService,
-        CajaResolvePagingParams,
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    declarations: [CajaComponent, CajaDetailComponent, CajaUpdateComponent, CajaDeleteDialogComponent, CajaDeletePopupComponent],
+    entryComponents: [CajaComponent, CajaUpdateComponent, CajaDeleteDialogComponent, CajaDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetCajaModule {}

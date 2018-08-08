@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import soldimet.web.rest.errors.InvalidPasswordException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,26 +81,24 @@ public class UserService {
             });
     }
 
-    public User createUser(String login, String password, String firstName, String lastName, String email,
-        String imageUrl, String langKey) {
+    public User registerUser(UserDTO userDTO, String password) {
 
         User newUser = new User();
-        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
-        Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setLogin(login);
+        newUser.setLogin(userDTO.getLogin());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setEmail(email);
-        newUser.setImageUrl(imageUrl);
-        newUser.setLangKey(langKey);
+        newUser.setFirstName(userDTO.getFirstName());
+        newUser.setLastName(userDTO.getLastName());
+        newUser.setEmail(userDTO.getEmail());
+        newUser.setImageUrl(userDTO.getImageUrl());
+        newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        authorities.add(authority);
+        Set<Authority> authorities = new HashSet<>();
+        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -119,10 +118,11 @@ public class UserService {
             user.setLangKey(userDTO.getLangKey());
         }
         if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = new HashSet<>();
-            userDTO.getAuthorities().forEach(
-                authority -> authorities.add(authorityRepository.findOne(authority))
-            );
+            Set<Authority> authorities = userDTO.getAuthorities().stream()
+                .map(authorityRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
@@ -145,14 +145,16 @@ public class UserService {
      * @param imageUrl image URL of user
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(user -> {
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setLangKey(langKey);
-            user.setImageUrl(imageUrl);
-            log.debug("Changed Information for User: {}", user);
-        });
+        SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .ifPresent(user -> {
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                user.setEmail(email);
+                user.setLangKey(langKey);
+                user.setImageUrl(imageUrl);
+                log.debug("Changed Information for User: {}", user);
+            });
     }
 
     /**
@@ -163,7 +165,9 @@ public class UserService {
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository
-            .findOne(userDTO.getId()))
+            .findById(userDTO.getId()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .map(user -> {
                 user.setLogin(userDTO.getLogin());
                 user.setFirstName(userDTO.getFirstName());
@@ -175,7 +179,9 @@ public class UserService {
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO.getAuthorities().stream()
-                    .map(authorityRepository::findOne)
+                    .map(authorityRepository::findById)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .forEach(managedAuthorities::add);
                 log.debug("Changed Information for User: {}", user);
                 return user;
@@ -190,12 +196,18 @@ public class UserService {
         });
     }
 
-    public void changePassword(String password) {
-        userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(user -> {
-            String encryptedPassword = passwordEncoder.encode(password);
-            user.setPassword(encryptedPassword);
-            log.debug("Changed password for User: {}", user);
-        });
+    public void changePassword(String currentClearTextPassword, String newPassword) {
+        SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .ifPresent(user -> {
+                String currentEncryptedPassword = user.getPassword();
+                if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
+                    throw new InvalidPasswordException();
+                }
+                String encryptedPassword = passwordEncoder.encode(newPassword);
+                user.setPassword(encryptedPassword);
+                log.debug("Changed password for User: {}", user);
+            });
     }
 
     @Transactional(readOnly = true)
@@ -209,13 +221,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities(Long id) {
+    public Optional<User> getUserWithAuthorities(Long id) {
         return userRepository.findOneWithAuthoritiesById(id);
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities() {
-        return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
+    public Optional<User> getUserWithAuthorities() {
+        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }
 
     /**

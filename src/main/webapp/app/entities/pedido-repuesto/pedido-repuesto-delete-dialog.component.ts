@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { PedidoRepuesto } from './pedido-repuesto.model';
-import { PedidoRepuestoPopupService } from './pedido-repuesto-popup.service';
+import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { PedidoRepuestoService } from './pedido-repuesto.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { PedidoRepuestoService } from './pedido-repuesto.service';
     templateUrl: './pedido-repuesto-delete-dialog.component.html'
 })
 export class PedidoRepuestoDeleteDialogComponent {
-
-    pedidoRepuesto: PedidoRepuesto;
+    pedidoRepuesto: IPedidoRepuesto;
 
     constructor(
         private pedidoRepuestoService: PedidoRepuestoService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.pedidoRepuestoService.delete(id).subscribe((response) => {
+        this.pedidoRepuestoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'pedidoRepuestoListModification',
                 content: 'Deleted an pedidoRepuesto'
@@ -43,22 +40,33 @@ export class PedidoRepuestoDeleteDialogComponent {
     template: ''
 })
 export class PedidoRepuestoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private pedidoRepuestoPopupService: PedidoRepuestoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.pedidoRepuestoPopupService
-                .open(PedidoRepuestoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ pedidoRepuesto }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(PedidoRepuestoDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.pedidoRepuesto = pedidoRepuesto;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

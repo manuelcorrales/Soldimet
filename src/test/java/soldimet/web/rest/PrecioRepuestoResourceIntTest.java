@@ -26,6 +26,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,6 +53,8 @@ public class PrecioRepuestoResourceIntTest {
 
     @Autowired
     private PrecioRepuestoRepository precioRepuestoRepository;
+
+    
 
     @Autowired
     private PrecioRepuestoService precioRepuestoService;
@@ -78,6 +82,7 @@ public class PrecioRepuestoResourceIntTest {
         this.restPrecioRepuestoMockMvc = MockMvcBuilders.standaloneSetup(precioRepuestoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -190,6 +195,7 @@ public class PrecioRepuestoResourceIntTest {
             .andExpect(jsonPath("$.[*].precioPrivado").value(hasItem(DEFAULT_PRECIO_PRIVADO.doubleValue())))
             .andExpect(jsonPath("$.[*].precioPublico").value(hasItem(DEFAULT_PRECIO_PUBLICO.doubleValue())));
     }
+    
 
     @Test
     @Transactional
@@ -206,7 +212,6 @@ public class PrecioRepuestoResourceIntTest {
             .andExpect(jsonPath("$.precioPrivado").value(DEFAULT_PRECIO_PRIVADO.doubleValue()))
             .andExpect(jsonPath("$.precioPublico").value(DEFAULT_PRECIO_PUBLICO.doubleValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingPrecioRepuesto() throws Exception {
@@ -224,7 +229,9 @@ public class PrecioRepuestoResourceIntTest {
         int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
 
         // Update the precioRepuesto
-        PrecioRepuesto updatedPrecioRepuesto = precioRepuestoRepository.findOne(precioRepuesto.getId());
+        PrecioRepuesto updatedPrecioRepuesto = precioRepuestoRepository.findById(precioRepuesto.getId()).get();
+        // Disconnect from session so that the updates on updatedPrecioRepuesto are not directly saved in db
+        em.detach(updatedPrecioRepuesto);
         updatedPrecioRepuesto
             .fecha(UPDATED_FECHA)
             .precioPrivado(UPDATED_PRECIO_PRIVADO)
@@ -255,11 +262,11 @@ public class PrecioRepuestoResourceIntTest {
         restPrecioRepuestoMockMvc.perform(put("/api/precio-repuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(precioRepuesto)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the PrecioRepuesto in the database
         List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
-        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

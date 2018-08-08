@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.TipoTarjeta;
 import soldimet.service.TipoTarjetaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class TipoTarjetaResource {
     public ResponseEntity<TipoTarjeta> createTipoTarjeta(@Valid @RequestBody TipoTarjeta tipoTarjeta) throws URISyntaxException {
         log.debug("REST request to save TipoTarjeta : {}", tipoTarjeta);
         if (tipoTarjeta.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoTarjeta cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tipoTarjeta cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoTarjeta result = tipoTarjetaService.save(tipoTarjeta);
         return ResponseEntity.created(new URI("/api/tipo-tarjetas/" + result.getId()))
@@ -68,7 +69,7 @@ public class TipoTarjetaResource {
     public ResponseEntity<TipoTarjeta> updateTipoTarjeta(@Valid @RequestBody TipoTarjeta tipoTarjeta) throws URISyntaxException {
         log.debug("REST request to update TipoTarjeta : {}", tipoTarjeta);
         if (tipoTarjeta.getId() == null) {
-            return createTipoTarjeta(tipoTarjeta);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TipoTarjeta result = tipoTarjetaService.save(tipoTarjeta);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class TipoTarjetaResource {
     public List<TipoTarjeta> getAllTipoTarjetas() {
         log.debug("REST request to get all TipoTarjetas");
         return tipoTarjetaService.findAll();
-        }
+    }
 
     /**
      * GET  /tipo-tarjetas/:id : get the "id" tipoTarjeta.
@@ -98,8 +99,8 @@ public class TipoTarjetaResource {
     @Timed
     public ResponseEntity<TipoTarjeta> getTipoTarjeta(@PathVariable Long id) {
         log.debug("REST request to get TipoTarjeta : {}", id);
-        TipoTarjeta tipoTarjeta = tipoTarjetaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoTarjeta));
+        Optional<TipoTarjeta> tipoTarjeta = tipoTarjetaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(tipoTarjeta);
     }
 
     /**

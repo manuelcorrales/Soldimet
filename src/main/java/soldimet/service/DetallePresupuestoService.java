@@ -4,11 +4,13 @@ import soldimet.domain.DetallePresupuesto;
 import soldimet.repository.DetallePresupuestoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing DetallePresupuesto.
  */
@@ -31,14 +33,13 @@ public class DetallePresupuestoService {
      * @return the persisted entity
      */
     public DetallePresupuesto save(DetallePresupuesto detallePresupuesto) {
-        log.debug("Request to save DetallePresupuesto : {}", detallePresupuesto);
-        return detallePresupuestoRepository.save(detallePresupuesto);
+        log.debug("Request to save DetallePresupuesto : {}", detallePresupuesto);        return detallePresupuestoRepository.save(detallePresupuesto);
     }
 
     /**
-     *  Get all the detallePresupuestos.
+     * Get all the detallePresupuestos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<DetallePresupuesto> findAll() {
@@ -46,25 +47,26 @@ public class DetallePresupuestoService {
         return detallePresupuestoRepository.findAll();
     }
 
+
     /**
-     *  Get one detallePresupuesto by id.
+     * Get one detallePresupuesto by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public DetallePresupuesto findOne(Long id) {
+    public Optional<DetallePresupuesto> findOne(Long id) {
         log.debug("Request to get DetallePresupuesto : {}", id);
-        return detallePresupuestoRepository.findOne(id);
+        return detallePresupuestoRepository.findById(id);
     }
 
     /**
-     *  Delete the  detallePresupuesto by id.
+     * Delete the detallePresupuesto by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete DetallePresupuesto : {}", id);
-        detallePresupuestoRepository.delete(id);
+        detallePresupuestoRepository.deleteById(id);
     }
 }

@@ -1,8 +1,10 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -106,7 +108,7 @@ public class MovimientoArticulo implements Serializable {
     public String toString() {
         return "MovimientoArticulo{" +
             "id=" + getId() +
-            ", cantidad='" + getCantidad() + "'" +
+            ", cantidad=" + getCantidad() +
             "}";
     }
 }

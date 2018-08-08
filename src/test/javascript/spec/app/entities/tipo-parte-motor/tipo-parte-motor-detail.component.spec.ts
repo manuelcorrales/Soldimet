@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { TipoParteMotorDetailComponent } from '../../../../../../main/webapp/app/entities/tipo-parte-motor/tipo-parte-motor-detail.component';
-import { TipoParteMotorService } from '../../../../../../main/webapp/app/entities/tipo-parte-motor/tipo-parte-motor.service';
-import { TipoParteMotor } from '../../../../../../main/webapp/app/entities/tipo-parte-motor/tipo-parte-motor.model';
+import { TipoParteMotorDetailComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor-detail.component';
+import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 
 describe('Component Tests', () => {
-
     describe('TipoParteMotor Management Detail Component', () => {
         let comp: TipoParteMotorDetailComponent;
         let fixture: ComponentFixture<TipoParteMotorDetailComponent>;
-        let service: TipoParteMotorService;
+        const route = ({ data: of({ tipoParteMotor: new TipoParteMotor(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [TipoParteMotorDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    TipoParteMotorService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(TipoParteMotorDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(TipoParteMotorDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(TipoParteMotorDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(TipoParteMotorService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new TipoParteMotor(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.tipoParteMotor).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.tipoParteMotor).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

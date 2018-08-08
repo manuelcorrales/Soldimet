@@ -1,13 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Motor } from 'app/shared/model/motor.model';
+import { MotorService } from './motor.service';
 import { MotorComponent } from './motor.component';
 import { MotorDetailComponent } from './motor-detail.component';
-import { MotorPopupComponent } from './motor-dialog.component';
+import { MotorUpdateComponent } from './motor-update.component';
 import { MotorDeletePopupComponent } from './motor-delete-dialog.component';
+import { IMotor } from 'app/shared/model/motor.model';
+
+@Injectable({ providedIn: 'root' })
+export class MotorResolve implements Resolve<IMotor> {
+    constructor(private service: MotorService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((motor: HttpResponse<Motor>) => motor.body));
+        }
+        return of(new Motor());
+    }
+}
 
 export const motorRoute: Routes = [
     {
@@ -18,9 +34,37 @@ export const motorRoute: Routes = [
             pageTitle: 'Motors'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'motor/:id',
+    },
+    {
+        path: 'motor/:id/view',
         component: MotorDetailComponent,
+        resolve: {
+            motor: MotorResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Motors'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'motor/new',
+        component: MotorUpdateComponent,
+        resolve: {
+            motor: MotorResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Motors'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'motor/:id/edit',
+        component: MotorUpdateComponent,
+        resolve: {
+            motor: MotorResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Motors'
@@ -31,28 +75,11 @@ export const motorRoute: Routes = [
 
 export const motorPopupRoute: Routes = [
     {
-        path: 'motor-new',
-        component: MotorPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Motors'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'motor/:id/edit',
-        component: MotorPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Motors'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'motor/:id/delete',
         component: MotorDeletePopupComponent,
+        resolve: {
+            motor: MotorResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Motors'

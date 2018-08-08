@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    EstadoPersonaService,
-    EstadoPersonaPopupService,
     EstadoPersonaComponent,
     EstadoPersonaDetailComponent,
-    EstadoPersonaDialogComponent,
-    EstadoPersonaPopupComponent,
+    EstadoPersonaUpdateComponent,
     EstadoPersonaDeletePopupComponent,
     EstadoPersonaDeleteDialogComponent,
     estadoPersonaRoute,
-    estadoPersonaPopupRoute,
+    estadoPersonaPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...estadoPersonaRoute,
-    ...estadoPersonaPopupRoute,
-];
+const ENTITY_STATES = [...estadoPersonaRoute, ...estadoPersonaPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EstadoPersonaComponent,
         EstadoPersonaDetailComponent,
-        EstadoPersonaDialogComponent,
+        EstadoPersonaUpdateComponent,
         EstadoPersonaDeleteDialogComponent,
-        EstadoPersonaPopupComponent,
-        EstadoPersonaDeletePopupComponent,
+        EstadoPersonaDeletePopupComponent
     ],
     entryComponents: [
         EstadoPersonaComponent,
-        EstadoPersonaDialogComponent,
-        EstadoPersonaPopupComponent,
+        EstadoPersonaUpdateComponent,
         EstadoPersonaDeleteDialogComponent,
-        EstadoPersonaDeletePopupComponent,
-    ],
-    providers: [
-        EstadoPersonaService,
-        EstadoPersonaPopupService,
+        EstadoPersonaDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

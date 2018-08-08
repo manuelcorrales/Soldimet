@@ -1,0 +1,87 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-persona-heading">Create or edit a Persona</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!persona.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="persona.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nombre">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" id="field_nombre"
+                        [(ngModel)]="persona.nombre" required minlength="3"/>
+                    <div [hidden]="!(editForm.controls.nombre?.dirty && editForm.controls.nombre?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nombre?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nombre?.errors?.minlength">
+                        This field is required to be at least 3 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_numeroTelefono">Numero Telefono</label>
+                    <input type="text" class="form-control" name="numeroTelefono" id="field_numeroTelefono"
+                        [(ngModel)]="persona.numeroTelefono" required minlength="5"/>
+                    <div [hidden]="!(editForm.controls.numeroTelefono?.dirty && editForm.controls.numeroTelefono?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.numeroTelefono?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.numeroTelefono?.errors?.minlength">
+                        This field is required to be at least 5 characters.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_direccion">Direccion</label>
+                    <select class="form-control" id="field_direccion" name="direccion" [(ngModel)]="persona.direccion" required>
+                        <option *ngIf="!editForm.value.direccion" [ngValue]="null" selected></option>
+                        <option [ngValue]="direccionOption.id === persona.direccion?.id ? persona.direccion : direccionOption" *ngFor="let direccionOption of direccions; trackBy: trackDireccionById">{{direccionOption.id}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.direccion?.dirty && editForm.controls.direccion?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.direccion?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_estadoPersona">Estado Persona</label>
+                    <select class="form-control" id="field_estadoPersona" name="estadoPersona" [(ngModel)]="persona.estadoPersona"  required>
+                        <option *ngIf="!editForm.value.estadoPersona" [ngValue]="null" selected></option>
+                        <option [ngValue]="estadoPersonaOption.id === persona.estadoPersona?.id ? persona.estadoPersona : estadoPersonaOption" *ngFor="let estadoPersonaOption of estadopersonas; trackBy: trackEstadoPersonaById">{{estadoPersonaOption.nombreEstado}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.estadoPersona?.dirty && editForm.controls.estadoPersona?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.estadoPersona?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="persona.user" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id === persona.user?.id ? persona.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

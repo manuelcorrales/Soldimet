@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { ListaPrecioDesdeHasta } from './lista-precio-desde-hasta.model';
-import { ListaPrecioDesdeHastaPopupService } from './lista-precio-desde-hasta-popup.service';
+import { IListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
 import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service
     templateUrl: './lista-precio-desde-hasta-delete-dialog.component.html'
 })
 export class ListaPrecioDesdeHastaDeleteDialogComponent {
-
-    listaPrecioDesdeHasta: ListaPrecioDesdeHasta;
+    listaPrecioDesdeHasta: IListaPrecioDesdeHasta;
 
     constructor(
         private listaPrecioDesdeHastaService: ListaPrecioDesdeHastaService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.listaPrecioDesdeHastaService.delete(id).subscribe((response) => {
+        this.listaPrecioDesdeHastaService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'listaPrecioDesdeHastaListModification',
                 content: 'Deleted an listaPrecioDesdeHasta'
@@ -43,22 +40,33 @@ export class ListaPrecioDesdeHastaDeleteDialogComponent {
     template: ''
 })
 export class ListaPrecioDesdeHastaDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private listaPrecioDesdeHastaPopupService: ListaPrecioDesdeHastaPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.listaPrecioDesdeHastaPopupService
-                .open(ListaPrecioDesdeHastaDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ listaPrecioDesdeHasta }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(ListaPrecioDesdeHastaDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.listaPrecioDesdeHasta = listaPrecioDesdeHasta;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

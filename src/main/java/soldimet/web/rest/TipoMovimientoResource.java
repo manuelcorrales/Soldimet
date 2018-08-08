@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.TipoMovimiento;
 import soldimet.service.TipoMovimientoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class TipoMovimientoResource {
     public ResponseEntity<TipoMovimiento> createTipoMovimiento(@Valid @RequestBody TipoMovimiento tipoMovimiento) throws URISyntaxException {
         log.debug("REST request to save TipoMovimiento : {}", tipoMovimiento);
         if (tipoMovimiento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoMovimiento cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tipoMovimiento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoMovimiento result = tipoMovimientoService.save(tipoMovimiento);
         return ResponseEntity.created(new URI("/api/tipo-movimientos/" + result.getId()))
@@ -68,7 +69,7 @@ public class TipoMovimientoResource {
     public ResponseEntity<TipoMovimiento> updateTipoMovimiento(@Valid @RequestBody TipoMovimiento tipoMovimiento) throws URISyntaxException {
         log.debug("REST request to update TipoMovimiento : {}", tipoMovimiento);
         if (tipoMovimiento.getId() == null) {
-            return createTipoMovimiento(tipoMovimiento);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TipoMovimiento result = tipoMovimientoService.save(tipoMovimiento);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class TipoMovimientoResource {
     public List<TipoMovimiento> getAllTipoMovimientos() {
         log.debug("REST request to get all TipoMovimientos");
         return tipoMovimientoService.findAll();
-        }
+    }
 
     /**
      * GET  /tipo-movimientos/:id : get the "id" tipoMovimiento.
@@ -98,8 +99,8 @@ public class TipoMovimientoResource {
     @Timed
     public ResponseEntity<TipoMovimiento> getTipoMovimiento(@PathVariable Long id) {
         log.debug("REST request to get TipoMovimiento : {}", id);
-        TipoMovimiento tipoMovimiento = tipoMovimientoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoMovimiento));
+        Optional<TipoMovimiento> tipoMovimiento = tipoMovimientoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(tipoMovimiento);
     }
 
     /**

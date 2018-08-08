@@ -19,7 +19,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './pago-tarjeta-dialog.component.html'
 })
 export class PagoTarjetaDialogComponent implements OnInit {
-
     pagoTarjeta: PagoTarjeta;
     isSaving: boolean;
 
@@ -37,28 +36,37 @@ export class PagoTarjetaDialogComponent implements OnInit {
         private tarjetaService: TarjetaService,
         private tipoTarjetaService: TipoTarjetaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.formaDePagoService
-            .query({filter: 'pagotarjeta-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.formaDePagoService.query({ filter: 'pagotarjeta-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.pagoTarjeta.formaDePago || !this.pagoTarjeta.formaDePago.id) {
                     this.formadepagos = res.json;
                 } else {
-                    this.formaDePagoService
-                        .find(this.pagoTarjeta.formaDePago.id)
-                        .subscribe((subRes: FormaDePago) => {
+                    this.formaDePagoService.find(this.pagoTarjeta.formaDePago.id).subscribe(
+                        (subRes: FormaDePago) => {
                             this.formadepagos = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
-        this.tarjetaService.query()
-            .subscribe((res: ResponseWrapper) => { this.tarjetas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.tipoTarjetaService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipotarjetas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.tarjetaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tarjetas = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.tipoTarjetaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tipotarjetas = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -68,21 +76,18 @@ export class PagoTarjetaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.pagoTarjeta.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.pagoTarjetaService.update(this.pagoTarjeta));
+            this.subscribeToSaveResponse(this.pagoTarjetaService.update(this.pagoTarjeta));
         } else {
-            this.subscribeToSaveResponse(
-                this.pagoTarjetaService.create(this.pagoTarjeta));
+            this.subscribeToSaveResponse(this.pagoTarjetaService.create(this.pagoTarjeta));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<PagoTarjeta>) {
-        result.subscribe((res: PagoTarjeta) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: PagoTarjeta) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: PagoTarjeta) {
-        this.eventManager.broadcast({ name: 'pagoTarjetaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'pagoTarjetaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -113,22 +118,16 @@ export class PagoTarjetaDialogComponent implements OnInit {
     template: ''
 })
 export class PagoTarjetaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private pagoTarjetaPopupService: PagoTarjetaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private pagoTarjetaPopupService: PagoTarjetaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.pagoTarjetaPopupService
-                    .open(PagoTarjetaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.pagoTarjetaPopupService.open(PagoTarjetaDialogComponent as Component, params['id']);
             } else {
-                this.pagoTarjetaPopupService
-                    .open(PagoTarjetaDialogComponent as Component);
+                this.pagoTarjetaPopupService.open(PagoTarjetaDialogComponent as Component);
             }
         });
     }

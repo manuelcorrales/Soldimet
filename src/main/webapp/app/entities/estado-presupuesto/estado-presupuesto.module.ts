@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    EstadoPresupuestoService,
-    EstadoPresupuestoPopupService,
     EstadoPresupuestoComponent,
     EstadoPresupuestoDetailComponent,
-    EstadoPresupuestoDialogComponent,
-    EstadoPresupuestoPopupComponent,
+    EstadoPresupuestoUpdateComponent,
     EstadoPresupuestoDeletePopupComponent,
     EstadoPresupuestoDeleteDialogComponent,
     estadoPresupuestoRoute,
-    estadoPresupuestoPopupRoute,
+    estadoPresupuestoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...estadoPresupuestoRoute,
-    ...estadoPresupuestoPopupRoute,
-];
+const ENTITY_STATES = [...estadoPresupuestoRoute, ...estadoPresupuestoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EstadoPresupuestoComponent,
         EstadoPresupuestoDetailComponent,
-        EstadoPresupuestoDialogComponent,
+        EstadoPresupuestoUpdateComponent,
         EstadoPresupuestoDeleteDialogComponent,
-        EstadoPresupuestoPopupComponent,
-        EstadoPresupuestoDeletePopupComponent,
+        EstadoPresupuestoDeletePopupComponent
     ],
     entryComponents: [
         EstadoPresupuestoComponent,
-        EstadoPresupuestoDialogComponent,
-        EstadoPresupuestoPopupComponent,
+        EstadoPresupuestoUpdateComponent,
         EstadoPresupuestoDeleteDialogComponent,
-        EstadoPresupuestoDeletePopupComponent,
-    ],
-    providers: [
-        EstadoPresupuestoService,
-        EstadoPresupuestoPopupService,
+        EstadoPresupuestoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

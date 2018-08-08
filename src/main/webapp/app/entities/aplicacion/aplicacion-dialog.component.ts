@@ -15,7 +15,6 @@ import { AplicacionService } from './aplicacion.service';
     templateUrl: './aplicacion-dialog.component.html'
 })
 export class AplicacionDialogComponent implements OnInit {
-
     aplicacion: Aplicacion;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class AplicacionDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private aplicacionService: AplicacionService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class AplicacionDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.aplicacion.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.aplicacionService.update(this.aplicacion));
+            this.subscribeToSaveResponse(this.aplicacionService.update(this.aplicacion));
         } else {
-            this.subscribeToSaveResponse(
-                this.aplicacionService.create(this.aplicacion));
+            this.subscribeToSaveResponse(this.aplicacionService.create(this.aplicacion));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Aplicacion>) {
-        result.subscribe((res: Aplicacion) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Aplicacion) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Aplicacion) {
-        this.eventManager.broadcast({ name: 'aplicacionListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'aplicacionListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class AplicacionDialogComponent implements OnInit {
     template: ''
 })
 export class AplicacionPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private aplicacionPopupService: AplicacionPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private aplicacionPopupService: AplicacionPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.aplicacionPopupService
-                    .open(AplicacionDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.aplicacionPopupService.open(AplicacionDialogComponent as Component, params['id']);
             } else {
-                this.aplicacionPopupService
-                    .open(AplicacionDialogComponent as Component);
+                this.aplicacionPopupService.open(AplicacionDialogComponent as Component);
             }
         });
     }

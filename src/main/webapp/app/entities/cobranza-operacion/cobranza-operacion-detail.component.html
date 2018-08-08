@@ -1,37 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="cobranzaOperacion">
+            <h2><span>Cobranza Operacion</span> {{cobranzaOperacion.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Cobranza Operacion</span></dt>
+                <dd>
+                    <span>{{cobranzaOperacion.cobranzaOperacion}}</span>
+                </dd>
+                <dt><span>Estado Cobranza Operacion</span></dt>
+                <dd>
+                    <div *ngIf="cobranzaOperacion.estadoCobranzaOperacion">
+                        <a [routerLink]="['/estado-cobranza-operacion', cobranzaOperacion.estadoCobranzaOperacion?.id, 'view']">{{cobranzaOperacion.estadoCobranzaOperacion?.nombreEstado}}</a>
+                    </div>
+                </dd>
+                <dt><span>Operacion</span></dt>
+                <dd>
+                    <div *ngIf="cobranzaOperacion.operacion">
+                        <a [routerLink]="['/operacion', cobranzaOperacion.operacion?.id, 'view']">{{cobranzaOperacion.operacion?.nombreOperacion}}</a>
+                    </div>
+                </dd>
+            </dl>
 
-<div *ngIf="cobranzaOperacion">
-    <h2><span>Cobranza Operacion</span> {{cobranzaOperacion.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span>Cobranza Operacion</span></dt>
-        <dd>
-            <span>{{cobranzaOperacion.cobranzaOperacion}}</span>
-        </dd>
-        <dt><span>Estado Cobranza Operacion</span></dt>
-        <dd>
-            <div *ngIf="cobranzaOperacion.estadoCobranzaOperacion">
-                <a [routerLink]="['/estado-cobranza-operacion', cobranzaOperacion.estadoCobranzaOperacion?.id]">{{cobranzaOperacion.estadoCobranzaOperacion?.nombreEstado}}</a>
-            </div>
-        </dd>
-        <dt><span>Operacion</span></dt>
-        <dd>
-            <div *ngIf="cobranzaOperacion.operacion">
-                <a [routerLink]="['/operacion', cobranzaOperacion.operacion?.id]">{{cobranzaOperacion.operacion?.nombreOperacion}}</a>
-            </div>
-        </dd>
-    </dl>
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
-
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'cobranza-operacion/'+ cobranzaOperacion.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
-    </button>
+            <button type="button"
+                    [routerLink]="['/cobranza-operacion', cobranzaOperacion.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
 </div>

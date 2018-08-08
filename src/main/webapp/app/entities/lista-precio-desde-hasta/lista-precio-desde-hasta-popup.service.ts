@@ -12,7 +12,6 @@ export class ListaPrecioDesdeHastaPopupService {
         private modalService: NgbModal,
         private router: Router,
         private listaPrecioDesdeHastaService: ListaPrecioDesdeHastaService
-
     ) {
         this.ngbModalRef = null;
     }
@@ -25,7 +24,7 @@ export class ListaPrecioDesdeHastaPopupService {
             }
 
             if (id) {
-                this.listaPrecioDesdeHastaService.find(id).subscribe((listaPrecioDesdeHasta) => {
+                this.listaPrecioDesdeHastaService.find(id).subscribe(listaPrecioDesdeHasta => {
                     if (listaPrecioDesdeHasta.fechaDesde) {
                         listaPrecioDesdeHasta.fechaDesde = {
                             year: listaPrecioDesdeHasta.fechaDesde.getFullYear(),
@@ -54,15 +53,18 @@ export class ListaPrecioDesdeHastaPopupService {
     }
 
     listaPrecioDesdeHastaModalRef(component: Component, listaPrecioDesdeHasta: ListaPrecioDesdeHasta): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.listaPrecioDesdeHasta = listaPrecioDesdeHasta;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

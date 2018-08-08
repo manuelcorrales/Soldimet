@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './direccion-dialog.component.html'
 })
 export class DireccionDialogComponent implements OnInit {
-
     direccion: Direccion;
     isSaving: boolean;
 
@@ -29,13 +28,16 @@ export class DireccionDialogComponent implements OnInit {
         private direccionService: DireccionService,
         private localidadService: LocalidadService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.localidadService.query()
-            .subscribe((res: ResponseWrapper) => { this.localidads = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.localidadService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.localidads = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -45,21 +47,18 @@ export class DireccionDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.direccion.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.direccionService.update(this.direccion));
+            this.subscribeToSaveResponse(this.direccionService.update(this.direccion));
         } else {
-            this.subscribeToSaveResponse(
-                this.direccionService.create(this.direccion));
+            this.subscribeToSaveResponse(this.direccionService.create(this.direccion));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Direccion>) {
-        result.subscribe((res: Direccion) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Direccion) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Direccion) {
-        this.eventManager.broadcast({ name: 'direccionListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'direccionListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -82,22 +81,16 @@ export class DireccionDialogComponent implements OnInit {
     template: ''
 })
 export class DireccionPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private direccionPopupService: DireccionPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private direccionPopupService: DireccionPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.direccionPopupService
-                    .open(DireccionDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.direccionPopupService.open(DireccionDialogComponent as Component, params['id']);
             } else {
-                this.direccionPopupService
-                    .open(DireccionDialogComponent as Component);
+                this.direccionPopupService.open(DireccionDialogComponent as Component);
             }
         });
     }

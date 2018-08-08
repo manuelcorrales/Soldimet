@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Rubro;
 import soldimet.service.RubroService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class RubroResource {
     public ResponseEntity<Rubro> createRubro(@Valid @RequestBody Rubro rubro) throws URISyntaxException {
         log.debug("REST request to save Rubro : {}", rubro);
         if (rubro.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new rubro cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new rubro cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Rubro result = rubroService.save(rubro);
         return ResponseEntity.created(new URI("/api/rubros/" + result.getId()))
@@ -68,7 +69,7 @@ public class RubroResource {
     public ResponseEntity<Rubro> updateRubro(@Valid @RequestBody Rubro rubro) throws URISyntaxException {
         log.debug("REST request to update Rubro : {}", rubro);
         if (rubro.getId() == null) {
-            return createRubro(rubro);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Rubro result = rubroService.save(rubro);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class RubroResource {
     public List<Rubro> getAllRubros() {
         log.debug("REST request to get all Rubros");
         return rubroService.findAll();
-        }
+    }
 
     /**
      * GET  /rubros/:id : get the "id" rubro.
@@ -98,8 +99,8 @@ public class RubroResource {
     @Timed
     public ResponseEntity<Rubro> getRubro(@PathVariable Long id) {
         log.debug("REST request to get Rubro : {}", id);
-        Rubro rubro = rubroService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(rubro));
+        Optional<Rubro> rubro = rubroService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(rubro);
     }
 
     /**

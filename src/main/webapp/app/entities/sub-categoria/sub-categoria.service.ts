@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { SubCategoria } from './sub-categoria.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<ISubCategoria>;
+type EntityArrayResponseType = HttpResponse<ISubCategoria[]>;
+
+@Injectable({ providedIn: 'root' })
 export class SubCategoriaService {
-
     private resourceUrl = SERVER_API_URL + 'api/sub-categorias';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(subCategoria: SubCategoria): Observable<SubCategoria> {
-        const copy = this.convert(subCategoria);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(subCategoria: ISubCategoria): Observable<EntityResponseType> {
+        return this.http.post<ISubCategoria>(this.resourceUrl, subCategoria, { observe: 'response' });
     }
 
-    update(subCategoria: SubCategoria): Observable<SubCategoria> {
-        const copy = this.convert(subCategoria);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(subCategoria: ISubCategoria): Observable<EntityResponseType> {
+        return this.http.put<ISubCategoria>(this.resourceUrl, subCategoria, { observe: 'response' });
     }
 
-    find(id: number): Observable<SubCategoria> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<ISubCategoria>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<ISubCategoria[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to SubCategoria.
-     */
-    private convertItemFromServer(json: any): SubCategoria {
-        const entity: SubCategoria = Object.assign(new SubCategoria(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a SubCategoria to a JSON which can be sent to the server.
-     */
-    private convert(subCategoria: SubCategoria): SubCategoria {
-        const copy: SubCategoria = Object.assign({}, subCategoria);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

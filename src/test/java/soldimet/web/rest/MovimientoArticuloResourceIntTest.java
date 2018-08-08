@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,6 +47,8 @@ public class MovimientoArticuloResourceIntTest {
 
     @Autowired
     private MovimientoArticuloRepository movimientoArticuloRepository;
+
+    
 
     @Autowired
     private MovimientoArticuloService movimientoArticuloService;
@@ -72,6 +76,7 @@ public class MovimientoArticuloResourceIntTest {
         this.restMovimientoArticuloMockMvc = MockMvcBuilders.standaloneSetup(movimientoArticuloResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -170,6 +175,7 @@ public class MovimientoArticuloResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(movimientoArticulo.getId().intValue())))
             .andExpect(jsonPath("$.[*].cantidad").value(hasItem(DEFAULT_CANTIDAD)));
     }
+    
 
     @Test
     @Transactional
@@ -184,7 +190,6 @@ public class MovimientoArticuloResourceIntTest {
             .andExpect(jsonPath("$.id").value(movimientoArticulo.getId().intValue()))
             .andExpect(jsonPath("$.cantidad").value(DEFAULT_CANTIDAD));
     }
-
     @Test
     @Transactional
     public void getNonExistingMovimientoArticulo() throws Exception {
@@ -202,7 +207,9 @@ public class MovimientoArticuloResourceIntTest {
         int databaseSizeBeforeUpdate = movimientoArticuloRepository.findAll().size();
 
         // Update the movimientoArticulo
-        MovimientoArticulo updatedMovimientoArticulo = movimientoArticuloRepository.findOne(movimientoArticulo.getId());
+        MovimientoArticulo updatedMovimientoArticulo = movimientoArticuloRepository.findById(movimientoArticulo.getId()).get();
+        // Disconnect from session so that the updates on updatedMovimientoArticulo are not directly saved in db
+        em.detach(updatedMovimientoArticulo);
         updatedMovimientoArticulo
             .cantidad(UPDATED_CANTIDAD);
 
@@ -229,11 +236,11 @@ public class MovimientoArticuloResourceIntTest {
         restMovimientoArticuloMockMvc.perform(put("/api/movimiento-articulos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(movimientoArticulo)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the MovimientoArticulo in the database
         List<MovimientoArticulo> movimientoArticuloList = movimientoArticuloRepository.findAll();
-        assertThat(movimientoArticuloList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(movimientoArticuloList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

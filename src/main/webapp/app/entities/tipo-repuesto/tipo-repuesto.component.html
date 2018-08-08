@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Tipo Repuestos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-tipo-repuesto" [routerLink]="['/', { outlets: { popup: ['tipo-repuesto-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-tipo-repuesto" [routerLink]="['/tipo-repuesto/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Tipo Repuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="tipoRepuestos">
         <table class="table table-striped">
@@ -24,33 +22,33 @@
             </thead>
             <tbody>
             <tr *ngFor="let tipoRepuesto of tipoRepuestos ;trackBy: trackId">
-                <td><a [routerLink]="['../tipo-repuesto', tipoRepuesto.id ]">{{tipoRepuesto.id}}</a></td>
+                <td><a [routerLink]="['/tipo-repuesto', tipoRepuesto.id, 'view' ]">{{tipoRepuesto.id}}</a></td>
                 <td>{{tipoRepuesto.nombreTipoRepuesto}}</td>
                 <td>
                     <div *ngIf="tipoRepuesto.tipoParteMotor">
-                        <a [routerLink]="['../tipo-parte-motor', tipoRepuesto.tipoParteMotor?.id ]" >{{tipoRepuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
+                        <a [routerLink]="['../tipo-parte-motor', tipoRepuesto.tipoParteMotor?.id, 'view' ]" >{{tipoRepuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../tipo-repuesto', tipoRepuesto.id ]"
+                                [routerLink]="['/tipo-repuesto', tipoRepuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'tipo-repuesto/'+ tipoRepuesto.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/tipo-repuesto', tipoRepuesto.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'tipo-repuesto/'+ tipoRepuesto.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

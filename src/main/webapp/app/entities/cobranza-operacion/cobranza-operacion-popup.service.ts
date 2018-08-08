@@ -8,12 +8,7 @@ import { CobranzaOperacionService } from './cobranza-operacion.service';
 export class CobranzaOperacionPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private cobranzaOperacionService: CobranzaOperacionService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private cobranzaOperacionService: CobranzaOperacionService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class CobranzaOperacionPopupService {
             }
 
             if (id) {
-                this.cobranzaOperacionService.find(id).subscribe((cobranzaOperacion) => {
+                this.cobranzaOperacionService.find(id).subscribe(cobranzaOperacion => {
                     this.ngbModalRef = this.cobranzaOperacionModalRef(component, cobranzaOperacion);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class CobranzaOperacionPopupService {
     }
 
     cobranzaOperacionModalRef(component: Component, cobranzaOperacion: CobranzaOperacion): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.cobranzaOperacion = cobranzaOperacion;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

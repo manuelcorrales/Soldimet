@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    HistorialPrecioService,
-    HistorialPrecioPopupService,
     HistorialPrecioComponent,
     HistorialPrecioDetailComponent,
-    HistorialPrecioDialogComponent,
-    HistorialPrecioPopupComponent,
+    HistorialPrecioUpdateComponent,
     HistorialPrecioDeletePopupComponent,
     HistorialPrecioDeleteDialogComponent,
     historialPrecioRoute,
-    historialPrecioPopupRoute,
+    historialPrecioPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...historialPrecioRoute,
-    ...historialPrecioPopupRoute,
-];
+const ENTITY_STATES = [...historialPrecioRoute, ...historialPrecioPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         HistorialPrecioComponent,
         HistorialPrecioDetailComponent,
-        HistorialPrecioDialogComponent,
+        HistorialPrecioUpdateComponent,
         HistorialPrecioDeleteDialogComponent,
-        HistorialPrecioPopupComponent,
-        HistorialPrecioDeletePopupComponent,
+        HistorialPrecioDeletePopupComponent
     ],
     entryComponents: [
         HistorialPrecioComponent,
-        HistorialPrecioDialogComponent,
-        HistorialPrecioPopupComponent,
+        HistorialPrecioUpdateComponent,
         HistorialPrecioDeleteDialogComponent,
-        HistorialPrecioDeletePopupComponent,
-    ],
-    providers: [
-        HistorialPrecioService,
-        HistorialPrecioPopupService,
+        HistorialPrecioDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -1,8 +1,10 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -21,9 +23,11 @@ public class DetalleMovimiento implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private TipoDetalleMovimiento tipoDetalleMovimiento;
 
     @ManyToOne
+    @JsonIgnoreProperties("")
     private Presupuesto presupuesto;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

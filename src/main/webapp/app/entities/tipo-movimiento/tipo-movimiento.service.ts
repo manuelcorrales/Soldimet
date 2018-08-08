@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { TipoMovimiento } from './tipo-movimiento.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<ITipoMovimiento>;
+type EntityArrayResponseType = HttpResponse<ITipoMovimiento[]>;
+
+@Injectable({ providedIn: 'root' })
 export class TipoMovimientoService {
-
     private resourceUrl = SERVER_API_URL + 'api/tipo-movimientos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(tipoMovimiento: TipoMovimiento): Observable<TipoMovimiento> {
-        const copy = this.convert(tipoMovimiento);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(tipoMovimiento: ITipoMovimiento): Observable<EntityResponseType> {
+        return this.http.post<ITipoMovimiento>(this.resourceUrl, tipoMovimiento, { observe: 'response' });
     }
 
-    update(tipoMovimiento: TipoMovimiento): Observable<TipoMovimiento> {
-        const copy = this.convert(tipoMovimiento);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(tipoMovimiento: ITipoMovimiento): Observable<EntityResponseType> {
+        return this.http.put<ITipoMovimiento>(this.resourceUrl, tipoMovimiento, { observe: 'response' });
     }
 
-    find(id: number): Observable<TipoMovimiento> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<ITipoMovimiento>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<ITipoMovimiento[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to TipoMovimiento.
-     */
-    private convertItemFromServer(json: any): TipoMovimiento {
-        const entity: TipoMovimiento = Object.assign(new TipoMovimiento(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a TipoMovimiento to a JSON which can be sent to the server.
-     */
-    private convert(tipoMovimiento: TipoMovimiento): TipoMovimiento {
-        const copy: TipoMovimiento = Object.assign({}, tipoMovimiento);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

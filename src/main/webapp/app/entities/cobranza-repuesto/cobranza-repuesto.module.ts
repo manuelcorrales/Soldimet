@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    CobranzaRepuestoService,
-    CobranzaRepuestoPopupService,
     CobranzaRepuestoComponent,
     CobranzaRepuestoDetailComponent,
-    CobranzaRepuestoDialogComponent,
-    CobranzaRepuestoPopupComponent,
+    CobranzaRepuestoUpdateComponent,
     CobranzaRepuestoDeletePopupComponent,
     CobranzaRepuestoDeleteDialogComponent,
     cobranzaRepuestoRoute,
-    cobranzaRepuestoPopupRoute,
+    cobranzaRepuestoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...cobranzaRepuestoRoute,
-    ...cobranzaRepuestoPopupRoute,
-];
+const ENTITY_STATES = [...cobranzaRepuestoRoute, ...cobranzaRepuestoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CobranzaRepuestoComponent,
         CobranzaRepuestoDetailComponent,
-        CobranzaRepuestoDialogComponent,
+        CobranzaRepuestoUpdateComponent,
         CobranzaRepuestoDeleteDialogComponent,
-        CobranzaRepuestoPopupComponent,
-        CobranzaRepuestoDeletePopupComponent,
+        CobranzaRepuestoDeletePopupComponent
     ],
     entryComponents: [
         CobranzaRepuestoComponent,
-        CobranzaRepuestoDialogComponent,
-        CobranzaRepuestoPopupComponent,
+        CobranzaRepuestoUpdateComponent,
         CobranzaRepuestoDeleteDialogComponent,
-        CobranzaRepuestoDeletePopupComponent,
-    ],
-    providers: [
-        CobranzaRepuestoService,
-        CobranzaRepuestoPopupService,
+        CobranzaRepuestoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

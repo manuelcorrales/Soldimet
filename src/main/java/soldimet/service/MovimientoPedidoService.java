@@ -4,11 +4,13 @@ import soldimet.domain.MovimientoPedido;
 import soldimet.repository.MovimientoPedidoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing MovimientoPedido.
  */
@@ -31,14 +33,13 @@ public class MovimientoPedidoService {
      * @return the persisted entity
      */
     public MovimientoPedido save(MovimientoPedido movimientoPedido) {
-        log.debug("Request to save MovimientoPedido : {}", movimientoPedido);
-        return movimientoPedidoRepository.save(movimientoPedido);
+        log.debug("Request to save MovimientoPedido : {}", movimientoPedido);        return movimientoPedidoRepository.save(movimientoPedido);
     }
 
     /**
-     *  Get all the movimientoPedidos.
+     * Get all the movimientoPedidos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<MovimientoPedido> findAll() {
@@ -46,25 +47,26 @@ public class MovimientoPedidoService {
         return movimientoPedidoRepository.findAll();
     }
 
+
     /**
-     *  Get one movimientoPedido by id.
+     * Get one movimientoPedido by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public MovimientoPedido findOne(Long id) {
+    public Optional<MovimientoPedido> findOne(Long id) {
         log.debug("Request to get MovimientoPedido : {}", id);
-        return movimientoPedidoRepository.findOne(id);
+        return movimientoPedidoRepository.findById(id);
     }
 
     /**
-     *  Delete the  movimientoPedido by id.
+     * Delete the movimientoPedido by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete MovimientoPedido : {}", id);
-        movimientoPedidoRepository.delete(id);
+        movimientoPedidoRepository.deleteById(id);
     }
 }

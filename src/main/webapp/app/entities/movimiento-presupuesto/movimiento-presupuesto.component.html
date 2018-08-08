@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Movimiento Presupuestos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-movimiento-presupuesto" [routerLink]="['/', { outlets: { popup: ['movimiento-presupuesto-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-movimiento-presupuesto" [routerLink]="['/movimiento-presupuesto/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Movimiento Presupuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="movimientoPresupuestos">
         <table class="table table-striped">
@@ -24,37 +22,37 @@
             </thead>
             <tbody>
             <tr *ngFor="let movimientoPresupuesto of movimientoPresupuestos ;trackBy: trackId">
-                <td><a [routerLink]="['../movimiento-presupuesto', movimientoPresupuesto.id ]">{{movimientoPresupuesto.id}}</a></td>
+                <td><a [routerLink]="['/movimiento-presupuesto', movimientoPresupuesto.id, 'view' ]">{{movimientoPresupuesto.id}}</a></td>
                 <td>
                     <div *ngIf="movimientoPresupuesto.presupuesto">
-                        <a [routerLink]="['../presupuesto', movimientoPresupuesto.presupuesto?.id ]" >{{movimientoPresupuesto.presupuesto?.id}}</a>
+                        <a [routerLink]="['../presupuesto', movimientoPresupuesto.presupuesto?.id, 'view' ]" >{{movimientoPresupuesto.presupuesto?.id}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimientoPresupuesto.movimiento">
-                        <a [routerLink]="['../movimiento', movimientoPresupuesto.movimiento?.id ]" >{{movimientoPresupuesto.movimiento?.id}}</a>
+                        <a [routerLink]="['../movimiento', movimientoPresupuesto.movimiento?.id, 'view' ]" >{{movimientoPresupuesto.movimiento?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../movimiento-presupuesto', movimientoPresupuesto.id ]"
+                                [routerLink]="['/movimiento-presupuesto', movimientoPresupuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'movimiento-presupuesto/'+ movimientoPresupuesto.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/movimiento-presupuesto', movimientoPresupuesto.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'movimiento-presupuesto/'+ movimientoPresupuesto.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

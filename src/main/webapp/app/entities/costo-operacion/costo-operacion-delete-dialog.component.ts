@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { CostoOperacion } from './costo-operacion.model';
-import { CostoOperacionPopupService } from './costo-operacion-popup.service';
+import { ICostoOperacion } from 'app/shared/model/costo-operacion.model';
 import { CostoOperacionService } from './costo-operacion.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { CostoOperacionService } from './costo-operacion.service';
     templateUrl: './costo-operacion-delete-dialog.component.html'
 })
 export class CostoOperacionDeleteDialogComponent {
-
-    costoOperacion: CostoOperacion;
+    costoOperacion: ICostoOperacion;
 
     constructor(
         private costoOperacionService: CostoOperacionService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.costoOperacionService.delete(id).subscribe((response) => {
+        this.costoOperacionService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'costoOperacionListModification',
                 content: 'Deleted an costoOperacion'
@@ -43,22 +40,33 @@ export class CostoOperacionDeleteDialogComponent {
     template: ''
 })
 export class CostoOperacionDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private costoOperacionPopupService: CostoOperacionPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.costoOperacionPopupService
-                .open(CostoOperacionDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ costoOperacion }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(CostoOperacionDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.costoOperacion = costoOperacion;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

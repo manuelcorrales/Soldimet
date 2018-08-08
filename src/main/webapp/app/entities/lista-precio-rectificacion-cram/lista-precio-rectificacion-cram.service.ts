@@ -1,83 +1,81 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { map } from 'rxjs/operators';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IListaPrecioRectificacionCRAM } from 'app/shared/model/lista-precio-rectificacion-cram.model';
 
-import { ListaPrecioRectificacionCRAM } from './lista-precio-rectificacion-cram.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+type EntityResponseType = HttpResponse<IListaPrecioRectificacionCRAM>;
+type EntityArrayResponseType = HttpResponse<IListaPrecioRectificacionCRAM[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ListaPrecioRectificacionCRAMService {
-
     private resourceUrl = SERVER_API_URL + 'api/lista-precio-rectificacion-crams';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient) {}
 
-    create(listaPrecioRectificacionCRAM: ListaPrecioRectificacionCRAM): Observable<ListaPrecioRectificacionCRAM> {
-        const copy = this.convert(listaPrecioRectificacionCRAM);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(listaPrecioRectificacionCRAM: IListaPrecioRectificacionCRAM): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(listaPrecioRectificacionCRAM);
+        return this.http
+            .post<IListaPrecioRectificacionCRAM>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(listaPrecioRectificacionCRAM: ListaPrecioRectificacionCRAM): Observable<ListaPrecioRectificacionCRAM> {
-        const copy = this.convert(listaPrecioRectificacionCRAM);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(listaPrecioRectificacionCRAM: IListaPrecioRectificacionCRAM): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(listaPrecioRectificacionCRAM);
+        return this.http
+            .put<IListaPrecioRectificacionCRAM>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<ListaPrecioRectificacionCRAM> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<IListaPrecioRectificacionCRAM>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http
+            .get<IListaPrecioRectificacionCRAM[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to ListaPrecioRectificacionCRAM.
-     */
-    private convertItemFromServer(json: any): ListaPrecioRectificacionCRAM {
-        const entity: ListaPrecioRectificacionCRAM = Object.assign(new ListaPrecioRectificacionCRAM(), json);
-        entity.fechaVigenciaDesde = this.dateUtils
-            .convertLocalDateFromServer(json.fechaVigenciaDesde);
-        entity.fechaVigenciaHasta = this.dateUtils
-            .convertLocalDateFromServer(json.fechaVigenciaHasta);
-        return entity;
-    }
-
-    /**
-     * Convert a ListaPrecioRectificacionCRAM to a JSON which can be sent to the server.
-     */
-    private convert(listaPrecioRectificacionCRAM: ListaPrecioRectificacionCRAM): ListaPrecioRectificacionCRAM {
-        const copy: ListaPrecioRectificacionCRAM = Object.assign({}, listaPrecioRectificacionCRAM);
-        copy.fechaVigenciaDesde = this.dateUtils
-            .convertLocalDateToServer(listaPrecioRectificacionCRAM.fechaVigenciaDesde);
-        copy.fechaVigenciaHasta = this.dateUtils
-            .convertLocalDateToServer(listaPrecioRectificacionCRAM.fechaVigenciaHasta);
+    private convertDateFromClient(listaPrecioRectificacionCRAM: IListaPrecioRectificacionCRAM): IListaPrecioRectificacionCRAM {
+        const copy: IListaPrecioRectificacionCRAM = Object.assign({}, listaPrecioRectificacionCRAM, {
+            fechaVigenciaDesde:
+                listaPrecioRectificacionCRAM.fechaVigenciaDesde != null && listaPrecioRectificacionCRAM.fechaVigenciaDesde.isValid()
+                    ? listaPrecioRectificacionCRAM.fechaVigenciaDesde.format(DATE_FORMAT)
+                    : null,
+            fechaVigenciaHasta:
+                listaPrecioRectificacionCRAM.fechaVigenciaHasta != null && listaPrecioRectificacionCRAM.fechaVigenciaHasta.isValid()
+                    ? listaPrecioRectificacionCRAM.fechaVigenciaHasta.format(DATE_FORMAT)
+                    : null
+        });
         return copy;
+    }
+
+    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        res.body.fechaVigenciaDesde = res.body.fechaVigenciaDesde != null ? moment(res.body.fechaVigenciaDesde) : null;
+        res.body.fechaVigenciaHasta = res.body.fechaVigenciaHasta != null ? moment(res.body.fechaVigenciaHasta) : null;
+        return res;
+    }
+
+    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        res.body.forEach((listaPrecioRectificacionCRAM: IListaPrecioRectificacionCRAM) => {
+            listaPrecioRectificacionCRAM.fechaVigenciaDesde =
+                listaPrecioRectificacionCRAM.fechaVigenciaDesde != null ? moment(listaPrecioRectificacionCRAM.fechaVigenciaDesde) : null;
+            listaPrecioRectificacionCRAM.fechaVigenciaHasta =
+                listaPrecioRectificacionCRAM.fechaVigenciaHasta != null ? moment(listaPrecioRectificacionCRAM.fechaVigenciaHasta) : null;
+        });
+        return res;
     }
 }

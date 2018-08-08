@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Detalle Presupuestos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-detalle-presupuesto" [routerLink]="['/', { outlets: { popup: ['detalle-presupuesto-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-detalle-presupuesto" [routerLink]="['/detalle-presupuesto/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Detalle Presupuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="detallePresupuestos">
         <table class="table table-striped">
@@ -27,48 +25,48 @@
             </thead>
             <tbody>
             <tr *ngFor="let detallePresupuesto of detallePresupuestos ;trackBy: trackId">
-                <td><a [routerLink]="['../detalle-presupuesto', detallePresupuesto.id ]">{{detallePresupuesto.id}}</a></td>
+                <td><a [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'view' ]">{{detallePresupuesto.id}}</a></td>
                 <td>{{detallePresupuesto.importe}}</td>
                 <td>
                     <div *ngIf="detallePresupuesto.aplicacion">
-                        <a [routerLink]="['../aplicacion', detallePresupuesto.aplicacion?.id ]" >{{detallePresupuesto.aplicacion?.nombreAplicacion}}</a>
+                        <a [routerLink]="['../aplicacion', detallePresupuesto.aplicacion?.id, 'view' ]" >{{detallePresupuesto.aplicacion?.nombreAplicacion}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="detallePresupuesto.cilindrada">
-                        <a [routerLink]="['../cilindrada', detallePresupuesto.cilindrada?.id ]" >{{detallePresupuesto.cilindrada?.cantidadDeCilindros}}</a>
+                        <a [routerLink]="['../cilindrada', detallePresupuesto.cilindrada?.id, 'view' ]" >{{detallePresupuesto.cilindrada?.cantidadDeCilindros}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="detallePresupuesto.motor">
-                        <a [routerLink]="['../motor', detallePresupuesto.motor?.id ]" >{{detallePresupuesto.motor?.id}}</a>
+                        <a [routerLink]="['../motor', detallePresupuesto.motor?.id, 'view' ]" >{{detallePresupuesto.motor?.id}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="detallePresupuesto.tipoParteMotor">
-                        <a [routerLink]="['../tipo-parte-motor', detallePresupuesto.tipoParteMotor?.id ]" >{{detallePresupuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
+                        <a [routerLink]="['../tipo-parte-motor', detallePresupuesto.tipoParteMotor?.id, 'view' ]" >{{detallePresupuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../detalle-presupuesto', detallePresupuesto.id ]"
+                                [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'detalle-presupuesto/'+ detallePresupuesto.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'detalle-presupuesto/'+ detallePresupuesto.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

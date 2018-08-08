@@ -4,11 +4,13 @@ import soldimet.domain.TipoDetalleMovimiento;
 import soldimet.repository.TipoDetalleMovimientoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing TipoDetalleMovimiento.
  */
@@ -31,14 +33,13 @@ public class TipoDetalleMovimientoService {
      * @return the persisted entity
      */
     public TipoDetalleMovimiento save(TipoDetalleMovimiento tipoDetalleMovimiento) {
-        log.debug("Request to save TipoDetalleMovimiento : {}", tipoDetalleMovimiento);
-        return tipoDetalleMovimientoRepository.save(tipoDetalleMovimiento);
+        log.debug("Request to save TipoDetalleMovimiento : {}", tipoDetalleMovimiento);        return tipoDetalleMovimientoRepository.save(tipoDetalleMovimiento);
     }
 
     /**
-     *  Get all the tipoDetalleMovimientos.
+     * Get all the tipoDetalleMovimientos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<TipoDetalleMovimiento> findAll() {
@@ -46,25 +47,26 @@ public class TipoDetalleMovimientoService {
         return tipoDetalleMovimientoRepository.findAll();
     }
 
+
     /**
-     *  Get one tipoDetalleMovimiento by id.
+     * Get one tipoDetalleMovimiento by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public TipoDetalleMovimiento findOne(Long id) {
+    public Optional<TipoDetalleMovimiento> findOne(Long id) {
         log.debug("Request to get TipoDetalleMovimiento : {}", id);
-        return tipoDetalleMovimientoRepository.findOne(id);
+        return tipoDetalleMovimientoRepository.findById(id);
     }
 
     /**
-     *  Delete the  tipoDetalleMovimiento by id.
+     * Delete the tipoDetalleMovimiento by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete TipoDetalleMovimiento : {}", id);
-        tipoDetalleMovimientoRepository.delete(id);
+        tipoDetalleMovimientoRepository.deleteById(id);
     }
 }

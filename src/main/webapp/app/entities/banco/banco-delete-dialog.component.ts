@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Banco } from './banco.model';
-import { BancoPopupService } from './banco-popup.service';
+import { IBanco } from 'app/shared/model/banco.model';
 import { BancoService } from './banco.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { BancoService } from './banco.service';
     templateUrl: './banco-delete-dialog.component.html'
 })
 export class BancoDeleteDialogComponent {
+    banco: IBanco;
 
-    banco: Banco;
-
-    constructor(
-        private bancoService: BancoService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private bancoService: BancoService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.bancoService.delete(id).subscribe((response) => {
+        this.bancoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'bancoListModification',
                 content: 'Deleted an banco'
@@ -43,22 +36,30 @@ export class BancoDeleteDialogComponent {
     template: ''
 })
 export class BancoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private bancoPopupService: BancoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.bancoPopupService
-                .open(BancoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ banco }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(BancoDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.banco = banco;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

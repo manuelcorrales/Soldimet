@@ -4,11 +4,13 @@ import soldimet.domain.TipoMovimiento;
 import soldimet.repository.TipoMovimientoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing TipoMovimiento.
  */
@@ -31,14 +33,13 @@ public class TipoMovimientoService {
      * @return the persisted entity
      */
     public TipoMovimiento save(TipoMovimiento tipoMovimiento) {
-        log.debug("Request to save TipoMovimiento : {}", tipoMovimiento);
-        return tipoMovimientoRepository.save(tipoMovimiento);
+        log.debug("Request to save TipoMovimiento : {}", tipoMovimiento);        return tipoMovimientoRepository.save(tipoMovimiento);
     }
 
     /**
-     *  Get all the tipoMovimientos.
+     * Get all the tipoMovimientos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<TipoMovimiento> findAll() {
@@ -46,25 +47,26 @@ public class TipoMovimientoService {
         return tipoMovimientoRepository.findAll();
     }
 
+
     /**
-     *  Get one tipoMovimiento by id.
+     * Get one tipoMovimiento by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public TipoMovimiento findOne(Long id) {
+    public Optional<TipoMovimiento> findOne(Long id) {
         log.debug("Request to get TipoMovimiento : {}", id);
-        return tipoMovimientoRepository.findOne(id);
+        return tipoMovimientoRepository.findById(id);
     }
 
     /**
-     *  Delete the  tipoMovimiento by id.
+     * Delete the tipoMovimiento by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete TipoMovimiento : {}", id);
-        tipoMovimientoRepository.delete(id);
+        tipoMovimientoRepository.deleteById(id);
     }
 }

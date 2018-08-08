@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './lista-precio-rectificacion-cram-dialog.component.html'
 })
 export class ListaPrecioRectificacionCRAMDialogComponent implements OnInit {
-
     listaPrecioRectificacionCRAM: ListaPrecioRectificacionCRAM;
     isSaving: boolean;
 
@@ -31,13 +30,16 @@ export class ListaPrecioRectificacionCRAMDialogComponent implements OnInit {
         private listaPrecioRectificacionCRAMService: ListaPrecioRectificacionCRAMService,
         private costoOperacionService: CostoOperacionService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.costoOperacionService.query()
-            .subscribe((res: ResponseWrapper) => { this.costooperacions = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.costoOperacionService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.costooperacions = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -47,21 +49,18 @@ export class ListaPrecioRectificacionCRAMDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.listaPrecioRectificacionCRAM.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.listaPrecioRectificacionCRAMService.update(this.listaPrecioRectificacionCRAM));
+            this.subscribeToSaveResponse(this.listaPrecioRectificacionCRAMService.update(this.listaPrecioRectificacionCRAM));
         } else {
-            this.subscribeToSaveResponse(
-                this.listaPrecioRectificacionCRAMService.create(this.listaPrecioRectificacionCRAM));
+            this.subscribeToSaveResponse(this.listaPrecioRectificacionCRAMService.create(this.listaPrecioRectificacionCRAM));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<ListaPrecioRectificacionCRAM>) {
-        result.subscribe((res: ListaPrecioRectificacionCRAM) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: ListaPrecioRectificacionCRAM) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: ListaPrecioRectificacionCRAM) {
-        this.eventManager.broadcast({ name: 'listaPrecioRectificacionCRAMListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'listaPrecioRectificacionCRAMListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -84,7 +83,6 @@ export class ListaPrecioRectificacionCRAMDialogComponent implements OnInit {
     template: ''
 })
 export class ListaPrecioRectificacionCRAMPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
     constructor(
@@ -93,13 +91,11 @@ export class ListaPrecioRectificacionCRAMPopupComponent implements OnInit, OnDes
     ) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.listaPrecioRectificacionCRAMPopupService
-                    .open(ListaPrecioRectificacionCRAMDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.listaPrecioRectificacionCRAMPopupService.open(ListaPrecioRectificacionCRAMDialogComponent as Component, params['id']);
             } else {
-                this.listaPrecioRectificacionCRAMPopupService
-                    .open(ListaPrecioRectificacionCRAMDialogComponent as Component);
+                this.listaPrecioRectificacionCRAMPopupService.open(ListaPrecioRectificacionCRAMDialogComponent as Component);
             }
         });
     }

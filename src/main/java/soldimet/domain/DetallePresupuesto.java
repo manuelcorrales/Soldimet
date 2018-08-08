@@ -1,5 +1,8 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -195,7 +198,7 @@ public class DetallePresupuesto implements Serializable {
     public String toString() {
         return "DetallePresupuesto{" +
             "id=" + getId() +
-            ", importe='" + getImporte() + "'" +
+            ", importe=" + getImporte() +
             "}";
     }
 }

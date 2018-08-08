@@ -18,7 +18,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './movimiento-pedido-dialog.component.html'
 })
 export class MovimientoPedidoDialogComponent implements OnInit {
-
     movimientoPedido: MovimientoPedido;
     isSaving: boolean;
 
@@ -33,26 +32,31 @@ export class MovimientoPedidoDialogComponent implements OnInit {
         private pedidoRepuestoService: PedidoRepuestoService,
         private movimientoService: MovimientoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.pedidoRepuestoService.query()
-            .subscribe((res: ResponseWrapper) => { this.pedidorepuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.movimientoService
-            .query({filter: 'movimientopedido-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.pedidoRepuestoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.pedidorepuestos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.movimientoService.query({ filter: 'movimientopedido-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.movimientoPedido.movimiento || !this.movimientoPedido.movimiento.id) {
                     this.movimientos = res.json;
                 } else {
-                    this.movimientoService
-                        .find(this.movimientoPedido.movimiento.id)
-                        .subscribe((subRes: Movimiento) => {
+                    this.movimientoService.find(this.movimientoPedido.movimiento.id).subscribe(
+                        (subRes: Movimiento) => {
                             this.movimientos = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -62,21 +66,18 @@ export class MovimientoPedidoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.movimientoPedido.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.movimientoPedidoService.update(this.movimientoPedido));
+            this.subscribeToSaveResponse(this.movimientoPedidoService.update(this.movimientoPedido));
         } else {
-            this.subscribeToSaveResponse(
-                this.movimientoPedidoService.create(this.movimientoPedido));
+            this.subscribeToSaveResponse(this.movimientoPedidoService.create(this.movimientoPedido));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<MovimientoPedido>) {
-        result.subscribe((res: MovimientoPedido) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: MovimientoPedido) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: MovimientoPedido) {
-        this.eventManager.broadcast({ name: 'movimientoPedidoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'movimientoPedidoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -103,22 +104,16 @@ export class MovimientoPedidoDialogComponent implements OnInit {
     template: ''
 })
 export class MovimientoPedidoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private movimientoPedidoPopupService: MovimientoPedidoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private movimientoPedidoPopupService: MovimientoPedidoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.movimientoPedidoPopupService
-                    .open(MovimientoPedidoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.movimientoPedidoPopupService.open(MovimientoPedidoDialogComponent as Component, params['id']);
             } else {
-                this.movimientoPedidoPopupService
-                    .open(MovimientoPedidoDialogComponent as Component);
+                this.movimientoPedidoPopupService.open(MovimientoPedidoDialogComponent as Component);
             }
         });
     }

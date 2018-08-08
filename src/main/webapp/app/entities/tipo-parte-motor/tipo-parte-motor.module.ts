@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    TipoParteMotorService,
-    TipoParteMotorPopupService,
     TipoParteMotorComponent,
     TipoParteMotorDetailComponent,
-    TipoParteMotorDialogComponent,
-    TipoParteMotorPopupComponent,
+    TipoParteMotorUpdateComponent,
     TipoParteMotorDeletePopupComponent,
     TipoParteMotorDeleteDialogComponent,
     tipoParteMotorRoute,
-    tipoParteMotorPopupRoute,
+    tipoParteMotorPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...tipoParteMotorRoute,
-    ...tipoParteMotorPopupRoute,
-];
+const ENTITY_STATES = [...tipoParteMotorRoute, ...tipoParteMotorPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         TipoParteMotorComponent,
         TipoParteMotorDetailComponent,
-        TipoParteMotorDialogComponent,
+        TipoParteMotorUpdateComponent,
         TipoParteMotorDeleteDialogComponent,
-        TipoParteMotorPopupComponent,
-        TipoParteMotorDeletePopupComponent,
+        TipoParteMotorDeletePopupComponent
     ],
     entryComponents: [
         TipoParteMotorComponent,
-        TipoParteMotorDialogComponent,
-        TipoParteMotorPopupComponent,
+        TipoParteMotorUpdateComponent,
         TipoParteMotorDeleteDialogComponent,
-        TipoParteMotorDeletePopupComponent,
-    ],
-    providers: [
-        TipoParteMotorService,
-        TipoParteMotorPopupService,
+        TipoParteMotorDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

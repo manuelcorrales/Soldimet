@@ -27,6 +27,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,6 +54,8 @@ public class ListaPrecioRectificacionCRAMResourceIntTest {
 
     @Autowired
     private ListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
+
+    
 
     @Autowired
     private ListaPrecioRectificacionCRAMService listaPrecioRectificacionCRAMService;
@@ -79,6 +83,7 @@ public class ListaPrecioRectificacionCRAMResourceIntTest {
         this.restListaPrecioRectificacionCRAMMockMvc = MockMvcBuilders.standaloneSetup(listaPrecioRectificacionCRAMResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -196,6 +201,7 @@ public class ListaPrecioRectificacionCRAMResourceIntTest {
             .andExpect(jsonPath("$.[*].fechaVigenciaHasta").value(hasItem(DEFAULT_FECHA_VIGENCIA_HASTA.toString())))
             .andExpect(jsonPath("$.[*].numeroGrupo").value(hasItem(DEFAULT_NUMERO_GRUPO)));
     }
+    
 
     @Test
     @Transactional
@@ -212,7 +218,6 @@ public class ListaPrecioRectificacionCRAMResourceIntTest {
             .andExpect(jsonPath("$.fechaVigenciaHasta").value(DEFAULT_FECHA_VIGENCIA_HASTA.toString()))
             .andExpect(jsonPath("$.numeroGrupo").value(DEFAULT_NUMERO_GRUPO));
     }
-
     @Test
     @Transactional
     public void getNonExistingListaPrecioRectificacionCRAM() throws Exception {
@@ -230,7 +235,9 @@ public class ListaPrecioRectificacionCRAMResourceIntTest {
         int databaseSizeBeforeUpdate = listaPrecioRectificacionCRAMRepository.findAll().size();
 
         // Update the listaPrecioRectificacionCRAM
-        ListaPrecioRectificacionCRAM updatedListaPrecioRectificacionCRAM = listaPrecioRectificacionCRAMRepository.findOne(listaPrecioRectificacionCRAM.getId());
+        ListaPrecioRectificacionCRAM updatedListaPrecioRectificacionCRAM = listaPrecioRectificacionCRAMRepository.findById(listaPrecioRectificacionCRAM.getId()).get();
+        // Disconnect from session so that the updates on updatedListaPrecioRectificacionCRAM are not directly saved in db
+        em.detach(updatedListaPrecioRectificacionCRAM);
         updatedListaPrecioRectificacionCRAM
             .fechaVigenciaDesde(UPDATED_FECHA_VIGENCIA_DESDE)
             .fechaVigenciaHasta(UPDATED_FECHA_VIGENCIA_HASTA)
@@ -261,11 +268,11 @@ public class ListaPrecioRectificacionCRAMResourceIntTest {
         restListaPrecioRectificacionCRAMMockMvc.perform(put("/api/lista-precio-rectificacion-crams")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(listaPrecioRectificacionCRAM)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the ListaPrecioRectificacionCRAM in the database
         List<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAMList = listaPrecioRectificacionCRAMRepository.findAll();
-        assertThat(listaPrecioRectificacionCRAMList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(listaPrecioRectificacionCRAMList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

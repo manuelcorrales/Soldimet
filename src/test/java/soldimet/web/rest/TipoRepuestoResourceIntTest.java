@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,6 +46,8 @@ public class TipoRepuestoResourceIntTest {
 
     @Autowired
     private TipoRepuestoRepository tipoRepuestoRepository;
+
+    
 
     @Autowired
     private TipoRepuestoService tipoRepuestoService;
@@ -71,6 +75,7 @@ public class TipoRepuestoResourceIntTest {
         this.restTipoRepuestoMockMvc = MockMvcBuilders.standaloneSetup(tipoRepuestoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -164,6 +169,7 @@ public class TipoRepuestoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreTipoRepuesto").value(hasItem(DEFAULT_NOMBRE_TIPO_REPUESTO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -178,7 +184,6 @@ public class TipoRepuestoResourceIntTest {
             .andExpect(jsonPath("$.id").value(tipoRepuesto.getId().intValue()))
             .andExpect(jsonPath("$.nombreTipoRepuesto").value(DEFAULT_NOMBRE_TIPO_REPUESTO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingTipoRepuesto() throws Exception {
@@ -196,7 +201,9 @@ public class TipoRepuestoResourceIntTest {
         int databaseSizeBeforeUpdate = tipoRepuestoRepository.findAll().size();
 
         // Update the tipoRepuesto
-        TipoRepuesto updatedTipoRepuesto = tipoRepuestoRepository.findOne(tipoRepuesto.getId());
+        TipoRepuesto updatedTipoRepuesto = tipoRepuestoRepository.findById(tipoRepuesto.getId()).get();
+        // Disconnect from session so that the updates on updatedTipoRepuesto are not directly saved in db
+        em.detach(updatedTipoRepuesto);
         updatedTipoRepuesto
             .nombreTipoRepuesto(UPDATED_NOMBRE_TIPO_REPUESTO);
 
@@ -223,11 +230,11 @@ public class TipoRepuestoResourceIntTest {
         restTipoRepuestoMockMvc.perform(put("/api/tipo-repuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tipoRepuesto)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the TipoRepuesto in the database
         List<TipoRepuesto> tipoRepuestoList = tipoRepuestoRepository.findAll();
-        assertThat(tipoRepuestoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(tipoRepuestoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

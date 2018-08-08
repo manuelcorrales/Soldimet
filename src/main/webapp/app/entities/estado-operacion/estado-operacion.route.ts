@@ -1,13 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EstadoOperacion } from 'app/shared/model/estado-operacion.model';
+import { EstadoOperacionService } from './estado-operacion.service';
 import { EstadoOperacionComponent } from './estado-operacion.component';
 import { EstadoOperacionDetailComponent } from './estado-operacion-detail.component';
-import { EstadoOperacionPopupComponent } from './estado-operacion-dialog.component';
+import { EstadoOperacionUpdateComponent } from './estado-operacion-update.component';
 import { EstadoOperacionDeletePopupComponent } from './estado-operacion-delete-dialog.component';
+import { IEstadoOperacion } from 'app/shared/model/estado-operacion.model';
+
+@Injectable({ providedIn: 'root' })
+export class EstadoOperacionResolve implements Resolve<IEstadoOperacion> {
+    constructor(private service: EstadoOperacionService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((estadoOperacion: HttpResponse<EstadoOperacion>) => estadoOperacion.body));
+        }
+        return of(new EstadoOperacion());
+    }
+}
 
 export const estadoOperacionRoute: Routes = [
     {
@@ -18,9 +34,37 @@ export const estadoOperacionRoute: Routes = [
             pageTitle: 'EstadoOperacions'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'estado-operacion/:id',
+    },
+    {
+        path: 'estado-operacion/:id/view',
         component: EstadoOperacionDetailComponent,
+        resolve: {
+            estadoOperacion: EstadoOperacionResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoOperacions'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-operacion/new',
+        component: EstadoOperacionUpdateComponent,
+        resolve: {
+            estadoOperacion: EstadoOperacionResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoOperacions'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-operacion/:id/edit',
+        component: EstadoOperacionUpdateComponent,
+        resolve: {
+            estadoOperacion: EstadoOperacionResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoOperacions'
@@ -31,28 +75,11 @@ export const estadoOperacionRoute: Routes = [
 
 export const estadoOperacionPopupRoute: Routes = [
     {
-        path: 'estado-operacion-new',
-        component: EstadoOperacionPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoOperacions'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'estado-operacion/:id/edit',
-        component: EstadoOperacionPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoOperacions'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'estado-operacion/:id/delete',
         component: EstadoOperacionDeletePopupComponent,
+        resolve: {
+            estadoOperacion: EstadoOperacionResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoOperacions'

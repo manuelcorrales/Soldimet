@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { ListaPrecioRectificacionCRAM } from './lista-precio-rectificacion-cram.model';
+import { IListaPrecioRectificacionCRAM } from 'app/shared/model/lista-precio-rectificacion-cram.model';
+import { Principal } from 'app/core';
 import { ListaPrecioRectificacionCRAMService } from './lista-precio-rectificacion-cram.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-lista-precio-rectificacion-cram',
     templateUrl: './lista-precio-rectificacion-cram.component.html'
 })
 export class ListaPrecioRectificacionCRAMComponent implements OnInit, OnDestroy {
-listaPrecioRectificacionCRAMS: ListaPrecioRectificacionCRAM[];
+    listaPrecioRectificacionCRAMS: IListaPrecioRectificacionCRAM[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ listaPrecioRectificacionCRAMS: ListaPrecioRectificacionCRAM[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.listaPrecioRectificacionCRAMService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.listaPrecioRectificacionCRAMS = res.json;
+            (res: HttpResponse<IListaPrecioRectificacionCRAM[]>) => {
+                this.listaPrecioRectificacionCRAMS = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInListaPrecioRectificacionCRAMS();
@@ -45,14 +44,15 @@ listaPrecioRectificacionCRAMS: ListaPrecioRectificacionCRAM[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: ListaPrecioRectificacionCRAM) {
+    trackId(index: number, item: IListaPrecioRectificacionCRAM) {
         return item.id;
     }
+
     registerChangeInListaPrecioRectificacionCRAMS() {
-        this.eventSubscriber = this.eventManager.subscribe('listaPrecioRectificacionCRAMListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('listaPrecioRectificacionCRAMListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

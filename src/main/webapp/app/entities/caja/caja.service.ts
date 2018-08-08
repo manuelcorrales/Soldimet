@@ -1,87 +1,76 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { map } from 'rxjs/operators';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { ICaja } from 'app/shared/model/caja.model';
 
-import { Caja } from './caja.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+type EntityResponseType = HttpResponse<ICaja>;
+type EntityArrayResponseType = HttpResponse<ICaja[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CajaService {
-
     private resourceUrl = SERVER_API_URL + 'api/cajas';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient) {}
 
-    create(caja: Caja): Observable<Caja> {
-        const copy = this.convert(caja);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(caja: ICaja): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(caja);
+        return this.http
+            .post<ICaja>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(caja: Caja): Observable<Caja> {
-        const copy = this.convert(caja);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(caja: ICaja): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(caja);
+        return this.http
+            .put<ICaja>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<Caja> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<ICaja>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http
+            .get<ICaja[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Caja.
-     */
-    private convertItemFromServer(json: any): Caja {
-        const entity: Caja = Object.assign(new Caja(), json);
-        entity.fecha = this.dateUtils
-            .convertLocalDateFromServer(json.fecha);
-        entity.horaApertura = this.dateUtils
-            .convertDateTimeFromServer(json.horaApertura);
-        entity.horaCierre = this.dateUtils
-            .convertDateTimeFromServer(json.horaCierre);
-        return entity;
-    }
-
-    /**
-     * Convert a Caja to a JSON which can be sent to the server.
-     */
-    private convert(caja: Caja): Caja {
-        const copy: Caja = Object.assign({}, caja);
-        copy.fecha = this.dateUtils
-            .convertLocalDateToServer(caja.fecha);
-
-        copy.horaApertura = this.dateUtils.toDate(caja.horaApertura);
-
-        copy.horaCierre = this.dateUtils.toDate(caja.horaCierre);
+    private convertDateFromClient(caja: ICaja): ICaja {
+        const copy: ICaja = Object.assign({}, caja, {
+            fecha: caja.fecha != null && caja.fecha.isValid() ? caja.fecha.format(DATE_FORMAT) : null,
+            horaApertura: caja.horaApertura != null && caja.horaApertura.isValid() ? caja.horaApertura.toJSON() : null,
+            horaCierre: caja.horaCierre != null && caja.horaCierre.isValid() ? caja.horaCierre.toJSON() : null
+        });
         return copy;
+    }
+
+    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        res.body.fecha = res.body.fecha != null ? moment(res.body.fecha) : null;
+        res.body.horaApertura = res.body.horaApertura != null ? moment(res.body.horaApertura) : null;
+        res.body.horaCierre = res.body.horaCierre != null ? moment(res.body.horaCierre) : null;
+        return res;
+    }
+
+    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        res.body.forEach((caja: ICaja) => {
+            caja.fecha = caja.fecha != null ? moment(caja.fecha) : null;
+            caja.horaApertura = caja.horaApertura != null ? moment(caja.horaApertura) : null;
+            caja.horaCierre = caja.horaCierre != null ? moment(caja.horaCierre) : null;
+        });
+        return res;
     }
 }

@@ -6,18 +6,10 @@ import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
-  imports: [
-    CommonModule,
-      BrowserModule,
-      RouterModule.forRoot([ PEDIDOS_ROUTE ], { useHash: true })
-  ],
-    exports: [
-        RouterModule,
-    ],
-    entryComponents: [
-        PedidosComponent,
-    ],
+    imports: [CommonModule, BrowserModule, RouterModule.forRoot([PEDIDOS_ROUTE], { useHash: true })],
+    exports: [RouterModule],
+    entryComponents: [PedidosComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  declarations: [PedidosComponent]
+    declarations: [PedidosComponent]
 })
-export class PedidosModule { }
+export class PedidosModule {}

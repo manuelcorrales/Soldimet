@@ -8,12 +8,7 @@ import { FormaDePagoService } from './forma-de-pago.service';
 export class FormaDePagoPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private formaDePagoService: FormaDePagoService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private formaDePagoService: FormaDePagoService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class FormaDePagoPopupService {
             }
 
             if (id) {
-                this.formaDePagoService.find(id).subscribe((formaDePago) => {
+                this.formaDePagoService.find(id).subscribe(formaDePago => {
                     this.ngbModalRef = this.formaDePagoModalRef(component, formaDePago);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class FormaDePagoPopupService {
     }
 
     formaDePagoModalRef(component: Component, formaDePago: FormaDePago): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.formaDePago = formaDePago;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

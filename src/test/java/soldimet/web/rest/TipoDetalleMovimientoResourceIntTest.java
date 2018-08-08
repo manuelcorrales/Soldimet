@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class TipoDetalleMovimientoResourceIntTest {
 
     @Autowired
     private TipoDetalleMovimientoRepository tipoDetalleMovimientoRepository;
+
+    
 
     @Autowired
     private TipoDetalleMovimientoService tipoDetalleMovimientoService;
@@ -70,6 +74,7 @@ public class TipoDetalleMovimientoResourceIntTest {
         this.restTipoDetalleMovimientoMockMvc = MockMvcBuilders.standaloneSetup(tipoDetalleMovimientoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class TipoDetalleMovimientoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoDetalleMovimiento.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreTipoDetalle").value(hasItem(DEFAULT_NOMBRE_TIPO_DETALLE.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class TipoDetalleMovimientoResourceIntTest {
             .andExpect(jsonPath("$.id").value(tipoDetalleMovimiento.getId().intValue()))
             .andExpect(jsonPath("$.nombreTipoDetalle").value(DEFAULT_NOMBRE_TIPO_DETALLE.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingTipoDetalleMovimiento() throws Exception {
@@ -190,7 +195,9 @@ public class TipoDetalleMovimientoResourceIntTest {
         int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
 
         // Update the tipoDetalleMovimiento
-        TipoDetalleMovimiento updatedTipoDetalleMovimiento = tipoDetalleMovimientoRepository.findOne(tipoDetalleMovimiento.getId());
+        TipoDetalleMovimiento updatedTipoDetalleMovimiento = tipoDetalleMovimientoRepository.findById(tipoDetalleMovimiento.getId()).get();
+        // Disconnect from session so that the updates on updatedTipoDetalleMovimiento are not directly saved in db
+        em.detach(updatedTipoDetalleMovimiento);
         updatedTipoDetalleMovimiento
             .nombreTipoDetalle(UPDATED_NOMBRE_TIPO_DETALLE);
 
@@ -217,11 +224,11 @@ public class TipoDetalleMovimientoResourceIntTest {
         restTipoDetalleMovimientoMockMvc.perform(put("/api/tipo-detalle-movimientos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the TipoDetalleMovimiento in the database
         List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
-        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

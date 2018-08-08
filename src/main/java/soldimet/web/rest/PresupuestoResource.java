@@ -3,11 +3,11 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Presupuesto;
 import soldimet.service.PresupuestoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import soldimet.web.rest.util.PaginationUtil;
 import soldimet.service.dto.PresupuestoCriteria;
 import soldimet.service.PresupuestoQueryService;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class PresupuestoResource {
     public ResponseEntity<Presupuesto> createPresupuesto(@Valid @RequestBody Presupuesto presupuesto) throws URISyntaxException {
         log.debug("REST request to save Presupuesto : {}", presupuesto);
         if (presupuesto.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new presupuesto cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new presupuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Presupuesto result = presupuestoService.save(presupuesto);
         return ResponseEntity.created(new URI("/api/presupuestos/" + result.getId()))
@@ -79,7 +79,7 @@ public class PresupuestoResource {
     public ResponseEntity<Presupuesto> updatePresupuesto(@Valid @RequestBody Presupuesto presupuesto) throws URISyntaxException {
         log.debug("REST request to update Presupuesto : {}", presupuesto);
         if (presupuesto.getId() == null) {
-            return createPresupuesto(presupuesto);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Presupuesto result = presupuestoService.save(presupuesto);
         return ResponseEntity.ok()
@@ -96,7 +96,7 @@ public class PresupuestoResource {
      */
     @GetMapping("/presupuestos")
     @Timed
-    public ResponseEntity<List<Presupuesto>> getAllPresupuestos(PresupuestoCriteria criteria,@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Presupuesto>> getAllPresupuestos(PresupuestoCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Presupuestos by criteria: {}", criteria);
         Page<Presupuesto> page = presupuestoQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/presupuestos");
@@ -113,8 +113,8 @@ public class PresupuestoResource {
     @Timed
     public ResponseEntity<Presupuesto> getPresupuesto(@PathVariable Long id) {
         log.debug("REST request to get Presupuesto : {}", id);
-        Presupuesto presupuesto = presupuestoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(presupuesto));
+        Optional<Presupuesto> presupuesto = presupuestoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(presupuesto);
     }
 
     /**

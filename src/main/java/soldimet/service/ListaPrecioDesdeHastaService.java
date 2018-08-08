@@ -4,11 +4,13 @@ import soldimet.domain.ListaPrecioDesdeHasta;
 import soldimet.repository.ListaPrecioDesdeHastaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing ListaPrecioDesdeHasta.
  */
@@ -31,14 +33,13 @@ public class ListaPrecioDesdeHastaService {
      * @return the persisted entity
      */
     public ListaPrecioDesdeHasta save(ListaPrecioDesdeHasta listaPrecioDesdeHasta) {
-        log.debug("Request to save ListaPrecioDesdeHasta : {}", listaPrecioDesdeHasta);
-        return listaPrecioDesdeHastaRepository.save(listaPrecioDesdeHasta);
+        log.debug("Request to save ListaPrecioDesdeHasta : {}", listaPrecioDesdeHasta);        return listaPrecioDesdeHastaRepository.save(listaPrecioDesdeHasta);
     }
 
     /**
-     *  Get all the listaPrecioDesdeHastas.
+     * Get all the listaPrecioDesdeHastas.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<ListaPrecioDesdeHasta> findAll() {
@@ -46,25 +47,26 @@ public class ListaPrecioDesdeHastaService {
         return listaPrecioDesdeHastaRepository.findAll();
     }
 
+
     /**
-     *  Get one listaPrecioDesdeHasta by id.
+     * Get one listaPrecioDesdeHasta by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public ListaPrecioDesdeHasta findOne(Long id) {
+    public Optional<ListaPrecioDesdeHasta> findOne(Long id) {
         log.debug("Request to get ListaPrecioDesdeHasta : {}", id);
-        return listaPrecioDesdeHastaRepository.findOne(id);
+        return listaPrecioDesdeHastaRepository.findById(id);
     }
 
     /**
-     *  Delete the  listaPrecioDesdeHasta by id.
+     * Delete the listaPrecioDesdeHasta by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete ListaPrecioDesdeHasta : {}", id);
-        listaPrecioDesdeHastaRepository.delete(id);
+        listaPrecioDesdeHastaRepository.deleteById(id);
     }
 }

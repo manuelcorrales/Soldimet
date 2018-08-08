@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,6 +49,8 @@ public class DireccionResourceIntTest {
 
     @Autowired
     private DireccionRepository direccionRepository;
+
+    
 
     @Autowired
     private DireccionService direccionService;
@@ -74,6 +78,7 @@ public class DireccionResourceIntTest {
         this.restDireccionMockMvc = MockMvcBuilders.standaloneSetup(direccionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -188,6 +193,7 @@ public class DireccionResourceIntTest {
             .andExpect(jsonPath("$.[*].calle").value(hasItem(DEFAULT_CALLE.toString())))
             .andExpect(jsonPath("$.[*].numero").value(hasItem(DEFAULT_NUMERO)));
     }
+    
 
     @Test
     @Transactional
@@ -203,7 +209,6 @@ public class DireccionResourceIntTest {
             .andExpect(jsonPath("$.calle").value(DEFAULT_CALLE.toString()))
             .andExpect(jsonPath("$.numero").value(DEFAULT_NUMERO));
     }
-
     @Test
     @Transactional
     public void getNonExistingDireccion() throws Exception {
@@ -221,7 +226,9 @@ public class DireccionResourceIntTest {
         int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
 
         // Update the direccion
-        Direccion updatedDireccion = direccionRepository.findOne(direccion.getId());
+        Direccion updatedDireccion = direccionRepository.findById(direccion.getId()).get();
+        // Disconnect from session so that the updates on updatedDireccion are not directly saved in db
+        em.detach(updatedDireccion);
         updatedDireccion
             .calle(UPDATED_CALLE)
             .numero(UPDATED_NUMERO);
@@ -250,11 +257,11 @@ public class DireccionResourceIntTest {
         restDireccionMockMvc.perform(put("/api/direccions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(direccion)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Direccion in the database
         List<Direccion> direccionList = direccionRepository.findAll();
-        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

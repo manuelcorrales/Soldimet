@@ -3,11 +3,11 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Articulo;
 import soldimet.service.ArticuloService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import soldimet.web.rest.util.PaginationUtil;
 import soldimet.service.dto.ArticuloCriteria;
 import soldimet.service.ArticuloQueryService;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class ArticuloResource {
     public ResponseEntity<Articulo> createArticulo(@Valid @RequestBody Articulo articulo) throws URISyntaxException {
         log.debug("REST request to save Articulo : {}", articulo);
         if (articulo.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new articulo cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new articulo cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Articulo result = articuloService.save(articulo);
         return ResponseEntity.created(new URI("/api/articulos/" + result.getId()))
@@ -79,7 +79,7 @@ public class ArticuloResource {
     public ResponseEntity<Articulo> updateArticulo(@Valid @RequestBody Articulo articulo) throws URISyntaxException {
         log.debug("REST request to update Articulo : {}", articulo);
         if (articulo.getId() == null) {
-            return createArticulo(articulo);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Articulo result = articuloService.save(articulo);
         return ResponseEntity.ok()
@@ -96,7 +96,7 @@ public class ArticuloResource {
      */
     @GetMapping("/articulos")
     @Timed
-    public ResponseEntity<List<Articulo>> getAllArticulos(ArticuloCriteria criteria,@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Articulo>> getAllArticulos(ArticuloCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Articulos by criteria: {}", criteria);
         Page<Articulo> page = articuloQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/articulos");
@@ -113,8 +113,8 @@ public class ArticuloResource {
     @Timed
     public ResponseEntity<Articulo> getArticulo(@PathVariable Long id) {
         log.debug("REST request to get Articulo : {}", id);
-        Articulo articulo = articuloService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(articulo));
+        Optional<Articulo> articulo = articuloService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(articulo);
     }
 
     /**

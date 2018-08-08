@@ -14,7 +14,6 @@ export class MovimientoPopupService {
         private modalService: NgbModal,
         private router: Router,
         private movimientoService: MovimientoService
-
     ) {
         this.ngbModalRef = null;
     }
@@ -27,7 +26,7 @@ export class MovimientoPopupService {
             }
 
             if (id) {
-                this.movimientoService.find(id).subscribe((movimiento) => {
+                this.movimientoService.find(id).subscribe(movimiento => {
                     if (movimiento.fecha) {
                         movimiento.fecha = {
                             year: movimiento.fecha.getFullYear(),
@@ -35,8 +34,7 @@ export class MovimientoPopupService {
                             day: movimiento.fecha.getDate()
                         };
                     }
-                    movimiento.hora = this.datePipe
-                        .transform(movimiento.hora, 'yyyy-MM-ddTHH:mm:ss');
+                    movimiento.hora = this.datePipe.transform(movimiento.hora, 'yyyy-MM-ddTHH:mm:ss');
                     this.ngbModalRef = this.movimientoModalRef(component, movimiento);
                     resolve(this.ngbModalRef);
                 });
@@ -51,15 +49,18 @@ export class MovimientoPopupService {
     }
 
     movimientoModalRef(component: Component, movimiento: Movimiento): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.movimiento = movimiento;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

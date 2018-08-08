@@ -4,11 +4,13 @@ import soldimet.domain.Empleado;
 import soldimet.repository.EmpleadoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing Empleado.
  */
@@ -31,14 +33,13 @@ public class EmpleadoService {
      * @return the persisted entity
      */
     public Empleado save(Empleado empleado) {
-        log.debug("Request to save Empleado : {}", empleado);
-        return empleadoRepository.save(empleado);
+        log.debug("Request to save Empleado : {}", empleado);        return empleadoRepository.save(empleado);
     }
 
     /**
-     *  Get all the empleados.
+     * Get all the empleados.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Empleado> findAll() {
@@ -46,25 +47,26 @@ public class EmpleadoService {
         return empleadoRepository.findAll();
     }
 
+
     /**
-     *  Get one empleado by id.
+     * Get one empleado by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Empleado findOne(Long id) {
+    public Optional<Empleado> findOne(Long id) {
         log.debug("Request to get Empleado : {}", id);
-        return empleadoRepository.findOne(id);
+        return empleadoRepository.findById(id);
     }
 
     /**
-     *  Delete the  empleado by id.
+     * Delete the empleado by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Empleado : {}", id);
-        empleadoRepository.delete(id);
+        empleadoRepository.deleteById(id);
     }
 }

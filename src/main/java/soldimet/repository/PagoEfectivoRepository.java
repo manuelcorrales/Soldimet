@@ -1,13 +1,12 @@
 package soldimet.repository;
 
 import soldimet.domain.PagoEfectivo;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the PagoEfectivo entity.
+ * Spring Data  repository for the PagoEfectivo entity.
  */
 @SuppressWarnings("unused")
 @Repository

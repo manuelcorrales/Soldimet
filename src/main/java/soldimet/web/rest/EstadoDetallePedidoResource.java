@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoDetallePedido;
 import soldimet.service.EstadoDetallePedidoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EstadoDetallePedidoResource {
     public ResponseEntity<EstadoDetallePedido> createEstadoDetallePedido(@Valid @RequestBody EstadoDetallePedido estadoDetallePedido) throws URISyntaxException {
         log.debug("REST request to save EstadoDetallePedido : {}", estadoDetallePedido);
         if (estadoDetallePedido.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new estadoDetallePedido cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new estadoDetallePedido cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EstadoDetallePedido result = estadoDetallePedidoService.save(estadoDetallePedido);
         return ResponseEntity.created(new URI("/api/estado-detalle-pedidos/" + result.getId()))
@@ -68,7 +69,7 @@ public class EstadoDetallePedidoResource {
     public ResponseEntity<EstadoDetallePedido> updateEstadoDetallePedido(@Valid @RequestBody EstadoDetallePedido estadoDetallePedido) throws URISyntaxException {
         log.debug("REST request to update EstadoDetallePedido : {}", estadoDetallePedido);
         if (estadoDetallePedido.getId() == null) {
-            return createEstadoDetallePedido(estadoDetallePedido);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EstadoDetallePedido result = estadoDetallePedidoService.save(estadoDetallePedido);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EstadoDetallePedidoResource {
     public List<EstadoDetallePedido> getAllEstadoDetallePedidos() {
         log.debug("REST request to get all EstadoDetallePedidos");
         return estadoDetallePedidoService.findAll();
-        }
+    }
 
     /**
      * GET  /estado-detalle-pedidos/:id : get the "id" estadoDetallePedido.
@@ -98,8 +99,8 @@ public class EstadoDetallePedidoResource {
     @Timed
     public ResponseEntity<EstadoDetallePedido> getEstadoDetallePedido(@PathVariable Long id) {
         log.debug("REST request to get EstadoDetallePedido : {}", id);
-        EstadoDetallePedido estadoDetallePedido = estadoDetallePedidoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(estadoDetallePedido));
+        Optional<EstadoDetallePedido> estadoDetallePedido = estadoDetallePedidoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(estadoDetallePedido);
     }
 
     /**

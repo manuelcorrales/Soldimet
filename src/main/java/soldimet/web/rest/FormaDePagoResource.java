@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.FormaDePago;
 import soldimet.service.FormaDePagoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class FormaDePagoResource {
     public ResponseEntity<FormaDePago> createFormaDePago(@Valid @RequestBody FormaDePago formaDePago) throws URISyntaxException {
         log.debug("REST request to save FormaDePago : {}", formaDePago);
         if (formaDePago.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new formaDePago cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new formaDePago cannot already have an ID", ENTITY_NAME, "idexists");
         }
         FormaDePago result = formaDePagoService.save(formaDePago);
         return ResponseEntity.created(new URI("/api/forma-de-pagos/" + result.getId()))
@@ -68,7 +69,7 @@ public class FormaDePagoResource {
     public ResponseEntity<FormaDePago> updateFormaDePago(@Valid @RequestBody FormaDePago formaDePago) throws URISyntaxException {
         log.debug("REST request to update FormaDePago : {}", formaDePago);
         if (formaDePago.getId() == null) {
-            return createFormaDePago(formaDePago);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         FormaDePago result = formaDePagoService.save(formaDePago);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class FormaDePagoResource {
     public List<FormaDePago> getAllFormaDePagos() {
         log.debug("REST request to get all FormaDePagos");
         return formaDePagoService.findAll();
-        }
+    }
 
     /**
      * GET  /forma-de-pagos/:id : get the "id" formaDePago.
@@ -98,8 +99,8 @@ public class FormaDePagoResource {
     @Timed
     public ResponseEntity<FormaDePago> getFormaDePago(@PathVariable Long id) {
         log.debug("REST request to get FormaDePago : {}", id);
-        FormaDePago formaDePago = formaDePagoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(formaDePago));
+        Optional<FormaDePago> formaDePago = formaDePagoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(formaDePago);
     }
 
     /**

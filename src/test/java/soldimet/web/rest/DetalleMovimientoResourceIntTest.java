@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,6 +43,8 @@ public class DetalleMovimientoResourceIntTest {
 
     @Autowired
     private DetalleMovimientoRepository detalleMovimientoRepository;
+
+    
 
     @Autowired
     private DetalleMovimientoService detalleMovimientoService;
@@ -68,6 +72,7 @@ public class DetalleMovimientoResourceIntTest {
         this.restDetalleMovimientoMockMvc = MockMvcBuilders.standaloneSetup(detalleMovimientoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -140,6 +145,7 @@ public class DetalleMovimientoResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(detalleMovimiento.getId().intValue())));
     }
+    
 
     @Test
     @Transactional
@@ -153,7 +159,6 @@ public class DetalleMovimientoResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(detalleMovimiento.getId().intValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingDetalleMovimiento() throws Exception {
@@ -171,7 +176,9 @@ public class DetalleMovimientoResourceIntTest {
         int databaseSizeBeforeUpdate = detalleMovimientoRepository.findAll().size();
 
         // Update the detalleMovimiento
-        DetalleMovimiento updatedDetalleMovimiento = detalleMovimientoRepository.findOne(detalleMovimiento.getId());
+        DetalleMovimiento updatedDetalleMovimiento = detalleMovimientoRepository.findById(detalleMovimiento.getId()).get();
+        // Disconnect from session so that the updates on updatedDetalleMovimiento are not directly saved in db
+        em.detach(updatedDetalleMovimiento);
 
         restDetalleMovimientoMockMvc.perform(put("/api/detalle-movimientos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -195,11 +202,11 @@ public class DetalleMovimientoResourceIntTest {
         restDetalleMovimientoMockMvc.perform(put("/api/detalle-movimientos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(detalleMovimiento)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the DetalleMovimiento in the database
         List<DetalleMovimiento> detalleMovimientoList = detalleMovimientoRepository.findAll();
-        assertThat(detalleMovimientoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(detalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

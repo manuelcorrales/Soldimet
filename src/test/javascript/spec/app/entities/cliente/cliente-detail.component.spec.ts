@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { ClienteDetailComponent } from '../../../../../../main/webapp/app/entities/cliente/cliente-detail.component';
-import { ClienteService } from '../../../../../../main/webapp/app/entities/cliente/cliente.service';
-import { Cliente } from '../../../../../../main/webapp/app/entities/cliente/cliente.model';
+import { ClienteDetailComponent } from 'app/entities/cliente/cliente-detail.component';
+import { Cliente } from 'app/shared/model/cliente.model';
 
 describe('Component Tests', () => {
-
     describe('Cliente Management Detail Component', () => {
         let comp: ClienteDetailComponent;
         let fixture: ComponentFixture<ClienteDetailComponent>;
-        let service: ClienteService;
+        const route = ({ data: of({ cliente: new Cliente(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [ClienteDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    ClienteService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(ClienteDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(ClienteDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(ClienteDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(ClienteService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new Cliente(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.cliente).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.cliente).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

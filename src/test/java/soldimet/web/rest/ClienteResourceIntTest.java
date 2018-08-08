@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,6 +46,8 @@ public class ClienteResourceIntTest {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    
 
     @Autowired
     private ClienteService clienteService;
@@ -71,6 +75,7 @@ public class ClienteResourceIntTest {
         this.restClienteMockMvc = MockMvcBuilders.standaloneSetup(clienteResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -164,6 +169,7 @@ public class ClienteResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(cliente.getId().intValue())))
             .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -178,7 +184,6 @@ public class ClienteResourceIntTest {
             .andExpect(jsonPath("$.id").value(cliente.getId().intValue()))
             .andExpect(jsonPath("$.apellido").value(DEFAULT_APELLIDO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingCliente() throws Exception {
@@ -196,7 +201,9 @@ public class ClienteResourceIntTest {
         int databaseSizeBeforeUpdate = clienteRepository.findAll().size();
 
         // Update the cliente
-        Cliente updatedCliente = clienteRepository.findOne(cliente.getId());
+        Cliente updatedCliente = clienteRepository.findById(cliente.getId()).get();
+        // Disconnect from session so that the updates on updatedCliente are not directly saved in db
+        em.detach(updatedCliente);
         updatedCliente
             .apellido(UPDATED_APELLIDO);
 
@@ -223,11 +230,11 @@ public class ClienteResourceIntTest {
         restClienteMockMvc.perform(put("/api/clientes")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cliente)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Cliente in the database
         List<Cliente> clienteList = clienteRepository.findAll();
-        assertThat(clienteList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(clienteList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -3,11 +3,11 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Persona;
 import soldimet.service.PersonaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import soldimet.web.rest.util.PaginationUtil;
 import soldimet.service.dto.PersonaCriteria;
 import soldimet.service.PersonaQueryService;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class PersonaResource {
     public ResponseEntity<Persona> createPersona(@Valid @RequestBody Persona persona) throws URISyntaxException {
         log.debug("REST request to save Persona : {}", persona);
         if (persona.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new persona cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new persona cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Persona result = personaService.save(persona);
         return ResponseEntity.created(new URI("/api/personas/" + result.getId()))
@@ -79,7 +79,7 @@ public class PersonaResource {
     public ResponseEntity<Persona> updatePersona(@Valid @RequestBody Persona persona) throws URISyntaxException {
         log.debug("REST request to update Persona : {}", persona);
         if (persona.getId() == null) {
-            return createPersona(persona);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Persona result = personaService.save(persona);
         return ResponseEntity.ok()
@@ -96,7 +96,7 @@ public class PersonaResource {
      */
     @GetMapping("/personas")
     @Timed
-    public ResponseEntity<List<Persona>> getAllPersonas(PersonaCriteria criteria,@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Persona>> getAllPersonas(PersonaCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Personas by criteria: {}", criteria);
         Page<Persona> page = personaQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/personas");
@@ -113,8 +113,8 @@ public class PersonaResource {
     @Timed
     public ResponseEntity<Persona> getPersona(@PathVariable Long id) {
         log.debug("REST request to get Persona : {}", id);
-        Persona persona = personaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(persona));
+        Optional<Persona> persona = personaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(persona);
     }
 
     /**

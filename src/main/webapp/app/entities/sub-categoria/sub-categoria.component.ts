@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { SubCategoria } from './sub-categoria.model';
+import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
+import { Principal } from 'app/core';
 import { SubCategoriaService } from './sub-categoria.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-sub-categoria',
     templateUrl: './sub-categoria.component.html'
 })
 export class SubCategoriaComponent implements OnInit, OnDestroy {
-subCategorias: SubCategoria[];
+    subCategorias: ISubCategoria[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ subCategorias: SubCategoria[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.subCategoriaService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.subCategorias = res.json;
+            (res: HttpResponse<ISubCategoria[]>) => {
+                this.subCategorias = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInSubCategorias();
@@ -45,14 +44,15 @@ subCategorias: SubCategoria[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: SubCategoria) {
+    trackId(index: number, item: ISubCategoria) {
         return item.id;
     }
+
     registerChangeInSubCategorias() {
-        this.eventSubscriber = this.eventManager.subscribe('subCategoriaListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('subCategoriaListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

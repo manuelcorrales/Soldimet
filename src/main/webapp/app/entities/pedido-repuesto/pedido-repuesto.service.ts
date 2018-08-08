@@ -1,87 +1,85 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { map } from 'rxjs/operators';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 
-import { PedidoRepuesto } from './pedido-repuesto.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+type EntityResponseType = HttpResponse<IPedidoRepuesto>;
+type EntityArrayResponseType = HttpResponse<IPedidoRepuesto[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PedidoRepuestoService {
-
     private resourceUrl = SERVER_API_URL + 'api/pedido-repuestos';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient) {}
 
-    create(pedidoRepuesto: PedidoRepuesto): Observable<PedidoRepuesto> {
-        const copy = this.convert(pedidoRepuesto);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(pedidoRepuesto: IPedidoRepuesto): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(pedidoRepuesto);
+        return this.http
+            .post<IPedidoRepuesto>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(pedidoRepuesto: PedidoRepuesto): Observable<PedidoRepuesto> {
-        const copy = this.convert(pedidoRepuesto);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(pedidoRepuesto: IPedidoRepuesto): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(pedidoRepuesto);
+        return this.http
+            .put<IPedidoRepuesto>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<PedidoRepuesto> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<IPedidoRepuesto>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http
+            .get<IPedidoRepuesto[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to PedidoRepuesto.
-     */
-    private convertItemFromServer(json: any): PedidoRepuesto {
-        const entity: PedidoRepuesto = Object.assign(new PedidoRepuesto(), json);
-        entity.fechaCreacion = this.dateUtils
-            .convertLocalDateFromServer(json.fechaCreacion);
-        entity.fechaPedido = this.dateUtils
-            .convertLocalDateFromServer(json.fechaPedido);
-        entity.fechaRecibo = this.dateUtils
-            .convertLocalDateFromServer(json.fechaRecibo);
-        return entity;
-    }
-
-    /**
-     * Convert a PedidoRepuesto to a JSON which can be sent to the server.
-     */
-    private convert(pedidoRepuesto: PedidoRepuesto): PedidoRepuesto {
-        const copy: PedidoRepuesto = Object.assign({}, pedidoRepuesto);
-        copy.fechaCreacion = this.dateUtils
-            .convertLocalDateToServer(pedidoRepuesto.fechaCreacion);
-        copy.fechaPedido = this.dateUtils
-            .convertLocalDateToServer(pedidoRepuesto.fechaPedido);
-        copy.fechaRecibo = this.dateUtils
-            .convertLocalDateToServer(pedidoRepuesto.fechaRecibo);
+    private convertDateFromClient(pedidoRepuesto: IPedidoRepuesto): IPedidoRepuesto {
+        const copy: IPedidoRepuesto = Object.assign({}, pedidoRepuesto, {
+            fechaCreacion:
+                pedidoRepuesto.fechaCreacion != null && pedidoRepuesto.fechaCreacion.isValid()
+                    ? pedidoRepuesto.fechaCreacion.format(DATE_FORMAT)
+                    : null,
+            fechaPedido:
+                pedidoRepuesto.fechaPedido != null && pedidoRepuesto.fechaPedido.isValid()
+                    ? pedidoRepuesto.fechaPedido.format(DATE_FORMAT)
+                    : null,
+            fechaRecibo:
+                pedidoRepuesto.fechaRecibo != null && pedidoRepuesto.fechaRecibo.isValid()
+                    ? pedidoRepuesto.fechaRecibo.format(DATE_FORMAT)
+                    : null
+        });
         return copy;
+    }
+
+    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        res.body.fechaCreacion = res.body.fechaCreacion != null ? moment(res.body.fechaCreacion) : null;
+        res.body.fechaPedido = res.body.fechaPedido != null ? moment(res.body.fechaPedido) : null;
+        res.body.fechaRecibo = res.body.fechaRecibo != null ? moment(res.body.fechaRecibo) : null;
+        return res;
+    }
+
+    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        res.body.forEach((pedidoRepuesto: IPedidoRepuesto) => {
+            pedidoRepuesto.fechaCreacion = pedidoRepuesto.fechaCreacion != null ? moment(pedidoRepuesto.fechaCreacion) : null;
+            pedidoRepuesto.fechaPedido = pedidoRepuesto.fechaPedido != null ? moment(pedidoRepuesto.fechaPedido) : null;
+            pedidoRepuesto.fechaRecibo = pedidoRepuesto.fechaRecibo != null ? moment(pedidoRepuesto.fechaRecibo) : null;
+        });
+        return res;
     }
 }

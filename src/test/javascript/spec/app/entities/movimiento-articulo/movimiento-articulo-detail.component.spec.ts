@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { MovimientoArticuloDetailComponent } from '../../../../../../main/webapp/app/entities/movimiento-articulo/movimiento-articulo-detail.component';
-import { MovimientoArticuloService } from '../../../../../../main/webapp/app/entities/movimiento-articulo/movimiento-articulo.service';
-import { MovimientoArticulo } from '../../../../../../main/webapp/app/entities/movimiento-articulo/movimiento-articulo.model';
+import { MovimientoArticuloDetailComponent } from 'app/entities/movimiento-articulo/movimiento-articulo-detail.component';
+import { MovimientoArticulo } from 'app/shared/model/movimiento-articulo.model';
 
 describe('Component Tests', () => {
-
     describe('MovimientoArticulo Management Detail Component', () => {
         let comp: MovimientoArticuloDetailComponent;
         let fixture: ComponentFixture<MovimientoArticuloDetailComponent>;
-        let service: MovimientoArticuloService;
+        const route = ({ data: of({ movimientoArticulo: new MovimientoArticulo(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [MovimientoArticuloDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    MovimientoArticuloService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(MovimientoArticuloDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(MovimientoArticuloDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(MovimientoArticuloDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(MovimientoArticuloService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new MovimientoArticulo(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.movimientoArticulo).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.movimientoArticulo).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

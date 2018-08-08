@@ -19,7 +19,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './articulo-dialog.component.html'
 })
 export class ArticuloDialogComponent implements OnInit {
-
     articulo: Articulo;
     isSaving: boolean;
 
@@ -37,17 +36,28 @@ export class ArticuloDialogComponent implements OnInit {
         private marcaService: MarcaService,
         private tipoRepuestoService: TipoRepuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.estadoArticuloService.query()
-            .subscribe((res: ResponseWrapper) => { this.estadoarticulos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.marcaService.query()
-            .subscribe((res: ResponseWrapper) => { this.marcas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.tipoRepuestoService.query()
-            .subscribe((res: ResponseWrapper) => { this.tiporepuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.estadoArticuloService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.estadoarticulos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.marcaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.marcas = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.tipoRepuestoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tiporepuestos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -57,21 +67,18 @@ export class ArticuloDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.articulo.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.articuloService.update(this.articulo));
+            this.subscribeToSaveResponse(this.articuloService.update(this.articulo));
         } else {
-            this.subscribeToSaveResponse(
-                this.articuloService.create(this.articulo));
+            this.subscribeToSaveResponse(this.articuloService.create(this.articulo));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Articulo>) {
-        result.subscribe((res: Articulo) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Articulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Articulo) {
-        this.eventManager.broadcast({ name: 'articuloListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'articuloListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -102,22 +109,16 @@ export class ArticuloDialogComponent implements OnInit {
     template: ''
 })
 export class ArticuloPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private articuloPopupService: ArticuloPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private articuloPopupService: ArticuloPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.articuloPopupService
-                    .open(ArticuloDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.articuloPopupService.open(ArticuloDialogComponent as Component, params['id']);
             } else {
-                this.articuloPopupService
-                    .open(ArticuloDialogComponent as Component);
+                this.articuloPopupService.open(ArticuloDialogComponent as Component);
             }
         });
     }

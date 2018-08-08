@@ -15,7 +15,6 @@ import { MotorService } from './motor.service';
     templateUrl: './motor-dialog.component.html'
 })
 export class MotorDialogComponent implements OnInit {
-
     motor: Motor;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class MotorDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private motorService: MotorService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class MotorDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.motor.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.motorService.update(this.motor));
+            this.subscribeToSaveResponse(this.motorService.update(this.motor));
         } else {
-            this.subscribeToSaveResponse(
-                this.motorService.create(this.motor));
+            this.subscribeToSaveResponse(this.motorService.create(this.motor));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Motor>) {
-        result.subscribe((res: Motor) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Motor) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Motor) {
-        this.eventManager.broadcast({ name: 'motorListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'motorListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class MotorDialogComponent implements OnInit {
     template: ''
 })
 export class MotorPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private motorPopupService: MotorPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private motorPopupService: MotorPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.motorPopupService
-                    .open(MotorDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.motorPopupService.open(MotorDialogComponent as Component, params['id']);
             } else {
-                this.motorPopupService
-                    .open(MotorDialogComponent as Component);
+                this.motorPopupService.open(MotorDialogComponent as Component);
             }
         });
     }

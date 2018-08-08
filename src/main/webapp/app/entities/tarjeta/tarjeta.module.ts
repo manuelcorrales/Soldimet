@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    TarjetaService,
-    TarjetaPopupService,
     TarjetaComponent,
     TarjetaDetailComponent,
-    TarjetaDialogComponent,
-    TarjetaPopupComponent,
+    TarjetaUpdateComponent,
     TarjetaDeletePopupComponent,
     TarjetaDeleteDialogComponent,
     tarjetaRoute,
-    tarjetaPopupRoute,
+    tarjetaPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...tarjetaRoute,
-    ...tarjetaPopupRoute,
-];
+const ENTITY_STATES = [...tarjetaRoute, ...tarjetaPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         TarjetaComponent,
         TarjetaDetailComponent,
-        TarjetaDialogComponent,
+        TarjetaUpdateComponent,
         TarjetaDeleteDialogComponent,
-        TarjetaPopupComponent,
-        TarjetaDeletePopupComponent,
+        TarjetaDeletePopupComponent
     ],
-    entryComponents: [
-        TarjetaComponent,
-        TarjetaDialogComponent,
-        TarjetaPopupComponent,
-        TarjetaDeleteDialogComponent,
-        TarjetaDeletePopupComponent,
-    ],
-    providers: [
-        TarjetaService,
-        TarjetaPopupService,
-    ],
+    entryComponents: [TarjetaComponent, TarjetaUpdateComponent, TarjetaDeleteDialogComponent, TarjetaDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetTarjetaModule {}

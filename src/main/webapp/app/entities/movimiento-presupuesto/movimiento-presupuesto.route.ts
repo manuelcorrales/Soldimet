@@ -1,13 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { MovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
+import { MovimientoPresupuestoService } from './movimiento-presupuesto.service';
 import { MovimientoPresupuestoComponent } from './movimiento-presupuesto.component';
 import { MovimientoPresupuestoDetailComponent } from './movimiento-presupuesto-detail.component';
-import { MovimientoPresupuestoPopupComponent } from './movimiento-presupuesto-dialog.component';
+import { MovimientoPresupuestoUpdateComponent } from './movimiento-presupuesto-update.component';
 import { MovimientoPresupuestoDeletePopupComponent } from './movimiento-presupuesto-delete-dialog.component';
+import { IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
+
+@Injectable({ providedIn: 'root' })
+export class MovimientoPresupuestoResolve implements Resolve<IMovimientoPresupuesto> {
+    constructor(private service: MovimientoPresupuestoService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service
+                .find(id)
+                .pipe(map((movimientoPresupuesto: HttpResponse<MovimientoPresupuesto>) => movimientoPresupuesto.body));
+        }
+        return of(new MovimientoPresupuesto());
+    }
+}
 
 export const movimientoPresupuestoRoute: Routes = [
     {
@@ -18,9 +36,37 @@ export const movimientoPresupuestoRoute: Routes = [
             pageTitle: 'MovimientoPresupuestos'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'movimiento-presupuesto/:id',
+    },
+    {
+        path: 'movimiento-presupuesto/:id/view',
         component: MovimientoPresupuestoDetailComponent,
+        resolve: {
+            movimientoPresupuesto: MovimientoPresupuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'MovimientoPresupuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'movimiento-presupuesto/new',
+        component: MovimientoPresupuestoUpdateComponent,
+        resolve: {
+            movimientoPresupuesto: MovimientoPresupuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'MovimientoPresupuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'movimiento-presupuesto/:id/edit',
+        component: MovimientoPresupuestoUpdateComponent,
+        resolve: {
+            movimientoPresupuesto: MovimientoPresupuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'MovimientoPresupuestos'
@@ -31,28 +77,11 @@ export const movimientoPresupuestoRoute: Routes = [
 
 export const movimientoPresupuestoPopupRoute: Routes = [
     {
-        path: 'movimiento-presupuesto-new',
-        component: MovimientoPresupuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'MovimientoPresupuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'movimiento-presupuesto/:id/edit',
-        component: MovimientoPresupuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'MovimientoPresupuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'movimiento-presupuesto/:id/delete',
         component: MovimientoPresupuestoDeletePopupComponent,
+        resolve: {
+            movimientoPresupuesto: MovimientoPresupuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'MovimientoPresupuestos'

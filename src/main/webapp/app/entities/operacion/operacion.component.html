@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Operacions</span>
-        <button class="btn btn-primary float-right jh-create-entity create-operacion" [routerLink]="['/', { outlets: { popup: ['operacion-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-operacion" [routerLink]="['/operacion/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Operacion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="operacions">
         <table class="table table-striped">
@@ -25,38 +23,38 @@
             </thead>
             <tbody>
             <tr *ngFor="let operacion of operacions ;trackBy: trackId">
-                <td><a [routerLink]="['../operacion', operacion.id ]">{{operacion.id}}</a></td>
+                <td><a [routerLink]="['/operacion', operacion.id, 'view' ]">{{operacion.id}}</a></td>
                 <td>{{operacion.nombreOperacion}}</td>
                 <td>
                     <div *ngIf="operacion.tipoParteMotor">
-                        <a [routerLink]="['../tipo-parte-motor', operacion.tipoParteMotor?.id ]" >{{operacion.tipoParteMotor?.nombreTipoParteMotor}}</a>
+                        <a [routerLink]="['../tipo-parte-motor', operacion.tipoParteMotor?.id, 'view' ]" >{{operacion.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="operacion.estadoOperacion">
-                        <a [routerLink]="['../estado-operacion', operacion.estadoOperacion?.id ]" >{{operacion.estadoOperacion?.nombreEstado}}</a>
+                        <a [routerLink]="['../estado-operacion', operacion.estadoOperacion?.id, 'view' ]" >{{operacion.estadoOperacion?.nombreEstado}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../operacion', operacion.id ]"
+                                [routerLink]="['/operacion', operacion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'operacion/'+ operacion.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/operacion', operacion.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'operacion/'+ operacion.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

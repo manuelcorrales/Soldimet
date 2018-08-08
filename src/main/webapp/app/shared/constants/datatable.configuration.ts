@@ -3,7 +3,7 @@ export const DT_OPTIONS = {
     pageLength: 10,
     dom: 'Bfrtip',
     language: {
-        url: 'assets/i18n/ES/es.json',
+        url: 'assets/i18n/ES/es.json'
     },
     colReorder: true,
     // Configure the buttons
@@ -13,37 +13,37 @@ export const DT_OPTIONS = {
             text: '<i class="fa fa-cogs" aria-hidden="true"></i>',
             buttons: [
                 {
-                    extend: 'pageLength',
+                    extend: 'pageLength'
                 },
                 {
                     extend: 'colvis',
-                    text: 'Mostrar/Ocultar',
+                    text: 'Mostrar/Ocultar'
                 },
                 {
                     extend: 'colvisRestore',
-                    text: 'Restaurar',
-                },
-            ],
+                    text: 'Restaurar'
+                }
+            ]
         },
         {
             extend: 'copy',
-            text: '<i class="fa fa-clipboard" aria-hidden="true"></i>',
+            text: '<i class="fa fa-clipboard" aria-hidden="true"></i>'
         },
         {
             extend: 'pdf',
-            text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
+            text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>'
         },
         {
             extend: 'print',
-            text: '<i class="fa fa-print" aria-hidden="true"></i>',
+            text: '<i class="fa fa-print" aria-hidden="true"></i>'
         },
         {
             extend: 'excel',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>'
         },
         {
             extend: 'csv',
-            text: '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
-        },
-    ],
+            text: '<i class="fa fa-file-text-o" aria-hidden="true"></i>'
+        }
+    ]
 };

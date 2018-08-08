@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,6 +48,8 @@ public class AplicacionResourceIntTest {
 
     @Autowired
     private AplicacionRepository aplicacionRepository;
+
+    
 
     @Autowired
     private AplicacionService aplicacionService;
@@ -73,6 +77,7 @@ public class AplicacionResourceIntTest {
         this.restAplicacionMockMvc = MockMvcBuilders.standaloneSetup(aplicacionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -182,6 +187,7 @@ public class AplicacionResourceIntTest {
             .andExpect(jsonPath("$.[*].nombreAplicacion").value(hasItem(DEFAULT_NOMBRE_APLICACION.toString())))
             .andExpect(jsonPath("$.[*].numeroGrupo").value(hasItem(DEFAULT_NUMERO_GRUPO)));
     }
+    
 
     @Test
     @Transactional
@@ -197,7 +203,6 @@ public class AplicacionResourceIntTest {
             .andExpect(jsonPath("$.nombreAplicacion").value(DEFAULT_NOMBRE_APLICACION.toString()))
             .andExpect(jsonPath("$.numeroGrupo").value(DEFAULT_NUMERO_GRUPO));
     }
-
     @Test
     @Transactional
     public void getNonExistingAplicacion() throws Exception {
@@ -215,7 +220,9 @@ public class AplicacionResourceIntTest {
         int databaseSizeBeforeUpdate = aplicacionRepository.findAll().size();
 
         // Update the aplicacion
-        Aplicacion updatedAplicacion = aplicacionRepository.findOne(aplicacion.getId());
+        Aplicacion updatedAplicacion = aplicacionRepository.findById(aplicacion.getId()).get();
+        // Disconnect from session so that the updates on updatedAplicacion are not directly saved in db
+        em.detach(updatedAplicacion);
         updatedAplicacion
             .nombreAplicacion(UPDATED_NOMBRE_APLICACION)
             .numeroGrupo(UPDATED_NUMERO_GRUPO);
@@ -244,11 +251,11 @@ public class AplicacionResourceIntTest {
         restAplicacionMockMvc.perform(put("/api/aplicacions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(aplicacion)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Aplicacion in the database
         List<Aplicacion> aplicacionList = aplicacionRepository.findAll();
-        assertThat(aplicacionList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(aplicacionList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

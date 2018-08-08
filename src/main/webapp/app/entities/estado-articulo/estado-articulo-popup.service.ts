@@ -8,12 +8,7 @@ import { EstadoArticuloService } from './estado-articulo.service';
 export class EstadoArticuloPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private estadoArticuloService: EstadoArticuloService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private estadoArticuloService: EstadoArticuloService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class EstadoArticuloPopupService {
             }
 
             if (id) {
-                this.estadoArticuloService.find(id).subscribe((estadoArticulo) => {
+                this.estadoArticuloService.find(id).subscribe(estadoArticulo => {
                     this.ngbModalRef = this.estadoArticuloModalRef(component, estadoArticulo);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class EstadoArticuloPopupService {
     }
 
     estadoArticuloModalRef(component: Component, estadoArticulo: EstadoArticulo): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.estadoArticulo = estadoArticulo;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,6 +48,8 @@ public class CostoOperacionResourceIntTest {
 
     @Autowired
     private CostoOperacionRepository costoOperacionRepository;
+
+    
 
     @Autowired
     private CostoOperacionService costoOperacionService;
@@ -73,6 +77,7 @@ public class CostoOperacionResourceIntTest {
         this.restCostoOperacionMockMvc = MockMvcBuilders.standaloneSetup(costoOperacionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -176,6 +181,7 @@ public class CostoOperacionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(costoOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].costoOperacion").value(hasItem(DEFAULT_COSTO_OPERACION.doubleValue())));
     }
+    
 
     @Test
     @Transactional
@@ -190,7 +196,6 @@ public class CostoOperacionResourceIntTest {
             .andExpect(jsonPath("$.id").value(costoOperacion.getId().intValue()))
             .andExpect(jsonPath("$.costoOperacion").value(DEFAULT_COSTO_OPERACION.doubleValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingCostoOperacion() throws Exception {
@@ -208,7 +213,9 @@ public class CostoOperacionResourceIntTest {
         int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
 
         // Update the costoOperacion
-        CostoOperacion updatedCostoOperacion = costoOperacionRepository.findOne(costoOperacion.getId());
+        CostoOperacion updatedCostoOperacion = costoOperacionRepository.findById(costoOperacion.getId()).get();
+        // Disconnect from session so that the updates on updatedCostoOperacion are not directly saved in db
+        em.detach(updatedCostoOperacion);
         updatedCostoOperacion
             .costoOperacion(UPDATED_COSTO_OPERACION);
 
@@ -235,11 +242,11 @@ public class CostoOperacionResourceIntTest {
         restCostoOperacionMockMvc.perform(put("/api/costo-operacions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(costoOperacion)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the CostoOperacion in the database
         List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
-        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { SubCategoria } from './sub-categoria.model';
-import { SubCategoriaPopupService } from './sub-categoria-popup.service';
+import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 import { SubCategoriaService } from './sub-categoria.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { SubCategoriaService } from './sub-categoria.service';
     templateUrl: './sub-categoria-delete-dialog.component.html'
 })
 export class SubCategoriaDeleteDialogComponent {
-
-    subCategoria: SubCategoria;
+    subCategoria: ISubCategoria;
 
     constructor(
         private subCategoriaService: SubCategoriaService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.subCategoriaService.delete(id).subscribe((response) => {
+        this.subCategoriaService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'subCategoriaListModification',
                 content: 'Deleted an subCategoria'
@@ -43,22 +40,33 @@ export class SubCategoriaDeleteDialogComponent {
     template: ''
 })
 export class SubCategoriaDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private subCategoriaPopupService: SubCategoriaPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.subCategoriaPopupService
-                .open(SubCategoriaDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ subCategoria }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(SubCategoriaDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.subCategoria = subCategoria;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

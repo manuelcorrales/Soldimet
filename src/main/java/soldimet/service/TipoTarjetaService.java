@@ -4,11 +4,13 @@ import soldimet.domain.TipoTarjeta;
 import soldimet.repository.TipoTarjetaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing TipoTarjeta.
  */
@@ -31,14 +33,13 @@ public class TipoTarjetaService {
      * @return the persisted entity
      */
     public TipoTarjeta save(TipoTarjeta tipoTarjeta) {
-        log.debug("Request to save TipoTarjeta : {}", tipoTarjeta);
-        return tipoTarjetaRepository.save(tipoTarjeta);
+        log.debug("Request to save TipoTarjeta : {}", tipoTarjeta);        return tipoTarjetaRepository.save(tipoTarjeta);
     }
 
     /**
-     *  Get all the tipoTarjetas.
+     * Get all the tipoTarjetas.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<TipoTarjeta> findAll() {
@@ -46,25 +47,26 @@ public class TipoTarjetaService {
         return tipoTarjetaRepository.findAll();
     }
 
+
     /**
-     *  Get one tipoTarjeta by id.
+     * Get one tipoTarjeta by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public TipoTarjeta findOne(Long id) {
+    public Optional<TipoTarjeta> findOne(Long id) {
         log.debug("Request to get TipoTarjeta : {}", id);
-        return tipoTarjetaRepository.findOne(id);
+        return tipoTarjetaRepository.findById(id);
     }
 
     /**
-     *  Delete the  tipoTarjeta by id.
+     * Delete the tipoTarjeta by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete TipoTarjeta : {}", id);
-        tipoTarjetaRepository.delete(id);
+        tipoTarjetaRepository.deleteById(id);
     }
 }

@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.DetallePresupuesto;
 import soldimet.service.DetallePresupuestoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class DetallePresupuestoResource {
     public ResponseEntity<DetallePresupuesto> createDetallePresupuesto(@Valid @RequestBody DetallePresupuesto detallePresupuesto) throws URISyntaxException {
         log.debug("REST request to save DetallePresupuesto : {}", detallePresupuesto);
         if (detallePresupuesto.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new detallePresupuesto cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new detallePresupuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         DetallePresupuesto result = detallePresupuestoService.save(detallePresupuesto);
         return ResponseEntity.created(new URI("/api/detalle-presupuestos/" + result.getId()))
@@ -68,7 +69,7 @@ public class DetallePresupuestoResource {
     public ResponseEntity<DetallePresupuesto> updateDetallePresupuesto(@Valid @RequestBody DetallePresupuesto detallePresupuesto) throws URISyntaxException {
         log.debug("REST request to update DetallePresupuesto : {}", detallePresupuesto);
         if (detallePresupuesto.getId() == null) {
-            return createDetallePresupuesto(detallePresupuesto);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         DetallePresupuesto result = detallePresupuestoService.save(detallePresupuesto);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class DetallePresupuestoResource {
     public List<DetallePresupuesto> getAllDetallePresupuestos() {
         log.debug("REST request to get all DetallePresupuestos");
         return detallePresupuestoService.findAll();
-        }
+    }
 
     /**
      * GET  /detalle-presupuestos/:id : get the "id" detallePresupuesto.
@@ -98,8 +99,8 @@ public class DetallePresupuestoResource {
     @Timed
     public ResponseEntity<DetallePresupuesto> getDetallePresupuesto(@PathVariable Long id) {
         log.debug("REST request to get DetallePresupuesto : {}", id);
-        DetallePresupuesto detallePresupuesto = detallePresupuestoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(detallePresupuesto));
+        Optional<DetallePresupuesto> detallePresupuesto = detallePresupuestoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(detallePresupuesto);
     }
 
     /**

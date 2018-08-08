@@ -19,7 +19,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './persona-dialog.component.html'
 })
 export class PersonaDialogComponent implements OnInit {
-
     persona: Persona;
     isSaving: boolean;
 
@@ -37,28 +36,37 @@ export class PersonaDialogComponent implements OnInit {
         private estadoPersonaService: EstadoPersonaService,
         private userService: UserService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.direccionService
-            .query({filter: 'persona-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.direccionService.query({ filter: 'persona-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.persona.direccion || !this.persona.direccion.id) {
                     this.direccions = res.json;
                 } else {
-                    this.direccionService
-                        .find(this.persona.direccion.id)
-                        .subscribe((subRes: Direccion) => {
+                    this.direccionService.find(this.persona.direccion.id).subscribe(
+                        (subRes: Direccion) => {
                             this.direccions = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
-        this.estadoPersonaService.query()
-            .subscribe((res: ResponseWrapper) => { this.estadopersonas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.userService.query()
-            .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.estadoPersonaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.estadopersonas = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.userService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.users = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -68,21 +76,18 @@ export class PersonaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.persona.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.personaService.update(this.persona));
+            this.subscribeToSaveResponse(this.personaService.update(this.persona));
         } else {
-            this.subscribeToSaveResponse(
-                this.personaService.create(this.persona));
+            this.subscribeToSaveResponse(this.personaService.create(this.persona));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Persona>) {
-        result.subscribe((res: Persona) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Persona) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Persona) {
-        this.eventManager.broadcast({ name: 'personaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'personaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -113,22 +118,16 @@ export class PersonaDialogComponent implements OnInit {
     template: ''
 })
 export class PersonaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private personaPopupService: PersonaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private personaPopupService: PersonaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.personaPopupService
-                    .open(PersonaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.personaPopupService.open(PersonaDialogComponent as Component, params['id']);
             } else {
-                this.personaPopupService
-                    .open(PersonaDialogComponent as Component);
+                this.personaPopupService.open(PersonaDialogComponent as Component);
             }
         });
     }

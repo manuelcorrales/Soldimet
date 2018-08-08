@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.service.EstadoMovimientoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EstadoMovimientoResource {
     public ResponseEntity<EstadoMovimiento> createEstadoMovimiento(@Valid @RequestBody EstadoMovimiento estadoMovimiento) throws URISyntaxException {
         log.debug("REST request to save EstadoMovimiento : {}", estadoMovimiento);
         if (estadoMovimiento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new estadoMovimiento cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new estadoMovimiento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EstadoMovimiento result = estadoMovimientoService.save(estadoMovimiento);
         return ResponseEntity.created(new URI("/api/estado-movimientos/" + result.getId()))
@@ -68,7 +69,7 @@ public class EstadoMovimientoResource {
     public ResponseEntity<EstadoMovimiento> updateEstadoMovimiento(@Valid @RequestBody EstadoMovimiento estadoMovimiento) throws URISyntaxException {
         log.debug("REST request to update EstadoMovimiento : {}", estadoMovimiento);
         if (estadoMovimiento.getId() == null) {
-            return createEstadoMovimiento(estadoMovimiento);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EstadoMovimiento result = estadoMovimientoService.save(estadoMovimiento);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EstadoMovimientoResource {
     public List<EstadoMovimiento> getAllEstadoMovimientos() {
         log.debug("REST request to get all EstadoMovimientos");
         return estadoMovimientoService.findAll();
-        }
+    }
 
     /**
      * GET  /estado-movimientos/:id : get the "id" estadoMovimiento.
@@ -98,8 +99,8 @@ public class EstadoMovimientoResource {
     @Timed
     public ResponseEntity<EstadoMovimiento> getEstadoMovimiento(@PathVariable Long id) {
         log.debug("REST request to get EstadoMovimiento : {}", id);
-        EstadoMovimiento estadoMovimiento = estadoMovimientoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(estadoMovimiento));
+        Optional<EstadoMovimiento> estadoMovimiento = estadoMovimientoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(estadoMovimiento);
     }
 
     /**

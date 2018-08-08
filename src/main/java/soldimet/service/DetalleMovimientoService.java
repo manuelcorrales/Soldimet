@@ -4,11 +4,13 @@ import soldimet.domain.DetalleMovimiento;
 import soldimet.repository.DetalleMovimientoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing DetalleMovimiento.
  */
@@ -31,14 +33,13 @@ public class DetalleMovimientoService {
      * @return the persisted entity
      */
     public DetalleMovimiento save(DetalleMovimiento detalleMovimiento) {
-        log.debug("Request to save DetalleMovimiento : {}", detalleMovimiento);
-        return detalleMovimientoRepository.save(detalleMovimiento);
+        log.debug("Request to save DetalleMovimiento : {}", detalleMovimiento);        return detalleMovimientoRepository.save(detalleMovimiento);
     }
 
     /**
-     *  Get all the detalleMovimientos.
+     * Get all the detalleMovimientos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<DetalleMovimiento> findAll() {
@@ -46,25 +47,26 @@ public class DetalleMovimientoService {
         return detalleMovimientoRepository.findAll();
     }
 
+
     /**
-     *  Get one detalleMovimiento by id.
+     * Get one detalleMovimiento by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public DetalleMovimiento findOne(Long id) {
+    public Optional<DetalleMovimiento> findOne(Long id) {
         log.debug("Request to get DetalleMovimiento : {}", id);
-        return detalleMovimientoRepository.findOne(id);
+        return detalleMovimientoRepository.findById(id);
     }
 
     /**
-     *  Delete the  detalleMovimiento by id.
+     * Delete the detalleMovimiento by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete DetalleMovimiento : {}", id);
-        detalleMovimientoRepository.delete(id);
+        detalleMovimientoRepository.deleteById(id);
     }
 }

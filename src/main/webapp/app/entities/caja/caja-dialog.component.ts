@@ -15,7 +15,6 @@ import { CajaService } from './caja.service';
     templateUrl: './caja-dialog.component.html'
 })
 export class CajaDialogComponent implements OnInit {
-
     caja: Caja;
     isSaving: boolean;
     fechaDp: any;
@@ -25,8 +24,7 @@ export class CajaDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private cajaService: CajaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -39,21 +37,18 @@ export class CajaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.caja.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.cajaService.update(this.caja));
+            this.subscribeToSaveResponse(this.cajaService.update(this.caja));
         } else {
-            this.subscribeToSaveResponse(
-                this.cajaService.create(this.caja));
+            this.subscribeToSaveResponse(this.cajaService.create(this.caja));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Caja>) {
-        result.subscribe((res: Caja) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Caja) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Caja) {
-        this.eventManager.broadcast({ name: 'cajaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'cajaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -72,22 +67,16 @@ export class CajaDialogComponent implements OnInit {
     template: ''
 })
 export class CajaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private cajaPopupService: CajaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private cajaPopupService: CajaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.cajaPopupService
-                    .open(CajaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.cajaPopupService.open(CajaDialogComponent as Component, params['id']);
             } else {
-                this.cajaPopupService
-                    .open(CajaDialogComponent as Component);
+                this.cajaPopupService.open(CajaDialogComponent as Component);
             }
         });
     }

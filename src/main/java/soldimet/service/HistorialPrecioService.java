@@ -4,11 +4,13 @@ import soldimet.domain.HistorialPrecio;
 import soldimet.repository.HistorialPrecioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing HistorialPrecio.
  */
@@ -31,14 +33,13 @@ public class HistorialPrecioService {
      * @return the persisted entity
      */
     public HistorialPrecio save(HistorialPrecio historialPrecio) {
-        log.debug("Request to save HistorialPrecio : {}", historialPrecio);
-        return historialPrecioRepository.save(historialPrecio);
+        log.debug("Request to save HistorialPrecio : {}", historialPrecio);        return historialPrecioRepository.save(historialPrecio);
     }
 
     /**
-     *  Get all the historialPrecios.
+     * Get all the historialPrecios.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<HistorialPrecio> findAll() {
@@ -46,25 +47,26 @@ public class HistorialPrecioService {
         return historialPrecioRepository.findAll();
     }
 
+
     /**
-     *  Get one historialPrecio by id.
+     * Get one historialPrecio by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public HistorialPrecio findOne(Long id) {
+    public Optional<HistorialPrecio> findOne(Long id) {
         log.debug("Request to get HistorialPrecio : {}", id);
-        return historialPrecioRepository.findOne(id);
+        return historialPrecioRepository.findById(id);
     }
 
     /**
-     *  Delete the  historialPrecio by id.
+     * Delete the historialPrecio by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete HistorialPrecio : {}", id);
-        historialPrecioRepository.delete(id);
+        historialPrecioRepository.deleteById(id);
     }
 }

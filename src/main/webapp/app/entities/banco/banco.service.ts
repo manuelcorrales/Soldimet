@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { Banco } from './banco.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IBanco } from 'app/shared/model/banco.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IBanco>;
+type EntityArrayResponseType = HttpResponse<IBanco[]>;
+
+@Injectable({ providedIn: 'root' })
 export class BancoService {
-
     private resourceUrl = SERVER_API_URL + 'api/bancos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(banco: Banco): Observable<Banco> {
-        const copy = this.convert(banco);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(banco: IBanco): Observable<EntityResponseType> {
+        return this.http.post<IBanco>(this.resourceUrl, banco, { observe: 'response' });
     }
 
-    update(banco: Banco): Observable<Banco> {
-        const copy = this.convert(banco);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(banco: IBanco): Observable<EntityResponseType> {
+        return this.http.put<IBanco>(this.resourceUrl, banco, { observe: 'response' });
     }
 
-    find(id: number): Observable<Banco> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IBanco>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IBanco[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Banco.
-     */
-    private convertItemFromServer(json: any): Banco {
-        const entity: Banco = Object.assign(new Banco(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a Banco to a JSON which can be sent to the server.
-     */
-    private convert(banco: Banco): Banco {
-        const copy: Banco = Object.assign({}, banco);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

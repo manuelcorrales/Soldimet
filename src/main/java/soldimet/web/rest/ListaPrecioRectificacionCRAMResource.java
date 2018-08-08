@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.ListaPrecioRectificacionCRAM;
 import soldimet.service.ListaPrecioRectificacionCRAMService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class ListaPrecioRectificacionCRAMResource {
     public ResponseEntity<ListaPrecioRectificacionCRAM> createListaPrecioRectificacionCRAM(@Valid @RequestBody ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM) throws URISyntaxException {
         log.debug("REST request to save ListaPrecioRectificacionCRAM : {}", listaPrecioRectificacionCRAM);
         if (listaPrecioRectificacionCRAM.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new listaPrecioRectificacionCRAM cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new listaPrecioRectificacionCRAM cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ListaPrecioRectificacionCRAM result = listaPrecioRectificacionCRAMService.save(listaPrecioRectificacionCRAM);
         return ResponseEntity.created(new URI("/api/lista-precio-rectificacion-crams/" + result.getId()))
@@ -68,7 +69,7 @@ public class ListaPrecioRectificacionCRAMResource {
     public ResponseEntity<ListaPrecioRectificacionCRAM> updateListaPrecioRectificacionCRAM(@Valid @RequestBody ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM) throws URISyntaxException {
         log.debug("REST request to update ListaPrecioRectificacionCRAM : {}", listaPrecioRectificacionCRAM);
         if (listaPrecioRectificacionCRAM.getId() == null) {
-            return createListaPrecioRectificacionCRAM(listaPrecioRectificacionCRAM);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         ListaPrecioRectificacionCRAM result = listaPrecioRectificacionCRAMService.save(listaPrecioRectificacionCRAM);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class ListaPrecioRectificacionCRAMResource {
     public List<ListaPrecioRectificacionCRAM> getAllListaPrecioRectificacionCRAMS() {
         log.debug("REST request to get all ListaPrecioRectificacionCRAMS");
         return listaPrecioRectificacionCRAMService.findAll();
-        }
+    }
 
     /**
      * GET  /lista-precio-rectificacion-crams/:id : get the "id" listaPrecioRectificacionCRAM.
@@ -98,8 +99,8 @@ public class ListaPrecioRectificacionCRAMResource {
     @Timed
     public ResponseEntity<ListaPrecioRectificacionCRAM> getListaPrecioRectificacionCRAM(@PathVariable Long id) {
         log.debug("REST request to get ListaPrecioRectificacionCRAM : {}", id);
-        ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM = listaPrecioRectificacionCRAMService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(listaPrecioRectificacionCRAM));
+        Optional<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAM = listaPrecioRectificacionCRAMService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(listaPrecioRectificacionCRAM);
     }
 
     /**

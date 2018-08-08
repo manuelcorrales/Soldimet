@@ -15,7 +15,6 @@ import { CategoriaPagoService } from './categoria-pago.service';
     templateUrl: './categoria-pago-dialog.component.html'
 })
 export class CategoriaPagoDialogComponent implements OnInit {
-
     categoriaPago: CategoriaPago;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class CategoriaPagoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private categoriaPagoService: CategoriaPagoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class CategoriaPagoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.categoriaPago.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.categoriaPagoService.update(this.categoriaPago));
+            this.subscribeToSaveResponse(this.categoriaPagoService.update(this.categoriaPago));
         } else {
-            this.subscribeToSaveResponse(
-                this.categoriaPagoService.create(this.categoriaPago));
+            this.subscribeToSaveResponse(this.categoriaPagoService.create(this.categoriaPago));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<CategoriaPago>) {
-        result.subscribe((res: CategoriaPago) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: CategoriaPago) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CategoriaPago) {
-        this.eventManager.broadcast({ name: 'categoriaPagoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'categoriaPagoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class CategoriaPagoDialogComponent implements OnInit {
     template: ''
 })
 export class CategoriaPagoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private categoriaPagoPopupService: CategoriaPagoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private categoriaPagoPopupService: CategoriaPagoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.categoriaPagoPopupService
-                    .open(CategoriaPagoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.categoriaPagoPopupService.open(CategoriaPagoDialogComponent as Component, params['id']);
             } else {
-                this.categoriaPagoPopupService
-                    .open(CategoriaPagoDialogComponent as Component);
+                this.categoriaPagoPopupService.open(CategoriaPagoDialogComponent as Component);
             }
         });
     }

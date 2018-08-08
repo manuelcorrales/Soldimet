@@ -1,13 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
+import { EstadoPresupuestoService } from './estado-presupuesto.service';
 import { EstadoPresupuestoComponent } from './estado-presupuesto.component';
 import { EstadoPresupuestoDetailComponent } from './estado-presupuesto-detail.component';
-import { EstadoPresupuestoPopupComponent } from './estado-presupuesto-dialog.component';
+import { EstadoPresupuestoUpdateComponent } from './estado-presupuesto-update.component';
 import { EstadoPresupuestoDeletePopupComponent } from './estado-presupuesto-delete-dialog.component';
+import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
+
+@Injectable({ providedIn: 'root' })
+export class EstadoPresupuestoResolve implements Resolve<IEstadoPresupuesto> {
+    constructor(private service: EstadoPresupuestoService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((estadoPresupuesto: HttpResponse<EstadoPresupuesto>) => estadoPresupuesto.body));
+        }
+        return of(new EstadoPresupuesto());
+    }
+}
 
 export const estadoPresupuestoRoute: Routes = [
     {
@@ -18,9 +34,37 @@ export const estadoPresupuestoRoute: Routes = [
             pageTitle: 'EstadoPresupuestos'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'estado-presupuesto/:id',
+    },
+    {
+        path: 'estado-presupuesto/:id/view',
         component: EstadoPresupuestoDetailComponent,
+        resolve: {
+            estadoPresupuesto: EstadoPresupuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoPresupuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-presupuesto/new',
+        component: EstadoPresupuestoUpdateComponent,
+        resolve: {
+            estadoPresupuesto: EstadoPresupuestoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoPresupuestos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-presupuesto/:id/edit',
+        component: EstadoPresupuestoUpdateComponent,
+        resolve: {
+            estadoPresupuesto: EstadoPresupuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoPresupuestos'
@@ -31,28 +75,11 @@ export const estadoPresupuestoRoute: Routes = [
 
 export const estadoPresupuestoPopupRoute: Routes = [
     {
-        path: 'estado-presupuesto-new',
-        component: EstadoPresupuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoPresupuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'estado-presupuesto/:id/edit',
-        component: EstadoPresupuestoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoPresupuestos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'estado-presupuesto/:id/delete',
         component: EstadoPresupuestoDeletePopupComponent,
+        resolve: {
+            estadoPresupuesto: EstadoPresupuestoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoPresupuestos'

@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Marca;
 import soldimet.service.MarcaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class MarcaResource {
     public ResponseEntity<Marca> createMarca(@Valid @RequestBody Marca marca) throws URISyntaxException {
         log.debug("REST request to save Marca : {}", marca);
         if (marca.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new marca cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new marca cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Marca result = marcaService.save(marca);
         return ResponseEntity.created(new URI("/api/marcas/" + result.getId()))
@@ -68,7 +69,7 @@ public class MarcaResource {
     public ResponseEntity<Marca> updateMarca(@Valid @RequestBody Marca marca) throws URISyntaxException {
         log.debug("REST request to update Marca : {}", marca);
         if (marca.getId() == null) {
-            return createMarca(marca);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Marca result = marcaService.save(marca);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class MarcaResource {
     public List<Marca> getAllMarcas() {
         log.debug("REST request to get all Marcas");
         return marcaService.findAll();
-        }
+    }
 
     /**
      * GET  /marcas/:id : get the "id" marca.
@@ -98,8 +99,8 @@ public class MarcaResource {
     @Timed
     public ResponseEntity<Marca> getMarca(@PathVariable Long id) {
         log.debug("REST request to get Marca : {}", id);
-        Marca marca = marcaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(marca));
+        Optional<Marca> marca = marcaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(marca);
     }
 
     /**

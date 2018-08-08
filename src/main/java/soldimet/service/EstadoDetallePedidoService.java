@@ -4,11 +4,13 @@ import soldimet.domain.EstadoDetallePedido;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing EstadoDetallePedido.
  */
@@ -31,14 +33,13 @@ public class EstadoDetallePedidoService {
      * @return the persisted entity
      */
     public EstadoDetallePedido save(EstadoDetallePedido estadoDetallePedido) {
-        log.debug("Request to save EstadoDetallePedido : {}", estadoDetallePedido);
-        return estadoDetallePedidoRepository.save(estadoDetallePedido);
+        log.debug("Request to save EstadoDetallePedido : {}", estadoDetallePedido);        return estadoDetallePedidoRepository.save(estadoDetallePedido);
     }
 
     /**
-     *  Get all the estadoDetallePedidos.
+     * Get all the estadoDetallePedidos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<EstadoDetallePedido> findAll() {
@@ -46,25 +47,26 @@ public class EstadoDetallePedidoService {
         return estadoDetallePedidoRepository.findAll();
     }
 
+
     /**
-     *  Get one estadoDetallePedido by id.
+     * Get one estadoDetallePedido by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public EstadoDetallePedido findOne(Long id) {
+    public Optional<EstadoDetallePedido> findOne(Long id) {
         log.debug("Request to get EstadoDetallePedido : {}", id);
-        return estadoDetallePedidoRepository.findOne(id);
+        return estadoDetallePedidoRepository.findById(id);
     }
 
     /**
-     *  Delete the  estadoDetallePedido by id.
+     * Delete the estadoDetallePedido by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoDetallePedido : {}", id);
-        estadoDetallePedidoRepository.delete(id);
+        estadoDetallePedidoRepository.deleteById(id);
     }
 }

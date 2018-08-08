@@ -33,6 +33,8 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -58,6 +60,8 @@ public class MovimientoResourceIntTest {
 
     @Autowired
     private MovimientoRepository movimientoRepository;
+
+    
 
     @Autowired
     private MovimientoService movimientoService;
@@ -85,6 +89,7 @@ public class MovimientoResourceIntTest {
         this.restMovimientoMockMvc = MockMvcBuilders.standaloneSetup(movimientoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -100,10 +105,10 @@ public class MovimientoResourceIntTest {
             .hora(DEFAULT_HORA)
             .importe(DEFAULT_IMPORTE);
         // Add required entity
-        EstadoMovimiento estado = EstadoMovimientoResourceIntTest.createEntity(em);
-        em.persist(estado);
+        EstadoMovimiento estadoMovimiento = EstadoMovimientoResourceIntTest.createEntity(em);
+        em.persist(estadoMovimiento);
         em.flush();
-        movimiento.setEstado(estado);
+        movimiento.setEstado(estadoMovimiento);
         // Add required entity
         FormaDePago formaDePago = FormaDePagoResourceIntTest.createEntity(em);
         em.persist(formaDePago);
@@ -240,6 +245,7 @@ public class MovimientoResourceIntTest {
             .andExpect(jsonPath("$.[*].hora").value(hasItem(DEFAULT_HORA.toString())))
             .andExpect(jsonPath("$.[*].importe").value(hasItem(DEFAULT_IMPORTE.doubleValue())));
     }
+    
 
     @Test
     @Transactional
@@ -256,7 +262,6 @@ public class MovimientoResourceIntTest {
             .andExpect(jsonPath("$.hora").value(DEFAULT_HORA.toString()))
             .andExpect(jsonPath("$.importe").value(DEFAULT_IMPORTE.doubleValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingMovimiento() throws Exception {
@@ -274,7 +279,9 @@ public class MovimientoResourceIntTest {
         int databaseSizeBeforeUpdate = movimientoRepository.findAll().size();
 
         // Update the movimiento
-        Movimiento updatedMovimiento = movimientoRepository.findOne(movimiento.getId());
+        Movimiento updatedMovimiento = movimientoRepository.findById(movimiento.getId()).get();
+        // Disconnect from session so that the updates on updatedMovimiento are not directly saved in db
+        em.detach(updatedMovimiento);
         updatedMovimiento
             .fecha(UPDATED_FECHA)
             .hora(UPDATED_HORA)
@@ -305,11 +312,11 @@ public class MovimientoResourceIntTest {
         restMovimientoMockMvc.perform(put("/api/movimientos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(movimiento)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Movimiento in the database
         List<Movimiento> movimientoList = movimientoRepository.findAll();
-        assertThat(movimientoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(movimientoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

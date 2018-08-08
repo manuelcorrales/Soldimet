@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 
-import { UserRouteAccessService } from '../shared';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import {OperacionesComponent} from './operaciones.component';
+import { OperacionesComponent } from './operaciones.component';
+import { UserRouteAccessService } from 'app/core';
 
 export const OPERACIONES_ROUTE: Route = {
     path: 'operaciones',

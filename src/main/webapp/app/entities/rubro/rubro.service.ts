@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { Rubro } from './rubro.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IRubro } from 'app/shared/model/rubro.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IRubro>;
+type EntityArrayResponseType = HttpResponse<IRubro[]>;
+
+@Injectable({ providedIn: 'root' })
 export class RubroService {
-
     private resourceUrl = SERVER_API_URL + 'api/rubros';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(rubro: Rubro): Observable<Rubro> {
-        const copy = this.convert(rubro);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(rubro: IRubro): Observable<EntityResponseType> {
+        return this.http.post<IRubro>(this.resourceUrl, rubro, { observe: 'response' });
     }
 
-    update(rubro: Rubro): Observable<Rubro> {
-        const copy = this.convert(rubro);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(rubro: IRubro): Observable<EntityResponseType> {
+        return this.http.put<IRubro>(this.resourceUrl, rubro, { observe: 'response' });
     }
 
-    find(id: number): Observable<Rubro> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IRubro>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IRubro[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Rubro.
-     */
-    private convertItemFromServer(json: any): Rubro {
-        const entity: Rubro = Object.assign(new Rubro(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a Rubro to a JSON which can be sent to the server.
-     */
-    private convert(rubro: Rubro): Rubro {
-        const copy: Rubro = Object.assign({}, rubro);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

@@ -15,7 +15,6 @@ import { TipoDetalleMovimientoService } from './tipo-detalle-movimiento.service'
     templateUrl: './tipo-detalle-movimiento-dialog.component.html'
 })
 export class TipoDetalleMovimientoDialogComponent implements OnInit {
-
     tipoDetalleMovimiento: TipoDetalleMovimiento;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class TipoDetalleMovimientoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private tipoDetalleMovimientoService: TipoDetalleMovimientoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class TipoDetalleMovimientoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.tipoDetalleMovimiento.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.tipoDetalleMovimientoService.update(this.tipoDetalleMovimiento));
+            this.subscribeToSaveResponse(this.tipoDetalleMovimientoService.update(this.tipoDetalleMovimiento));
         } else {
-            this.subscribeToSaveResponse(
-                this.tipoDetalleMovimientoService.create(this.tipoDetalleMovimiento));
+            this.subscribeToSaveResponse(this.tipoDetalleMovimientoService.create(this.tipoDetalleMovimiento));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<TipoDetalleMovimiento>) {
-        result.subscribe((res: TipoDetalleMovimiento) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: TipoDetalleMovimiento) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: TipoDetalleMovimiento) {
-        this.eventManager.broadcast({ name: 'tipoDetalleMovimientoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'tipoDetalleMovimientoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class TipoDetalleMovimientoDialogComponent implements OnInit {
     template: ''
 })
 export class TipoDetalleMovimientoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private tipoDetalleMovimientoPopupService: TipoDetalleMovimientoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private tipoDetalleMovimientoPopupService: TipoDetalleMovimientoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.tipoDetalleMovimientoPopupService
-                    .open(TipoDetalleMovimientoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.tipoDetalleMovimientoPopupService.open(TipoDetalleMovimientoDialogComponent as Component, params['id']);
             } else {
-                this.tipoDetalleMovimientoPopupService
-                    .open(TipoDetalleMovimientoDialogComponent as Component);
+                this.tipoDetalleMovimientoPopupService.open(TipoDetalleMovimientoDialogComponent as Component);
             }
         });
     }

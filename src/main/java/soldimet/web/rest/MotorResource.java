@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Motor;
 import soldimet.service.MotorService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class MotorResource {
     public ResponseEntity<Motor> createMotor(@Valid @RequestBody Motor motor) throws URISyntaxException {
         log.debug("REST request to save Motor : {}", motor);
         if (motor.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new motor cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new motor cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Motor result = motorService.save(motor);
         return ResponseEntity.created(new URI("/api/motors/" + result.getId()))
@@ -68,7 +69,7 @@ public class MotorResource {
     public ResponseEntity<Motor> updateMotor(@Valid @RequestBody Motor motor) throws URISyntaxException {
         log.debug("REST request to update Motor : {}", motor);
         if (motor.getId() == null) {
-            return createMotor(motor);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Motor result = motorService.save(motor);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class MotorResource {
     public List<Motor> getAllMotors() {
         log.debug("REST request to get all Motors");
         return motorService.findAll();
-        }
+    }
 
     /**
      * GET  /motors/:id : get the "id" motor.
@@ -98,8 +99,8 @@ public class MotorResource {
     @Timed
     public ResponseEntity<Motor> getMotor(@PathVariable Long id) {
         log.debug("REST request to get Motor : {}", id);
-        Motor motor = motorService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(motor));
+        Optional<Motor> motor = motorService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(motor);
     }
 
     /**

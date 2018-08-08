@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class EstadoMovimientoResourceIntTest {
 
     @Autowired
     private EstadoMovimientoRepository estadoMovimientoRepository;
+
+    
 
     @Autowired
     private EstadoMovimientoService estadoMovimientoService;
@@ -70,6 +74,7 @@ public class EstadoMovimientoResourceIntTest {
         this.restEstadoMovimientoMockMvc = MockMvcBuilders.standaloneSetup(estadoMovimientoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class EstadoMovimientoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoMovimiento.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class EstadoMovimientoResourceIntTest {
             .andExpect(jsonPath("$.id").value(estadoMovimiento.getId().intValue()))
             .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEstadoMovimiento() throws Exception {
@@ -190,7 +195,9 @@ public class EstadoMovimientoResourceIntTest {
         int databaseSizeBeforeUpdate = estadoMovimientoRepository.findAll().size();
 
         // Update the estadoMovimiento
-        EstadoMovimiento updatedEstadoMovimiento = estadoMovimientoRepository.findOne(estadoMovimiento.getId());
+        EstadoMovimiento updatedEstadoMovimiento = estadoMovimientoRepository.findById(estadoMovimiento.getId()).get();
+        // Disconnect from session so that the updates on updatedEstadoMovimiento are not directly saved in db
+        em.detach(updatedEstadoMovimiento);
         updatedEstadoMovimiento
             .nombreEstado(UPDATED_NOMBRE_ESTADO);
 
@@ -217,11 +224,11 @@ public class EstadoMovimientoResourceIntTest {
         restEstadoMovimientoMockMvc.perform(put("/api/estado-movimientos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(estadoMovimiento)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EstadoMovimiento in the database
         List<EstadoMovimiento> estadoMovimientoList = estadoMovimientoRepository.findAll();
-        assertThat(estadoMovimientoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(estadoMovimientoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

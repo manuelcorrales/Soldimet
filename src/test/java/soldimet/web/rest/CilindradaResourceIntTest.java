@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class CilindradaResourceIntTest {
 
     @Autowired
     private CilindradaRepository cilindradaRepository;
+
+    
 
     @Autowired
     private CilindradaService cilindradaService;
@@ -70,6 +74,7 @@ public class CilindradaResourceIntTest {
         this.restCilindradaMockMvc = MockMvcBuilders.standaloneSetup(cilindradaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class CilindradaResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(cilindrada.getId().intValue())))
             .andExpect(jsonPath("$.[*].cantidadDeCilindros").value(hasItem(DEFAULT_CANTIDAD_DE_CILINDROS)));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class CilindradaResourceIntTest {
             .andExpect(jsonPath("$.id").value(cilindrada.getId().intValue()))
             .andExpect(jsonPath("$.cantidadDeCilindros").value(DEFAULT_CANTIDAD_DE_CILINDROS));
     }
-
     @Test
     @Transactional
     public void getNonExistingCilindrada() throws Exception {
@@ -190,7 +195,9 @@ public class CilindradaResourceIntTest {
         int databaseSizeBeforeUpdate = cilindradaRepository.findAll().size();
 
         // Update the cilindrada
-        Cilindrada updatedCilindrada = cilindradaRepository.findOne(cilindrada.getId());
+        Cilindrada updatedCilindrada = cilindradaRepository.findById(cilindrada.getId()).get();
+        // Disconnect from session so that the updates on updatedCilindrada are not directly saved in db
+        em.detach(updatedCilindrada);
         updatedCilindrada
             .cantidadDeCilindros(UPDATED_CANTIDAD_DE_CILINDROS);
 
@@ -217,11 +224,11 @@ public class CilindradaResourceIntTest {
         restCilindradaMockMvc.perform(put("/api/cilindradas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cilindrada)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Cilindrada in the database
         List<Cilindrada> cilindradaList = cilindradaRepository.findAll();
-        assertThat(cilindradaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(cilindradaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

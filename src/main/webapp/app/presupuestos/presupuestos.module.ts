@@ -8,25 +8,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SoldimetSharedModule } from '../shared/shared.module';
 import { PresupuestosService } from './presupuestos.service';
 import { ClientesNuevopresupuestoComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto.component';
-import { OperacionesNuevopresupuestoComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto.component';
-import { RepuestosNuevopresupuestoComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto.component';
 import { MotorNuevoPresupuestoComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/motor-nuevo-presupuesto/motor-nuevo-presupuesto.component';
 import { FormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { OperacionPrecioComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operacion_precio/operacion-precio.component';
-import { RepuestoPrecioComponent } from './nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuesto_precio/repuesto-precio.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { RepuestosNuevopresupuestoComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto.component';
+import { OperacionesNuevopresupuestoComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto.component';
+import { RepuestoPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuesto_precio/repuesto-precio.component';
+import { OperacionPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operacion_precio/operacion-precio.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
-    imports: [
-        NgSelectModule,
-        BrowserModule,
-        FormsModule,
-        SoldimetSharedModule,
-        CommonModule,
-        RouterModule.forChild(PRESUPUESTOS_ROUTES),
-
-    ],
+    imports: [NgSelectModule, BrowserModule, FormsModule, SoldimetSharedModule, CommonModule, RouterModule.forChild(PRESUPUESTOS_ROUTES)],
     declarations: [
         PresupuestosComponent,
         NuevoPresupuestoComponent,
@@ -35,7 +27,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         RepuestosNuevopresupuestoComponent,
         MotorNuevoPresupuestoComponent,
         OperacionPrecioComponent,
-        RepuestoPrecioComponent,
+        RepuestoPrecioComponent
     ],
     entryComponents: [
         PresupuestosComponent,
@@ -43,17 +35,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         ClientesNuevopresupuestoComponent,
         OperacionesNuevopresupuestoComponent,
         RepuestosNuevopresupuestoComponent,
-        MotorNuevoPresupuestoComponent,
+        MotorNuevoPresupuestoComponent
     ],
-    providers: [
-        PresupuestosService,
-        NgbActiveModal,
-    ],
-    exports: [
-        RouterModule,
-    ],
+    providers: [PresupuestosService, NgbActiveModal],
+    exports: [RouterModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class PresupuestosModule {
-
-}
+export class PresupuestosModule {}

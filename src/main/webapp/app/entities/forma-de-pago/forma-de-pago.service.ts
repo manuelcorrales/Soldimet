@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { FormaDePago } from './forma-de-pago.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IFormaDePago>;
+type EntityArrayResponseType = HttpResponse<IFormaDePago[]>;
+
+@Injectable({ providedIn: 'root' })
 export class FormaDePagoService {
-
     private resourceUrl = SERVER_API_URL + 'api/forma-de-pagos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(formaDePago: FormaDePago): Observable<FormaDePago> {
-        const copy = this.convert(formaDePago);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(formaDePago: IFormaDePago): Observable<EntityResponseType> {
+        return this.http.post<IFormaDePago>(this.resourceUrl, formaDePago, { observe: 'response' });
     }
 
-    update(formaDePago: FormaDePago): Observable<FormaDePago> {
-        const copy = this.convert(formaDePago);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(formaDePago: IFormaDePago): Observable<EntityResponseType> {
+        return this.http.put<IFormaDePago>(this.resourceUrl, formaDePago, { observe: 'response' });
     }
 
-    find(id: number): Observable<FormaDePago> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IFormaDePago>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IFormaDePago[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to FormaDePago.
-     */
-    private convertItemFromServer(json: any): FormaDePago {
-        const entity: FormaDePago = Object.assign(new FormaDePago(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a FormaDePago to a JSON which can be sent to the server.
-     */
-    private convert(formaDePago: FormaDePago): FormaDePago {
-        const copy: FormaDePago = Object.assign({}, formaDePago);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

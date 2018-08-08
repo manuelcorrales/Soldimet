@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Banco;
 import soldimet.service.BancoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class BancoResource {
     public ResponseEntity<Banco> createBanco(@Valid @RequestBody Banco banco) throws URISyntaxException {
         log.debug("REST request to save Banco : {}", banco);
         if (banco.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new banco cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new banco cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Banco result = bancoService.save(banco);
         return ResponseEntity.created(new URI("/api/bancos/" + result.getId()))
@@ -68,7 +69,7 @@ public class BancoResource {
     public ResponseEntity<Banco> updateBanco(@Valid @RequestBody Banco banco) throws URISyntaxException {
         log.debug("REST request to update Banco : {}", banco);
         if (banco.getId() == null) {
-            return createBanco(banco);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Banco result = bancoService.save(banco);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class BancoResource {
     public List<Banco> getAllBancos() {
         log.debug("REST request to get all Bancos");
         return bancoService.findAll();
-        }
+    }
 
     /**
      * GET  /bancos/:id : get the "id" banco.
@@ -98,8 +99,8 @@ public class BancoResource {
     @Timed
     public ResponseEntity<Banco> getBanco(@PathVariable Long id) {
         log.debug("REST request to get Banco : {}", id);
-        Banco banco = bancoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(banco));
+        Optional<Banco> banco = bancoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(banco);
     }
 
     /**

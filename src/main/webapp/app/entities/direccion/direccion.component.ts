@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { Direccion } from './direccion.model';
+import { IDireccion } from 'app/shared/model/direccion.model';
+import { Principal } from 'app/core';
 import { DireccionService } from './direccion.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-direccion',
     templateUrl: './direccion.component.html'
 })
 export class DireccionComponent implements OnInit, OnDestroy {
-direccions: Direccion[];
+    direccions: IDireccion[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ direccions: Direccion[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.direccionService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.direccions = res.json;
+            (res: HttpResponse<IDireccion[]>) => {
+                this.direccions = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInDireccions();
@@ -45,14 +44,15 @@ direccions: Direccion[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: Direccion) {
+    trackId(index: number, item: IDireccion) {
         return item.id;
     }
+
     registerChangeInDireccions() {
-        this.eventSubscriber = this.eventManager.subscribe('direccionListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('direccionListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

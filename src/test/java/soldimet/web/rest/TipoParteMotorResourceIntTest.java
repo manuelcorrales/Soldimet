@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class TipoParteMotorResourceIntTest {
 
     @Autowired
     private TipoParteMotorRepository tipoParteMotorRepository;
+
+    
 
     @Autowired
     private TipoParteMotorService tipoParteMotorService;
@@ -70,6 +74,7 @@ public class TipoParteMotorResourceIntTest {
         this.restTipoParteMotorMockMvc = MockMvcBuilders.standaloneSetup(tipoParteMotorResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class TipoParteMotorResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoParteMotor.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreTipoParteMotor").value(hasItem(DEFAULT_NOMBRE_TIPO_PARTE_MOTOR.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class TipoParteMotorResourceIntTest {
             .andExpect(jsonPath("$.id").value(tipoParteMotor.getId().intValue()))
             .andExpect(jsonPath("$.nombreTipoParteMotor").value(DEFAULT_NOMBRE_TIPO_PARTE_MOTOR.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingTipoParteMotor() throws Exception {
@@ -190,7 +195,9 @@ public class TipoParteMotorResourceIntTest {
         int databaseSizeBeforeUpdate = tipoParteMotorRepository.findAll().size();
 
         // Update the tipoParteMotor
-        TipoParteMotor updatedTipoParteMotor = tipoParteMotorRepository.findOne(tipoParteMotor.getId());
+        TipoParteMotor updatedTipoParteMotor = tipoParteMotorRepository.findById(tipoParteMotor.getId()).get();
+        // Disconnect from session so that the updates on updatedTipoParteMotor are not directly saved in db
+        em.detach(updatedTipoParteMotor);
         updatedTipoParteMotor
             .nombreTipoParteMotor(UPDATED_NOMBRE_TIPO_PARTE_MOTOR);
 
@@ -217,11 +224,11 @@ public class TipoParteMotorResourceIntTest {
         restTipoParteMotorMockMvc.perform(put("/api/tipo-parte-motors")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tipoParteMotor)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the TipoParteMotor in the database
         List<TipoParteMotor> tipoParteMotorList = tipoParteMotorRepository.findAll();
-        assertThat(tipoParteMotorList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(tipoParteMotorList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

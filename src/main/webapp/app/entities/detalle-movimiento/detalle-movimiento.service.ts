@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { DetalleMovimiento } from './detalle-movimiento.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IDetalleMovimiento>;
+type EntityArrayResponseType = HttpResponse<IDetalleMovimiento[]>;
+
+@Injectable({ providedIn: 'root' })
 export class DetalleMovimientoService {
-
     private resourceUrl = SERVER_API_URL + 'api/detalle-movimientos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(detalleMovimiento: DetalleMovimiento): Observable<DetalleMovimiento> {
-        const copy = this.convert(detalleMovimiento);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(detalleMovimiento: IDetalleMovimiento): Observable<EntityResponseType> {
+        return this.http.post<IDetalleMovimiento>(this.resourceUrl, detalleMovimiento, { observe: 'response' });
     }
 
-    update(detalleMovimiento: DetalleMovimiento): Observable<DetalleMovimiento> {
-        const copy = this.convert(detalleMovimiento);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(detalleMovimiento: IDetalleMovimiento): Observable<EntityResponseType> {
+        return this.http.put<IDetalleMovimiento>(this.resourceUrl, detalleMovimiento, { observe: 'response' });
     }
 
-    find(id: number): Observable<DetalleMovimiento> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IDetalleMovimiento>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IDetalleMovimiento[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to DetalleMovimiento.
-     */
-    private convertItemFromServer(json: any): DetalleMovimiento {
-        const entity: DetalleMovimiento = Object.assign(new DetalleMovimiento(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a DetalleMovimiento to a JSON which can be sent to the server.
-     */
-    private convert(detalleMovimiento: DetalleMovimiento): DetalleMovimiento {
-        const copy: DetalleMovimiento = Object.assign({}, detalleMovimiento);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

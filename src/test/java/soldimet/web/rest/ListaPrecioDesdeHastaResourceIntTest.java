@@ -26,6 +26,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,6 +50,8 @@ public class ListaPrecioDesdeHastaResourceIntTest {
 
     @Autowired
     private ListaPrecioDesdeHastaRepository listaPrecioDesdeHastaRepository;
+
+    
 
     @Autowired
     private ListaPrecioDesdeHastaService listaPrecioDesdeHastaService;
@@ -75,6 +79,7 @@ public class ListaPrecioDesdeHastaResourceIntTest {
         this.restListaPrecioDesdeHastaMockMvc = MockMvcBuilders.standaloneSetup(listaPrecioDesdeHastaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -166,6 +171,7 @@ public class ListaPrecioDesdeHastaResourceIntTest {
             .andExpect(jsonPath("$.[*].fechaDesde").value(hasItem(DEFAULT_FECHA_DESDE.toString())))
             .andExpect(jsonPath("$.[*].fechaHasta").value(hasItem(DEFAULT_FECHA_HASTA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -181,7 +187,6 @@ public class ListaPrecioDesdeHastaResourceIntTest {
             .andExpect(jsonPath("$.fechaDesde").value(DEFAULT_FECHA_DESDE.toString()))
             .andExpect(jsonPath("$.fechaHasta").value(DEFAULT_FECHA_HASTA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingListaPrecioDesdeHasta() throws Exception {
@@ -199,7 +204,9 @@ public class ListaPrecioDesdeHastaResourceIntTest {
         int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
 
         // Update the listaPrecioDesdeHasta
-        ListaPrecioDesdeHasta updatedListaPrecioDesdeHasta = listaPrecioDesdeHastaRepository.findOne(listaPrecioDesdeHasta.getId());
+        ListaPrecioDesdeHasta updatedListaPrecioDesdeHasta = listaPrecioDesdeHastaRepository.findById(listaPrecioDesdeHasta.getId()).get();
+        // Disconnect from session so that the updates on updatedListaPrecioDesdeHasta are not directly saved in db
+        em.detach(updatedListaPrecioDesdeHasta);
         updatedListaPrecioDesdeHasta
             .fechaDesde(UPDATED_FECHA_DESDE)
             .fechaHasta(UPDATED_FECHA_HASTA);
@@ -228,11 +235,11 @@ public class ListaPrecioDesdeHastaResourceIntTest {
         restListaPrecioDesdeHastaMockMvc.perform(put("/api/lista-precio-desde-hastas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the ListaPrecioDesdeHasta in the database
         List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
-        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

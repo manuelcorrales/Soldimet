@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { EstadoPersona } from './estado-persona.model';
+import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
+import { Principal } from 'app/core';
 import { EstadoPersonaService } from './estado-persona.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-estado-persona',
     templateUrl: './estado-persona.component.html'
 })
 export class EstadoPersonaComponent implements OnInit, OnDestroy {
-estadoPersonas: EstadoPersona[];
+    estadoPersonas: IEstadoPersona[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ estadoPersonas: EstadoPersona[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.estadoPersonaService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.estadoPersonas = res.json;
+            (res: HttpResponse<IEstadoPersona[]>) => {
+                this.estadoPersonas = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInEstadoPersonas();
@@ -45,14 +44,15 @@ estadoPersonas: EstadoPersona[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: EstadoPersona) {
+    trackId(index: number, item: IEstadoPersona) {
         return item.id;
     }
+
     registerChangeInEstadoPersonas() {
-        this.eventSubscriber = this.eventManager.subscribe('estadoPersonaListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('estadoPersonaListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

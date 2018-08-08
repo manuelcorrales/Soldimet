@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,6 +49,8 @@ public class EmpleadoResourceIntTest {
 
     @Autowired
     private EmpleadoRepository empleadoRepository;
+
+    
 
     @Autowired
     private EmpleadoService empleadoService;
@@ -74,6 +78,7 @@ public class EmpleadoResourceIntTest {
         this.restEmpleadoMockMvc = MockMvcBuilders.standaloneSetup(empleadoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -188,6 +193,7 @@ public class EmpleadoResourceIntTest {
             .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())))
             .andExpect(jsonPath("$.[*].contrasenia").value(hasItem(DEFAULT_CONTRASENIA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -203,7 +209,6 @@ public class EmpleadoResourceIntTest {
             .andExpect(jsonPath("$.usuario").value(DEFAULT_USUARIO.toString()))
             .andExpect(jsonPath("$.contrasenia").value(DEFAULT_CONTRASENIA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEmpleado() throws Exception {
@@ -221,7 +226,9 @@ public class EmpleadoResourceIntTest {
         int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
 
         // Update the empleado
-        Empleado updatedEmpleado = empleadoRepository.findOne(empleado.getId());
+        Empleado updatedEmpleado = empleadoRepository.findById(empleado.getId()).get();
+        // Disconnect from session so that the updates on updatedEmpleado are not directly saved in db
+        em.detach(updatedEmpleado);
         updatedEmpleado
             .usuario(UPDATED_USUARIO)
             .contrasenia(UPDATED_CONTRASENIA);
@@ -250,11 +257,11 @@ public class EmpleadoResourceIntTest {
         restEmpleadoMockMvc.perform(put("/api/empleados")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(empleado)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Empleado in the database
         List<Empleado> empleadoList = empleadoRepository.findAll();
-        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

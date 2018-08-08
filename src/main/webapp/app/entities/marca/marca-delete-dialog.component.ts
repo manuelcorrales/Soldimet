@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Marca } from './marca.model';
-import { MarcaPopupService } from './marca-popup.service';
+import { IMarca } from 'app/shared/model/marca.model';
 import { MarcaService } from './marca.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { MarcaService } from './marca.service';
     templateUrl: './marca-delete-dialog.component.html'
 })
 export class MarcaDeleteDialogComponent {
+    marca: IMarca;
 
-    marca: Marca;
-
-    constructor(
-        private marcaService: MarcaService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private marcaService: MarcaService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.marcaService.delete(id).subscribe((response) => {
+        this.marcaService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'marcaListModification',
                 content: 'Deleted an marca'
@@ -43,22 +36,30 @@ export class MarcaDeleteDialogComponent {
     template: ''
 })
 export class MarcaDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private marcaPopupService: MarcaPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.marcaPopupService
-                .open(MarcaDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ marca }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(MarcaDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.marca = marca;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

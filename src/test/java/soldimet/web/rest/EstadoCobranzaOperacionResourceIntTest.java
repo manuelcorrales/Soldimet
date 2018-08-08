@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class EstadoCobranzaOperacionResourceIntTest {
 
     @Autowired
     private EstadoCobranzaOperacionRepository estadoCobranzaOperacionRepository;
+
+    
 
     @Autowired
     private EstadoCobranzaOperacionService estadoCobranzaOperacionService;
@@ -70,6 +74,7 @@ public class EstadoCobranzaOperacionResourceIntTest {
         this.restEstadoCobranzaOperacionMockMvc = MockMvcBuilders.standaloneSetup(estadoCobranzaOperacionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class EstadoCobranzaOperacionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoCobranzaOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class EstadoCobranzaOperacionResourceIntTest {
             .andExpect(jsonPath("$.id").value(estadoCobranzaOperacion.getId().intValue()))
             .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEstadoCobranzaOperacion() throws Exception {
@@ -190,7 +195,9 @@ public class EstadoCobranzaOperacionResourceIntTest {
         int databaseSizeBeforeUpdate = estadoCobranzaOperacionRepository.findAll().size();
 
         // Update the estadoCobranzaOperacion
-        EstadoCobranzaOperacion updatedEstadoCobranzaOperacion = estadoCobranzaOperacionRepository.findOne(estadoCobranzaOperacion.getId());
+        EstadoCobranzaOperacion updatedEstadoCobranzaOperacion = estadoCobranzaOperacionRepository.findById(estadoCobranzaOperacion.getId()).get();
+        // Disconnect from session so that the updates on updatedEstadoCobranzaOperacion are not directly saved in db
+        em.detach(updatedEstadoCobranzaOperacion);
         updatedEstadoCobranzaOperacion
             .nombreEstado(UPDATED_NOMBRE_ESTADO);
 
@@ -217,11 +224,11 @@ public class EstadoCobranzaOperacionResourceIntTest {
         restEstadoCobranzaOperacionMockMvc.perform(put("/api/estado-cobranza-operacions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(estadoCobranzaOperacion)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EstadoCobranzaOperacion in the database
         List<EstadoCobranzaOperacion> estadoCobranzaOperacionList = estadoCobranzaOperacionRepository.findAll();
-        assertThat(estadoCobranzaOperacionList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(estadoCobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -36,7 +36,7 @@ public class ExpertoCUCancelarMovimiento {
 
         EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
-        Movimiento mov =movimientoRepository.findOne(movimiento);
+        Movimiento mov =movimientoRepository.findById(movimiento).get();
 
         mov.setEstado(estadoBaja);
 

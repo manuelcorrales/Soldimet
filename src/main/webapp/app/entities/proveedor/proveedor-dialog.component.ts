@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './proveedor-dialog.component.html'
 })
 export class ProveedorDialogComponent implements OnInit {
-
     proveedor: Proveedor;
     isSaving: boolean;
 
@@ -29,24 +28,25 @@ export class ProveedorDialogComponent implements OnInit {
         private proveedorService: ProveedorService,
         private personaService: PersonaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.personaService
-            .query({filter: 'proveedor-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.personaService.query({ filter: 'proveedor-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.proveedor.persona || !this.proveedor.persona.id) {
                     this.personas = res.json;
                 } else {
-                    this.personaService
-                        .find(this.proveedor.persona.id)
-                        .subscribe((subRes: Persona) => {
+                    this.personaService.find(this.proveedor.persona.id).subscribe(
+                        (subRes: Persona) => {
                             this.personas = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -56,21 +56,18 @@ export class ProveedorDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.proveedor.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.proveedorService.update(this.proveedor));
+            this.subscribeToSaveResponse(this.proveedorService.update(this.proveedor));
         } else {
-            this.subscribeToSaveResponse(
-                this.proveedorService.create(this.proveedor));
+            this.subscribeToSaveResponse(this.proveedorService.create(this.proveedor));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Proveedor>) {
-        result.subscribe((res: Proveedor) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Proveedor) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Proveedor) {
-        this.eventManager.broadcast({ name: 'proveedorListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'proveedorListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -93,22 +90,16 @@ export class ProveedorDialogComponent implements OnInit {
     template: ''
 })
 export class ProveedorPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private proveedorPopupService: ProveedorPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private proveedorPopupService: ProveedorPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.proveedorPopupService
-                    .open(ProveedorDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.proveedorPopupService.open(ProveedorDialogComponent as Component, params['id']);
             } else {
-                this.proveedorPopupService
-                    .open(ProveedorDialogComponent as Component);
+                this.proveedorPopupService.open(ProveedorDialogComponent as Component);
             }
         });
     }

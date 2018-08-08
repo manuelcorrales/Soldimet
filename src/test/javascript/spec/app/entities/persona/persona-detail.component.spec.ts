@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { PersonaDetailComponent } from '../../../../../../main/webapp/app/entities/persona/persona-detail.component';
-import { PersonaService } from '../../../../../../main/webapp/app/entities/persona/persona.service';
-import { Persona } from '../../../../../../main/webapp/app/entities/persona/persona.model';
+import { PersonaDetailComponent } from 'app/entities/persona/persona-detail.component';
+import { Persona } from 'app/shared/model/persona.model';
 
 describe('Component Tests', () => {
-
     describe('Persona Management Detail Component', () => {
         let comp: PersonaDetailComponent;
         let fixture: ComponentFixture<PersonaDetailComponent>;
-        let service: PersonaService;
+        const route = ({ data: of({ persona: new Persona(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [PersonaDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    PersonaService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(PersonaDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(PersonaDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(PersonaDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(PersonaService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new Persona(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.persona).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.persona).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

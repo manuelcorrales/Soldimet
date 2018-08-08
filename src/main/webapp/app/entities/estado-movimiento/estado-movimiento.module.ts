@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    EstadoMovimientoService,
-    EstadoMovimientoPopupService,
     EstadoMovimientoComponent,
     EstadoMovimientoDetailComponent,
-    EstadoMovimientoDialogComponent,
-    EstadoMovimientoPopupComponent,
+    EstadoMovimientoUpdateComponent,
     EstadoMovimientoDeletePopupComponent,
     EstadoMovimientoDeleteDialogComponent,
     estadoMovimientoRoute,
-    estadoMovimientoPopupRoute,
+    estadoMovimientoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...estadoMovimientoRoute,
-    ...estadoMovimientoPopupRoute,
-];
+const ENTITY_STATES = [...estadoMovimientoRoute, ...estadoMovimientoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EstadoMovimientoComponent,
         EstadoMovimientoDetailComponent,
-        EstadoMovimientoDialogComponent,
+        EstadoMovimientoUpdateComponent,
         EstadoMovimientoDeleteDialogComponent,
-        EstadoMovimientoPopupComponent,
-        EstadoMovimientoDeletePopupComponent,
+        EstadoMovimientoDeletePopupComponent
     ],
     entryComponents: [
         EstadoMovimientoComponent,
-        EstadoMovimientoDialogComponent,
-        EstadoMovimientoPopupComponent,
+        EstadoMovimientoUpdateComponent,
         EstadoMovimientoDeleteDialogComponent,
-        EstadoMovimientoDeletePopupComponent,
-    ],
-    providers: [
-        EstadoMovimientoService,
-        EstadoMovimientoPopupService,
+        EstadoMovimientoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

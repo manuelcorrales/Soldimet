@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { TipoParteMotor } from './tipo-parte-motor.model';
+import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
+import { Principal } from 'app/core';
 import { TipoParteMotorService } from './tipo-parte-motor.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-tipo-parte-motor',
     templateUrl: './tipo-parte-motor.component.html'
 })
 export class TipoParteMotorComponent implements OnInit, OnDestroy {
-tipoParteMotors: TipoParteMotor[];
+    tipoParteMotors: ITipoParteMotor[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ tipoParteMotors: TipoParteMotor[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.tipoParteMotorService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.tipoParteMotors = res.json;
+            (res: HttpResponse<ITipoParteMotor[]>) => {
+                this.tipoParteMotors = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInTipoParteMotors();
@@ -45,14 +44,15 @@ tipoParteMotors: TipoParteMotor[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: TipoParteMotor) {
+    trackId(index: number, item: ITipoParteMotor) {
         return item.id;
     }
+
     registerChangeInTipoParteMotors() {
-        this.eventSubscriber = this.eventManager.subscribe('tipoParteMotorListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('tipoParteMotorListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

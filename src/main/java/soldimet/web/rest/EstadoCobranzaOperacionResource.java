@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoCobranzaOperacion;
 import soldimet.service.EstadoCobranzaOperacionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EstadoCobranzaOperacionResource {
     public ResponseEntity<EstadoCobranzaOperacion> createEstadoCobranzaOperacion(@Valid @RequestBody EstadoCobranzaOperacion estadoCobranzaOperacion) throws URISyntaxException {
         log.debug("REST request to save EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);
         if (estadoCobranzaOperacion.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new estadoCobranzaOperacion cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new estadoCobranzaOperacion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EstadoCobranzaOperacion result = estadoCobranzaOperacionService.save(estadoCobranzaOperacion);
         return ResponseEntity.created(new URI("/api/estado-cobranza-operacions/" + result.getId()))
@@ -68,7 +69,7 @@ public class EstadoCobranzaOperacionResource {
     public ResponseEntity<EstadoCobranzaOperacion> updateEstadoCobranzaOperacion(@Valid @RequestBody EstadoCobranzaOperacion estadoCobranzaOperacion) throws URISyntaxException {
         log.debug("REST request to update EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);
         if (estadoCobranzaOperacion.getId() == null) {
-            return createEstadoCobranzaOperacion(estadoCobranzaOperacion);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EstadoCobranzaOperacion result = estadoCobranzaOperacionService.save(estadoCobranzaOperacion);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EstadoCobranzaOperacionResource {
     public List<EstadoCobranzaOperacion> getAllEstadoCobranzaOperacions() {
         log.debug("REST request to get all EstadoCobranzaOperacions");
         return estadoCobranzaOperacionService.findAll();
-        }
+    }
 
     /**
      * GET  /estado-cobranza-operacions/:id : get the "id" estadoCobranzaOperacion.
@@ -98,8 +99,8 @@ public class EstadoCobranzaOperacionResource {
     @Timed
     public ResponseEntity<EstadoCobranzaOperacion> getEstadoCobranzaOperacion(@PathVariable Long id) {
         log.debug("REST request to get EstadoCobranzaOperacion : {}", id);
-        EstadoCobranzaOperacion estadoCobranzaOperacion = estadoCobranzaOperacionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(estadoCobranzaOperacion));
+        Optional<EstadoCobranzaOperacion> estadoCobranzaOperacion = estadoCobranzaOperacionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(estadoCobranzaOperacion);
     }
 
     /**

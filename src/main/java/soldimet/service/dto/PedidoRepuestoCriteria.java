@@ -36,6 +36,8 @@ public class PedidoRepuestoCriteria implements Serializable {
 
     private LongFilter estadoPedidoRepuestoId;
 
+    private LongFilter detallePedidoId;
+
     private LongFilter presupuestoId;
 
     public PedidoRepuestoCriteria() {
@@ -81,6 +83,14 @@ public class PedidoRepuestoCriteria implements Serializable {
         this.estadoPedidoRepuestoId = estadoPedidoRepuestoId;
     }
 
+    public LongFilter getDetallePedidoId() {
+        return detallePedidoId;
+    }
+
+    public void setDetallePedidoId(LongFilter detallePedidoId) {
+        this.detallePedidoId = detallePedidoId;
+    }
+
     public LongFilter getPresupuestoId() {
         return presupuestoId;
     }
@@ -97,6 +107,7 @@ public class PedidoRepuestoCriteria implements Serializable {
                 (fechaPedido != null ? "fechaPedido=" + fechaPedido + ", " : "") +
                 (fechaRecibo != null ? "fechaRecibo=" + fechaRecibo + ", " : "") +
                 (estadoPedidoRepuestoId != null ? "estadoPedidoRepuestoId=" + estadoPedidoRepuestoId + ", " : "") +
+                (detallePedidoId != null ? "detallePedidoId=" + detallePedidoId + ", " : "") +
                 (presupuestoId != null ? "presupuestoId=" + presupuestoId + ", " : "") +
             "}";
     }

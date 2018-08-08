@@ -15,7 +15,6 @@ import { LocalidadService } from './localidad.service';
     templateUrl: './localidad-dialog.component.html'
 })
 export class LocalidadDialogComponent implements OnInit {
-
     localidad: Localidad;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class LocalidadDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private localidadService: LocalidadService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class LocalidadDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.localidad.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.localidadService.update(this.localidad));
+            this.subscribeToSaveResponse(this.localidadService.update(this.localidad));
         } else {
-            this.subscribeToSaveResponse(
-                this.localidadService.create(this.localidad));
+            this.subscribeToSaveResponse(this.localidadService.create(this.localidad));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Localidad>) {
-        result.subscribe((res: Localidad) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Localidad) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Localidad) {
-        this.eventManager.broadcast({ name: 'localidadListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'localidadListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class LocalidadDialogComponent implements OnInit {
     template: ''
 })
 export class LocalidadPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private localidadPopupService: LocalidadPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private localidadPopupService: LocalidadPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.localidadPopupService
-                    .open(LocalidadDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.localidadPopupService.open(LocalidadDialogComponent as Component, params['id']);
             } else {
-                this.localidadPopupService
-                    .open(LocalidadDialogComponent as Component);
+                this.localidadPopupService.open(LocalidadDialogComponent as Component);
             }
         });
     }

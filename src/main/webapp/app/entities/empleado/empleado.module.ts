@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    EmpleadoService,
-    EmpleadoPopupService,
     EmpleadoComponent,
     EmpleadoDetailComponent,
-    EmpleadoDialogComponent,
-    EmpleadoPopupComponent,
+    EmpleadoUpdateComponent,
     EmpleadoDeletePopupComponent,
     EmpleadoDeleteDialogComponent,
     empleadoRoute,
-    empleadoPopupRoute,
+    empleadoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...empleadoRoute,
-    ...empleadoPopupRoute,
-];
+const ENTITY_STATES = [...empleadoRoute, ...empleadoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EmpleadoComponent,
         EmpleadoDetailComponent,
-        EmpleadoDialogComponent,
+        EmpleadoUpdateComponent,
         EmpleadoDeleteDialogComponent,
-        EmpleadoPopupComponent,
-        EmpleadoDeletePopupComponent,
+        EmpleadoDeletePopupComponent
     ],
-    entryComponents: [
-        EmpleadoComponent,
-        EmpleadoDialogComponent,
-        EmpleadoPopupComponent,
-        EmpleadoDeleteDialogComponent,
-        EmpleadoDeletePopupComponent,
-    ],
-    providers: [
-        EmpleadoService,
-        EmpleadoPopupService,
-    ],
+    entryComponents: [EmpleadoComponent, EmpleadoUpdateComponent, EmpleadoDeleteDialogComponent, EmpleadoDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetEmpleadoModule {}

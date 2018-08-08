@@ -1,13 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EstadoDetallePedido } from 'app/shared/model/estado-detalle-pedido.model';
+import { EstadoDetallePedidoService } from './estado-detalle-pedido.service';
 import { EstadoDetallePedidoComponent } from './estado-detalle-pedido.component';
 import { EstadoDetallePedidoDetailComponent } from './estado-detalle-pedido-detail.component';
-import { EstadoDetallePedidoPopupComponent } from './estado-detalle-pedido-dialog.component';
+import { EstadoDetallePedidoUpdateComponent } from './estado-detalle-pedido-update.component';
 import { EstadoDetallePedidoDeletePopupComponent } from './estado-detalle-pedido-delete-dialog.component';
+import { IEstadoDetallePedido } from 'app/shared/model/estado-detalle-pedido.model';
+
+@Injectable({ providedIn: 'root' })
+export class EstadoDetallePedidoResolve implements Resolve<IEstadoDetallePedido> {
+    constructor(private service: EstadoDetallePedidoService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((estadoDetallePedido: HttpResponse<EstadoDetallePedido>) => estadoDetallePedido.body));
+        }
+        return of(new EstadoDetallePedido());
+    }
+}
 
 export const estadoDetallePedidoRoute: Routes = [
     {
@@ -18,9 +34,37 @@ export const estadoDetallePedidoRoute: Routes = [
             pageTitle: 'EstadoDetallePedidos'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'estado-detalle-pedido/:id',
+    },
+    {
+        path: 'estado-detalle-pedido/:id/view',
         component: EstadoDetallePedidoDetailComponent,
+        resolve: {
+            estadoDetallePedido: EstadoDetallePedidoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoDetallePedidos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-detalle-pedido/new',
+        component: EstadoDetallePedidoUpdateComponent,
+        resolve: {
+            estadoDetallePedido: EstadoDetallePedidoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'EstadoDetallePedidos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'estado-detalle-pedido/:id/edit',
+        component: EstadoDetallePedidoUpdateComponent,
+        resolve: {
+            estadoDetallePedido: EstadoDetallePedidoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoDetallePedidos'
@@ -31,28 +75,11 @@ export const estadoDetallePedidoRoute: Routes = [
 
 export const estadoDetallePedidoPopupRoute: Routes = [
     {
-        path: 'estado-detalle-pedido-new',
-        component: EstadoDetallePedidoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoDetallePedidos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'estado-detalle-pedido/:id/edit',
-        component: EstadoDetallePedidoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'EstadoDetallePedidos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'estado-detalle-pedido/:id/delete',
         component: EstadoDetallePedidoDeletePopupComponent,
+        resolve: {
+            estadoDetallePedido: EstadoDetallePedidoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'EstadoDetallePedidos'

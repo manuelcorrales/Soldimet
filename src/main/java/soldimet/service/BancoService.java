@@ -4,11 +4,13 @@ import soldimet.domain.Banco;
 import soldimet.repository.BancoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing Banco.
  */
@@ -31,14 +33,13 @@ public class BancoService {
      * @return the persisted entity
      */
     public Banco save(Banco banco) {
-        log.debug("Request to save Banco : {}", banco);
-        return bancoRepository.save(banco);
+        log.debug("Request to save Banco : {}", banco);        return bancoRepository.save(banco);
     }
 
     /**
-     *  Get all the bancos.
+     * Get all the bancos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Banco> findAll() {
@@ -46,25 +47,26 @@ public class BancoService {
         return bancoRepository.findAll();
     }
 
+
     /**
-     *  Get one banco by id.
+     * Get one banco by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Banco findOne(Long id) {
+    public Optional<Banco> findOne(Long id) {
         log.debug("Request to get Banco : {}", id);
-        return bancoRepository.findOne(id);
+        return bancoRepository.findById(id);
     }
 
     /**
-     *  Delete the  banco by id.
+     * Delete the banco by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Banco : {}", id);
-        bancoRepository.delete(id);
+        bancoRepository.deleteById(id);
     }
 }

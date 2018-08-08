@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.PagoTarjeta;
 import soldimet.service.PagoTarjetaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class PagoTarjetaResource {
     public ResponseEntity<PagoTarjeta> createPagoTarjeta(@Valid @RequestBody PagoTarjeta pagoTarjeta) throws URISyntaxException {
         log.debug("REST request to save PagoTarjeta : {}", pagoTarjeta);
         if (pagoTarjeta.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new pagoTarjeta cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new pagoTarjeta cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PagoTarjeta result = pagoTarjetaService.save(pagoTarjeta);
         return ResponseEntity.created(new URI("/api/pago-tarjetas/" + result.getId()))
@@ -68,7 +69,7 @@ public class PagoTarjetaResource {
     public ResponseEntity<PagoTarjeta> updatePagoTarjeta(@Valid @RequestBody PagoTarjeta pagoTarjeta) throws URISyntaxException {
         log.debug("REST request to update PagoTarjeta : {}", pagoTarjeta);
         if (pagoTarjeta.getId() == null) {
-            return createPagoTarjeta(pagoTarjeta);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         PagoTarjeta result = pagoTarjetaService.save(pagoTarjeta);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class PagoTarjetaResource {
     public List<PagoTarjeta> getAllPagoTarjetas() {
         log.debug("REST request to get all PagoTarjetas");
         return pagoTarjetaService.findAll();
-        }
+    }
 
     /**
      * GET  /pago-tarjetas/:id : get the "id" pagoTarjeta.
@@ -98,8 +99,8 @@ public class PagoTarjetaResource {
     @Timed
     public ResponseEntity<PagoTarjeta> getPagoTarjeta(@PathVariable Long id) {
         log.debug("REST request to get PagoTarjeta : {}", id);
-        PagoTarjeta pagoTarjeta = pagoTarjetaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(pagoTarjeta));
+        Optional<PagoTarjeta> pagoTarjeta = pagoTarjetaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(pagoTarjeta);
     }
 
     /**

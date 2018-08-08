@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    EstadoCobranzaOperacionService,
-    EstadoCobranzaOperacionPopupService,
     EstadoCobranzaOperacionComponent,
     EstadoCobranzaOperacionDetailComponent,
-    EstadoCobranzaOperacionDialogComponent,
-    EstadoCobranzaOperacionPopupComponent,
+    EstadoCobranzaOperacionUpdateComponent,
     EstadoCobranzaOperacionDeletePopupComponent,
     EstadoCobranzaOperacionDeleteDialogComponent,
     estadoCobranzaOperacionRoute,
-    estadoCobranzaOperacionPopupRoute,
+    estadoCobranzaOperacionPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...estadoCobranzaOperacionRoute,
-    ...estadoCobranzaOperacionPopupRoute,
-];
+const ENTITY_STATES = [...estadoCobranzaOperacionRoute, ...estadoCobranzaOperacionPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EstadoCobranzaOperacionComponent,
         EstadoCobranzaOperacionDetailComponent,
-        EstadoCobranzaOperacionDialogComponent,
+        EstadoCobranzaOperacionUpdateComponent,
         EstadoCobranzaOperacionDeleteDialogComponent,
-        EstadoCobranzaOperacionPopupComponent,
-        EstadoCobranzaOperacionDeletePopupComponent,
+        EstadoCobranzaOperacionDeletePopupComponent
     ],
     entryComponents: [
         EstadoCobranzaOperacionComponent,
-        EstadoCobranzaOperacionDialogComponent,
-        EstadoCobranzaOperacionPopupComponent,
+        EstadoCobranzaOperacionUpdateComponent,
         EstadoCobranzaOperacionDeleteDialogComponent,
-        EstadoCobranzaOperacionDeletePopupComponent,
-    ],
-    providers: [
-        EstadoCobranzaOperacionService,
-        EstadoCobranzaOperacionPopupService,
+        EstadoCobranzaOperacionDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

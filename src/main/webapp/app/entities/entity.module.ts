@@ -55,6 +55,7 @@ import { SoldimetMovimientoPedidoModule } from './movimiento-pedido/movimiento-p
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
+    // prettier-ignore
     imports: [
         SoldimetAplicacionModule,
         SoldimetArticuloModule,

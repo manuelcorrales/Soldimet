@@ -15,38 +15,36 @@ import { DatePipe } from '@angular/common';
     styles: []
 })
 export class PresupuestosComponent implements OnInit {
-
-    @ViewChild('toastr', { read: ViewContainerRef }) toastrContainer: ViewContainerRef;
+    @ViewChild('toastr', { read: ViewContainerRef })
+    toastrContainer: ViewContainerRef;
 
     presupuestos: DtoPresupuestoCabeceraComponent[] = [];
 
-    constructor(private _presupuestoService: PresupuestoService,
+    constructor(
+        private _presupuestoService: PresupuestoService,
         private _presupuestosService: PresupuestosService,
-        private datePipe: DatePipe) {
-    }
+        private datePipe: DatePipe
+    ) {}
 
     ngOnInit() {
-        this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos) => {
+        this._presupuestosService.findPresupuestoCabecera().subscribe(presupuestos => {
             this.presupuestos.push(...presupuestos);
-        })
+        });
     }
 
     aceptarPresupuesto(dtoPResupuesto: DtoPresupuestoCabeceraComponent) {
-        this._presupuestosService.aceptarPresupuesto(dtoPResupuesto).subscribe(
-            (dto) => {
-                const presupuestos = this.presupuestos.filter((obj) => obj.codigo !== dto.codigo);
-                presupuestos.push(dto);
-                this.presupuestos = presupuestos;
-        })
+        this._presupuestosService.aceptarPresupuesto(dtoPResupuesto).subscribe(dto => {
+            const presupuestos = this.presupuestos.filter(obj => obj.codigo !== dto.codigo);
+            presupuestos.push(dto);
+            this.presupuestos = presupuestos;
+        });
     }
 
     cancelarPresupuesto(dtoPResupuesto: DtoPresupuestoCabeceraComponent) {
-        this._presupuestosService.cancelarPresupuesto(dtoPResupuesto).subscribe(
-            (dto) => {
-                const presupuestos = this.presupuestos.filter((obj) => obj.codigo !== dto.codigo);
-                presupuestos.push(dto);
-                this.presupuestos = presupuestos;
-            })
+        this._presupuestosService.cancelarPresupuesto(dtoPResupuesto).subscribe(dto => {
+            const presupuestos = this.presupuestos.filter(obj => obj.codigo !== dto.codigo);
+            presupuestos.push(dto);
+            this.presupuestos = presupuestos;
+        });
     }
-
 }

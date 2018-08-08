@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Persona } from './persona.model';
-import { PersonaPopupService } from './persona-popup.service';
+import { IPersona } from 'app/shared/model/persona.model';
 import { PersonaService } from './persona.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { PersonaService } from './persona.service';
     templateUrl: './persona-delete-dialog.component.html'
 })
 export class PersonaDeleteDialogComponent {
+    persona: IPersona;
 
-    persona: Persona;
-
-    constructor(
-        private personaService: PersonaService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private personaService: PersonaService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.personaService.delete(id).subscribe((response) => {
+        this.personaService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'personaListModification',
                 content: 'Deleted an persona'
@@ -43,22 +36,30 @@ export class PersonaDeleteDialogComponent {
     template: ''
 })
 export class PersonaDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private personaPopupService: PersonaPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.personaPopupService
-                .open(PersonaDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ persona }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(PersonaDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.persona = persona;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

@@ -15,7 +15,6 @@ import { BancoService } from './banco.service';
     templateUrl: './banco-dialog.component.html'
 })
 export class BancoDialogComponent implements OnInit {
-
     banco: Banco;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class BancoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private bancoService: BancoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class BancoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.banco.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.bancoService.update(this.banco));
+            this.subscribeToSaveResponse(this.bancoService.update(this.banco));
         } else {
-            this.subscribeToSaveResponse(
-                this.bancoService.create(this.banco));
+            this.subscribeToSaveResponse(this.bancoService.create(this.banco));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Banco>) {
-        result.subscribe((res: Banco) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Banco) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Banco) {
-        this.eventManager.broadcast({ name: 'bancoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'bancoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class BancoDialogComponent implements OnInit {
     template: ''
 })
 export class BancoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private bancoPopupService: BancoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private bancoPopupService: BancoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.bancoPopupService
-                    .open(BancoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.bancoPopupService.open(BancoDialogComponent as Component, params['id']);
             } else {
-                this.bancoPopupService
-                    .open(BancoDialogComponent as Component);
+                this.bancoPopupService.open(BancoDialogComponent as Component);
             }
         });
     }

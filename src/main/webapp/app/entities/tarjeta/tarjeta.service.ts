@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { Tarjeta } from './tarjeta.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { ITarjeta } from 'app/shared/model/tarjeta.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<ITarjeta>;
+type EntityArrayResponseType = HttpResponse<ITarjeta[]>;
+
+@Injectable({ providedIn: 'root' })
 export class TarjetaService {
-
     private resourceUrl = SERVER_API_URL + 'api/tarjetas';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(tarjeta: Tarjeta): Observable<Tarjeta> {
-        const copy = this.convert(tarjeta);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(tarjeta: ITarjeta): Observable<EntityResponseType> {
+        return this.http.post<ITarjeta>(this.resourceUrl, tarjeta, { observe: 'response' });
     }
 
-    update(tarjeta: Tarjeta): Observable<Tarjeta> {
-        const copy = this.convert(tarjeta);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(tarjeta: ITarjeta): Observable<EntityResponseType> {
+        return this.http.put<ITarjeta>(this.resourceUrl, tarjeta, { observe: 'response' });
     }
 
-    find(id: number): Observable<Tarjeta> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<ITarjeta>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<ITarjeta[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Tarjeta.
-     */
-    private convertItemFromServer(json: any): Tarjeta {
-        const entity: Tarjeta = Object.assign(new Tarjeta(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a Tarjeta to a JSON which can be sent to the server.
-     */
-    private convert(tarjeta: Tarjeta): Tarjeta {
-        const copy: Tarjeta = Object.assign({}, tarjeta);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

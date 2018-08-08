@@ -1,49 +1,23 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    RubroService,
-    RubroPopupService,
     RubroComponent,
     RubroDetailComponent,
-    RubroDialogComponent,
-    RubroPopupComponent,
+    RubroUpdateComponent,
     RubroDeletePopupComponent,
     RubroDeleteDialogComponent,
     rubroRoute,
-    rubroPopupRoute,
+    rubroPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...rubroRoute,
-    ...rubroPopupRoute,
-];
+const ENTITY_STATES = [...rubroRoute, ...rubroPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
-    declarations: [
-        RubroComponent,
-        RubroDetailComponent,
-        RubroDialogComponent,
-        RubroDeleteDialogComponent,
-        RubroPopupComponent,
-        RubroDeletePopupComponent,
-    ],
-    entryComponents: [
-        RubroComponent,
-        RubroDialogComponent,
-        RubroPopupComponent,
-        RubroDeleteDialogComponent,
-        RubroDeletePopupComponent,
-    ],
-    providers: [
-        RubroService,
-        RubroPopupService,
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    declarations: [RubroComponent, RubroDetailComponent, RubroUpdateComponent, RubroDeleteDialogComponent, RubroDeletePopupComponent],
+    entryComponents: [RubroComponent, RubroUpdateComponent, RubroDeleteDialogComponent, RubroDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetRubroModule {}

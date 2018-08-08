@@ -46,6 +46,8 @@ public class PresupuestoCriteria implements Serializable {
 
     private LongFilter estadoPresupuestoId;
 
+    private LongFilter detallePresupuestoId;
+
     public PresupuestoCriteria() {
     }
 
@@ -129,6 +131,14 @@ public class PresupuestoCriteria implements Serializable {
         this.estadoPresupuestoId = estadoPresupuestoId;
     }
 
+    public LongFilter getDetallePresupuestoId() {
+        return detallePresupuestoId;
+    }
+
+    public void setDetallePresupuestoId(LongFilter detallePresupuestoId) {
+        this.detallePresupuestoId = detallePresupuestoId;
+    }
+
     @Override
     public String toString() {
         return "PresupuestoCriteria{" +
@@ -142,6 +152,7 @@ public class PresupuestoCriteria implements Serializable {
                 (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
                 (clienteId != null ? "clienteId=" + clienteId + ", " : "") +
                 (estadoPresupuestoId != null ? "estadoPresupuestoId=" + estadoPresupuestoId + ", " : "") +
+                (detallePresupuestoId != null ? "detallePresupuestoId=" + detallePresupuestoId + ", " : "") +
             "}";
     }
 

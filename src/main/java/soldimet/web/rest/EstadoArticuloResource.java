@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoArticulo;
 import soldimet.service.EstadoArticuloService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EstadoArticuloResource {
     public ResponseEntity<EstadoArticulo> createEstadoArticulo(@Valid @RequestBody EstadoArticulo estadoArticulo) throws URISyntaxException {
         log.debug("REST request to save EstadoArticulo : {}", estadoArticulo);
         if (estadoArticulo.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new estadoArticulo cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new estadoArticulo cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EstadoArticulo result = estadoArticuloService.save(estadoArticulo);
         return ResponseEntity.created(new URI("/api/estado-articulos/" + result.getId()))
@@ -68,7 +69,7 @@ public class EstadoArticuloResource {
     public ResponseEntity<EstadoArticulo> updateEstadoArticulo(@Valid @RequestBody EstadoArticulo estadoArticulo) throws URISyntaxException {
         log.debug("REST request to update EstadoArticulo : {}", estadoArticulo);
         if (estadoArticulo.getId() == null) {
-            return createEstadoArticulo(estadoArticulo);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EstadoArticulo result = estadoArticuloService.save(estadoArticulo);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EstadoArticuloResource {
     public List<EstadoArticulo> getAllEstadoArticulos() {
         log.debug("REST request to get all EstadoArticulos");
         return estadoArticuloService.findAll();
-        }
+    }
 
     /**
      * GET  /estado-articulos/:id : get the "id" estadoArticulo.
@@ -98,8 +99,8 @@ public class EstadoArticuloResource {
     @Timed
     public ResponseEntity<EstadoArticulo> getEstadoArticulo(@PathVariable Long id) {
         log.debug("REST request to get EstadoArticulo : {}", id);
-        EstadoArticulo estadoArticulo = estadoArticuloService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(estadoArticulo));
+        Optional<EstadoArticulo> estadoArticulo = estadoArticuloService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(estadoArticulo);
     }
 
     /**

@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class EstadoOperacionResourceIntTest {
 
     @Autowired
     private EstadoOperacionRepository estadoOperacionRepository;
+
+    
 
     @Autowired
     private EstadoOperacionService estadoOperacionService;
@@ -70,6 +74,7 @@ public class EstadoOperacionResourceIntTest {
         this.restEstadoOperacionMockMvc = MockMvcBuilders.standaloneSetup(estadoOperacionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class EstadoOperacionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class EstadoOperacionResourceIntTest {
             .andExpect(jsonPath("$.id").value(estadoOperacion.getId().intValue()))
             .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEstadoOperacion() throws Exception {
@@ -190,7 +195,9 @@ public class EstadoOperacionResourceIntTest {
         int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
 
         // Update the estadoOperacion
-        EstadoOperacion updatedEstadoOperacion = estadoOperacionRepository.findOne(estadoOperacion.getId());
+        EstadoOperacion updatedEstadoOperacion = estadoOperacionRepository.findById(estadoOperacion.getId()).get();
+        // Disconnect from session so that the updates on updatedEstadoOperacion are not directly saved in db
+        em.detach(updatedEstadoOperacion);
         updatedEstadoOperacion
             .nombreEstado(UPDATED_NOMBRE_ESTADO);
 
@@ -217,11 +224,11 @@ public class EstadoOperacionResourceIntTest {
         restEstadoOperacionMockMvc.perform(put("/api/estado-operacions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(estadoOperacion)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EstadoOperacion in the database
         List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
-        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

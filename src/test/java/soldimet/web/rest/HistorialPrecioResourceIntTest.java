@@ -27,6 +27,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,6 +48,8 @@ public class HistorialPrecioResourceIntTest {
 
     @Autowired
     private HistorialPrecioRepository historialPrecioRepository;
+
+    
 
     @Autowired
     private HistorialPrecioService historialPrecioService;
@@ -73,6 +77,7 @@ public class HistorialPrecioResourceIntTest {
         this.restHistorialPrecioMockMvc = MockMvcBuilders.standaloneSetup(historialPrecioResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -166,6 +171,7 @@ public class HistorialPrecioResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(historialPrecio.getId().intValue())))
             .andExpect(jsonPath("$.[*].fechaHistorial").value(hasItem(DEFAULT_FECHA_HISTORIAL.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -180,7 +186,6 @@ public class HistorialPrecioResourceIntTest {
             .andExpect(jsonPath("$.id").value(historialPrecio.getId().intValue()))
             .andExpect(jsonPath("$.fechaHistorial").value(DEFAULT_FECHA_HISTORIAL.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingHistorialPrecio() throws Exception {
@@ -198,7 +203,9 @@ public class HistorialPrecioResourceIntTest {
         int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
 
         // Update the historialPrecio
-        HistorialPrecio updatedHistorialPrecio = historialPrecioRepository.findOne(historialPrecio.getId());
+        HistorialPrecio updatedHistorialPrecio = historialPrecioRepository.findById(historialPrecio.getId()).get();
+        // Disconnect from session so that the updates on updatedHistorialPrecio are not directly saved in db
+        em.detach(updatedHistorialPrecio);
         updatedHistorialPrecio
             .fechaHistorial(UPDATED_FECHA_HISTORIAL);
 
@@ -225,11 +232,11 @@ public class HistorialPrecioResourceIntTest {
         restHistorialPrecioMockMvc.perform(put("/api/historial-precios")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(historialPrecio)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the HistorialPrecio in the database
         List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
-        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

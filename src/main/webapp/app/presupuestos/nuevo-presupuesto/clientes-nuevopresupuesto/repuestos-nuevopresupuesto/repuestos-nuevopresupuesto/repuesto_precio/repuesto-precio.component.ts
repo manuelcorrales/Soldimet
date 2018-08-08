@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { CobranzaRepuesto } from '../../../../../../entities/cobranza-repuesto';
-import { TipoRepuesto } from '../../../../../../entities/tipo-repuesto';
+import { CobranzaRepuesto } from 'app/entities/cobranza-repuesto/cobranza-repuesto.model';
+import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 
 @Component({
     selector: 'jhi-repuesto-precio',
@@ -14,18 +14,15 @@ export class RepuestoPrecioComponent implements OnInit {
     precioAnterior = 0;
     @Output() eventoCambioValor = new EventEmitter<number>();
 
-    constructor() {
-    }
+    constructor() {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     marcado(): Boolean {
         return this.seleccionado;
     }
 
     getArticuloAcobrar(): CobranzaRepuesto {
-
         const nuevaCobranzaRepuesto = new CobranzaRepuesto();
         nuevaCobranzaRepuesto.valor = this.precio;
         nuevaCobranzaRepuesto.tipoRepuesto = this.repuesto;
@@ -37,11 +34,10 @@ export class RepuestoPrecioComponent implements OnInit {
     }
 
     getPrecio() {
-        if ( this.seleccionado) {
+        if (this.seleccionado) {
             return this.precio;
-        }else {
+        } else {
             return 0;
         }
     }
-
 }

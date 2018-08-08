@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Cliente;
 import soldimet.service.ClienteService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class ClienteResource {
     public ResponseEntity<Cliente> createCliente(@Valid @RequestBody Cliente cliente) throws URISyntaxException {
         log.debug("REST request to save Cliente : {}", cliente);
         if (cliente.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new cliente cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new cliente cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Cliente result = clienteService.save(cliente);
         return ResponseEntity.created(new URI("/api/clientes/" + result.getId()))
@@ -68,7 +69,7 @@ public class ClienteResource {
     public ResponseEntity<Cliente> updateCliente(@Valid @RequestBody Cliente cliente) throws URISyntaxException {
         log.debug("REST request to update Cliente : {}", cliente);
         if (cliente.getId() == null) {
-            return createCliente(cliente);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Cliente result = clienteService.save(cliente);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class ClienteResource {
     public List<Cliente> getAllClientes() {
         log.debug("REST request to get all Clientes");
         return clienteService.findAll();
-        }
+    }
 
     /**
      * GET  /clientes/:id : get the "id" cliente.
@@ -98,8 +99,8 @@ public class ClienteResource {
     @Timed
     public ResponseEntity<Cliente> getCliente(@PathVariable Long id) {
         log.debug("REST request to get Cliente : {}", id);
-        Cliente cliente = clienteService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(cliente));
+        Optional<Cliente> cliente = clienteService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(cliente);
     }
 
     /**

@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { DetallePedido } from './detalle-pedido.model';
-import { DetallePedidoPopupService } from './detalle-pedido-popup.service';
+import { IDetallePedido } from 'app/shared/model/detalle-pedido.model';
 import { DetallePedidoService } from './detalle-pedido.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { DetallePedidoService } from './detalle-pedido.service';
     templateUrl: './detalle-pedido-delete-dialog.component.html'
 })
 export class DetallePedidoDeleteDialogComponent {
-
-    detallePedido: DetallePedido;
+    detallePedido: IDetallePedido;
 
     constructor(
         private detallePedidoService: DetallePedidoService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.detallePedidoService.delete(id).subscribe((response) => {
+        this.detallePedidoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'detallePedidoListModification',
                 content: 'Deleted an detallePedido'
@@ -43,22 +40,33 @@ export class DetallePedidoDeleteDialogComponent {
     template: ''
 })
 export class DetallePedidoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private detallePedidoPopupService: DetallePedidoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.detallePedidoPopupService
-                .open(DetallePedidoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ detallePedido }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(DetallePedidoDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.detallePedido = detallePedido;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

@@ -15,7 +15,6 @@ import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.serv
     templateUrl: './estado-cobranza-operacion-dialog.component.html'
 })
 export class EstadoCobranzaOperacionDialogComponent implements OnInit {
-
     estadoCobranzaOperacion: EstadoCobranzaOperacion;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoCobranzaOperacionDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoCobranzaOperacionService: EstadoCobranzaOperacionService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoCobranzaOperacionDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoCobranzaOperacion.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoCobranzaOperacionService.update(this.estadoCobranzaOperacion));
+            this.subscribeToSaveResponse(this.estadoCobranzaOperacionService.update(this.estadoCobranzaOperacion));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoCobranzaOperacionService.create(this.estadoCobranzaOperacion));
+            this.subscribeToSaveResponse(this.estadoCobranzaOperacionService.create(this.estadoCobranzaOperacion));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoCobranzaOperacion>) {
-        result.subscribe((res: EstadoCobranzaOperacion) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoCobranzaOperacion) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoCobranzaOperacion) {
-        this.eventManager.broadcast({ name: 'estadoCobranzaOperacionListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoCobranzaOperacionListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoCobranzaOperacionDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoCobranzaOperacionPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoCobranzaOperacionPopupService: EstadoCobranzaOperacionPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoCobranzaOperacionPopupService: EstadoCobranzaOperacionPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoCobranzaOperacionPopupService
-                    .open(EstadoCobranzaOperacionDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoCobranzaOperacionPopupService.open(EstadoCobranzaOperacionDialogComponent as Component, params['id']);
             } else {
-                this.estadoCobranzaOperacionPopupService
-                    .open(EstadoCobranzaOperacionDialogComponent as Component);
+                this.estadoCobranzaOperacionPopupService.open(EstadoCobranzaOperacionDialogComponent as Component);
             }
         });
     }

@@ -8,12 +8,7 @@ import { LocalidadService } from './localidad.service';
 export class LocalidadPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private localidadService: LocalidadService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private localidadService: LocalidadService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class LocalidadPopupService {
             }
 
             if (id) {
-                this.localidadService.find(id).subscribe((localidad) => {
+                this.localidadService.find(id).subscribe(localidad => {
                     this.ngbModalRef = this.localidadModalRef(component, localidad);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class LocalidadPopupService {
     }
 
     localidadModalRef(component: Component, localidad: Localidad): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.localidad = localidad;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { PagoTarjeta } from './pago-tarjeta.model';
+import { IPagoTarjeta } from 'app/shared/model/pago-tarjeta.model';
+import { Principal } from 'app/core';
 import { PagoTarjetaService } from './pago-tarjeta.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-pago-tarjeta',
     templateUrl: './pago-tarjeta.component.html'
 })
 export class PagoTarjetaComponent implements OnInit, OnDestroy {
-pagoTarjetas: PagoTarjeta[];
+    pagoTarjetas: IPagoTarjeta[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ pagoTarjetas: PagoTarjeta[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.pagoTarjetaService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.pagoTarjetas = res.json;
+            (res: HttpResponse<IPagoTarjeta[]>) => {
+                this.pagoTarjetas = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInPagoTarjetas();
@@ -45,14 +44,15 @@ pagoTarjetas: PagoTarjeta[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: PagoTarjeta) {
+    trackId(index: number, item: IPagoTarjeta) {
         return item.id;
     }
+
     registerChangeInPagoTarjetas() {
-        this.eventSubscriber = this.eventManager.subscribe('pagoTarjetaListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('pagoTarjetaListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

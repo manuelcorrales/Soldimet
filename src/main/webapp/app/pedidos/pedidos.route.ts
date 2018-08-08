@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 
-import { UserRouteAccessService } from '../shared';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PedidosComponent } from './pedidos.component';
+import { UserRouteAccessService } from 'app/core';
 
 export const PEDIDOS_ROUTE: Route = {
     path: 'pedidos',

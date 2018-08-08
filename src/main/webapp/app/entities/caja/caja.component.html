@@ -1,54 +1,52 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Cajas</span>
-        <button class="btn btn-primary float-right jh-create-entity create-caja" [routerLink]="['/', { outlets: { popup: ['caja-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-caja" [routerLink]="['/caja/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Caja
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="cajas">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="fecha"><span>Fecha</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="horaApertura"><span>Hora Apertura</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="horaCierre"><span>Hora Cierre</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fecha"><span>Fecha</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="horaApertura"><span>Hora Apertura</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="horaCierre"><span>Hora Cierre</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let caja of cajas ;trackBy: trackId">
-                <td><a [routerLink]="['../caja', caja.id ]">{{caja.id}}</a></td>
+                <td><a [routerLink]="['/caja', caja.id, 'view' ]">{{caja.id}}</a></td>
                 <td>{{caja.fecha | date:'mediumDate'}}</td>
                 <td>{{caja.horaApertura | date:'medium'}}</td>
                 <td>{{caja.horaCierre | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../caja', caja.id ]"
+                                [routerLink]="['/caja', caja.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'caja/'+ caja.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/caja', caja.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'caja/'+ caja.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>
@@ -57,12 +55,12 @@
             </tbody>
         </table>
     </div>
-        <div *ngIf="cajas && cajas.length">
-            <div class="row justify-content-center">
-                <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-            </div>
-            <div class="row justify-content-center">
-                <ngb-pagination [collectionSize]="totalItems" [(page)]="page" (pageChange)="loadPage(page)"></ngb-pagination>
-            </div>
+    <div *ngIf="cajas && cajas.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
 </div>

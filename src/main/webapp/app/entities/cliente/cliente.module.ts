@@ -1,48 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SoldimetSharedModule } from '../../shared';
+
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    ClienteService,
-    ClientePopupService,
     ClienteComponent,
     ClienteDetailComponent,
-    ClienteDialogComponent,
-    ClientePopupComponent,
+    ClienteUpdateComponent,
     ClienteDeletePopupComponent,
     ClienteDeleteDialogComponent,
     clienteRoute,
-    clientePopupRoute,
+    clientePopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...clienteRoute,
-    ...clientePopupRoute,
-];
+const ENTITY_STATES = [...clienteRoute, ...clientePopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         ClienteComponent,
         ClienteDetailComponent,
-        ClienteDialogComponent,
+        ClienteUpdateComponent,
         ClienteDeleteDialogComponent,
-        ClientePopupComponent,
-        ClienteDeletePopupComponent,
+        ClienteDeletePopupComponent
     ],
-    entryComponents: [
-        ClienteComponent,
-        ClienteDialogComponent,
-        ClientePopupComponent,
-        ClienteDeleteDialogComponent,
-        ClienteDeletePopupComponent,
-    ],
-    providers: [
-        ClienteService,
-        ClientePopupService,
-    ],
+    entryComponents: [ClienteComponent, ClienteUpdateComponent, ClienteDeleteDialogComponent, ClienteDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetClienteModule {}

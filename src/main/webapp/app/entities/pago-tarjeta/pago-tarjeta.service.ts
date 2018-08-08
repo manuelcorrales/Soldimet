@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { PagoTarjeta } from './pago-tarjeta.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IPagoTarjeta } from 'app/shared/model/pago-tarjeta.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IPagoTarjeta>;
+type EntityArrayResponseType = HttpResponse<IPagoTarjeta[]>;
+
+@Injectable({ providedIn: 'root' })
 export class PagoTarjetaService {
-
     private resourceUrl = SERVER_API_URL + 'api/pago-tarjetas';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(pagoTarjeta: PagoTarjeta): Observable<PagoTarjeta> {
-        const copy = this.convert(pagoTarjeta);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(pagoTarjeta: IPagoTarjeta): Observable<EntityResponseType> {
+        return this.http.post<IPagoTarjeta>(this.resourceUrl, pagoTarjeta, { observe: 'response' });
     }
 
-    update(pagoTarjeta: PagoTarjeta): Observable<PagoTarjeta> {
-        const copy = this.convert(pagoTarjeta);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(pagoTarjeta: IPagoTarjeta): Observable<EntityResponseType> {
+        return this.http.put<IPagoTarjeta>(this.resourceUrl, pagoTarjeta, { observe: 'response' });
     }
 
-    find(id: number): Observable<PagoTarjeta> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IPagoTarjeta>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IPagoTarjeta[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to PagoTarjeta.
-     */
-    private convertItemFromServer(json: any): PagoTarjeta {
-        const entity: PagoTarjeta = Object.assign(new PagoTarjeta(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a PagoTarjeta to a JSON which can be sent to the server.
-     */
-    private convert(pagoTarjeta: PagoTarjeta): PagoTarjeta {
-        const copy: PagoTarjeta = Object.assign({}, pagoTarjeta);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

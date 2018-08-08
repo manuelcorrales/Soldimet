@@ -3,9 +3,9 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Proveedor;
 import soldimet.service.ProveedorService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import soldimet.web.rest.util.PaginationUtil;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class ProveedorResource {
     public ResponseEntity<Proveedor> createProveedor(@Valid @RequestBody Proveedor proveedor) throws URISyntaxException {
         log.debug("REST request to save Proveedor : {}", proveedor);
         if (proveedor.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new proveedor cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new proveedor cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Proveedor result = proveedorService.save(proveedor);
         return ResponseEntity.created(new URI("/api/proveedors/" + result.getId()))
@@ -74,7 +74,7 @@ public class ProveedorResource {
     public ResponseEntity<Proveedor> updateProveedor(@Valid @RequestBody Proveedor proveedor) throws URISyntaxException {
         log.debug("REST request to update Proveedor : {}", proveedor);
         if (proveedor.getId() == null) {
-            return createProveedor(proveedor);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Proveedor result = proveedorService.save(proveedor);
         return ResponseEntity.ok()
@@ -90,7 +90,7 @@ public class ProveedorResource {
      */
     @GetMapping("/proveedors")
     @Timed
-    public ResponseEntity<List<Proveedor>> getAllProveedors(@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Proveedor>> getAllProveedors(Pageable pageable) {
         log.debug("REST request to get a page of Proveedors");
         Page<Proveedor> page = proveedorService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/proveedors");
@@ -107,8 +107,8 @@ public class ProveedorResource {
     @Timed
     public ResponseEntity<Proveedor> getProveedor(@PathVariable Long id) {
         log.debug("REST request to get Proveedor : {}", id);
-        Proveedor proveedor = proveedorService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(proveedor));
+        Optional<Proveedor> proveedor = proveedorService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(proveedor);
     }
 
     /**

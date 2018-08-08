@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class TarjetaResourceIntTest {
 
     @Autowired
     private TarjetaRepository tarjetaRepository;
+
+    
 
     @Autowired
     private TarjetaService tarjetaService;
@@ -70,6 +74,7 @@ public class TarjetaResourceIntTest {
         this.restTarjetaMockMvc = MockMvcBuilders.standaloneSetup(tarjetaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class TarjetaResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(tarjeta.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreTarjeta").value(hasItem(DEFAULT_NOMBRE_TARJETA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class TarjetaResourceIntTest {
             .andExpect(jsonPath("$.id").value(tarjeta.getId().intValue()))
             .andExpect(jsonPath("$.nombreTarjeta").value(DEFAULT_NOMBRE_TARJETA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingTarjeta() throws Exception {
@@ -190,7 +195,9 @@ public class TarjetaResourceIntTest {
         int databaseSizeBeforeUpdate = tarjetaRepository.findAll().size();
 
         // Update the tarjeta
-        Tarjeta updatedTarjeta = tarjetaRepository.findOne(tarjeta.getId());
+        Tarjeta updatedTarjeta = tarjetaRepository.findById(tarjeta.getId()).get();
+        // Disconnect from session so that the updates on updatedTarjeta are not directly saved in db
+        em.detach(updatedTarjeta);
         updatedTarjeta
             .nombreTarjeta(UPDATED_NOMBRE_TARJETA);
 
@@ -217,11 +224,11 @@ public class TarjetaResourceIntTest {
         restTarjetaMockMvc.perform(put("/api/tarjetas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tarjeta)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Tarjeta in the database
         List<Tarjeta> tarjetaList = tarjetaRepository.findAll();
-        assertThat(tarjetaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(tarjetaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.PrecioRepuesto;
 import soldimet.service.PrecioRepuestoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class PrecioRepuestoResource {
     public ResponseEntity<PrecioRepuesto> createPrecioRepuesto(@Valid @RequestBody PrecioRepuesto precioRepuesto) throws URISyntaxException {
         log.debug("REST request to save PrecioRepuesto : {}", precioRepuesto);
         if (precioRepuesto.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new precioRepuesto cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new precioRepuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PrecioRepuesto result = precioRepuestoService.save(precioRepuesto);
         return ResponseEntity.created(new URI("/api/precio-repuestos/" + result.getId()))
@@ -68,7 +69,7 @@ public class PrecioRepuestoResource {
     public ResponseEntity<PrecioRepuesto> updatePrecioRepuesto(@Valid @RequestBody PrecioRepuesto precioRepuesto) throws URISyntaxException {
         log.debug("REST request to update PrecioRepuesto : {}", precioRepuesto);
         if (precioRepuesto.getId() == null) {
-            return createPrecioRepuesto(precioRepuesto);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         PrecioRepuesto result = precioRepuestoService.save(precioRepuesto);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class PrecioRepuestoResource {
     public List<PrecioRepuesto> getAllPrecioRepuestos() {
         log.debug("REST request to get all PrecioRepuestos");
         return precioRepuestoService.findAll();
-        }
+    }
 
     /**
      * GET  /precio-repuestos/:id : get the "id" precioRepuesto.
@@ -98,8 +99,8 @@ public class PrecioRepuestoResource {
     @Timed
     public ResponseEntity<PrecioRepuesto> getPrecioRepuesto(@PathVariable Long id) {
         log.debug("REST request to get PrecioRepuesto : {}", id);
-        PrecioRepuesto precioRepuesto = precioRepuestoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(precioRepuesto));
+        Optional<PrecioRepuesto> precioRepuesto = precioRepuestoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(precioRepuesto);
     }
 
     /**

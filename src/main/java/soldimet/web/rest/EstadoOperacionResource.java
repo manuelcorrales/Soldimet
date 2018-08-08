@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoOperacion;
 import soldimet.service.EstadoOperacionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EstadoOperacionResource {
     public ResponseEntity<EstadoOperacion> createEstadoOperacion(@Valid @RequestBody EstadoOperacion estadoOperacion) throws URISyntaxException {
         log.debug("REST request to save EstadoOperacion : {}", estadoOperacion);
         if (estadoOperacion.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new estadoOperacion cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new estadoOperacion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EstadoOperacion result = estadoOperacionService.save(estadoOperacion);
         return ResponseEntity.created(new URI("/api/estado-operacions/" + result.getId()))
@@ -68,7 +69,7 @@ public class EstadoOperacionResource {
     public ResponseEntity<EstadoOperacion> updateEstadoOperacion(@Valid @RequestBody EstadoOperacion estadoOperacion) throws URISyntaxException {
         log.debug("REST request to update EstadoOperacion : {}", estadoOperacion);
         if (estadoOperacion.getId() == null) {
-            return createEstadoOperacion(estadoOperacion);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EstadoOperacion result = estadoOperacionService.save(estadoOperacion);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EstadoOperacionResource {
     public List<EstadoOperacion> getAllEstadoOperacions() {
         log.debug("REST request to get all EstadoOperacions");
         return estadoOperacionService.findAll();
-        }
+    }
 
     /**
      * GET  /estado-operacions/:id : get the "id" estadoOperacion.
@@ -98,8 +99,8 @@ public class EstadoOperacionResource {
     @Timed
     public ResponseEntity<EstadoOperacion> getEstadoOperacion(@PathVariable Long id) {
         log.debug("REST request to get EstadoOperacion : {}", id);
-        EstadoOperacion estadoOperacion = estadoOperacionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(estadoOperacion));
+        Optional<EstadoOperacion> estadoOperacion = estadoOperacionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(estadoOperacion);
     }
 
     /**

@@ -37,7 +37,7 @@ public class ExpertoCUEliminarMovimientoCaja {
     public Boolean eliminarMovimiento(Long movimientoID) {
 
         try {
-            Movimiento mov = movimientoRepository.findOne(movimientoID);
+            Movimiento mov = movimientoRepository.findById(movimientoID).get();
 
             EstadoMovimiento estadoAlta = estadoMovimientoRepository
                 .findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);

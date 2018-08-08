@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Estado Movimientos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-estado-movimiento" [routerLink]="['/', { outlets: { popup: ['estado-movimiento-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-estado-movimiento" [routerLink]="['/estado-movimiento/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Estado Movimiento
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="estadoMovimientos">
         <table class="table table-striped">
@@ -23,28 +21,28 @@
             </thead>
             <tbody>
             <tr *ngFor="let estadoMovimiento of estadoMovimientos ;trackBy: trackId">
-                <td><a [routerLink]="['../estado-movimiento', estadoMovimiento.id ]">{{estadoMovimiento.id}}</a></td>
+                <td><a [routerLink]="['/estado-movimiento', estadoMovimiento.id, 'view' ]">{{estadoMovimiento.id}}</a></td>
                 <td>{{estadoMovimiento.nombreEstado}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../estado-movimiento', estadoMovimiento.id ]"
+                                [routerLink]="['/estado-movimiento', estadoMovimiento.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'estado-movimiento/'+ estadoMovimiento.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/estado-movimiento', estadoMovimiento.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'estado-movimiento/'+ estadoMovimiento.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

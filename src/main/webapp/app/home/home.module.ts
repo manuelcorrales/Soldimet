@@ -1,22 +1,12 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../shared';
-
+import { SoldimetSharedModule } from 'app/shared';
 import { HOME_ROUTE, HomeComponent } from './';
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot([ HOME_ROUTE ], { useHash: true })
-    ],
-    declarations: [
-        HomeComponent,
-    ],
-    entryComponents: [
-    ],
-    providers: [
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild([HOME_ROUTE])],
+    declarations: [HomeComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetHomeModule {}

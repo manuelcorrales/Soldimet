@@ -1,51 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    ProveedorService,
-    ProveedorPopupService,
     ProveedorComponent,
     ProveedorDetailComponent,
-    ProveedorDialogComponent,
-    ProveedorPopupComponent,
+    ProveedorUpdateComponent,
     ProveedorDeletePopupComponent,
     ProveedorDeleteDialogComponent,
     proveedorRoute,
-    proveedorPopupRoute,
-    ProveedorResolvePagingParams,
+    proveedorPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...proveedorRoute,
-    ...proveedorPopupRoute,
-];
+const ENTITY_STATES = [...proveedorRoute, ...proveedorPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         ProveedorComponent,
         ProveedorDetailComponent,
-        ProveedorDialogComponent,
+        ProveedorUpdateComponent,
         ProveedorDeleteDialogComponent,
-        ProveedorPopupComponent,
-        ProveedorDeletePopupComponent,
+        ProveedorDeletePopupComponent
     ],
-    entryComponents: [
-        ProveedorComponent,
-        ProveedorDialogComponent,
-        ProveedorPopupComponent,
-        ProveedorDeleteDialogComponent,
-        ProveedorDeletePopupComponent,
-    ],
-    providers: [
-        ProveedorService,
-        ProveedorPopupService,
-        ProveedorResolvePagingParams,
-    ],
+    entryComponents: [ProveedorComponent, ProveedorUpdateComponent, ProveedorDeleteDialogComponent, ProveedorDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetProveedorModule {}

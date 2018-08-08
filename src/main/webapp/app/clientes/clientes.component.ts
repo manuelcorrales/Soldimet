@@ -1,18 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {Cliente} from '../entities/cliente/cliente.model';
-import {ResponseWrapper} from '../shared/model/response-wrapper.model';
-import {ClienteService} from '../entities/cliente/cliente.service';
-import {JhiAlertService, JhiEventManager} from 'ng-jhipster';
-import {Principal} from '../shared/auth/principal.service';
-import {Subscription} from 'rxjs/Subscription';
+import { Cliente } from '../entities/cliente/cliente.model';
+import { ResponseWrapper } from '../shared/model/response-wrapper.model';
+import { ClienteService } from '../entities/cliente/cliente.service';
+import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
+import { Principal } from '../shared/auth/principal.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-  selector: 'jhi-clientes',
-  templateUrl: './clientes.component.html',
-  styles: []
+    selector: 'jhi-clientes',
+    templateUrl: './clientes.component.html',
+    styles: []
 })
-export class ClientesComponent implements OnInit, OnDestroy  {
-
+export class ClientesComponent implements OnInit, OnDestroy {
     clientes: Cliente[];
     currentAccount: any;
     eventSubscriber: Subscription;
@@ -22,8 +21,7 @@ export class ClientesComponent implements OnInit, OnDestroy  {
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.clienteService.query().subscribe(
@@ -35,7 +33,7 @@ export class ClientesComponent implements OnInit, OnDestroy  {
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInClientes();
@@ -49,7 +47,7 @@ export class ClientesComponent implements OnInit, OnDestroy  {
         return item.id;
     }
     registerChangeInClientes() {
-        this.eventSubscriber = this.eventManager.subscribe('clienteListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('clienteListModification', response => this.loadAll());
     }
 
     private onError(error) {

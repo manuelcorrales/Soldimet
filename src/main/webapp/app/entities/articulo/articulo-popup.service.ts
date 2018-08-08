@@ -8,12 +8,7 @@ import { ArticuloService } from './articulo.service';
 export class ArticuloPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private articuloService: ArticuloService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private articuloService: ArticuloService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class ArticuloPopupService {
             }
 
             if (id) {
-                this.articuloService.find(id).subscribe((articulo) => {
+                this.articuloService.find(id).subscribe(articulo => {
                     this.ngbModalRef = this.articuloModalRef(component, articulo);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class ArticuloPopupService {
     }
 
     articuloModalRef(component: Component, articulo: Articulo): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.articulo = articulo;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

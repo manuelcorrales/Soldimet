@@ -9,13 +9,7 @@ import { CajaService } from './caja.service';
 export class CajaPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private datePipe: DatePipe,
-        private modalService: NgbModal,
-        private router: Router,
-        private cajaService: CajaService
-
-    ) {
+    constructor(private datePipe: DatePipe, private modalService: NgbModal, private router: Router, private cajaService: CajaService) {
         this.ngbModalRef = null;
     }
 
@@ -27,7 +21,7 @@ export class CajaPopupService {
             }
 
             if (id) {
-                this.cajaService.find(id).subscribe((caja) => {
+                this.cajaService.find(id).subscribe(caja => {
                     if (caja.fecha) {
                         caja.fecha = {
                             year: caja.fecha.getFullYear(),
@@ -35,10 +29,8 @@ export class CajaPopupService {
                             day: caja.fecha.getDate()
                         };
                     }
-                    caja.horaApertura = this.datePipe
-                        .transform(caja.horaApertura, 'yyyy-MM-ddTHH:mm:ss');
-                    caja.horaCierre = this.datePipe
-                        .transform(caja.horaCierre, 'yyyy-MM-ddTHH:mm:ss');
+                    caja.horaApertura = this.datePipe.transform(caja.horaApertura, 'yyyy-MM-ddTHH:mm:ss');
+                    caja.horaCierre = this.datePipe.transform(caja.horaCierre, 'yyyy-MM-ddTHH:mm:ss');
                     this.ngbModalRef = this.cajaModalRef(component, caja);
                     resolve(this.ngbModalRef);
                 });
@@ -53,15 +45,18 @@ export class CajaPopupService {
     }
 
     cajaModalRef(component: Component, caja: Caja): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.caja = caja;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

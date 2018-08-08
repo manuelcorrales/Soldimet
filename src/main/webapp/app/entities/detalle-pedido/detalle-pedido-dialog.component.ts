@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './detalle-pedido-dialog.component.html'
 })
 export class DetallePedidoDialogComponent implements OnInit {
-
     detallePedido: DetallePedido;
     isSaving: boolean;
 
@@ -29,24 +28,25 @@ export class DetallePedidoDialogComponent implements OnInit {
         private detallePedidoService: DetallePedidoService,
         private detallePresupuestoService: DetallePresupuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.detallePresupuestoService
-            .query({filter: 'detallepedido-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.detallePresupuestoService.query({ filter: 'detallepedido-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.detallePedido.detallePresupuesto || !this.detallePedido.detallePresupuesto.id) {
                     this.detallepresupuestos = res.json;
                 } else {
-                    this.detallePresupuestoService
-                        .find(this.detallePedido.detallePresupuesto.id)
-                        .subscribe((subRes: DetallePresupuesto) => {
+                    this.detallePresupuestoService.find(this.detallePedido.detallePresupuesto.id).subscribe(
+                        (subRes: DetallePresupuesto) => {
                             this.detallepresupuestos = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -56,21 +56,18 @@ export class DetallePedidoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.detallePedido.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.detallePedidoService.update(this.detallePedido));
+            this.subscribeToSaveResponse(this.detallePedidoService.update(this.detallePedido));
         } else {
-            this.subscribeToSaveResponse(
-                this.detallePedidoService.create(this.detallePedido));
+            this.subscribeToSaveResponse(this.detallePedidoService.create(this.detallePedido));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<DetallePedido>) {
-        result.subscribe((res: DetallePedido) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: DetallePedido) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: DetallePedido) {
-        this.eventManager.broadcast({ name: 'detallePedidoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'detallePedidoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -93,22 +90,16 @@ export class DetallePedidoDialogComponent implements OnInit {
     template: ''
 })
 export class DetallePedidoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private detallePedidoPopupService: DetallePedidoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private detallePedidoPopupService: DetallePedidoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.detallePedidoPopupService
-                    .open(DetallePedidoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.detallePedidoPopupService.open(DetallePedidoDialogComponent as Component, params['id']);
             } else {
-                this.detallePedidoPopupService
-                    .open(DetallePedidoDialogComponent as Component);
+                this.detallePedidoPopupService.open(DetallePedidoDialogComponent as Component);
             }
         });
     }

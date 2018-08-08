@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    PagoTarjetaService,
-    PagoTarjetaPopupService,
     PagoTarjetaComponent,
     PagoTarjetaDetailComponent,
-    PagoTarjetaDialogComponent,
-    PagoTarjetaPopupComponent,
+    PagoTarjetaUpdateComponent,
     PagoTarjetaDeletePopupComponent,
     PagoTarjetaDeleteDialogComponent,
     pagoTarjetaRoute,
-    pagoTarjetaPopupRoute,
+    pagoTarjetaPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...pagoTarjetaRoute,
-    ...pagoTarjetaPopupRoute,
-];
+const ENTITY_STATES = [...pagoTarjetaRoute, ...pagoTarjetaPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         PagoTarjetaComponent,
         PagoTarjetaDetailComponent,
-        PagoTarjetaDialogComponent,
+        PagoTarjetaUpdateComponent,
         PagoTarjetaDeleteDialogComponent,
-        PagoTarjetaPopupComponent,
-        PagoTarjetaDeletePopupComponent,
+        PagoTarjetaDeletePopupComponent
     ],
-    entryComponents: [
-        PagoTarjetaComponent,
-        PagoTarjetaDialogComponent,
-        PagoTarjetaPopupComponent,
-        PagoTarjetaDeleteDialogComponent,
-        PagoTarjetaDeletePopupComponent,
-    ],
-    providers: [
-        PagoTarjetaService,
-        PagoTarjetaPopupService,
-    ],
+    entryComponents: [PagoTarjetaComponent, PagoTarjetaUpdateComponent, PagoTarjetaDeleteDialogComponent, PagoTarjetaDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPagoTarjetaModule {}

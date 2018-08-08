@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { EstadoOperacion } from './estado-operacion.model';
+import { IEstadoOperacion } from 'app/shared/model/estado-operacion.model';
+import { Principal } from 'app/core';
 import { EstadoOperacionService } from './estado-operacion.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-estado-operacion',
     templateUrl: './estado-operacion.component.html'
 })
 export class EstadoOperacionComponent implements OnInit, OnDestroy {
-estadoOperacions: EstadoOperacion[];
+    estadoOperacions: IEstadoOperacion[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ estadoOperacions: EstadoOperacion[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.estadoOperacionService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.estadoOperacions = res.json;
+            (res: HttpResponse<IEstadoOperacion[]>) => {
+                this.estadoOperacions = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInEstadoOperacions();
@@ -45,14 +44,15 @@ estadoOperacions: EstadoOperacion[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: EstadoOperacion) {
+    trackId(index: number, item: IEstadoOperacion) {
         return item.id;
     }
+
     registerChangeInEstadoOperacions() {
-        this.eventSubscriber = this.eventManager.subscribe('estadoOperacionListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('estadoOperacionListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

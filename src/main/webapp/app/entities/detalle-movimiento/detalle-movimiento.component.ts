@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { DetalleMovimiento } from './detalle-movimiento.model';
+import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
+import { Principal } from 'app/core';
 import { DetalleMovimientoService } from './detalle-movimiento.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-detalle-movimiento',
     templateUrl: './detalle-movimiento.component.html'
 })
 export class DetalleMovimientoComponent implements OnInit, OnDestroy {
-detalleMovimientos: DetalleMovimiento[];
+    detalleMovimientos: IDetalleMovimiento[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ detalleMovimientos: DetalleMovimiento[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.detalleMovimientoService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.detalleMovimientos = res.json;
+            (res: HttpResponse<IDetalleMovimiento[]>) => {
+                this.detalleMovimientos = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInDetalleMovimientos();
@@ -45,14 +44,15 @@ detalleMovimientos: DetalleMovimiento[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: DetalleMovimiento) {
+    trackId(index: number, item: IDetalleMovimiento) {
         return item.id;
     }
+
     registerChangeInDetalleMovimientos() {
-        this.eventSubscriber = this.eventManager.subscribe('detalleMovimientoListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('detalleMovimientoListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

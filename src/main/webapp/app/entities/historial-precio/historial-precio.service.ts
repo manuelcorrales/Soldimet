@@ -1,79 +1,73 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { map } from 'rxjs/operators';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
 
-import { HistorialPrecio } from './historial-precio.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+type EntityResponseType = HttpResponse<IHistorialPrecio>;
+type EntityArrayResponseType = HttpResponse<IHistorialPrecio[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HistorialPrecioService {
-
     private resourceUrl = SERVER_API_URL + 'api/historial-precios';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient) {}
 
-    create(historialPrecio: HistorialPrecio): Observable<HistorialPrecio> {
-        const copy = this.convert(historialPrecio);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(historialPrecio: IHistorialPrecio): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(historialPrecio);
+        return this.http
+            .post<IHistorialPrecio>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(historialPrecio: HistorialPrecio): Observable<HistorialPrecio> {
-        const copy = this.convert(historialPrecio);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(historialPrecio: IHistorialPrecio): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(historialPrecio);
+        return this.http
+            .put<IHistorialPrecio>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<HistorialPrecio> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<IHistorialPrecio>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http
+            .get<IHistorialPrecio[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to HistorialPrecio.
-     */
-    private convertItemFromServer(json: any): HistorialPrecio {
-        const entity: HistorialPrecio = Object.assign(new HistorialPrecio(), json);
-        entity.fechaHistorial = this.dateUtils
-            .convertLocalDateFromServer(json.fechaHistorial);
-        return entity;
-    }
-
-    /**
-     * Convert a HistorialPrecio to a JSON which can be sent to the server.
-     */
-    private convert(historialPrecio: HistorialPrecio): HistorialPrecio {
-        const copy: HistorialPrecio = Object.assign({}, historialPrecio);
-        copy.fechaHistorial = this.dateUtils
-            .convertLocalDateToServer(historialPrecio.fechaHistorial);
+    private convertDateFromClient(historialPrecio: IHistorialPrecio): IHistorialPrecio {
+        const copy: IHistorialPrecio = Object.assign({}, historialPrecio, {
+            fechaHistorial:
+                historialPrecio.fechaHistorial != null && historialPrecio.fechaHistorial.isValid()
+                    ? historialPrecio.fechaHistorial.format(DATE_FORMAT)
+                    : null
+        });
         return copy;
+    }
+
+    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        res.body.fechaHistorial = res.body.fechaHistorial != null ? moment(res.body.fechaHistorial) : null;
+        return res;
+    }
+
+    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        res.body.forEach((historialPrecio: IHistorialPrecio) => {
+            historialPrecio.fechaHistorial = historialPrecio.fechaHistorial != null ? moment(historialPrecio.fechaHistorial) : null;
+        });
+        return res;
     }
 }

@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class SubCategoriaResourceIntTest {
 
     @Autowired
     private SubCategoriaRepository subCategoriaRepository;
+
+    
 
     @Autowired
     private SubCategoriaService subCategoriaService;
@@ -70,6 +74,7 @@ public class SubCategoriaResourceIntTest {
         this.restSubCategoriaMockMvc = MockMvcBuilders.standaloneSetup(subCategoriaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class SubCategoriaResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(subCategoria.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreSubCategoria").value(hasItem(DEFAULT_NOMBRE_SUB_CATEGORIA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class SubCategoriaResourceIntTest {
             .andExpect(jsonPath("$.id").value(subCategoria.getId().intValue()))
             .andExpect(jsonPath("$.nombreSubCategoria").value(DEFAULT_NOMBRE_SUB_CATEGORIA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingSubCategoria() throws Exception {
@@ -190,7 +195,9 @@ public class SubCategoriaResourceIntTest {
         int databaseSizeBeforeUpdate = subCategoriaRepository.findAll().size();
 
         // Update the subCategoria
-        SubCategoria updatedSubCategoria = subCategoriaRepository.findOne(subCategoria.getId());
+        SubCategoria updatedSubCategoria = subCategoriaRepository.findById(subCategoria.getId()).get();
+        // Disconnect from session so that the updates on updatedSubCategoria are not directly saved in db
+        em.detach(updatedSubCategoria);
         updatedSubCategoria
             .nombreSubCategoria(UPDATED_NOMBRE_SUB_CATEGORIA);
 
@@ -217,11 +224,11 @@ public class SubCategoriaResourceIntTest {
         restSubCategoriaMockMvc.perform(put("/api/sub-categorias")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(subCategoria)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the SubCategoria in the database
         List<SubCategoria> subCategoriaList = subCategoriaRepository.findAll();
-        assertThat(subCategoriaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(subCategoriaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

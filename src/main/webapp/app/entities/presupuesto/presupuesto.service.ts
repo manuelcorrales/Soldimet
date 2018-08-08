@@ -1,93 +1,85 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { map } from 'rxjs/operators';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 
-import { Presupuesto } from './presupuesto.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+type EntityResponseType = HttpResponse<IPresupuesto>;
+type EntityArrayResponseType = HttpResponse<IPresupuesto[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PresupuestoService {
-
     private resourceUrl = SERVER_API_URL + 'api/presupuestos';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient) {}
 
-    create(presupuesto: Presupuesto): Observable<Presupuesto> {
-        const copy = this.convert(presupuesto);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(presupuesto: IPresupuesto): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(presupuesto);
+        return this.http
+            .post<IPresupuesto>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(presupuesto: Presupuesto): Observable<Presupuesto> {
-        const copy = this.convert(presupuesto);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(presupuesto: IPresupuesto): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(presupuesto);
+        return this.http
+            .put<IPresupuesto>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<Presupuesto> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<IPresupuesto>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http
+            .get<IPresupuesto[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Presupuesto.
-     */
-    private convertItemFromServer(json: any): Presupuesto {
-        const entity: Presupuesto = Object.assign(new Presupuesto(), json);
-        entity.fechaCreacion = this.dateUtils
-            .convertLocalDateFromServer(json.fechaCreacion);
-        entity.fechaAceptado = this.dateUtils
-            .convertLocalDateFromServer(json.fechaAceptado);
-        entity.fechaEntregado = this.dateUtils
-            .convertLocalDateFromServer(json.fechaEntregado);
-        return entity;
-    }
-
-    /**
-     * Convert a Presupuesto to a JSON which can be sent to the server.
-     */
-    private convert(presupuesto: Presupuesto): Presupuesto {
-        const copy: Presupuesto = Object.assign({}, presupuesto);
-        if ( presupuesto.fechaCreacion) {
-        copy.fechaCreacion = this.dateUtils
-            .convertLocalDateToServer(presupuesto.fechaCreacion);
-        }
-        if ( presupuesto.fechaAceptado) {
-        copy.fechaAceptado = this.dateUtils
-            .convertLocalDateToServer(presupuesto.fechaAceptado);
-        }
-        if ( presupuesto.fechaEntregado) {
-        copy.fechaEntregado = this.dateUtils
-            .convertLocalDateToServer(presupuesto.fechaEntregado);
-        }
+    private convertDateFromClient(presupuesto: IPresupuesto): IPresupuesto {
+        const copy: IPresupuesto = Object.assign({}, presupuesto, {
+            fechaCreacion:
+                presupuesto.fechaCreacion != null && presupuesto.fechaCreacion.isValid()
+                    ? presupuesto.fechaCreacion.format(DATE_FORMAT)
+                    : null,
+            fechaAceptado:
+                presupuesto.fechaAceptado != null && presupuesto.fechaAceptado.isValid()
+                    ? presupuesto.fechaAceptado.format(DATE_FORMAT)
+                    : null,
+            fechaEntregado:
+                presupuesto.fechaEntregado != null && presupuesto.fechaEntregado.isValid()
+                    ? presupuesto.fechaEntregado.format(DATE_FORMAT)
+                    : null
+        });
         return copy;
+    }
+
+    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        res.body.fechaCreacion = res.body.fechaCreacion != null ? moment(res.body.fechaCreacion) : null;
+        res.body.fechaAceptado = res.body.fechaAceptado != null ? moment(res.body.fechaAceptado) : null;
+        res.body.fechaEntregado = res.body.fechaEntregado != null ? moment(res.body.fechaEntregado) : null;
+        return res;
+    }
+
+    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        res.body.forEach((presupuesto: IPresupuesto) => {
+            presupuesto.fechaCreacion = presupuesto.fechaCreacion != null ? moment(presupuesto.fechaCreacion) : null;
+            presupuesto.fechaAceptado = presupuesto.fechaAceptado != null ? moment(presupuesto.fechaAceptado) : null;
+            presupuesto.fechaEntregado = presupuesto.fechaEntregado != null ? moment(presupuesto.fechaEntregado) : null;
+        });
+        return res;
     }
 }

@@ -18,7 +18,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './movimiento-presupuesto-dialog.component.html'
 })
 export class MovimientoPresupuestoDialogComponent implements OnInit {
-
     movimientoPresupuesto: MovimientoPresupuesto;
     isSaving: boolean;
 
@@ -33,26 +32,31 @@ export class MovimientoPresupuestoDialogComponent implements OnInit {
         private presupuestoService: PresupuestoService,
         private movimientoService: MovimientoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.presupuestoService.query()
-            .subscribe((res: ResponseWrapper) => { this.presupuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.movimientoService
-            .query({filter: 'movimientopresupuesto-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.presupuestoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.presupuestos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.movimientoService.query({ filter: 'movimientopresupuesto-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.movimientoPresupuesto.movimiento || !this.movimientoPresupuesto.movimiento.id) {
                     this.movimientos = res.json;
                 } else {
-                    this.movimientoService
-                        .find(this.movimientoPresupuesto.movimiento.id)
-                        .subscribe((subRes: Movimiento) => {
+                    this.movimientoService.find(this.movimientoPresupuesto.movimiento.id).subscribe(
+                        (subRes: Movimiento) => {
                             this.movimientos = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -62,21 +66,18 @@ export class MovimientoPresupuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.movimientoPresupuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.movimientoPresupuestoService.update(this.movimientoPresupuesto));
+            this.subscribeToSaveResponse(this.movimientoPresupuestoService.update(this.movimientoPresupuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.movimientoPresupuestoService.create(this.movimientoPresupuesto));
+            this.subscribeToSaveResponse(this.movimientoPresupuestoService.create(this.movimientoPresupuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<MovimientoPresupuesto>) {
-        result.subscribe((res: MovimientoPresupuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: MovimientoPresupuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: MovimientoPresupuesto) {
-        this.eventManager.broadcast({ name: 'movimientoPresupuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'movimientoPresupuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -103,22 +104,16 @@ export class MovimientoPresupuestoDialogComponent implements OnInit {
     template: ''
 })
 export class MovimientoPresupuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private movimientoPresupuestoPopupService: MovimientoPresupuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private movimientoPresupuestoPopupService: MovimientoPresupuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.movimientoPresupuestoPopupService
-                    .open(MovimientoPresupuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.movimientoPresupuestoPopupService.open(MovimientoPresupuestoDialogComponent as Component, params['id']);
             } else {
-                this.movimientoPresupuestoPopupService
-                    .open(MovimientoPresupuestoDialogComponent as Component);
+                this.movimientoPresupuestoPopupService.open(MovimientoPresupuestoDialogComponent as Component);
             }
         });
     }

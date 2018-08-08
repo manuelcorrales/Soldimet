@@ -1,50 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    PedidoRepuestoService,
-    PedidoRepuestoPopupService,
     PedidoRepuestoComponent,
     PedidoRepuestoDetailComponent,
-    PedidoRepuestoDialogComponent,
-    PedidoRepuestoPopupComponent,
+    PedidoRepuestoUpdateComponent,
     PedidoRepuestoDeletePopupComponent,
     PedidoRepuestoDeleteDialogComponent,
     pedidoRepuestoRoute,
-    pedidoRepuestoPopupRoute,
-    PedidoRepuestoResolvePagingParams,
+    pedidoRepuestoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...pedidoRepuestoRoute,
-    ...pedidoRepuestoPopupRoute,
-];
+const ENTITY_STATES = [...pedidoRepuestoRoute, ...pedidoRepuestoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         PedidoRepuestoComponent,
         PedidoRepuestoDetailComponent,
-        PedidoRepuestoDialogComponent,
+        PedidoRepuestoUpdateComponent,
         PedidoRepuestoDeleteDialogComponent,
-        PedidoRepuestoPopupComponent,
-        PedidoRepuestoDeletePopupComponent,
+        PedidoRepuestoDeletePopupComponent
     ],
     entryComponents: [
         PedidoRepuestoComponent,
-        PedidoRepuestoDialogComponent,
-        PedidoRepuestoPopupComponent,
+        PedidoRepuestoUpdateComponent,
         PedidoRepuestoDeleteDialogComponent,
-        PedidoRepuestoDeletePopupComponent,
-    ],
-    providers: [
-        PedidoRepuestoService,
-        PedidoRepuestoPopupService,
-        PedidoRepuestoResolvePagingParams,
+        PedidoRepuestoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

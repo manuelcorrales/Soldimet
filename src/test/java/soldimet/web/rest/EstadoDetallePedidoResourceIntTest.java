@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class EstadoDetallePedidoResourceIntTest {
 
     @Autowired
     private EstadoDetallePedidoRepository estadoDetallePedidoRepository;
+
+    
 
     @Autowired
     private EstadoDetallePedidoService estadoDetallePedidoService;
@@ -70,6 +74,7 @@ public class EstadoDetallePedidoResourceIntTest {
         this.restEstadoDetallePedidoMockMvc = MockMvcBuilders.standaloneSetup(estadoDetallePedidoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class EstadoDetallePedidoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoDetallePedido.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class EstadoDetallePedidoResourceIntTest {
             .andExpect(jsonPath("$.id").value(estadoDetallePedido.getId().intValue()))
             .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingEstadoDetallePedido() throws Exception {
@@ -190,7 +195,9 @@ public class EstadoDetallePedidoResourceIntTest {
         int databaseSizeBeforeUpdate = estadoDetallePedidoRepository.findAll().size();
 
         // Update the estadoDetallePedido
-        EstadoDetallePedido updatedEstadoDetallePedido = estadoDetallePedidoRepository.findOne(estadoDetallePedido.getId());
+        EstadoDetallePedido updatedEstadoDetallePedido = estadoDetallePedidoRepository.findById(estadoDetallePedido.getId()).get();
+        // Disconnect from session so that the updates on updatedEstadoDetallePedido are not directly saved in db
+        em.detach(updatedEstadoDetallePedido);
         updatedEstadoDetallePedido
             .nombreEstado(UPDATED_NOMBRE_ESTADO);
 
@@ -217,11 +224,11 @@ public class EstadoDetallePedidoResourceIntTest {
         restEstadoDetallePedidoMockMvc.perform(put("/api/estado-detalle-pedidos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(estadoDetallePedido)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EstadoDetallePedido in the database
         List<EstadoDetallePedido> estadoDetallePedidoList = estadoDetallePedidoRepository.findAll();
-        assertThat(estadoDetallePedidoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(estadoDetallePedidoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

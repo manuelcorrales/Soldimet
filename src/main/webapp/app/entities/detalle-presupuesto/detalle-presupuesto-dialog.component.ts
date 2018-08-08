@@ -20,7 +20,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './detalle-presupuesto-dialog.component.html'
 })
 export class DetallePresupuestoDialogComponent implements OnInit {
-
     detallePresupuesto: DetallePresupuesto;
     isSaving: boolean;
 
@@ -41,19 +40,34 @@ export class DetallePresupuestoDialogComponent implements OnInit {
         private motorService: MotorService,
         private tipoParteMotorService: TipoParteMotorService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.aplicacionService.query()
-            .subscribe((res: ResponseWrapper) => { this.aplicacions = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.cilindradaService.query()
-            .subscribe((res: ResponseWrapper) => { this.cilindradas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.motorService.query()
-            .subscribe((res: ResponseWrapper) => { this.motors = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.tipoParteMotorService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipopartemotors = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.aplicacionService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.aplicacions = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.cilindradaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.cilindradas = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.motorService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.motors = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.tipoParteMotorService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tipopartemotors = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -63,21 +77,18 @@ export class DetallePresupuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.detallePresupuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.detallePresupuestoService.update(this.detallePresupuesto));
+            this.subscribeToSaveResponse(this.detallePresupuestoService.update(this.detallePresupuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.detallePresupuestoService.create(this.detallePresupuesto));
+            this.subscribeToSaveResponse(this.detallePresupuestoService.create(this.detallePresupuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<DetallePresupuesto>) {
-        result.subscribe((res: DetallePresupuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: DetallePresupuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: DetallePresupuesto) {
-        this.eventManager.broadcast({ name: 'detallePresupuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'detallePresupuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -112,22 +123,16 @@ export class DetallePresupuestoDialogComponent implements OnInit {
     template: ''
 })
 export class DetallePresupuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private detallePresupuestoPopupService: DetallePresupuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private detallePresupuestoPopupService: DetallePresupuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.detallePresupuestoPopupService
-                    .open(DetallePresupuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.detallePresupuestoPopupService.open(DetallePresupuestoDialogComponent as Component, params['id']);
             } else {
-                this.detallePresupuestoPopupService
-                    .open(DetallePresupuestoDialogComponent as Component);
+                this.detallePresupuestoPopupService.open(DetallePresupuestoDialogComponent as Component);
             }
         });
     }

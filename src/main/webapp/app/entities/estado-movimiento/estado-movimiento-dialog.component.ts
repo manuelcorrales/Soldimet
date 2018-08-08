@@ -15,7 +15,6 @@ import { EstadoMovimientoService } from './estado-movimiento.service';
     templateUrl: './estado-movimiento-dialog.component.html'
 })
 export class EstadoMovimientoDialogComponent implements OnInit {
-
     estadoMovimiento: EstadoMovimiento;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoMovimientoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoMovimientoService: EstadoMovimientoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoMovimientoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoMovimiento.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoMovimientoService.update(this.estadoMovimiento));
+            this.subscribeToSaveResponse(this.estadoMovimientoService.update(this.estadoMovimiento));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoMovimientoService.create(this.estadoMovimiento));
+            this.subscribeToSaveResponse(this.estadoMovimientoService.create(this.estadoMovimiento));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoMovimiento>) {
-        result.subscribe((res: EstadoMovimiento) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoMovimiento) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoMovimiento) {
-        this.eventManager.broadcast({ name: 'estadoMovimientoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoMovimientoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoMovimientoDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoMovimientoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoMovimientoPopupService: EstadoMovimientoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoMovimientoPopupService: EstadoMovimientoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoMovimientoPopupService
-                    .open(EstadoMovimientoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoMovimientoPopupService.open(EstadoMovimientoDialogComponent as Component, params['id']);
             } else {
-                this.estadoMovimientoPopupService
-                    .open(EstadoMovimientoDialogComponent as Component);
+                this.estadoMovimientoPopupService.open(EstadoMovimientoDialogComponent as Component);
             }
         });
     }

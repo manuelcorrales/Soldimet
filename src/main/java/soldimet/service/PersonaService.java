@@ -4,12 +4,14 @@ import soldimet.domain.Persona;
 import soldimet.repository.PersonaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Optional;
 /**
  * Service Implementation for managing Persona.
  */
@@ -32,15 +34,14 @@ public class PersonaService {
      * @return the persisted entity
      */
     public Persona save(Persona persona) {
-        log.debug("Request to save Persona : {}", persona);
-        return personaRepository.save(persona);
+        log.debug("Request to save Persona : {}", persona);        return personaRepository.save(persona);
     }
 
     /**
-     *  Get all the personas.
+     * Get all the personas.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<Persona> findAll(Pageable pageable) {
@@ -48,25 +49,26 @@ public class PersonaService {
         return personaRepository.findAll(pageable);
     }
 
+
     /**
-     *  Get one persona by id.
+     * Get one persona by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Persona findOne(Long id) {
+    public Optional<Persona> findOne(Long id) {
         log.debug("Request to get Persona : {}", id);
-        return personaRepository.findOne(id);
+        return personaRepository.findById(id);
     }
 
     /**
-     *  Delete the  persona by id.
+     * Delete the persona by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Persona : {}", id);
-        personaRepository.delete(id);
+        personaRepository.deleteById(id);
     }
 }

@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { EstadoPersonaDetailComponent } from '../../../../../../main/webapp/app/entities/estado-persona/estado-persona-detail.component';
-import { EstadoPersonaService } from '../../../../../../main/webapp/app/entities/estado-persona/estado-persona.service';
-import { EstadoPersona } from '../../../../../../main/webapp/app/entities/estado-persona/estado-persona.model';
+import { EstadoPersonaDetailComponent } from 'app/entities/estado-persona/estado-persona-detail.component';
+import { EstadoPersona } from 'app/shared/model/estado-persona.model';
 
 describe('Component Tests', () => {
-
     describe('EstadoPersona Management Detail Component', () => {
         let comp: EstadoPersonaDetailComponent;
         let fixture: ComponentFixture<EstadoPersonaDetailComponent>;
-        let service: EstadoPersonaService;
+        const route = ({ data: of({ estadoPersona: new EstadoPersona(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [EstadoPersonaDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    EstadoPersonaService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(EstadoPersonaDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(EstadoPersonaDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(EstadoPersonaDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(EstadoPersonaService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new EstadoPersona(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.estadoPersona).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.estadoPersona).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

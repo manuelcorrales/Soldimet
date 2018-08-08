@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    LocalidadService,
-    LocalidadPopupService,
     LocalidadComponent,
     LocalidadDetailComponent,
-    LocalidadDialogComponent,
-    LocalidadPopupComponent,
+    LocalidadUpdateComponent,
     LocalidadDeletePopupComponent,
     LocalidadDeleteDialogComponent,
     localidadRoute,
-    localidadPopupRoute,
+    localidadPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...localidadRoute,
-    ...localidadPopupRoute,
-];
+const ENTITY_STATES = [...localidadRoute, ...localidadPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         LocalidadComponent,
         LocalidadDetailComponent,
-        LocalidadDialogComponent,
+        LocalidadUpdateComponent,
         LocalidadDeleteDialogComponent,
-        LocalidadPopupComponent,
-        LocalidadDeletePopupComponent,
+        LocalidadDeletePopupComponent
     ],
-    entryComponents: [
-        LocalidadComponent,
-        LocalidadDialogComponent,
-        LocalidadPopupComponent,
-        LocalidadDeleteDialogComponent,
-        LocalidadDeletePopupComponent,
-    ],
-    providers: [
-        LocalidadService,
-        LocalidadPopupService,
-    ],
+    entryComponents: [LocalidadComponent, LocalidadUpdateComponent, LocalidadDeleteDialogComponent, LocalidadDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetLocalidadModule {}

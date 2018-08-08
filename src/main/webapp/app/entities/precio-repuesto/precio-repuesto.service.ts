@@ -1,79 +1,70 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { map } from 'rxjs/operators';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IPrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
 
-import { PrecioRepuesto } from './precio-repuesto.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+type EntityResponseType = HttpResponse<IPrecioRepuesto>;
+type EntityArrayResponseType = HttpResponse<IPrecioRepuesto[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PrecioRepuestoService {
-
     private resourceUrl = SERVER_API_URL + 'api/precio-repuestos';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient) {}
 
-    create(precioRepuesto: PrecioRepuesto): Observable<PrecioRepuesto> {
-        const copy = this.convert(precioRepuesto);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(precioRepuesto: IPrecioRepuesto): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(precioRepuesto);
+        return this.http
+            .post<IPrecioRepuesto>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(precioRepuesto: PrecioRepuesto): Observable<PrecioRepuesto> {
-        const copy = this.convert(precioRepuesto);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(precioRepuesto: IPrecioRepuesto): Observable<EntityResponseType> {
+        const copy = this.convertDateFromClient(precioRepuesto);
+        return this.http
+            .put<IPrecioRepuesto>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<PrecioRepuesto> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<IPrecioRepuesto>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http
+            .get<IPrecioRepuesto[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to PrecioRepuesto.
-     */
-    private convertItemFromServer(json: any): PrecioRepuesto {
-        const entity: PrecioRepuesto = Object.assign(new PrecioRepuesto(), json);
-        entity.fecha = this.dateUtils
-            .convertLocalDateFromServer(json.fecha);
-        return entity;
-    }
-
-    /**
-     * Convert a PrecioRepuesto to a JSON which can be sent to the server.
-     */
-    private convert(precioRepuesto: PrecioRepuesto): PrecioRepuesto {
-        const copy: PrecioRepuesto = Object.assign({}, precioRepuesto);
-        copy.fecha = this.dateUtils
-            .convertLocalDateToServer(precioRepuesto.fecha);
+    private convertDateFromClient(precioRepuesto: IPrecioRepuesto): IPrecioRepuesto {
+        const copy: IPrecioRepuesto = Object.assign({}, precioRepuesto, {
+            fecha: precioRepuesto.fecha != null && precioRepuesto.fecha.isValid() ? precioRepuesto.fecha.format(DATE_FORMAT) : null
+        });
         return copy;
+    }
+
+    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        res.body.fecha = res.body.fecha != null ? moment(res.body.fecha) : null;
+        return res;
+    }
+
+    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        res.body.forEach((precioRepuesto: IPrecioRepuesto) => {
+            precioRepuesto.fecha = precioRepuesto.fecha != null ? moment(precioRepuesto.fecha) : null;
+        });
+        return res;
     }
 }

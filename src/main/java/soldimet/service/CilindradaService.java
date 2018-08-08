@@ -4,11 +4,13 @@ import soldimet.domain.Cilindrada;
 import soldimet.repository.CilindradaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing Cilindrada.
  */
@@ -31,14 +33,13 @@ public class CilindradaService {
      * @return the persisted entity
      */
     public Cilindrada save(Cilindrada cilindrada) {
-        log.debug("Request to save Cilindrada : {}", cilindrada);
-        return cilindradaRepository.save(cilindrada);
+        log.debug("Request to save Cilindrada : {}", cilindrada);        return cilindradaRepository.save(cilindrada);
     }
 
     /**
-     *  Get all the cilindradas.
+     * Get all the cilindradas.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Cilindrada> findAll() {
@@ -46,25 +47,26 @@ public class CilindradaService {
         return cilindradaRepository.findAll();
     }
 
+
     /**
-     *  Get one cilindrada by id.
+     * Get one cilindrada by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Cilindrada findOne(Long id) {
+    public Optional<Cilindrada> findOne(Long id) {
         log.debug("Request to get Cilindrada : {}", id);
-        return cilindradaRepository.findOne(id);
+        return cilindradaRepository.findById(id);
     }
 
     /**
-     *  Delete the  cilindrada by id.
+     * Delete the cilindrada by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Cilindrada : {}", id);
-        cilindradaRepository.delete(id);
+        cilindradaRepository.deleteById(id);
     }
 }

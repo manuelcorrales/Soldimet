@@ -18,7 +18,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './pedido-repuesto-dialog.component.html'
 })
 export class PedidoRepuestoDialogComponent implements OnInit {
-
     pedidoRepuesto: PedidoRepuesto;
     isSaving: boolean;
 
@@ -36,15 +35,22 @@ export class PedidoRepuestoDialogComponent implements OnInit {
         private estadoPedidoRepuestoService: EstadoPedidoRepuestoService,
         private presupuestoService: PresupuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.estadoPedidoRepuestoService.query()
-            .subscribe((res: ResponseWrapper) => { this.estadopedidorepuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.presupuestoService.query()
-            .subscribe((res: ResponseWrapper) => { this.presupuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.estadoPedidoRepuestoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.estadopedidorepuestos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.presupuestoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.presupuestos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -54,21 +60,18 @@ export class PedidoRepuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.pedidoRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.pedidoRepuestoService.update(this.pedidoRepuesto));
+            this.subscribeToSaveResponse(this.pedidoRepuestoService.update(this.pedidoRepuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.pedidoRepuestoService.create(this.pedidoRepuesto));
+            this.subscribeToSaveResponse(this.pedidoRepuestoService.create(this.pedidoRepuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<PedidoRepuesto>) {
-        result.subscribe((res: PedidoRepuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: PedidoRepuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: PedidoRepuesto) {
-        this.eventManager.broadcast({ name: 'pedidoRepuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'pedidoRepuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -95,22 +98,16 @@ export class PedidoRepuestoDialogComponent implements OnInit {
     template: ''
 })
 export class PedidoRepuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private pedidoRepuestoPopupService: PedidoRepuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private pedidoRepuestoPopupService: PedidoRepuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.pedidoRepuestoPopupService
-                    .open(PedidoRepuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.pedidoRepuestoPopupService.open(PedidoRepuestoDialogComponent as Component, params['id']);
             } else {
-                this.pedidoRepuestoPopupService
-                    .open(PedidoRepuestoDialogComponent as Component);
+                this.pedidoRepuestoPopupService.open(PedidoRepuestoDialogComponent as Component);
             }
         });
     }

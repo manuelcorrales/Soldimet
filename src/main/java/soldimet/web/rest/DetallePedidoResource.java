@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.DetallePedido;
 import soldimet.service.DetallePedidoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class DetallePedidoResource {
     public ResponseEntity<DetallePedido> createDetallePedido(@Valid @RequestBody DetallePedido detallePedido) throws URISyntaxException {
         log.debug("REST request to save DetallePedido : {}", detallePedido);
         if (detallePedido.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new detallePedido cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new detallePedido cannot already have an ID", ENTITY_NAME, "idexists");
         }
         DetallePedido result = detallePedidoService.save(detallePedido);
         return ResponseEntity.created(new URI("/api/detalle-pedidos/" + result.getId()))
@@ -68,7 +69,7 @@ public class DetallePedidoResource {
     public ResponseEntity<DetallePedido> updateDetallePedido(@Valid @RequestBody DetallePedido detallePedido) throws URISyntaxException {
         log.debug("REST request to update DetallePedido : {}", detallePedido);
         if (detallePedido.getId() == null) {
-            return createDetallePedido(detallePedido);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         DetallePedido result = detallePedidoService.save(detallePedido);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class DetallePedidoResource {
     public List<DetallePedido> getAllDetallePedidos() {
         log.debug("REST request to get all DetallePedidos");
         return detallePedidoService.findAll();
-        }
+    }
 
     /**
      * GET  /detalle-pedidos/:id : get the "id" detallePedido.
@@ -98,8 +99,8 @@ public class DetallePedidoResource {
     @Timed
     public ResponseEntity<DetallePedido> getDetallePedido(@PathVariable Long id) {
         log.debug("REST request to get DetallePedido : {}", id);
-        DetallePedido detallePedido = detallePedidoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(detallePedido));
+        Optional<DetallePedido> detallePedido = detallePedidoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(detallePedido);
     }
 
     /**

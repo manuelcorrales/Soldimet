@@ -1,13 +1,12 @@
 package soldimet.repository;
 
 import soldimet.domain.CategoriaPago;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the CategoriaPago entity.
+ * Spring Data  repository for the CategoriaPago entity.
  */
 @SuppressWarnings("unused")
 @Repository

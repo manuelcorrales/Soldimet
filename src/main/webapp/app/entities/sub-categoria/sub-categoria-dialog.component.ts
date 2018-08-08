@@ -15,7 +15,6 @@ import { SubCategoriaService } from './sub-categoria.service';
     templateUrl: './sub-categoria-dialog.component.html'
 })
 export class SubCategoriaDialogComponent implements OnInit {
-
     subCategoria: SubCategoria;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class SubCategoriaDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private subCategoriaService: SubCategoriaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class SubCategoriaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.subCategoria.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.subCategoriaService.update(this.subCategoria));
+            this.subscribeToSaveResponse(this.subCategoriaService.update(this.subCategoria));
         } else {
-            this.subscribeToSaveResponse(
-                this.subCategoriaService.create(this.subCategoria));
+            this.subscribeToSaveResponse(this.subCategoriaService.create(this.subCategoria));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<SubCategoria>) {
-        result.subscribe((res: SubCategoria) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: SubCategoria) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: SubCategoria) {
-        this.eventManager.broadcast({ name: 'subCategoriaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'subCategoriaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class SubCategoriaDialogComponent implements OnInit {
     template: ''
 })
 export class SubCategoriaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private subCategoriaPopupService: SubCategoriaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private subCategoriaPopupService: SubCategoriaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.subCategoriaPopupService
-                    .open(SubCategoriaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.subCategoriaPopupService.open(SubCategoriaDialogComponent as Component, params['id']);
             } else {
-                this.subCategoriaPopupService
-                    .open(SubCategoriaDialogComponent as Component);
+                this.subCategoriaPopupService.open(SubCategoriaDialogComponent as Component);
             }
         });
     }

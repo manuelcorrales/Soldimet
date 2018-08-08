@@ -15,7 +15,6 @@ import { EstadoPedidoRepuestoService } from './estado-pedido-repuesto.service';
     templateUrl: './estado-pedido-repuesto-dialog.component.html'
 })
 export class EstadoPedidoRepuestoDialogComponent implements OnInit {
-
     estadoPedidoRepuesto: EstadoPedidoRepuesto;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoPedidoRepuestoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoPedidoRepuestoService: EstadoPedidoRepuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoPedidoRepuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoPedidoRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoPedidoRepuestoService.update(this.estadoPedidoRepuesto));
+            this.subscribeToSaveResponse(this.estadoPedidoRepuestoService.update(this.estadoPedidoRepuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoPedidoRepuestoService.create(this.estadoPedidoRepuesto));
+            this.subscribeToSaveResponse(this.estadoPedidoRepuestoService.create(this.estadoPedidoRepuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoPedidoRepuesto>) {
-        result.subscribe((res: EstadoPedidoRepuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoPedidoRepuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoPedidoRepuesto) {
-        this.eventManager.broadcast({ name: 'estadoPedidoRepuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoPedidoRepuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoPedidoRepuestoDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoPedidoRepuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoPedidoRepuestoPopupService: EstadoPedidoRepuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoPedidoRepuestoPopupService: EstadoPedidoRepuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoPedidoRepuestoPopupService
-                    .open(EstadoPedidoRepuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoPedidoRepuestoPopupService.open(EstadoPedidoRepuestoDialogComponent as Component, params['id']);
             } else {
-                this.estadoPedidoRepuestoPopupService
-                    .open(EstadoPedidoRepuestoDialogComponent as Component);
+                this.estadoPedidoRepuestoPopupService.open(EstadoPedidoRepuestoDialogComponent as Component);
             }
         });
     }

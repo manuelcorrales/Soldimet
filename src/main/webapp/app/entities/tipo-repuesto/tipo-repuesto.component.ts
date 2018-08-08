@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { TipoRepuesto } from './tipo-repuesto.model';
+import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
+import { Principal } from 'app/core';
 import { TipoRepuestoService } from './tipo-repuesto.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-tipo-repuesto',
     templateUrl: './tipo-repuesto.component.html'
 })
 export class TipoRepuestoComponent implements OnInit, OnDestroy {
-tipoRepuestos: TipoRepuesto[];
+    tipoRepuestos: ITipoRepuesto[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ tipoRepuestos: TipoRepuesto[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.tipoRepuestoService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.tipoRepuestos = res.json;
+            (res: HttpResponse<ITipoRepuesto[]>) => {
+                this.tipoRepuestos = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInTipoRepuestos();
@@ -45,14 +44,15 @@ tipoRepuestos: TipoRepuesto[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: TipoRepuesto) {
+    trackId(index: number, item: ITipoRepuesto) {
         return item.id;
     }
+
     registerChangeInTipoRepuestos() {
-        this.eventSubscriber = this.eventManager.subscribe('tipoRepuestoListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('tipoRepuestoListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

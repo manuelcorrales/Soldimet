@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    DetallePedidoService,
-    DetallePedidoPopupService,
     DetallePedidoComponent,
     DetallePedidoDetailComponent,
-    DetallePedidoDialogComponent,
-    DetallePedidoPopupComponent,
+    DetallePedidoUpdateComponent,
     DetallePedidoDeletePopupComponent,
     DetallePedidoDeleteDialogComponent,
     detallePedidoRoute,
-    detallePedidoPopupRoute,
+    detallePedidoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...detallePedidoRoute,
-    ...detallePedidoPopupRoute,
-];
+const ENTITY_STATES = [...detallePedidoRoute, ...detallePedidoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         DetallePedidoComponent,
         DetallePedidoDetailComponent,
-        DetallePedidoDialogComponent,
+        DetallePedidoUpdateComponent,
         DetallePedidoDeleteDialogComponent,
-        DetallePedidoPopupComponent,
-        DetallePedidoDeletePopupComponent,
+        DetallePedidoDeletePopupComponent
     ],
     entryComponents: [
         DetallePedidoComponent,
-        DetallePedidoDialogComponent,
-        DetallePedidoPopupComponent,
+        DetallePedidoUpdateComponent,
         DetallePedidoDeleteDialogComponent,
-        DetallePedidoDeletePopupComponent,
-    ],
-    providers: [
-        DetallePedidoService,
-        DetallePedidoPopupService,
+        DetallePedidoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

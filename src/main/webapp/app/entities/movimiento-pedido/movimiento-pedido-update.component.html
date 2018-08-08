@@ -1,0 +1,50 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-movimiento-pedido-heading">Create or edit a Movimiento Pedido</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!movimientoPedido.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="movimientoPedido.id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_pedidoRepuesto">Pedido Repuesto</label>
+                    <select class="form-control" id="field_pedidoRepuesto" name="pedidoRepuesto" [(ngModel)]="movimientoPedido.pedidoRepuesto"  required>
+                        <option *ngIf="!editForm.value.pedidoRepuesto" [ngValue]="null" selected></option>
+                        <option [ngValue]="pedidoRepuestoOption.id === movimientoPedido.pedidoRepuesto?.id ? movimientoPedido.pedidoRepuesto : pedidoRepuestoOption" *ngFor="let pedidoRepuestoOption of pedidorepuestos; trackBy: trackPedidoRepuestoById">{{pedidoRepuestoOption.id}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.pedidoRepuesto?.dirty && editForm.controls.pedidoRepuesto?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.pedidoRepuesto?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_movimiento">Movimiento</label>
+                    <select class="form-control" id="field_movimiento" name="movimiento" [(ngModel)]="movimientoPedido.movimiento" required>
+                        <option *ngIf="!editForm.value.movimiento" [ngValue]="null" selected></option>
+                        <option [ngValue]="movimientoOption.id === movimientoPedido.movimiento?.id ? movimientoPedido.movimiento : movimientoOption" *ngFor="let movimientoOption of movimientos; trackBy: trackMovimientoById">{{movimientoOption.id}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.movimiento?.dirty && editForm.controls.movimiento?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.movimiento?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

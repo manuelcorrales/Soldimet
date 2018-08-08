@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { Cliente } from './cliente.model';
+import { ICliente } from 'app/shared/model/cliente.model';
+import { Principal } from 'app/core';
 import { ClienteService } from './cliente.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-cliente',
     templateUrl: './cliente.component.html'
 })
 export class ClienteComponent implements OnInit, OnDestroy {
-clientes: Cliente[];
+    clientes: ICliente[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ clientes: Cliente[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.clienteService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.clientes = res.json;
+            (res: HttpResponse<ICliente[]>) => {
+                this.clientes = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInClientes();
@@ -45,14 +44,15 @@ clientes: Cliente[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: Cliente) {
+    trackId(index: number, item: ICliente) {
         return item.id;
     }
+
     registerChangeInClientes() {
-        this.eventSubscriber = this.eventManager.subscribe('clienteListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('clienteListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

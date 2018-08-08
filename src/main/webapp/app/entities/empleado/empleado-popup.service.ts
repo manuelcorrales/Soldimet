@@ -8,12 +8,7 @@ import { EmpleadoService } from './empleado.service';
 export class EmpleadoPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private empleadoService: EmpleadoService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private empleadoService: EmpleadoService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class EmpleadoPopupService {
             }
 
             if (id) {
-                this.empleadoService.find(id).subscribe((empleado) => {
+                this.empleadoService.find(id).subscribe(empleado => {
                     this.ngbModalRef = this.empleadoModalRef(component, empleado);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class EmpleadoPopupService {
     }
 
     empleadoModalRef(component: Component, empleado: Empleado): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.empleado = empleado;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

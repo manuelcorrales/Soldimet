@@ -18,7 +18,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './detalle-movimiento-dialog.component.html'
 })
 export class DetalleMovimientoDialogComponent implements OnInit {
-
     detalleMovimiento: DetalleMovimiento;
     isSaving: boolean;
 
@@ -33,15 +32,22 @@ export class DetalleMovimientoDialogComponent implements OnInit {
         private tipoDetalleMovimientoService: TipoDetalleMovimientoService,
         private presupuestoService: PresupuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.tipoDetalleMovimientoService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipodetallemovimientos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.presupuestoService.query()
-            .subscribe((res: ResponseWrapper) => { this.presupuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.tipoDetalleMovimientoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tipodetallemovimientos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.presupuestoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.presupuestos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -51,21 +57,18 @@ export class DetalleMovimientoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.detalleMovimiento.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.detalleMovimientoService.update(this.detalleMovimiento));
+            this.subscribeToSaveResponse(this.detalleMovimientoService.update(this.detalleMovimiento));
         } else {
-            this.subscribeToSaveResponse(
-                this.detalleMovimientoService.create(this.detalleMovimiento));
+            this.subscribeToSaveResponse(this.detalleMovimientoService.create(this.detalleMovimiento));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<DetalleMovimiento>) {
-        result.subscribe((res: DetalleMovimiento) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: DetalleMovimiento) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: DetalleMovimiento) {
-        this.eventManager.broadcast({ name: 'detalleMovimientoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'detalleMovimientoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +95,16 @@ export class DetalleMovimientoDialogComponent implements OnInit {
     template: ''
 })
 export class DetalleMovimientoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private detalleMovimientoPopupService: DetalleMovimientoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private detalleMovimientoPopupService: DetalleMovimientoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.detalleMovimientoPopupService
-                    .open(DetalleMovimientoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.detalleMovimientoPopupService.open(DetalleMovimientoDialogComponent as Component, params['id']);
             } else {
-                this.detalleMovimientoPopupService
-                    .open(DetalleMovimientoDialogComponent as Component);
+                this.detalleMovimientoPopupService.open(DetalleMovimientoDialogComponent as Component);
             }
         });
     }

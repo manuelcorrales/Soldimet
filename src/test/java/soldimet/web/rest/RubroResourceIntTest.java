@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class RubroResourceIntTest {
 
     @Autowired
     private RubroRepository rubroRepository;
+
+    
 
     @Autowired
     private RubroService rubroService;
@@ -70,6 +74,7 @@ public class RubroResourceIntTest {
         this.restRubroMockMvc = MockMvcBuilders.standaloneSetup(rubroResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class RubroResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(rubro.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreRubro").value(hasItem(DEFAULT_NOMBRE_RUBRO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class RubroResourceIntTest {
             .andExpect(jsonPath("$.id").value(rubro.getId().intValue()))
             .andExpect(jsonPath("$.nombreRubro").value(DEFAULT_NOMBRE_RUBRO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingRubro() throws Exception {
@@ -190,7 +195,9 @@ public class RubroResourceIntTest {
         int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
 
         // Update the rubro
-        Rubro updatedRubro = rubroRepository.findOne(rubro.getId());
+        Rubro updatedRubro = rubroRepository.findById(rubro.getId()).get();
+        // Disconnect from session so that the updates on updatedRubro are not directly saved in db
+        em.detach(updatedRubro);
         updatedRubro
             .nombreRubro(UPDATED_NOMBRE_RUBRO);
 
@@ -217,11 +224,11 @@ public class RubroResourceIntTest {
         restRubroMockMvc.perform(put("/api/rubros")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(rubro)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Rubro in the database
         List<Rubro> rubroList = rubroRepository.findAll();
-        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

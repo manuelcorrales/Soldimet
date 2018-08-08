@@ -1,8 +1,4 @@
-
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Cilindrada } from '../../../../entities/cilindrada/cilindrada.model';
-import { Motor } from '../../../../entities/motor/motor.model';
-import { Aplicacion } from '../../../../entities/aplicacion/aplicacion.model';
 import { TipoParteMotor } from '../../../../entities/tipo-parte-motor/tipo-parte-motor.model';
 import { PresupuestosService } from '../../../presupuestos.service';
 import { DetallePresupuesto } from '../../../../entities/detalle-presupuesto/detalle-presupuesto.model';
@@ -10,6 +6,9 @@ import { JhiEventManager } from 'ng-jhipster';
 import { DetallePresupuestoService } from '../../../../entities/detalle-presupuesto';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { Cilindrada } from 'app/shared/model/cilindrada.model';
+import { Motor } from 'app/shared/model/motor.model';
+import { Aplicacion } from 'app/shared/model/aplicacion.model';
 
 @Component({
     selector: 'jhi-motor-nuevo-presupuesto',
@@ -17,7 +16,6 @@ import { ActivatedRoute } from '@angular/router';
     styles: []
 })
 export class MotorNuevoPresupuestoComponent implements OnInit {
-
     cilindradas: Cilindrada[] = [];
     motores: Motor[] = [];
     aplicaciones: Aplicacion[];
@@ -32,13 +30,12 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
     private eventSubscriber: Subscription;
     @Output() eventoDetallePresupuesto = new EventEmitter<DetallePresupuesto>();
 
-    constructor(private _presupuestosService: PresupuestosService,
+    constructor(
+        private _presupuestosService: PresupuestosService,
         private eventManager: JhiEventManager,
         private detalleService: DetallePresupuestoService,
-        private route: ActivatedRoute,
-    ) {
-
-    }
+        private route: ActivatedRoute
+    ) {}
 
     ngOnInit() {
         this.motores = this._presupuestosService.buscarMotores();
@@ -47,7 +44,7 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
     }
 
     buscarAplicaciones() {
-        this._presupuestosService.findAplicacionesPorMotor(this.motor).subscribe((datos) => {
+        this._presupuestosService.findAplicacionesPorMotor(this.motor).subscribe(datos => {
             this.aplicaciones = datos;
         });
     }
@@ -60,6 +57,5 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
         detallePresupuesto.cilindrada = this.cilindradaElegida;
         detallePresupuesto.aplicacion = this.aplicacion;
         this.eventoDetallePresupuesto.emit(detallePresupuesto);
-
     }
 }

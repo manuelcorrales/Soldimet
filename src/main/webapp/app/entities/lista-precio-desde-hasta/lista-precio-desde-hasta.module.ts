@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    ListaPrecioDesdeHastaService,
-    ListaPrecioDesdeHastaPopupService,
     ListaPrecioDesdeHastaComponent,
     ListaPrecioDesdeHastaDetailComponent,
-    ListaPrecioDesdeHastaDialogComponent,
-    ListaPrecioDesdeHastaPopupComponent,
+    ListaPrecioDesdeHastaUpdateComponent,
     ListaPrecioDesdeHastaDeletePopupComponent,
     ListaPrecioDesdeHastaDeleteDialogComponent,
     listaPrecioDesdeHastaRoute,
-    listaPrecioDesdeHastaPopupRoute,
+    listaPrecioDesdeHastaPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...listaPrecioDesdeHastaRoute,
-    ...listaPrecioDesdeHastaPopupRoute,
-];
+const ENTITY_STATES = [...listaPrecioDesdeHastaRoute, ...listaPrecioDesdeHastaPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         ListaPrecioDesdeHastaComponent,
         ListaPrecioDesdeHastaDetailComponent,
-        ListaPrecioDesdeHastaDialogComponent,
+        ListaPrecioDesdeHastaUpdateComponent,
         ListaPrecioDesdeHastaDeleteDialogComponent,
-        ListaPrecioDesdeHastaPopupComponent,
-        ListaPrecioDesdeHastaDeletePopupComponent,
+        ListaPrecioDesdeHastaDeletePopupComponent
     ],
     entryComponents: [
         ListaPrecioDesdeHastaComponent,
-        ListaPrecioDesdeHastaDialogComponent,
-        ListaPrecioDesdeHastaPopupComponent,
+        ListaPrecioDesdeHastaUpdateComponent,
         ListaPrecioDesdeHastaDeleteDialogComponent,
-        ListaPrecioDesdeHastaDeletePopupComponent,
-    ],
-    providers: [
-        ListaPrecioDesdeHastaService,
-        ListaPrecioDesdeHastaPopupService,
+        ListaPrecioDesdeHastaDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

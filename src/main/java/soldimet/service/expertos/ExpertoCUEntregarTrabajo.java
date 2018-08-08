@@ -36,7 +36,7 @@ public class ExpertoCUEntregarTrabajo {
 
             EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
 
-            Presupuesto presupuesto = presupuestoRepository.findOne(idPresupuesto);
+            Presupuesto presupuesto = presupuestoRepository.findById(idPresupuesto).get();
 
             if (presupuesto != null && !presupuesto.getEstadoPresupuesto().equals(estadoAceptado)) {
                 //modifico y guardo el presupuesto

@@ -4,11 +4,13 @@ import soldimet.domain.EstadoCobranzaOperacion;
 import soldimet.repository.EstadoCobranzaOperacionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing EstadoCobranzaOperacion.
  */
@@ -31,14 +33,13 @@ public class EstadoCobranzaOperacionService {
      * @return the persisted entity
      */
     public EstadoCobranzaOperacion save(EstadoCobranzaOperacion estadoCobranzaOperacion) {
-        log.debug("Request to save EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);
-        return estadoCobranzaOperacionRepository.save(estadoCobranzaOperacion);
+        log.debug("Request to save EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);        return estadoCobranzaOperacionRepository.save(estadoCobranzaOperacion);
     }
 
     /**
-     *  Get all the estadoCobranzaOperacions.
+     * Get all the estadoCobranzaOperacions.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<EstadoCobranzaOperacion> findAll() {
@@ -46,25 +47,26 @@ public class EstadoCobranzaOperacionService {
         return estadoCobranzaOperacionRepository.findAll();
     }
 
+
     /**
-     *  Get one estadoCobranzaOperacion by id.
+     * Get one estadoCobranzaOperacion by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public EstadoCobranzaOperacion findOne(Long id) {
+    public Optional<EstadoCobranzaOperacion> findOne(Long id) {
         log.debug("Request to get EstadoCobranzaOperacion : {}", id);
-        return estadoCobranzaOperacionRepository.findOne(id);
+        return estadoCobranzaOperacionRepository.findById(id);
     }
 
     /**
-     *  Delete the  estadoCobranzaOperacion by id.
+     * Delete the estadoCobranzaOperacion by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoCobranzaOperacion : {}", id);
-        estadoCobranzaOperacionRepository.delete(id);
+        estadoCobranzaOperacionRepository.deleteById(id);
     }
 }

@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    EstadoPedidoRepuestoService,
-    EstadoPedidoRepuestoPopupService,
     EstadoPedidoRepuestoComponent,
     EstadoPedidoRepuestoDetailComponent,
-    EstadoPedidoRepuestoDialogComponent,
-    EstadoPedidoRepuestoPopupComponent,
+    EstadoPedidoRepuestoUpdateComponent,
     EstadoPedidoRepuestoDeletePopupComponent,
     EstadoPedidoRepuestoDeleteDialogComponent,
     estadoPedidoRepuestoRoute,
-    estadoPedidoRepuestoPopupRoute,
+    estadoPedidoRepuestoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...estadoPedidoRepuestoRoute,
-    ...estadoPedidoRepuestoPopupRoute,
-];
+const ENTITY_STATES = [...estadoPedidoRepuestoRoute, ...estadoPedidoRepuestoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EstadoPedidoRepuestoComponent,
         EstadoPedidoRepuestoDetailComponent,
-        EstadoPedidoRepuestoDialogComponent,
+        EstadoPedidoRepuestoUpdateComponent,
         EstadoPedidoRepuestoDeleteDialogComponent,
-        EstadoPedidoRepuestoPopupComponent,
-        EstadoPedidoRepuestoDeletePopupComponent,
+        EstadoPedidoRepuestoDeletePopupComponent
     ],
     entryComponents: [
         EstadoPedidoRepuestoComponent,
-        EstadoPedidoRepuestoDialogComponent,
-        EstadoPedidoRepuestoPopupComponent,
+        EstadoPedidoRepuestoUpdateComponent,
         EstadoPedidoRepuestoDeleteDialogComponent,
-        EstadoPedidoRepuestoDeletePopupComponent,
-    ],
-    providers: [
-        EstadoPedidoRepuestoService,
-        EstadoPedidoRepuestoPopupService,
+        EstadoPedidoRepuestoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

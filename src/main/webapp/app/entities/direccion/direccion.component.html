@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Direccions</span>
-        <button class="btn btn-primary float-right jh-create-entity create-direccion" [routerLink]="['/', { outlets: { popup: ['direccion-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-direccion" [routerLink]="['/direccion/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Direccion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="direccions">
         <table class="table table-striped">
@@ -25,34 +23,34 @@
             </thead>
             <tbody>
             <tr *ngFor="let direccion of direccions ;trackBy: trackId">
-                <td><a [routerLink]="['../direccion', direccion.id ]">{{direccion.id}}</a></td>
+                <td><a [routerLink]="['/direccion', direccion.id, 'view' ]">{{direccion.id}}</a></td>
                 <td>{{direccion.calle}}</td>
                 <td>{{direccion.numero}}</td>
                 <td>
                     <div *ngIf="direccion.localidad">
-                        <a [routerLink]="['../localidad', direccion.localidad?.id ]" >{{direccion.localidad?.nombreLocalidad}}</a>
+                        <a [routerLink]="['../localidad', direccion.localidad?.id, 'view' ]" >{{direccion.localidad?.nombreLocalidad}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../direccion', direccion.id ]"
+                                [routerLink]="['/direccion', direccion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'direccion/'+ direccion.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/direccion', direccion.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'direccion/'+ direccion.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

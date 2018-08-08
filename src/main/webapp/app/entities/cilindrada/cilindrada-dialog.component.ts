@@ -15,7 +15,6 @@ import { CilindradaService } from './cilindrada.service';
     templateUrl: './cilindrada-dialog.component.html'
 })
 export class CilindradaDialogComponent implements OnInit {
-
     cilindrada: Cilindrada;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class CilindradaDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private cilindradaService: CilindradaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class CilindradaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.cilindrada.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.cilindradaService.update(this.cilindrada));
+            this.subscribeToSaveResponse(this.cilindradaService.update(this.cilindrada));
         } else {
-            this.subscribeToSaveResponse(
-                this.cilindradaService.create(this.cilindrada));
+            this.subscribeToSaveResponse(this.cilindradaService.create(this.cilindrada));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Cilindrada>) {
-        result.subscribe((res: Cilindrada) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Cilindrada) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Cilindrada) {
-        this.eventManager.broadcast({ name: 'cilindradaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'cilindradaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class CilindradaDialogComponent implements OnInit {
     template: ''
 })
 export class CilindradaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private cilindradaPopupService: CilindradaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private cilindradaPopupService: CilindradaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.cilindradaPopupService
-                    .open(CilindradaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.cilindradaPopupService.open(CilindradaDialogComponent as Component, params['id']);
             } else {
-                this.cilindradaPopupService
-                    .open(CilindradaDialogComponent as Component);
+                this.cilindradaPopupService.open(CilindradaDialogComponent as Component);
             }
         });
     }

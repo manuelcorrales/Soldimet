@@ -16,30 +16,19 @@ export function interceptableFactory(
     injector: Injector,
     eventManager: JhiEventManager
 ) {
-    return new JhiInterceptableHttp(
-        backend,
-        defaultOptions,
-        [
-            new AuthInterceptor(localStorage, sessionStorage),
-            new AuthExpiredInterceptor(injector),
-            // Other interceptors can be added here
-            new ErrorHandlerInterceptor(eventManager),
-            new NotificationInterceptor(injector)
-        ]
-    );
+    return new JhiInterceptableHttp(backend, defaultOptions, [
+        new AuthInterceptor(localStorage, sessionStorage),
+        new AuthExpiredInterceptor(injector),
+        // Other interceptors can be added here
+        new ErrorHandlerInterceptor(eventManager),
+        new NotificationInterceptor(injector)
+    ]);
 }
 
 export function customHttpProvider() {
     return {
         provide: Http,
         useFactory: interceptableFactory,
-        deps: [
-            XHRBackend,
-            RequestOptions,
-            LocalStorageService,
-            SessionStorageService,
-            Injector,
-            JhiEventManager
-        ]
+        deps: [XHRBackend, RequestOptions, LocalStorageService, SessionStorageService, Injector, JhiEventManager]
     };
 }

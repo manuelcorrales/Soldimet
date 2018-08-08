@@ -1,13 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { TipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
+import { TipoDetalleMovimientoService } from './tipo-detalle-movimiento.service';
 import { TipoDetalleMovimientoComponent } from './tipo-detalle-movimiento.component';
 import { TipoDetalleMovimientoDetailComponent } from './tipo-detalle-movimiento-detail.component';
-import { TipoDetalleMovimientoPopupComponent } from './tipo-detalle-movimiento-dialog.component';
+import { TipoDetalleMovimientoUpdateComponent } from './tipo-detalle-movimiento-update.component';
 import { TipoDetalleMovimientoDeletePopupComponent } from './tipo-detalle-movimiento-delete-dialog.component';
+import { ITipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
+
+@Injectable({ providedIn: 'root' })
+export class TipoDetalleMovimientoResolve implements Resolve<ITipoDetalleMovimiento> {
+    constructor(private service: TipoDetalleMovimientoService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service
+                .find(id)
+                .pipe(map((tipoDetalleMovimiento: HttpResponse<TipoDetalleMovimiento>) => tipoDetalleMovimiento.body));
+        }
+        return of(new TipoDetalleMovimiento());
+    }
+}
 
 export const tipoDetalleMovimientoRoute: Routes = [
     {
@@ -18,9 +36,37 @@ export const tipoDetalleMovimientoRoute: Routes = [
             pageTitle: 'TipoDetalleMovimientos'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'tipo-detalle-movimiento/:id',
+    },
+    {
+        path: 'tipo-detalle-movimiento/:id/view',
         component: TipoDetalleMovimientoDetailComponent,
+        resolve: {
+            tipoDetalleMovimiento: TipoDetalleMovimientoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'TipoDetalleMovimientos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'tipo-detalle-movimiento/new',
+        component: TipoDetalleMovimientoUpdateComponent,
+        resolve: {
+            tipoDetalleMovimiento: TipoDetalleMovimientoResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'TipoDetalleMovimientos'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'tipo-detalle-movimiento/:id/edit',
+        component: TipoDetalleMovimientoUpdateComponent,
+        resolve: {
+            tipoDetalleMovimiento: TipoDetalleMovimientoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'TipoDetalleMovimientos'
@@ -31,28 +77,11 @@ export const tipoDetalleMovimientoRoute: Routes = [
 
 export const tipoDetalleMovimientoPopupRoute: Routes = [
     {
-        path: 'tipo-detalle-movimiento-new',
-        component: TipoDetalleMovimientoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'TipoDetalleMovimientos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'tipo-detalle-movimiento/:id/edit',
-        component: TipoDetalleMovimientoPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'TipoDetalleMovimientos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'tipo-detalle-movimiento/:id/delete',
         component: TipoDetalleMovimientoDeletePopupComponent,
+        resolve: {
+            tipoDetalleMovimiento: TipoDetalleMovimientoResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'TipoDetalleMovimientos'

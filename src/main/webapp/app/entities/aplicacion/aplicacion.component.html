@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Aplicacions</span>
-        <button class="btn btn-primary float-right jh-create-entity create-aplicacion" [routerLink]="['/', { outlets: { popup: ['aplicacion-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-aplicacion" [routerLink]="['/aplicacion/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Aplicacion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="aplicacions">
         <table class="table table-striped">
@@ -24,29 +22,29 @@
             </thead>
             <tbody>
             <tr *ngFor="let aplicacion of aplicacions ;trackBy: trackId">
-                <td><a [routerLink]="['../aplicacion', aplicacion.id ]">{{aplicacion.id}}</a></td>
+                <td><a [routerLink]="['/aplicacion', aplicacion.id, 'view' ]">{{aplicacion.id}}</a></td>
                 <td>{{aplicacion.nombreAplicacion}}</td>
                 <td>{{aplicacion.numeroGrupo}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../aplicacion', aplicacion.id ]"
+                                [routerLink]="['/aplicacion', aplicacion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'aplicacion/'+ aplicacion.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/aplicacion', aplicacion.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'aplicacion/'+ aplicacion.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

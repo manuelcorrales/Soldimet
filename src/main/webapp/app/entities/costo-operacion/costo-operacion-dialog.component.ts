@@ -19,7 +19,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './costo-operacion-dialog.component.html'
 })
 export class CostoOperacionDialogComponent implements OnInit {
-
     costoOperacion: CostoOperacion;
     isSaving: boolean;
 
@@ -37,17 +36,28 @@ export class CostoOperacionDialogComponent implements OnInit {
         private operacionService: OperacionService,
         private tipoParteMotorService: TipoParteMotorService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.cilindradaService.query()
-            .subscribe((res: ResponseWrapper) => { this.cilindradas = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.operacionService.query()
-            .subscribe((res: ResponseWrapper) => { this.operacions = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.tipoParteMotorService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipopartemotors = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.cilindradaService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.cilindradas = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.operacionService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.operacions = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.tipoParteMotorService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tipopartemotors = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -57,21 +67,18 @@ export class CostoOperacionDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.costoOperacion.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.costoOperacionService.update(this.costoOperacion));
+            this.subscribeToSaveResponse(this.costoOperacionService.update(this.costoOperacion));
         } else {
-            this.subscribeToSaveResponse(
-                this.costoOperacionService.create(this.costoOperacion));
+            this.subscribeToSaveResponse(this.costoOperacionService.create(this.costoOperacion));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<CostoOperacion>) {
-        result.subscribe((res: CostoOperacion) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: CostoOperacion) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CostoOperacion) {
-        this.eventManager.broadcast({ name: 'costoOperacionListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'costoOperacionListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -102,22 +109,16 @@ export class CostoOperacionDialogComponent implements OnInit {
     template: ''
 })
 export class CostoOperacionPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private costoOperacionPopupService: CostoOperacionPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private costoOperacionPopupService: CostoOperacionPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.costoOperacionPopupService
-                    .open(CostoOperacionDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.costoOperacionPopupService.open(CostoOperacionDialogComponent as Component, params['id']);
             } else {
-                this.costoOperacionPopupService
-                    .open(CostoOperacionDialogComponent as Component);
+                this.costoOperacionPopupService.open(CostoOperacionDialogComponent as Component);
             }
         });
     }

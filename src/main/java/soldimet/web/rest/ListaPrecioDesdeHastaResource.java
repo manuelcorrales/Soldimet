@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.ListaPrecioDesdeHasta;
 import soldimet.service.ListaPrecioDesdeHastaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class ListaPrecioDesdeHastaResource {
     public ResponseEntity<ListaPrecioDesdeHasta> createListaPrecioDesdeHasta(@Valid @RequestBody ListaPrecioDesdeHasta listaPrecioDesdeHasta) throws URISyntaxException {
         log.debug("REST request to save ListaPrecioDesdeHasta : {}", listaPrecioDesdeHasta);
         if (listaPrecioDesdeHasta.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new listaPrecioDesdeHasta cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new listaPrecioDesdeHasta cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ListaPrecioDesdeHasta result = listaPrecioDesdeHastaService.save(listaPrecioDesdeHasta);
         return ResponseEntity.created(new URI("/api/lista-precio-desde-hastas/" + result.getId()))
@@ -68,7 +69,7 @@ public class ListaPrecioDesdeHastaResource {
     public ResponseEntity<ListaPrecioDesdeHasta> updateListaPrecioDesdeHasta(@Valid @RequestBody ListaPrecioDesdeHasta listaPrecioDesdeHasta) throws URISyntaxException {
         log.debug("REST request to update ListaPrecioDesdeHasta : {}", listaPrecioDesdeHasta);
         if (listaPrecioDesdeHasta.getId() == null) {
-            return createListaPrecioDesdeHasta(listaPrecioDesdeHasta);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         ListaPrecioDesdeHasta result = listaPrecioDesdeHastaService.save(listaPrecioDesdeHasta);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class ListaPrecioDesdeHastaResource {
     public List<ListaPrecioDesdeHasta> getAllListaPrecioDesdeHastas() {
         log.debug("REST request to get all ListaPrecioDesdeHastas");
         return listaPrecioDesdeHastaService.findAll();
-        }
+    }
 
     /**
      * GET  /lista-precio-desde-hastas/:id : get the "id" listaPrecioDesdeHasta.
@@ -98,8 +99,8 @@ public class ListaPrecioDesdeHastaResource {
     @Timed
     public ResponseEntity<ListaPrecioDesdeHasta> getListaPrecioDesdeHasta(@PathVariable Long id) {
         log.debug("REST request to get ListaPrecioDesdeHasta : {}", id);
-        ListaPrecioDesdeHasta listaPrecioDesdeHasta = listaPrecioDesdeHastaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(listaPrecioDesdeHasta));
+        Optional<ListaPrecioDesdeHasta> listaPrecioDesdeHasta = listaPrecioDesdeHastaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(listaPrecioDesdeHasta);
     }
 
     /**

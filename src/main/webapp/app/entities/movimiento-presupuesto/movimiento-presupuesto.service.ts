@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { MovimientoPresupuesto } from './movimiento-presupuesto.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IMovimientoPresupuesto>;
+type EntityArrayResponseType = HttpResponse<IMovimientoPresupuesto[]>;
+
+@Injectable({ providedIn: 'root' })
 export class MovimientoPresupuestoService {
-
     private resourceUrl = SERVER_API_URL + 'api/movimiento-presupuestos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(movimientoPresupuesto: MovimientoPresupuesto): Observable<MovimientoPresupuesto> {
-        const copy = this.convert(movimientoPresupuesto);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(movimientoPresupuesto: IMovimientoPresupuesto): Observable<EntityResponseType> {
+        return this.http.post<IMovimientoPresupuesto>(this.resourceUrl, movimientoPresupuesto, { observe: 'response' });
     }
 
-    update(movimientoPresupuesto: MovimientoPresupuesto): Observable<MovimientoPresupuesto> {
-        const copy = this.convert(movimientoPresupuesto);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(movimientoPresupuesto: IMovimientoPresupuesto): Observable<EntityResponseType> {
+        return this.http.put<IMovimientoPresupuesto>(this.resourceUrl, movimientoPresupuesto, { observe: 'response' });
     }
 
-    find(id: number): Observable<MovimientoPresupuesto> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IMovimientoPresupuesto>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IMovimientoPresupuesto[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to MovimientoPresupuesto.
-     */
-    private convertItemFromServer(json: any): MovimientoPresupuesto {
-        const entity: MovimientoPresupuesto = Object.assign(new MovimientoPresupuesto(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a MovimientoPresupuesto to a JSON which can be sent to the server.
-     */
-    private convert(movimientoPresupuesto: MovimientoPresupuesto): MovimientoPresupuesto {
-        const copy: MovimientoPresupuesto = Object.assign({}, movimientoPresupuesto);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

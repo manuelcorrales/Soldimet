@@ -11,22 +11,16 @@ import { ClienteBorrarPopupService } from '../modal-borrar-cliente/cliente-modal
     templateUrl: './cliente-borrar-dialog.component.html'
 })
 export class ClienteBorrarDialogComponent {
-
     cliente: Cliente;
 
-    constructor(
-        private clienteService: ClienteService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private clienteService: ClienteService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.clienteService.delete(id).subscribe((response) => {
+        this.clienteService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'clienteListModification',
                 content: 'Cliente eliminado'
@@ -41,20 +35,15 @@ export class ClienteBorrarDialogComponent {
     template: ''
 })
 export class ClienteBorrarPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(private route: ActivatedRoute,
-        private clientePopupService: ClienteBorrarPopupService) {
-    }
+    constructor(private route: ActivatedRoute, private clientePopupService: ClienteBorrarPopupService) {}
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
+        this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
-                this.clientePopupService
-                    .open(ClienteBorrarDialogComponent as Component, params['id']);
+                this.clientePopupService.open(ClienteBorrarDialogComponent as Component, params['id']);
             } else {
-                this.clientePopupService
-                    .open(ClienteBorrarDialogComponent as Component);
+                this.clientePopupService.open(ClienteBorrarDialogComponent as Component);
             }
         });
     }

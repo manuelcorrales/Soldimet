@@ -8,12 +8,7 @@ import { CilindradaService } from './cilindrada.service';
 export class CilindradaPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private cilindradaService: CilindradaService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private cilindradaService: CilindradaService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class CilindradaPopupService {
             }
 
             if (id) {
-                this.cilindradaService.find(id).subscribe((cilindrada) => {
+                this.cilindradaService.find(id).subscribe(cilindrada => {
                     this.ngbModalRef = this.cilindradaModalRef(component, cilindrada);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class CilindradaPopupService {
     }
 
     cilindradaModalRef(component: Component, cilindrada: Cilindrada): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.cilindrada = cilindrada;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

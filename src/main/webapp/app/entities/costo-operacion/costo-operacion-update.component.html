@@ -1,0 +1,82 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-costo-operacion-heading">Create or edit a Costo Operacion</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!costoOperacion.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="costoOperacion.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_costoOperacion">Costo Operacion</label>
+                    <input type="number" class="form-control" name="costoOperacion" id="field_costoOperacion"
+                        [(ngModel)]="costoOperacion.costoOperacion" required min="0" jhiMin="0"/>
+                    <div [hidden]="!(editForm.controls.costoOperacion?.dirty && editForm.controls.costoOperacion?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.costoOperacion?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.costoOperacion?.errors?.min">
+                            This field should be at least 0.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.costoOperacion?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_cilindrada">Cilindrada</label>
+                    <select class="form-control" id="field_cilindrada" name="cilindrada" [(ngModel)]="costoOperacion.cilindrada"  required>
+                        <option *ngIf="!editForm.value.cilindrada" [ngValue]="null" selected></option>
+                        <option [ngValue]="cilindradaOption.id === costoOperacion.cilindrada?.id ? costoOperacion.cilindrada : cilindradaOption" *ngFor="let cilindradaOption of cilindradas; trackBy: trackCilindradaById">{{cilindradaOption.cantidadDeCilindros}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.cilindrada?.dirty && editForm.controls.cilindrada?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.cilindrada?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_operacion">Operacion</label>
+                    <select class="form-control" id="field_operacion" name="operacion" [(ngModel)]="costoOperacion.operacion"  required>
+                        <option *ngIf="!editForm.value.operacion" [ngValue]="null" selected></option>
+                        <option [ngValue]="operacionOption.id === costoOperacion.operacion?.id ? costoOperacion.operacion : operacionOption" *ngFor="let operacionOption of operacions; trackBy: trackOperacionById">{{operacionOption.nombreOperacion}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.operacion?.dirty && editForm.controls.operacion?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.operacion?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_tipoParteMotor">Tipo Parte Motor</label>
+                    <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" [(ngModel)]="costoOperacion.tipoParteMotor"  required>
+                        <option *ngIf="!editForm.value.tipoParteMotor" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoParteMotorOption.id === costoOperacion.tipoParteMotor?.id ? costoOperacion.tipoParteMotor : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.tipoParteMotor?.dirty && editForm.controls.tipoParteMotor?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.tipoParteMotor?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

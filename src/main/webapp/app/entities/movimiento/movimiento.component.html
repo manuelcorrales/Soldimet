@@ -1,90 +1,88 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Movimientos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-movimiento" [routerLink]="['/', { outlets: { popup: ['movimiento-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-movimiento" [routerLink]="['/movimiento/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Movimiento
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="movimientos">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="fecha"><span>Fecha</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="hora"><span>Hora</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="importe"><span>Importe</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="estado.nombreEstado"><span>Estado</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="formaDePago.nombreFormaDePago"><span>Forma De Pago</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="tipoMovimiento.nombreTipoMovimiento"><span>Tipo Movimiento</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="empleado.usuario"><span>Empleado</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="persona.nombre"><span>Persona</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="subCategoria.nombreSubCategoria"><span>Sub Categoria</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fecha"><span>Fecha</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="hora"><span>Hora</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="importe"><span>Importe</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="estado.nombreEstado"><span>Estado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="formaDePago.nombreFormaDePago"><span>Forma De Pago</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="tipoMovimiento.nombreTipoMovimiento"><span>Tipo Movimiento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="empleado.usuario"><span>Empleado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="persona.nombre"><span>Persona</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="subCategoria.nombreSubCategoria"><span>Sub Categoria</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let movimiento of movimientos ;trackBy: trackId">
-                <td><a [routerLink]="['../movimiento', movimiento.id ]">{{movimiento.id}}</a></td>
+                <td><a [routerLink]="['/movimiento', movimiento.id, 'view' ]">{{movimiento.id}}</a></td>
                 <td>{{movimiento.fecha | date:'mediumDate'}}</td>
                 <td>{{movimiento.hora | date:'medium'}}</td>
                 <td>{{movimiento.importe}}</td>
                 <td>
                     <div *ngIf="movimiento.estado">
-                        <a [routerLink]="['../estado-movimiento', movimiento.estado?.id ]" >{{movimiento.estado?.nombreEstado}}</a>
+                        <a [routerLink]="['../estado-movimiento', movimiento.estado?.id, 'view' ]" >{{movimiento.estado?.nombreEstado}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimiento.formaDePago">
-                        <a [routerLink]="['../forma-de-pago', movimiento.formaDePago?.id ]" >{{movimiento.formaDePago?.nombreFormaDePago}}</a>
+                        <a [routerLink]="['../forma-de-pago', movimiento.formaDePago?.id, 'view' ]" >{{movimiento.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimiento.tipoMovimiento">
-                        <a [routerLink]="['../tipo-movimiento', movimiento.tipoMovimiento?.id ]" >{{movimiento.tipoMovimiento?.nombreTipoMovimiento}}</a>
+                        <a [routerLink]="['../tipo-movimiento', movimiento.tipoMovimiento?.id, 'view' ]" >{{movimiento.tipoMovimiento?.nombreTipoMovimiento}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimiento.empleado">
-                        <a [routerLink]="['../empleado', movimiento.empleado?.id ]" >{{movimiento.empleado?.usuario}}</a>
+                        <a [routerLink]="['../empleado', movimiento.empleado?.id, 'view' ]" >{{movimiento.empleado?.usuario}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimiento.persona">
-                        <a [routerLink]="['../persona', movimiento.persona?.id ]" >{{movimiento.persona?.nombre}}</a>
+                        <a [routerLink]="['../persona', movimiento.persona?.id, 'view' ]" >{{movimiento.persona?.nombre}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimiento.subCategoria">
-                        <a [routerLink]="['../sub-categoria', movimiento.subCategoria?.id ]" >{{movimiento.subCategoria?.nombreSubCategoria}}</a>
+                        <a [routerLink]="['../sub-categoria', movimiento.subCategoria?.id, 'view' ]" >{{movimiento.subCategoria?.nombreSubCategoria}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../movimiento', movimiento.id ]"
+                                [routerLink]="['/movimiento', movimiento.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'movimiento/'+ movimiento.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/movimiento', movimiento.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'movimiento/'+ movimiento.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>
@@ -93,12 +91,12 @@
             </tbody>
         </table>
     </div>
-        <div *ngIf="movimientos && movimientos.length">
-            <div class="row justify-content-center">
-                <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-            </div>
-            <div class="row justify-content-center">
-                <ngb-pagination [collectionSize]="totalItems" [(page)]="page" (pageChange)="loadPage(page)"></ngb-pagination>
-            </div>
+    <div *ngIf="movimientos && movimientos.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
 </div>

@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { TipoParteMotor } from './tipo-parte-motor.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<ITipoParteMotor>;
+type EntityArrayResponseType = HttpResponse<ITipoParteMotor[]>;
+
+@Injectable({ providedIn: 'root' })
 export class TipoParteMotorService {
-
     private resourceUrl = SERVER_API_URL + 'api/tipo-parte-motors';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(tipoParteMotor: TipoParteMotor): Observable<TipoParteMotor> {
-        const copy = this.convert(tipoParteMotor);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(tipoParteMotor: ITipoParteMotor): Observable<EntityResponseType> {
+        return this.http.post<ITipoParteMotor>(this.resourceUrl, tipoParteMotor, { observe: 'response' });
     }
 
-    update(tipoParteMotor: TipoParteMotor): Observable<TipoParteMotor> {
-        const copy = this.convert(tipoParteMotor);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(tipoParteMotor: ITipoParteMotor): Observable<EntityResponseType> {
+        return this.http.put<ITipoParteMotor>(this.resourceUrl, tipoParteMotor, { observe: 'response' });
     }
 
-    find(id: number): Observable<TipoParteMotor> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<ITipoParteMotor>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<ITipoParteMotor[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to TipoParteMotor.
-     */
-    private convertItemFromServer(json: any): TipoParteMotor {
-        const entity: TipoParteMotor = Object.assign(new TipoParteMotor(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a TipoParteMotor to a JSON which can be sent to the server.
-     */
-    private convert(tipoParteMotor: TipoParteMotor): TipoParteMotor {
-        const copy: TipoParteMotor = Object.assign({}, tipoParteMotor);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

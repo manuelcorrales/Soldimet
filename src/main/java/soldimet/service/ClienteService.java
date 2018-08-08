@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing Cliente.
  */
@@ -38,14 +39,13 @@ public class ClienteService {
      * @return the persisted entity
      */
     public Cliente save(Cliente cliente) {
-        log.debug("Request to save Cliente : {}", cliente);
-        return clienteRepository.save(cliente);
+        log.debug("Request to save Cliente : {}", cliente);        return clienteRepository.save(cliente);
     }
 
     /**
-     *  Get all the clientes.
+     * Get all the clientes.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Cliente> findAll() {
@@ -53,27 +53,28 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
+
     /**
-     *  Get one cliente by id.
+     * Get one cliente by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Cliente findOne(Long id) {
+    public Optional<Cliente> findOne(Long id) {
         log.debug("Request to get Cliente : {}", id);
-        return clienteRepository.findOne(id);
+        return clienteRepository.findById(id);
     }
 
     /**
-     *  Delete the  cliente by id.
+     * Delete the cliente by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Cliente : {}", id);
         EstadoPersona estadoBaja = estadoPersonaRepository.findByNombreEstado("Baja");
-        Cliente cliente = clienteRepository.findOne(id);
+        Cliente cliente = clienteRepository.findById(id).get();
         cliente.getPersona().setEstadoPersona(estadoBaja);
         clienteRepository.save(cliente);
     }

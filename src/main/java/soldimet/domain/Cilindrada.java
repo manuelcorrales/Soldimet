@@ -3,6 +3,7 @@ package soldimet.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -72,7 +73,7 @@ public class Cilindrada implements Serializable {
     public String toString() {
         return "Cilindrada{" +
             "id=" + getId() +
-            ", cantidadDeCilindros='" + getCantidadDeCilindros() + "'" +
+            ", cantidadDeCilindros=" + getCantidadDeCilindros() +
             "}";
     }
 }

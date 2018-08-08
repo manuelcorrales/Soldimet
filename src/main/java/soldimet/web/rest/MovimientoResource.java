@@ -3,9 +3,9 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Movimiento;
 import soldimet.service.MovimientoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import soldimet.web.rest.util.PaginationUtil;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class MovimientoResource {
     public ResponseEntity<Movimiento> createMovimiento(@Valid @RequestBody Movimiento movimiento) throws URISyntaxException {
         log.debug("REST request to save Movimiento : {}", movimiento);
         if (movimiento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new movimiento cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new movimiento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Movimiento result = movimientoService.save(movimiento);
         return ResponseEntity.created(new URI("/api/movimientos/" + result.getId()))
@@ -74,7 +74,7 @@ public class MovimientoResource {
     public ResponseEntity<Movimiento> updateMovimiento(@Valid @RequestBody Movimiento movimiento) throws URISyntaxException {
         log.debug("REST request to update Movimiento : {}", movimiento);
         if (movimiento.getId() == null) {
-            return createMovimiento(movimiento);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Movimiento result = movimientoService.save(movimiento);
         return ResponseEntity.ok()
@@ -90,7 +90,7 @@ public class MovimientoResource {
      */
     @GetMapping("/movimientos")
     @Timed
-    public ResponseEntity<List<Movimiento>> getAllMovimientos(@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Movimiento>> getAllMovimientos(Pageable pageable) {
         log.debug("REST request to get a page of Movimientos");
         Page<Movimiento> page = movimientoService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/movimientos");
@@ -107,8 +107,8 @@ public class MovimientoResource {
     @Timed
     public ResponseEntity<Movimiento> getMovimiento(@PathVariable Long id) {
         log.debug("REST request to get Movimiento : {}", id);
-        Movimiento movimiento = movimientoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(movimiento));
+        Optional<Movimiento> movimiento = movimientoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(movimiento);
     }
 
     /**

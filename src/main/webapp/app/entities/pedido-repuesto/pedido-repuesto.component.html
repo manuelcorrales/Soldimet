@@ -1,66 +1,64 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Pedido Repuestos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-pedido-repuesto" [routerLink]="['/', { outlets: { popup: ['pedido-repuesto-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-pedido-repuesto" [routerLink]="['/pedido-repuesto/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Pedido Repuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="pedidoRepuestos">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="fechaCreacion"><span>Fecha Creacion</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="fechaPedido"><span>Fecha Pedido</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="fechaRecibo"><span>Fecha Recibo</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="estadoPedidoRepuesto.nombreEstado"><span>Estado Pedido Repuesto</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="presupuesto.id"><span>Presupuesto</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fechaCreacion"><span>Fecha Creacion</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fechaPedido"><span>Fecha Pedido</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fechaRecibo"><span>Fecha Recibo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="estadoPedidoRepuesto.nombreEstado"><span>Estado Pedido Repuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="presupuesto.id"><span>Presupuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let pedidoRepuesto of pedidoRepuestos ;trackBy: trackId">
-                <td><a [routerLink]="['../pedido-repuesto', pedidoRepuesto.id ]">{{pedidoRepuesto.id}}</a></td>
+                <td><a [routerLink]="['/pedido-repuesto', pedidoRepuesto.id, 'view' ]">{{pedidoRepuesto.id}}</a></td>
                 <td>{{pedidoRepuesto.fechaCreacion | date:'mediumDate'}}</td>
                 <td>{{pedidoRepuesto.fechaPedido | date:'mediumDate'}}</td>
                 <td>{{pedidoRepuesto.fechaRecibo | date:'mediumDate'}}</td>
                 <td>
                     <div *ngIf="pedidoRepuesto.estadoPedidoRepuesto">
-                        <a [routerLink]="['../estado-pedido-repuesto', pedidoRepuesto.estadoPedidoRepuesto?.id ]" >{{pedidoRepuesto.estadoPedidoRepuesto?.nombreEstado}}</a>
+                        <a [routerLink]="['../estado-pedido-repuesto', pedidoRepuesto.estadoPedidoRepuesto?.id, 'view' ]" >{{pedidoRepuesto.estadoPedidoRepuesto?.nombreEstado}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="pedidoRepuesto.presupuesto">
-                        <a [routerLink]="['../presupuesto', pedidoRepuesto.presupuesto?.id ]" >{{pedidoRepuesto.presupuesto?.id}}</a>
+                        <a [routerLink]="['../presupuesto', pedidoRepuesto.presupuesto?.id, 'view' ]" >{{pedidoRepuesto.presupuesto?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../pedido-repuesto', pedidoRepuesto.id ]"
+                                [routerLink]="['/pedido-repuesto', pedidoRepuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'pedido-repuesto/'+ pedidoRepuesto.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/pedido-repuesto', pedidoRepuesto.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'pedido-repuesto/'+ pedidoRepuesto.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>
@@ -69,12 +67,12 @@
             </tbody>
         </table>
     </div>
-        <div *ngIf="pedidoRepuestos && pedidoRepuestos.length">
-            <div class="row justify-content-center">
-                <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-            </div>
-            <div class="row justify-content-center">
-                <ngb-pagination [collectionSize]="totalItems" [(page)]="page" (pageChange)="loadPage(page)"></ngb-pagination>
-            </div>
+    <div *ngIf="pedidoRepuestos && pedidoRepuestos.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
 </div>

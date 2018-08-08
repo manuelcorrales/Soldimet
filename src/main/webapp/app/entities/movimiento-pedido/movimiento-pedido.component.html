@@ -1,16 +1,14 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Movimiento Pedidos</span>
-        <button class="btn btn-primary float-right jh-create-entity create-movimiento-pedido" [routerLink]="['/', { outlets: { popup: ['movimiento-pedido-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-movimiento-pedido" [routerLink]="['/movimiento-pedido/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Movimiento Pedido
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="movimientoPedidos">
         <table class="table table-striped">
@@ -24,37 +22,37 @@
             </thead>
             <tbody>
             <tr *ngFor="let movimientoPedido of movimientoPedidos ;trackBy: trackId">
-                <td><a [routerLink]="['../movimiento-pedido', movimientoPedido.id ]">{{movimientoPedido.id}}</a></td>
+                <td><a [routerLink]="['/movimiento-pedido', movimientoPedido.id, 'view' ]">{{movimientoPedido.id}}</a></td>
                 <td>
                     <div *ngIf="movimientoPedido.pedidoRepuesto">
-                        <a [routerLink]="['../pedido-repuesto', movimientoPedido.pedidoRepuesto?.id ]" >{{movimientoPedido.pedidoRepuesto?.id}}</a>
+                        <a [routerLink]="['../pedido-repuesto', movimientoPedido.pedidoRepuesto?.id, 'view' ]" >{{movimientoPedido.pedidoRepuesto?.id}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimientoPedido.movimiento">
-                        <a [routerLink]="['../movimiento', movimientoPedido.movimiento?.id ]" >{{movimientoPedido.movimiento?.id}}</a>
+                        <a [routerLink]="['../movimiento', movimientoPedido.movimiento?.id, 'view' ]" >{{movimientoPedido.movimiento?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../movimiento-pedido', movimientoPedido.id ]"
+                                [routerLink]="['/movimiento-pedido', movimientoPedido.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'movimiento-pedido/'+ movimientoPedido.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/movimiento-pedido', movimientoPedido.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', { outlets: { popup: 'movimiento-pedido/'+ movimientoPedido.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

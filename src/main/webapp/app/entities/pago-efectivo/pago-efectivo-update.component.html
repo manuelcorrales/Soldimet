@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-pago-efectivo-heading">Create or edit a Pago Efectivo</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!pagoEfectivo.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="pagoEfectivo.id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_formaDePago">Forma De Pago</label>
+                    <select class="form-control" id="field_formaDePago" name="formaDePago" [(ngModel)]="pagoEfectivo.formaDePago" required>
+                        <option *ngIf="!editForm.value.formaDePago" [ngValue]="null" selected></option>
+                        <option [ngValue]="formaDePagoOption.id === pagoEfectivo.formaDePago?.id ? pagoEfectivo.formaDePago : formaDePagoOption" *ngFor="let formaDePagoOption of formadepagos; trackBy: trackFormaDePagoById">{{formaDePagoOption.nombreFormaDePago}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.formaDePago?.dirty && editForm.controls.formaDePago?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.formaDePago?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

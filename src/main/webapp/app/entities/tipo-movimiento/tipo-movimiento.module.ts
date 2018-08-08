@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    TipoMovimientoService,
-    TipoMovimientoPopupService,
     TipoMovimientoComponent,
     TipoMovimientoDetailComponent,
-    TipoMovimientoDialogComponent,
-    TipoMovimientoPopupComponent,
+    TipoMovimientoUpdateComponent,
     TipoMovimientoDeletePopupComponent,
     TipoMovimientoDeleteDialogComponent,
     tipoMovimientoRoute,
-    tipoMovimientoPopupRoute,
+    tipoMovimientoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...tipoMovimientoRoute,
-    ...tipoMovimientoPopupRoute,
-];
+const ENTITY_STATES = [...tipoMovimientoRoute, ...tipoMovimientoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         TipoMovimientoComponent,
         TipoMovimientoDetailComponent,
-        TipoMovimientoDialogComponent,
+        TipoMovimientoUpdateComponent,
         TipoMovimientoDeleteDialogComponent,
-        TipoMovimientoPopupComponent,
-        TipoMovimientoDeletePopupComponent,
+        TipoMovimientoDeletePopupComponent
     ],
     entryComponents: [
         TipoMovimientoComponent,
-        TipoMovimientoDialogComponent,
-        TipoMovimientoPopupComponent,
+        TipoMovimientoUpdateComponent,
         TipoMovimientoDeleteDialogComponent,
-        TipoMovimientoDeletePopupComponent,
-    ],
-    providers: [
-        TipoMovimientoService,
-        TipoMovimientoPopupService,
+        TipoMovimientoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

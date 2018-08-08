@@ -12,7 +12,6 @@ export class MovimientoPresupuestoPopupService {
         private modalService: NgbModal,
         private router: Router,
         private movimientoPresupuestoService: MovimientoPresupuestoService
-
     ) {
         this.ngbModalRef = null;
     }
@@ -25,7 +24,7 @@ export class MovimientoPresupuestoPopupService {
             }
 
             if (id) {
-                this.movimientoPresupuestoService.find(id).subscribe((movimientoPresupuesto) => {
+                this.movimientoPresupuestoService.find(id).subscribe(movimientoPresupuesto => {
                     this.ngbModalRef = this.movimientoPresupuestoModalRef(component, movimientoPresupuesto);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +39,18 @@ export class MovimientoPresupuestoPopupService {
     }
 
     movimientoPresupuestoModalRef(component: Component, movimientoPresupuesto: MovimientoPresupuesto): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.movimientoPresupuesto = movimientoPresupuesto;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

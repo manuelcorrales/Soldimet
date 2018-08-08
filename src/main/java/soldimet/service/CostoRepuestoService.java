@@ -4,11 +4,13 @@ import soldimet.domain.CostoRepuesto;
 import soldimet.repository.CostoRepuestoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing CostoRepuesto.
  */
@@ -31,14 +33,13 @@ public class CostoRepuestoService {
      * @return the persisted entity
      */
     public CostoRepuesto save(CostoRepuesto costoRepuesto) {
-        log.debug("Request to save CostoRepuesto : {}", costoRepuesto);
-        return costoRepuestoRepository.save(costoRepuesto);
+        log.debug("Request to save CostoRepuesto : {}", costoRepuesto);        return costoRepuestoRepository.save(costoRepuesto);
     }
 
     /**
-     *  Get all the costoRepuestos.
+     * Get all the costoRepuestos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<CostoRepuesto> findAll() {
@@ -46,25 +47,26 @@ public class CostoRepuestoService {
         return costoRepuestoRepository.findAll();
     }
 
+
     /**
-     *  Get one costoRepuesto by id.
+     * Get one costoRepuesto by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public CostoRepuesto findOne(Long id) {
+    public Optional<CostoRepuesto> findOne(Long id) {
         log.debug("Request to get CostoRepuesto : {}", id);
-        return costoRepuestoRepository.findOne(id);
+        return costoRepuestoRepository.findById(id);
     }
 
     /**
-     *  Delete the  costoRepuesto by id.
+     * Delete the costoRepuesto by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete CostoRepuesto : {}", id);
-        costoRepuestoRepository.delete(id);
+        costoRepuestoRepository.deleteById(id);
     }
 }

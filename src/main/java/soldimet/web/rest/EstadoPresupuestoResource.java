@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.service.EstadoPresupuestoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EstadoPresupuestoResource {
     public ResponseEntity<EstadoPresupuesto> createEstadoPresupuesto(@Valid @RequestBody EstadoPresupuesto estadoPresupuesto) throws URISyntaxException {
         log.debug("REST request to save EstadoPresupuesto : {}", estadoPresupuesto);
         if (estadoPresupuesto.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new estadoPresupuesto cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new estadoPresupuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EstadoPresupuesto result = estadoPresupuestoService.save(estadoPresupuesto);
         return ResponseEntity.created(new URI("/api/estado-presupuestos/" + result.getId()))
@@ -68,7 +69,7 @@ public class EstadoPresupuestoResource {
     public ResponseEntity<EstadoPresupuesto> updateEstadoPresupuesto(@Valid @RequestBody EstadoPresupuesto estadoPresupuesto) throws URISyntaxException {
         log.debug("REST request to update EstadoPresupuesto : {}", estadoPresupuesto);
         if (estadoPresupuesto.getId() == null) {
-            return createEstadoPresupuesto(estadoPresupuesto);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EstadoPresupuesto result = estadoPresupuestoService.save(estadoPresupuesto);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EstadoPresupuestoResource {
     public List<EstadoPresupuesto> getAllEstadoPresupuestos() {
         log.debug("REST request to get all EstadoPresupuestos");
         return estadoPresupuestoService.findAll();
-        }
+    }
 
     /**
      * GET  /estado-presupuestos/:id : get the "id" estadoPresupuesto.
@@ -98,8 +99,8 @@ public class EstadoPresupuestoResource {
     @Timed
     public ResponseEntity<EstadoPresupuesto> getEstadoPresupuesto(@PathVariable Long id) {
         log.debug("REST request to get EstadoPresupuesto : {}", id);
-        EstadoPresupuesto estadoPresupuesto = estadoPresupuestoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(estadoPresupuesto));
+        Optional<EstadoPresupuesto> estadoPresupuesto = estadoPresupuestoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(estadoPresupuesto);
     }
 
     /**

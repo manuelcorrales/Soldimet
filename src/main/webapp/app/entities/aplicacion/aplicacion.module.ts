@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    AplicacionService,
-    AplicacionPopupService,
     AplicacionComponent,
     AplicacionDetailComponent,
-    AplicacionDialogComponent,
-    AplicacionPopupComponent,
+    AplicacionUpdateComponent,
     AplicacionDeletePopupComponent,
     AplicacionDeleteDialogComponent,
     aplicacionRoute,
-    aplicacionPopupRoute,
+    aplicacionPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...aplicacionRoute,
-    ...aplicacionPopupRoute,
-];
+const ENTITY_STATES = [...aplicacionRoute, ...aplicacionPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         AplicacionComponent,
         AplicacionDetailComponent,
-        AplicacionDialogComponent,
+        AplicacionUpdateComponent,
         AplicacionDeleteDialogComponent,
-        AplicacionPopupComponent,
-        AplicacionDeletePopupComponent,
+        AplicacionDeletePopupComponent
     ],
-    entryComponents: [
-        AplicacionComponent,
-        AplicacionDialogComponent,
-        AplicacionPopupComponent,
-        AplicacionDeleteDialogComponent,
-        AplicacionDeletePopupComponent,
-    ],
-    providers: [
-        AplicacionService,
-        AplicacionPopupService,
-    ],
+    entryComponents: [AplicacionComponent, AplicacionUpdateComponent, AplicacionDeleteDialogComponent, AplicacionDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetAplicacionModule {}

@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { CobranzaRepuesto } from './cobranza-repuesto.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { ICobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<ICobranzaRepuesto>;
+type EntityArrayResponseType = HttpResponse<ICobranzaRepuesto[]>;
+
+@Injectable({ providedIn: 'root' })
 export class CobranzaRepuestoService {
-
     private resourceUrl = SERVER_API_URL + 'api/cobranza-repuestos';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(cobranzaRepuesto: CobranzaRepuesto): Observable<CobranzaRepuesto> {
-        const copy = this.convert(cobranzaRepuesto);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(cobranzaRepuesto: ICobranzaRepuesto): Observable<EntityResponseType> {
+        return this.http.post<ICobranzaRepuesto>(this.resourceUrl, cobranzaRepuesto, { observe: 'response' });
     }
 
-    update(cobranzaRepuesto: CobranzaRepuesto): Observable<CobranzaRepuesto> {
-        const copy = this.convert(cobranzaRepuesto);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(cobranzaRepuesto: ICobranzaRepuesto): Observable<EntityResponseType> {
+        return this.http.put<ICobranzaRepuesto>(this.resourceUrl, cobranzaRepuesto, { observe: 'response' });
     }
 
-    find(id: number): Observable<CobranzaRepuesto> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<ICobranzaRepuesto>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<ICobranzaRepuesto[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to CobranzaRepuesto.
-     */
-    private convertItemFromServer(json: any): CobranzaRepuesto {
-        const entity: CobranzaRepuesto = Object.assign(new CobranzaRepuesto(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a CobranzaRepuesto to a JSON which can be sent to the server.
-     */
-    private convert(cobranzaRepuesto: CobranzaRepuesto): CobranzaRepuesto {
-        const copy: CobranzaRepuesto = Object.assign({}, cobranzaRepuesto);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

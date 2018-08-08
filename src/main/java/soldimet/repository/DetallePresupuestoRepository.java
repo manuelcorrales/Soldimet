@@ -1,13 +1,12 @@
 package soldimet.repository;
 
 import soldimet.domain.DetallePresupuesto;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the DetallePresupuesto entity.
+ * Spring Data  repository for the DetallePresupuesto entity.
  */
 @SuppressWarnings("unused")
 @Repository

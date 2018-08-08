@@ -7,15 +7,9 @@ import { Direccion } from '../../entities/direccion';
 
 @Injectable()
 export class ClienteModalPopupService {
-
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private clienteService: ClienteService,
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private clienteService: ClienteService) {
         this.ngbModalRef = null;
     }
 
@@ -26,7 +20,7 @@ export class ClienteModalPopupService {
                 resolve(this.ngbModalRef);
             }
             if (id) {
-                this.clienteService.find(id).subscribe((cliente) => {
+                this.clienteService.find(id).subscribe(cliente => {
                     this.ngbModalRef = this.clienteModalRef(component, cliente);
                     resolve(this.ngbModalRef);
                 });
@@ -50,13 +44,16 @@ export class ClienteModalPopupService {
         modalRef.componentInstance.persona = cliente.persona;
         const persona: Persona = cliente.persona as Persona;
         modalRef.componentInstance.direccion = persona.direccion;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

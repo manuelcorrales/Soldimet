@@ -4,11 +4,13 @@ import soldimet.domain.TipoParteMotor;
 import soldimet.repository.TipoParteMotorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing TipoParteMotor.
  */
@@ -31,14 +33,13 @@ public class TipoParteMotorService {
      * @return the persisted entity
      */
     public TipoParteMotor save(TipoParteMotor tipoParteMotor) {
-        log.debug("Request to save TipoParteMotor : {}", tipoParteMotor);
-        return tipoParteMotorRepository.save(tipoParteMotor);
+        log.debug("Request to save TipoParteMotor : {}", tipoParteMotor);        return tipoParteMotorRepository.save(tipoParteMotor);
     }
 
     /**
-     *  Get all the tipoParteMotors.
+     * Get all the tipoParteMotors.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<TipoParteMotor> findAll() {
@@ -46,25 +47,26 @@ public class TipoParteMotorService {
         return tipoParteMotorRepository.findAll();
     }
 
+
     /**
-     *  Get one tipoParteMotor by id.
+     * Get one tipoParteMotor by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public TipoParteMotor findOne(Long id) {
+    public Optional<TipoParteMotor> findOne(Long id) {
         log.debug("Request to get TipoParteMotor : {}", id);
-        return tipoParteMotorRepository.findOne(id);
+        return tipoParteMotorRepository.findById(id);
     }
 
     /**
-     *  Delete the  tipoParteMotor by id.
+     * Delete the tipoParteMotor by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete TipoParteMotor : {}", id);
-        tipoParteMotorRepository.delete(id);
+        tipoParteMotorRepository.deleteById(id);
     }
 }

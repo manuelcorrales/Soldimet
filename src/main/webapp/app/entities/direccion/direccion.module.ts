@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    DireccionService,
-    DireccionPopupService,
     DireccionComponent,
     DireccionDetailComponent,
-    DireccionDialogComponent,
-    DireccionPopupComponent,
+    DireccionUpdateComponent,
     DireccionDeletePopupComponent,
     DireccionDeleteDialogComponent,
     direccionRoute,
-    direccionPopupRoute,
+    direccionPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...direccionRoute,
-    ...direccionPopupRoute,
-];
+const ENTITY_STATES = [...direccionRoute, ...direccionPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         DireccionComponent,
         DireccionDetailComponent,
-        DireccionDialogComponent,
+        DireccionUpdateComponent,
         DireccionDeleteDialogComponent,
-        DireccionPopupComponent,
-        DireccionDeletePopupComponent,
+        DireccionDeletePopupComponent
     ],
-    entryComponents: [
-        DireccionComponent,
-        DireccionDialogComponent,
-        DireccionPopupComponent,
-        DireccionDeleteDialogComponent,
-        DireccionDeletePopupComponent,
-    ],
-    providers: [
-        DireccionService,
-        DireccionPopupService,
-    ],
+    entryComponents: [DireccionComponent, DireccionUpdateComponent, DireccionDeleteDialogComponent, DireccionDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetDireccionModule {}

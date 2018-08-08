@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { Operacion } from './operacion.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IOperacion } from 'app/shared/model/operacion.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<IOperacion>;
+type EntityArrayResponseType = HttpResponse<IOperacion[]>;
+
+@Injectable({ providedIn: 'root' })
 export class OperacionService {
-
     private resourceUrl = SERVER_API_URL + 'api/operacions';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(operacion: Operacion): Observable<Operacion> {
-        const copy = this.convert(operacion);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(operacion: IOperacion): Observable<EntityResponseType> {
+        return this.http.post<IOperacion>(this.resourceUrl, operacion, { observe: 'response' });
     }
 
-    update(operacion: Operacion): Observable<Operacion> {
-        const copy = this.convert(operacion);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(operacion: IOperacion): Observable<EntityResponseType> {
+        return this.http.put<IOperacion>(this.resourceUrl, operacion, { observe: 'response' });
     }
 
-    find(id: number): Observable<Operacion> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<IOperacion>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<IOperacion[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Operacion.
-     */
-    private convertItemFromServer(json: any): Operacion {
-        const entity: Operacion = Object.assign(new Operacion(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a Operacion to a JSON which can be sent to the server.
-     */
-    private convert(operacion: Operacion): Operacion {
-        const copy: Operacion = Object.assign({}, operacion);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

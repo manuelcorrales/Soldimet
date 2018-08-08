@@ -32,6 +32,7 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
     private static final String PROP_METRIC_REG_JVM_FILES = "jvm.files";
     private static final String PROP_METRIC_REG_JVM_BUFFERS = "jvm.buffers";
     private static final String PROP_METRIC_REG_JVM_ATTRIBUTE_SET = "jvm.attributes";
+
     private final Logger log = LoggerFactory.getLogger(MetricsConfiguration.class);
 
     private MetricRegistry metricRegistry = new MetricRegistry();
@@ -74,6 +75,8 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
         metricRegistry.register(PROP_METRIC_REG_JVM_ATTRIBUTE_SET, new JvmAttributeGaugeSet());
         if (hikariDataSource != null) {
             log.debug("Monitoring the datasource");
+            // remove the factory created by HikariDataSourceMetricsPostProcessor until JHipster migrate to Micrometer
+            hikariDataSource.setMetricsTrackerFactory(null);
             hikariDataSource.setMetricRegistry(metricRegistry);
         }
         if (jHipsterProperties.getMetrics().getJmx().isEnabled()) {

@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { DetalleMovimiento } from './detalle-movimiento.model';
-import { DetalleMovimientoPopupService } from './detalle-movimiento-popup.service';
+import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 import { DetalleMovimientoService } from './detalle-movimiento.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { DetalleMovimientoService } from './detalle-movimiento.service';
     templateUrl: './detalle-movimiento-delete-dialog.component.html'
 })
 export class DetalleMovimientoDeleteDialogComponent {
-
-    detalleMovimiento: DetalleMovimiento;
+    detalleMovimiento: IDetalleMovimiento;
 
     constructor(
         private detalleMovimientoService: DetalleMovimientoService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.detalleMovimientoService.delete(id).subscribe((response) => {
+        this.detalleMovimientoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'detalleMovimientoListModification',
                 content: 'Deleted an detalleMovimiento'
@@ -43,22 +40,33 @@ export class DetalleMovimientoDeleteDialogComponent {
     template: ''
 })
 export class DetalleMovimientoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private detalleMovimientoPopupService: DetalleMovimientoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.detalleMovimientoPopupService
-                .open(DetalleMovimientoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ detalleMovimiento }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(DetalleMovimientoDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.detalleMovimiento = detalleMovimiento;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

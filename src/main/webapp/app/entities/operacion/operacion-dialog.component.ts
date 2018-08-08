@@ -18,7 +18,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './operacion-dialog.component.html'
 })
 export class OperacionDialogComponent implements OnInit {
-
     operacion: Operacion;
     isSaving: boolean;
 
@@ -33,15 +32,22 @@ export class OperacionDialogComponent implements OnInit {
         private tipoParteMotorService: TipoParteMotorService,
         private estadoOperacionService: EstadoOperacionService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.tipoParteMotorService.query()
-            .subscribe((res: ResponseWrapper) => { this.tipopartemotors = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.estadoOperacionService.query()
-            .subscribe((res: ResponseWrapper) => { this.estadooperacions = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.tipoParteMotorService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.tipopartemotors = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.estadoOperacionService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.estadooperacions = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -51,21 +57,18 @@ export class OperacionDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.operacion.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.operacionService.update(this.operacion));
+            this.subscribeToSaveResponse(this.operacionService.update(this.operacion));
         } else {
-            this.subscribeToSaveResponse(
-                this.operacionService.create(this.operacion));
+            this.subscribeToSaveResponse(this.operacionService.create(this.operacion));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Operacion>) {
-        result.subscribe((res: Operacion) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Operacion) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Operacion) {
-        this.eventManager.broadcast({ name: 'operacionListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'operacionListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +95,16 @@ export class OperacionDialogComponent implements OnInit {
     template: ''
 })
 export class OperacionPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private operacionPopupService: OperacionPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private operacionPopupService: OperacionPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.operacionPopupService
-                    .open(OperacionDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.operacionPopupService.open(OperacionDialogComponent as Component, params['id']);
             } else {
-                this.operacionPopupService
-                    .open(OperacionDialogComponent as Component);
+                this.operacionPopupService.open(OperacionDialogComponent as Component);
             }
         });
     }

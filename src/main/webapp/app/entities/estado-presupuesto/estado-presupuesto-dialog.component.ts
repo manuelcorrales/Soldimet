@@ -15,7 +15,6 @@ import { EstadoPresupuestoService } from './estado-presupuesto.service';
     templateUrl: './estado-presupuesto-dialog.component.html'
 })
 export class EstadoPresupuestoDialogComponent implements OnInit {
-
     estadoPresupuesto: EstadoPresupuesto;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoPresupuestoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoPresupuestoService: EstadoPresupuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoPresupuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoPresupuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoPresupuestoService.update(this.estadoPresupuesto));
+            this.subscribeToSaveResponse(this.estadoPresupuestoService.update(this.estadoPresupuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoPresupuestoService.create(this.estadoPresupuesto));
+            this.subscribeToSaveResponse(this.estadoPresupuestoService.create(this.estadoPresupuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoPresupuesto>) {
-        result.subscribe((res: EstadoPresupuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoPresupuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoPresupuesto) {
-        this.eventManager.broadcast({ name: 'estadoPresupuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoPresupuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoPresupuestoDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoPresupuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoPresupuestoPopupService: EstadoPresupuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoPresupuestoPopupService: EstadoPresupuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoPresupuestoPopupService
-                    .open(EstadoPresupuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoPresupuestoPopupService.open(EstadoPresupuestoDialogComponent as Component, params['id']);
             } else {
-                this.estadoPresupuestoPopupService
-                    .open(EstadoPresupuestoDialogComponent as Component);
+                this.estadoPresupuestoPopupService.open(EstadoPresupuestoDialogComponent as Component);
             }
         });
     }

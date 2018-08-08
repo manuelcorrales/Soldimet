@@ -34,6 +34,8 @@ public class CajaCriteria implements Serializable {
 
     private InstantFilter horaCierre;
 
+    private LongFilter movimientoId;
+
     public CajaCriteria() {
     }
 
@@ -69,6 +71,14 @@ public class CajaCriteria implements Serializable {
         this.horaCierre = horaCierre;
     }
 
+    public LongFilter getMovimientoId() {
+        return movimientoId;
+    }
+
+    public void setMovimientoId(LongFilter movimientoId) {
+        this.movimientoId = movimientoId;
+    }
+
     @Override
     public String toString() {
         return "CajaCriteria{" +
@@ -76,6 +86,7 @@ public class CajaCriteria implements Serializable {
                 (fecha != null ? "fecha=" + fecha + ", " : "") +
                 (horaApertura != null ? "horaApertura=" + horaApertura + ", " : "") +
                 (horaCierre != null ? "horaCierre=" + horaCierre + ", " : "") +
+                (movimientoId != null ? "movimientoId=" + movimientoId + ", " : "") +
             "}";
     }
 

@@ -15,7 +15,6 @@ import { FormaDePagoService } from './forma-de-pago.service';
     templateUrl: './forma-de-pago-dialog.component.html'
 })
 export class FormaDePagoDialogComponent implements OnInit {
-
     formaDePago: FormaDePago;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class FormaDePagoDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private formaDePagoService: FormaDePagoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class FormaDePagoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.formaDePago.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.formaDePagoService.update(this.formaDePago));
+            this.subscribeToSaveResponse(this.formaDePagoService.update(this.formaDePago));
         } else {
-            this.subscribeToSaveResponse(
-                this.formaDePagoService.create(this.formaDePago));
+            this.subscribeToSaveResponse(this.formaDePagoService.create(this.formaDePago));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<FormaDePago>) {
-        result.subscribe((res: FormaDePago) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: FormaDePago) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: FormaDePago) {
-        this.eventManager.broadcast({ name: 'formaDePagoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'formaDePagoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class FormaDePagoDialogComponent implements OnInit {
     template: ''
 })
 export class FormaDePagoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private formaDePagoPopupService: FormaDePagoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private formaDePagoPopupService: FormaDePagoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.formaDePagoPopupService
-                    .open(FormaDePagoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.formaDePagoPopupService.open(FormaDePagoDialogComponent as Component, params['id']);
             } else {
-                this.formaDePagoPopupService
-                    .open(FormaDePagoDialogComponent as Component);
+                this.formaDePagoPopupService.open(FormaDePagoDialogComponent as Component);
             }
         });
     }

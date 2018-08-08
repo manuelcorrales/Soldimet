@@ -1,8 +1,10 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -107,7 +109,7 @@ public class Direccion implements Serializable {
         return "Direccion{" +
             "id=" + getId() +
             ", calle='" + getCalle() + "'" +
-            ", numero='" + getNumero() + "'" +
+            ", numero=" + getNumero() +
             "}";
     }
 }

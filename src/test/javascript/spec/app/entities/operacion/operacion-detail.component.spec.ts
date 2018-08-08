@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { OperacionDetailComponent } from '../../../../../../main/webapp/app/entities/operacion/operacion-detail.component';
-import { OperacionService } from '../../../../../../main/webapp/app/entities/operacion/operacion.service';
-import { Operacion } from '../../../../../../main/webapp/app/entities/operacion/operacion.model';
+import { OperacionDetailComponent } from 'app/entities/operacion/operacion-detail.component';
+import { Operacion } from 'app/shared/model/operacion.model';
 
 describe('Component Tests', () => {
-
     describe('Operacion Management Detail Component', () => {
         let comp: OperacionDetailComponent;
         let fixture: ComponentFixture<OperacionDetailComponent>;
-        let service: OperacionService;
+        const route = ({ data: of({ operacion: new Operacion(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [OperacionDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    OperacionService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(OperacionDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(OperacionDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(OperacionDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(OperacionService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new Operacion(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.operacion).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.operacion).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

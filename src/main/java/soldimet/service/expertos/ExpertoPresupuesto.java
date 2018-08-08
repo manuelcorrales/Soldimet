@@ -129,7 +129,7 @@ public class ExpertoPresupuesto {
                 }
 
                 // GUARDAR
-                pedidoRepuestoRepository.save(pedidos);
+                pedidoRepuestoRepository.saveAll(pedidos);
             }
         }
     }
@@ -157,7 +157,7 @@ public class ExpertoPresupuesto {
 
     private Presupuesto buscarPresupuesto(Long id) {
         try {
-            return presupuestoRepository.findOne(id);
+            return presupuestoRepository.findById(id).get();
         } catch (NullPointerException e) {
             return null;
         }
@@ -172,7 +172,7 @@ public class ExpertoPresupuesto {
 
     public List<Aplicacion> buscarAplicacionPorMotor(Long motorId) {
         try {
-            Motor motorEncontrado = motorRepository.findOne(motorId);
+            Motor motorEncontrado = motorRepository.findById(motorId).get();
             Set<Aplicacion> aplicacionesSet = motorEncontrado.getAplicacions();
             List<Aplicacion> aplicacionesList = new ArrayList<Aplicacion>();
             for (Aplicacion aplicacion : aplicacionesSet) {
@@ -191,11 +191,11 @@ public class ExpertoPresupuesto {
         List<CostoOperacion> listaDTO = new ArrayList<CostoOperacion>();
 
         try {
-            Aplicacion aplicacion = aplicacionRepository.findOne(dtoDatosMotor.getIdAplicacion());
+            Aplicacion aplicacion = aplicacionRepository.findById(dtoDatosMotor.getIdAplicacion()).get();
 
-            motorRepository.exists(dtoDatosMotor.getIdMotor());
-            Cilindrada cilindrada = cilindradaRepository.findOne(dtoDatosMotor.getIdCilindrada());
-            TipoParteMotor tipoParteMotor = tipoParteMotorRepository.findOne(dtoDatosMotor.getIdTiposPartesMotores());
+            motorRepository.existsById(dtoDatosMotor.getIdMotor());
+            Cilindrada cilindrada = cilindradaRepository.findById(dtoDatosMotor.getIdCilindrada()).get();
+            TipoParteMotor tipoParteMotor = tipoParteMotorRepository.findById(dtoDatosMotor.getIdTiposPartesMotores()).get();
 
             ListaPrecioRectificacionCRAM listaPrecio = listaPrecioRectificacionCRAMRepository
                     .findByNumeroGrupo(aplicacion.getNumeroGrupo());
@@ -235,7 +235,7 @@ public class ExpertoPresupuesto {
     }
 
     public List<TipoRepuesto> buscarRepuestos(Long idTipoParteMotor) {
-        TipoParteMotor tipoParte = tipoParteMotorRepository.findOne(idTipoParteMotor);
+        TipoParteMotor tipoParte = tipoParteMotorRepository.findById(idTipoParteMotor).get();
         List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotor(tipoParte);
         return tipoRepuestos;
     }
@@ -325,7 +325,7 @@ public class ExpertoPresupuesto {
 
     private Presupuesto cambiarEstadoPresupuesto(DTOPresupuesto dtoPresupuesto, EstadoPresupuesto estado)
             throws NullPointerException {
-        Presupuesto presupuesto = presupuestoRepository.findOne(dtoPresupuesto.getCodigo());
+        Presupuesto presupuesto = presupuestoRepository.findById(dtoPresupuesto.getCodigo()).get();
         presupuesto.setEstadoPresupuesto(estado);
         Presupuesto editado = presupuestoRepository.save(presupuesto);
         return editado;

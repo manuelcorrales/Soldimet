@@ -1,49 +1,15 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 
-import {
-    SoldimetSharedLibsModule,
-    SoldimetSharedCommonModule,
-    CSRFService,
-    AuthServerProvider,
-    AccountService,
-    UserService,
-    StateStorageService,
-    LoginService,
-    LoginModalService,
-    Principal,
-    HasAnyAuthorityDirective,
-    JhiLoginModalComponent
-} from './';
+import { NgbDateMomentAdapter } from './util/datepicker-adapter';
+import { SoldimetSharedLibsModule, SoldimetSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective } from './';
 
 @NgModule({
-    imports: [
-        SoldimetSharedLibsModule,
-        SoldimetSharedCommonModule
-    ],
-    declarations: [
-        JhiLoginModalComponent,
-        HasAnyAuthorityDirective
-    ],
-    providers: [
-        LoginService,
-        LoginModalService,
-        AccountService,
-        StateStorageService,
-        Principal,
-        CSRFService,
-        AuthServerProvider,
-        UserService,
-        DatePipe
-    ],
+    imports: [SoldimetSharedLibsModule, SoldimetSharedCommonModule],
+    declarations: [JhiLoginModalComponent, HasAnyAuthorityDirective],
+    providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent],
-    exports: [
-        SoldimetSharedCommonModule,
-        JhiLoginModalComponent,
-        HasAnyAuthorityDirective,
-        DatePipe
-    ],
+    exports: [SoldimetSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
-
 })
 export class SoldimetSharedModule {}

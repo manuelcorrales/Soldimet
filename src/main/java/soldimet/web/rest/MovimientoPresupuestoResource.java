@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.MovimientoPresupuesto;
 import soldimet.service.MovimientoPresupuestoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class MovimientoPresupuestoResource {
     public ResponseEntity<MovimientoPresupuesto> createMovimientoPresupuesto(@Valid @RequestBody MovimientoPresupuesto movimientoPresupuesto) throws URISyntaxException {
         log.debug("REST request to save MovimientoPresupuesto : {}", movimientoPresupuesto);
         if (movimientoPresupuesto.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new movimientoPresupuesto cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new movimientoPresupuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MovimientoPresupuesto result = movimientoPresupuestoService.save(movimientoPresupuesto);
         return ResponseEntity.created(new URI("/api/movimiento-presupuestos/" + result.getId()))
@@ -68,7 +69,7 @@ public class MovimientoPresupuestoResource {
     public ResponseEntity<MovimientoPresupuesto> updateMovimientoPresupuesto(@Valid @RequestBody MovimientoPresupuesto movimientoPresupuesto) throws URISyntaxException {
         log.debug("REST request to update MovimientoPresupuesto : {}", movimientoPresupuesto);
         if (movimientoPresupuesto.getId() == null) {
-            return createMovimientoPresupuesto(movimientoPresupuesto);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         MovimientoPresupuesto result = movimientoPresupuestoService.save(movimientoPresupuesto);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class MovimientoPresupuestoResource {
     public List<MovimientoPresupuesto> getAllMovimientoPresupuestos() {
         log.debug("REST request to get all MovimientoPresupuestos");
         return movimientoPresupuestoService.findAll();
-        }
+    }
 
     /**
      * GET  /movimiento-presupuestos/:id : get the "id" movimientoPresupuesto.
@@ -98,8 +99,8 @@ public class MovimientoPresupuestoResource {
     @Timed
     public ResponseEntity<MovimientoPresupuesto> getMovimientoPresupuesto(@PathVariable Long id) {
         log.debug("REST request to get MovimientoPresupuesto : {}", id);
-        MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(movimientoPresupuesto));
+        Optional<MovimientoPresupuesto> movimientoPresupuesto = movimientoPresupuestoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(movimientoPresupuesto);
     }
 
     /**

@@ -1,73 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { Localidad } from './localidad.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { ILocalidad } from 'app/shared/model/localidad.model';
 
-@Injectable()
+type EntityResponseType = HttpResponse<ILocalidad>;
+type EntityArrayResponseType = HttpResponse<ILocalidad[]>;
+
+@Injectable({ providedIn: 'root' })
 export class LocalidadService {
-
     private resourceUrl = SERVER_API_URL + 'api/localidads';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {}
 
-    create(localidad: Localidad): Observable<Localidad> {
-        const copy = this.convert(localidad);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    create(localidad: ILocalidad): Observable<EntityResponseType> {
+        return this.http.post<ILocalidad>(this.resourceUrl, localidad, { observe: 'response' });
     }
 
-    update(localidad: Localidad): Observable<Localidad> {
-        const copy = this.convert(localidad);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    update(localidad: ILocalidad): Observable<EntityResponseType> {
+        return this.http.put<ILocalidad>(this.resourceUrl, localidad, { observe: 'response' });
     }
 
-    find(id: number): Observable<Localidad> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<ILocalidad>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<ILocalidad[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Localidad.
-     */
-    private convertItemFromServer(json: any): Localidad {
-        const entity: Localidad = Object.assign(new Localidad(), json);
-        return entity;
-    }
-
-    /**
-     * Convert a Localidad to a JSON which can be sent to the server.
-     */
-    private convert(localidad: Localidad): Localidad {
-        const copy: Localidad = Object.assign({}, localidad);
-        return copy;
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

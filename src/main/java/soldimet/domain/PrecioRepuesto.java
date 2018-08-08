@@ -3,6 +3,7 @@ package soldimet.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -107,8 +108,8 @@ public class PrecioRepuesto implements Serializable {
         return "PrecioRepuesto{" +
             "id=" + getId() +
             ", fecha='" + getFecha() + "'" +
-            ", precioPrivado='" + getPrecioPrivado() + "'" +
-            ", precioPublico='" + getPrecioPublico() + "'" +
+            ", precioPrivado=" + getPrecioPrivado() +
+            ", precioPublico=" + getPrecioPublico() +
             "}";
     }
 }

@@ -15,7 +15,6 @@ import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service
     templateUrl: './lista-precio-desde-hasta-dialog.component.html'
 })
 export class ListaPrecioDesdeHastaDialogComponent implements OnInit {
-
     listaPrecioDesdeHasta: ListaPrecioDesdeHasta;
     isSaving: boolean;
     fechaDesdeDp: any;
@@ -26,8 +25,7 @@ export class ListaPrecioDesdeHastaDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private listaPrecioDesdeHastaService: ListaPrecioDesdeHastaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -40,21 +38,18 @@ export class ListaPrecioDesdeHastaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.listaPrecioDesdeHasta.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.listaPrecioDesdeHastaService.update(this.listaPrecioDesdeHasta));
+            this.subscribeToSaveResponse(this.listaPrecioDesdeHastaService.update(this.listaPrecioDesdeHasta));
         } else {
-            this.subscribeToSaveResponse(
-                this.listaPrecioDesdeHastaService.create(this.listaPrecioDesdeHasta));
+            this.subscribeToSaveResponse(this.listaPrecioDesdeHastaService.create(this.listaPrecioDesdeHasta));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<ListaPrecioDesdeHasta>) {
-        result.subscribe((res: ListaPrecioDesdeHasta) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: ListaPrecioDesdeHasta) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: ListaPrecioDesdeHasta) {
-        this.eventManager.broadcast({ name: 'listaPrecioDesdeHastaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'listaPrecioDesdeHastaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -73,22 +68,16 @@ export class ListaPrecioDesdeHastaDialogComponent implements OnInit {
     template: ''
 })
 export class ListaPrecioDesdeHastaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private listaPrecioDesdeHastaPopupService: ListaPrecioDesdeHastaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private listaPrecioDesdeHastaPopupService: ListaPrecioDesdeHastaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.listaPrecioDesdeHastaPopupService
-                    .open(ListaPrecioDesdeHastaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.listaPrecioDesdeHastaPopupService.open(ListaPrecioDesdeHastaDialogComponent as Component, params['id']);
             } else {
-                this.listaPrecioDesdeHastaPopupService
-                    .open(ListaPrecioDesdeHastaDialogComponent as Component);
+                this.listaPrecioDesdeHastaPopupService.open(ListaPrecioDesdeHastaDialogComponent as Component);
             }
         });
     }

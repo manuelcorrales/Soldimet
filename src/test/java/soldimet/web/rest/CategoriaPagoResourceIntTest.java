@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class CategoriaPagoResourceIntTest {
 
     @Autowired
     private CategoriaPagoRepository categoriaPagoRepository;
+
+    
 
     @Autowired
     private CategoriaPagoService categoriaPagoService;
@@ -70,6 +74,7 @@ public class CategoriaPagoResourceIntTest {
         this.restCategoriaPagoMockMvc = MockMvcBuilders.standaloneSetup(categoriaPagoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class CategoriaPagoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(categoriaPago.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreCategoriaPago").value(hasItem(DEFAULT_NOMBRE_CATEGORIA_PAGO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class CategoriaPagoResourceIntTest {
             .andExpect(jsonPath("$.id").value(categoriaPago.getId().intValue()))
             .andExpect(jsonPath("$.nombreCategoriaPago").value(DEFAULT_NOMBRE_CATEGORIA_PAGO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingCategoriaPago() throws Exception {
@@ -190,7 +195,9 @@ public class CategoriaPagoResourceIntTest {
         int databaseSizeBeforeUpdate = categoriaPagoRepository.findAll().size();
 
         // Update the categoriaPago
-        CategoriaPago updatedCategoriaPago = categoriaPagoRepository.findOne(categoriaPago.getId());
+        CategoriaPago updatedCategoriaPago = categoriaPagoRepository.findById(categoriaPago.getId()).get();
+        // Disconnect from session so that the updates on updatedCategoriaPago are not directly saved in db
+        em.detach(updatedCategoriaPago);
         updatedCategoriaPago
             .nombreCategoriaPago(UPDATED_NOMBRE_CATEGORIA_PAGO);
 
@@ -217,11 +224,11 @@ public class CategoriaPagoResourceIntTest {
         restCategoriaPagoMockMvc.perform(put("/api/categoria-pagos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(categoriaPago)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the CategoriaPago in the database
         List<CategoriaPago> categoriaPagoList = categoriaPagoRepository.findAll();
-        assertThat(categoriaPagoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(categoriaPagoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

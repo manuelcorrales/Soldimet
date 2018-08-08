@@ -1,8 +1,10 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -26,14 +28,17 @@ public class CostoOperacion implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Cilindrada cilindrada;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Operacion operacion;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private TipoParteMotor tipoParteMotor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -122,7 +127,7 @@ public class CostoOperacion implements Serializable {
     public String toString() {
         return "CostoOperacion{" +
             "id=" + getId() +
-            ", costoOperacion='" + getCostoOperacion() + "'" +
+            ", costoOperacion=" + getCostoOperacion() +
             "}";
     }
 }

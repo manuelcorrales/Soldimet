@@ -4,11 +4,13 @@ import soldimet.domain.EstadoPresupuesto;
 import soldimet.repository.EstadoPresupuestoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing EstadoPresupuesto.
  */
@@ -31,14 +33,13 @@ public class EstadoPresupuestoService {
      * @return the persisted entity
      */
     public EstadoPresupuesto save(EstadoPresupuesto estadoPresupuesto) {
-        log.debug("Request to save EstadoPresupuesto : {}", estadoPresupuesto);
-        return estadoPresupuestoRepository.save(estadoPresupuesto);
+        log.debug("Request to save EstadoPresupuesto : {}", estadoPresupuesto);        return estadoPresupuestoRepository.save(estadoPresupuesto);
     }
 
     /**
-     *  Get all the estadoPresupuestos.
+     * Get all the estadoPresupuestos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<EstadoPresupuesto> findAll() {
@@ -46,25 +47,26 @@ public class EstadoPresupuestoService {
         return estadoPresupuestoRepository.findAll();
     }
 
+
     /**
-     *  Get one estadoPresupuesto by id.
+     * Get one estadoPresupuesto by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public EstadoPresupuesto findOne(Long id) {
+    public Optional<EstadoPresupuesto> findOne(Long id) {
         log.debug("Request to get EstadoPresupuesto : {}", id);
-        return estadoPresupuestoRepository.findOne(id);
+        return estadoPresupuestoRepository.findById(id);
     }
 
     /**
-     *  Delete the  estadoPresupuesto by id.
+     * Delete the estadoPresupuesto by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoPresupuesto : {}", id);
-        estadoPresupuestoRepository.delete(id);
+        estadoPresupuestoRepository.deleteById(id);
     }
 }

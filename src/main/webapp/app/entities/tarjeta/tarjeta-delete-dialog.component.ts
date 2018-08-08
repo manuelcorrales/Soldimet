@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Tarjeta } from './tarjeta.model';
-import { TarjetaPopupService } from './tarjeta-popup.service';
+import { ITarjeta } from 'app/shared/model/tarjeta.model';
 import { TarjetaService } from './tarjeta.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { TarjetaService } from './tarjeta.service';
     templateUrl: './tarjeta-delete-dialog.component.html'
 })
 export class TarjetaDeleteDialogComponent {
+    tarjeta: ITarjeta;
 
-    tarjeta: Tarjeta;
-
-    constructor(
-        private tarjetaService: TarjetaService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private tarjetaService: TarjetaService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.tarjetaService.delete(id).subscribe((response) => {
+        this.tarjetaService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'tarjetaListModification',
                 content: 'Deleted an tarjeta'
@@ -43,22 +36,30 @@ export class TarjetaDeleteDialogComponent {
     template: ''
 })
 export class TarjetaDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private tarjetaPopupService: TarjetaPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.tarjetaPopupService
-                .open(TarjetaDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ tarjeta }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(TarjetaDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.tarjeta = tarjeta;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

@@ -18,7 +18,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './cobranza-operacion-dialog.component.html'
 })
 export class CobranzaOperacionDialogComponent implements OnInit {
-
     cobranzaOperacion: CobranzaOperacion;
     isSaving: boolean;
 
@@ -33,15 +32,22 @@ export class CobranzaOperacionDialogComponent implements OnInit {
         private estadoCobranzaOperacionService: EstadoCobranzaOperacionService,
         private operacionService: OperacionService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.estadoCobranzaOperacionService.query()
-            .subscribe((res: ResponseWrapper) => { this.estadocobranzaoperacions = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.operacionService.query()
-            .subscribe((res: ResponseWrapper) => { this.operacions = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.estadoCobranzaOperacionService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.estadocobranzaoperacions = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.operacionService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.operacions = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -51,21 +57,18 @@ export class CobranzaOperacionDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.cobranzaOperacion.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.cobranzaOperacionService.update(this.cobranzaOperacion));
+            this.subscribeToSaveResponse(this.cobranzaOperacionService.update(this.cobranzaOperacion));
         } else {
-            this.subscribeToSaveResponse(
-                this.cobranzaOperacionService.create(this.cobranzaOperacion));
+            this.subscribeToSaveResponse(this.cobranzaOperacionService.create(this.cobranzaOperacion));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<CobranzaOperacion>) {
-        result.subscribe((res: CobranzaOperacion) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: CobranzaOperacion) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CobranzaOperacion) {
-        this.eventManager.broadcast({ name: 'cobranzaOperacionListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'cobranzaOperacionListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +95,16 @@ export class CobranzaOperacionDialogComponent implements OnInit {
     template: ''
 })
 export class CobranzaOperacionPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private cobranzaOperacionPopupService: CobranzaOperacionPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private cobranzaOperacionPopupService: CobranzaOperacionPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.cobranzaOperacionPopupService
-                    .open(CobranzaOperacionDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.cobranzaOperacionPopupService.open(CobranzaOperacionDialogComponent as Component, params['id']);
             } else {
-                this.cobranzaOperacionPopupService
-                    .open(CobranzaOperacionDialogComponent as Component);
+                this.cobranzaOperacionPopupService.open(CobranzaOperacionDialogComponent as Component);
             }
         });
     }

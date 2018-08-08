@@ -1,48 +1,33 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    CostoRepuestoService,
-    CostoRepuestoPopupService,
     CostoRepuestoComponent,
     CostoRepuestoDetailComponent,
-    CostoRepuestoDialogComponent,
-    CostoRepuestoPopupComponent,
+    CostoRepuestoUpdateComponent,
     CostoRepuestoDeletePopupComponent,
     CostoRepuestoDeleteDialogComponent,
     costoRepuestoRoute,
-    costoRepuestoPopupRoute,
+    costoRepuestoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...costoRepuestoRoute,
-    ...costoRepuestoPopupRoute,
-];
+const ENTITY_STATES = [...costoRepuestoRoute, ...costoRepuestoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CostoRepuestoComponent,
         CostoRepuestoDetailComponent,
-        CostoRepuestoDialogComponent,
+        CostoRepuestoUpdateComponent,
         CostoRepuestoDeleteDialogComponent,
-        CostoRepuestoPopupComponent,
-        CostoRepuestoDeletePopupComponent,
+        CostoRepuestoDeletePopupComponent
     ],
     entryComponents: [
         CostoRepuestoComponent,
-        CostoRepuestoDialogComponent,
-        CostoRepuestoPopupComponent,
+        CostoRepuestoUpdateComponent,
         CostoRepuestoDeleteDialogComponent,
-        CostoRepuestoDeletePopupComponent,
-    ],
-    providers: [
-        CostoRepuestoService,
-        CostoRepuestoPopupService,
+        CostoRepuestoDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

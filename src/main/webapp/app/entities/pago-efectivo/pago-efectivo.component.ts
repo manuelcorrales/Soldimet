@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { PagoEfectivo } from './pago-efectivo.model';
+import { IPagoEfectivo } from 'app/shared/model/pago-efectivo.model';
+import { Principal } from 'app/core';
 import { PagoEfectivoService } from './pago-efectivo.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-pago-efectivo',
     templateUrl: './pago-efectivo.component.html'
 })
 export class PagoEfectivoComponent implements OnInit, OnDestroy {
-pagoEfectivos: PagoEfectivo[];
+    pagoEfectivos: IPagoEfectivo[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -22,20 +21,20 @@ pagoEfectivos: PagoEfectivo[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
-    ) {
-    }
+    ) {}
 
     loadAll() {
         this.pagoEfectivoService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.pagoEfectivos = res.json;
+            (res: HttpResponse<IPagoEfectivo[]>) => {
+                this.pagoEfectivos = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInPagoEfectivos();
@@ -45,14 +44,15 @@ pagoEfectivos: PagoEfectivo[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: PagoEfectivo) {
+    trackId(index: number, item: IPagoEfectivo) {
         return item.id;
     }
+
     registerChangeInPagoEfectivos() {
-        this.eventSubscriber = this.eventManager.subscribe('pagoEfectivoListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('pagoEfectivoListModification', response => this.loadAll());
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

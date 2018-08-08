@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Operacion;
 import soldimet.service.OperacionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class OperacionResource {
     public ResponseEntity<Operacion> createOperacion(@Valid @RequestBody Operacion operacion) throws URISyntaxException {
         log.debug("REST request to save Operacion : {}", operacion);
         if (operacion.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new operacion cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new operacion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Operacion result = operacionService.save(operacion);
         return ResponseEntity.created(new URI("/api/operacions/" + result.getId()))
@@ -68,7 +69,7 @@ public class OperacionResource {
     public ResponseEntity<Operacion> updateOperacion(@Valid @RequestBody Operacion operacion) throws URISyntaxException {
         log.debug("REST request to update Operacion : {}", operacion);
         if (operacion.getId() == null) {
-            return createOperacion(operacion);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Operacion result = operacionService.save(operacion);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class OperacionResource {
     public List<Operacion> getAllOperacions() {
         log.debug("REST request to get all Operacions");
         return operacionService.findAll();
-        }
+    }
 
     /**
      * GET  /operacions/:id : get the "id" operacion.
@@ -98,8 +99,8 @@ public class OperacionResource {
     @Timed
     public ResponseEntity<Operacion> getOperacion(@PathVariable Long id) {
         log.debug("REST request to get Operacion : {}", id);
-        Operacion operacion = operacionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(operacion));
+        Optional<Operacion> operacion = operacionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(operacion);
     }
 
     /**

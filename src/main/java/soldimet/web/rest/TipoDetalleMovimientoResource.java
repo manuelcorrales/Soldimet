@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.TipoDetalleMovimiento;
 import soldimet.service.TipoDetalleMovimientoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class TipoDetalleMovimientoResource {
     public ResponseEntity<TipoDetalleMovimiento> createTipoDetalleMovimiento(@Valid @RequestBody TipoDetalleMovimiento tipoDetalleMovimiento) throws URISyntaxException {
         log.debug("REST request to save TipoDetalleMovimiento : {}", tipoDetalleMovimiento);
         if (tipoDetalleMovimiento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoDetalleMovimiento cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tipoDetalleMovimiento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoDetalleMovimiento result = tipoDetalleMovimientoService.save(tipoDetalleMovimiento);
         return ResponseEntity.created(new URI("/api/tipo-detalle-movimientos/" + result.getId()))
@@ -68,7 +69,7 @@ public class TipoDetalleMovimientoResource {
     public ResponseEntity<TipoDetalleMovimiento> updateTipoDetalleMovimiento(@Valid @RequestBody TipoDetalleMovimiento tipoDetalleMovimiento) throws URISyntaxException {
         log.debug("REST request to update TipoDetalleMovimiento : {}", tipoDetalleMovimiento);
         if (tipoDetalleMovimiento.getId() == null) {
-            return createTipoDetalleMovimiento(tipoDetalleMovimiento);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TipoDetalleMovimiento result = tipoDetalleMovimientoService.save(tipoDetalleMovimiento);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class TipoDetalleMovimientoResource {
     public List<TipoDetalleMovimiento> getAllTipoDetalleMovimientos() {
         log.debug("REST request to get all TipoDetalleMovimientos");
         return tipoDetalleMovimientoService.findAll();
-        }
+    }
 
     /**
      * GET  /tipo-detalle-movimientos/:id : get the "id" tipoDetalleMovimiento.
@@ -98,8 +99,8 @@ public class TipoDetalleMovimientoResource {
     @Timed
     public ResponseEntity<TipoDetalleMovimiento> getTipoDetalleMovimiento(@PathVariable Long id) {
         log.debug("REST request to get TipoDetalleMovimiento : {}", id);
-        TipoDetalleMovimiento tipoDetalleMovimiento = tipoDetalleMovimientoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoDetalleMovimiento));
+        Optional<TipoDetalleMovimiento> tipoDetalleMovimiento = tipoDetalleMovimientoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(tipoDetalleMovimiento);
     }
 
     /**

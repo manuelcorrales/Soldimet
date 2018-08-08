@@ -17,7 +17,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './cliente-dialog.component.html'
 })
 export class ClienteDialogComponent implements OnInit {
-
     cliente: Cliente;
     isSaving: boolean;
     personas: Persona[];
@@ -28,24 +27,25 @@ export class ClienteDialogComponent implements OnInit {
         private clienteService: ClienteService,
         private personaService: PersonaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.personaService
-            .query({filter: 'cliente-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+        this.personaService.query({ filter: 'cliente-is-null' }).subscribe(
+            (res: ResponseWrapper) => {
                 if (!this.cliente.persona || !this.cliente.persona.id) {
                     this.personas = res.json;
                 } else {
-                    this.personaService
-                        .find(this.cliente.persona.id)
-                        .subscribe((subRes: Persona) => {
+                    this.personaService.find(this.cliente.persona.id).subscribe(
+                        (subRes: Persona) => {
                             this.personas = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        },
+                        (subRes: ResponseWrapper) => this.onError(subRes.json)
+                    );
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -55,21 +55,18 @@ export class ClienteDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.cliente.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.clienteService.update(this.cliente));
+            this.subscribeToSaveResponse(this.clienteService.update(this.cliente));
         } else {
-            this.subscribeToSaveResponse(
-                this.clienteService.create(this.cliente));
+            this.subscribeToSaveResponse(this.clienteService.create(this.cliente));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Cliente>) {
-        result.subscribe((res: Cliente) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Cliente) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Cliente) {
-        this.eventManager.broadcast({ name: 'clienteListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'clienteListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +89,16 @@ export class ClienteDialogComponent implements OnInit {
     template: ''
 })
 export class ClientePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private clientePopupService: ClientePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private clientePopupService: ClientePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.clientePopupService
-                    .open(ClienteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.clientePopupService.open(ClienteDialogComponent as Component, params['id']);
             } else {
-                this.clientePopupService
-                    .open(ClienteDialogComponent as Component);
+                this.clientePopupService.open(ClienteDialogComponent as Component);
             }
         });
     }

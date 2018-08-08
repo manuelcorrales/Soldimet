@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.HistorialPrecio;
 import soldimet.service.HistorialPrecioService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class HistorialPrecioResource {
     public ResponseEntity<HistorialPrecio> createHistorialPrecio(@Valid @RequestBody HistorialPrecio historialPrecio) throws URISyntaxException {
         log.debug("REST request to save HistorialPrecio : {}", historialPrecio);
         if (historialPrecio.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new historialPrecio cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new historialPrecio cannot already have an ID", ENTITY_NAME, "idexists");
         }
         HistorialPrecio result = historialPrecioService.save(historialPrecio);
         return ResponseEntity.created(new URI("/api/historial-precios/" + result.getId()))
@@ -68,7 +69,7 @@ public class HistorialPrecioResource {
     public ResponseEntity<HistorialPrecio> updateHistorialPrecio(@Valid @RequestBody HistorialPrecio historialPrecio) throws URISyntaxException {
         log.debug("REST request to update HistorialPrecio : {}", historialPrecio);
         if (historialPrecio.getId() == null) {
-            return createHistorialPrecio(historialPrecio);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         HistorialPrecio result = historialPrecioService.save(historialPrecio);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class HistorialPrecioResource {
     public List<HistorialPrecio> getAllHistorialPrecios() {
         log.debug("REST request to get all HistorialPrecios");
         return historialPrecioService.findAll();
-        }
+    }
 
     /**
      * GET  /historial-precios/:id : get the "id" historialPrecio.
@@ -98,8 +99,8 @@ public class HistorialPrecioResource {
     @Timed
     public ResponseEntity<HistorialPrecio> getHistorialPrecio(@PathVariable Long id) {
         log.debug("REST request to get HistorialPrecio : {}", id);
-        HistorialPrecio historialPrecio = historialPrecioService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(historialPrecio));
+        Optional<HistorialPrecio> historialPrecio = historialPrecioService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(historialPrecio);
     }
 
     /**

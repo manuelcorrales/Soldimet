@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
+import { UserRouteAccessService } from 'app/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Persona } from 'app/shared/model/persona.model';
+import { PersonaService } from './persona.service';
 import { PersonaComponent } from './persona.component';
 import { PersonaDetailComponent } from './persona-detail.component';
-import { PersonaPopupComponent } from './persona-dialog.component';
+import { PersonaUpdateComponent } from './persona-update.component';
 import { PersonaDeletePopupComponent } from './persona-delete-dialog.component';
+import { IPersona } from 'app/shared/model/persona.model';
 
-@Injectable()
-export class PersonaResolvePagingParams implements Resolve<any> {
-
-    constructor(private paginationUtil: JhiPaginationUtil) {}
+@Injectable({ providedIn: 'root' })
+export class PersonaResolve implements Resolve<IPersona> {
+    constructor(private service: PersonaService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
-        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
-        return {
-            page: this.paginationUtil.parsePage(page),
-            predicate: this.paginationUtil.parsePredicate(sort),
-            ascending: this.paginationUtil.parseAscending(sort)
-      };
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(map((persona: HttpResponse<Persona>) => persona.body));
+        }
+        return of(new Persona());
     }
 }
 
@@ -30,16 +31,45 @@ export const personaRoute: Routes = [
         path: 'persona',
         component: PersonaComponent,
         resolve: {
-            'pagingParams': PersonaResolvePagingParams
+            pagingParams: JhiResolvePagingParams
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            defaultSort: 'id,asc',
+            pageTitle: 'Personas'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'persona/:id/view',
+        component: PersonaDetailComponent,
+        resolve: {
+            persona: PersonaResolve
         },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Personas'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'persona/:id',
-        component: PersonaDetailComponent,
+    },
+    {
+        path: 'persona/new',
+        component: PersonaUpdateComponent,
+        resolve: {
+            persona: PersonaResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Personas'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'persona/:id/edit',
+        component: PersonaUpdateComponent,
+        resolve: {
+            persona: PersonaResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Personas'
@@ -50,28 +80,11 @@ export const personaRoute: Routes = [
 
 export const personaPopupRoute: Routes = [
     {
-        path: 'persona-new',
-        component: PersonaPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Personas'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'persona/:id/edit',
-        component: PersonaPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Personas'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'persona/:id/delete',
         component: PersonaDeletePopupComponent,
+        resolve: {
+            persona: PersonaResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Personas'

@@ -15,7 +15,6 @@ import { MarcaService } from './marca.service';
     templateUrl: './marca-dialog.component.html'
 })
 export class MarcaDialogComponent implements OnInit {
-
     marca: Marca;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class MarcaDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private marcaService: MarcaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class MarcaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.marca.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.marcaService.update(this.marca));
+            this.subscribeToSaveResponse(this.marcaService.update(this.marca));
         } else {
-            this.subscribeToSaveResponse(
-                this.marcaService.create(this.marca));
+            this.subscribeToSaveResponse(this.marcaService.create(this.marca));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Marca>) {
-        result.subscribe((res: Marca) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Marca) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Marca) {
-        this.eventManager.broadcast({ name: 'marcaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'marcaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class MarcaDialogComponent implements OnInit {
     template: ''
 })
 export class MarcaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private marcaPopupService: MarcaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private marcaPopupService: MarcaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.marcaPopupService
-                    .open(MarcaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.marcaPopupService.open(MarcaDialogComponent as Component, params['id']);
             } else {
-                this.marcaPopupService
-                    .open(MarcaDialogComponent as Component);
+                this.marcaPopupService.open(MarcaDialogComponent as Component);
             }
         });
     }

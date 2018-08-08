@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from '../../shared';
+import { SoldimetSharedModule } from 'app/shared';
 import {
-    FormaDePagoService,
-    FormaDePagoPopupService,
     FormaDePagoComponent,
     FormaDePagoDetailComponent,
-    FormaDePagoDialogComponent,
-    FormaDePagoPopupComponent,
+    FormaDePagoUpdateComponent,
     FormaDePagoDeletePopupComponent,
     FormaDePagoDeleteDialogComponent,
     formaDePagoRoute,
-    formaDePagoPopupRoute,
+    formaDePagoPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...formaDePagoRoute,
-    ...formaDePagoPopupRoute,
-];
+const ENTITY_STATES = [...formaDePagoRoute, ...formaDePagoPopupRoute];
 
 @NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
-    ],
+    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         FormaDePagoComponent,
         FormaDePagoDetailComponent,
-        FormaDePagoDialogComponent,
+        FormaDePagoUpdateComponent,
         FormaDePagoDeleteDialogComponent,
-        FormaDePagoPopupComponent,
-        FormaDePagoDeletePopupComponent,
+        FormaDePagoDeletePopupComponent
     ],
-    entryComponents: [
-        FormaDePagoComponent,
-        FormaDePagoDialogComponent,
-        FormaDePagoPopupComponent,
-        FormaDePagoDeleteDialogComponent,
-        FormaDePagoDeletePopupComponent,
-    ],
-    providers: [
-        FormaDePagoService,
-        FormaDePagoPopupService,
-    ],
+    entryComponents: [FormaDePagoComponent, FormaDePagoUpdateComponent, FormaDePagoDeleteDialogComponent, FormaDePagoDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetFormaDePagoModule {}

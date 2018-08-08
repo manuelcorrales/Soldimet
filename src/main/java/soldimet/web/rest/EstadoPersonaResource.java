@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoPersona;
 import soldimet.service.EstadoPersonaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class EstadoPersonaResource {
     public ResponseEntity<EstadoPersona> createEstadoPersona(@Valid @RequestBody EstadoPersona estadoPersona) throws URISyntaxException {
         log.debug("REST request to save EstadoPersona : {}", estadoPersona);
         if (estadoPersona.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new estadoPersona cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new estadoPersona cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EstadoPersona result = estadoPersonaService.save(estadoPersona);
         return ResponseEntity.created(new URI("/api/estado-personas/" + result.getId()))
@@ -68,7 +69,7 @@ public class EstadoPersonaResource {
     public ResponseEntity<EstadoPersona> updateEstadoPersona(@Valid @RequestBody EstadoPersona estadoPersona) throws URISyntaxException {
         log.debug("REST request to update EstadoPersona : {}", estadoPersona);
         if (estadoPersona.getId() == null) {
-            return createEstadoPersona(estadoPersona);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EstadoPersona result = estadoPersonaService.save(estadoPersona);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class EstadoPersonaResource {
     public List<EstadoPersona> getAllEstadoPersonas() {
         log.debug("REST request to get all EstadoPersonas");
         return estadoPersonaService.findAll();
-        }
+    }
 
     /**
      * GET  /estado-personas/:id : get the "id" estadoPersona.
@@ -98,8 +99,8 @@ public class EstadoPersonaResource {
     @Timed
     public ResponseEntity<EstadoPersona> getEstadoPersona(@PathVariable Long id) {
         log.debug("REST request to get EstadoPersona : {}", id);
-        EstadoPersona estadoPersona = estadoPersonaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(estadoPersona));
+        Optional<EstadoPersona> estadoPersona = estadoPersonaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(estadoPersona);
     }
 
     /**

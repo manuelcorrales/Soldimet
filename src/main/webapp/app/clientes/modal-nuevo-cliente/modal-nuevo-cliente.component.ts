@@ -18,7 +18,7 @@ import { ClienteModalPopupService } from './cliente-nuevo-popup-service';
 
 @Component({
     selector: 'jhi-modal-nuevo-cliente',
-    templateUrl: './modal-nuevo-cliente.component.html',
+    templateUrl: './modal-nuevo-cliente.component.html'
 })
 export class ModalNuevoClienteComponent implements OnInit {
     cliente: Cliente;
@@ -28,14 +28,15 @@ export class ModalNuevoClienteComponent implements OnInit {
     localidades: Localidad[];
     personas: Persona[];
 
-    constructor(public activeModal: NgbActiveModal,
+    constructor(
+        public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private clienteService: ClienteService,
         private personaService: PersonaService,
         private eventManager: JhiEventManager,
         private localidadService: LocalidadService,
         private direccionService: DireccionService,
-        private estadoPersonaService: EstadoPersonaService,
+        private estadoPersonaService: EstadoPersonaService
     ) {
         this.cliente = new Cliente();
         this.persona = new Persona();
@@ -46,9 +47,12 @@ export class ModalNuevoClienteComponent implements OnInit {
 
     ngOnInit() {
         this.isSaving = false;
-        this.localidadService.query()
-            .subscribe((res: ResponseWrapper) => { this.localidades = res.json; },
-            (res: ResponseWrapper) => this.onError(res.json));
+        this.localidadService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.localidades = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -58,32 +62,26 @@ export class ModalNuevoClienteComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.direccion.id !== undefined) {
-            this.subscribeToSaveDireccionResponse(
-                this.direccionService.update(this.direccion));
+            this.subscribeToSaveDireccionResponse(this.direccionService.update(this.direccion));
         } else {
-            this.subscribeToSaveDireccionResponse(
-                this.direccionService.create(this.direccion));
+            this.subscribeToSaveDireccionResponse(this.direccionService.create(this.direccion));
         }
     }
 
     private subscribeToSaveDireccionResponse(result: Observable<Direccion>) {
-        result.subscribe((res: Direccion) =>
-            this.onSaveDireccionSuccess(res), (res: Response) => this.onSaveDireccionError());
+        result.subscribe((res: Direccion) => this.onSaveDireccionSuccess(res), (res: Response) => this.onSaveDireccionError());
     }
 
     private onSaveDireccionSuccess(result: Direccion) {
         this.persona.direccion = result;
-        this.estadoPersonaService.find(1).subscribe(
-            (estado: EstadoPersona) => {
-                this.persona.estadoPersona = estado;
-                if (this.persona.id !== undefined) {
-                    this.subscribeToSavePersonaResponse(
-                        this.personaService.update(this.persona));
-                } else {
-                    this.subscribeToSavePersonaResponse(
-                        this.personaService.create(this.persona));
-                }
-            });
+        this.estadoPersonaService.find(1).subscribe((estado: EstadoPersona) => {
+            this.persona.estadoPersona = estado;
+            if (this.persona.id !== undefined) {
+                this.subscribeToSavePersonaResponse(this.personaService.update(this.persona));
+            } else {
+                this.subscribeToSavePersonaResponse(this.personaService.create(this.persona));
+            }
+        });
     }
 
     private onSaveDireccionError() {
@@ -91,18 +89,15 @@ export class ModalNuevoClienteComponent implements OnInit {
     }
 
     private subscribeToSavePersonaResponse(result: Observable<Persona>) {
-        result.subscribe((res: Persona) =>
-            this.onSavePersonaSuccess(res), (res: Response) => this.onSavePersonaError());
+        result.subscribe((res: Persona) => this.onSavePersonaSuccess(res), (res: Response) => this.onSavePersonaError());
     }
 
     private onSavePersonaSuccess(result: Persona) {
         this.cliente.persona = result;
         if (this.cliente.id !== undefined) {
-            this.subscribeToSaveClienteResponse(
-                this.clienteService.update(this.cliente));
+            this.subscribeToSaveClienteResponse(this.clienteService.update(this.cliente));
         } else {
-            this.subscribeToSaveClienteResponse(
-                this.clienteService.create(this.cliente));
+            this.subscribeToSaveClienteResponse(this.clienteService.create(this.cliente));
         }
     }
 
@@ -111,8 +106,7 @@ export class ModalNuevoClienteComponent implements OnInit {
     }
 
     private subscribeToSaveClienteResponse(result: Observable<Cliente>) {
-        result.subscribe((res: Cliente) =>
-            this.onSaveClienteSuccess(res), (res: Response) => this.onSaveClienteError());
+        result.subscribe((res: Cliente) => this.onSaveClienteSuccess(res), (res: Response) => this.onSaveClienteError());
     }
 
     private onSaveClienteSuccess(result: Cliente) {
@@ -139,21 +133,16 @@ export class ModalNuevoClienteComponent implements OnInit {
     template: ''
 })
 export class ClienteModalPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(private route: ActivatedRoute,
-        private clientePopupService: ClienteModalPopupService) {
-    }
+    constructor(private route: ActivatedRoute, private clientePopupService: ClienteModalPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
+        this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
-                this.clientePopupService
-                    .open(ModalNuevoClienteComponent as Component, params['id']);
+                this.clientePopupService.open(ModalNuevoClienteComponent as Component, params['id']);
             } else {
-                this.clientePopupService
-                    .open(ModalNuevoClienteComponent as Component);
+                this.clientePopupService.open(ModalNuevoClienteComponent as Component);
             }
         });
     }

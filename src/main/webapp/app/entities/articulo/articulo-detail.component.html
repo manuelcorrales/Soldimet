@@ -1,47 +1,49 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="articulo">
+            <h2><span>Articulo</span> {{articulo.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Descripcion</span></dt>
+                <dd>
+                    <span>{{articulo.descripcion}}</span>
+                </dd>
+                <dt><span>Codigo Articulo Proveedor</span></dt>
+                <dd>
+                    <span>{{articulo.codigoArticuloProveedor}}</span>
+                </dd>
+                <dt><span>Estado</span></dt>
+                <dd>
+                    <div *ngIf="articulo.estado">
+                        <a [routerLink]="['/estado-articulo', articulo.estado?.id, 'view']">{{articulo.estado?.nombreEstado}}</a>
+                    </div>
+                </dd>
+                <dt><span>Marca</span></dt>
+                <dd>
+                    <div *ngIf="articulo.marca">
+                        <a [routerLink]="['/marca', articulo.marca?.id, 'view']">{{articulo.marca?.nombreMarca}}</a>
+                    </div>
+                </dd>
+                <dt><span>Tipo Repuesto</span></dt>
+                <dd>
+                    <div *ngIf="articulo.tipoRepuesto">
+                        <a [routerLink]="['/tipo-repuesto', articulo.tipoRepuesto?.id, 'view']">{{articulo.tipoRepuesto?.nombreTipoRepuesto}}</a>
+                    </div>
+                </dd>
+            </dl>
 
-<div *ngIf="articulo">
-    <h2><span>Articulo</span> {{articulo.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span>Descripcion</span></dt>
-        <dd>
-            <span>{{articulo.descripcion}}</span>
-        </dd>
-        <dt><span>Codigo Articulo Proveedor</span></dt>
-        <dd>
-            <span>{{articulo.codigoArticuloProveedor}}</span>
-        </dd>
-        <dt><span>Estado</span></dt>
-        <dd>
-            <div *ngIf="articulo.estado">
-                <a [routerLink]="['/estado-articulo', articulo.estado?.id]">{{articulo.estado?.nombreEstado}}</a>
-            </div>
-        </dd>
-        <dt><span>Marca</span></dt>
-        <dd>
-            <div *ngIf="articulo.marca">
-                <a [routerLink]="['/marca', articulo.marca?.id]">{{articulo.marca?.nombreMarca}}</a>
-            </div>
-        </dd>
-        <dt><span>Tipo Repuesto</span></dt>
-        <dd>
-            <div *ngIf="articulo.tipoRepuesto">
-                <a [routerLink]="['/tipo-repuesto', articulo.tipoRepuesto?.id]">{{articulo.tipoRepuesto?.nombreTipoRepuesto}}</a>
-            </div>
-        </dd>
-    </dl>
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
-
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'articulo/'+ articulo.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
-    </button>
+            <button type="button"
+                    [routerLink]="['/articulo', articulo.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
 </div>

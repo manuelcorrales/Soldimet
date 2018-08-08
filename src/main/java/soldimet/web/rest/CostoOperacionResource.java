@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.CostoOperacion;
 import soldimet.service.CostoOperacionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
 import soldimet.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class CostoOperacionResource {
     public ResponseEntity<CostoOperacion> createCostoOperacion(@Valid @RequestBody CostoOperacion costoOperacion) throws URISyntaxException {
         log.debug("REST request to save CostoOperacion : {}", costoOperacion);
         if (costoOperacion.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new costoOperacion cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new costoOperacion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CostoOperacion result = costoOperacionService.save(costoOperacion);
         return ResponseEntity.created(new URI("/api/costo-operacions/" + result.getId()))
@@ -68,7 +69,7 @@ public class CostoOperacionResource {
     public ResponseEntity<CostoOperacion> updateCostoOperacion(@Valid @RequestBody CostoOperacion costoOperacion) throws URISyntaxException {
         log.debug("REST request to update CostoOperacion : {}", costoOperacion);
         if (costoOperacion.getId() == null) {
-            return createCostoOperacion(costoOperacion);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CostoOperacion result = costoOperacionService.save(costoOperacion);
         return ResponseEntity.ok()
@@ -86,7 +87,7 @@ public class CostoOperacionResource {
     public List<CostoOperacion> getAllCostoOperacions() {
         log.debug("REST request to get all CostoOperacions");
         return costoOperacionService.findAll();
-        }
+    }
 
     /**
      * GET  /costo-operacions/:id : get the "id" costoOperacion.
@@ -98,8 +99,8 @@ public class CostoOperacionResource {
     @Timed
     public ResponseEntity<CostoOperacion> getCostoOperacion(@PathVariable Long id) {
         log.debug("REST request to get CostoOperacion : {}", id);
-        CostoOperacion costoOperacion = costoOperacionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(costoOperacion));
+        Optional<CostoOperacion> costoOperacion = costoOperacionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(costoOperacion);
     }
 
     /**

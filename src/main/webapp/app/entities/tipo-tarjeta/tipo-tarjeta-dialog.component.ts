@@ -15,7 +15,6 @@ import { TipoTarjetaService } from './tipo-tarjeta.service';
     templateUrl: './tipo-tarjeta-dialog.component.html'
 })
 export class TipoTarjetaDialogComponent implements OnInit {
-
     tipoTarjeta: TipoTarjeta;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class TipoTarjetaDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private tipoTarjetaService: TipoTarjetaService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class TipoTarjetaDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.tipoTarjeta.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.tipoTarjetaService.update(this.tipoTarjeta));
+            this.subscribeToSaveResponse(this.tipoTarjetaService.update(this.tipoTarjeta));
         } else {
-            this.subscribeToSaveResponse(
-                this.tipoTarjetaService.create(this.tipoTarjeta));
+            this.subscribeToSaveResponse(this.tipoTarjetaService.create(this.tipoTarjeta));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<TipoTarjeta>) {
-        result.subscribe((res: TipoTarjeta) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: TipoTarjeta) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: TipoTarjeta) {
-        this.eventManager.broadcast({ name: 'tipoTarjetaListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'tipoTarjetaListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class TipoTarjetaDialogComponent implements OnInit {
     template: ''
 })
 export class TipoTarjetaPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private tipoTarjetaPopupService: TipoTarjetaPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private tipoTarjetaPopupService: TipoTarjetaPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.tipoTarjetaPopupService
-                    .open(TipoTarjetaDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.tipoTarjetaPopupService.open(TipoTarjetaDialogComponent as Component, params['id']);
             } else {
-                this.tipoTarjetaPopupService
-                    .open(TipoTarjetaDialogComponent as Component);
+                this.tipoTarjetaPopupService.open(TipoTarjetaDialogComponent as Component);
             }
         });
     }

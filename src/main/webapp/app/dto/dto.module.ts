@@ -1,12 +1,11 @@
 import { DtoPresupuestoCabeceraComponent } from './dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 @NgModule({
-  imports: [
-  ],
+    imports: [],
     declarations: [],
     entryComponents: [],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: []
 })
-export class DtoModule { }
+export class DtoModule {}

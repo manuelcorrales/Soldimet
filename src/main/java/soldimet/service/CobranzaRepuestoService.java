@@ -4,11 +4,13 @@ import soldimet.domain.CobranzaRepuesto;
 import soldimet.repository.CobranzaRepuestoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing CobranzaRepuesto.
  */
@@ -31,14 +33,13 @@ public class CobranzaRepuestoService {
      * @return the persisted entity
      */
     public CobranzaRepuesto save(CobranzaRepuesto cobranzaRepuesto) {
-        log.debug("Request to save CobranzaRepuesto : {}", cobranzaRepuesto);
-        return cobranzaRepuestoRepository.save(cobranzaRepuesto);
+        log.debug("Request to save CobranzaRepuesto : {}", cobranzaRepuesto);        return cobranzaRepuestoRepository.save(cobranzaRepuesto);
     }
 
     /**
-     *  Get all the cobranzaRepuestos.
+     * Get all the cobranzaRepuestos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<CobranzaRepuesto> findAll() {
@@ -46,25 +47,26 @@ public class CobranzaRepuestoService {
         return cobranzaRepuestoRepository.findAll();
     }
 
+
     /**
-     *  Get one cobranzaRepuesto by id.
+     * Get one cobranzaRepuesto by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public CobranzaRepuesto findOne(Long id) {
+    public Optional<CobranzaRepuesto> findOne(Long id) {
         log.debug("Request to get CobranzaRepuesto : {}", id);
-        return cobranzaRepuestoRepository.findOne(id);
+        return cobranzaRepuestoRepository.findById(id);
     }
 
     /**
-     *  Delete the  cobranzaRepuesto by id.
+     * Delete the cobranzaRepuesto by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete CobranzaRepuesto : {}", id);
-        cobranzaRepuestoRepository.delete(id);
+        cobranzaRepuestoRepository.deleteById(id);
     }
 }

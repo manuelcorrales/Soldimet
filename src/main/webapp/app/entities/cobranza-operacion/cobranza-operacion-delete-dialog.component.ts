@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { CobranzaOperacion } from './cobranza-operacion.model';
-import { CobranzaOperacionPopupService } from './cobranza-operacion-popup.service';
+import { ICobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 import { CobranzaOperacionService } from './cobranza-operacion.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { CobranzaOperacionService } from './cobranza-operacion.service';
     templateUrl: './cobranza-operacion-delete-dialog.component.html'
 })
 export class CobranzaOperacionDeleteDialogComponent {
-
-    cobranzaOperacion: CobranzaOperacion;
+    cobranzaOperacion: ICobranzaOperacion;
 
     constructor(
         private cobranzaOperacionService: CobranzaOperacionService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.cobranzaOperacionService.delete(id).subscribe((response) => {
+        this.cobranzaOperacionService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'cobranzaOperacionListModification',
                 content: 'Deleted an cobranzaOperacion'
@@ -43,22 +40,33 @@ export class CobranzaOperacionDeleteDialogComponent {
     template: ''
 })
 export class CobranzaOperacionDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private cobranzaOperacionPopupService: CobranzaOperacionPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.cobranzaOperacionPopupService
-                .open(CobranzaOperacionDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ cobranzaOperacion }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(CobranzaOperacionDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.cobranzaOperacion = cobranzaOperacion;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

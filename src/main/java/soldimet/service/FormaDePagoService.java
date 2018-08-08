@@ -4,11 +4,13 @@ import soldimet.domain.FormaDePago;
 import soldimet.repository.FormaDePagoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 /**
  * Service Implementation for managing FormaDePago.
  */
@@ -31,14 +33,13 @@ public class FormaDePagoService {
      * @return the persisted entity
      */
     public FormaDePago save(FormaDePago formaDePago) {
-        log.debug("Request to save FormaDePago : {}", formaDePago);
-        return formaDePagoRepository.save(formaDePago);
+        log.debug("Request to save FormaDePago : {}", formaDePago);        return formaDePagoRepository.save(formaDePago);
     }
 
     /**
-     *  Get all the formaDePagos.
+     * Get all the formaDePagos.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<FormaDePago> findAll() {
@@ -46,25 +47,26 @@ public class FormaDePagoService {
         return formaDePagoRepository.findAll();
     }
 
+
     /**
-     *  Get one formaDePago by id.
+     * Get one formaDePago by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public FormaDePago findOne(Long id) {
+    public Optional<FormaDePago> findOne(Long id) {
         log.debug("Request to get FormaDePago : {}", id);
-        return formaDePagoRepository.findOne(id);
+        return formaDePagoRepository.findById(id);
     }
 
     /**
-     *  Delete the  formaDePago by id.
+     * Delete the formaDePago by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete FormaDePago : {}", id);
-        formaDePagoRepository.delete(id);
+        formaDePagoRepository.deleteById(id);
     }
 }

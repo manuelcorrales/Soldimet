@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,6 +48,8 @@ public class PagoTarjetaResourceIntTest {
 
     @Autowired
     private PagoTarjetaRepository pagoTarjetaRepository;
+
+    
 
     @Autowired
     private PagoTarjetaService pagoTarjetaService;
@@ -73,6 +77,7 @@ public class PagoTarjetaResourceIntTest {
         this.restPagoTarjetaMockMvc = MockMvcBuilders.standaloneSetup(pagoTarjetaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -176,6 +181,7 @@ public class PagoTarjetaResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(pagoTarjeta.getId().intValue())))
             .andExpect(jsonPath("$.[*].numeroTarjeta").value(hasItem(DEFAULT_NUMERO_TARJETA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -190,7 +196,6 @@ public class PagoTarjetaResourceIntTest {
             .andExpect(jsonPath("$.id").value(pagoTarjeta.getId().intValue()))
             .andExpect(jsonPath("$.numeroTarjeta").value(DEFAULT_NUMERO_TARJETA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingPagoTarjeta() throws Exception {
@@ -208,7 +213,9 @@ public class PagoTarjetaResourceIntTest {
         int databaseSizeBeforeUpdate = pagoTarjetaRepository.findAll().size();
 
         // Update the pagoTarjeta
-        PagoTarjeta updatedPagoTarjeta = pagoTarjetaRepository.findOne(pagoTarjeta.getId());
+        PagoTarjeta updatedPagoTarjeta = pagoTarjetaRepository.findById(pagoTarjeta.getId()).get();
+        // Disconnect from session so that the updates on updatedPagoTarjeta are not directly saved in db
+        em.detach(updatedPagoTarjeta);
         updatedPagoTarjeta
             .numeroTarjeta(UPDATED_NUMERO_TARJETA);
 
@@ -235,11 +242,11 @@ public class PagoTarjetaResourceIntTest {
         restPagoTarjetaMockMvc.perform(put("/api/pago-tarjetas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(pagoTarjeta)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the PagoTarjeta in the database
         List<PagoTarjeta> pagoTarjetaList = pagoTarjetaRepository.findAll();
-        assertThat(pagoTarjetaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(pagoTarjetaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

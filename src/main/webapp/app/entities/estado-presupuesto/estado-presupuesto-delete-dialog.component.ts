@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { EstadoPresupuesto } from './estado-presupuesto.model';
-import { EstadoPresupuestoPopupService } from './estado-presupuesto-popup.service';
+import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
 import { EstadoPresupuestoService } from './estado-presupuesto.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { EstadoPresupuestoService } from './estado-presupuesto.service';
     templateUrl: './estado-presupuesto-delete-dialog.component.html'
 })
 export class EstadoPresupuestoDeleteDialogComponent {
-
-    estadoPresupuesto: EstadoPresupuesto;
+    estadoPresupuesto: IEstadoPresupuesto;
 
     constructor(
         private estadoPresupuestoService: EstadoPresupuestoService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.estadoPresupuestoService.delete(id).subscribe((response) => {
+        this.estadoPresupuestoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'estadoPresupuestoListModification',
                 content: 'Deleted an estadoPresupuesto'
@@ -43,22 +40,33 @@ export class EstadoPresupuestoDeleteDialogComponent {
     template: ''
 })
 export class EstadoPresupuestoDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private estadoPresupuestoPopupService: EstadoPresupuestoPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.estadoPresupuestoPopupService
-                .open(EstadoPresupuestoDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ estadoPresupuesto }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(EstadoPresupuestoDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.estadoPresupuesto = estadoPresupuesto;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

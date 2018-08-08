@@ -18,7 +18,6 @@ import { ResponseWrapper } from '../../shared';
     templateUrl: './presupuesto-dialog.component.html'
 })
 export class PresupuestoDialogComponent implements OnInit {
-
     presupuesto: Presupuesto;
     isSaving: boolean;
 
@@ -36,15 +35,22 @@ export class PresupuestoDialogComponent implements OnInit {
         private clienteService: ClienteService,
         private estadoPresupuestoService: EstadoPresupuestoService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.clienteService.query()
-            .subscribe((res: ResponseWrapper) => { this.clientes = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.estadoPresupuestoService.query()
-            .subscribe((res: ResponseWrapper) => { this.estadopresupuestos = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.clienteService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.clientes = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
+        this.estadoPresupuestoService.query().subscribe(
+            (res: ResponseWrapper) => {
+                this.estadopresupuestos = res.json;
+            },
+            (res: ResponseWrapper) => this.onError(res.json)
+        );
     }
 
     clear() {
@@ -54,21 +60,18 @@ export class PresupuestoDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.presupuesto.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.presupuestoService.update(this.presupuesto));
+            this.subscribeToSaveResponse(this.presupuestoService.update(this.presupuesto));
         } else {
-            this.subscribeToSaveResponse(
-                this.presupuestoService.create(this.presupuesto));
+            this.subscribeToSaveResponse(this.presupuestoService.create(this.presupuesto));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<Presupuesto>) {
-        result.subscribe((res: Presupuesto) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: Presupuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Presupuesto) {
-        this.eventManager.broadcast({ name: 'presupuestoListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'presupuestoListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -95,22 +98,16 @@ export class PresupuestoDialogComponent implements OnInit {
     template: ''
 })
 export class PresupuestoPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private presupuestoPopupService: PresupuestoPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private presupuestoPopupService: PresupuestoPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.presupuestoPopupService
-                    .open(PresupuestoDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.presupuestoPopupService.open(PresupuestoDialogComponent as Component, params['id']);
             } else {
-                this.presupuestoPopupService
-                    .open(PresupuestoDialogComponent as Component);
+                this.presupuestoPopupService.open(PresupuestoDialogComponent as Component);
             }
         });
     }

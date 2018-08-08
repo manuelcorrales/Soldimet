@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { RubroDetailComponent } from '../../../../../../main/webapp/app/entities/rubro/rubro-detail.component';
-import { RubroService } from '../../../../../../main/webapp/app/entities/rubro/rubro.service';
-import { Rubro } from '../../../../../../main/webapp/app/entities/rubro/rubro.model';
+import { RubroDetailComponent } from 'app/entities/rubro/rubro-detail.component';
+import { Rubro } from 'app/shared/model/rubro.model';
 
 describe('Component Tests', () => {
-
     describe('Rubro Management Detail Component', () => {
         let comp: RubroDetailComponent;
         let fixture: ComponentFixture<RubroDetailComponent>;
-        let service: RubroService;
+        const route = ({ data: of({ rubro: new Rubro(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [RubroDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    RubroService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(RubroDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(RubroDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(RubroDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(RubroService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new Rubro(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.rubro).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.rubro).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +45,8 @@ public class MarcaResourceIntTest {
 
     @Autowired
     private MarcaRepository marcaRepository;
+
+    
 
     @Autowired
     private MarcaService marcaService;
@@ -70,6 +74,7 @@ public class MarcaResourceIntTest {
         this.restMarcaMockMvc = MockMvcBuilders.standaloneSetup(marcaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -158,6 +163,7 @@ public class MarcaResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(marca.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreMarca").value(hasItem(DEFAULT_NOMBRE_MARCA.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -172,7 +178,6 @@ public class MarcaResourceIntTest {
             .andExpect(jsonPath("$.id").value(marca.getId().intValue()))
             .andExpect(jsonPath("$.nombreMarca").value(DEFAULT_NOMBRE_MARCA.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingMarca() throws Exception {
@@ -190,7 +195,9 @@ public class MarcaResourceIntTest {
         int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
 
         // Update the marca
-        Marca updatedMarca = marcaRepository.findOne(marca.getId());
+        Marca updatedMarca = marcaRepository.findById(marca.getId()).get();
+        // Disconnect from session so that the updates on updatedMarca are not directly saved in db
+        em.detach(updatedMarca);
         updatedMarca
             .nombreMarca(UPDATED_NOMBRE_MARCA);
 
@@ -217,11 +224,11 @@ public class MarcaResourceIntTest {
         restMarcaMockMvc.perform(put("/api/marcas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(marca)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Marca in the database
         List<Marca> marcaList = marcaRepository.findAll();
-        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

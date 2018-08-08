@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Rubro } from './rubro.model';
-import { RubroPopupService } from './rubro-popup.service';
+import { IRubro } from 'app/shared/model/rubro.model';
 import { RubroService } from './rubro.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { RubroService } from './rubro.service';
     templateUrl: './rubro-delete-dialog.component.html'
 })
 export class RubroDeleteDialogComponent {
+    rubro: IRubro;
 
-    rubro: Rubro;
-
-    constructor(
-        private rubroService: RubroService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private rubroService: RubroService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.rubroService.delete(id).subscribe((response) => {
+        this.rubroService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'rubroListModification',
                 content: 'Deleted an rubro'
@@ -43,22 +36,30 @@ export class RubroDeleteDialogComponent {
     template: ''
 })
 export class RubroDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private rubroPopupService: RubroPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.rubroPopupService
-                .open(RubroDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ rubro }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(RubroDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.rubro = rubro;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

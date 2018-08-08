@@ -1,62 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { SoldimetTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { CilindradaDetailComponent } from '../../../../../../main/webapp/app/entities/cilindrada/cilindrada-detail.component';
-import { CilindradaService } from '../../../../../../main/webapp/app/entities/cilindrada/cilindrada.service';
-import { Cilindrada } from '../../../../../../main/webapp/app/entities/cilindrada/cilindrada.model';
+import { CilindradaDetailComponent } from 'app/entities/cilindrada/cilindrada-detail.component';
+import { Cilindrada } from 'app/shared/model/cilindrada.model';
 
 describe('Component Tests', () => {
-
     describe('Cilindrada Management Detail Component', () => {
         let comp: CilindradaDetailComponent;
         let fixture: ComponentFixture<CilindradaDetailComponent>;
-        let service: CilindradaService;
+        const route = ({ data: of({ cilindrada: new Cilindrada(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(async(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SoldimetTestModule],
                 declarations: [CilindradaDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    CilindradaService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(CilindradaDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
+                providers: [{ provide: ActivatedRoute, useValue: route }]
+            })
+                .overrideTemplate(CilindradaDetailComponent, '')
+                .compileComponents();
             fixture = TestBed.createComponent(CilindradaDetailComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(CilindradaService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new Cilindrada(10)));
+                // WHEN
+                comp.ngOnInit();
 
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.cilindrada).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(comp.cilindrada).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

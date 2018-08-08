@@ -4,6 +4,7 @@ import soldimet.SoldimetApp;
 
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.EstadoPedidoRepuesto;
+import soldimet.domain.DetallePedido;
 import soldimet.domain.Presupuesto;
 import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.service.PedidoRepuestoService;
@@ -30,6 +31,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,6 +58,8 @@ public class PedidoRepuestoResourceIntTest {
 
     @Autowired
     private PedidoRepuestoRepository pedidoRepuestoRepository;
+
+    
 
     @Autowired
     private PedidoRepuestoService pedidoRepuestoService;
@@ -85,6 +90,7 @@ public class PedidoRepuestoResourceIntTest {
         this.restPedidoRepuestoMockMvc = MockMvcBuilders.standaloneSetup(pedidoRepuestoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -189,6 +195,7 @@ public class PedidoRepuestoResourceIntTest {
             .andExpect(jsonPath("$.[*].fechaPedido").value(hasItem(DEFAULT_FECHA_PEDIDO.toString())))
             .andExpect(jsonPath("$.[*].fechaRecibo").value(hasItem(DEFAULT_FECHA_RECIBO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -404,6 +411,62 @@ public class PedidoRepuestoResourceIntTest {
     }
 
 
+    @Test
+    @Transactional
+    public void getAllPedidoRepuestosByEstadoPedidoRepuestoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        EstadoPedidoRepuesto estadoPedidoRepuesto = EstadoPedidoRepuestoResourceIntTest.createEntity(em);
+        em.persist(estadoPedidoRepuesto);
+        em.flush();
+        pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+        Long estadoPedidoRepuestoId = estadoPedidoRepuesto.getId();
+
+        // Get all the pedidoRepuestoList where estadoPedidoRepuesto equals to estadoPedidoRepuestoId
+        defaultPedidoRepuestoShouldBeFound("estadoPedidoRepuestoId.equals=" + estadoPedidoRepuestoId);
+
+        // Get all the pedidoRepuestoList where estadoPedidoRepuesto equals to estadoPedidoRepuestoId + 1
+        defaultPedidoRepuestoShouldNotBeFound("estadoPedidoRepuestoId.equals=" + (estadoPedidoRepuestoId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllPedidoRepuestosByDetallePedidoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        DetallePedido detallePedido = DetallePedidoResourceIntTest.createEntity(em);
+        em.persist(detallePedido);
+        em.flush();
+        pedidoRepuesto.addDetallePedido(detallePedido);
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+        Long detallePedidoId = detallePedido.getId();
+
+        // Get all the pedidoRepuestoList where detallePedido equals to detallePedidoId
+        defaultPedidoRepuestoShouldBeFound("detallePedidoId.equals=" + detallePedidoId);
+
+        // Get all the pedidoRepuestoList where detallePedido equals to detallePedidoId + 1
+        defaultPedidoRepuestoShouldNotBeFound("detallePedidoId.equals=" + (detallePedidoId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllPedidoRepuestosByPresupuestoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Presupuesto presupuesto = PresupuestoResourceIntTest.createEntity(em);
+        em.persist(presupuesto);
+        em.flush();
+        pedidoRepuesto.setPresupuesto(presupuesto);
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+        Long presupuestoId = presupuesto.getId();
+
+        // Get all the pedidoRepuestoList where presupuesto equals to presupuestoId
+        defaultPedidoRepuestoShouldBeFound("presupuestoId.equals=" + presupuestoId);
+
+        // Get all the pedidoRepuestoList where presupuesto equals to presupuestoId + 1
+        defaultPedidoRepuestoShouldNotBeFound("presupuestoId.equals=" + (presupuestoId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -428,7 +491,6 @@ public class PedidoRepuestoResourceIntTest {
             .andExpect(jsonPath("$").isEmpty());
     }
 
-
     @Test
     @Transactional
     public void getNonExistingPedidoRepuesto() throws Exception {
@@ -446,7 +508,9 @@ public class PedidoRepuestoResourceIntTest {
         int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
 
         // Update the pedidoRepuesto
-        PedidoRepuesto updatedPedidoRepuesto = pedidoRepuestoRepository.findOne(pedidoRepuesto.getId());
+        PedidoRepuesto updatedPedidoRepuesto = pedidoRepuestoRepository.findById(pedidoRepuesto.getId()).get();
+        // Disconnect from session so that the updates on updatedPedidoRepuesto are not directly saved in db
+        em.detach(updatedPedidoRepuesto);
         updatedPedidoRepuesto
             .fechaCreacion(UPDATED_FECHA_CREACION)
             .fechaPedido(UPDATED_FECHA_PEDIDO)
@@ -477,11 +541,11 @@ public class PedidoRepuestoResourceIntTest {
         restPedidoRepuestoMockMvc.perform(put("/api/pedido-repuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the PedidoRepuesto in the database
         List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
-        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

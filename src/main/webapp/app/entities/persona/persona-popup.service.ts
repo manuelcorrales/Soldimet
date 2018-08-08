@@ -8,12 +8,7 @@ import { PersonaService } from './persona.service';
 export class PersonaPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private personaService: PersonaService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private personaService: PersonaService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class PersonaPopupService {
             }
 
             if (id) {
-                this.personaService.find(id).subscribe((persona) => {
+                this.personaService.find(id).subscribe(persona => {
                     this.ngbModalRef = this.personaModalRef(component, persona);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class PersonaPopupService {
     }
 
     personaModalRef(component: Component, persona: Persona): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.persona = persona;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

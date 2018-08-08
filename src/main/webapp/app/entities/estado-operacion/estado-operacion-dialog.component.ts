@@ -15,7 +15,6 @@ import { EstadoOperacionService } from './estado-operacion.service';
     templateUrl: './estado-operacion-dialog.component.html'
 })
 export class EstadoOperacionDialogComponent implements OnInit {
-
     estadoOperacion: EstadoOperacion;
     isSaving: boolean;
 
@@ -24,8 +23,7 @@ export class EstadoOperacionDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private estadoOperacionService: EstadoOperacionService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -38,21 +36,18 @@ export class EstadoOperacionDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.estadoOperacion.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.estadoOperacionService.update(this.estadoOperacion));
+            this.subscribeToSaveResponse(this.estadoOperacionService.update(this.estadoOperacion));
         } else {
-            this.subscribeToSaveResponse(
-                this.estadoOperacionService.create(this.estadoOperacion));
+            this.subscribeToSaveResponse(this.estadoOperacionService.create(this.estadoOperacion));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<EstadoOperacion>) {
-        result.subscribe((res: EstadoOperacion) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+        result.subscribe((res: EstadoOperacion) => this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EstadoOperacion) {
-        this.eventManager.broadcast({ name: 'estadoOperacionListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'estadoOperacionListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -71,22 +66,16 @@ export class EstadoOperacionDialogComponent implements OnInit {
     template: ''
 })
 export class EstadoOperacionPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private estadoOperacionPopupService: EstadoOperacionPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private estadoOperacionPopupService: EstadoOperacionPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.estadoOperacionPopupService
-                    .open(EstadoOperacionDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.estadoOperacionPopupService.open(EstadoOperacionDialogComponent as Component, params['id']);
             } else {
-                this.estadoOperacionPopupService
-                    .open(EstadoOperacionDialogComponent as Component);
+                this.estadoOperacionPopupService.open(EstadoOperacionDialogComponent as Component);
             }
         });
     }

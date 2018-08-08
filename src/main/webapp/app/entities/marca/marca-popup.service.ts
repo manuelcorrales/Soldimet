@@ -8,12 +8,7 @@ import { MarcaService } from './marca.service';
 export class MarcaPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private marcaService: MarcaService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private marcaService: MarcaService) {
         this.ngbModalRef = null;
     }
 
@@ -25,7 +20,7 @@ export class MarcaPopupService {
             }
 
             if (id) {
-                this.marcaService.find(id).subscribe((marca) => {
+                this.marcaService.find(id).subscribe(marca => {
                     this.ngbModalRef = this.marcaModalRef(component, marca);
                     resolve(this.ngbModalRef);
                 });
@@ -40,15 +35,18 @@ export class MarcaPopupService {
     }
 
     marcaModalRef(component: Component, marca: Marca): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.marca = marca;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { EstadoPersona } from './estado-persona.model';
-import { EstadoPersonaPopupService } from './estado-persona-popup.service';
+import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
 import { EstadoPersonaService } from './estado-persona.service';
 
 @Component({
@@ -13,22 +12,20 @@ import { EstadoPersonaService } from './estado-persona.service';
     templateUrl: './estado-persona-delete-dialog.component.html'
 })
 export class EstadoPersonaDeleteDialogComponent {
-
-    estadoPersona: EstadoPersona;
+    estadoPersona: IEstadoPersona;
 
     constructor(
         private estadoPersonaService: EstadoPersonaService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.estadoPersonaService.delete(id).subscribe((response) => {
+        this.estadoPersonaService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'estadoPersonaListModification',
                 content: 'Deleted an estadoPersona'
@@ -43,22 +40,33 @@ export class EstadoPersonaDeleteDialogComponent {
     template: ''
 })
 export class EstadoPersonaDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private estadoPersonaPopupService: EstadoPersonaPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.estadoPersonaPopupService
-                .open(EstadoPersonaDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ estadoPersona }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(EstadoPersonaDeleteDialogComponent as Component, {
+                    size: 'lg',
+                    backdrop: 'static'
+                });
+                this.ngbModalRef.componentInstance.estadoPersona = estadoPersona;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

@@ -1,8 +1,10 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -26,10 +28,12 @@ public class CobranzaOperacion implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private EstadoCobranzaOperacion estadoCobranzaOperacion;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Operacion operacion;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -105,7 +109,7 @@ public class CobranzaOperacion implements Serializable {
     public String toString() {
         return "CobranzaOperacion{" +
             "id=" + getId() +
-            ", cobranzaOperacion='" + getCobranzaOperacion() + "'" +
+            ", cobranzaOperacion=" + getCobranzaOperacion() +
             "}";
     }
 }

@@ -1,13 +1,12 @@
 package soldimet.repository;
 
 import soldimet.domain.SubCategoria;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the SubCategoria entity.
+ * Spring Data  repository for the SubCategoria entity.
  */
 @SuppressWarnings("unused")
 @Repository
