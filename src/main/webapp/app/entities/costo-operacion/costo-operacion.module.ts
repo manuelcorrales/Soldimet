@@ -7,9 +7,9 @@ import {
     CostoOperacionDetailComponent,
     CostoOperacionUpdateComponent,
     CostoOperacionDeletePopupComponent,
-    CostoOperacionDeleteDialogComponent,
     costoOperacionRoute,
-    costoOperacionPopupRoute
+    costoOperacionPopupRoute,
+    CostoOperacionDeleteDialogComponent
 } from './';
 
 const ENTITY_STATES = [...costoOperacionRoute, ...costoOperacionPopupRoute];
@@ -20,15 +20,10 @@ const ENTITY_STATES = [...costoOperacionRoute, ...costoOperacionPopupRoute];
         CostoOperacionComponent,
         CostoOperacionDetailComponent,
         CostoOperacionUpdateComponent,
-        CostoOperacionDeleteDialogComponent,
-        CostoOperacionDeletePopupComponent
+        CostoOperacionDeletePopupComponent,
+        CostoOperacionDeleteDialogComponent
     ],
-    entryComponents: [
-        CostoOperacionComponent,
-        CostoOperacionUpdateComponent,
-        CostoOperacionDeleteDialogComponent,
-        CostoOperacionDeletePopupComponent
-    ],
+    entryComponents: [CostoOperacionComponent, CostoOperacionUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetCostoOperacionModule {}

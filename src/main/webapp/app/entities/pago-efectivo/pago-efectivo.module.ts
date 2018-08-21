@@ -6,8 +6,8 @@ import {
     PagoEfectivoComponent,
     PagoEfectivoDetailComponent,
     PagoEfectivoUpdateComponent,
-    PagoEfectivoDeletePopupComponent,
     PagoEfectivoDeleteDialogComponent,
+    PagoEfectivoDeletePopupComponent,
     pagoEfectivoRoute,
     pagoEfectivoPopupRoute
 } from './';
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...pagoEfectivoRoute, ...pagoEfectivoPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         PagoEfectivoComponent,
+        PagoEfectivoDeleteDialogComponent,
+        PagoEfectivoDeletePopupComponent,
         PagoEfectivoDetailComponent,
-        PagoEfectivoUpdateComponent,
-        PagoEfectivoDeleteDialogComponent,
-        PagoEfectivoDeletePopupComponent
+        PagoEfectivoUpdateComponent
     ],
-    entryComponents: [
-        PagoEfectivoComponent,
-        PagoEfectivoUpdateComponent,
-        PagoEfectivoDeleteDialogComponent,
-        PagoEfectivoDeletePopupComponent
-    ],
+    entryComponents: [PagoEfectivoComponent, PagoEfectivoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPagoEfectivoModule {}

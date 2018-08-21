@@ -6,8 +6,8 @@ import {
     MarcaComponent,
     MarcaDetailComponent,
     MarcaUpdateComponent,
-    MarcaDeletePopupComponent,
     MarcaDeleteDialogComponent,
+    MarcaDeletePopupComponent,
     marcaRoute,
     marcaPopupRoute
 } from './';
@@ -16,8 +16,8 @@ const ENTITY_STATES = [...marcaRoute, ...marcaPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [MarcaComponent, MarcaDetailComponent, MarcaUpdateComponent, MarcaDeleteDialogComponent, MarcaDeletePopupComponent],
-    entryComponents: [MarcaComponent, MarcaUpdateComponent, MarcaDeleteDialogComponent, MarcaDeletePopupComponent],
+    declarations: [MarcaComponent, MarcaDetailComponent, MarcaDeleteDialogComponent, MarcaDeletePopupComponent, MarcaUpdateComponent],
+    entryComponents: [MarcaComponent, MarcaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetMarcaModule {}

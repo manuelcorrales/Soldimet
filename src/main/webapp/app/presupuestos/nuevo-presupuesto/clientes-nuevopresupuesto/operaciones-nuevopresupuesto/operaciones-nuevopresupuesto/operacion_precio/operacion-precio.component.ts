@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { CostoOperacion } from 'app/entities/costo-operacion/costo-operacion.model';
 import { CobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
+import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
 
 @Component({
     selector: 'jhi-operacion-precio',

@@ -6,8 +6,8 @@ import {
     DetallePedidoComponent,
     DetallePedidoDetailComponent,
     DetallePedidoUpdateComponent,
-    DetallePedidoDeletePopupComponent,
     DetallePedidoDeleteDialogComponent,
+    DetallePedidoDeletePopupComponent,
     detallePedidoRoute,
     detallePedidoPopupRoute
 } from './';
@@ -19,16 +19,11 @@ const ENTITY_STATES = [...detallePedidoRoute, ...detallePedidoPopupRoute];
     declarations: [
         DetallePedidoComponent,
         DetallePedidoDetailComponent,
-        DetallePedidoUpdateComponent,
         DetallePedidoDeleteDialogComponent,
-        DetallePedidoDeletePopupComponent
+        DetallePedidoDeletePopupComponent,
+        DetallePedidoUpdateComponent
     ],
-    entryComponents: [
-        DetallePedidoComponent,
-        DetallePedidoUpdateComponent,
-        DetallePedidoDeleteDialogComponent,
-        DetallePedidoDeletePopupComponent
-    ],
+    entryComponents: [DetallePedidoComponent, DetallePedidoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetDetallePedidoModule {}

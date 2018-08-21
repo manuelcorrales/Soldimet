@@ -1,10 +1,10 @@
 import { Component, Input, Output, OnInit, ViewChildren, QueryList, EventEmitter } from '@angular/core';
-import { DetallePresupuesto } from '../../../../../entities/detalle-presupuesto/detalle-presupuesto.model';
 import { PresupuestosService } from '../../../../presupuestos.service';
 import { DTODatosMotorComponent } from '../../../../../dto/dto-presupuesto-cabecera/DTODatosMotor';
 import { OperacionPrecioComponent } from './operacion_precio/operacion-precio.component';
 import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
-import { CobranzaOperacion } from 'app/entities/cobranza-operacion/cobranza-operacion.model';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
+import { CobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 
 @Component({
     selector: 'jhi-operaciones-nuevopresupuesto',

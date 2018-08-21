@@ -6,8 +6,8 @@ import {
     PrecioRepuestoComponent,
     PrecioRepuestoDetailComponent,
     PrecioRepuestoUpdateComponent,
-    PrecioRepuestoDeletePopupComponent,
     PrecioRepuestoDeleteDialogComponent,
+    PrecioRepuestoDeletePopupComponent,
     precioRepuestoRoute,
     precioRepuestoPopupRoute
 } from './';
@@ -19,16 +19,11 @@ const ENTITY_STATES = [...precioRepuestoRoute, ...precioRepuestoPopupRoute];
     declarations: [
         PrecioRepuestoComponent,
         PrecioRepuestoDetailComponent,
-        PrecioRepuestoUpdateComponent,
         PrecioRepuestoDeleteDialogComponent,
-        PrecioRepuestoDeletePopupComponent
+        PrecioRepuestoDeletePopupComponent,
+        PrecioRepuestoUpdateComponent
     ],
-    entryComponents: [
-        PrecioRepuestoComponent,
-        PrecioRepuestoUpdateComponent,
-        PrecioRepuestoDeleteDialogComponent,
-        PrecioRepuestoDeletePopupComponent
-    ],
+    entryComponents: [PrecioRepuestoComponent, PrecioRepuestoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPrecioRepuestoModule {}

@@ -6,9 +6,9 @@ import {
     EstadoOperacionComponent,
     EstadoOperacionDetailComponent,
     EstadoOperacionUpdateComponent,
-    EstadoOperacionDeletePopupComponent,
-    EstadoOperacionDeleteDialogComponent,
     estadoOperacionRoute,
+    EstadoOperacionDeleteDialogComponent,
+    EstadoOperacionDeletePopupComponent,
     estadoOperacionPopupRoute
 } from './';
 
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...estadoOperacionRoute, ...estadoOperacionPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EstadoOperacionComponent,
+        EstadoOperacionDeleteDialogComponent,
+        EstadoOperacionDeletePopupComponent,
         EstadoOperacionDetailComponent,
-        EstadoOperacionUpdateComponent,
-        EstadoOperacionDeleteDialogComponent,
-        EstadoOperacionDeletePopupComponent
+        EstadoOperacionUpdateComponent
     ],
-    entryComponents: [
-        EstadoOperacionComponent,
-        EstadoOperacionUpdateComponent,
-        EstadoOperacionDeleteDialogComponent,
-        EstadoOperacionDeletePopupComponent
-    ],
+    entryComponents: [EstadoOperacionComponent, EstadoOperacionUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetEstadoOperacionModule {}

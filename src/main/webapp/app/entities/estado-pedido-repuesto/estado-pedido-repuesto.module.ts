@@ -6,8 +6,8 @@ import {
     EstadoPedidoRepuestoComponent,
     EstadoPedidoRepuestoDetailComponent,
     EstadoPedidoRepuestoUpdateComponent,
-    EstadoPedidoRepuestoDeletePopupComponent,
     EstadoPedidoRepuestoDeleteDialogComponent,
+    EstadoPedidoRepuestoDeletePopupComponent,
     estadoPedidoRepuestoRoute,
     estadoPedidoRepuestoPopupRoute
 } from './';
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...estadoPedidoRepuestoRoute, ...estadoPedidoRepuestoPopu
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EstadoPedidoRepuestoComponent,
+        EstadoPedidoRepuestoDeleteDialogComponent,
+        EstadoPedidoRepuestoDeletePopupComponent,
         EstadoPedidoRepuestoDetailComponent,
-        EstadoPedidoRepuestoUpdateComponent,
-        EstadoPedidoRepuestoDeleteDialogComponent,
-        EstadoPedidoRepuestoDeletePopupComponent
+        EstadoPedidoRepuestoUpdateComponent
     ],
-    entryComponents: [
-        EstadoPedidoRepuestoComponent,
-        EstadoPedidoRepuestoUpdateComponent,
-        EstadoPedidoRepuestoDeleteDialogComponent,
-        EstadoPedidoRepuestoDeletePopupComponent
-    ],
+    entryComponents: [EstadoPedidoRepuestoComponent, EstadoPedidoRepuestoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetEstadoPedidoRepuestoModule {}

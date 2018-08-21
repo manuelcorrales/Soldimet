@@ -7,8 +7,8 @@ import {
     PersonaComponent,
     PersonaDetailComponent,
     PersonaUpdateComponent,
-    PersonaDeletePopupComponent,
     PersonaDeleteDialogComponent,
+    PersonaDeletePopupComponent,
     personaRoute,
     personaPopupRoute
 } from './';
@@ -19,12 +19,12 @@ const ENTITY_STATES = [...personaRoute, ...personaPopupRoute];
     imports: [SoldimetSharedModule, SoldimetAdminModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         PersonaComponent,
-        PersonaDetailComponent,
-        PersonaUpdateComponent,
         PersonaDeleteDialogComponent,
-        PersonaDeletePopupComponent
+        PersonaDeletePopupComponent,
+        PersonaDetailComponent,
+        PersonaUpdateComponent
     ],
-    entryComponents: [PersonaComponent, PersonaUpdateComponent, PersonaDeleteDialogComponent, PersonaDeletePopupComponent],
+    entryComponents: [PersonaComponent, PersonaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPersonaModule {}

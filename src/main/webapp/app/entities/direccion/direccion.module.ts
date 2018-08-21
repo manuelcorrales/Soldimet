@@ -6,9 +6,9 @@ import {
     DireccionComponent,
     DireccionDetailComponent,
     DireccionUpdateComponent,
-    DireccionDeletePopupComponent,
     DireccionDeleteDialogComponent,
     direccionRoute,
+    DireccionDeletePopupComponent,
     direccionPopupRoute
 } from './';
 
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...direccionRoute, ...direccionPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         DireccionComponent,
+        DireccionDeletePopupComponent,
         DireccionDetailComponent,
-        DireccionUpdateComponent,
         DireccionDeleteDialogComponent,
-        DireccionDeletePopupComponent
+        DireccionUpdateComponent
     ],
-    entryComponents: [DireccionComponent, DireccionUpdateComponent, DireccionDeleteDialogComponent, DireccionDeletePopupComponent],
+    entryComponents: [DireccionComponent, DireccionUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetDireccionModule {}

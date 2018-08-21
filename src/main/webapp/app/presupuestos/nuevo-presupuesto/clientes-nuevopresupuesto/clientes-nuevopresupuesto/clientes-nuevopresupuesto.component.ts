@@ -49,7 +49,7 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
 
     buscarTodoscliente() {
         this.buscandoClientes = true;
-        this._presupuestosService.findAllClientes().subscribe((res: Cliente[]) => {
+        this._presupuestosService.findAllActiveClientes().subscribe((res: Cliente[]) => {
             (this.buscandoClientes = false), (this.clientes = [...res]);
         });
     }

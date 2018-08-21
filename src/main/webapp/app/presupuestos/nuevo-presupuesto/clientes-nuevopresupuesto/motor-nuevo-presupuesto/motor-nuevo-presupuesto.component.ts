@@ -1,7 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { TipoParteMotor } from '../../../../entities/tipo-parte-motor/tipo-parte-motor.model';
 import { PresupuestosService } from '../../../presupuestos.service';
-import { DetallePresupuesto } from '../../../../entities/detalle-presupuesto/detalle-presupuesto.model';
 import { JhiEventManager } from 'ng-jhipster';
 import { DetallePresupuestoService } from '../../../../entities/detalle-presupuesto';
 import { Subscription } from 'rxjs';
@@ -9,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Cilindrada } from 'app/shared/model/cilindrada.model';
 import { Motor } from 'app/shared/model/motor.model';
 import { Aplicacion } from 'app/shared/model/aplicacion.model';
+import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 
 @Component({
     selector: 'jhi-motor-nuevo-presupuesto',

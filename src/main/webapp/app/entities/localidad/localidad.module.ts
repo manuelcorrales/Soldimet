@@ -6,8 +6,8 @@ import {
     LocalidadComponent,
     LocalidadDetailComponent,
     LocalidadUpdateComponent,
-    LocalidadDeletePopupComponent,
     LocalidadDeleteDialogComponent,
+    LocalidadDeletePopupComponent,
     localidadRoute,
     localidadPopupRoute
 } from './';
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...localidadRoute, ...localidadPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         LocalidadComponent,
-        LocalidadDetailComponent,
-        LocalidadUpdateComponent,
         LocalidadDeleteDialogComponent,
-        LocalidadDeletePopupComponent
+        LocalidadDeletePopupComponent,
+        LocalidadDetailComponent,
+        LocalidadUpdateComponent
     ],
-    entryComponents: [LocalidadComponent, LocalidadUpdateComponent, LocalidadDeleteDialogComponent, LocalidadDeletePopupComponent],
+    entryComponents: [LocalidadComponent, LocalidadUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetLocalidadModule {}

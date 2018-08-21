@@ -7,9 +7,9 @@ import {
     ArticuloDetailComponent,
     ArticuloUpdateComponent,
     ArticuloDeletePopupComponent,
-    ArticuloDeleteDialogComponent,
     articuloRoute,
-    articuloPopupRoute
+    articuloPopupRoute,
+    ArticuloDeleteDialogComponent
 } from './';
 
 const ENTITY_STATES = [...articuloRoute, ...articuloPopupRoute];
@@ -19,11 +19,11 @@ const ENTITY_STATES = [...articuloRoute, ...articuloPopupRoute];
     declarations: [
         ArticuloComponent,
         ArticuloDetailComponent,
+        ArticuloDeletePopupComponent,
         ArticuloUpdateComponent,
-        ArticuloDeleteDialogComponent,
-        ArticuloDeletePopupComponent
+        ArticuloDeleteDialogComponent
     ],
-    entryComponents: [ArticuloComponent, ArticuloUpdateComponent, ArticuloDeleteDialogComponent, ArticuloDeletePopupComponent],
+    entryComponents: [ArticuloComponent, ArticuloUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetArticuloModule {}

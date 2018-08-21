@@ -6,24 +6,17 @@ import {
     AplicacionComponent,
     AplicacionDetailComponent,
     AplicacionUpdateComponent,
-    AplicacionDeletePopupComponent,
-    AplicacionDeleteDialogComponent,
     aplicacionRoute,
-    aplicacionPopupRoute
+    aplicacionPopupRoute,
+    AplicacionDeletePopupComponent
 } from './';
 
 const ENTITY_STATES = [...aplicacionRoute, ...aplicacionPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        AplicacionComponent,
-        AplicacionDetailComponent,
-        AplicacionUpdateComponent,
-        AplicacionDeleteDialogComponent,
-        AplicacionDeletePopupComponent
-    ],
-    entryComponents: [AplicacionComponent, AplicacionUpdateComponent, AplicacionDeleteDialogComponent, AplicacionDeletePopupComponent],
+    declarations: [AplicacionComponent, AplicacionDetailComponent, AplicacionUpdateComponent, AplicacionDeletePopupComponent],
+    entryComponents: [AplicacionComponent, AplicacionUpdateComponent, AplicacionDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetAplicacionModule {}

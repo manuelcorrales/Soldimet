@@ -18,6 +18,7 @@ import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.DetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
+import soldimet.domain.EstadoPersona;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.ListaPrecioDesdeHasta;
 import soldimet.domain.ListaPrecioRectificacionCRAM;
@@ -36,6 +37,7 @@ import soldimet.repository.CilindradaRepository;
 import soldimet.repository.ClienteRepository;
 import soldimet.repository.EstadoCobranzaOperacionRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
+import soldimet.repository.EstadoPersonaRepository;
 import soldimet.repository.EstadoPresupuestoRepository;
 import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
 import soldimet.repository.MotorRepository;
@@ -94,6 +96,9 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private PersonaRepository personaRepository;
+
+    @Autowired
+    private EstadoPersonaRepository estadoPersonaRepository;
 
     @Autowired
     private EstadoCobranzaOperacionRepository estadoCobranzaOperacionRepository;
@@ -241,7 +246,9 @@ public class ExpertoPresupuesto {
     }
 
     public List<Cliente> buscarTodosLosClientes() {
-        return clienteRepository.findAll();
+        EstadoPersona estadoClienteActivo = estadoPersonaRepository.findByNombreEstado("Alta");
+        List<Persona> personas = personaRepository.findByEstadoPersona(estadoClienteActivo);
+        return clienteRepository.findClienteByPersonaIn(personas);
     }
 
     public EstadoPresupuesto buscarEstadoPresupuestoCreado() {

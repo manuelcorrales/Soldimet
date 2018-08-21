@@ -1,10 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
-import { PresupuestoService } from '../entities/presupuesto/presupuesto.service';
-import { Page } from '../dto/page/Page';
-import { ITEMS_PER_PAGE } from '../shared/constants/pagination.constants';
-import { FILTRO_PRESUPUESTO } from '../shared/constants/filter.constants';
-import { DT_OPTIONS } from '../shared/constants/datatable.configuration';
-import { Subject } from 'rxjs/Subject';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { DtoPresupuestoCabeceraComponent } from '../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { PresupuestosService } from './presupuestos.service';
 import { DatePipe } from '@angular/common';
@@ -20,14 +14,10 @@ export class PresupuestosComponent implements OnInit {
 
     presupuestos: DtoPresupuestoCabeceraComponent[] = [];
 
-    constructor(
-        private _presupuestoService: PresupuestoService,
-        private _presupuestosService: PresupuestosService,
-        private datePipe: DatePipe
-    ) {}
+    constructor(private _presupuestosService: PresupuestosService) {}
 
     ngOnInit() {
-        this._presupuestosService.findPresupuestoCabecera().subscribe(presupuestos => {
+        this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
             this.presupuestos.push(...presupuestos);
         });
     }

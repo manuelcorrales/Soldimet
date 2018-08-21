@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Cliente } from '../entities/cliente/cliente.model';
 import { ResponseWrapper } from '../shared/model/response-wrapper.model';
 import { ClienteService } from '../entities/cliente/cliente.service';
 import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
-import { Principal } from '../shared/auth/principal.service';
 import { Subscription } from 'rxjs/Subscription';
+import { Cliente, ICliente } from 'app/shared/model/cliente.model';
+import { HttpResponse, HttpErrorResponse } from '../../../../../node_modules/@angular/common/http';
+import { Principal } from 'app/core';
 
 @Component({
     selector: 'jhi-clientes',
@@ -12,7 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
     styles: []
 })
 export class ClientesComponent implements OnInit, OnDestroy {
-    clientes: Cliente[];
+    clientes: ICliente[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
@@ -25,10 +26,10 @@ export class ClientesComponent implements OnInit, OnDestroy {
 
     loadAll() {
         this.clienteService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.clientes = res.json;
+            (res: HttpResponse<ICliente[]>) => {
+                this.clientes = res.body;
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
     ngOnInit() {

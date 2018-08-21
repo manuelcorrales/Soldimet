@@ -6,8 +6,8 @@ import {
     CilindradaComponent,
     CilindradaDetailComponent,
     CilindradaUpdateComponent,
-    CilindradaDeletePopupComponent,
     CilindradaDeleteDialogComponent,
+    CilindradaDeletePopupComponent,
     cilindradaRoute,
     cilindradaPopupRoute
 } from './';
@@ -23,7 +23,7 @@ const ENTITY_STATES = [...cilindradaRoute, ...cilindradaPopupRoute];
         CilindradaDeleteDialogComponent,
         CilindradaDeletePopupComponent
     ],
-    entryComponents: [CilindradaComponent, CilindradaUpdateComponent, CilindradaDeleteDialogComponent, CilindradaDeletePopupComponent],
+    entryComponents: [CilindradaComponent, CilindradaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetCilindradaModule {}

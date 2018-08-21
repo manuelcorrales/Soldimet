@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, ViewChildren, QueryList, ViewChild, Output } from '@angular/core';
-import { DetallePresupuesto } from '../../entities/detalle-presupuesto/detalle-presupuesto.model';
-import { TipoParteMotor } from '../../entities/tipo-parte-motor/tipo-parte-motor.model';
 import { PresupuestosService } from '../presupuestos.service';
 import { PresupuestoService } from '../../entities/presupuesto';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
@@ -12,6 +10,8 @@ import { Subscription, Observable } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EstadoPresupuestoService } from '../../entities/estado-presupuesto';
 import { Presupuesto } from 'app/shared/model/presupuesto.model';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
+import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 
 @Component({
     selector: 'jhi-nuevo-presupuesto',

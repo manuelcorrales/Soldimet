@@ -6,8 +6,8 @@ import {
     OperacionComponent,
     OperacionDetailComponent,
     OperacionUpdateComponent,
-    OperacionDeletePopupComponent,
     OperacionDeleteDialogComponent,
+    OperacionDeletePopupComponent,
     operacionRoute,
     operacionPopupRoute
 } from './';
@@ -19,11 +19,11 @@ const ENTITY_STATES = [...operacionRoute, ...operacionPopupRoute];
     declarations: [
         OperacionComponent,
         OperacionDetailComponent,
-        OperacionUpdateComponent,
         OperacionDeleteDialogComponent,
-        OperacionDeletePopupComponent
+        OperacionDeletePopupComponent,
+        OperacionUpdateComponent
     ],
-    entryComponents: [OperacionComponent, OperacionUpdateComponent, OperacionDeleteDialogComponent, OperacionDeletePopupComponent],
+    entryComponents: [OperacionComponent, OperacionUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetOperacionModule {}

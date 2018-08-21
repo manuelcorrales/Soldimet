@@ -6,9 +6,9 @@ import {
     DetallePresupuestoComponent,
     DetallePresupuestoDetailComponent,
     DetallePresupuestoUpdateComponent,
-    DetallePresupuestoDeletePopupComponent,
     DetallePresupuestoDeleteDialogComponent,
     detallePresupuestoRoute,
+    DetallePresupuestoDeletePopupComponent,
     detallePresupuestoPopupRoute
 } from './';
 
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...detallePresupuestoRoute, ...detallePresupuestoPopupRou
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         DetallePresupuestoComponent,
+        DetallePresupuestoDeletePopupComponent,
         DetallePresupuestoDetailComponent,
-        DetallePresupuestoUpdateComponent,
         DetallePresupuestoDeleteDialogComponent,
-        DetallePresupuestoDeletePopupComponent
+        DetallePresupuestoUpdateComponent
     ],
-    entryComponents: [
-        DetallePresupuestoComponent,
-        DetallePresupuestoUpdateComponent,
-        DetallePresupuestoDeleteDialogComponent,
-        DetallePresupuestoDeletePopupComponent
-    ],
+    entryComponents: [DetallePresupuestoComponent, DetallePresupuestoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetDetallePresupuestoModule {}

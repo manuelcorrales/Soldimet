@@ -7,7 +7,6 @@ import {
     EstadoCobranzaOperacionDetailComponent,
     EstadoCobranzaOperacionUpdateComponent,
     EstadoCobranzaOperacionDeletePopupComponent,
-    EstadoCobranzaOperacionDeleteDialogComponent,
     estadoCobranzaOperacionRoute,
     estadoCobranzaOperacionPopupRoute
 } from './';
@@ -19,16 +18,10 @@ const ENTITY_STATES = [...estadoCobranzaOperacionRoute, ...estadoCobranzaOperaci
     declarations: [
         EstadoCobranzaOperacionComponent,
         EstadoCobranzaOperacionDetailComponent,
-        EstadoCobranzaOperacionUpdateComponent,
-        EstadoCobranzaOperacionDeleteDialogComponent,
-        EstadoCobranzaOperacionDeletePopupComponent
+        EstadoCobranzaOperacionDeletePopupComponent,
+        EstadoCobranzaOperacionUpdateComponent
     ],
-    entryComponents: [
-        EstadoCobranzaOperacionComponent,
-        EstadoCobranzaOperacionUpdateComponent,
-        EstadoCobranzaOperacionDeleteDialogComponent,
-        EstadoCobranzaOperacionDeletePopupComponent
-    ],
+    entryComponents: [EstadoCobranzaOperacionComponent, EstadoCobranzaOperacionUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetEstadoCobranzaOperacionModule {}

@@ -6,8 +6,8 @@ import {
     TipoMovimientoComponent,
     TipoMovimientoDetailComponent,
     TipoMovimientoUpdateComponent,
-    TipoMovimientoDeletePopupComponent,
     TipoMovimientoDeleteDialogComponent,
+    TipoMovimientoDeletePopupComponent,
     tipoMovimientoRoute,
     tipoMovimientoPopupRoute
 } from './';
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...tipoMovimientoRoute, ...tipoMovimientoPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         TipoMovimientoComponent,
+        TipoMovimientoDeleteDialogComponent,
+        TipoMovimientoDeletePopupComponent,
         TipoMovimientoDetailComponent,
-        TipoMovimientoUpdateComponent,
-        TipoMovimientoDeleteDialogComponent,
-        TipoMovimientoDeletePopupComponent
+        TipoMovimientoUpdateComponent
     ],
-    entryComponents: [
-        TipoMovimientoComponent,
-        TipoMovimientoUpdateComponent,
-        TipoMovimientoDeleteDialogComponent,
-        TipoMovimientoDeletePopupComponent
-    ],
+    entryComponents: [TipoMovimientoComponent, TipoMovimientoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetTipoMovimientoModule {}

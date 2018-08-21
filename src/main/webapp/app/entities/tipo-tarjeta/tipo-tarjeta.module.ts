@@ -2,15 +2,11 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared';
+import { TipoTarjetaComponent, TipoTarjetaDetailComponent, TipoTarjetaUpdateComponent, tipoTarjetaRoute, tipoTarjetaPopupRoute } from './';
 import {
-    TipoTarjetaComponent,
-    TipoTarjetaDetailComponent,
-    TipoTarjetaUpdateComponent,
-    TipoTarjetaDeletePopupComponent,
     TipoTarjetaDeleteDialogComponent,
-    tipoTarjetaRoute,
-    tipoTarjetaPopupRoute
-} from './';
+    TipoTarjetaDeletePopupComponent
+} from 'app/entities/tipo-tarjeta/tipo-tarjeta-delete-dialog.component';
 
 const ENTITY_STATES = [...tipoTarjetaRoute, ...tipoTarjetaPopupRoute];
 
@@ -19,11 +15,11 @@ const ENTITY_STATES = [...tipoTarjetaRoute, ...tipoTarjetaPopupRoute];
     declarations: [
         TipoTarjetaComponent,
         TipoTarjetaDetailComponent,
-        TipoTarjetaUpdateComponent,
         TipoTarjetaDeleteDialogComponent,
-        TipoTarjetaDeletePopupComponent
+        TipoTarjetaDeletePopupComponent,
+        TipoTarjetaUpdateComponent
     ],
-    entryComponents: [TipoTarjetaComponent, TipoTarjetaUpdateComponent, TipoTarjetaDeleteDialogComponent, TipoTarjetaDeletePopupComponent],
+    entryComponents: [TipoTarjetaComponent, TipoTarjetaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetTipoTarjetaModule {}

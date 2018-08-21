@@ -6,8 +6,8 @@ import {
     TipoRepuestoComponent,
     TipoRepuestoDetailComponent,
     TipoRepuestoUpdateComponent,
-    TipoRepuestoDeletePopupComponent,
     TipoRepuestoDeleteDialogComponent,
+    TipoRepuestoDeletePopupComponent,
     tipoRepuestoRoute,
     tipoRepuestoPopupRoute
 } from './';
@@ -19,16 +19,11 @@ const ENTITY_STATES = [...tipoRepuestoRoute, ...tipoRepuestoPopupRoute];
     declarations: [
         TipoRepuestoComponent,
         TipoRepuestoDetailComponent,
-        TipoRepuestoUpdateComponent,
         TipoRepuestoDeleteDialogComponent,
-        TipoRepuestoDeletePopupComponent
+        TipoRepuestoDeletePopupComponent,
+        TipoRepuestoUpdateComponent
     ],
-    entryComponents: [
-        TipoRepuestoComponent,
-        TipoRepuestoUpdateComponent,
-        TipoRepuestoDeleteDialogComponent,
-        TipoRepuestoDeletePopupComponent
-    ],
+    entryComponents: [TipoRepuestoComponent, TipoRepuestoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetTipoRepuestoModule {}

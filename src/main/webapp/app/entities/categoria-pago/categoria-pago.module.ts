@@ -6,8 +6,8 @@ import {
     CategoriaPagoComponent,
     CategoriaPagoDetailComponent,
     CategoriaPagoUpdateComponent,
-    CategoriaPagoDeletePopupComponent,
     CategoriaPagoDeleteDialogComponent,
+    CategoriaPagoDeletePopupComponent,
     categoriaPagoRoute,
     categoriaPagoPopupRoute
 } from './';
@@ -23,12 +23,7 @@ const ENTITY_STATES = [...categoriaPagoRoute, ...categoriaPagoPopupRoute];
         CategoriaPagoDeleteDialogComponent,
         CategoriaPagoDeletePopupComponent
     ],
-    entryComponents: [
-        CategoriaPagoComponent,
-        CategoriaPagoUpdateComponent,
-        CategoriaPagoDeleteDialogComponent,
-        CategoriaPagoDeletePopupComponent
-    ],
+    entryComponents: [CategoriaPagoComponent, CategoriaPagoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetCategoriaPagoModule {}

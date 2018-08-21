@@ -6,8 +6,8 @@ import {
     CobranzaRepuestoComponent,
     CobranzaRepuestoDetailComponent,
     CobranzaRepuestoUpdateComponent,
-    CobranzaRepuestoDeletePopupComponent,
     CobranzaRepuestoDeleteDialogComponent,
+    CobranzaRepuestoDeletePopupComponent,
     cobranzaRepuestoRoute,
     cobranzaRepuestoPopupRoute
 } from './';
@@ -19,16 +19,11 @@ const ENTITY_STATES = [...cobranzaRepuestoRoute, ...cobranzaRepuestoPopupRoute];
     declarations: [
         CobranzaRepuestoComponent,
         CobranzaRepuestoDetailComponent,
-        CobranzaRepuestoUpdateComponent,
+        CobranzaRepuestoDeletePopupComponent,
         CobranzaRepuestoDeleteDialogComponent,
-        CobranzaRepuestoDeletePopupComponent
+        CobranzaRepuestoUpdateComponent
     ],
-    entryComponents: [
-        CobranzaRepuestoComponent,
-        CobranzaRepuestoUpdateComponent,
-        CobranzaRepuestoDeleteDialogComponent,
-        CobranzaRepuestoDeletePopupComponent
-    ],
+    entryComponents: [CobranzaRepuestoComponent, CobranzaRepuestoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetCobranzaRepuestoModule {}

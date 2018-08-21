@@ -6,8 +6,8 @@ import {
     ClienteComponent,
     ClienteDetailComponent,
     ClienteUpdateComponent,
-    ClienteDeletePopupComponent,
     ClienteDeleteDialogComponent,
+    ClienteDeletePopupComponent,
     clienteRoute,
     clientePopupRoute
 } from './';
@@ -19,11 +19,11 @@ const ENTITY_STATES = [...clienteRoute, ...clientePopupRoute];
     declarations: [
         ClienteComponent,
         ClienteDetailComponent,
+        ClienteDeletePopupComponent,
         ClienteUpdateComponent,
-        ClienteDeleteDialogComponent,
-        ClienteDeletePopupComponent
+        ClienteDeleteDialogComponent
     ],
-    entryComponents: [ClienteComponent, ClienteUpdateComponent, ClienteDeleteDialogComponent, ClienteDeletePopupComponent],
+    entryComponents: [ClienteComponent, ClienteUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetClienteModule {}

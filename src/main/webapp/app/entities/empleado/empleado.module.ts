@@ -6,9 +6,9 @@ import {
     EmpleadoComponent,
     EmpleadoDetailComponent,
     EmpleadoUpdateComponent,
-    EmpleadoDeletePopupComponent,
     EmpleadoDeleteDialogComponent,
     empleadoRoute,
+    EmpleadoDeletePopupComponent,
     empleadoPopupRoute
 } from './';
 
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...empleadoRoute, ...empleadoPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EmpleadoComponent,
+        EmpleadoDeletePopupComponent,
         EmpleadoDetailComponent,
-        EmpleadoUpdateComponent,
         EmpleadoDeleteDialogComponent,
-        EmpleadoDeletePopupComponent
+        EmpleadoUpdateComponent
     ],
-    entryComponents: [EmpleadoComponent, EmpleadoUpdateComponent, EmpleadoDeleteDialogComponent, EmpleadoDeletePopupComponent],
+    entryComponents: [EmpleadoComponent, EmpleadoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetEmpleadoModule {}

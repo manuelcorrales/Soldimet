@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import { Cliente, ClienteService } from '../../entities/cliente';
+import { ClienteService } from '../../entities/cliente';
 import { ClienteBorrarPopupService } from '../modal-borrar-cliente/cliente-modal-popup.service';
+import { Cliente } from 'app/shared/model/cliente.model';
 
 @Component({
     selector: 'jhi-cliente-borrar-dialog',

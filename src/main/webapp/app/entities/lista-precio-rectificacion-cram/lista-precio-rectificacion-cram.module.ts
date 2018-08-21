@@ -6,8 +6,8 @@ import {
     ListaPrecioRectificacionCRAMComponent,
     ListaPrecioRectificacionCRAMDetailComponent,
     ListaPrecioRectificacionCRAMUpdateComponent,
-    ListaPrecioRectificacionCRAMDeletePopupComponent,
     ListaPrecioRectificacionCRAMDeleteDialogComponent,
+    ListaPrecioRectificacionCRAMDeletePopupComponent,
     listaPrecioRectificacionCRAMRoute,
     listaPrecioRectificacionCRAMPopupRoute
 } from './';
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...listaPrecioRectificacionCRAMRoute, ...listaPrecioRecti
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         ListaPrecioRectificacionCRAMComponent,
+        ListaPrecioRectificacionCRAMDeleteDialogComponent,
+        ListaPrecioRectificacionCRAMDeletePopupComponent,
         ListaPrecioRectificacionCRAMDetailComponent,
-        ListaPrecioRectificacionCRAMUpdateComponent,
-        ListaPrecioRectificacionCRAMDeleteDialogComponent,
-        ListaPrecioRectificacionCRAMDeletePopupComponent
+        ListaPrecioRectificacionCRAMUpdateComponent
     ],
-    entryComponents: [
-        ListaPrecioRectificacionCRAMComponent,
-        ListaPrecioRectificacionCRAMUpdateComponent,
-        ListaPrecioRectificacionCRAMDeleteDialogComponent,
-        ListaPrecioRectificacionCRAMDeletePopupComponent
-    ],
+    entryComponents: [ListaPrecioRectificacionCRAMComponent, ListaPrecioRectificacionCRAMUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetListaPrecioRectificacionCRAMModule {}

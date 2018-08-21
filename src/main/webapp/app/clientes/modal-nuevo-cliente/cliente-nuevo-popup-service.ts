@@ -1,9 +1,10 @@
 import { Component, Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { ClienteService, Cliente } from '../../entities/cliente';
-import { Persona } from '../../entities/persona';
-import { Direccion } from '../../entities/direccion';
+import { Cliente } from 'app/shared/model/cliente.model';
+import { Persona } from 'app/shared/model/persona.model';
+import { Direccion } from 'app/shared/model/direccion.model';
+import { ClienteService } from 'app/entities/cliente';
 
 @Injectable()
 export class ClienteModalPopupService {
@@ -21,7 +22,7 @@ export class ClienteModalPopupService {
             }
             if (id) {
                 this.clienteService.find(id).subscribe(cliente => {
-                    this.ngbModalRef = this.clienteModalRef(component, cliente);
+                    this.ngbModalRef = this.clienteModalRef(component, cliente.body);
                     resolve(this.ngbModalRef);
                 });
             } else {

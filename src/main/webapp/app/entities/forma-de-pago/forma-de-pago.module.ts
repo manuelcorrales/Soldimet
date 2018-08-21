@@ -6,8 +6,8 @@ import {
     FormaDePagoComponent,
     FormaDePagoDetailComponent,
     FormaDePagoUpdateComponent,
-    FormaDePagoDeletePopupComponent,
     FormaDePagoDeleteDialogComponent,
+    FormaDePagoDeletePopupComponent,
     formaDePagoRoute,
     formaDePagoPopupRoute
 } from './';
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...formaDePagoRoute, ...formaDePagoPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         FormaDePagoComponent,
-        FormaDePagoDetailComponent,
-        FormaDePagoUpdateComponent,
         FormaDePagoDeleteDialogComponent,
-        FormaDePagoDeletePopupComponent
+        FormaDePagoDeletePopupComponent,
+        FormaDePagoDetailComponent,
+        FormaDePagoUpdateComponent
     ],
-    entryComponents: [FormaDePagoComponent, FormaDePagoUpdateComponent, FormaDePagoDeleteDialogComponent, FormaDePagoDeletePopupComponent],
+    entryComponents: [FormaDePagoComponent, FormaDePagoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetFormaDePagoModule {}

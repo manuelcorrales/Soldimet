@@ -6,8 +6,8 @@ import {
     PagoTarjetaComponent,
     PagoTarjetaDetailComponent,
     PagoTarjetaUpdateComponent,
-    PagoTarjetaDeletePopupComponent,
     PagoTarjetaDeleteDialogComponent,
+    PagoTarjetaDeletePopupComponent,
     pagoTarjetaRoute,
     pagoTarjetaPopupRoute
 } from './';
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...pagoTarjetaRoute, ...pagoTarjetaPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         PagoTarjetaComponent,
-        PagoTarjetaDetailComponent,
-        PagoTarjetaUpdateComponent,
         PagoTarjetaDeleteDialogComponent,
-        PagoTarjetaDeletePopupComponent
+        PagoTarjetaDeletePopupComponent,
+        PagoTarjetaDetailComponent,
+        PagoTarjetaUpdateComponent
     ],
-    entryComponents: [PagoTarjetaComponent, PagoTarjetaUpdateComponent, PagoTarjetaDeleteDialogComponent, PagoTarjetaDeletePopupComponent],
+    entryComponents: [PagoTarjetaComponent, PagoTarjetaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPagoTarjetaModule {}

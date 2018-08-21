@@ -1,7 +1,8 @@
 import { Component, Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { ClienteService, Cliente } from '../../entities/cliente';
+import { ClienteService } from '../../entities/cliente';
+import { Cliente } from 'app/shared/model/cliente.model';
 
 @Injectable()
 export class ClienteBorrarPopupService {
@@ -19,7 +20,7 @@ export class ClienteBorrarPopupService {
             }
             if (id) {
                 this.clienteService.find(id).subscribe(cliente => {
-                    this.ngbModalRef = this.clienteModalRef(component, cliente);
+                    this.ngbModalRef = this.clienteModalRef(component, cliente.body);
                     resolve(this.ngbModalRef);
                 });
             } else {

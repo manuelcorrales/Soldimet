@@ -6,8 +6,8 @@ import {
     HistorialPrecioComponent,
     HistorialPrecioDetailComponent,
     HistorialPrecioUpdateComponent,
-    HistorialPrecioDeletePopupComponent,
     HistorialPrecioDeleteDialogComponent,
+    HistorialPrecioDeletePopupComponent,
     historialPrecioRoute,
     historialPrecioPopupRoute
 } from './';
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...historialPrecioRoute, ...historialPrecioPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         HistorialPrecioComponent,
+        HistorialPrecioDeleteDialogComponent,
+        HistorialPrecioDeletePopupComponent,
         HistorialPrecioDetailComponent,
-        HistorialPrecioUpdateComponent,
-        HistorialPrecioDeleteDialogComponent,
-        HistorialPrecioDeletePopupComponent
+        HistorialPrecioUpdateComponent
     ],
-    entryComponents: [
-        HistorialPrecioComponent,
-        HistorialPrecioUpdateComponent,
-        HistorialPrecioDeleteDialogComponent,
-        HistorialPrecioDeletePopupComponent
-    ],
+    entryComponents: [HistorialPrecioComponent, HistorialPrecioUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetHistorialPrecioModule {}

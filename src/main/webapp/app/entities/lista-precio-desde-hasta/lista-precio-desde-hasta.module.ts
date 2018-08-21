@@ -5,9 +5,9 @@ import { SoldimetSharedModule } from 'app/shared';
 import {
     ListaPrecioDesdeHastaComponent,
     ListaPrecioDesdeHastaDetailComponent,
-    ListaPrecioDesdeHastaUpdateComponent,
-    ListaPrecioDesdeHastaDeletePopupComponent,
     ListaPrecioDesdeHastaDeleteDialogComponent,
+    ListaPrecioDesdeHastaDeletePopupComponent,
+    ListaPrecioDesdeHastaUpdateComponent,
     listaPrecioDesdeHastaRoute,
     listaPrecioDesdeHastaPopupRoute
 } from './';
@@ -18,17 +18,12 @@ const ENTITY_STATES = [...listaPrecioDesdeHastaRoute, ...listaPrecioDesdeHastaPo
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         ListaPrecioDesdeHastaComponent,
+        ListaPrecioDesdeHastaDeleteDialogComponent,
+        ListaPrecioDesdeHastaDeletePopupComponent,
         ListaPrecioDesdeHastaDetailComponent,
-        ListaPrecioDesdeHastaUpdateComponent,
-        ListaPrecioDesdeHastaDeleteDialogComponent,
-        ListaPrecioDesdeHastaDeletePopupComponent
+        ListaPrecioDesdeHastaUpdateComponent
     ],
-    entryComponents: [
-        ListaPrecioDesdeHastaComponent,
-        ListaPrecioDesdeHastaUpdateComponent,
-        ListaPrecioDesdeHastaDeleteDialogComponent,
-        ListaPrecioDesdeHastaDeletePopupComponent
-    ],
+    entryComponents: [ListaPrecioDesdeHastaComponent, ListaPrecioDesdeHastaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetListaPrecioDesdeHastaModule {}

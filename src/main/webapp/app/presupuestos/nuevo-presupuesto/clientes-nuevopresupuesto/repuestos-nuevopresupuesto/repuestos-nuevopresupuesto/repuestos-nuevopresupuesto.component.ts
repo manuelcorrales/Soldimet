@@ -1,9 +1,9 @@
 import { Component, OnInit, Output, Input, ViewChildren, QueryList, EventEmitter } from '@angular/core';
 import { PresupuestosService } from '../../../../presupuestos.service';
 import { RepuestoPrecioComponent } from './repuesto_precio/repuesto-precio.component';
-import { DetallePresupuesto } from 'app/entities/detalle-presupuesto/detalle-presupuesto.model';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 
 @Component({
     selector: 'jhi-repuestos-nuevopresupuesto',

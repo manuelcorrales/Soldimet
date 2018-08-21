@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { CobranzaRepuesto } from 'app/entities/cobranza-repuesto/cobranza-repuesto.model';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
+import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 
 @Component({
     selector: 'jhi-repuesto-precio',

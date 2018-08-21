@@ -6,8 +6,8 @@ import {
     ProveedorComponent,
     ProveedorDetailComponent,
     ProveedorUpdateComponent,
-    ProveedorDeletePopupComponent,
     ProveedorDeleteDialogComponent,
+    ProveedorDeletePopupComponent,
     proveedorRoute,
     proveedorPopupRoute
 } from './';
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...proveedorRoute, ...proveedorPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         ProveedorComponent,
-        ProveedorDetailComponent,
-        ProveedorUpdateComponent,
         ProveedorDeleteDialogComponent,
-        ProveedorDeletePopupComponent
+        ProveedorDeletePopupComponent,
+        ProveedorDetailComponent,
+        ProveedorUpdateComponent
     ],
-    entryComponents: [ProveedorComponent, ProveedorUpdateComponent, ProveedorDeleteDialogComponent, ProveedorDeletePopupComponent],
+    entryComponents: [ProveedorComponent, ProveedorUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetProveedorModule {}

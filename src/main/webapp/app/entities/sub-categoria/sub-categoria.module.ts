@@ -6,9 +6,8 @@ import {
     SubCategoriaComponent,
     SubCategoriaDetailComponent,
     SubCategoriaUpdateComponent,
-    SubCategoriaDeletePopupComponent,
-    SubCategoriaDeleteDialogComponent,
     subCategoriaRoute,
+    SubCategoriaDeletePopupComponent,
     subCategoriaPopupRoute
 } from './';
 
@@ -16,19 +15,8 @@ const ENTITY_STATES = [...subCategoriaRoute, ...subCategoriaPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        SubCategoriaComponent,
-        SubCategoriaDetailComponent,
-        SubCategoriaUpdateComponent,
-        SubCategoriaDeleteDialogComponent,
-        SubCategoriaDeletePopupComponent
-    ],
-    entryComponents: [
-        SubCategoriaComponent,
-        SubCategoriaUpdateComponent,
-        SubCategoriaDeleteDialogComponent,
-        SubCategoriaDeletePopupComponent
-    ],
+    declarations: [SubCategoriaComponent, SubCategoriaDetailComponent, SubCategoriaDeletePopupComponent, SubCategoriaUpdateComponent],
+    entryComponents: [SubCategoriaComponent, SubCategoriaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetSubCategoriaModule {}

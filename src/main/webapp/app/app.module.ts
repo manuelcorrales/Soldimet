@@ -16,6 +16,11 @@ import { SoldimetAppRoutingModule } from './app-routing.module';
 import { SoldimetHomeModule } from './home/home.module';
 import { SoldimetAccountModule } from './account/account.module';
 import { SoldimetEntityModule } from './entities/entity.module';
+import { PresupuestosModule } from './presupuestos';
+import { OperacionesModule } from './operaciones';
+import { PedidosModule } from './pedidos';
+import { ClientesModule } from './clientes';
+import { CajaModule } from './caja';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
 
@@ -28,7 +33,12 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         SoldimetCoreModule,
         SoldimetHomeModule,
         SoldimetAccountModule,
-        SoldimetEntityModule
+        SoldimetEntityModule,
+        PresupuestosModule,
+        OperacionesModule,
+        PedidosModule,
+        ClientesModule,
+        CajaModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],

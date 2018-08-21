@@ -6,8 +6,8 @@ import {
     TarjetaComponent,
     TarjetaDetailComponent,
     TarjetaUpdateComponent,
-    TarjetaDeletePopupComponent,
     TarjetaDeleteDialogComponent,
+    TarjetaDeletePopupComponent,
     tarjetaRoute,
     tarjetaPopupRoute
 } from './';
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...tarjetaRoute, ...tarjetaPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         TarjetaComponent,
-        TarjetaDetailComponent,
-        TarjetaUpdateComponent,
         TarjetaDeleteDialogComponent,
-        TarjetaDeletePopupComponent
+        TarjetaDeletePopupComponent,
+        TarjetaDetailComponent,
+        TarjetaUpdateComponent
     ],
-    entryComponents: [TarjetaComponent, TarjetaUpdateComponent, TarjetaDeleteDialogComponent, TarjetaDeletePopupComponent],
+    entryComponents: [TarjetaComponent, TarjetaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetTarjetaModule {}

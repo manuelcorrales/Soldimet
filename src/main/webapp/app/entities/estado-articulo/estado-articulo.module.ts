@@ -6,9 +6,8 @@ import {
     EstadoArticuloComponent,
     EstadoArticuloDetailComponent,
     EstadoArticuloUpdateComponent,
-    EstadoArticuloDeletePopupComponent,
-    EstadoArticuloDeleteDialogComponent,
     estadoArticuloRoute,
+    EstadoArticuloDeletePopupComponent,
     estadoArticuloPopupRoute
 } from './';
 
@@ -19,16 +18,10 @@ const ENTITY_STATES = [...estadoArticuloRoute, ...estadoArticuloPopupRoute];
     declarations: [
         EstadoArticuloComponent,
         EstadoArticuloDetailComponent,
-        EstadoArticuloUpdateComponent,
-        EstadoArticuloDeleteDialogComponent,
-        EstadoArticuloDeletePopupComponent
+        EstadoArticuloDeletePopupComponent,
+        EstadoArticuloUpdateComponent
     ],
-    entryComponents: [
-        EstadoArticuloComponent,
-        EstadoArticuloUpdateComponent,
-        EstadoArticuloDeleteDialogComponent,
-        EstadoArticuloDeletePopupComponent
-    ],
+    entryComponents: [EstadoArticuloComponent, EstadoArticuloUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetEstadoArticuloModule {}

@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { SERVER_API_URL } from '../app.constants';
 import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils } from 'ng-jhipster';
 import { DtoPresupuestoCabeceraComponent } from '../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { DTODatosMotorComponent } from '../dto/dto-presupuesto-cabecera/DTODatosMotor';
-import { DTOParOperacionPresupuestoComponent } from '../dto/dto-presupuesto-cabecera/DTOParOperacionPresupuesto';
 import { MotorService } from '../entities/motor/motor.service';
-import { AplicacionService } from '../entities/aplicacion/aplicacion.service';
 import { TipoParteMotorService } from '../entities/tipo-parte-motor/tipo-parte-motor.service';
 import { CilindradaService } from '../entities/cilindrada/cilindrada.service';
-import { TipoParteMotor } from '../entities/tipo-parte-motor/tipo-parte-motor.model';
-import { ResponseWrapper } from '../shared/model/response-wrapper.model';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Presupuesto } from 'app/shared/model/presupuesto.model';
 import { Motor } from 'app/shared/model/motor.model';
 import { Aplicacion } from 'app/shared/model/aplicacion.model';
-import { CostoOperacion } from 'app/entities/costo-operacion/costo-operacion.model';
 import { EstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
 import { Cliente } from 'app/shared/model/cliente.model';
 import { Cilindrada } from 'app/shared/model/cilindrada.model';
-import { DetallePresupuesto } from 'app/entities/detalle-presupuesto/detalle-presupuesto.model';
-import { TipoRepuesto } from 'app/entities/tipo-repuesto/tipo-repuesto.model';
+import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
+import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
+import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
+import { map } from '../../../../../node_modules/rxjs-compat/operator/map';
 
 @Injectable()
 export class PresupuestosService {
@@ -38,7 +35,6 @@ export class PresupuestosService {
 
     constructor(
         private http: HttpClient,
-        private dateUtils: JhiDateUtils,
         private motorService: MotorService,
         private tipoParteService: TipoParteMotorService,
         private cilindradaService: CilindradaService
@@ -46,12 +42,7 @@ export class PresupuestosService {
 
     savePresupuesto(presupuesto: Presupuesto): Observable<Presupuesto> {
         const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlSavePresupuesto}`;
-        console.log(presupuesto);
-        return this.http.post(urlLlamada, presupuesto).map((res: Response) => {
-            const jsonResponse = res.json();
-            console.log(res);
-            return this.convertJsonAPresupuesto(jsonResponse);
-        });
+        return this.http.post<Presupuesto>(urlLlamada, presupuesto);
     }
 
     aceptarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
@@ -71,49 +62,32 @@ export class PresupuestosService {
     }
 
     findPresupuestoCabecera(): Observable<DtoPresupuestoCabeceraComponent[]> {
-        return this.http.get(`${this.resourceUrlPresupuestos}` + this.urlPresupuestoCabecera).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonAPresupuestoCabecera(jsonResponse);
-        });
+        return this.http.get<DtoPresupuestoCabeceraComponent[]>(`${this.resourceUrlPresupuestos}${this.urlPresupuestoCabecera}`);
     }
 
     findAplicacionesPorMotor(motor: Motor): Observable<Aplicacion[]> {
         const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoAplicaciones}${motor.id}`;
-        return this.http.get(urlLlamada).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonAAplicacion(jsonResponse);
-        });
+        return this.http.get<Aplicacion[]>(urlLlamada);
     }
 
     findOperacionesPresupuesto(datos: DTODatosMotorComponent): Observable<CostoOperacion[]> {
         const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoOperacionesCosto}?idMotor=${datos.idMotor}&idCilindrada=${
             datos.idCilindrada
         }&idAplicacion=${datos.idAplicacion}&idTiposPartesMotores=${datos.idTiposPartesMotores}`;
-        return this.http.get(urlLlamada).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonAPArejaCostoOperacion(jsonResponse);
-        });
+        return this.http.get<CostoOperacion[]>(urlLlamada);
     }
 
     buscarEstadoCreado(): Observable<EstadoPresupuesto> {
         const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlEstadoPrespuestoCreado}`;
-        return this.http.get(urlLlamada).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonAEstadoPresupuesto(jsonResponse);
-        });
+        return this.http.get<EstadoPresupuesto>(urlLlamada);
     }
 
     findClientesByNombre(nombre: string): Observable<Cliente[]> {
-        return this.http.get(`${this.resourceUrlPresupuestos}${this.urlPresupuestoClientesFiltro}${nombre}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonACliente(jsonResponse);
-        });
+        return this.http.get<Cliente[]>(`${this.resourceUrlPresupuestos}${this.urlPresupuestoClientesFiltro}${nombre}`);
     }
 
-    findAllClientes(): Observable<Cliente[]> {
-        return this.http.get(`${this.resourceUrlPresupuestos}${this.urlPresupuestoClientesAll}`).map((res: HttpResponse<Cliente>) => {
-            return <Cliente[]>res.body;
-        });
+    findAllActiveClientes(): Observable<Cliente[]> {
+        return this.http.get<Cliente[]>(`${this.resourceUrlPresupuestos}${this.urlPresupuestoClientesAll}`);
     }
 
     buscarMotores(): Motor[] {
@@ -142,10 +116,7 @@ export class PresupuestosService {
 
     buscarRepuestos(detalle: DetallePresupuesto): Observable<TipoRepuesto[]> {
         const url = `${this.resourceUrlPresupuestos}${this.urlPresupuestoRepuestos}/${detalle.tipoParteMotor.id}`;
-        return this.http.get(url).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonToTipoRepuesto(jsonResponse);
-        });
+        return this.http.get<TipoRepuesto[]>(url);
     }
 
     convertJsonAPresupuestoCabecera(json: any): DtoPresupuestoCabeceraComponent[] {

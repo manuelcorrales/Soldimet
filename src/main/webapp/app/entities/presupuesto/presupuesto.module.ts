@@ -6,8 +6,8 @@ import {
     PresupuestoComponent,
     PresupuestoDetailComponent,
     PresupuestoUpdateComponent,
-    PresupuestoDeletePopupComponent,
     PresupuestoDeleteDialogComponent,
+    PresupuestoDeletePopupComponent,
     presupuestoRoute,
     presupuestoPopupRoute
 } from './';
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...presupuestoRoute, ...presupuestoPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         PresupuestoComponent,
-        PresupuestoDetailComponent,
-        PresupuestoUpdateComponent,
         PresupuestoDeleteDialogComponent,
-        PresupuestoDeletePopupComponent
+        PresupuestoDeletePopupComponent,
+        PresupuestoDetailComponent,
+        PresupuestoUpdateComponent
     ],
-    entryComponents: [PresupuestoComponent, PresupuestoUpdateComponent, PresupuestoDeleteDialogComponent, PresupuestoDeletePopupComponent],
+    entryComponents: [PresupuestoComponent, PresupuestoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPresupuestoModule {}

@@ -6,8 +6,8 @@ import {
     MotorComponent,
     MotorDetailComponent,
     MotorUpdateComponent,
-    MotorDeletePopupComponent,
     MotorDeleteDialogComponent,
+    MotorDeletePopupComponent,
     motorRoute,
     motorPopupRoute
 } from './';
@@ -16,8 +16,8 @@ const ENTITY_STATES = [...motorRoute, ...motorPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [MotorComponent, MotorDetailComponent, MotorUpdateComponent, MotorDeleteDialogComponent, MotorDeletePopupComponent],
-    entryComponents: [MotorComponent, MotorUpdateComponent, MotorDeleteDialogComponent, MotorDeletePopupComponent],
+    declarations: [MotorComponent, MotorDetailComponent, MotorDeletePopupComponent, MotorDeleteDialogComponent, MotorUpdateComponent],
+    entryComponents: [MotorComponent, MotorUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetMotorModule {}
