@@ -4865,10 +4865,6 @@ jasmine-core@~2.99.0:
   version "2.99.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.99.1.tgz#e6400df1e6b56e130b61c4bcd093daa7f6e8ca15"
 
-jasmine-core@~3.2.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.2.1.tgz#8e4ff5b861603ee83343f2b49eee6a0ffe9650ce"
-
 jasmine-reporters@2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/jasmine-reporters/-/jasmine-reporters-2.2.1.tgz#de9a9201367846269e7ca8adff5b44221671fcbd"
@@ -4876,20 +4872,13 @@ jasmine-reporters@2.2.1:
     mkdirp "^0.5.1"
     xmldom "^0.1.22"
 
-jasmine@^2.5.3:
+jasmine@^2.5.3, jasmine@^2.5.38:
   version "2.99.0"
   resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-2.99.0.tgz#8ca72d102e639b867c6489856e0e18a9c7aa42b7"
   dependencies:
     exit "^0.1.2"
     glob "^7.0.6"
     jasmine-core "~2.99.0"
-
-jasmine@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-3.2.0.tgz#b3a018454781805650e46578803d08e7cfdd7b3d"
-  dependencies:
-    glob "^7.0.6"
-    jasmine-core "~3.2.0"
 
 jasminewd2@^2.1.0:
   version "2.2.0"
