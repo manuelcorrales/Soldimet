@@ -2,7 +2,7 @@
     <jhi-alert></jhi-alert>
     <div>
         <button class="btn btn-primary float-right" [routerLink]="['/', { outlets: { popup: ['nuevo-cliente'] } }]">
-            <span class="fa fa-plus">Nuevo Cliente</span>
+            <span>Nuevo Cliente</span>
         </button>
     </div>
     <div class="">
@@ -10,24 +10,24 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Apellido</th>
-                        <th scope="col">Teléfono</th>
-                        <th scope="col">Dirección</th>
-                        <th scope="col">Departamento</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Operaciones</th>
+                        <th scope="col"  class="text-center" >Nombre</th>
+                        <th scope="col"  class="text-center" >Apellido</th>
+                        <th scope="col"  class="text-center" >Teléfono</th>
+                        <th scope="col"  class="text-center" >Dirección</th>
+                        <th scope="col"  class="text-center" >Departamento</th>
+                        <th scope="col"  class="text-center" >Estado</th>
+                        <th scope="col"  class="text-center" >Operaciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let cliente of clientes">
-                        <th>
+                        <th class="text-center">
                             {{cliente.persona?.nombre}}
                         </th>
-                        <td>{{cliente.apellido}}</td>
-                        <td>{{cliente.persona?.numeroTelefono}}</td>
-                        <td>{{cliente?.persona?.direccion?.calle}}, {{cliente?.persona?.direccion?.numero}}</td>
-                        <td>{{cliente?.persona?.direccion?.localidad?.nombreLocalidad}}</td>
+                        <td class="text-center">{{cliente.apellido}}</td>
+                        <td class="text-center">{{cliente.persona?.numeroTelefono}}</td>
+                        <td class="text-center">{{cliente?.persona?.direccion?.calle}}, {{cliente?.persona?.direccion?.numero}}</td>
+                        <td class="text-center">{{cliente?.persona?.direccion?.localidad?.nombreLocalidad}}</td>
                         <td>
                             <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
                                 <div class="alert alert-success" style="padding: 0px;" role="alert">
@@ -40,16 +40,24 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center">
+                        <td>
                             <div class="btn-group flex-btn-group-container">
-                                <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/editar'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
-                                    <span class="fa fa-pencil"></span>
-                                    <span class="d-none d-md-inline">Edit</span>
-                                </button>
-                                <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/eliminar'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
-                                    <span class="fa fa-remove"></span>
-                                    <span class="d-none d-md-inline">Delete</span>
-                                </button>
+                                    <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
+                                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/editar'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
+                                                <span class="fa fa-pencil"></span>
+                                                <span class="d-none d-md-inline">Editar</span>
+                                            </button>
+                                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/eliminar'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
+                                                <span class="fa fa-remove"></span>
+                                                <span class="d-none d-md-inline">Eliminar</span>
+                                            </button>
+                                    </div>
+                                    <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-right">
+                                            <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
+                                                <span class="fa fa-pencil"></span>
+                                                <span class="d-none d-md-inline">Activar</span>
+                                            </button>
+                                    </div>
                             </div>
                         </td>
                     </tr>
