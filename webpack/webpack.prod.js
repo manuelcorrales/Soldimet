@@ -3,7 +3,7 @@ const webpackMerge = require('webpack-merge');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const Visualizer = require('webpack-visualizer-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const AngularCompilerPlugin = require('@ngtools/webpack').AngularCompilerPlugin;
 const path = require('path');
@@ -59,10 +59,9 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
             }
         },
         minimizer: [
-            new TerserPlugin({
+            new UglifyJSPlugin({
                 parallel: true,
-                cache: true,
-                terserOptions: {
+                uglifyOptions: {
                     ie8: false,
                     // sourceMap: true, // Enable source maps. Please note that this will slow down the build
                     compress: {
@@ -92,9 +91,8 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         extractCSS,
         new MomentLocalesPlugin({
             localesToKeep: [
-                    'en'
-                    // jhipster-needle-i18n-language-moment-webpack - JHipster will add/remove languages in this array
-                ]
+                // jhipster-needle-i18n-language-moment-webpack - JHipster will add/remove languages in this array
+            ]
         }),
         new Visualizer({
             // Webpack statistics in target folder
