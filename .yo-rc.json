@@ -28,6 +28,7 @@
     "testFrameworks": [],
     "jhiPrefix": "jhi",
     "enableTranslation": false,
-    "herokuAppName": "soldimet-qa"
+    "herokuAppName": "soldimet-qa",
+    "herokuDeployType": "jar"
   }
 }
