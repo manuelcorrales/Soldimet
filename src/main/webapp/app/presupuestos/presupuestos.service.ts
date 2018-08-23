@@ -47,18 +47,12 @@ export class PresupuestosService {
 
     aceptarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
         const url = `${this.resourceUrlPresupuestos}${this.urlAceptarPresupuesto}`;
-        return this.http.post(url, dtoPresupuesto).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonAPresupuestoCabecera([jsonResponse])[0];
-        });
+        return this.http.post<DtoPresupuestoCabeceraComponent>(url, dtoPresupuesto);
     }
 
     cancelarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
         const url = `${this.resourceUrlPresupuestos}${this.urlCancelarPresupuesto}`;
-        return this.http.post(url, dtoPresupuesto).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertJsonAPresupuestoCabecera([jsonResponse])[0];
-        });
+        return this.http.post<DtoPresupuestoCabeceraComponent>(url, dtoPresupuesto);
     }
 
     findPresupuestoCabecera(): Observable<DtoPresupuestoCabeceraComponent[]> {
