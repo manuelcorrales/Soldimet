@@ -5,7 +5,12 @@
  */
 package soldimet.service.dto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+
+import soldimet.domain.CostoOperacion;
+import soldimet.domain.Operacion;
 
 /**
  *
@@ -15,9 +20,11 @@ public class DTOListaPrecioManoDeObra {
 
     private int numeroLista;
 
-    private ArrayList<String> nombreOperaciones;
+    private LocalDate fechaDesde;
 
-    private ArrayList precioOperaciones;
+    private LocalDate fechaHasta;
+
+    private List<CostoOperacion> operaciones = new ArrayList<CostoOperacion>();
 
     public DTOListaPrecioManoDeObra() {
     }
@@ -30,34 +37,46 @@ public class DTOListaPrecioManoDeObra {
         this.numeroLista = numeroLista;
     }
 
-    public ArrayList<String> getNombreOperaciones() {
-        return nombreOperaciones;
+    /**
+     * @return the fechaDesde
+     */
+    public LocalDate getFechaDesde() {
+        return fechaDesde;
     }
 
-    public void setNombreOperaciones(ArrayList<String> nombreOperaciones) {
-        this.nombreOperaciones = nombreOperaciones;
+    /**
+     * @return the fechaHasta
+     */
+    public LocalDate getFechaHasta() {
+        return fechaHasta;
     }
 
-    public ArrayList getPrecioOperaciones() {
-        return precioOperaciones;
+    /**
+     * @return the operaciones
+     */
+    public List<CostoOperacion> getOperaciones() {
+        return operaciones;
     }
 
-    public void setPrecioOperaciones(ArrayList precioOperaciones) {
-        this.precioOperaciones = precioOperaciones;
+    /**
+     * @param fechaDesde the fechaDesde to set
+     */
+    public void setFechaDesde(LocalDate fechaDesde) {
+        this.fechaDesde = fechaDesde;
     }
 
-    public void agregarOperacion(String op){
-        this.nombreOperaciones.add(op);
-    }
-    public void agregarPrecio(float precio){
-        this.precioOperaciones.add(precio);
-    }
-
-
-    public void agregarOperacionYPrecio(String op, float precio){
-        this.nombreOperaciones.add(op);
-        this.precioOperaciones.add(precio);
+    /**
+     * @param fechaHasta the fechaHasta to set
+     */
+    public void setFechaHasta(LocalDate fechaHasta) {
+        this.fechaHasta = fechaHasta;
     }
 
+    /**
+     * @param operaciones the operaciones to set
+     */
+    public void setOperaciones(ArrayList<CostoOperacion> operaciones) {
+        this.operaciones = operaciones;
+    }
 
 }

@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-body">
+        <form>
+            <h5 class="card-title">Lista número: {{lista.numeroLista}}</h5>
+            <h6 class="text-muted card-subtitle">Última modificación: {{lista.fechaDesde}}</h6>
+            <div *ngFor="let costoOperacion of lista.operaciones">
+                <div class="form-row">
+                    <label for="example-number-input" class="col-6 col-form-label">{{costoOperacion.operacion.nombreOperacion}}</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="number" value="{{costoOperacion.costoOperacion}}" id="{{costoOperacion.id}}">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>

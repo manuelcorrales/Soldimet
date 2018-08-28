@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DTOListaPrecioManoDeObraComponent } from 'app/dto/dto-operaciones/dto-lista-costo-operaciones';
+import { OperacionesService } from 'app/operaciones/operaciones-services';
 
 @Component({
     selector: 'jhi-operaciones',
@@ -6,7 +8,14 @@ import { Component, OnInit } from '@angular/core';
     styles: []
 })
 export class OperacionesComponent implements OnInit {
-    constructor() {}
+    listas: DTOListaPrecioManoDeObraComponent[] = [];
+    constructor(private operacionesService: OperacionesService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.operacionesService.getListasOperacionesAutorizadas().subscribe((listas: DTOListaPrecioManoDeObraComponent[]) => {
+            if (listas.length > 0) {
+                this.listas = listas;
+            }
+        });
+    }
 }

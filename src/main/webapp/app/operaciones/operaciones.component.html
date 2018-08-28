@@ -1,3 +1,11 @@
-<div class=".container-fluid card jh-card">
+<div class="">
+    <h1>Operaciones</h1>
+    <div class="container-fluid">
+        <div class="row">
+                <div *ngFor="let lista of listas">
+                    <jhi-operacion-lista [lista]="lista">
+                    </jhi-operacion-lista>
+                </div>
+        </div>
+    </div>
 </div>
-
