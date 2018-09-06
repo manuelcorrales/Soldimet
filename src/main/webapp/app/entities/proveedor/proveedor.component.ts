@@ -8,7 +8,7 @@ import { IProveedor } from 'app/shared/model/proveedor.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { ProveedorService } from './proveedor.service';
+import { ProveedorService } from 'app/entities/proveedor/proveedor.service';
 
 @Component({
     selector: 'jhi-proveedor',

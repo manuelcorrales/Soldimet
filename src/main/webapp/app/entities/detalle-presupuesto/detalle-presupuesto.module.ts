@@ -10,7 +10,7 @@ import {
     detallePresupuestoRoute,
     DetallePresupuestoDeletePopupComponent,
     detallePresupuestoPopupRoute
-} from './';
+} from 'app/entities/detalle-presupuesto';
 
 const ENTITY_STATES = [...detallePresupuestoRoute, ...detallePresupuestoPopupRoute];
 

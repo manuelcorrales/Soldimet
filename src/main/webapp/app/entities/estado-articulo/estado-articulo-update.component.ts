@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
-import { EstadoArticuloService } from './estado-articulo.service';
+import { EstadoArticuloService } from 'app/entities/estado-articulo/estado-articulo.service';
 
 @Component({
     selector: 'jhi-estado-articulo-update',

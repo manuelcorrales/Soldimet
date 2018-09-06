@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
-import { EstadoPresupuestoService } from './estado-presupuesto.service';
-import { EstadoPresupuestoComponent } from './estado-presupuesto.component';
-import { EstadoPresupuestoDetailComponent } from './estado-presupuesto-detail.component';
-import { EstadoPresupuestoUpdateComponent } from './estado-presupuesto-update.component';
-import { EstadoPresupuestoDeletePopupComponent } from './estado-presupuesto-delete-dialog.component';
+import { EstadoPresupuestoService } from 'app/entities/estado-presupuesto/estado-presupuesto.service';
+import { EstadoPresupuestoComponent } from 'app/entities/estado-presupuesto/estado-presupuesto.component';
+import { EstadoPresupuestoDetailComponent } from 'app/entities/estado-presupuesto/estado-presupuesto-detail.component';
+import { EstadoPresupuestoUpdateComponent } from 'app/entities/estado-presupuesto/estado-presupuesto-update.component';
+import { EstadoPresupuestoDeletePopupComponent } from 'app/entities/estado-presupuesto/estado-presupuesto-delete-dialog.component';
 import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
 
 @Injectable({ providedIn: 'root' })

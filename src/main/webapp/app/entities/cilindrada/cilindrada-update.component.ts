@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ICilindrada } from 'app/shared/model/cilindrada.model';
-import { CilindradaService } from './cilindrada.service';
+import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
 
 @Component({
     selector: 'jhi-cilindrada-update',

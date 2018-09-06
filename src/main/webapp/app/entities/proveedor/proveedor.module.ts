@@ -10,7 +10,7 @@ import {
     ProveedorDeletePopupComponent,
     proveedorRoute,
     proveedorPopupRoute
-} from './';
+} from 'app/entities/proveedor';
 
 const ENTITY_STATES = [...proveedorRoute, ...proveedorPopupRoute];
 

@@ -1,10 +1,12 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -39,10 +41,11 @@ public class PedidoRepuesto implements Serializable {
     @NotNull
     private EstadoPedidoRepuesto estadoPedidoRepuesto;
 
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL, fetch= FetchType.EAGER)
     @JoinColumn(name= "pedidoRepuesto")
-    @JsonIgnore
-    private Set<DetallePedido> detallePedidos = new HashSet<>();
+    @NotNull
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Set<DetallePedido> detallePedidos = new HashSet<DetallePedido>();
 
     @ManyToOne(optional = false)
     @NotNull
@@ -109,6 +112,7 @@ public class PedidoRepuesto implements Serializable {
         this.estadoPedidoRepuesto = estadoPedidoRepuesto;
     }
 
+    @JsonGetter("detallePedidos")
     public Set<DetallePedido> getDetallePedidos() {
         return detallePedidos;
     }
@@ -126,10 +130,6 @@ public class PedidoRepuesto implements Serializable {
     public PedidoRepuesto removeDetallePedido(DetallePedido detallePedido) {
         this.detallePedidos.remove(detallePedido);
         return this;
-    }
-
-    public void setDetallePedidos(Set<DetallePedido> detallePedidos) {
-        this.detallePedidos = detallePedidos;
     }
 
     public Presupuesto getPresupuesto() {

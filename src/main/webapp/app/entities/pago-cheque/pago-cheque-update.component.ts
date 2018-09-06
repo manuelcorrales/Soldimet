@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IPagoCheque } from 'app/shared/model/pago-cheque.model';
-import { PagoChequeService } from './pago-cheque.service';
+import { PagoChequeService } from 'app/entities/pago-cheque/pago-cheque.service';
 import { IBanco } from 'app/shared/model/banco.model';
 import { BancoService } from 'app/entities/banco';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';

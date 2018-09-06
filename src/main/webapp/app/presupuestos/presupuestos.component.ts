@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { DtoPresupuestoCabeceraComponent } from '../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
-import { PresupuestosService } from './presupuestos.service';
+import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
+import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { DatePipe } from '@angular/common';
 
 @Component({

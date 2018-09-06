@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IRubro } from 'app/shared/model/rubro.model';
-import { RubroService } from './rubro.service';
+import { RubroService } from 'app/entities/rubro/rubro.service';
 
 @Component({
     selector: 'jhi-rubro-delete-dialog',

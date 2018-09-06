@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
-import { PrecioRepuestoService } from './precio-repuesto.service';
-import { PrecioRepuestoComponent } from './precio-repuesto.component';
-import { PrecioRepuestoDetailComponent } from './precio-repuesto-detail.component';
-import { PrecioRepuestoUpdateComponent } from './precio-repuesto-update.component';
-import { PrecioRepuestoDeletePopupComponent } from './precio-repuesto-delete-dialog.component';
+import { PrecioRepuestoService } from 'app/entities/precio-repuesto/precio-repuesto.service';
+import { PrecioRepuestoComponent } from 'app/entities/precio-repuesto/precio-repuesto.component';
+import { PrecioRepuestoDetailComponent } from 'app/entities/precio-repuesto/precio-repuesto-detail.component';
+import { PrecioRepuestoUpdateComponent } from 'app/entities/precio-repuesto/precio-repuesto-update.component';
+import { PrecioRepuestoDeletePopupComponent } from 'app/entities/precio-repuesto/precio-repuesto-delete-dialog.component';
 import { IPrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
 
 @Injectable({ providedIn: 'root' })

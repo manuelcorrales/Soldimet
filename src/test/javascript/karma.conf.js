@@ -1,4 +1,4 @@
-const webpackConfig = require('../../../webpack/webpack.test.js');
+const webpackConfig = require('webpack/webpack.test');
 
 const ChromiumRevision = require('puppeteer/package.json').puppeteer.chromium_revision;
 const Downloader = require('puppeteer/utils/ChromiumDownloader');

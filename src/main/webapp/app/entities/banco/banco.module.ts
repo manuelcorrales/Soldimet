@@ -2,7 +2,14 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared';
-import { BancoComponent, BancoDetailComponent, BancoUpdateComponent, BancoDeletePopupComponent, bancoRoute, bancoPopupRoute } from './';
+import {
+    BancoComponent,
+    BancoDetailComponent,
+    BancoUpdateComponent,
+    BancoDeletePopupComponent,
+    bancoRoute,
+    bancoPopupRoute
+} from 'app/entities/banco';
 
 const ENTITY_STATES = [...bancoRoute, ...bancoPopupRoute];
 

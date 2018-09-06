@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
-import { PresupuestosService } from '../../../presupuestos.service';
-import { ClienteService } from '../../../../entities/cliente';
-import { PersonaService } from '../../../../entities/persona';
+import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
+import { ClienteService } from 'app/entities/cliente';
+import { PersonaService } from 'app/entities/persona';
 import { FormsModule } from '@angular/forms';
 import { Cliente } from 'app/shared/model/cliente.model';
 

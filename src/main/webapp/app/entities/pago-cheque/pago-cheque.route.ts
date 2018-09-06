@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PagoCheque } from 'app/shared/model/pago-cheque.model';
-import { PagoChequeService } from './pago-cheque.service';
-import { PagoChequeComponent } from './pago-cheque.component';
-import { PagoChequeDetailComponent } from './pago-cheque-detail.component';
-import { PagoChequeUpdateComponent } from './pago-cheque-update.component';
-import { PagoChequeDeletePopupComponent } from './pago-cheque-delete-dialog.component';
+import { PagoChequeService } from 'app/entities/pago-cheque/pago-cheque.service';
+import { PagoChequeComponent } from 'app/entities/pago-cheque/pago-cheque.component';
+import { PagoChequeDetailComponent } from 'app/entities/pago-cheque/pago-cheque-detail.component';
+import { PagoChequeUpdateComponent } from 'app/entities/pago-cheque/pago-cheque-update.component';
+import { PagoChequeDeletePopupComponent } from 'app/entities/pago-cheque/pago-cheque-delete-dialog.component';
 import { IPagoCheque } from 'app/shared/model/pago-cheque.model';
 
 @Injectable({ providedIn: 'root' })

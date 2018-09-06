@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 import { Principal } from 'app/core';
-import { CobranzaRepuestoService } from './cobranza-repuesto.service';
+import { CobranzaRepuestoService } from 'app/entities/cobranza-repuesto/cobranza-repuesto.service';
 
 @Component({
     selector: 'jhi-cobranza-repuesto',

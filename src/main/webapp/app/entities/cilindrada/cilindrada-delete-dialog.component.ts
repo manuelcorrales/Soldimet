@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ICilindrada } from 'app/shared/model/cilindrada.model';
-import { CilindradaService } from './cilindrada.service';
+import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
 
 @Component({
     selector: 'jhi-cilindrada-delete-dialog',

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { SoldimetSharedLibsModule, JhiAlertComponent, JhiAlertErrorComponent } from './';
+import { SoldimetSharedLibsModule, JhiAlertComponent, JhiAlertErrorComponent } from 'app/shared';
 
 @NgModule({
     imports: [SoldimetSharedLibsModule],

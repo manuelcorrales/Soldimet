@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ICostoOperacion } from 'app/shared/model/costo-operacion.model';
-import { CostoOperacionService } from './costo-operacion.service';
+import { CostoOperacionService } from 'app/entities/costo-operacion/costo-operacion.service';
 
 @Component({
     selector: 'jhi-costo-operacion-delete-dialog',

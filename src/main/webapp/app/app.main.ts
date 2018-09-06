@@ -1,6 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { ProdConfig } from './blocks/config/prod.config';
-import { SoldimetAppModule } from './app.module';
+import { ProdConfig } from 'app/blocks/config/prod.config';
+import { SoldimetAppModule } from 'app/app.module';
 
 ProdConfig();
 

@@ -10,7 +10,7 @@ import {
     ListaPrecioRectificacionCRAMDeletePopupComponent,
     listaPrecioRectificacionCRAMRoute,
     listaPrecioRectificacionCRAMPopupRoute
-} from './';
+} from 'app/entities/lista-precio-rectificacion-cram';
 
 const ENTITY_STATES = [...listaPrecioRectificacionCRAMRoute, ...listaPrecioRectificacionCRAMPopupRoute];
 

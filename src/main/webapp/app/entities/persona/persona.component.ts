@@ -8,7 +8,7 @@ import { IPersona } from 'app/shared/model/persona.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { PersonaService } from './persona.service';
+import { PersonaService } from 'app/entities/persona/persona.service';
 
 @Component({
     selector: 'jhi-persona',

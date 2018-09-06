@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IOperacion } from 'app/shared/model/operacion.model';
-import { OperacionService } from './operacion.service';
+import { OperacionService } from 'app/entities/operacion/operacion.service';
 import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 import { TipoParteMotorService } from 'app/entities/tipo-parte-motor';
 import { IEstadoOperacion } from 'app/shared/model/estado-operacion.model';

@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Marca } from 'app/shared/model/marca.model';
-import { MarcaService } from './marca.service';
-import { MarcaComponent } from './marca.component';
-import { MarcaDetailComponent } from './marca-detail.component';
-import { MarcaUpdateComponent } from './marca-update.component';
-import { MarcaDeletePopupComponent } from './marca-delete-dialog.component';
+import { MarcaService } from 'app/entities/marca/marca.service';
+import { MarcaComponent } from 'app/entities/marca/marca.component';
+import { MarcaDetailComponent } from 'app/entities/marca/marca-detail.component';
+import { MarcaUpdateComponent } from 'app/entities/marca/marca-update.component';
+import { MarcaDeletePopupComponent } from 'app/entities/marca/marca-delete-dialog.component';
 import { IMarca } from 'app/shared/model/marca.model';
 
 @Injectable({ providedIn: 'root' })

@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IDetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { Principal } from 'app/core';
-import { DetallePresupuestoService } from './detalle-presupuesto.service';
+import { DetallePresupuestoService } from 'app/entities/detalle-presupuesto/detalle-presupuesto.service';
 
 @Component({
     selector: 'jhi-detalle-presupuesto',

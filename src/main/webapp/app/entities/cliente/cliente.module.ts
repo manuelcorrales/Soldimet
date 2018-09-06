@@ -10,7 +10,7 @@ import {
     ClienteDeletePopupComponent,
     clienteRoute,
     clientePopupRoute
-} from './';
+} from 'app/entities/cliente';
 
 const ENTITY_STATES = [...clienteRoute, ...clientePopupRoute];
 

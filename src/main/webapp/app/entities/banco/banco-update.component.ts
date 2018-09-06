@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IBanco } from 'app/shared/model/banco.model';
-import { BancoService } from './banco.service';
+import { BancoService } from 'app/entities/banco/banco.service';
 
 @Component({
     selector: 'jhi-banco-update',

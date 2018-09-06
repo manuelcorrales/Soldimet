@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IMotor } from 'app/shared/model/motor.model';
-import { MotorService } from './motor.service';
+import { MotorService } from 'app/entities/motor/motor.service';
 
 @Component({
     selector: 'jhi-motor-update',

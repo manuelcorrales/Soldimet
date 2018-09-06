@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMarca } from 'app/shared/model/marca.model';
 import { Principal } from 'app/core';
-import { MarcaService } from './marca.service';
+import { MarcaService } from 'app/entities/marca/marca.service';
 
 @Component({
     selector: 'jhi-marca',

@@ -10,7 +10,7 @@ import {
     TarjetaDeletePopupComponent,
     tarjetaRoute,
     tarjetaPopupRoute
-} from './';
+} from 'app/entities/tarjeta';
 
 const ENTITY_STATES = [...tarjetaRoute, ...tarjetaPopupRoute];
 

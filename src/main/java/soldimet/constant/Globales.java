@@ -31,7 +31,7 @@ public class Globales {
     public final String NOMBRE_ESTADO_PRESUPUESTO_CREADO = "Creado";
     public final String NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO = "Entregado";
 
-    public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO = "Pendiente de Pedido";
+    public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO = "Pendiente de pedido";
     public final String NOMBRE_ESTADO_PEDIDO_PENDIENTE_RECIBO = "Pendiente de Recibo";
     public final String NOMBRE_ESTADO_PEDIDO_RECIBIDO = "Recibido";
 

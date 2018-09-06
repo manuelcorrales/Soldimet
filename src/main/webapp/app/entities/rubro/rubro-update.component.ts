@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IRubro } from 'app/shared/model/rubro.model';
-import { RubroService } from './rubro.service';
+import { RubroService } from 'app/entities/rubro/rubro.service';
 
 @Component({
     selector: 'jhi-rubro-update',

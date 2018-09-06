@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IMarca } from 'app/shared/model/marca.model';
-import { MarcaService } from './marca.service';
+import { MarcaService } from 'app/entities/marca/marca.service';
 
 @Component({
     selector: 'jhi-marca-delete-dialog',

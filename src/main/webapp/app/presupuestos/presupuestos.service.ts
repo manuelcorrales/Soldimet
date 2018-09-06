@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { SERVER_API_URL } from '../app.constants';
+import { SERVER_API_URL } from 'app/app.constants';
 import { Observable } from 'rxjs/Rx';
-import { DtoPresupuestoCabeceraComponent } from '../dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
-import { DTODatosMotorComponent } from '../dto/dto-presupuesto-cabecera/DTODatosMotor';
-import { MotorService } from '../entities/motor/motor.service';
-import { TipoParteMotorService } from '../entities/tipo-parte-motor/tipo-parte-motor.service';
-import { CilindradaService } from '../entities/cilindrada/cilindrada.service';
+import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
+import { DTODatosMotorComponent } from 'app/dto/dto-presupuesto-cabecera/DTODatosMotor';
+import { MotorService } from 'app/entities/motor/motor.service';
+import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
+import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Presupuesto } from 'app/shared/model/presupuesto.model';
 import { Motor } from 'app/shared/model/motor.model';
@@ -17,7 +17,7 @@ import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
 import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
-import { map } from '../../../../../node_modules/rxjs-compat/operator/map';
+import { map } from 'rxjs-compat/operator/map';
 
 @Injectable()
 export class PresupuestosService {

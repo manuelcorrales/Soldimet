@@ -2,7 +2,13 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared';
-import { TipoTarjetaComponent, TipoTarjetaDetailComponent, TipoTarjetaUpdateComponent, tipoTarjetaRoute, tipoTarjetaPopupRoute } from './';
+import {
+    TipoTarjetaComponent,
+    TipoTarjetaDetailComponent,
+    TipoTarjetaUpdateComponent,
+    tipoTarjetaRoute,
+    tipoTarjetaPopupRoute
+} from 'app/entities/tipo-tarjeta';
 import {
     TipoTarjetaDeleteDialogComponent,
     TipoTarjetaDeletePopupComponent

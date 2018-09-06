@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IPagoTarjeta } from 'app/shared/model/pago-tarjeta.model';
-import { PagoTarjetaService } from './pago-tarjeta.service';
+import { PagoTarjetaService } from 'app/entities/pago-tarjeta/pago-tarjeta.service';
 
 @Component({
     selector: 'jhi-pago-tarjeta-delete-dialog',

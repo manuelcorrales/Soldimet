@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { auditsRoute, configurationRoute, docsRoute, healthRoute, logsRoute, metricsRoute, userMgmtRoute } from './';
+import { auditsRoute, configurationRoute, docsRoute, healthRoute, logsRoute, metricsRoute, userMgmtRoute } from 'app/admin';
 
 import { UserRouteAccessService } from 'app/core';
 

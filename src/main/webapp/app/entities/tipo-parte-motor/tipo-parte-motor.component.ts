@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 import { Principal } from 'app/core';
-import { TipoParteMotorService } from './tipo-parte-motor.service';
+import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
 
 @Component({
     selector: 'jhi-tipo-parte-motor',

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IProveedor } from 'app/shared/model/proveedor.model';
-import { ProveedorService } from './proveedor.service';
+import { ProveedorService } from 'app/entities/proveedor/proveedor.service';
 import { IPersona } from 'app/shared/model/persona.model';
 import { PersonaService } from 'app/entities/persona';
 

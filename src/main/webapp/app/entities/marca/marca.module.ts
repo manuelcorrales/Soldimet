@@ -10,7 +10,7 @@ import {
     MarcaDeletePopupComponent,
     marcaRoute,
     marcaPopupRoute
-} from './';
+} from 'app/entities/marca';
 
 const ENTITY_STATES = [...marcaRoute, ...marcaPopupRoute];
 

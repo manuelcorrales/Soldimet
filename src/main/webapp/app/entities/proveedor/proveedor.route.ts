@@ -6,11 +6,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Proveedor } from 'app/shared/model/proveedor.model';
-import { ProveedorService } from './proveedor.service';
-import { ProveedorComponent } from './proveedor.component';
-import { ProveedorDetailComponent } from './proveedor-detail.component';
-import { ProveedorUpdateComponent } from './proveedor-update.component';
-import { ProveedorDeletePopupComponent } from './proveedor-delete-dialog.component';
+import { ProveedorService } from 'app/entities/proveedor/proveedor.service';
+import { ProveedorComponent } from 'app/entities/proveedor/proveedor.component';
+import { ProveedorDetailComponent } from 'app/entities/proveedor/proveedor-detail.component';
+import { ProveedorUpdateComponent } from 'app/entities/proveedor/proveedor-update.component';
+import { ProveedorDeletePopupComponent } from 'app/entities/proveedor/proveedor-delete-dialog.component';
 import { IProveedor } from 'app/shared/model/proveedor.model';
 
 @Injectable({ providedIn: 'root' })

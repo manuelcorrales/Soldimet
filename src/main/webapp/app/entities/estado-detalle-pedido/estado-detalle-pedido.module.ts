@@ -10,7 +10,7 @@ import {
     EstadoDetallePedidoDeletePopupComponent,
     EstadoDetallePedidoDeleteDialogComponent,
     estadoDetallePedidoPopupRoute
-} from './';
+} from 'app/entities/estado-detalle-pedido';
 
 const ENTITY_STATES = [...estadoDetallePedidoRoute, ...estadoDetallePedidoPopupRoute];
 

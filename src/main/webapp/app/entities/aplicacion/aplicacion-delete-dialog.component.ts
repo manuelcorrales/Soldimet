@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IAplicacion } from 'app/shared/model/aplicacion.model';
-import { AplicacionService } from './aplicacion.service';
+import { AplicacionService } from 'app/entities/aplicacion/aplicacion.service';
 
 @Component({
     selector: 'jhi-aplicacion-delete-dialog',

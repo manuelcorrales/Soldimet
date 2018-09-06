@@ -10,7 +10,7 @@ import {
     EstadoPedidoRepuestoDeletePopupComponent,
     estadoPedidoRepuestoRoute,
     estadoPedidoRepuestoPopupRoute
-} from './';
+} from 'app/entities/estado-pedido-repuesto';
 
 const ENTITY_STATES = [...estadoPedidoRepuestoRoute, ...estadoPedidoRepuestoPopupRoute];
 

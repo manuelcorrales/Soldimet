@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
-import { TipoDetalleMovimientoService } from './tipo-detalle-movimiento.service';
-import { TipoDetalleMovimientoComponent } from './tipo-detalle-movimiento.component';
-import { TipoDetalleMovimientoDetailComponent } from './tipo-detalle-movimiento-detail.component';
-import { TipoDetalleMovimientoUpdateComponent } from './tipo-detalle-movimiento-update.component';
-import { TipoDetalleMovimientoDeletePopupComponent } from './tipo-detalle-movimiento-delete-dialog.component';
+import { TipoDetalleMovimientoService } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento.service';
+import { TipoDetalleMovimientoComponent } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento.component';
+import { TipoDetalleMovimientoDetailComponent } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento-detail.component';
+import { TipoDetalleMovimientoUpdateComponent } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento-update.component';
+import { TipoDetalleMovimientoDeletePopupComponent } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento-delete-dialog.component';
 import { ITipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
 
 @Injectable({ providedIn: 'root' })

@@ -1,6 +1,7 @@
 <nav class="navbar navbar-dark navbar-expand-md jh-navbar">
     <div class="jh-logo-container float-left">
-        <a class="jh-navbar-toggler d-lg-none float-right" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
+        <a class="jh-navbar-toggler d-lg-none float-right" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
             <i class="fa fa-bars"></i>
         </a>
         <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
@@ -11,7 +12,7 @@
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item" routerLinkActive="active" *jhiHasAnyAuthority="'ROLE_USER'" [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link"  (click)="collapseNavbar()" [routerLink]="['presupuestos']"  >
+                <a class="nav-link" (click)="collapseNavbar()" [routerLink]="['presupuestos']">
                     <span>
                         <i class="fa fa-folder" aria-hidden="true"></i>
                         <span>Presupuestos</span>
@@ -19,28 +20,51 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerLink="clientes" routerLinkActive="active" *jhiHasAnyAuthority="'ROLE_USER'" [routerLinkActiveOptions]="{exact: true}" (click)="collapseNavbar()">
+                <a class="nav-link" routerLink="clientes" routerLinkActive="active" *jhiHasAnyAuthority="'ROLE_USER'" [routerLinkActiveOptions]="{exact: true}"
+                    (click)="collapseNavbar()">
                     <span>
                         <i class="fa fa-users" aria-hidden="true"></i>
                         <span>Clientes</span>
                     </span>
                 </a>
             </li>
-            <li class="nav-item" >
-                <a class="nav-link" routerLink="cajas" routerLinkActive="active" *jhiHasAnyAuthority="'ROLE_USER'" [routerLinkActiveOptions]="{exact: true}" (click)="collapseNavbar()">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="cajas" routerLinkActive="active" *jhiHasAnyAuthority="'ROLE_USER'" [routerLinkActiveOptions]="{exact: true}"
+                    (click)="collapseNavbar()">
                     <span>
                         <i class="fa fa-money" aria-hidden="true"></i>
                         <span>Caja</span>
                     </span>
                 </a>
             </li>
-            <li class="nav-item" routerLinkActive="active" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']" [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link" routerLink="pedidos" (click)="collapseNavbar()">
+            <li class="nav-item dropdown pointer" routerLinkActive="active" ngbDropdown *jhiHasAnyAuthority="'ROLE_USER'"
+                [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link dropdown-toggle"  class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
                     <span>
                         <i class="fa fa-car" aria-hidden="true"></i>
                         <span>Pedidos</span>
                     </span>
                 </a>
+                <ul class="dropdown-menu" ngbDropdownMenu>
+                    <li>
+                        <a class="dropdown-item" routerLink="pedidos/pendientes" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-list-ol" aria-hidden="true"></i>
+                            <span>Pendientes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="pedidos/realizados" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-list" aria-hidden="true"></i>
+                            <span>Realizados</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="pedidos/recibidos" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                            <span>recibidos</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item" routerLinkActive="active" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="operaciones" (click)="collapseNavbar()">
@@ -86,13 +110,15 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="sub-categoria" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="sub-categoria" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Sub Categoria</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="categoria-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="categoria-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Categoria Pago</span>
                         </a>
@@ -110,19 +136,22 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="costo-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="costo-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Costo Operacion</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Detalle Pedido</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Detalle Presupuesto</span>
                         </a>
@@ -140,73 +169,85 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Articulo</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Cobranza Operacion</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Detalle Pedido</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Operacion</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Pedido Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-persona" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-persona" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Persona</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Estado Presupuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="forma-de-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="forma-de-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Forma De Pago</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="historial-precio" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="historial-precio" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Historial Precio</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="lista-precio-desde-hasta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="lista-precio-desde-hasta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Lista Precio Desde Hasta</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="lista-precio-rectificacion-cram" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="lista-precio-rectificacion-cram" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Lista Precio Rectificacion Cram</span>
                         </a>
@@ -248,19 +289,22 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="pago-efectivo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="pago-efectivo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Pago Efectivo</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="pago-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="pago-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Pago Tarjeta</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Pedido Repuesto</span>
                         </a>
@@ -272,7 +316,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="precio-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="precio-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Precio Repuesto</span>
                         </a>
@@ -302,55 +347,64 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Tipo Detalle Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Tipo Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-parte-motor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-parte-motor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Tipo Parte Motor</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Tipo Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Tipo Tarjeta</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Detalle Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Cobranza Operacion</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="cobranza-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="cobranza-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Cobranza Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Detalle Presupuesto</span>
                         </a>
@@ -362,37 +416,43 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Tipo Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="costo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="costo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Costo Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Detalle Pedido</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="movimiento-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="movimiento-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Movimiento Articulo</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="movimiento-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="movimiento-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Movimiento Presupuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="movimiento-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="movimiento-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
                             <span>Movimiento Pedido</span>
                         </a>
@@ -422,7 +482,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="categoria-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="categoria-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Categoria Pago</span>
                         </a>
@@ -440,37 +501,43 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Cobranza Operacion</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="cobranza-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="cobranza-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Cobranza Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="costo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="costo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Costo Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Detalle Presupuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Detalle Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Detalle Pedido</span>
                         </a>
@@ -488,73 +555,85 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Articulo</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-cobranza-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Cobranza Operacion</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-detalle-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Detalle Pedido</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-operacion" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Operacion</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Pedido Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-persona" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-persona" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Persona</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="estado-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="estado-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Estado Presupuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="forma-de-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="forma-de-pago" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Forma De Pago</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="historial-precio" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="historial-precio" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Historial Precio</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="lista-precio-desde-hasta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="lista-precio-desde-hasta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Lista Precio Desde Hasta</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="lista-precio-rectificacion-cram" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="lista-precio-rectificacion-cram" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Lista Precio Rectificacion Cram</span>
                         </a>
@@ -584,19 +663,22 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="movimiento-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="movimiento-articulo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Movimiento Articulo</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="movimiento-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="movimiento-pedido" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Movimiento Pedido</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="movimiento-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="movimiento-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Movimiento Presupuesto</span>
                         </a>
@@ -614,19 +696,22 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="pago-efectivo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="pago-efectivo" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Pago Efectivo</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="pago-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="pago-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Pago Tarjeta</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="pedido-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Pedido Repuesto</span>
                         </a>
@@ -638,7 +723,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="precio-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="precio-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Precio Repuesto</span>
                         </a>
@@ -662,7 +748,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="sub-categoria" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="sub-categoria" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Sub Categoria</span>
                         </a>
@@ -674,31 +761,36 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-detalle-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Tipo Detalle Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-movimiento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Tipo Movimiento</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-parte-motor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-parte-motor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Tipo Parte Motor</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-repuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Tipo Repuesto</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="tipo-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="tipo-tarjeta" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                            (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                             <span>Tipo Tarjeta</span>
                         </a>
@@ -761,15 +853,15 @@
             </li>
             <li ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
-                  <span *ngIf="!getImageUrl()">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    <span>
-                      Cuenta
+                    <span *ngIf="!getImageUrl()">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <span>
+                            Cuenta
+                        </span>
                     </span>
-                  </span>
-                  <span *ngIf="getImageUrl()">
-                      <img [src]="getImageUrl()" class="profile-image img-circle" alt="Avatar">
-                  </span>
+                    <span *ngIf="getImageUrl()">
+                        <img [src]="getImageUrl()" class="profile-image img-circle" alt="Avatar">
+                    </span>
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu>
                     <li *ngSwitchCase="true">

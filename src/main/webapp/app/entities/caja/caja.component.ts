@@ -8,7 +8,7 @@ import { ICaja } from 'app/shared/model/caja.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { CajaService } from './caja.service';
+import { CajaService } from 'app/entities/caja/caja.service';
 
 @Component({
     selector: 'jhi-caja',

@@ -10,7 +10,7 @@ import {
     PagoTarjetaDeletePopupComponent,
     pagoTarjetaRoute,
     pagoTarjetaPopupRoute
-} from './';
+} from 'app/entities/pago-tarjeta';
 
 const ENTITY_STATES = [...pagoTarjetaRoute, ...pagoTarjetaPopupRoute];
 

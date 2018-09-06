@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
-import { HistorialPrecioService } from './historial-precio.service';
+import { HistorialPrecioService } from 'app/entities/historial-precio/historial-precio.service';
 import { IPrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
 import { PrecioRepuestoService } from 'app/entities/precio-repuesto';
 

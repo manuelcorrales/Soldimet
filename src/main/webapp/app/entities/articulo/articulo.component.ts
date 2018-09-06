@@ -8,7 +8,7 @@ import { IArticulo } from 'app/shared/model/articulo.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { ArticuloService } from './articulo.service';
+import { ArticuloService } from 'app/entities/articulo/articulo.service';
 
 @Component({
     selector: 'jhi-articulo',

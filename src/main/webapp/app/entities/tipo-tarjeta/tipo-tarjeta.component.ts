@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
 import { Principal } from 'app/core';
-import { TipoTarjetaService } from './tipo-tarjeta.service';
+import { TipoTarjetaService } from 'app/entities/tipo-tarjeta/tipo-tarjeta.service';
 
 @Component({
     selector: 'jhi-tipo-tarjeta',

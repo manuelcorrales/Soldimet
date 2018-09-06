@@ -11,7 +11,7 @@ import {
     PersonaDeletePopupComponent,
     personaRoute,
     personaPopupRoute
-} from './';
+} from 'app/entities/persona';
 
 const ENTITY_STATES = [...personaRoute, ...personaPopupRoute];
 

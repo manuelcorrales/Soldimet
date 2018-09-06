@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
 import { Principal } from 'app/core';
-import { EstadoPresupuestoService } from './estado-presupuesto.service';
+import { EstadoPresupuestoService } from 'app/entities/estado-presupuesto/estado-presupuesto.service';
 
 @Component({
     selector: 'jhi-estado-presupuesto',

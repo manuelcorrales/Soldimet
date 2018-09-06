@@ -9,7 +9,7 @@ import {
     EstadoCobranzaOperacionDeletePopupComponent,
     estadoCobranzaOperacionRoute,
     estadoCobranzaOperacionPopupRoute
-} from './';
+} from 'app/entities/estado-cobranza-operacion';
 
 const ENTITY_STATES = [...estadoCobranzaOperacionRoute, ...estadoCobranzaOperacionPopupRoute];
 

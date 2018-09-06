@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
-import { EstadoPedidoRepuestoService } from './estado-pedido-repuesto.service';
-import { EstadoPedidoRepuestoComponent } from './estado-pedido-repuesto.component';
-import { EstadoPedidoRepuestoDetailComponent } from './estado-pedido-repuesto-detail.component';
-import { EstadoPedidoRepuestoUpdateComponent } from './estado-pedido-repuesto-update.component';
-import { EstadoPedidoRepuestoDeletePopupComponent } from './estado-pedido-repuesto-delete-dialog.component';
+import { EstadoPedidoRepuestoService } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.service';
+import { EstadoPedidoRepuestoComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.component';
+import { EstadoPedidoRepuestoDetailComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto-detail.component';
+import { EstadoPedidoRepuestoUpdateComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto-update.component';
+import { EstadoPedidoRepuestoDeletePopupComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto-delete-dialog.component';
 import { IEstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
 
 @Injectable({ providedIn: 'root' })

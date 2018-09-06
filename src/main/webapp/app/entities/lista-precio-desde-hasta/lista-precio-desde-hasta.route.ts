@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
-import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service';
-import { ListaPrecioDesdeHastaComponent } from './lista-precio-desde-hasta.component';
-import { ListaPrecioDesdeHastaDetailComponent } from './lista-precio-desde-hasta-detail.component';
-import { ListaPrecioDesdeHastaUpdateComponent } from './lista-precio-desde-hasta-update.component';
-import { ListaPrecioDesdeHastaDeletePopupComponent } from './lista-precio-desde-hasta-delete-dialog.component';
+import { ListaPrecioDesdeHastaService } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta.service';
+import { ListaPrecioDesdeHastaComponent } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta.component';
+import { ListaPrecioDesdeHastaDetailComponent } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta-detail.component';
+import { ListaPrecioDesdeHastaUpdateComponent } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta-update.component';
+import { ListaPrecioDesdeHastaDeletePopupComponent } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta-delete-dialog.component';
 import { IListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
 
 @Injectable({ providedIn: 'root' })

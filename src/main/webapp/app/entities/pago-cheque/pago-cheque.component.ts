@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IPagoCheque } from 'app/shared/model/pago-cheque.model';
 import { Principal } from 'app/core';
-import { PagoChequeService } from './pago-cheque.service';
+import { PagoChequeService } from 'app/entities/pago-cheque/pago-cheque.service';
 
 @Component({
     selector: 'jhi-pago-cheque',

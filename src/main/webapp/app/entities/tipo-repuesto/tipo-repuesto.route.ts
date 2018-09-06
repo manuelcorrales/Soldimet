@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
-import { TipoRepuestoService } from './tipo-repuesto.service';
-import { TipoRepuestoComponent } from './tipo-repuesto.component';
-import { TipoRepuestoDetailComponent } from './tipo-repuesto-detail.component';
-import { TipoRepuestoUpdateComponent } from './tipo-repuesto-update.component';
-import { TipoRepuestoDeletePopupComponent } from './tipo-repuesto-delete-dialog.component';
+import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
+import { TipoRepuestoComponent } from 'app/entities/tipo-repuesto/tipo-repuesto.component';
+import { TipoRepuestoDetailComponent } from 'app/entities/tipo-repuesto/tipo-repuesto-detail.component';
+import { TipoRepuestoUpdateComponent } from 'app/entities/tipo-repuesto/tipo-repuesto-update.component';
+import { TipoRepuestoDeletePopupComponent } from 'app/entities/tipo-repuesto/tipo-repuesto-delete-dialog.component';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 
 @Injectable({ providedIn: 'root' })

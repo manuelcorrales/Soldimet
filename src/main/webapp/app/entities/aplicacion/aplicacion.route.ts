@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Aplicacion } from 'app/shared/model/aplicacion.model';
-import { AplicacionService } from './aplicacion.service';
-import { AplicacionComponent } from './aplicacion.component';
-import { AplicacionDetailComponent } from './aplicacion-detail.component';
-import { AplicacionUpdateComponent } from './aplicacion-update.component';
-import { AplicacionDeletePopupComponent } from './aplicacion-delete-dialog.component';
+import { AplicacionService } from 'app/entities/aplicacion/aplicacion.service';
+import { AplicacionComponent } from 'app/entities/aplicacion/aplicacion.component';
+import { AplicacionDetailComponent } from 'app/entities/aplicacion/aplicacion-detail.component';
+import { AplicacionUpdateComponent } from 'app/entities/aplicacion/aplicacion-update.component';
+import { AplicacionDeletePopupComponent } from 'app/entities/aplicacion/aplicacion-delete-dialog.component';
 import { IAplicacion } from 'app/shared/model/aplicacion.model';
 
 @Injectable({ providedIn: 'root' })

@@ -10,7 +10,7 @@ import {
     ListaPrecioDesdeHastaUpdateComponent,
     listaPrecioDesdeHastaRoute,
     listaPrecioDesdeHastaPopupRoute
-} from './';
+} from 'app/entities/lista-precio-desde-hasta';
 
 const ENTITY_STATES = [...listaPrecioDesdeHastaRoute, ...listaPrecioDesdeHastaPopupRoute];
 

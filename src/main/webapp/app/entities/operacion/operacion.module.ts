@@ -10,7 +10,7 @@ import {
     OperacionDeletePopupComponent,
     operacionRoute,
     operacionPopupRoute
-} from './';
+} from 'app/entities/operacion';
 
 const ENTITY_STATES = [...operacionRoute, ...operacionPopupRoute];
 

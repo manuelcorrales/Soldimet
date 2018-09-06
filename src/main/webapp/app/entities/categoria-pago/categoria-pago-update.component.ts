@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ICategoriaPago } from 'app/shared/model/categoria-pago.model';
-import { CategoriaPagoService } from './categoria-pago.service';
+import { CategoriaPagoService } from 'app/entities/categoria-pago/categoria-pago.service';
 
 @Component({
     selector: 'jhi-categoria-pago-update',

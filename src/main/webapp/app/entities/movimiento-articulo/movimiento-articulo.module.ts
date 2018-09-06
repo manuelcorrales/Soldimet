@@ -10,7 +10,7 @@ import {
     MovimientoArticuloDeletePopupComponent,
     movimientoArticuloRoute,
     movimientoArticuloPopupRoute
-} from './';
+} from 'app/entities/movimiento-articulo';
 
 const ENTITY_STATES = [...movimientoArticuloRoute, ...movimientoArticuloPopupRoute];
 

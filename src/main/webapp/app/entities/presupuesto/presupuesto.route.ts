@@ -6,11 +6,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Presupuesto } from 'app/shared/model/presupuesto.model';
-import { PresupuestoService } from './presupuesto.service';
-import { PresupuestoComponent } from './presupuesto.component';
-import { PresupuestoDetailComponent } from './presupuesto-detail.component';
-import { PresupuestoUpdateComponent } from './presupuesto-update.component';
-import { PresupuestoDeletePopupComponent } from './presupuesto-delete-dialog.component';
+import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
+import { PresupuestoComponent } from 'app/entities/presupuesto/presupuesto.component';
+import { PresupuestoDetailComponent } from 'app/entities/presupuesto/presupuesto-detail.component';
+import { PresupuestoUpdateComponent } from 'app/entities/presupuesto/presupuesto-update.component';
+import { PresupuestoDeletePopupComponent } from 'app/entities/presupuesto/presupuesto-delete-dialog.component';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 
 @Injectable({ providedIn: 'root' })

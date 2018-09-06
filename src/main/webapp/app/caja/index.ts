@@ -1,3 +1,3 @@
-export * from './caja.route';
-export * from './caja.module';
-export * from './caja.component';
+export * from 'app/caja/caja.route';
+export * from 'app/caja/caja.module';
+export * from 'app/caja/caja.component';

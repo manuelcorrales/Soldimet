@@ -42,8 +42,8 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
     @NotNull
     private CostoOperacion costoOperacion;
 
-    @OneToMany
-        @JoinColumn(name= "lista")
+    @OneToMany(cascade = { CascadeType.ALL })
+    @JoinColumn(name= "lista")
     @JsonIgnore
     private Set<ListaPrecioDesdeHasta> fechas = new HashSet<>();
 
@@ -160,5 +160,24 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
             ", fechaVigenciaHasta='" + getFechaVigenciaHasta() + "'" +
             ", numeroGrupo=" + getNumeroGrupo() +
             "}";
+    }
+
+    public ListaPrecioDesdeHasta getUltimaListaActiva(){
+
+        if (this.getFechas().size() == 0){
+            return null;
+        } else {
+            if (this.getFechas().size() == 1) {
+                return this.getFechas().iterator().next();
+            } else {
+                ListaPrecioDesdeHasta ultimaLista = null;
+                for(ListaPrecioDesdeHasta lista: this.getFechas()) {
+                    if ( lista.getFechaHasta() == null) {
+                        ultimaLista = lista;
+                    }
+                }
+                return ultimaLista;
+            }
+        }
     }
 }

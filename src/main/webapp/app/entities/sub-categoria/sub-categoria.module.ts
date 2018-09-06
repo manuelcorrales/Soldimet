@@ -9,7 +9,7 @@ import {
     subCategoriaRoute,
     SubCategoriaDeletePopupComponent,
     subCategoriaPopupRoute
-} from './';
+} from 'app/entities/sub-categoria';
 
 const ENTITY_STATES = [...subCategoriaRoute, ...subCategoriaPopupRoute];
 

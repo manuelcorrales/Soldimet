@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnInit, ViewChildren, QueryList, EventEmitter } from '@angular/core';
-import { PresupuestosService } from '../../../../presupuestos.service';
-import { DTODatosMotorComponent } from '../../../../../dto/dto-presupuesto-cabecera/DTODatosMotor';
-import { OperacionPrecioComponent } from './operacion_precio/operacion-precio.component';
+import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
+import { DTODatosMotorComponent } from 'app/dto/dto-presupuesto-cabecera/DTODatosMotor';
+import { OperacionPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operacion_precio/operacion-precio.component';
 import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { CobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';

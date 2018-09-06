@@ -10,7 +10,7 @@ import {
     LocalidadDeletePopupComponent,
     localidadRoute,
     localidadPopupRoute
-} from './';
+} from 'app/entities/localidad';
 
 const ENTITY_STATES = [...localidadRoute, ...localidadPopupRoute];
 

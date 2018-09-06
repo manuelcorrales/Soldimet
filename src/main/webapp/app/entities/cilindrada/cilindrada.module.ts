@@ -10,7 +10,7 @@ import {
     CilindradaDeletePopupComponent,
     cilindradaRoute,
     cilindradaPopupRoute
-} from './';
+} from 'app/entities/cilindrada';
 
 const ENTITY_STATES = [...cilindradaRoute, ...cilindradaPopupRoute];
 

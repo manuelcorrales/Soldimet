@@ -10,7 +10,7 @@ import {
     articuloRoute,
     articuloPopupRoute,
     ArticuloDeleteDialogComponent
-} from './';
+} from 'app/entities/articulo';
 
 const ENTITY_STATES = [...articuloRoute, ...articuloPopupRoute];
 

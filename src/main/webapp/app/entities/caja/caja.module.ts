@@ -10,7 +10,7 @@ import {
     CajaDeletePopupComponent,
     cajaRoute,
     cajaPopupRoute
-} from './';
+} from 'app/entities/caja';
 
 const ENTITY_STATES = [...cajaRoute, ...cajaPopupRoute];
 

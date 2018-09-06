@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IMarca } from 'app/shared/model/marca.model';
-import { MarcaService } from './marca.service';
+import { MarcaService } from 'app/entities/marca/marca.service';
 
 @Component({
     selector: 'jhi-marca-update',

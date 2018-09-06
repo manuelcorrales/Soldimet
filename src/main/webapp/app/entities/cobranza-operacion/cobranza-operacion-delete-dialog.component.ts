@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ICobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
-import { CobranzaOperacionService } from './cobranza-operacion.service';
+import { CobranzaOperacionService } from 'app/entities/cobranza-operacion/cobranza-operacion.service';
 
 @Component({
     selector: 'jhi-cobranza-operacion-delete-dialog',

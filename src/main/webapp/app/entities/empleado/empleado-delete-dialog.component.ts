@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IEmpleado } from 'app/shared/model/empleado.model';
-import { EmpleadoService } from './empleado.service';
+import { EmpleadoService } from 'app/entities/empleado/empleado.service';
 
 @Component({
     selector: 'jhi-empleado-delete-dialog',

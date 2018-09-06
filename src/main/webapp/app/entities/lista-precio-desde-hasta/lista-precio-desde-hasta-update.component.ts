@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
-import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service';
+import { ListaPrecioDesdeHastaService } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta.service';
 
 @Component({
     selector: 'jhi-lista-precio-desde-hasta-update',

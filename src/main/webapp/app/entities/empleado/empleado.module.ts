@@ -10,7 +10,7 @@ import {
     empleadoRoute,
     EmpleadoDeletePopupComponent,
     empleadoPopupRoute
-} from './';
+} from 'app/entities/empleado';
 
 const ENTITY_STATES = [...empleadoRoute, ...empleadoPopupRoute];
 

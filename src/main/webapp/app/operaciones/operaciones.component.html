@@ -1,11 +1,12 @@
-<div class="">
+<div class="container-fluid  card jh-card">
     <h1>Operaciones</h1>
-    <div class="container-fluid">
+    <jhi-alert></jhi-alert>
+    <div class="card-deck">
         <div class="row">
-                <div *ngFor="let lista of listas">
-                    <jhi-operacion-lista [lista]="lista">
-                    </jhi-operacion-lista>
-                </div>
+            <div *ngFor="let lista of listas">
+                <jhi-operacion-lista [lista]="lista">
+                </jhi-operacion-lista>
+            </div>
         </div>
     </div>
 </div>

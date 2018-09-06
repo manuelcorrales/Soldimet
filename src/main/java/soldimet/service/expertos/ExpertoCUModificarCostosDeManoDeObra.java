@@ -36,127 +36,74 @@ public class ExpertoCUModificarCostosDeManoDeObra {
     @Autowired
     private ListaPrecioDesdeHastaRepository listaPrecioDesdeHastaRepository;
 
-    private List<ListaPrecioRectificacionCRAM> listaNumeroLista;
-
-    public void modificarCostos(String porcentaje) {
-        // busco en la lista identificada por numero la lista que contiene el ultimo
-        // valor todo de nuevo
-        // y despues sigo modificando valores y todo
+    public DTOListaPrecioManoDeObra modificarCostos(DTOListaPrecioManoDeObra dtoLista) {
+        // busco en la lista identificada por numero la lista que no tiene fechs hasta y
+        // la cierro
+        // luego creo una nueva
 
         try {
+            ListaPrecioRectificacionCRAM listaNumero = listaPrecioRectificacionCRAMRepository
+                    .findByNumeroGrupo(dtoLista.getNumeroLista());
+            ListaPrecioDesdeHasta listaACerrar = listaNumero.getUltimaListaActiva();
+            listaACerrar.setFechaHasta(LocalDate.now());
 
-            // por cada lista identificada por su numero
-            for (ListaPrecioRectificacionCRAM listaPrecio : listaNumeroLista) {
-
-                // obtengo las listas
-                Set<ListaPrecioDesdeHasta> listaDesde = listaPrecio.getFechas();
-
-                // inicializo el apuntador a la ultima lista de precios con el primero que sale
-                ListaPrecioDesdeHasta ultimaListaPrecios = listaDesde.iterator().next();
-
-                // verifico cual tiene la ultima fecha y lo dejo en el apuntador de la ultima
-                // lista
-                // y veo que tampoco este cerrada la lista
-                for (ListaPrecioDesdeHasta lista : listaDesde) {
-
-                    if (lista.getFechaDesde().isAfter(ultimaListaPrecios.getFechaDesde())
-                            && lista.getFechaHasta() != null) {
-                        ultimaListaPrecios = lista;
-                    }
-                }
-
-                // le indico la fecha de finalizacion de uso y creo otro nuevo con los nuevos
-                // valores
-                ultimaListaPrecios.setFechaHasta(LocalDate.now());
-                Set<CostoOperacion> costoOperacionvieja = ultimaListaPrecios.getCostoOperacions();
-
-                // proceso de creacion de la nueva lista
-                ListaPrecioDesdeHasta listaPreciosNueva = new ListaPrecioDesdeHasta();
-                listaPreciosNueva.setFechaDesde(LocalDate.now());
-
-                // creo los nuevos valores y se los asigno a la lista nueva
-                Set<CostoOperacion> costosNuevos = new HashSet<>();
-                for (CostoOperacion costo : costoOperacionvieja) {
-
-                    CostoOperacion nuevoCosto = new CostoOperacion();
-
-                    nuevoCosto.setCilindrada(costo.getCilindrada());
-                    nuevoCosto.setTipoParteMotor(costo.getTipoParteMotor());
-                    nuevoCosto.setOperacion(costo.getOperacion());
-
-                    float precio = costo.getCostoOperacion();
-                    float calculoNuevoValor;
-                    Float porciento = Float.valueOf(porcentaje);
-                    if (porcentaje.contains("-")) {
-
-                        calculoNuevoValor = precio - (precio * porciento);
-                    } else {
-                        calculoNuevoValor = precio + (precio * porciento);
-                    }
-                    nuevoCosto.setCostoOperacion(calculoNuevoValor);
-
-                    costosNuevos.add(nuevoCosto);
-
-                }
-                listaPreciosNueva.setCostoOperacions(costosNuevos);
-
-                listaPrecio.getFechas().add(listaPreciosNueva);
-
-                listaPrecioDesdeHastaRepository.save(listaPreciosNueva);
-                listaPrecioRectificacionCRAMRepository.save(listaPrecio);
-
+            ListaPrecioDesdeHasta nuevaListaPrecios = new ListaPrecioDesdeHasta();
+            for (CostoOperacion costoRecibido : dtoLista.getOperaciones()) {
+                CostoOperacion nuevoCostoOperacion = new CostoOperacion();
+                nuevoCostoOperacion.setCilindrada(costoRecibido.getCilindrada());
+                nuevoCostoOperacion.setCostoOperacion(costoRecibido.getCostoOperacion());
+                nuevoCostoOperacion.setOperacion(costoRecibido.getOperacion());
+                nuevoCostoOperacion.setTipoParteMotor(costoRecibido.getTipoParteMotor());
+                nuevaListaPrecios.addCostoOperacion(nuevoCostoOperacion);
             }
+            nuevaListaPrecios.setFechaDesde(LocalDate.now());
+            listaNumero.addFechas(nuevaListaPrecios);
+
+            ListaPrecioRectificacionCRAM listaNueva = listaPrecioRectificacionCRAMRepository.save(listaNumero);
+
+            return crearDtoConUltimaLista(listaNueva);
 
         } catch (NullPointerException e) {
             e.printStackTrace();
+            return null;
         }
 
     }
 
     public List<DTOListaPrecioManoDeObra> buscarCostos() {
 
-        List<DTOListaPrecioManoDeObra> listaDTO = new ArrayList();
+        List<DTOListaPrecioManoDeObra> listaDTO = new ArrayList<DTOListaPrecioManoDeObra>();
         try {
             // busco la lista que contiene el numero de lista
-            listaNumeroLista = listaPrecioRectificacionCRAMRepository.findAll();
+            List<ListaPrecioRectificacionCRAM> listaNumeroLista = listaPrecioRectificacionCRAMRepository.findAll();
 
             // por cada lista identificada por su numero
             for (ListaPrecioRectificacionCRAM listaPrecio : listaNumeroLista) {
 
-                // obtengo las listas
-                Set<ListaPrecioDesdeHasta> listaDesde = listaPrecio.getFechas();
-                // inicializo el apuntador a la ultima lista de precios con el primero que sale
-                ListaPrecioDesdeHasta ultimaListaPrecios = listaDesde.iterator().next();
-
-                // verifico cual tiene la ultima fecha y lo dejo en el apuntador de la ultima
-                // lista
-                // y veo que tampoco este cerrada la lista
-                for (ListaPrecioDesdeHasta lista : listaDesde) {
-
-                    if (lista.getFechaDesde().isAfter(ultimaListaPrecios.getFechaDesde())
-                            && lista.getFechaHasta() != null) {
-                        ultimaListaPrecios = lista;
-                    }
-                }
-
-                if (ultimaListaPrecios != null) {
-                    DTOListaPrecioManoDeObra dto = new DTOListaPrecioManoDeObra();
-                    dto.setNumeroLista(listaPrecio.getNumeroGrupo());
-                    dto.setFechaDesde(listaPrecio.getFechaVigenciaDesde());
-                    dto.setFechaHasta(listaPrecio.getFechaVigenciaHasta());
-                    // Por cada operacion y su costo creo un dto y lo agrego a la lista
-                    for (CostoOperacion costoOp : ultimaListaPrecios.getCostoOperacions()) {
-                        dto.getOperaciones().add(costoOp);
-                        listaDTO.add(dto);
-                    }
-                }
-
+                listaDTO.add(crearDtoConUltimaLista(listaPrecio));
             }
             return listaDTO;
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private DTOListaPrecioManoDeObra crearDtoConUltimaLista(ListaPrecioRectificacionCRAM listaPrecio) {
+
+        DTOListaPrecioManoDeObra dto = new DTOListaPrecioManoDeObra();
+
+        // obtengo las listas
+        dto.setNumeroLista(listaPrecio.getNumeroGrupo());
+        dto.setFechaDesde(listaPrecio.getFechaVigenciaDesde());
+        dto.setFechaHasta(listaPrecio.getFechaVigenciaHasta());
+
+        // Por cada operacion y su costo creo un dto y lo agrego a la lista
+        for (CostoOperacion costoOp : listaPrecio.getUltimaListaActiva().getCostoOperacions()) {
+            dto.getOperaciones().add(costoOp);
+        }
+        return dto;
+
     }
 
 }

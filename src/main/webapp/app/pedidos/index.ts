@@ -1,3 +1,3 @@
-export * from './pedidos.route';
-export * from './pedidos.module';
-export * from './pedidos.component';
+export * from 'app/pedidos/pedidos.route';
+export * from 'app/pedidos/pedidos.module';
+export * from 'app/pedidos/pedidos.component';

@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
-import { HistorialPrecioService } from './historial-precio.service';
+import { HistorialPrecioService } from 'app/entities/historial-precio/historial-precio.service';
 
 @Component({
     selector: 'jhi-historial-precio-delete-dialog',

@@ -10,7 +10,7 @@ import {
     CobranzaRepuestoDeletePopupComponent,
     cobranzaRepuestoRoute,
     cobranzaRepuestoPopupRoute
-} from './';
+} from 'app/entities/cobranza-repuesto';
 
 const ENTITY_STATES = [...cobranzaRepuestoRoute, ...cobranzaRepuestoPopupRoute];
 

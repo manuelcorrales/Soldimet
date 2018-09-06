@@ -291,11 +291,15 @@ public class ExpertoPresupuesto {
 
     private Presupuesto crearPedidoRepuesto(Presupuesto presupuesto) {
         PedidoRepuesto nuevoPedido = new PedidoRepuesto();
-        EstadoPedidoRepuesto estadoCreado = estadoPedidoRepuestoRepository.findByNombreEstado("Creado");
+        EstadoPedidoRepuesto estadoCreado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
         nuevoPedido.setEstadoPedidoRepuesto(estadoCreado);
         nuevoPedido.setFechaCreacion(LocalDate.now());
         nuevoPedido.setPresupuesto(presupuesto);
-        nuevoPedido.setDetallePedidos(new HashSet<DetallePedido>());
+        for(DetallePresupuesto detallePresupuesto: presupuesto.getDetallePresupuestos()){
+            DetallePedido nuevoDetallePedido = new DetallePedido();
+            nuevoDetallePedido.setDetallePresupuesto(detallePresupuesto);
+            nuevoPedido.getDetallePedidos().add(nuevoDetallePedido);
+        }
         pedidoRepuestoRepository.save(nuevoPedido);
         return presupuesto;
     }

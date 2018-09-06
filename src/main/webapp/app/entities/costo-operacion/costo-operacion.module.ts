@@ -10,7 +10,7 @@ import {
     costoOperacionRoute,
     costoOperacionPopupRoute,
     CostoOperacionDeleteDialogComponent
-} from './';
+} from 'app/entities/costo-operacion';
 
 const ENTITY_STATES = [...costoOperacionRoute, ...costoOperacionPopupRoute];
 

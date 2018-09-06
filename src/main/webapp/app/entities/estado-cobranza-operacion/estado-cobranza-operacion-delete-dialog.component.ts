@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
-import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.service';
+import { EstadoCobranzaOperacionService } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.service';
 
 @Component({
     selector: 'jhi-estado-cobranza-operacion-delete-dialog',

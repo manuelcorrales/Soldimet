@@ -1,0 +1,8 @@
+<div class=".container-fluid card jh-card">
+    <h5>Pedidos pendientes</h5>
+    <div class="card-deck">
+        <div *ngFor="let pedido of pedidos">
+            <jhi-pedido-pendiente [pedido]="pedido" [proveedores] = "proveedores"></jhi-pedido-pendiente>
+        </div>
+    </div>
+</div>

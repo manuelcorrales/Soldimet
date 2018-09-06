@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
 import { Principal } from 'app/core';
-import { HistorialPrecioService } from './historial-precio.service';
+import { HistorialPrecioService } from 'app/entities/historial-precio/historial-precio.service';
 
 @Component({
     selector: 'jhi-historial-precio',

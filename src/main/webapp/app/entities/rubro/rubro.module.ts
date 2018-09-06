@@ -10,7 +10,7 @@ import {
     RubroDeletePopupComponent,
     rubroRoute,
     rubroPopupRoute
-} from './';
+} from 'app/entities/rubro';
 
 const ENTITY_STATES = [...rubroRoute, ...rubroPopupRoute];
 

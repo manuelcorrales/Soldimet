@@ -10,7 +10,7 @@ import {
     TipoParteMotorDeletePopupComponent,
     tipoParteMotorRoute,
     tipoParteMotorPopupRoute
-} from './';
+} from 'app/entities/tipo-parte-motor';
 
 const ENTITY_STATES = [...tipoParteMotorRoute, ...tipoParteMotorPopupRoute];
 

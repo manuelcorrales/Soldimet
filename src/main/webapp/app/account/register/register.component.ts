@@ -4,7 +4,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared';
 import { LoginModalService } from 'app/core';
-import { Register } from './register.service';
+import { Register } from 'app/account/register/register.service';
 
 @Component({
     selector: 'jhi-register',

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IPagoEfectivo } from 'app/shared/model/pago-efectivo.model';
-import { PagoEfectivoService } from './pago-efectivo.service';
+import { PagoEfectivoService } from 'app/entities/pago-efectivo/pago-efectivo.service';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { FormaDePagoService } from 'app/entities/forma-de-pago';
 

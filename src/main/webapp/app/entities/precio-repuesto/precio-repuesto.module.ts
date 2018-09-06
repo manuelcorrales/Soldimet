@@ -10,7 +10,7 @@ import {
     PrecioRepuestoDeletePopupComponent,
     precioRepuestoRoute,
     precioRepuestoPopupRoute
-} from './';
+} from 'app/entities/precio-repuesto';
 
 const ENTITY_STATES = [...precioRepuestoRoute, ...precioRepuestoPopupRoute];
 

@@ -17,7 +17,7 @@ import {
     JhiHealthCheckComponent,
     JhiConfigurationComponent,
     JhiDocsComponent
-} from './';
+} from 'app/admin';
 
 @NgModule({
     imports: [

@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMovimientoPedido } from 'app/shared/model/movimiento-pedido.model';
 import { Principal } from 'app/core';
-import { MovimientoPedidoService } from './movimiento-pedido.service';
+import { MovimientoPedidoService } from 'app/entities/movimiento-pedido/movimiento-pedido.service';
 
 @Component({
     selector: 'jhi-movimiento-pedido',

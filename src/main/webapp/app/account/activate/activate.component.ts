@@ -3,7 +3,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 
 import { LoginModalService } from 'app/core';
-import { ActivateService } from './activate.service';
+import { ActivateService } from 'app/account/activate/activate.service';
 
 @Component({
     selector: 'jhi-activate',

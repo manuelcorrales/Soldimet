@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { ClientesComponent } from './clientes.component';
-import { ClienteBorrarPopupComponent } from './modal-borrar-cliente/cliente-borrar-dialog.component';
-import { ClienteModalPopupComponent } from './modal-nuevo-cliente/modal-nuevo-cliente.component';
+import { ClientesComponent } from 'app/clientes/clientes.component';
+import { ClienteBorrarPopupComponent } from 'app/clientes/modal-borrar-cliente/cliente-borrar-dialog.component';
+import { ClienteModalPopupComponent } from 'app/clientes/modal-nuevo-cliente/modal-nuevo-cliente.component';
 import { UserRouteAccessService } from 'app/core';
 
 export const CLIENTES_ROUTE: Routes = [

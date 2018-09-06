@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ListaPrecioRectificacionCRAM } from 'app/shared/model/lista-precio-rectificacion-cram.model';
-import { ListaPrecioRectificacionCRAMService } from './lista-precio-rectificacion-cram.service';
-import { ListaPrecioRectificacionCRAMComponent } from './lista-precio-rectificacion-cram.component';
-import { ListaPrecioRectificacionCRAMDetailComponent } from './lista-precio-rectificacion-cram-detail.component';
-import { ListaPrecioRectificacionCRAMUpdateComponent } from './lista-precio-rectificacion-cram-update.component';
-import { ListaPrecioRectificacionCRAMDeletePopupComponent } from './lista-precio-rectificacion-cram-delete-dialog.component';
+import { ListaPrecioRectificacionCRAMService } from 'app/entities/lista-precio-rectificacion-cram/lista-precio-rectificacion-cram.service';
+import { ListaPrecioRectificacionCRAMComponent } from 'app/entities/lista-precio-rectificacion-cram/lista-precio-rectificacion-cram.component';
+import { ListaPrecioRectificacionCRAMDetailComponent } from 'app/entities/lista-precio-rectificacion-cram/lista-precio-rectificacion-cram-detail.component';
+import { ListaPrecioRectificacionCRAMUpdateComponent } from 'app/entities/lista-precio-rectificacion-cram/lista-precio-rectificacion-cram-update.component';
+import { ListaPrecioRectificacionCRAMDeletePopupComponent } from 'app/entities/lista-precio-rectificacion-cram/lista-precio-rectificacion-cram-delete-dialog.component';
 import { IListaPrecioRectificacionCRAM } from 'app/shared/model/lista-precio-rectificacion-cram.model';
 
 @Injectable({ providedIn: 'root' })

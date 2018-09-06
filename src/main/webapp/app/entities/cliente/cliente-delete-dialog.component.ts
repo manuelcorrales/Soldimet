@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ICliente } from 'app/shared/model/cliente.model';
-import { ClienteService } from './cliente.service';
+import { ClienteService } from 'app/entities/cliente/cliente.service';
 
 @Component({
     selector: 'jhi-cliente-delete-dialog',

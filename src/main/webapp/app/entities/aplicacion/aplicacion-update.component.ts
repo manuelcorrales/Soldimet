@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IAplicacion } from 'app/shared/model/aplicacion.model';
-import { AplicacionService } from './aplicacion.service';
+import { AplicacionService } from 'app/entities/aplicacion/aplicacion.service';
 
 @Component({
     selector: 'jhi-aplicacion-update',

@@ -10,7 +10,7 @@ import {
     MotorDeletePopupComponent,
     motorRoute,
     motorPopupRoute
-} from './';
+} from 'app/entities/motor';
 
 const ENTITY_STATES = [...motorRoute, ...motorPopupRoute];
 

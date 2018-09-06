@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import { ClienteService } from '../../entities/cliente';
-import { ClienteBorrarPopupService } from '../modal-borrar-cliente/cliente-modal-popup.service';
+import { ClienteService } from 'app/entities/cliente';
+import { ClienteBorrarPopupService } from 'app/clientes/modal-borrar-cliente/cliente-modal-popup.service';
 import { Cliente } from 'app/shared/model/cliente.model';
 
 @Component({

@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
 import { Principal } from 'app/core';
-import { EstadoPedidoRepuestoService } from './estado-pedido-repuesto.service';
+import { EstadoPedidoRepuestoService } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.service';
 
 @Component({
     selector: 'jhi-estado-pedido-repuesto',

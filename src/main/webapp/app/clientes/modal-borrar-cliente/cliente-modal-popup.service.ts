@@ -1,7 +1,7 @@
 import { Component, Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { ClienteService } from '../../entities/cliente';
+import { ClienteService } from 'app/entities/cliente';
 import { Cliente } from 'app/shared/model/cliente.model';
 
 @Injectable()

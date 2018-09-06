@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICilindrada } from 'app/shared/model/cilindrada.model';
 import { Principal } from 'app/core';
-import { CilindradaService } from './cilindrada.service';
+import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
 
 @Component({
     selector: 'jhi-cilindrada',

@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ResponseWrapper } from '../shared/model/response-wrapper.model';
-import { ClienteService } from '../entities/cliente/cliente.service';
+import { ResponseWrapper } from 'app/shared/model/response-wrapper.model';
+import { ClienteService } from 'app/entities/cliente/cliente.service';
 import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 import { Subscription } from 'rxjs/Subscription';
 import { Cliente, ICliente } from 'app/shared/model/cliente.model';
-import { HttpResponse, HttpErrorResponse } from '../../../../../node_modules/@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Principal } from 'app/core';
 
 @Component({

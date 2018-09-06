@@ -10,7 +10,7 @@ import {
     PagoEfectivoDeletePopupComponent,
     pagoEfectivoRoute,
     pagoEfectivoPopupRoute
-} from './';
+} from 'app/entities/pago-efectivo';
 
 const ENTITY_STATES = [...pagoEfectivoRoute, ...pagoEfectivoPopupRoute];
 

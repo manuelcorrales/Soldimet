@@ -1,10 +1,11 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -58,7 +59,7 @@ public class Presupuesto implements Serializable {
     @NotNull
     private EstadoPresupuesto estadoPresupuesto;
 
-    @OneToMany(cascade = { CascadeType.ALL })
+    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
     @JoinColumn(name= "presupuesto")
     private Set<DetallePresupuesto> detallePresupuestos = new HashSet<DetallePresupuesto>();
 
@@ -188,6 +189,7 @@ public class Presupuesto implements Serializable {
         this.estadoPresupuesto = estadoPresupuesto;
     }
 
+    @JsonGetter("detallePresupuestos")
     public Set<DetallePresupuesto> getDetallePresupuestos() {
         return detallePresupuestos;
     }

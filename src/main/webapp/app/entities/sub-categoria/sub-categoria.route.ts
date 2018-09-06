@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SubCategoria } from 'app/shared/model/sub-categoria.model';
-import { SubCategoriaService } from './sub-categoria.service';
-import { SubCategoriaComponent } from './sub-categoria.component';
-import { SubCategoriaDetailComponent } from './sub-categoria-detail.component';
-import { SubCategoriaUpdateComponent } from './sub-categoria-update.component';
-import { SubCategoriaDeletePopupComponent } from './sub-categoria-delete-dialog.component';
+import { SubCategoriaService } from 'app/entities/sub-categoria/sub-categoria.service';
+import { SubCategoriaComponent } from 'app/entities/sub-categoria/sub-categoria.component';
+import { SubCategoriaDetailComponent } from 'app/entities/sub-categoria/sub-categoria-detail.component';
+import { SubCategoriaUpdateComponent } from 'app/entities/sub-categoria/sub-categoria-update.component';
+import { SubCategoriaDeletePopupComponent } from 'app/entities/sub-categoria/sub-categoria-delete-dialog.component';
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 
 @Injectable({ providedIn: 'root' })

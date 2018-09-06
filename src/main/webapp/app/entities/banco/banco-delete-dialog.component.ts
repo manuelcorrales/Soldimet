@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IBanco } from 'app/shared/model/banco.model';
-import { BancoService } from './banco.service';
+import { BancoService } from 'app/entities/banco/banco.service';
 
 @Component({
     selector: 'jhi-banco-delete-dialog',

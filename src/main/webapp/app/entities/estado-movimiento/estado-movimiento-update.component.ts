@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IEstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
-import { EstadoMovimientoService } from './estado-movimiento.service';
+import { EstadoMovimientoService } from 'app/entities/estado-movimiento/estado-movimiento.service';
 
 @Component({
     selector: 'jhi-estado-movimiento-update',

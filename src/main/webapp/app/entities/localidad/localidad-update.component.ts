@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ILocalidad } from 'app/shared/model/localidad.model';
-import { LocalidadService } from './localidad.service';
+import { LocalidadService } from 'app/entities/localidad/localidad.service';
 
 @Component({
     selector: 'jhi-localidad-update',

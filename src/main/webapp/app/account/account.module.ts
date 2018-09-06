@@ -12,7 +12,7 @@ import {
     PasswordResetFinishComponent,
     SettingsComponent,
     accountState
-} from './';
+} from 'app/account';
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(accountState)],

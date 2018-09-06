@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IListaPrecioRectificacionCRAM } from 'app/shared/model/lista-precio-rectificacion-cram.model';
-import { ListaPrecioRectificacionCRAMService } from './lista-precio-rectificacion-cram.service';
+import { ListaPrecioRectificacionCRAMService } from 'app/entities/lista-precio-rectificacion-cram/lista-precio-rectificacion-cram.service';
 import { ICostoOperacion } from 'app/shared/model/costo-operacion.model';
 import { CostoOperacionService } from 'app/entities/costo-operacion';
 

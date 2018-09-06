@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IArticulo } from 'app/shared/model/articulo.model';
-import { ArticuloService } from './articulo.service';
+import { ArticuloService } from 'app/entities/articulo/articulo.service';
 import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
 import { EstadoArticuloService } from 'app/entities/estado-articulo';
 import { IMarca } from 'app/shared/model/marca.model';

@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMovimientoArticulo } from 'app/shared/model/movimiento-articulo.model';
 import { Principal } from 'app/core';
-import { MovimientoArticuloService } from './movimiento-articulo.service';
+import { MovimientoArticuloService } from 'app/entities/movimiento-articulo/movimiento-articulo.service';
 
 @Component({
     selector: 'jhi-movimiento-articulo',

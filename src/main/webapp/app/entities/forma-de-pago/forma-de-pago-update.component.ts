@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
-import { FormaDePagoService } from './forma-de-pago.service';
+import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
 
 @Component({
     selector: 'jhi-forma-de-pago-update',

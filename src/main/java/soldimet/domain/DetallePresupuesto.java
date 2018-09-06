@@ -2,6 +2,7 @@ package soldimet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -41,16 +42,18 @@ public class DetallePresupuesto implements Serializable {
     @NotNull
     private Motor motor;
 
-    @OneToMany(cascade = { CascadeType.ALL })
+    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
     @JoinColumn(name= "detallePresupuesto")
+    @JsonInclude
     private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<CobranzaOperacion>();
 
     @ManyToOne(optional = false)
     @NotNull
     private TipoParteMotor tipoParteMotor;
 
-    @OneToMany(cascade = { CascadeType.ALL })
+    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
     @JoinColumn(name= "detallePresupuesto")
+    @JsonInclude
     private Set<CobranzaRepuesto> cobranzaRepuestos = new HashSet<CobranzaRepuesto>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

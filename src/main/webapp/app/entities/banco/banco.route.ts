@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Banco } from 'app/shared/model/banco.model';
-import { BancoService } from './banco.service';
-import { BancoComponent } from './banco.component';
-import { BancoDetailComponent } from './banco-detail.component';
-import { BancoUpdateComponent } from './banco-update.component';
-import { BancoDeletePopupComponent } from './banco-delete-dialog.component';
+import { BancoService } from 'app/entities/banco/banco.service';
+import { BancoComponent } from 'app/entities/banco/banco.component';
+import { BancoDetailComponent } from 'app/entities/banco/banco-detail.component';
+import { BancoUpdateComponent } from 'app/entities/banco/banco-update.component';
+import { BancoDeletePopupComponent } from 'app/entities/banco/banco-delete-dialog.component';
 import { IBanco } from 'app/shared/model/banco.model';
 
 @Injectable({ providedIn: 'root' })

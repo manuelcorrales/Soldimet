@@ -9,7 +9,7 @@ import {
     estadoArticuloRoute,
     EstadoArticuloDeletePopupComponent,
     estadoArticuloPopupRoute
-} from './';
+} from 'app/entities/estado-articulo';
 
 const ENTITY_STATES = [...estadoArticuloRoute, ...estadoArticuloPopupRoute];
 

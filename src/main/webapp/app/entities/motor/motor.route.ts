@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Motor } from 'app/shared/model/motor.model';
-import { MotorService } from './motor.service';
-import { MotorComponent } from './motor.component';
-import { MotorDetailComponent } from './motor-detail.component';
-import { MotorUpdateComponent } from './motor-update.component';
-import { MotorDeletePopupComponent } from './motor-delete-dialog.component';
+import { MotorService } from 'app/entities/motor/motor.service';
+import { MotorComponent } from 'app/entities/motor/motor.component';
+import { MotorDetailComponent } from 'app/entities/motor/motor-detail.component';
+import { MotorUpdateComponent } from 'app/entities/motor/motor-update.component';
+import { MotorDeletePopupComponent } from 'app/entities/motor/motor-delete-dialog.component';
 import { IMotor } from 'app/shared/model/motor.model';
 
 @Injectable({ providedIn: 'root' })

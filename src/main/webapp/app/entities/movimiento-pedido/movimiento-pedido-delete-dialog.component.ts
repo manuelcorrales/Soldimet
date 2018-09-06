@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IMovimientoPedido } from 'app/shared/model/movimiento-pedido.model';
-import { MovimientoPedidoService } from './movimiento-pedido.service';
+import { MovimientoPedidoService } from 'app/entities/movimiento-pedido/movimiento-pedido.service';
 
 @Component({
     selector: 'jhi-movimiento-pedido-delete-dialog',

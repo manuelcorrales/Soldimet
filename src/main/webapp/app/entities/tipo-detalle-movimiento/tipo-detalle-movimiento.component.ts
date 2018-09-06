@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ITipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
 import { Principal } from 'app/core';
-import { TipoDetalleMovimientoService } from './tipo-detalle-movimiento.service';
+import { TipoDetalleMovimientoService } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento.service';
 
 @Component({
     selector: 'jhi-tipo-detalle-movimiento',

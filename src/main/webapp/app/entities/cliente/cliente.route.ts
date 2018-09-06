@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Cliente } from 'app/shared/model/cliente.model';
-import { ClienteService } from './cliente.service';
-import { ClienteComponent } from './cliente.component';
-import { ClienteDetailComponent } from './cliente-detail.component';
-import { ClienteUpdateComponent } from './cliente-update.component';
-import { ClienteDeletePopupComponent } from './cliente-delete-dialog.component';
+import { ClienteService } from 'app/entities/cliente/cliente.service';
+import { ClienteComponent } from 'app/entities/cliente/cliente.component';
+import { ClienteDetailComponent } from 'app/entities/cliente/cliente-detail.component';
+import { ClienteUpdateComponent } from 'app/entities/cliente/cliente-update.component';
+import { ClienteDeletePopupComponent } from 'app/entities/cliente/cliente-delete-dialog.component';
 import { ICliente } from 'app/shared/model/cliente.model';
 
 @Injectable({ providedIn: 'root' })

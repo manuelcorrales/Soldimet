@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PagoEfectivo } from 'app/shared/model/pago-efectivo.model';
-import { PagoEfectivoService } from './pago-efectivo.service';
-import { PagoEfectivoComponent } from './pago-efectivo.component';
-import { PagoEfectivoDetailComponent } from './pago-efectivo-detail.component';
-import { PagoEfectivoUpdateComponent } from './pago-efectivo-update.component';
-import { PagoEfectivoDeletePopupComponent } from './pago-efectivo-delete-dialog.component';
+import { PagoEfectivoService } from 'app/entities/pago-efectivo/pago-efectivo.service';
+import { PagoEfectivoComponent } from 'app/entities/pago-efectivo/pago-efectivo.component';
+import { PagoEfectivoDetailComponent } from 'app/entities/pago-efectivo/pago-efectivo-detail.component';
+import { PagoEfectivoUpdateComponent } from 'app/entities/pago-efectivo/pago-efectivo-update.component';
+import { PagoEfectivoDeletePopupComponent } from 'app/entities/pago-efectivo/pago-efectivo-delete-dialog.component';
 import { IPagoEfectivo } from 'app/shared/model/pago-efectivo.model';
 
 @Injectable({ providedIn: 'root' })

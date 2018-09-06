@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, ViewChildren, QueryList, EventEmitter } from '@angular/core';
-import { PresupuestosService } from '../../../../presupuestos.service';
-import { RepuestoPrecioComponent } from './repuesto_precio/repuesto-precio.component';
+import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
+import { RepuestoPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuesto_precio/repuesto-precio.component';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';

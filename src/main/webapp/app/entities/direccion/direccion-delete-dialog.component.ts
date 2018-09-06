@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IDireccion } from 'app/shared/model/direccion.model';
-import { DireccionService } from './direccion.service';
+import { DireccionService } from 'app/entities/direccion/direccion.service';
 
 @Component({
     selector: 'jhi-direccion-delete-dialog',

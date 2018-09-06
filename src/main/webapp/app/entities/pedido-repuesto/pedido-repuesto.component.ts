@@ -8,7 +8,7 @@ import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { PedidoRepuestoService } from './pedido-repuesto.service';
+import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
 
 @Component({
     selector: 'jhi-pedido-repuesto',

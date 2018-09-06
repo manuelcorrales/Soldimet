@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMotor } from 'app/shared/model/motor.model';
 import { Principal } from 'app/core';
-import { MotorService } from './motor.service';
+import { MotorService } from 'app/entities/motor/motor.service';
 
 @Component({
     selector: 'jhi-motor',

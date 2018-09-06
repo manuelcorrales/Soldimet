@@ -8,7 +8,7 @@ import { IMovimiento } from 'app/shared/model/movimiento.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { MovimientoService } from './movimiento.service';
+import { MovimientoService } from 'app/entities/movimiento/movimiento.service';
 
 @Component({
     selector: 'jhi-movimiento',

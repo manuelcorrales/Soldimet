@@ -6,11 +6,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Persona } from 'app/shared/model/persona.model';
-import { PersonaService } from './persona.service';
-import { PersonaComponent } from './persona.component';
-import { PersonaDetailComponent } from './persona-detail.component';
-import { PersonaUpdateComponent } from './persona-update.component';
-import { PersonaDeletePopupComponent } from './persona-delete-dialog.component';
+import { PersonaService } from 'app/entities/persona/persona.service';
+import { PersonaComponent } from 'app/entities/persona/persona.component';
+import { PersonaDetailComponent } from 'app/entities/persona/persona-detail.component';
+import { PersonaUpdateComponent } from 'app/entities/persona/persona-update.component';
+import { PersonaDeletePopupComponent } from 'app/entities/persona/persona-delete-dialog.component';
 import { IPersona } from 'app/shared/model/persona.model';
 
 @Injectable({ providedIn: 'root' })

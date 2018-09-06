@@ -1,4 +1,4 @@
-import { ITEMS_PER_PAGE } from '../../shared/constants/pagination.constants';
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 export class Page {
     // The number of elements in the page
     size: number = ITEMS_PER_PAGE;

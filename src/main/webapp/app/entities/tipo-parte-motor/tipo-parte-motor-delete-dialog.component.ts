@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
-import { TipoParteMotorService } from './tipo-parte-motor.service';
+import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
 
 @Component({
     selector: 'jhi-tipo-parte-motor-delete-dialog',

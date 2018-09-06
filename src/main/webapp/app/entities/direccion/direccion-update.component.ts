@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IDireccion } from 'app/shared/model/direccion.model';
-import { DireccionService } from './direccion.service';
+import { DireccionService } from 'app/entities/direccion/direccion.service';
 import { ILocalidad } from 'app/shared/model/localidad.model';
 import { LocalidadService } from 'app/entities/localidad';
 

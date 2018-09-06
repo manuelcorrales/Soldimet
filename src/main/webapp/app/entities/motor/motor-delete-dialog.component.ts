@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IMotor } from 'app/shared/model/motor.model';
-import { MotorService } from './motor.service';
+import { MotorService } from 'app/entities/motor/motor.service';
 
 @Component({
     selector: 'jhi-motor-delete-dialog',

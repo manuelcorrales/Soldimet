@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { ICobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
-import { CobranzaOperacionService } from './cobranza-operacion.service';
+import { CobranzaOperacionService } from 'app/entities/cobranza-operacion/cobranza-operacion.service';
 import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
 import { EstadoCobranzaOperacionService } from 'app/entities/estado-cobranza-operacion';
 import { IOperacion } from 'app/shared/model/operacion.model';

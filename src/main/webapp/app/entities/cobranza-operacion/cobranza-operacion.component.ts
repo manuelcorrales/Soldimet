@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 import { Principal } from 'app/core';
-import { CobranzaOperacionService } from './cobranza-operacion.service';
+import { CobranzaOperacionService } from 'app/entities/cobranza-operacion/cobranza-operacion.service';
 
 @Component({
     selector: 'jhi-cobranza-operacion',

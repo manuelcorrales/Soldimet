@@ -10,7 +10,7 @@ import {
     FormaDePagoDeletePopupComponent,
     formaDePagoRoute,
     formaDePagoPopupRoute
-} from './';
+} from 'app/entities/forma-de-pago';
 
 const ENTITY_STATES = [...formaDePagoRoute, ...formaDePagoPopupRoute];
 

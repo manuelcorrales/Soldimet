@@ -1,15 +1,18 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { ClientesComponent } from './clientes.component';
+import { ClientesComponent } from 'app/clientes/clientes.component';
 import { RouterModule } from '@angular/router';
-import { CLIENTES_POPUP_ROUTE, CLIENTES_ROUTE } from './clientes.route';
-import { SoldimetSharedModule } from '../shared/shared.module';
-import { ModalNuevoClienteComponent, ClienteModalPopupComponent } from './modal-nuevo-cliente/modal-nuevo-cliente.component';
-import { ClienteService } from '../entities/cliente/cliente.service';
-import { ClienteBorrarPopupService } from './modal-borrar-cliente/cliente-modal-popup.service';
+import { CLIENTES_POPUP_ROUTE, CLIENTES_ROUTE } from 'app/clientes/clientes.route';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { ModalNuevoClienteComponent, ClienteModalPopupComponent } from 'app/clientes/modal-nuevo-cliente/modal-nuevo-cliente.component';
+import { ClienteService } from 'app/entities/cliente/cliente.service';
+import { ClienteBorrarPopupService } from 'app/clientes/modal-borrar-cliente/cliente-modal-popup.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { ClienteBorrarDialogComponent, ClienteBorrarPopupComponent } from './modal-borrar-cliente/cliente-borrar-dialog.component';
+import {
+    ClienteBorrarDialogComponent,
+    ClienteBorrarPopupComponent
+} from 'app/clientes/modal-borrar-cliente/cliente-borrar-dialog.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ClienteModalPopupService } from './modal-nuevo-cliente/cliente-nuevo-popup-service';
+import { ClienteModalPopupService } from 'app/clientes/modal-nuevo-cliente/cliente-nuevo-popup-service';
 
 const CLIENTES_ROUTES_ALL = [...CLIENTES_ROUTE, ...CLIENTES_POPUP_ROUTE];
 

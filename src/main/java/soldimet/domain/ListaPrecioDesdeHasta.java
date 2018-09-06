@@ -31,7 +31,7 @@ public class ListaPrecioDesdeHasta implements Serializable {
     @Column(name = "fecha_hasta")
     private LocalDate fechaHasta;
 
-    @OneToMany
+    @OneToMany(cascade = { CascadeType.ALL })
     @JoinColumn(name = "lista")
     @JsonIgnore
     private Set<CostoOperacion> costoOperacions = new HashSet<>();

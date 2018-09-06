@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { PresupuestosService } from '../../../presupuestos.service';
+import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { JhiEventManager } from 'ng-jhipster';
-import { DetallePresupuestoService } from '../../../../entities/detalle-presupuesto';
+import { DetallePresupuestoService } from 'app/entities/detalle-presupuesto';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Cilindrada } from 'app/shared/model/cilindrada.model';

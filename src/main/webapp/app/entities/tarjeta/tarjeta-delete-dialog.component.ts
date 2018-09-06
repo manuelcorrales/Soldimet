@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ITarjeta } from 'app/shared/model/tarjeta.model';
-import { TarjetaService } from './tarjeta.service';
+import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
 
 @Component({
     selector: 'jhi-tarjeta-delete-dialog',

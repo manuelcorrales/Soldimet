@@ -26,17 +26,17 @@ public class CostoOperacion implements Serializable {
     @Column(name = "costo_operacion", nullable = false)
     private Float costoOperacion;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.DETACH })
     @NotNull
     @JsonIgnoreProperties("")
     private Cilindrada cilindrada;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.DETACH })
     @NotNull
     @JsonIgnoreProperties("")
     private Operacion operacion;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.DETACH })
     @NotNull
     @JsonIgnoreProperties("")
     private TipoParteMotor tipoParteMotor;

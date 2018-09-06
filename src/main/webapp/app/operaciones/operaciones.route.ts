@@ -2,7 +2,7 @@ import { Route } from '@angular/router';
 
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { OperacionesComponent } from './operaciones.component';
+import { OperacionesComponent } from 'app/operaciones/operaciones.component';
 import { UserRouteAccessService } from 'app/core';
 
 export const OPERACIONES_ROUTE: Route = {

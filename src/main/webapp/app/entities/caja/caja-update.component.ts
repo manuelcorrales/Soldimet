@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { ICaja } from 'app/shared/model/caja.model';
-import { CajaService } from './caja.service';
+import { CajaService } from 'app/entities/caja/caja.service';
 
 @Component({
     selector: 'jhi-caja-update',

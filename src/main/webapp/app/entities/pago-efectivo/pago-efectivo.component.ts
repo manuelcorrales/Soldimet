@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IPagoEfectivo } from 'app/shared/model/pago-efectivo.model';
 import { Principal } from 'app/core';
-import { PagoEfectivoService } from './pago-efectivo.service';
+import { PagoEfectivoService } from 'app/entities/pago-efectivo/pago-efectivo.service';
 
 @Component({
     selector: 'jhi-pago-efectivo',

@@ -10,7 +10,7 @@ import {
     HistorialPrecioDeletePopupComponent,
     historialPrecioRoute,
     historialPrecioPopupRoute
-} from './';
+} from 'app/entities/historial-precio';
 
 const ENTITY_STATES = [...historialPrecioRoute, ...historialPrecioPopupRoute];
 

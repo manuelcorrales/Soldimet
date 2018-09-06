@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
-import { TipoTarjetaService } from './tipo-tarjeta.service';
+import { TipoTarjetaService } from 'app/entities/tipo-tarjeta/tipo-tarjeta.service';
 
 @Component({
     selector: 'jhi-tipo-tarjeta-update',

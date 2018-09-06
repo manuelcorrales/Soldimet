@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
-import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.service';
-import { EstadoCobranzaOperacionComponent } from './estado-cobranza-operacion.component';
-import { EstadoCobranzaOperacionDetailComponent } from './estado-cobranza-operacion-detail.component';
-import { EstadoCobranzaOperacionUpdateComponent } from './estado-cobranza-operacion-update.component';
-import { EstadoCobranzaOperacionDeletePopupComponent } from './estado-cobranza-operacion-delete-dialog.component';
+import { EstadoCobranzaOperacionService } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.service';
+import { EstadoCobranzaOperacionComponent } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.component';
+import { EstadoCobranzaOperacionDetailComponent } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion-detail.component';
+import { EstadoCobranzaOperacionUpdateComponent } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion-update.component';
+import { EstadoCobranzaOperacionDeletePopupComponent } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion-delete-dialog.component';
 import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
 
 @Injectable({ providedIn: 'root' })

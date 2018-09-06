@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
-import { FormaDePagoService } from './forma-de-pago.service';
+import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
 
 @Component({
     selector: 'jhi-forma-de-pago-delete-dialog',

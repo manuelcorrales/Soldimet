@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { Principal } from 'app/core';
-import { TipoRepuestoService } from './tipo-repuesto.service';
+import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
 
 @Component({
     selector: 'jhi-tipo-repuesto',
