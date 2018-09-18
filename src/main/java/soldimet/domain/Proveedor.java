@@ -4,6 +4,8 @@ package soldimet.domain;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -23,6 +25,7 @@ public class Proveedor implements Serializable {
     @OneToOne(optional = false)
     @NotNull
     @JoinColumn(unique = true)
+    @JsonInclude
     private Persona persona;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

@@ -28,7 +28,6 @@ public class CobranzaRepuesto implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
     private TipoRepuesto tipoRepuesto;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

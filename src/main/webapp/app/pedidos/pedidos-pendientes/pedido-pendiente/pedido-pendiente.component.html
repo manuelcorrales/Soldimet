@@ -5,7 +5,7 @@
         <span>{{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</span>
     </div>
     <div class="card-body">
-        <h5 class="card-title">Motor: {{pedido.presupuesto.detallePresupuestos[0].motor.nombreMotor}}</h5>
+        <h5 class="card-title">Motor: {{pedido.presupuesto.detallePresupuestos[0]?.motor.marcaMotor}}</h5>
         <div *ngFor="let detallePedido of pedido.detallePedidos">
             <jhi-detalle-pedido [detallePedido]="detallePedido" [proveedores]="proveedores"></jhi-detalle-pedido>
         </div>

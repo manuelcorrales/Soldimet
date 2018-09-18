@@ -11,12 +11,13 @@ import { PedidoPendienteComponent } from 'app/pedidos/pedidos-pendientes/pedido-
 import { DetallePedidoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { CostoRepuestoComponent } from './pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const ROUTES = [PEDIDOS_ROUTE, ...PEDIDOS_SUBROUTES];
 
 @NgModule({
-    imports: [CommonModule, BrowserModule, RouterModule.forChild(ROUTES)],
-    exports: [RouterModule],
+    imports: [NgbModule.forRoot(), CommonModule, BrowserModule, RouterModule.forChild(ROUTES)],
+    exports: [RouterModule, NgbModule],
     entryComponents: [PedidosComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [PedidosService],

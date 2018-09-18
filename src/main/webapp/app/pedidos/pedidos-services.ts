@@ -18,7 +18,6 @@ export class PedidosService {
 
     getPedidosPendientes(): Observable<PedidoRepuesto[]> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarPedidosPendientes}`;
-        console.log(urlLlamada);
         return this.http.get<PedidoRepuesto[]>(urlLlamada);
     }
     getPedidosRecibidos(): Observable<PedidoRepuesto[]> {
