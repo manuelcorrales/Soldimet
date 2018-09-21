@@ -1,14 +1,18 @@
-<div class="card">
-    <div class="card-header">
-        <span>Presupuesto Nº: {{pedido.presupuesto.id}}</span>
-        <span>Fecha: {{pedido.presupuesto.fechaCreacion}}</span>
-        <span>{{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</span>
+<div class="card border-info">
+    <div class="card-header .container-fluid ">
+        <div class="row">
+        <div class="col">Presupuesto Nº: {{pedido.presupuesto.id}}</div>
+        <div class="col">Fecha: {{pedido.presupuesto.fechaCreacion}}</div>
+        <div class="col">{{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</div>
+    </div>
     </div>
     <div class="card-body">
         <h5 class="card-title">Motor: {{pedido.presupuesto.detallePresupuestos[0]?.motor.marcaMotor}}</h5>
         <div *ngFor="let detallePedido of pedido.detallePedidos">
-            <jhi-detalle-pedido [detallePedido]="detallePedido" [proveedores]="proveedores"></jhi-detalle-pedido>
+            <jhi-detalle-pedido #detallePedidoComponent
+            [detallePedido]="detallePedido" [proveedores]="proveedores"></jhi-detalle-pedido>
+            <br>
         </div>
-        <a class="btn btn-primary">Guardar</a>
+        <a class="btn btn-primary float-right" (click)="guardarPedidoPendiente()">Guardar</a>
     </div>
 </div>

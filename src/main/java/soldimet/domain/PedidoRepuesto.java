@@ -5,8 +5,6 @@ import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -47,7 +45,7 @@ public class PedidoRepuesto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<DetallePedido> detallePedidos = new HashSet<DetallePedido>();
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade=CascadeType.ALL)
     @NotNull
     private Presupuesto presupuesto;
 
@@ -174,5 +172,12 @@ public class PedidoRepuesto implements Serializable {
             ", fechaPedido='" + getFechaPedido() + "'" +
             ", fechaRecibo='" + getFechaRecibo() + "'" +
             "}";
+    }
+
+    public void cambiarEstadoADetalles( EstadoDetallePedido estadoDetallePedido) {
+        for( DetallePedido detalle: this.detallePedidos) {
+            detalle.setEstadoDetallePedido(estadoDetallePedido);
+        }
+
     }
 }

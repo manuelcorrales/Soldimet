@@ -40,8 +40,10 @@
         </div>
     </div>
     <div class="card-footer">
-        <div class="align-center">
-            <label>Total Presupuesto: ${{presupuesto.importeTotal}}</label>
+        <div class="text-center">
+            <label>Total Presupuesto:
+                <input type="number" class="form-control" name="importeTotal" [(ngModel)]="presupuesto.importeTotal">
+            </label>
         </div>
         <div class="text-right">
             <button [disabled]="isSaving" type="submit" class="btn btn-primary" >

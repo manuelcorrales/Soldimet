@@ -37,7 +37,17 @@
                     </span>
                 </a>
             </li>
-            <li class="nav-item dropdown pointer" routerLinkActive="active" ngbDropdown *jhiHasAnyAuthority="'ROLE_USER'"
+            <li class="nav-item">
+                <a class="nav-link" routerLink="pedidos" routerLinkActive="active" *jhiHasAnyAuthority="'ROLE_USER'" [routerLinkActiveOptions]="{exact: true}"
+                    (click)="collapseNavbar()">
+                    <span>
+                        <i class="fa fa-car" aria-hidden="true"></i>
+                        <span>Pedidos</span>
+                    </span>
+                </a>
+            </li>
+
+            <!--li class="nav-item dropdown pointer" routerLinkActive="active" ngbDropdown *jhiHasAnyAuthority="'ROLE_USER'"
                 [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link dropdown-toggle"  class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
                     <span>
@@ -65,7 +75,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li-->
             <li class="nav-item" routerLinkActive="active" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="operaciones" (click)="collapseNavbar()">
                     <span>

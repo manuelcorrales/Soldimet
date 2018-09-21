@@ -33,6 +33,10 @@ public class DetallePedido implements Serializable {
     @JsonInclude
     private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
+    @ManyToOne (cascade ={CascadeType.DETACH, CascadeType.MERGE}, optional = false)
+    @NotNull
+    private EstadoDetallePedido estadoDetallePedido;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -76,6 +80,20 @@ public class DetallePedido implements Serializable {
 
     public void setCostoRepuestos(Set<CostoRepuesto> costoRepuestos) {
         this.costoRepuestos = costoRepuestos;
+    }
+
+    /**
+     * @return the estadoDetallePedido
+     */
+    public EstadoDetallePedido getEstadoDetallePedido() {
+        return estadoDetallePedido;
+    }
+
+    /**
+     * @param estadoDetallePedido the estadoDetallePedido to set
+     */
+    public void setEstadoDetallePedido(EstadoDetallePedido estadoDetallePedido) {
+        this.estadoDetallePedido = estadoDetallePedido;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

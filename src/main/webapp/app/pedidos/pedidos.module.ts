@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PedidosComponent } from 'app/pedidos/pedidos.component';
-import { PEDIDOS_ROUTE, PEDIDOS_SUBROUTES } from 'app/pedidos/pedidos.route';
+import { PEDIDOS_SUBROUTES } from 'app/pedidos/pedidos.route';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { PedidosPendientesComponent } from 'app/pedidos/pedidos-pendientes/pedidos-pendientes.component';
@@ -12,11 +12,12 @@ import { DetallePedidoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pe
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { CostoRepuestoComponent } from './pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '../../../../../node_modules/@angular/forms';
 
-const ROUTES = [PEDIDOS_ROUTE, ...PEDIDOS_SUBROUTES];
+const ROUTES = [...PEDIDOS_SUBROUTES];
 
 @NgModule({
-    imports: [NgbModule.forRoot(), CommonModule, BrowserModule, RouterModule.forChild(ROUTES)],
+    imports: [NgbModule.forRoot(), CommonModule, BrowserModule, FormsModule, RouterModule.forChild(ROUTES)],
     exports: [RouterModule, NgbModule],
     entryComponents: [PedidosComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

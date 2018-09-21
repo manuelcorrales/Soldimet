@@ -1,8 +1,14 @@
-<div class=".container-fluid card jh-card">
-    <h5>Pedidos pendientes</h5>
-    <div class="card-deck">
-        <div *ngFor="let pedido of pedidos">
-            <jhi-pedido-pendiente [pedido]="pedido" [proveedores] = "proveedores"></jhi-pedido-pendiente>
-        </div>
+<div class=".container-fluid jh-card">
+    <h2>Pedidos pendientes</h2>
+    <div class="d-flex justify-content-center">
+        <ng-container *ngIf="pedidos?.length > 0; else elseTemplate">
+            <div *ngFor="let pedido of pedidos">
+                <jhi-pedido-pendiente [pedido]="pedido" [proveedores]="proveedores"></jhi-pedido-pendiente>
+                <br>
+            </div>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <p> No se encontraron pedidos para mostrar</p>
+        </ng-template>
     </div>
 </div>

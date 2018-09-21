@@ -18,5 +18,7 @@ public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long>,
 
     public List<Presupuesto> findAll(Specification specification);
 
+    public List<Presupuesto> findAllByOrderByIdDesc();
+
     public List<Presupuesto> findByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 }

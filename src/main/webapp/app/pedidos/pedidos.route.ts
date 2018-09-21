@@ -6,60 +6,61 @@ import { PedidosComponent } from 'app/pedidos/pedidos.component';
 import { UserRouteAccessService } from 'app/core';
 import { PedidosPendientesComponent } from 'app/pedidos/pedidos-pendientes/pedidos-pendientes.component';
 
-export const PEDIDOS_ROUTE: Route = {
-    path: 'pedidos',
-    component: PedidosComponent,
-    data: {
-        authorities: ['ROLE_USER'],
-        pageTitle: 'Pedidos'
-    },
-    canActivate: [UserRouteAccessService]
-};
-
 export const PEDIDOS_SUBROUTES: Routes = [
     {
-        path: 'pedidos/pendientes',
-        component: PedidosPendientesComponent,
+        path: 'pedidos',
+        component: PedidosComponent,
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Pedidos Pendientes'
+            pageTitle: 'Pedidos'
         },
-        canActivate: [UserRouteAccessService]
+        children: [
+            {
+                path: 'pendientes',
+                component: PedidosPendientesComponent,
+                data: {
+                    authorities: ['ROLE_USER'],
+                    pageTitle: 'Pedidos Pendientes'
+                },
+                canActivate: [UserRouteAccessService]
+            }
+        ]
+
+        //     {
+        //         path: 'pedido-repuesto/:id/view',
+        //         component: PedidoRepuestoDetailComponent,
+        //         resolve: {
+        //             pedidoRepuesto: PedidoRepuestoResolve
+        //         },
+        //         data: {
+        //             authorities: ['ROLE_USER'],
+        //             pageTitle: 'PedidoRepuestos'
+        //         },
+        //         canActivate: [UserRouteAccessService]
+        //     },
+        //     {
+        //         path: 'pedido-repuesto/new',
+        //         component: PedidoRepuestoUpdateComponent,
+        //         resolve: {
+        //             pedidoRepuesto: PedidoRepuestoResolve
+        //         },
+        //         data: {
+        //             authorities: ['ROLE_USER'],
+        //             pageTitle: 'PedidoRepuestos'
+        //         },
+        //         canActivate: [UserRouteAccessService]
+        //     },
+        //     {
+        //         path: 'pedido-repuesto/:id/edit',
+        //         component: PedidoRepuestoUpdateComponent,
+        //         resolve: {
+        //             pedidoRepuesto: PedidoRepuestoResolve
+        //         },
+        //         data: {
+        //             authorities: ['ROLE_USER'],
+        //             pageTitle: 'PedidoRepuestos'
+        //         },
+        //         canActivate: [UserRouteAccessService]
+        //     }
     }
-    //     {
-    //         path: 'pedido-repuesto/:id/view',
-    //         component: PedidoRepuestoDetailComponent,
-    //         resolve: {
-    //             pedidoRepuesto: PedidoRepuestoResolve
-    //         },
-    //         data: {
-    //             authorities: ['ROLE_USER'],
-    //             pageTitle: 'PedidoRepuestos'
-    //         },
-    //         canActivate: [UserRouteAccessService]
-    //     },
-    //     {
-    //         path: 'pedido-repuesto/new',
-    //         component: PedidoRepuestoUpdateComponent,
-    //         resolve: {
-    //             pedidoRepuesto: PedidoRepuestoResolve
-    //         },
-    //         data: {
-    //             authorities: ['ROLE_USER'],
-    //             pageTitle: 'PedidoRepuestos'
-    //         },
-    //         canActivate: [UserRouteAccessService]
-    //     },
-    //     {
-    //         path: 'pedido-repuesto/:id/edit',
-    //         component: PedidoRepuestoUpdateComponent,
-    //         resolve: {
-    //             pedidoRepuesto: PedidoRepuestoResolve
-    //         },
-    //         data: {
-    //             authorities: ['ROLE_USER'],
-    //             pageTitle: 'PedidoRepuestos'
-    //         },
-    //         canActivate: [UserRouteAccessService]
-    //     }
 ];

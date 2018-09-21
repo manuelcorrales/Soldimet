@@ -5,6 +5,7 @@ import { Proveedor } from 'app/shared/model/proveedor.model';
 import { Observable } from '../../../../../../../../../node_modules/rxjs';
 import { NgbTypeaheadConfig } from '@ng-bootstrap/ng-bootstrap';
 import { map } from '../../../../../../../../../node_modules/rxjs/operators';
+import { Persona } from 'app/shared/model/persona.model';
 
 @Component({
     selector: 'jhi-costo-repuesto',
@@ -18,15 +19,21 @@ export class CostoRepuestoComponent implements OnInit {
     @Input()
     proveedores: Proveedor[];
     search;
+    nombreProveedor = '';
+    nombreArticulo = '';
+
+    formatter = result => result.persona.nombre;
 
     constructor(config: NgbTypeaheadConfig) {
         // customize default values of typeaheads used by this component tree
         config.showHint = true;
+        config.container = true;
     }
 
     ngOnInit() {
-        this.costoRepuesto.proveedor = this.proveedores[0];
-        this.cobranzaRepuesto.this.search = (text$: Observable<string>) =>
+        this.costoRepuesto.tipoRepuesto = this.cobranzaRepuesto.tipoRepuesto;
+
+        this.search = (text$: Observable<string>) =>
             text$.pipe(
                 map(
                     term =>
@@ -35,5 +42,13 @@ export class CostoRepuestoComponent implements OnInit {
                             : this.proveedores.filter(v => v.persona.nombre.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)
                 )
             );
+    }
+
+    selectedItem(proveedor) {
+        this.costoRepuesto.proveedor = proveedor;
+    }
+
+    getCostoRepuesto() {
+        return this.costoRepuesto;
     }
 }

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import com.codahale.metrics.annotation.Timed;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,11 +38,12 @@ import soldimet.web.rest.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/api/presupuestos")
-@Transactional
+@Transactional()
 @Timed
 public class PresupuestoController {
 
     private final Logger log = LoggerFactory.getLogger(PresupuestoController.class);
+
 
     private static final String ENTITY_NAME = "Presupuesto";
 
@@ -121,6 +124,7 @@ public class PresupuestoController {
                     .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
                     .body(result);
         } else {
+            log.debug("Error :) ", dtoPresupuesto);
             return ResponseEntity.status(500).body(dtoPresupuesto);
         }
     }

@@ -11,7 +11,6 @@ public class Globales {
     //-------------------------ESTADOS------------------------
     public final String NOMBRE_ESTADO_ARTICULO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA = "Alta";
-    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_MOVIMIENTO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_OPERACION_ALTA = "Alta";
     public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_ALTA = "Alta";
@@ -20,7 +19,6 @@ public class Globales {
 
     public final String NOMBRE_ESTADO_ARTICULO_BAJA = "Baja";
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_BAJA = "Baja";
-    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_BAJA = "Baja";
     public final String NOMBRE_ESTADO_MOVIMIENTO_BAJA = "Baja";
     public final String NOMBRE_ESTADO_OPERACION_BAJA = "Baja";
     public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_BAJA = "Baja";
@@ -30,10 +28,20 @@ public class Globales {
     public final String NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO = "Aceptado";
     public final String NOMBRE_ESTADO_PRESUPUESTO_CREADO = "Creado";
     public final String NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO = "Entregado";
+    public final String NOMBRE_ESTADO_PRESUPUESTO_CANCELADO = "Cancelado";
+    public final String NOMBRE_ESTADO_PRESUPUESTO_TERMINADO = "Terminado";
 
     public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO = "Pendiente de pedido";
     public final String NOMBRE_ESTADO_PEDIDO_PENDIENTE_RECIBO = "Pendiente de Recibo";
     public final String NOMBRE_ESTADO_PEDIDO_RECIBIDO = "Recibido";
+    public final String NOMBRE_ESTADO_PEDIDO_CANCELADO = "Cancelado";
+
+    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO = "Pendiente de pedido";
+    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_RECIBO = "Pendido";
+    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO = "Recibido";
+    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO = "Cancelado";
+
+    public final String NOMBRE_ESTADO_COBRANZA_OPERACION_CREADO = "Creado";
 
     //---------------------------------Tipo Articulos------------------------
     public final String nombre_Tipo_Repuesto_Repuesto = "Repuesto";
