@@ -1,4 +1,4 @@
-<div class="row">
+<!--div class="row">
     <div class="col-lg-2 col-md-2 col-sm-5 col-xs-6 bhoechie-tab-container">
         <div class="list-group">
             <a routerLink="pendientes" class="list-group-item active text-center">
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="col-lg-10 col-md-10 col-sm-7 col-xs-6 bhoechie-tab">
-        <!-- Buscador-->
+        <! Buscador>
         <div class="card-body row no-gutters align-items-center">
                 <div class="col-auto">
                     <i class="fa fa-search h4 text-body"></i>
@@ -28,9 +28,15 @@
                     <button class="btn btn-lg btn-success" type="submit">Filtrar</button>
                 </div>
             </div>
-        <!-- Router -->
+        <! Router >
         <div class="bhoechie-tab-content active">
             <router-outlet></router-outlet>
         </div>
     </div>
+</div-->
+<div class="">
+    <ng2-smart-table
+    [settings]="settings"
+    [source]="pedidos"
+    ></ng2-smart-table>
 </div>

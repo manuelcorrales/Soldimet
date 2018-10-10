@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { Proveedor } from 'app/shared/model/proveedor.model';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'jhi-pedidos-pendientes',
@@ -11,8 +12,9 @@ import { Proveedor } from 'app/shared/model/proveedor.model';
 export class PedidosPendientesComponent implements OnInit {
     pedidos: PedidoRepuesto[];
     proveedores: Proveedor[];
+    pedidoElegido: PedidoRepuesto;
 
-    constructor(private pedidosServices: PedidosService) {}
+    constructor(private pedidosServices: PedidosService, private modalService: NgbActiveModal) {}
 
     ngOnInit() {
         this.pedidosServices.getPedidosPendientes().subscribe((pedidos: PedidoRepuesto[]) => {
@@ -22,5 +24,9 @@ export class PedidosPendientesComponent implements OnInit {
         this.pedidosServices.getProveedoresRepuestos().subscribe((proveedores: Proveedor[]) => {
             this.proveedores = proveedores;
         });
+    }
+
+    setPedido(pedido) {
+        this.pedidoElegido = pedido;
     }
 }

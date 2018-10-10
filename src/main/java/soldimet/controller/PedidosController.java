@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Proveedor;
+import soldimet.service.dto.DTOPedidoCabecera;
 import soldimet.service.expertos.ExpertoPedidos;
 
 import com.codahale.metrics.annotation.Timed;
@@ -55,6 +56,21 @@ public class PedidosController {
         if (pedidos != null) {
 
             return new ResponseEntity<List<Proveedor>>(pedidos, HttpStatus.OK);
+
+        } else {
+            return ResponseEntity.status(500).body(null);
+        }
+
+    }
+
+    @GetMapping("/getPedidosCabecera")
+    public ResponseEntity<List<DTOPedidoCabecera>> getPedidosCabecera() {
+
+        List<DTOPedidoCabecera> pedidos = expertoPedidos.getPedidosCabecera();
+
+        if (pedidos != null) {
+
+            return new ResponseEntity<List<DTOPedidoCabecera>>(pedidos, HttpStatus.OK);
 
         } else {
             return ResponseEntity.status(500).body(null);

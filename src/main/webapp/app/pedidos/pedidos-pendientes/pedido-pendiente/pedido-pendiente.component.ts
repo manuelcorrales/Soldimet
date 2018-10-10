@@ -8,7 +8,7 @@ import { DetallePedidoComponent } from 'app/entities/detalle-pedido';
 @Component({
     selector: 'jhi-pedido-pendiente',
     templateUrl: './pedido-pendiente.component.html',
-    styles: []
+    styles: ['./collapsable.css']
 })
 export class PedidoPendienteComponent implements OnInit {
     @Input()

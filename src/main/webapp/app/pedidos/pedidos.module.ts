@@ -13,11 +13,12 @@ import { PedidosService } from 'app/pedidos/pedidos-services';
 import { CostoRepuestoComponent } from './pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '../../../../../node_modules/@angular/forms';
+import { Ng2SmartTableModule } from '../../../../../node_modules/ng2-smart-table';
 
 const ROUTES = [...PEDIDOS_SUBROUTES];
 
 @NgModule({
-    imports: [NgbModule.forRoot(), CommonModule, BrowserModule, FormsModule, RouterModule.forChild(ROUTES)],
+    imports: [Ng2SmartTableModule, NgbModule.forRoot(), CommonModule, BrowserModule, FormsModule, RouterModule.forChild(ROUTES)],
     exports: [RouterModule, NgbModule],
     entryComponents: [PedidosComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

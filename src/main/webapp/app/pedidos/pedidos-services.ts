@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { Proveedor } from 'app/shared/model/proveedor.model';
+import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 
 @Injectable()
 export class PedidosService {
@@ -13,6 +14,7 @@ export class PedidosService {
     private urlBuscarPedidosRealizados = '/getPedidosRealizados';
     private urlUpdatePedido = '/updatePedido';
     private urlProveedoresRepuestos = '/proveedoresRepuestos';
+    private urlBuscarPedidoCabecera = '/getPedidosCabecera';
 
     constructor(private http: HttpClient) {}
 
@@ -36,5 +38,10 @@ export class PedidosService {
     getProveedoresRepuestos(): Observable<Proveedor[]> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlProveedoresRepuestos}`;
         return this.http.get<Proveedor[]>(urlLlamada);
+    }
+
+    getPedidosCabecera(): Observable<DtoPedidoCabecera[]> {
+        const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarPedidoCabecera}`;
+        return this.http.get<DtoPedidoCabecera[]>(urlLlamada);
     }
 }

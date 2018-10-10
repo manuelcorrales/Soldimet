@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import soldimet.constant.Globales;
+import soldimet.converter.PedidoConverter;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPersona;
 import soldimet.domain.PedidoRepuesto;
@@ -16,6 +17,7 @@ import soldimet.repository.EstadoPersonaRepository;
 import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.repository.PersonaRepository;
 import soldimet.repository.ProveedorRepository;
+import soldimet.service.dto.DTOPedidoCabecera;
 
 @Service
 public class ExpertoPedidos {
@@ -38,6 +40,9 @@ public class ExpertoPedidos {
     @Autowired
     private PersonaRepository personaRepository;
 
+    @Autowired
+    private PedidoConverter pedidoConverter;
+
     public List<PedidoRepuesto> getPedidosPendientes() {
 
         EstadoPedidoRepuesto estadoPendiente = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
@@ -58,6 +63,13 @@ public class ExpertoPedidos {
         List<Proveedor> proveedores = proveedorRepository.findByPersonaIn(personasActivas);
 
 		return proveedores;
-	}
+    }
+
+    public List<DTOPedidoCabecera> getPedidosCabecera() {
+
+        List<PedidoRepuesto> pedidos = pedidoRepuestoRepository.findAll();
+
+        return pedidoConverter.convertirPedidosAPedidosCabeceras(pedidos);
+    }
 
 }

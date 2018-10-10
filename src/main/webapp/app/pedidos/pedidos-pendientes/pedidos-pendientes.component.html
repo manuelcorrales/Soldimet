@@ -1,14 +1,29 @@
-<div class=".container-fluid jh-card">
+<div class=".container-fluid">
     <h2>Pedidos pendientes</h2>
-    <div class="d-flex justify-content-center">
-        <ng-container *ngIf="pedidos?.length > 0; else elseTemplate">
-            <div *ngFor="let pedido of pedidos">
-                <jhi-pedido-pendiente [pedido]="pedido" [proveedores]="proveedores"></jhi-pedido-pendiente>
-                <br>
-            </div>
-        </ng-container>
-        <ng-template #elseTemplate>
-            <p> No se encontraron pedidos para mostrar</p>
-        </ng-template>
+    <div class="d-flex">
+        <ul class="list-group">
+            <ng-container *ngIf="pedidos?.length > 0; else elseTemplate">
+                <div *ngFor="let pedido of pedidos">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col">Presupuesto Nº: {{pedido.presupuesto.id}}</div>
+                            <div class="col">Fecha: {{pedido.presupuesto.fechaCreacion}}</div>
+                            <div class="col">{{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</div>
+                            <div class="btn btn-outline-primary"
+                            [routerLink]="['/', { outlets: { popup: 'pendientes/'+ pedido.id} }]"
+                            (click)="setPedido(pedido)">Ver</div>
+                        </div>
+                    </li>
+                </div>
+            </ng-container>
+            <ng-template #elseTemplate>
+                <p> No se encontraron pedidos para mostrar</p>
+            </ng-template>
+        </ul>
     </div>
 </div>
+<br>
+<div *ngIf="pedidoElegido">
+        <jhi-pedido-pendiente [pedido]="pedidoElegido" [proveedores]="proveedores"></jhi-pedido-pendiente>
+</div>
+

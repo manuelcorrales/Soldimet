@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { PedidosComponent } from 'app/pedidos/pedidos.component';
 import { UserRouteAccessService } from 'app/core';
 import { PedidosPendientesComponent } from 'app/pedidos/pedidos-pendientes/pedidos-pendientes.component';
+import { PedidoRepuestoResolve } from 'app/entities/pedido-repuesto';
 
 export const PEDIDOS_SUBROUTES: Routes = [
     {
@@ -16,7 +17,7 @@ export const PEDIDOS_SUBROUTES: Routes = [
         },
         children: [
             {
-                path: 'pendientes',
+                path: 'pendientes/:id',
                 component: PedidosPendientesComponent,
                 data: {
                     authorities: ['ROLE_USER'],
