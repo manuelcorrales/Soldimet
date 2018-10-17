@@ -19,6 +19,9 @@ public class DTOPedidoCabecera {
     private LocalDate fecha;
     private String cliente;
     private String estado;
+    private String motor;
+    private String tipo;
+    private Long presupuestoId;
 
     public DTOPedidoCabecera() {
     }
@@ -46,7 +49,26 @@ public class DTOPedidoCabecera {
      */
     public Long getId() {
         return id;
-    }/**
+    }
+    /**
+     * @return the motor
+     */
+    public String getMotor() {
+        return motor;
+    }
+    /**
+     * @return the presupuestoId
+     */
+    public Long getPresupuestoId() {
+        return presupuestoId;
+    }
+    /**
+     * @return the tipo
+     */
+    public String getTipo() {
+        return tipo;
+    }
+    /**
      * @param cliente the cliente to set
      */
     public void setCliente(String cliente) {
@@ -66,6 +88,24 @@ public class DTOPedidoCabecera {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+    /**
+     * @param motor the motor to set
+     */
+    public void setMotor(String motor) {
+        this.motor = motor;
+    }
+    /**
+     * @param presupuestoId the presupuestoId to set
+     */
+    public void setPresupuestoId(Long presupuestoId) {
+        this.presupuestoId = presupuestoId;
+    }
+    /**
+     * @param tipo the tipo to set
+     */
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
 

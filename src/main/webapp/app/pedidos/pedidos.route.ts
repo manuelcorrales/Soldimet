@@ -17,7 +17,7 @@ export const PEDIDOS_SUBROUTES: Routes = [
         },
         children: [
             {
-                path: 'pendientes/:id',
+                path: 'pedidos/:id',
                 component: PedidosPendientesComponent,
                 data: {
                     authorities: ['ROLE_USER'],

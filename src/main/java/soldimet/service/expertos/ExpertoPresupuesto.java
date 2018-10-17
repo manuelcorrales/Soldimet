@@ -320,10 +320,13 @@ public class ExpertoPresupuesto {
         nuevoPedido.setPresupuesto(presupuesto);
         EstadoDetallePedido estadoPendiente = estadoDetallePedidoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
         for(DetallePresupuesto detallePresupuesto: presupuesto.getDetallePresupuestos()){
-            DetallePedido nuevoDetallePedido = new DetallePedido();
-            nuevoDetallePedido.setDetallePresupuesto(detallePresupuesto);
-            nuevoDetallePedido.setEstadoDetallePedido(estadoPendiente);
-            nuevoPedido.getDetallePedidos().add(nuevoDetallePedido);
+            if (!detallePresupuesto.getCobranzaRepuestos().isEmpty()) {
+                DetallePedido nuevoDetallePedido = new DetallePedido();
+                nuevoDetallePedido.setDetallePresupuesto(detallePresupuesto);
+                nuevoDetallePedido.setEstadoDetallePedido(estadoPendiente);
+                nuevoPedido.getDetallePedidos().add(nuevoDetallePedido);
+            }
+
         }
         pedidoRepuestoRepository.save(nuevoPedido);
         return presupuesto;

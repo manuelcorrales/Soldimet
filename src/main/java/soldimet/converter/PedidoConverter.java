@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import soldimet.domain.DetallePedido;
+import soldimet.domain.DetallePresupuesto;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Presupuesto;
 import soldimet.service.dto.DTOPedidoCabecera;
@@ -19,6 +21,13 @@ public class PedidoConverter {
         dtoPedidoCabecera.setEstado(pedido.getEstadoPedidoRepuesto().getNombreEstado());
         dtoPedidoCabecera.setFecha(pedido.getFechaCreacion());
         dtoPedidoCabecera.setId(pedido.getId());
+        String tipo = "";
+        for (DetallePedido detallePedido: pedido.getDetallePedidos()) {
+            tipo += "-"+detallePedido.getDetallePresupuesto().getTipoParteMotor().getNombreTipoParteMotor();
+        }
+        dtoPedidoCabecera.setTipo(tipo.replaceFirst("-", " "));
+        dtoPedidoCabecera.setMotor(pedido.getPresupuesto().getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
+        dtoPedidoCabecera.setPresupuestoId(pedido.getPresupuesto().getId());
         return dtoPedidoCabecera;
     }
 

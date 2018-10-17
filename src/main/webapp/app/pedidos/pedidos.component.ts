@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { PedidosService } from 'app/pedidos/pedidos-services';
+import { EventEmitter } from 'events';
 
 @Component({
     selector: 'jhi-pedidos',
@@ -9,40 +9,41 @@ import { PedidosService } from 'app/pedidos/pedidos-services';
     styles: ['.pedidos-style.css']
 })
 export class PedidosComponent implements OnInit {
-    settings = {
-        columns: {
-            id: {
-                title: 'Número',
-                editable: false,
-                addable: false
-            },
-            fecha: {
-                title: 'Fecha',
-                editable: false,
-                addable: false
-            },
-            cliente: {
-                title: 'cliente',
-                editable: false,
-                addable: false
-            },
-            estado: {
-                title: 'Estado',
-                editable: false,
-                addable: false
-            }
+    columns = [
+        {
+            prop: 'id',
+            name: 'Nº Pedido',
+            draggable: false
         },
-        noDataMessage: 'No se encontraron pedidos para mostrar.',
-        actions: {
-            columnTitle: 'Operaciones',
-            add: false,
-            edit: false,
-            delete: false
+        {
+            name: 'Fecha',
+            draggable: false
         },
-        pager: {
-            perPage: 20
+        {
+            name: 'PresupuestoId',
+            draggable: false
+        },
+        {
+            name: 'Cliente',
+            draggable: false
+        },
+        {
+            name: 'Motor',
+            draggable: false
+        },
+        {
+            name: 'Tipo',
+            draggable: false
+        },
+        {
+            name: 'Estado',
+            draggable: false
+        },
+        {
+            name: 'Acciones',
+            draggable: false
         }
-    };
+    ];
 
     pedidos: DtoPedidoCabecera[];
 
@@ -53,4 +54,6 @@ export class PedidosComponent implements OnInit {
             this.pedidos = pedidos;
         });
     }
+
+    verPedido(id: number) {}
 }
