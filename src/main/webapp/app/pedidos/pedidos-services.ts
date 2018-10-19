@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
@@ -30,9 +30,9 @@ export class PedidosService {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarPedidosRealizados}`;
         return this.http.get<PedidoRepuesto[]>(urlLlamada);
     }
-    updatePedido(lista: PedidoRepuesto): Observable<PedidoRepuesto> {
+    updatePedido(lista: PedidoRepuesto): Observable<HttpResponse<PedidoRepuesto>> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlUpdatePedido}`;
-        return this.http.post<PedidoRepuesto>(urlLlamada, lista);
+        return this.http.post<HttpResponse<PedidoRepuesto>>(urlLlamada, lista);
     }
 
     getProveedoresRepuestos(): Observable<Proveedor[]> {

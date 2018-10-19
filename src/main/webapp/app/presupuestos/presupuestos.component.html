@@ -1,5 +1,6 @@
 <div class="container-fluid card jh-card">
     <jhi-alert></jhi-alert>
+
     <div class="">
         <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['nuevo']">
             <span>
@@ -7,7 +8,13 @@
             </span>
         </button>
     </div>
-    <div class="row">
+    <div id="row">
+        <div class="input-group stylish-input-group">
+            <input #search type="text" class="form-control search" placeholder="Buscar presupuesto..." (keydown.enter)="onSearch(search.value)">
+            <span class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </span>
+        </div>
     </div>
     <br/>
     <div class="">
@@ -32,7 +39,33 @@
                         <td>{{presupuesto.cliente}} </td>
                         <td>{{presupuesto.importe}}</td>
                         <td>{{presupuesto.fecha}}</td>
-                        <td>{{presupuesto.estado}}</td>
+                        <td>
+                            <div *ngIf="presupuesto.estado== 'Creado'" class="text-center">
+                                <div class="alert alert-primary" style="padding: 0px;" role="alert">
+                                    {{presupuesto.estado}}
+                                </div>
+                            </div>
+                            <div *ngIf="presupuesto.estado== 'Terminado'" class="text-center">
+                                <div class="alert alert-info" role="alert" style="padding: 0px;">
+                                    {{presupuesto.estado}}
+                                </div>
+                            </div>
+                            <div *ngIf="presupuesto.estado== 'Aceptado'" class="text-center">
+                                <div class="alert alert-warning" role="alert" style="padding: 0px;">
+                                    {{presupuesto.estado}}
+                                </div>
+                            </div>
+                            <div *ngIf="presupuesto.estado== 'Entregado'" class="text-center">
+                                <div class="alert alert-success" role="alert" style="padding: 0px;">
+                                    {{presupuesto.estado}}
+                                </div>
+                            </div>
+                            <div *ngIf="presupuesto.estado== 'Cancelado'" class="text-center">
+                                <div class="alert alert-danger" role="alert" style="padding: 0px;">
+                                    {{presupuesto.estado}}
+                                </div>
+                            </div>
+                        </td>
                         <td>{{presupuesto.sucursal}}</td>
                         <td>
 

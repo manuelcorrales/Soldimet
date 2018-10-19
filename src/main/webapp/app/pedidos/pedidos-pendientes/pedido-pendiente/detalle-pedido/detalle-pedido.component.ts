@@ -8,7 +8,7 @@ import { CostoRepuestoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pe
     templateUrl: './detalle-pedido.component.html',
     styles: []
 })
-export class DetallePedidoComponent implements OnInit {
+export class DetallePedidoComponentNew implements OnInit {
     @Input()
     detallePedido: DetallePedido;
     @Input()
