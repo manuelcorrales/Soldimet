@@ -63,7 +63,7 @@
                                     <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-right">
                                             <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
                                                 <span class="fa fa-pencil"></span>
-                                                <span class="d-none d-md-inline">Activar</span>
+                                                <span class="d-none d-md-inline" (click)="activarCliente(cliente)">Activar</span>
                                             </button>
                                     </div>
                             </div>

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/caja")
 public class CajaController {
 
     private final Logger log = LoggerFactory.getLogger(CajaController.class);

@@ -14,7 +14,7 @@
             <tr>
                 <th scope="col">Nº Pedido</th>
                 <th scope="col">Cliente</th>
-                <th scope="col">Fecga</th>
+                <th scope="col">Fecha</th>
                 <th scope="col">Presupuesto</th>
                 <th scope="col">Motor</th>
                 <th scope="col">Tipo</th>
@@ -41,11 +41,21 @@
                             {{pedido.estado}}
                         </div>
                     </div>
+                    <div *ngIf="pedido.estado== 'Pedido Parcial'" class="text-center">
+                            <div class="alert alert-info" role="alert" style="padding: 0px;">
+                                {{pedido.estado}}
+                            </div>
+                        </div>
                     <div *ngIf="pedido.estado== 'Recibido'" class="text-center">
                         <div class="alert alert-success" role="alert" style="padding: 0px;">
                             {{pedido.estado}}
                         </div>
                     </div>
+                    <div *ngIf="pedido.estado== 'Recibido Parcial'" class="text-center">
+                            <div class="alert alert-success" role="alert" style="padding: 0px;">
+                                {{pedido.estado}}
+                            </div>
+                        </div>
                     <div *ngIf="pedido.estado== 'Cancelado'" class="text-center">
                         <div class="alert alert-danger" role="alert" style="padding: 0px;">
                             {{pedido.estado}}
@@ -58,7 +68,7 @@
                     <button class="btn btn-info" type="submit"
                     [routerLink]="['/', { outlets: { popup: 'pedidos/'+ pedido.id } }]"
                     replaceUrl="true"
-                    *ngIf="pedido.estado == 'Pedido' || pedido.estado == 'Pendiente de pedido'"
+                    *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'"
                         placement="top" ngbTooltip="Operar pedido">
                         <i class="fa fa-external-link-square"></i>
                     </button>

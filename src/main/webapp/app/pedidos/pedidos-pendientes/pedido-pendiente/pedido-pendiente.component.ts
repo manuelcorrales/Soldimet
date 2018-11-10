@@ -1,14 +1,21 @@
 import { Component, OnInit, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { Proveedor } from 'app/shared/model/proveedor.model';
 import { PedidosService } from 'app/pedidos/pedidos-services';
-import { JhiAlertService, JhiEventManager } from '../../../../../../../node_modules/ng-jhipster';
+import { JhiEventManager } from '../../../../../../../node_modules/ng-jhipster';
 import { ActivatedRoute } from '../../../../../../../node_modules/@angular/router';
 import { PedidoModalPopupService } from 'app/pedidos/pedidos.component';
 import { DetallePedidoComponentNew } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
 import { HttpResponse } from '../../../../../../../node_modules/@angular/common/http';
 import { Observable } from '../../../../../../../node_modules/rxjs';
 import { NgbActiveModal } from '../../../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
+import { DtoBusquedaProveedor } from 'app/dto/dto-pedidos/dto-proveedor-search';
+import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
+import { ArticuloService } from 'app/entities/articulo';
+import { MarcaService } from 'app/entities/marca';
+import { IMarca } from 'app/shared/model/marca.model';
+import { IArticulo } from 'app/shared/model/articulo.model';
+import { TipoRepuestoService } from 'app/entities/tipo-repuesto';
+import { TipoRepuesto, ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 
 @Component({
     selector: 'jhi-pedido-pendiente',
@@ -17,16 +24,53 @@ import { NgbActiveModal } from '../../../../../../../node_modules/@ng-bootstrap/
 })
 export class PedidoPendienteComponent implements OnInit {
     pedido: PedidoRepuesto;
-    proveedores: Proveedor;
+    proveedores: DtoBusquedaProveedor[];
     @ViewChildren('detPed')
     detallePedidoComponent: QueryList<DetallePedidoComponentNew>;
 
+    marcas: IMarca[];
+    articulos: IArticulo[];
+    tiposRepuestos: ITipoRepuesto[];
     isSaving = false;
 
-    constructor(private pedidosServices: PedidosService, private activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(
+        private pedidosServices: PedidosService,
+        private activeModal: NgbActiveModal,
+        private eventManager: JhiEventManager,
+        private articuloService: ArticuloService,
+        private marcaService: MarcaService,
+        private tipoRepuestoService: TipoRepuestoService
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
+        this.pedidosServices.getProveedoresRepuestos().subscribe((listaProveedores: DtoBusquedaProveedor[]) => {
+            this.proveedores = listaProveedores;
+        });
+        this.marcaService.query().subscribe((res: HttpResponse<IMarca[]>) => {
+            this.marcas = res.body;
+        });
+        this.tipoRepuestoService.query().subscribe((tiposRepuestos: HttpResponse<ITipoRepuesto[]>) => {
+            this.tiposRepuestos = tiposRepuestos.body;
+            this.buscarArticulos();
+        });
+    }
+    buscarArticulos() {
+        this.pedido.presupuesto.detallePresupuestos.forEach(detalle => {
+            let tipoRepuestoID = null;
+            this.tiposRepuestos.forEach((tipoRepuestoI: ITipoRepuesto) => {
+                if (detalle.tipoParteMotor.id == tipoRepuestoI.tipoParteMotor.id) {
+                    tipoRepuestoID = tipoRepuestoI.id;
+                }
+            });
+            let query = '';
+            if (tipoRepuestoID) {
+                query = 'tipoRepuestoId.equals=' + tipoRepuestoID;
+            }
+            this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
+                this.articulos = res.body;
+            });
+        });
     }
 
     guardarPedidoPendiente() {
@@ -71,8 +115,6 @@ export class PedidoPendienteModalPopupComponent implements OnInit, OnDestroy {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
                 this.pedidoPendientePopupService.open(PedidoPendienteComponent as Component, params['id']);
-            } else {
-                console.log('No entro en el if de PedidosPendientesComponent');
             }
         });
     }

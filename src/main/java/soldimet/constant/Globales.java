@@ -13,7 +13,7 @@ public class Globales {
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA = "Alta";
     public final String NOMBRE_ESTADO_MOVIMIENTO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_OPERACION_ALTA = "Alta";
-    public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_ALTA = "Alta";
+    // public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_PERSONA_ALTA = "Alta";
     public final String NOMBRE_ESTADO_PRESUPUESTO_ALTA = "Alta";
 
@@ -32,12 +32,14 @@ public class Globales {
     public final String NOMBRE_ESTADO_PRESUPUESTO_TERMINADO = "Terminado";
 
     public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO = "Pendiente de pedido";
-    public final String NOMBRE_ESTADO_PEDIDO_PENDIENTE_RECIBO = "Pendiente de Recibo";
+    public final String NOMBRE_ESTADO_PEDIDO_PEDIDO = "Pedido";
+    public final String NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL = "Pedido Parcial";
     public final String NOMBRE_ESTADO_PEDIDO_RECIBIDO = "Recibido";
+    public final String NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL = "Recibido Parcial";
     public final String NOMBRE_ESTADO_PEDIDO_CANCELADO = "Cancelado";
 
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO = "Pendiente de pedido";
-    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_RECIBO = "Pendido";
+    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO = "Pedido";
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO = "Recibido";
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO = "Cancelado";
 

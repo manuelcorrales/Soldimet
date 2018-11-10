@@ -141,7 +141,6 @@ public class ExpertoPresupuesto {
 
                 pedido.setEstadoPedidoRepuesto(estadoPendienteDePedido);
 
-
                 // GUARDAR
                 pedidoRepuestoRepository.save(pedido);
             }
@@ -209,7 +208,8 @@ public class ExpertoPresupuesto {
 
             motorRepository.existsById(dtoDatosMotor.getIdMotor());
             Cilindrada cilindrada = cilindradaRepository.findById(dtoDatosMotor.getIdCilindrada()).get();
-            TipoParteMotor tipoParteMotor = tipoParteMotorRepository.findById(dtoDatosMotor.getIdTiposPartesMotores()).get();
+            TipoParteMotor tipoParteMotor = tipoParteMotorRepository.findById(dtoDatosMotor.getIdTiposPartesMotores())
+                    .get();
 
             ListaPrecioRectificacionCRAM listaPrecio = listaPrecioRectificacionCRAMRepository
                     .findByNumeroGrupo(aplicacion.getNumeroGrupo());
@@ -255,7 +255,8 @@ public class ExpertoPresupuesto {
     }
 
     public List<Cliente> buscarTodosLosClientes() {
-        EstadoPersona estadoClienteActivo = estadoPersonaRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_ALTA);
+        EstadoPersona estadoClienteActivo = estadoPersonaRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_ALTA);
         List<Persona> personas = personaRepository.findByEstadoPersona(estadoClienteActivo);
         return clienteRepository.findClienteByPersonaIn(personas);
     }
@@ -288,7 +289,8 @@ public class ExpertoPresupuesto {
 
     public DTOPresupuesto aceptarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
-            EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
+            EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
             Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoAceptado);
             if (this.validarCreacionPedido(editado)) {
                 editado = crearPedidoRepuesto(editado);
@@ -300,10 +302,10 @@ public class ExpertoPresupuesto {
 
     }
 
-    private boolean validarCreacionPedido( Presupuesto presupuesto) {
+    private boolean validarCreacionPedido(Presupuesto presupuesto) {
         Boolean crearPedido = false;
 
-        for (DetallePresupuesto detallePresupuesto: presupuesto.getDetallePresupuestos()) {
+        for (DetallePresupuesto detallePresupuesto : presupuesto.getDetallePresupuestos()) {
             if (!detallePresupuesto.getCobranzaRepuestos().isEmpty()) {
                 crearPedido = true;
             }
@@ -314,12 +316,14 @@ public class ExpertoPresupuesto {
 
     private Presupuesto crearPedidoRepuesto(Presupuesto presupuesto) {
         PedidoRepuesto nuevoPedido = new PedidoRepuesto();
-        EstadoPedidoRepuesto estadoCreado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
+        EstadoPedidoRepuesto estadoCreado = estadoPedidoRepuestoRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
         nuevoPedido.setEstadoPedidoRepuesto(estadoCreado);
         nuevoPedido.setFechaCreacion(LocalDate.now());
         nuevoPedido.setPresupuesto(presupuesto);
-        EstadoDetallePedido estadoPendiente = estadoDetallePedidoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
-        for(DetallePresupuesto detallePresupuesto: presupuesto.getDetallePresupuestos()){
+        EstadoDetallePedido estadoPendiente = estadoDetallePedidoRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
+        for (DetallePresupuesto detallePresupuesto : presupuesto.getDetallePresupuestos()) {
             if (!detallePresupuesto.getCobranzaRepuestos().isEmpty()) {
                 DetallePedido nuevoDetallePedido = new DetallePedido();
                 nuevoDetallePedido.setDetallePresupuesto(detallePresupuesto);
@@ -334,7 +338,8 @@ public class ExpertoPresupuesto {
 
     public DTOPresupuesto cancelarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
-            EstadoPresupuesto estadoPresupuestoCancelado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO);
+            EstadoPresupuesto estadoPresupuestoCancelado = estadoPresupuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO);
             Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoPresupuestoCancelado);
 
             cancelarPedido(editado);
@@ -348,15 +353,17 @@ public class ExpertoPresupuesto {
     }
 
     private void cancelarMovimientos(Presupuesto presupuesto) {
-        //falta cancelar los movimientos cuando los tenga :)
+        // falta cancelar los movimientos cuando los tenga :)
     }
 
     private void cancelarPedido(Presupuesto presupuesto) {
-        EstadoPedidoRepuesto estadoPedidoRepuestoCancelado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_CANCELADO);
+        EstadoPedidoRepuesto estadoPedidoRepuestoCancelado = estadoPedidoRepuestoRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_CANCELADO);
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
         pedido.setEstadoPedidoRepuesto(estadoPedidoRepuestoCancelado);
 
-        EstadoDetallePedido estadoDetallePedido = estadoDetallePedidoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO);
+        EstadoDetallePedido estadoDetallePedido = estadoDetallePedidoRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO);
         pedido.cambiarEstadoADetalles(estadoDetallePedido);
 
         pedidoRepuestoRepository.save(pedido);
@@ -364,9 +371,14 @@ public class ExpertoPresupuesto {
 
     public DTOPresupuesto entregarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
-            EstadoPresupuesto estadoEntregado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO);
-            Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoEntregado);
-            return presupuestoConverter.convertirEntidadAModelo(editado);
+            if (this.puedeEntregarPresupuesto(dtoPresupuesto)) {
+                EstadoPresupuesto estadoEntregado = estadoPresupuestoRepository
+                        .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO);
+                Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoEntregado);
+                return presupuestoConverter.convertirEntidadAModelo(editado);
+            }
+            return null;
+
         } catch (Exception e) {
             return null;
         }
@@ -374,9 +386,14 @@ public class ExpertoPresupuesto {
 
     public DTOPresupuesto terminarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
-            EstadoPresupuesto estadoTerminado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
-            Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoTerminado);
-            return presupuestoConverter.convertirEntidadAModelo(editado);
+            EstadoPresupuesto estadoTerminado = estadoPresupuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+            if (this.puedeTerminarPresupuesto(dtoPresupuesto)) {
+                Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoTerminado);
+                return presupuestoConverter.convertirEntidadAModelo(editado);
+            }
+            return null;
+
         } catch (Exception e) {
             return null;
         }
@@ -388,5 +405,25 @@ public class ExpertoPresupuesto {
         presupuesto.setEstadoPresupuesto(estado);
         Presupuesto editado = presupuestoRepository.save(presupuesto);
         return editado;
+    }
+
+    private Boolean puedeTerminarPresupuesto(DTOPresupuesto dto) {
+        Boolean puedeTerminar = true;
+        Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
+        PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
+        for (DetallePedido detallePedido : pedido.getDetallePedidos()) {
+            if (!detallePedido.getEstadoDetallePedido().getNombreEstado()
+                    .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
+                puedeTerminar = false;
+            }
+        }
+        return puedeTerminar;
+
+    }
+
+    private Boolean puedeEntregarPresupuesto(DTOPresupuesto dto) {
+        Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
+        return presupuesto.getEstadoPresupuesto().getNombreEstado()
+                .equals(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
     }
 }

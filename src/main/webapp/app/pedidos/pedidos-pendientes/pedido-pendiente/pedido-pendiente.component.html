@@ -1,6 +1,6 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="guardarPedidoPendiente()" #editForm="ngForm">
+<form name="editForm" role="form" novalidate #editForm="ngForm">
     <div class="modal-header">
-        <h4 class="modal-title" id="myPedidoLabel">Pedido Pendiente</h4>
+        <h4 class="modal-title" id="myPedidoLabel">Pedido Nº: {{pedido.id}}</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;
         </button>
     </div>
@@ -13,22 +13,25 @@
         <div class="row">
             <div class="col">Presupuesto Nº: {{pedido.presupuesto.id}}</div>
             <div class="col">Fecha: {{pedido.presupuesto.fechaCreacion}}</div>
-            <div class="col">{{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</div>
+            <div class="col">Cliente: {{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</div>
         </div>
         <br>
         <div *ngFor="let detallePedido of pedido.detallePedidos">
-            <jhi-detalle-pedido #detPed [detallePedido]="detallePedido" [proveedores]="proveedores"></jhi-detalle-pedido>
+            <jhi-detalle-pedido #detPed [detallePedido]="detallePedido"
+            [proveedores]="proveedores" [articulos]="articulos" [marcas]="marcas"
+            ></jhi-detalle-pedido>
             <br>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
             <span class="fa fa-ban"></span>&nbsp;
-            <span>Cancelar</span>
+            <span>Volver</span>
         </button>
-        <button type="submit" class="btn btn-primary">
+
+        <!--button type="submit" class="btn btn-primary">
             <span class="fa fa-save"></span>&nbsp;
             <span>Guardar</span>
-        </button>
+        </button-->
     </div>
 </form>

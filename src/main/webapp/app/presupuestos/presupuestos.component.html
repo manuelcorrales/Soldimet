@@ -73,10 +73,10 @@
                                 ngbTooltip="Aceptar presupuesto">
                                 <i class="fa fa-check-square"></i>
                             </button>
-                            <button class="btn btn-info" *ngIf="presupuesto.estado == 'Aceptado'" placement="top" ngbTooltip="Terminar trabajo">
+                            <button class="btn btn-info" *ngIf="presupuesto.estado == 'Aceptado'" (click)="terminarPresupuesto(presupuesto)" placement="top" ngbTooltip="Terminar trabajo">
                                 <i class="fa fa-check-square"></i>
                             </button>
-                            <button class="btn btn-primary" *ngIf="presupuesto.estado == 'Terminado'" placement="top" ngbTooltip="Entregar trabajo">
+                            <button class="btn btn-primary" *ngIf="presupuesto.estado == 'Terminado'" (click)="entregarPresupuesto(presupuesto)" placement="top" ngbTooltip="Entregar trabajo">
                                 <i class="fa fa-check-square"></i>
                             </button>
                             <button class="btn btn-danger" *ngIf="presupuesto.estado != 'Cancelado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"

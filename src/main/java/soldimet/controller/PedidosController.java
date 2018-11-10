@@ -9,12 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import soldimet.domain.CobranzaOperacion;
+import soldimet.domain.CostoRepuesto;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Proveedor;
 import soldimet.service.dto.DTOPedidoCabecera;
+import soldimet.service.dto.DTOProveedor;
 import soldimet.service.expertos.ExpertoPedidos;
 
 import com.codahale.metrics.annotation.Timed;
@@ -47,15 +53,14 @@ public class PedidosController {
 
     }
 
-
     @GetMapping("/proveedoresRepuestos")
-    public ResponseEntity<List<Proveedor>> getProveedoresRepuestos() {
+    public ResponseEntity<List<DTOProveedor>> getProveedoresRepuestos() {
 
-        List<Proveedor> pedidos = expertoPedidos.getProveedoresRepuestos();
+        List<DTOProveedor> pedidos = expertoPedidos.getProveedoresRepuestos();
 
         if (pedidos != null) {
 
-            return new ResponseEntity<List<Proveedor>>(pedidos, HttpStatus.OK);
+            return new ResponseEntity<List<DTOProveedor>>(pedidos, HttpStatus.OK);
 
         } else {
             return ResponseEntity.status(500).body(null);
@@ -71,6 +76,38 @@ public class PedidosController {
         if (pedidos != null) {
 
             return new ResponseEntity<List<DTOPedidoCabecera>>(pedidos, HttpStatus.OK);
+
+        } else {
+            return ResponseEntity.status(500).body(null);
+        }
+
+    }
+
+    @PostMapping("/updateDetallePedido/{detallePedidoId}")
+    public ResponseEntity<CostoRepuesto> updateDetallePedido(@RequestBody CostoRepuesto costoRepuesto,
+            @PathVariable("detallePedidoId") Long detallePedidoId) {
+
+        costoRepuesto = expertoPedidos.updateDetallePedido(costoRepuesto, detallePedidoId);
+
+        if (costoRepuesto != null) {
+
+            return new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
+
+        } else {
+            return ResponseEntity.status(500).body(null);
+        }
+
+    }
+
+    @PostMapping("/recibirRepuesto/{detallePedidoId}")
+    public ResponseEntity<CostoRepuesto> recibirRepuesto(@RequestBody CostoRepuesto costoRepuesto,
+            @PathVariable("detallePedidoId") Long detallePedidoId) {
+
+        costoRepuesto = expertoPedidos.recibirRepuesto(costoRepuesto, detallePedidoId);
+
+        if (costoRepuesto != null) {
+
+            return new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
 
         } else {
             return ResponseEntity.status(500).body(null);

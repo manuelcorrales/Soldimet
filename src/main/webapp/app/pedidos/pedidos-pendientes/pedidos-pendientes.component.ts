@@ -14,23 +14,7 @@ import { PedidoModalPopupService } from 'app/pedidos/pedidos.component';
     styles: []
 })
 export class PedidosPendientesComponent implements OnInit {
-    pedidos: PedidoRepuesto[];
-    proveedores: Proveedor[];
-    pedidoElegido: PedidoRepuesto;
+    constructor() {}
 
-    constructor(private pedidosServices: PedidosService, private modalService: NgbActiveModal) {}
-
-    ngOnInit() {
-        this.pedidosServices.getPedidosPendientes().subscribe((pedidos: PedidoRepuesto[]) => {
-            this.pedidos = pedidos;
-        });
-
-        this.pedidosServices.getProveedoresRepuestos().subscribe((proveedores: Proveedor[]) => {
-            this.proveedores = proveedores;
-        });
-    }
-
-    setPedido(pedido) {
-        this.pedidoElegido = pedido;
-    }
+    ngOnInit() {}
 }

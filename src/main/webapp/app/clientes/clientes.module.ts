@@ -13,6 +13,7 @@ import {
 } from 'app/clientes/modal-borrar-cliente/cliente-borrar-dialog.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClienteModalPopupService } from 'app/clientes/modal-nuevo-cliente/cliente-nuevo-popup-service';
+import { ClientesService } from 'app/clientes/clientes.service';
 
 const CLIENTES_ROUTES_ALL = [...CLIENTES_ROUTE, ...CLIENTES_POPUP_ROUTE];
 
@@ -34,6 +35,6 @@ const CLIENTES_ROUTES_ALL = [...CLIENTES_ROUTE, ...CLIENTES_POPUP_ROUTE];
         ClienteBorrarPopupComponent,
         ClienteBorrarDialogComponent
     ],
-    providers: [ClienteService, ClienteModalPopupService, ClienteBorrarPopupService]
+    providers: [ClienteService, ClienteModalPopupService, ClienteBorrarPopupService, ClientesService]
 })
 export class ClientesModule {}

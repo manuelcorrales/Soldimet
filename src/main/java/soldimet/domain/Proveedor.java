@@ -22,7 +22,7 @@ public class Proveedor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch=FetchType.EAGER)
     @NotNull
     @JoinColumn(unique = true)
     @JsonInclude

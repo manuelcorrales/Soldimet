@@ -32,6 +32,8 @@ export class PresupuestosService {
     private urlSavePresupuesto = '/save';
     private urlAceptarPresupuesto = '/aceptar';
     private urlCancelarPresupuesto = '/cancelar';
+    private urlTerminasPresupuesto = '/terminar';
+    private urlEntregarPresupuesto = '/entregar';
 
     constructor(
         private http: HttpClient,
@@ -52,6 +54,16 @@ export class PresupuestosService {
 
     cancelarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
         const url = `${this.resourceUrlPresupuestos}${this.urlCancelarPresupuesto}`;
+        return this.http.post<DtoPresupuestoCabeceraComponent>(url, dtoPresupuesto);
+    }
+
+    terminarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
+        const url = `${this.resourceUrlPresupuestos}${this.urlTerminasPresupuesto}`;
+        return this.http.post<DtoPresupuestoCabeceraComponent>(url, dtoPresupuesto);
+    }
+
+    entregarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {
+        const url = `${this.resourceUrlPresupuestos}${this.urlEntregarPresupuesto}`;
         return this.http.post<DtoPresupuestoCabeceraComponent>(url, dtoPresupuesto);
     }
 

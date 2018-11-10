@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Cliente, ICliente } from 'app/shared/model/cliente.model';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Principal } from 'app/core';
+import { ClientesService } from 'app/clientes/clientes.service';
 
 @Component({
     selector: 'jhi-clientes',
@@ -21,7 +22,8 @@ export class ClientesComponent implements OnInit, OnDestroy {
         private clienteService: ClienteService,
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
-        private principal: Principal
+        private principal: Principal,
+        private clientesService: ClientesService
     ) {}
 
     loadAll() {
@@ -53,5 +55,16 @@ export class ClientesComponent implements OnInit, OnDestroy {
 
     private onError(error) {
         this.jhiAlertService.error(error.message, null, null);
+    }
+
+    activarCliente(cliente: Cliente) {
+        this.clientesService.activarCliente(cliente).subscribe((clienteResp: Cliente) => {
+            this.clientes.forEach((clienteEnTabla: Cliente) => {
+                if (clienteEnTabla.id === clienteResp.id) {
+                    clienteEnTabla = clienteResp;
+                }
+            });
+            this.loadAll();
+        });
     }
 }

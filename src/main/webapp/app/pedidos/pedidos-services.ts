@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { Proveedor } from 'app/shared/model/proveedor.model';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
+import { DtoBusquedaProveedor } from 'app/dto/dto-pedidos/dto-proveedor-search';
+import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 
 @Injectable()
 export class PedidosService {
@@ -15,6 +16,8 @@ export class PedidosService {
     private urlUpdatePedido = '/updatePedido';
     private urlProveedoresRepuestos = '/proveedoresRepuestos';
     private urlBuscarPedidoCabecera = '/getPedidosCabecera';
+    private urlActualizarDetallePedido = '/updateDetallePedido/';
+    private urlRecibirRepuesto = '/recibirRepuesto/';
 
     constructor(private http: HttpClient) {}
 
@@ -35,13 +38,23 @@ export class PedidosService {
         return this.http.post<HttpResponse<PedidoRepuesto>>(urlLlamada, lista);
     }
 
-    getProveedoresRepuestos(): Observable<Proveedor[]> {
+    getProveedoresRepuestos(): Observable<DtoBusquedaProveedor[]> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlProveedoresRepuestos}`;
-        return this.http.get<Proveedor[]>(urlLlamada);
+        return this.http.get<DtoBusquedaProveedor[]>(urlLlamada);
     }
 
     getPedidosCabecera(): Observable<DtoPedidoCabecera[]> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarPedidoCabecera}`;
         return this.http.get<DtoPedidoCabecera[]>(urlLlamada);
+    }
+
+    updatePedidoDetalle(cobranzaRepuesto: CobranzaRepuesto, detallePedidoId: number): Observable<CobranzaRepuesto> {
+        const urlLlamada = `${this.resourceUrlOperaciones}${this.urlActualizarDetallePedido}${detallePedidoId}`;
+        return this.http.post<CobranzaRepuesto>(urlLlamada, cobranzaRepuesto);
+    }
+
+    recibirRepuesto(cobranzaRepuesto: CobranzaRepuesto, detallePedidoId: number): Observable<CobranzaRepuesto> {
+        const urlLlamada = `${this.resourceUrlOperaciones}${this.urlRecibirRepuesto}${detallePedidoId}`;
+        return this.http.post<CobranzaRepuesto>(urlLlamada, cobranzaRepuesto);
     }
 }
