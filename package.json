@@ -44,6 +44,7 @@
     "@angular/compiler-cli": "6.1.7",
     "@ngtools/webpack": "6.2.1",
     "@types/chai": "4.1.4",
+    "@types/jasmine": "^2.8.11",
     "@types/jest": "23.3.2",
     "@types/mocha": "5.2.5",
     "@types/node": "10.9.4",
@@ -102,7 +103,7 @@
     "webpack-merge": "4.1.4",
     "webpack-notifier": "1.6.0",
     "webpack-visualizer-plugin": "0.1.11",
-    "workbox-webpack-plugin": "3.5.0",
+    "workbox-webpack-plugin": "3.0.0-beta.1",
     "write-file-webpack-plugin": "4.4.0",
     "xml2js": "0.4.19"
   },
