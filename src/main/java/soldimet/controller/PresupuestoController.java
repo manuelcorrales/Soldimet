@@ -44,7 +44,6 @@ public class PresupuestoController {
 
     private final Logger log = LoggerFactory.getLogger(PresupuestoController.class);
 
-
     private static final String ENTITY_NAME = "Presupuesto";
 
     @Autowired

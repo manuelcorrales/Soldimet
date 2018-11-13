@@ -6,6 +6,14 @@
         </button>
     </div>
     <div class="">
+            <div id="row">
+                    <div class="input-group stylish-input-group">
+                        <input #search type="text" class="form-control search" placeholder="Buscar cliente..." (keydown.enter)="onSearch(search.value)">
+                        <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
         <div class="row" *ngIf="clientes">
             <table class="table table-hover">
                 <thead>
@@ -55,7 +63,7 @@
                                     <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-right">
                                             <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
                                                 <span class="fa fa-pencil"></span>
-                                                <span class="d-none d-md-inline">Activar</span>
+                                                <span class="d-none d-md-inline" (click)="activarCliente(cliente)">Activar</span>
                                             </button>
                                     </div>
                             </div>

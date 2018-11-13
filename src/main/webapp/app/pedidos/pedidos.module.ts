@@ -1,36 +1,47 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PedidosComponent } from 'app/pedidos/pedidos.component';
-import { PEDIDOS_SUBROUTES } from 'app/pedidos/pedidos.route';
+import { PedidosComponent, PedidoModalPopupService } from 'app/pedidos/pedidos.component';
+import { PEDIDOS_SUBROUTES, PEDIDOS_NEW_POPUP_ROUTE } from 'app/pedidos/pedidos.route';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { PedidosPendientesComponent } from 'app/pedidos/pedidos-pendientes/pedidos-pendientes.component';
 import { PedidosRecibidosComponent } from 'app/pedidos/pedidos-recibidos/pedidos-recibidos.component';
 import { PedidosRealizadosComponent } from 'app/pedidos/pedidos-realizados/pedidos-realizados.component';
-import { PedidoPendienteComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/pedido-pendiente.component';
-import { DetallePedidoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
+import {
+    PedidoPendienteComponent,
+    PedidoPendienteModalPopupComponent
+} from 'app/pedidos/pedidos-pendientes/pedido-pendiente/pedido-pendiente.component';
+import { DetallePedidoComponentNew } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { CostoRepuestoComponent } from './pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '../../../../../node_modules/@angular/forms';
-import { Ng2SmartTableModule } from '../../../../../node_modules/ng2-smart-table';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
-const ROUTES = [...PEDIDOS_SUBROUTES];
+const PEDIDOS_NEW_ROUTES_ALL = [...PEDIDOS_NEW_POPUP_ROUTE, ...PEDIDOS_SUBROUTES];
 
 @NgModule({
-    imports: [Ng2SmartTableModule, NgbModule.forRoot(), CommonModule, BrowserModule, FormsModule, RouterModule.forChild(ROUTES)],
+    imports: [
+        NgxDatatableModule,
+        NgbModule.forRoot(),
+        CommonModule,
+        BrowserModule,
+        FormsModule,
+        RouterModule.forChild(PEDIDOS_NEW_ROUTES_ALL)
+    ],
     exports: [RouterModule, NgbModule],
-    entryComponents: [PedidosComponent],
+    entryComponents: [PedidosComponent, PedidoPendienteModalPopupComponent, PedidoPendienteComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    providers: [PedidosService],
+    providers: [PedidosService, PedidoModalPopupService],
     declarations: [
         PedidosComponent,
         PedidosPendientesComponent,
         PedidosRecibidosComponent,
         PedidosRealizadosComponent,
         PedidoPendienteComponent,
-        DetallePedidoComponent,
-        CostoRepuestoComponent
+        DetallePedidoComponentNew,
+        CostoRepuestoComponent,
+        PedidoPendienteModalPopupComponent
     ]
 })
 export class PedidosModule {}

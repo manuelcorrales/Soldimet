@@ -2,17 +2,23 @@ import { Component, OnInit, Input, QueryList, ViewChildren } from '@angular/core
 import { DetallePedido } from 'app/shared/model/detalle-pedido.model';
 import { Proveedor } from 'app/shared/model/proveedor.model';
 import { CostoRepuestoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
+import { IArticulo } from 'app/shared/model/articulo.model';
+import { IMarca } from 'app/shared/model/marca.model';
 
 @Component({
     selector: 'jhi-detalle-pedido',
     templateUrl: './detalle-pedido.component.html',
     styles: []
 })
-export class DetallePedidoComponent implements OnInit {
+export class DetallePedidoComponentNew implements OnInit {
     @Input()
     detallePedido: DetallePedido;
     @Input()
     proveedores: Proveedor[];
+    @Input()
+    articulos: IArticulo[];
+    @Input()
+    marcas: IMarca;
     @ViewChildren('costoRepuestoComponent')
     costosRepuestoComponent: QueryList<CostoRepuestoComponent>;
 

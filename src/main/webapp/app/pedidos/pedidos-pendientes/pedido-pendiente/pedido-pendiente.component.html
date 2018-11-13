@@ -1,18 +1,37 @@
-<div class="card border-info">
-    <div class="card-header .container-fluid ">
+<form name="editForm" role="form" novalidate #editForm="ngForm">
+    <div class="modal-header">
+        <h4 class="modal-title" id="myPedidoLabel">Pedido Nº: {{pedido.id}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;
+        </button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <h5>{{pedido.presupuesto.detallePresupuestos[0]?.motor.marcaMotor}}
+                <span class="text-muted">{{pedido.presupuesto.detallePresupuestos[0]?.aplicacion.nombreAplicacion}}</span>
+        </h5>
+
         <div class="row">
-        <div class="col">Presupuesto Nº: {{pedido.presupuesto.id}}</div>
-        <div class="col">Fecha: {{pedido.presupuesto.fechaCreacion}}</div>
-        <div class="col">{{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</div>
-    </div>
-    </div>
-    <div class="card-body">
-        <h5 class="card-title">Motor: {{pedido.presupuesto.detallePresupuestos[0]?.motor.marcaMotor}}</h5>
+            <div class="col">Presupuesto Nº: {{pedido.presupuesto.id}}</div>
+            <div class="col">Fecha: {{pedido.presupuesto.fechaCreacion}}</div>
+            <div class="col">Cliente: {{pedido.presupuesto.cliente.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</div>
+        </div>
+        <br>
         <div *ngFor="let detallePedido of pedido.detallePedidos">
-            <jhi-detalle-pedido #detallePedidoComponent
-            [detallePedido]="detallePedido" [proveedores]="proveedores"></jhi-detalle-pedido>
+            <jhi-detalle-pedido #detPed [detallePedido]="detallePedido"
+            [proveedores]="proveedores" [articulos]="articulos" [marcas]="marcas"
+            ></jhi-detalle-pedido>
             <br>
         </div>
-        <a class="btn btn-primary float-right" (click)="guardarPedidoPendiente()">Guardar</a>
     </div>
-</div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;
+            <span>Volver</span>
+        </button>
+
+        <!--button type="submit" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;
+            <span>Guardar</span>
+        </button-->
+    </div>
+</form>

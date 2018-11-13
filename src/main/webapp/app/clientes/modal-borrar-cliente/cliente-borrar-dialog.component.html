@@ -3,18 +3,18 @@
         <h4 class="modal-title">Confirmar operación</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body text-center">
         <jhi-alert-error></jhi-alert-error>
         <p>Seguro que desea dar de baja este cliente?</p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
             <span class="fa fa-ban"></span>&nbsp;
-            <span>Cancelar</span>
+            <span>NO!</span>
         </button>
         <button type="submit" class="btn btn-danger">
             <span class="fa fa-remove"></span>&nbsp;
-            <span>Elminar</span>
+            <span>Eliminar</span>
         </button>
     </div>
 </form>

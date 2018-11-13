@@ -5,6 +5,8 @@ import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import soldimet.constant.Globales;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,10 +30,10 @@ public class DetallePedido implements Serializable {
     @JoinColumn(unique = true)
     private DetallePresupuesto detallePresupuesto;
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinColumn(name="detallePedido")
     @JsonInclude
-    private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
+    private Set<CostoRepuesto> costoRepuestos = new HashSet<CostoRepuesto>();
 
     @ManyToOne (cascade ={CascadeType.DETACH, CascadeType.MERGE}, optional = false)
     @NotNull
@@ -122,5 +124,20 @@ public class DetallePedido implements Serializable {
         return "DetallePedido{" +
             "id=" + getId() +
             "}";
+    }
+
+    public CostoRepuesto filterCostoRepuesto(CostoRepuesto costoRepuesto) {
+
+        for(CostoRepuesto costoInList: this.getCostoRepuestos()) {
+            if (
+                (costoInList.getArticulo().getId() == costoRepuesto.getArticulo().getId() )&&
+                (costoInList.getProveedor().getId() == costoRepuesto.getProveedor().getId()) &&
+                (costoInList.getTipoRepuesto().getId() == costoRepuesto.getTipoRepuesto().getId()) &&
+                (costoInList.getValor() == costoRepuesto.getValor())
+            ){
+                return costoInList;
+            }
+        }
+        return null;
     }
 }

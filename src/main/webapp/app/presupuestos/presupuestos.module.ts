@@ -16,18 +16,9 @@ import { OperacionesNuevopresupuestoComponent } from 'app/presupuestos/nuevo-pre
 import { RepuestoPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuesto_precio/repuesto-precio.component';
 import { OperacionPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operacion_precio/operacion-precio.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { Ng2SmartTableModule } from '../../../../../node_modules/ng2-smart-table';
 
 @NgModule({
-    imports: [
-        Ng2SmartTableModule,
-        NgSelectModule,
-        BrowserModule,
-        FormsModule,
-        SoldimetSharedModule,
-        CommonModule,
-        RouterModule.forChild(PRESUPUESTOS_ROUTES)
-    ],
+    imports: [NgSelectModule, BrowserModule, FormsModule, SoldimetSharedModule, CommonModule, RouterModule.forChild(PRESUPUESTOS_ROUTES)],
     declarations: [
         PresupuestosComponent,
         NuevoPresupuestoComponent,

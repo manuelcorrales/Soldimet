@@ -26,15 +26,15 @@ public class CostoRepuesto implements Serializable {
     @Column(name = "valor", nullable = false)
     private Float valor;
 
-    @ManyToOne(optional = false, cascade=CascadeType.DETACH)
+    @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
     @NotNull
     private TipoRepuesto tipoRepuesto;
 
-    @ManyToOne(optional = false, cascade=CascadeType.DETACH)
+    @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
     @NotNull
     private Articulo articulo;
 
-    @ManyToOne( cascade=CascadeType.DETACH)
+    @ManyToOne( cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
     private Proveedor proveedor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
