@@ -26,5 +26,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="proveedor"/>
 
+        <addForeignKeyConstraint baseColumnNames="estado_id"
+                                 baseTableName="costo_repuesto"
+                                 constraintName="fk_costo_repuesto_estado_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="estado_costo_repuesto"/>
+
     </changeSet>
 </databaseChangeLog>

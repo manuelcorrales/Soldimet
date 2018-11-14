@@ -27,6 +27,12 @@
                         <a [routerLink]="['/proveedor', costoRepuesto.proveedor?.id, 'view']">{{costoRepuesto.proveedor?.id}}</a>
                     </div>
                 </dd>
+                <dt><span>Estado</span></dt>
+                <dd>
+                    <div *ngIf="costoRepuesto.estado">
+                        <a [routerLink]="['/estado-costo-repuesto', costoRepuesto.estado?.id, 'view']">{{costoRepuesto.estado?.nombreEstado}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

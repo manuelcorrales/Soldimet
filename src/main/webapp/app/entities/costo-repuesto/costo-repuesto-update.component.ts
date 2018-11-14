@@ -5,13 +5,15 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { ICostoRepuesto } from 'app/shared/model/costo-repuesto.model';
-import { CostoRepuestoService } from 'app/entities/costo-repuesto/costo-repuesto.service';
+import { CostoRepuestoService } from './costo-repuesto.service';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { TipoRepuestoService } from 'app/entities/tipo-repuesto';
 import { IArticulo } from 'app/shared/model/articulo.model';
 import { ArticuloService } from 'app/entities/articulo';
 import { IProveedor } from 'app/shared/model/proveedor.model';
 import { ProveedorService } from 'app/entities/proveedor';
+import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
+import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto';
 
 @Component({
     selector: 'jhi-costo-repuesto-update',
@@ -27,12 +29,15 @@ export class CostoRepuestoUpdateComponent implements OnInit {
 
     proveedors: IProveedor[];
 
+    estadocostorepuestos: IEstadoCostoRepuesto[];
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private costoRepuestoService: CostoRepuestoService,
         private tipoRepuestoService: TipoRepuestoService,
         private articuloService: ArticuloService,
         private proveedorService: ProveedorService,
+        private estadoCostoRepuestoService: EstadoCostoRepuestoService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -56,6 +61,12 @@ export class CostoRepuestoUpdateComponent implements OnInit {
         this.proveedorService.query().subscribe(
             (res: HttpResponse<IProveedor[]>) => {
                 this.proveedors = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.estadoCostoRepuestoService.query().subscribe(
+            (res: HttpResponse<IEstadoCostoRepuesto[]>) => {
+                this.estadocostorepuestos = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -100,6 +111,10 @@ export class CostoRepuestoUpdateComponent implements OnInit {
     }
 
     trackProveedorById(index: number, item: IProveedor) {
+        return item.id;
+    }
+
+    trackEstadoCostoRepuestoById(index: number, item: IEstadoCostoRepuesto) {
         return item.id;
     }
     get costoRepuesto() {

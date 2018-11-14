@@ -12,6 +12,7 @@ import soldimet.converter.ProveedorConverter;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.DetallePedido;
+import soldimet.domain.EstadoCostoRepuesto;
 import soldimet.domain.EstadoDetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPersona;
@@ -21,6 +22,7 @@ import soldimet.domain.Proveedor;
 import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CostoRepuestoRepository;
 import soldimet.repository.DetallePedidoRepository;
+import soldimet.repository.EstadoCostoRepuestoRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
 import soldimet.repository.EstadoPersonaRepository;
@@ -73,6 +75,9 @@ public class ExpertoPedidos {
     @Autowired
     private TipoRepuestoRepository tipoRepuestoRepository;
 
+    @Autowired
+    private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
+
     public List<PedidoRepuesto> getPedidosPendientes() {
 
         EstadoPedidoRepuesto estadoPendiente = estadoPedidoRepuestoRepository
@@ -105,6 +110,8 @@ public class ExpertoPedidos {
 
     public CostoRepuesto updateDetallePedido(CostoRepuesto costoRepuesto, Long detallePedidoId) {
         try {
+            EstadoCostoRepuesto estadoRecibido = estadoCostoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
+            costoRepuesto.setEstado(estadoRecibido);
             costoRepuesto.setArticulo(articuloRepository.getOne(costoRepuesto.getArticulo().getId()));
             costoRepuesto.setProveedor(proveedorRepository.getOne(costoRepuesto.getProveedor().getId()));
             costoRepuesto.setTipoRepuesto(tipoRepuestoRepository.getOne(costoRepuesto.getTipoRepuesto().getId()));

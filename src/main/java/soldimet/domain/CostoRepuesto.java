@@ -28,14 +28,21 @@ public class CostoRepuesto implements Serializable {
 
     @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
     @NotNull
+    @JsonIgnoreProperties("")
     private TipoRepuesto tipoRepuesto;
 
     @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
     @NotNull
+    @JsonIgnoreProperties("")
     private Articulo articulo;
 
     @ManyToOne( cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
     private Proveedor proveedor;
+
+    @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
+    @NotNull
+    @JsonIgnoreProperties("")
+    private EstadoCostoRepuesto estado;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -96,6 +103,19 @@ public class CostoRepuesto implements Serializable {
 
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
+    }
+
+    public EstadoCostoRepuesto getEstado() {
+        return estado;
+    }
+
+    public CostoRepuesto estado(EstadoCostoRepuesto estadoCostoRepuesto) {
+        this.estado = estadoCostoRepuesto;
+        return this;
+    }
+
+    public void setEstado(EstadoCostoRepuesto estadoCostoRepuesto) {
+        this.estado = estadoCostoRepuesto;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

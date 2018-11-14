@@ -24,6 +24,15 @@
             "otherEntityName": "proveedor",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "estado",
+            "otherEntityName": "estadoCostoRepuesto",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreEstado"
         }
     ],
     "fields": [
@@ -39,6 +48,7 @@
     ],
     "changelogDate": "20180616204734",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "costo_repuesto",
     "jpaMetamodelFiltering": false,

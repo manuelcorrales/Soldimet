@@ -45,6 +45,12 @@
                         <a [routerLink]="['/estado-presupuesto', presupuesto.estadoPresupuesto?.id, 'view']">{{presupuesto.estadoPresupuesto?.nombreEstado}}</a>
                     </div>
                 </dd>
+                <dt><span>Document Type</span></dt>
+                <dd>
+                    <div *ngIf="presupuesto.documentType">
+                        <a [routerLink]="['/documentation-type', presupuesto.documentType?.id, 'view']">{{presupuesto.documentType?.documentName}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

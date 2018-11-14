@@ -23,7 +23,7 @@ const ENTITY_STATES = [...presupuestoRoute, ...presupuestoPopupRoute];
         PresupuestoDetailComponent,
         PresupuestoUpdateComponent
     ],
-    entryComponents: [PresupuestoComponent, PresupuestoUpdateComponent],
+    entryComponents: [PresupuestoComponent, PresupuestoUpdateComponent, PresupuestoDeleteDialogComponent, PresupuestoDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPresupuestoModule {}

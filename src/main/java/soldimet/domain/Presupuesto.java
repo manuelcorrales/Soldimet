@@ -63,6 +63,9 @@ public class Presupuesto implements Serializable {
     @JoinColumn(name= "presupuesto")
     private Set<DetallePresupuesto> detallePresupuestos = new HashSet<DetallePresupuesto>();
 
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    private DocumentationType documentType;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -211,6 +214,19 @@ public class Presupuesto implements Serializable {
 
     public void setDetallePresupuestos(Set<DetallePresupuesto> detallePresupuestos) {
         this.detallePresupuestos = detallePresupuestos;
+    }
+
+    public DocumentationType getDocumentType() {
+        return documentType;
+    }
+
+    public Presupuesto documentType(DocumentationType documentationType) {
+        this.documentType = documentationType;
+        return this;
+    }
+
+    public void setDocumentType(DocumentationType documentationType) {
+        this.documentType = documentationType;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

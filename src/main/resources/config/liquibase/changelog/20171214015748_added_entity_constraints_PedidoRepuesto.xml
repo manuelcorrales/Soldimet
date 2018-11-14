@@ -20,5 +20,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="presupuesto"/>
 
+        <addForeignKeyConstraint baseColumnNames="document_type_id"
+                                 baseTableName="pedido_repuesto"
+                                 constraintName="fk_pedido_repuesto_document_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="documentation_type"/>
+
     </changeSet>
 </databaseChangeLog>

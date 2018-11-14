@@ -72,6 +72,13 @@
                         This field is required.
                     </small>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_documentType">Document Type</label>
+                    <select class="form-control" id="field_documentType" name="documentType" [(ngModel)]="pedidoRepuesto.documentType" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="documentationTypeOption.id === pedidoRepuesto.documentType?.id ? pedidoRepuesto.documentType : documentationTypeOption" *ngFor="let documentationTypeOption of documentationtypes; trackBy: trackDocumentationTypeById">{{documentationTypeOption.documentName}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

@@ -1,5 +1,8 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -48,6 +51,9 @@ public class PedidoRepuesto implements Serializable {
     @ManyToOne(optional = false, cascade=CascadeType.ALL)
     @NotNull
     private Presupuesto presupuesto;
+
+    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE})
+    private DocumentationType documentType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -130,6 +136,10 @@ public class PedidoRepuesto implements Serializable {
         return this;
     }
 
+    public void setDetallePedidos(Set<DetallePedido> detallePedidos) {
+        this.detallePedidos = detallePedidos;
+    }
+
     public Presupuesto getPresupuesto() {
         return presupuesto;
     }
@@ -141,6 +151,19 @@ public class PedidoRepuesto implements Serializable {
 
     public void setPresupuesto(Presupuesto presupuesto) {
         this.presupuesto = presupuesto;
+    }
+
+    public DocumentationType getDocumentType() {
+        return documentType;
+    }
+
+    public PedidoRepuesto documentType(DocumentationType documentationType) {
+        this.documentType = documentationType;
+        return this;
+    }
+
+    public void setDocumentType(DocumentationType documentationType) {
+        this.documentType = documentationType;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
