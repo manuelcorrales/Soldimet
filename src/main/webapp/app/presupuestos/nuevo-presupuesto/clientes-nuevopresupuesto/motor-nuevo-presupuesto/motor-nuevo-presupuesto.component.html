@@ -30,7 +30,7 @@
             <div class="col">
                 <p class="form-control-label"><strong>Cilindrada: </strong></p>
                 <div class="d-inline">
-                    <div class=" form-check" *ngFor="let cilindrada of cilindradas">
+                    <div class="form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
                         <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida" [(ngModel)]="cilindradaElegida"
                             [disabled]="detalleCreado">
                         <label class="form-check-label"> {{cilindrada?.cantidadDeCilindros}} cilindros</label>

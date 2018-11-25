@@ -30,6 +30,12 @@
             "otherEntityName": "documentationType",
             "relationshipType": "many-to-one",
             "otherEntityField": "documentName"
+        },
+        {
+            "relationshipName": "sucursal",
+            "otherEntityName": "sucursal",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nombreSucursal"
         }
     ],
     "fields": [

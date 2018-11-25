@@ -26,5 +26,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="documentation_type"/>
 
+        <addForeignKeyConstraint baseColumnNames="sucursal_id"
+                                 baseTableName="presupuesto"
+                                 constraintName="fk_presupuesto_sucursal_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sucursal"/>
+
     </changeSet>
 </databaseChangeLog>

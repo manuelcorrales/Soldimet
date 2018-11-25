@@ -30,8 +30,12 @@
                 <constraints nullable="false" />
             </column>
             <column name="persona_id" type="bigint">
-                <constraints unique="true" nullable="false" />
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_empleado_persona_id" />
             </column>
+            <column name="sucursal_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         

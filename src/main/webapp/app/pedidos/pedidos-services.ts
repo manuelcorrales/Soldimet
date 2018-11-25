@@ -6,6 +6,7 @@ import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { DtoBusquedaProveedor } from 'app/dto/dto-pedidos/dto-proveedor-search';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
+import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 
 @Injectable()
 export class PedidosService {
@@ -48,13 +49,13 @@ export class PedidosService {
         return this.http.get<DtoPedidoCabecera[]>(urlLlamada);
     }
 
-    updatePedidoDetalle(cobranzaRepuesto: CobranzaRepuesto, detallePedidoId: number): Observable<CobranzaRepuesto> {
+    updatePedidoDetalle(costoRepuesto: CostoRepuesto, detallePedidoId: number): Observable<CostoRepuesto> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlActualizarDetallePedido}${detallePedidoId}`;
-        return this.http.post<CobranzaRepuesto>(urlLlamada, cobranzaRepuesto);
+        return this.http.post<CostoRepuesto>(urlLlamada, costoRepuesto);
     }
 
-    recibirRepuesto(cobranzaRepuesto: CobranzaRepuesto, detallePedidoId: number): Observable<CobranzaRepuesto> {
+    recibirRepuesto(costoRepuesto: CostoRepuesto, detallePedidoId: number): Observable<CostoRepuesto> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlRecibirRepuesto}${detallePedidoId}`;
-        return this.http.post<CobranzaRepuesto>(urlLlamada, cobranzaRepuesto);
+        return this.http.post<CostoRepuesto>(urlLlamada, costoRepuesto);
     }
 }

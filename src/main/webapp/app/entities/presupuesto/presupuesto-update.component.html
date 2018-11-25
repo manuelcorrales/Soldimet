@@ -129,6 +129,13 @@
                         <option [ngValue]="documentationTypeOption.id === presupuesto.documentType?.id ? presupuesto.documentType : documentationTypeOption" *ngFor="let documentationTypeOption of documentationtypes; trackBy: trackDocumentationTypeById">{{documentationTypeOption.documentName}}</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sucursal">Sucursal</label>
+                    <select class="form-control" id="field_sucursal" name="sucursal" [(ngModel)]="presupuesto.sucursal" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="sucursalOption.id === presupuesto.sucursal?.id ? presupuesto.sucursal : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

@@ -66,6 +66,9 @@ public class Presupuesto implements Serializable {
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
     private DocumentationType documentType;
 
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    private Sucursal sucursal;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -192,7 +195,6 @@ public class Presupuesto implements Serializable {
         this.estadoPresupuesto = estadoPresupuesto;
     }
 
-    @JsonGetter("detallePresupuestos")
     public Set<DetallePresupuesto> getDetallePresupuestos() {
         return detallePresupuestos;
     }
@@ -227,6 +229,19 @@ public class Presupuesto implements Serializable {
 
     public void setDocumentType(DocumentationType documentationType) {
         this.documentType = documentationType;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
+    public Presupuesto sucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
+        return this;
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

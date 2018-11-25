@@ -52,7 +52,7 @@ public class PedidoRepuesto implements Serializable {
     @NotNull
     private Presupuesto presupuesto;
 
-    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE})
+    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
     private DocumentationType documentType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

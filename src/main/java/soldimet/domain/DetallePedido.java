@@ -127,6 +127,7 @@ public class DetallePedido implements Serializable {
     }
 
     public CostoRepuesto filterCostoRepuesto(CostoRepuesto costoRepuesto) {
+        System.out.println("id: "+costoRepuesto.getId());
 
         for(CostoRepuesto costoInList: this.getCostoRepuestos()) {
             if (
@@ -135,9 +136,11 @@ public class DetallePedido implements Serializable {
                 (costoInList.getTipoRepuesto().getId() == costoRepuesto.getTipoRepuesto().getId()) &&
                 (costoInList.getValor() == costoRepuesto.getValor())
             ){
+                System.out.println("id: "+costoInList.getId());
                 return costoInList;
             }
         }
+        System.out.println("no encuentro otro");
         return null;
     }
 }

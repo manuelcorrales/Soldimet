@@ -1,30 +1,40 @@
-<div class="container-fluid card jh-card">
+<div class="jh-card">
     <jhi-alert></jhi-alert>
-    <div>
-        <button class="btn btn-primary float-right" [routerLink]="['/', { outlets: { popup: ['nuevo-cliente'] } }]">
-            <span>Nuevo Cliente</span>
-        </button>
-    </div>
-    <div class="">
-            <div id="row">
-                    <div class="input-group stylish-input-group">
-                        <input #search type="text" class="form-control search" placeholder="Buscar cliente..." (keydown.enter)="onSearch(search.value)">
-                        <span class="input-group-addon">
-                            <i class="fa fa-search"></i>
-                        </span>
-                    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)" placeholder="Buscar cliente...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
                 </div>
+                <!-- /input-group -->
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['/', { outlets: { popup: ['nuevo-cliente'] } }]">
+                    <span>
+                        Nuevo Cliente
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="container-fluid">
         <div class="row" *ngIf="clientes">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col"  class="text-center" >Nombre</th>
-                        <th scope="col"  class="text-center" >Apellido</th>
-                        <th scope="col"  class="text-center" >Teléfono</th>
-                        <th scope="col"  class="text-center" >Dirección</th>
-                        <th scope="col"  class="text-center" >Departamento</th>
-                        <th scope="col"  class="text-center" >Estado</th>
-                        <th scope="col"  class="text-center" >Operaciones</th>
+                        <th scope="col" class="text-center">Nombre</th>
+                        <th scope="col" class="text-center">Apellido</th>
+                        <th scope="col" class="text-center">Teléfono</th>
+                        <th scope="col" class="text-center">Dirección</th>
+                        <th scope="col" class="text-center">Departamento</th>
+                        <th scope="col" class="text-center">Estado</th>
+                        <th scope="col" class="text-center">Operaciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,22 +60,24 @@
                         </td>
                         <td>
                             <div class="btn-group flex-btn-group-container">
-                                    <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
-                                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/editar'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
-                                                <span class="fa fa-pencil"></span>
-                                                <span class="d-none d-md-inline">Editar</span>
-                                            </button>
-                                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/eliminar'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
-                                                <span class="fa fa-remove"></span>
-                                                <span class="d-none d-md-inline">Eliminar</span>
-                                            </button>
-                                    </div>
-                                    <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-right">
-                                            <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
-                                                <span class="fa fa-pencil"></span>
-                                                <span class="d-none d-md-inline" (click)="activarCliente(cliente)">Activar</span>
-                                            </button>
-                                    </div>
+                                <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
+                                    <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/editar'} }]" replaceUrl="true"
+                                        class="btn btn-primary btn-sm">
+                                        <span class="fa fa-pencil"></span>
+                                        <span class="d-none d-md-inline">Editar</span>
+                                    </button>
+                                    <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/eliminar'} }]" replaceUrl="true"
+                                        class="btn btn-danger btn-sm">
+                                        <span class="fa fa-remove"></span>
+                                        <span class="d-none d-md-inline">Eliminar</span>
+                                    </button>
+                                </div>
+                                <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-right">
+                                    <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
+                                        <span class="fa fa-pencil"></span>
+                                        <span class="d-none d-md-inline" (click)="activarCliente(cliente)">Activar</span>
+                                    </button>
+                                </div>
                             </div>
                         </td>
                     </tr>

@@ -20,10 +20,14 @@ import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 })
 export class NuevoPresupuestoComponent implements OnInit {
     presupuesto: Presupuesto;
-    @Output() detallesPresupuestos: DetallePresupuesto[] = [];
-    @ViewChild('cliente') clientesComponent: ClientesNuevopresupuestoComponent;
-    @ViewChildren('repuestos') repuestoComponents: QueryList<RepuestosNuevopresupuestoComponent>;
-    @ViewChildren('operaciones') operacionComponents: QueryList<OperacionesNuevopresupuestoComponent>;
+    @Output()
+    detallesPresupuestos: DetallePresupuesto[] = [];
+    @ViewChild('cliente')
+    clientesComponent: ClientesNuevopresupuestoComponent;
+    @ViewChildren('repuestos')
+    repuestoComponents: QueryList<RepuestosNuevopresupuestoComponent>;
+    @ViewChildren('operaciones')
+    operacionComponents: QueryList<OperacionesNuevopresupuestoComponent>;
     private eventSubscriber: Subscription;
     totalOperaciones = 0;
     totalRepuestos = 0;
@@ -95,7 +99,7 @@ export class NuevoPresupuestoComponent implements OnInit {
 
     private onSaveSuccess(result: Presupuesto) {
         this.isSaving = false;
-        this.jhiAlertService.success('Se ha creado el presupuesto número: ' + result.id, null, null);
+        this.jhiAlertService.success('Se ha creado el presupuesto número: ' + result.id, { toast: true }, '.right');
         this.router.navigate(['/presupuestos']);
     }
 

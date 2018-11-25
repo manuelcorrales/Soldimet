@@ -829,6 +829,12 @@
                             <span>Pedido Repuesto</span>
                         </a>
                     </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="sucursal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span>Sucursal</span>
+                        </a>
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
             </li>

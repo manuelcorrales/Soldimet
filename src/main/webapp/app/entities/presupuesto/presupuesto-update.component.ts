@@ -12,6 +12,8 @@ import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
 import { EstadoPresupuestoService } from 'app/entities/estado-presupuesto';
 import { IDocumentationType } from 'app/shared/model/documentation-type.model';
 import { DocumentationTypeService } from 'app/entities/documentation-type';
+import { ISucursal } from 'app/shared/model/sucursal.model';
+import { SucursalService } from 'app/entities/sucursal';
 
 @Component({
     selector: 'jhi-presupuesto-update',
@@ -26,6 +28,8 @@ export class PresupuestoUpdateComponent implements OnInit {
     estadopresupuestos: IEstadoPresupuesto[];
 
     documentationtypes: IDocumentationType[];
+
+    sucursals: ISucursal[];
     fechaCreacionDp: any;
     fechaAceptadoDp: any;
     fechaEntregadoDp: any;
@@ -36,6 +40,7 @@ export class PresupuestoUpdateComponent implements OnInit {
         private clienteService: ClienteService,
         private estadoPresupuestoService: EstadoPresupuestoService,
         private documentationTypeService: DocumentationTypeService,
+        private sucursalService: SucursalService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -59,6 +64,12 @@ export class PresupuestoUpdateComponent implements OnInit {
         this.documentationTypeService.query().subscribe(
             (res: HttpResponse<IDocumentationType[]>) => {
                 this.documentationtypes = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.sucursalService.query().subscribe(
+            (res: HttpResponse<ISucursal[]>) => {
+                this.sucursals = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -103,6 +114,10 @@ export class PresupuestoUpdateComponent implements OnInit {
     }
 
     trackDocumentationTypeById(index: number, item: IDocumentationType) {
+        return item.id;
+    }
+
+    trackSucursalById(index: number, item: ISucursal) {
         return item.id;
     }
     get presupuesto() {

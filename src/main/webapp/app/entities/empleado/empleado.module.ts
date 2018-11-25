@@ -18,12 +18,12 @@ const ENTITY_STATES = [...empleadoRoute, ...empleadoPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EmpleadoComponent,
-        EmpleadoDeletePopupComponent,
         EmpleadoDetailComponent,
+        EmpleadoUpdateComponent,
         EmpleadoDeleteDialogComponent,
-        EmpleadoUpdateComponent
+        EmpleadoDeletePopupComponent
     ],
-    entryComponents: [EmpleadoComponent, EmpleadoUpdateComponent],
+    entryComponents: [EmpleadoComponent, EmpleadoUpdateComponent, EmpleadoDeleteDialogComponent, EmpleadoDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetEmpleadoModule {}

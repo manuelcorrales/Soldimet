@@ -54,6 +54,8 @@ import { SoldimetCostoRepuestoModule } from './costo-repuesto/costo-repuesto.mod
 import { SoldimetDocumentationTypeModule } from './documentation-type/documentation-type.module';
 import { SoldimetPresupuestoModule } from './presupuesto/presupuesto.module';
 import { SoldimetPedidoRepuestoModule } from './pedido-repuesto/pedido-repuesto.module';
+import { SoldimetSucursalModule } from './sucursal/sucursal.module';
+import { SoldimetEmpleadoModule } from './empleado/empleado.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -113,6 +115,7 @@ import { SoldimetPedidoRepuestoModule } from './pedido-repuesto/pedido-repuesto.
         SoldimetMovimientoPedidoModule,
         SoldimetEstadoCostoRepuestoModule,
         SoldimetDocumentationTypeModule,
+        SoldimetSucursalModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],
