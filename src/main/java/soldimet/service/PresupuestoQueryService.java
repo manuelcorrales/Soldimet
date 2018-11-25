@@ -100,6 +100,12 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
             if (criteria.getDetallePresupuestoId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getDetallePresupuestoId(), Presupuesto_.detallePresupuestos, DetallePresupuesto_.id));
             }
+            if (criteria.getDocumentTypeId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getDocumentTypeId(), Presupuesto_.documentType, DocumentationType_.id));
+            }
+            if (criteria.getSucursalId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getSucursalId(), Presupuesto_.sucursal, Sucursal_.id));
+            }
         }
         return specification;
     }

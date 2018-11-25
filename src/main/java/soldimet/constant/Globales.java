@@ -16,6 +16,9 @@ public class Globales {
     // public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_PERSONA_ALTA = "Alta";
     public final String NOMBRE_ESTADO_PRESUPUESTO_ALTA = "Alta";
+    public final String NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO = "Pedido";
+    public final String NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO = "Recibido";
+    public final String NOMBRE_ESTADO_COSTO_REPUESTO_DEVUELTO = "Devuelto";
 
     public final String NOMBRE_ESTADO_ARTICULO_BAJA = "Baja";
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_BAJA = "Baja";

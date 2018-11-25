@@ -18,6 +18,7 @@
             <th><span>Usuario</span></th>
             <th><span>Contrasenia</span></th>
             <th><span>Persona</span></th>
+            <th><span>Sucursal</span></th>
             <th></th>
             </tr>
             </thead>
@@ -29,6 +30,11 @@
                 <td>
                     <div *ngIf="empleado.persona">
                         <a [routerLink]="['../persona', empleado.persona?.id, 'view' ]" >{{empleado.persona?.nombre}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="empleado.sucursal">
+                        <a [routerLink]="['../sucursal', empleado.sucursal?.id, 'view' ]" >{{empleado.sucursal?.nombreSucursal}}</a>
                     </div>
                 </td>
                 <td class="text-right">

@@ -24,6 +24,8 @@
             <th jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="cliente.apellido"><span>Cliente</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estadoPresupuesto.nombreEstado"><span>Estado Presupuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="documentType.documentName"><span>Document Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sucursal.nombreSucursal"><span>Sucursal</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -45,6 +47,16 @@
                 <td>
                     <div *ngIf="presupuesto.estadoPresupuesto">
                         <a [routerLink]="['../estado-presupuesto', presupuesto.estadoPresupuesto?.id, 'view' ]" >{{presupuesto.estadoPresupuesto?.nombreEstado}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="presupuesto.documentType">
+                        <a [routerLink]="['../documentation-type', presupuesto.documentType?.id, 'view' ]" >{{presupuesto.documentType?.documentName}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="presupuesto.sucursal">
+                        <a [routerLink]="['../sucursal', presupuesto.sucursal?.id, 'view' ]" >{{presupuesto.sucursal?.nombreSucursal}}</a>
                     </div>
                 </td>
                 <td class="text-right">

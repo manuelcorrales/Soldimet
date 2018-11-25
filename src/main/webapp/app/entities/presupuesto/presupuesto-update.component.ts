@@ -5,11 +5,15 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
-import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
+import { PresupuestoService } from './presupuesto.service';
 import { ICliente } from 'app/shared/model/cliente.model';
 import { ClienteService } from 'app/entities/cliente';
 import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
 import { EstadoPresupuestoService } from 'app/entities/estado-presupuesto';
+import { IDocumentationType } from 'app/shared/model/documentation-type.model';
+import { DocumentationTypeService } from 'app/entities/documentation-type';
+import { ISucursal } from 'app/shared/model/sucursal.model';
+import { SucursalService } from 'app/entities/sucursal';
 
 @Component({
     selector: 'jhi-presupuesto-update',
@@ -22,6 +26,10 @@ export class PresupuestoUpdateComponent implements OnInit {
     clientes: ICliente[];
 
     estadopresupuestos: IEstadoPresupuesto[];
+
+    documentationtypes: IDocumentationType[];
+
+    sucursals: ISucursal[];
     fechaCreacionDp: any;
     fechaAceptadoDp: any;
     fechaEntregadoDp: any;
@@ -31,6 +39,8 @@ export class PresupuestoUpdateComponent implements OnInit {
         private presupuestoService: PresupuestoService,
         private clienteService: ClienteService,
         private estadoPresupuestoService: EstadoPresupuestoService,
+        private documentationTypeService: DocumentationTypeService,
+        private sucursalService: SucursalService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -48,6 +58,18 @@ export class PresupuestoUpdateComponent implements OnInit {
         this.estadoPresupuestoService.query().subscribe(
             (res: HttpResponse<IEstadoPresupuesto[]>) => {
                 this.estadopresupuestos = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.documentationTypeService.query().subscribe(
+            (res: HttpResponse<IDocumentationType[]>) => {
+                this.documentationtypes = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.sucursalService.query().subscribe(
+            (res: HttpResponse<ISucursal[]>) => {
+                this.sucursals = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -88,6 +110,14 @@ export class PresupuestoUpdateComponent implements OnInit {
     }
 
     trackEstadoPresupuestoById(index: number, item: IEstadoPresupuesto) {
+        return item.id;
+    }
+
+    trackDocumentationTypeById(index: number, item: IDocumentationType) {
+        return item.id;
+    }
+
+    trackSucursalById(index: number, item: ISucursal) {
         return item.id;
     }
     get presupuesto() {

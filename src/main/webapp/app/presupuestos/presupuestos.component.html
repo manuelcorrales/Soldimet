@@ -1,23 +1,28 @@
-<div class="container-fluid card jh-card">
+<div class="jh-card">
     <jhi-alert></jhi-alert>
-
-    <div class="">
-        <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['nuevo']">
-            <span>
-                Nuevo Presupuesto
-            </span>
-        </button>
-    </div>
-    <div id="row">
-        <div class="input-group stylish-input-group">
-            <input #search type="text" class="form-control search" placeholder="Buscar presupuesto..." (keydown.enter)="onSearch(search.value)">
-            <span class="input-group-addon">
-                <i class="fa fa-search"></i>
-            </span>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="input-group custom-search-form">
+                  <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)"  placeholder="Buscar presupuesto..." >
+                  <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">
+                  <span class="glyphicon glyphicon-search"></span>
+                 </button>
+                 </span>
+                 </div><!-- /input-group -->
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['nuevo']">
+                    <span>
+                        Nuevo Presupuesto
+                    </span>
+                </button>
+            </div>
         </div>
     </div>
     <br/>
-    <div class="">
+    <div class="container-fluid">
         <div class="">
             <table class="table table-hover">
                 <thead>
@@ -37,7 +42,7 @@
                         <th>{{presupuesto.codigo}}</th>
                         <td>{{presupuesto.motor}}</td>
                         <td>{{presupuesto.cliente}} </td>
-                        <td>{{presupuesto.importe}}</td>
+                        <td>${{presupuesto.importe}}</td>
                         <td>{{presupuesto.fecha}}</td>
                         <td>
                             <div *ngIf="presupuesto.estado== 'Creado'" class="text-center">
@@ -73,10 +78,12 @@
                                 ngbTooltip="Aceptar presupuesto">
                                 <i class="fa fa-check-square"></i>
                             </button>
-                            <button class="btn btn-info" *ngIf="presupuesto.estado == 'Aceptado'" (click)="terminarPresupuesto(presupuesto)" placement="top" ngbTooltip="Terminar trabajo">
+                            <button class="btn btn-info" *ngIf="presupuesto.estado == 'Aceptado'" (click)="terminarPresupuesto(presupuesto)" placement="top"
+                                ngbTooltip="Terminar trabajo">
                                 <i class="fa fa-check-square"></i>
                             </button>
-                            <button class="btn btn-primary" *ngIf="presupuesto.estado == 'Terminado'" (click)="entregarPresupuesto(presupuesto)" placement="top" ngbTooltip="Entregar trabajo">
+                            <button class="btn btn-primary" *ngIf="presupuesto.estado == 'Terminado'" (click)="entregarPresupuesto(presupuesto)" placement="top"
+                                ngbTooltip="Entregar trabajo">
                                 <i class="fa fa-check-square"></i>
                             </button>
                             <button class="btn btn-danger" *ngIf="presupuesto.estado != 'Cancelado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"

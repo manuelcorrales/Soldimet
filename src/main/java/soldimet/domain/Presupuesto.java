@@ -63,6 +63,12 @@ public class Presupuesto implements Serializable {
     @JoinColumn(name= "presupuesto")
     private Set<DetallePresupuesto> detallePresupuestos = new HashSet<DetallePresupuesto>();
 
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    private DocumentationType documentType;
+
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    private Sucursal sucursal;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -189,7 +195,6 @@ public class Presupuesto implements Serializable {
         this.estadoPresupuesto = estadoPresupuesto;
     }
 
-    @JsonGetter("detallePresupuestos")
     public Set<DetallePresupuesto> getDetallePresupuestos() {
         return detallePresupuestos;
     }
@@ -211,6 +216,32 @@ public class Presupuesto implements Serializable {
 
     public void setDetallePresupuestos(Set<DetallePresupuesto> detallePresupuestos) {
         this.detallePresupuestos = detallePresupuestos;
+    }
+
+    public DocumentationType getDocumentType() {
+        return documentType;
+    }
+
+    public Presupuesto documentType(DocumentationType documentationType) {
+        this.documentType = documentationType;
+        return this;
+    }
+
+    public void setDocumentType(DocumentationType documentationType) {
+        this.documentType = documentationType;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
+    public Presupuesto sucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
+        return this;
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

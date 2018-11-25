@@ -29,6 +29,12 @@
                         <a [routerLink]="['/presupuesto', pedidoRepuesto.presupuesto?.id, 'view']">{{pedidoRepuesto.presupuesto?.id}}</a>
                     </div>
                 </dd>
+                <dt><span>Document Type</span></dt>
+                <dd>
+                    <div *ngIf="pedidoRepuesto.documentType">
+                        <a [routerLink]="['/documentation-type', pedidoRepuesto.documentType?.id, 'view']">{{pedidoRepuesto.documentType?.documentName}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

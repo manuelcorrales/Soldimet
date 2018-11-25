@@ -33,10 +33,8 @@ import { SoldimetOperacionModule } from 'app/entities/operacion/operacion.module
 import { SoldimetPagoChequeModule } from 'app/entities/pago-cheque/pago-cheque.module';
 import { SoldimetPagoEfectivoModule } from 'app/entities/pago-efectivo/pago-efectivo.module';
 import { SoldimetPagoTarjetaModule } from 'app/entities/pago-tarjeta/pago-tarjeta.module';
-import { SoldimetPedidoRepuestoModule } from 'app/entities/pedido-repuesto/pedido-repuesto.module';
 import { SoldimetPersonaModule } from 'app/entities/persona/persona.module';
 import { SoldimetPrecioRepuestoModule } from 'app/entities/precio-repuesto/precio-repuesto.module';
-import { SoldimetPresupuestoModule } from 'app/entities/presupuesto/presupuesto.module';
 import { SoldimetProveedorModule } from 'app/entities/proveedor/proveedor.module';
 import { SoldimetRubroModule } from 'app/entities/rubro/rubro.module';
 import { SoldimetTarjetaModule } from 'app/entities/tarjeta/tarjeta.module';
@@ -48,10 +46,16 @@ import { SoldimetTipoTarjetaModule } from 'app/entities/tipo-tarjeta/tipo-tarjet
 import { SoldimetDetalleMovimientoModule } from 'app/entities/detalle-movimiento/detalle-movimiento.module';
 import { SoldimetCobranzaOperacionModule } from 'app/entities/cobranza-operacion/cobranza-operacion.module';
 import { SoldimetCobranzaRepuestoModule } from 'app/entities/cobranza-repuesto/cobranza-repuesto.module';
-import { SoldimetCostoRepuestoModule } from 'app/entities/costo-repuesto/costo-repuesto.module';
 import { SoldimetMovimientoArticuloModule } from 'app/entities/movimiento-articulo/movimiento-articulo.module';
 import { SoldimetMovimientoPresupuestoModule } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto.module';
 import { SoldimetMovimientoPedidoModule } from 'app/entities/movimiento-pedido/movimiento-pedido.module';
+import { SoldimetEstadoCostoRepuestoModule } from './estado-costo-repuesto/estado-costo-repuesto.module';
+import { SoldimetCostoRepuestoModule } from './costo-repuesto/costo-repuesto.module';
+import { SoldimetDocumentationTypeModule } from './documentation-type/documentation-type.module';
+import { SoldimetPresupuestoModule } from './presupuesto/presupuesto.module';
+import { SoldimetPedidoRepuestoModule } from './pedido-repuesto/pedido-repuesto.module';
+import { SoldimetSucursalModule } from './sucursal/sucursal.module';
+import { SoldimetEmpleadoModule } from './empleado/empleado.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -109,6 +113,9 @@ import { SoldimetMovimientoPedidoModule } from 'app/entities/movimiento-pedido/m
         SoldimetMovimientoArticuloModule,
         SoldimetMovimientoPresupuestoModule,
         SoldimetMovimientoPedidoModule,
+        SoldimetEstadoCostoRepuestoModule,
+        SoldimetDocumentationTypeModule,
+        SoldimetSucursalModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

@@ -20,6 +20,7 @@
             <th jhiSortBy="fechaRecibo"><span>Fecha Recibo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estadoPedidoRepuesto.nombreEstado"><span>Estado Pedido Repuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="presupuesto.id"><span>Presupuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="documentType.documentName"><span>Document Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -37,6 +38,11 @@
                 <td>
                     <div *ngIf="pedidoRepuesto.presupuesto">
                         <a [routerLink]="['../presupuesto', pedidoRepuesto.presupuesto?.id, 'view' ]" >{{pedidoRepuesto.presupuesto?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="pedidoRepuesto.documentType">
+                        <a [routerLink]="['../documentation-type', pedidoRepuesto.documentType?.id, 'view' ]" >{{pedidoRepuesto.documentType?.documentName}}</a>
                     </div>
                 </td>
                 <td class="text-right">

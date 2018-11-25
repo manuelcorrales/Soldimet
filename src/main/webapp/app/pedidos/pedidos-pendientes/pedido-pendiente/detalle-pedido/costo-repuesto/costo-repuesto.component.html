@@ -14,15 +14,15 @@
             <p>${{costoRepuesto.valor}}</p>
         </div>
         <div class="col-md-2">
-            <ng-container *ngIf="detallePedido.estadoDetallePedido.nombreEstado != 'Recibido'; else elseTemplate">
-                <label class="alert alert-success" role="alert" style="padding: 0px;">
-                    {{detallePedido.estadoDetallePedido.nombreEstado}}
+            <ng-container *ngIf="costoRepuesto.estado.nombreEstado != 'Recibido' && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else elseTemplate">
+                <label class="alert alert-primary" role="alert" style="padding: 0px;">
+                    {{costoRepuesto.estado.nombreEstado}}
                 </label>
-                <button class="btn btn-outline-primary" (click)="recibirRepuesto()">Recibir</button>
+                <button class="btn btn-outline-success" [disabled]="isSaving" (click)="recibirRepuesto()">Recibir</button>
             </ng-container>
             <ng-template #elseTemplate>
-                <label class="alert alert-secondary" role="alert" style="padding: 0px;">
-                    {{detallePedido.estadoDetallePedido.nombreEstado}}
+                <label class="alert alert-success" role="alert" style="padding: 0px;">
+                    {{costoRepuesto.estado.nombreEstado}}
                 </label>
             </ng-template>
 

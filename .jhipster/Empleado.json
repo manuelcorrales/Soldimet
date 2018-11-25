@@ -11,6 +11,12 @@
             "otherEntityField": "nombre",
             "ownerSide": true,
             "otherEntityRelationshipName": "empleado"
+        },
+        {
+            "relationshipName": "sucursal",
+            "otherEntityName": "sucursal",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nombreSucursal"
         }
     ],
     "fields": [
@@ -31,6 +37,7 @@
     ],
     "changelogDate": "20171214001419",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "empleado",
     "jpaMetamodelFiltering": false,

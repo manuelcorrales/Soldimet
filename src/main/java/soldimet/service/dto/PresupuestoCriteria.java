@@ -48,6 +48,10 @@ public class PresupuestoCriteria implements Serializable {
 
     private LongFilter detallePresupuestoId;
 
+    private LongFilter documentTypeId;
+
+    private LongFilter sucursalId;
+
     public PresupuestoCriteria() {
     }
 
@@ -139,6 +143,22 @@ public class PresupuestoCriteria implements Serializable {
         this.detallePresupuestoId = detallePresupuestoId;
     }
 
+    public LongFilter getDocumentTypeId() {
+        return documentTypeId;
+    }
+
+    public void setDocumentTypeId(LongFilter documentTypeId) {
+        this.documentTypeId = documentTypeId;
+    }
+
+    public LongFilter getSucursalId() {
+        return sucursalId;
+    }
+
+    public void setSucursalId(LongFilter sucursalId) {
+        this.sucursalId = sucursalId;
+    }
+
     @Override
     public String toString() {
         return "PresupuestoCriteria{" +
@@ -153,6 +173,8 @@ public class PresupuestoCriteria implements Serializable {
                 (clienteId != null ? "clienteId=" + clienteId + ", " : "") +
                 (estadoPresupuestoId != null ? "estadoPresupuestoId=" + estadoPresupuestoId + ", " : "") +
                 (detallePresupuestoId != null ? "detallePresupuestoId=" + detallePresupuestoId + ", " : "") +
+                (documentTypeId != null ? "documentTypeId=" + documentTypeId + ", " : "") +
+                (sucursalId != null ? "sucursalId=" + sucursalId + ", " : "") +
             "}";
     }
 

@@ -21,9 +21,16 @@ const ENTITY_STATES = [...pedidoRepuestoRoute, ...pedidoRepuestoPopupRoute];
         PedidoRepuestoDeleteDialogComponent,
         PedidoRepuestoDeletePopupComponent,
         PedidoRepuestoDetailComponent,
-        PedidoRepuestoUpdateComponent
+        PedidoRepuestoUpdateComponent,
+        PedidoRepuestoDeleteDialogComponent,
+        PedidoRepuestoDeletePopupComponent
     ],
-    entryComponents: [PedidoRepuestoComponent, PedidoRepuestoUpdateComponent],
+    entryComponents: [
+        PedidoRepuestoComponent,
+        PedidoRepuestoUpdateComponent,
+        PedidoRepuestoDeleteDialogComponent,
+        PedidoRepuestoDeletePopupComponent
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPedidoRepuestoModule {}

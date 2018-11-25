@@ -19,6 +19,12 @@
                         <a [routerLink]="['/persona', empleado.persona?.id, 'view']">{{empleado.persona?.nombre}}</a>
                     </div>
                 </dd>
+                <dt><span>Sucursal</span></dt>
+                <dd>
+                    <div *ngIf="empleado.sucursal">
+                        <a [routerLink]="['/sucursal', empleado.sucursal?.id, 'view']">{{empleado.sucursal?.nombreSucursal}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

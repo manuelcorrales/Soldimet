@@ -24,6 +24,18 @@
             "otherEntityName": "detallePresupuesto",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "presupuesto"
+        },
+        {
+            "relationshipName": "documentType",
+            "otherEntityName": "documentationType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "documentName"
+        },
+        {
+            "relationshipName": "sucursal",
+            "otherEntityName": "sucursal",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nombreSucursal"
         }
     ],
     "fields": [
@@ -74,6 +86,7 @@
     ],
     "changelogDate": "20171214020915",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "presupuesto",
     "jpaMetamodelFiltering": true,

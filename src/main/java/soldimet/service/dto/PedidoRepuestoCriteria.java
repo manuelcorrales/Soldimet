@@ -40,6 +40,8 @@ public class PedidoRepuestoCriteria implements Serializable {
 
     private LongFilter presupuestoId;
 
+    private LongFilter documentTypeId;
+
     public PedidoRepuestoCriteria() {
     }
 
@@ -99,6 +101,14 @@ public class PedidoRepuestoCriteria implements Serializable {
         this.presupuestoId = presupuestoId;
     }
 
+    public LongFilter getDocumentTypeId() {
+        return documentTypeId;
+    }
+
+    public void setDocumentTypeId(LongFilter documentTypeId) {
+        this.documentTypeId = documentTypeId;
+    }
+
     @Override
     public String toString() {
         return "PedidoRepuestoCriteria{" +
@@ -109,6 +119,7 @@ public class PedidoRepuestoCriteria implements Serializable {
                 (estadoPedidoRepuestoId != null ? "estadoPedidoRepuestoId=" + estadoPedidoRepuestoId + ", " : "") +
                 (detallePedidoId != null ? "detallePedidoId=" + detallePedidoId + ", " : "") +
                 (presupuestoId != null ? "presupuestoId=" + presupuestoId + ", " : "") +
+                (documentTypeId != null ? "documentTypeId=" + documentTypeId + ", " : "") +
             "}";
     }
 

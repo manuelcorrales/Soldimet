@@ -24,6 +24,12 @@
                 "required"
             ],
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "documentType",
+            "otherEntityName": "documentationType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "documentName"
         }
     ],
     "fields": [
@@ -45,6 +51,7 @@
     ],
     "changelogDate": "20171214015748",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "pedido_repuesto",
     "jpaMetamodelFiltering": true,

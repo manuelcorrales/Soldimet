@@ -16,6 +16,7 @@ import { ArticuloService } from 'app/entities/articulo';
 import { PersonaService } from 'app/entities/persona';
 import { ProveedorService } from 'app/entities/proveedor';
 import { HttpResponse } from '../../../../../../../../../node_modules/@angular/common/http';
+import { JhiAlertService } from 'ng-jhipster';
 
 @Component({
     selector: 'jhi-costo-repuesto',
@@ -66,7 +67,8 @@ export class CostoRepuestoComponent implements OnInit {
         private pedidoService: PedidosService,
         private articuloService: ArticuloService,
         private personaService: PersonaService,
-        private proveedorService: ProveedorService
+        private proveedorService: ProveedorService,
+        private jhiAlertService: JhiAlertService
     ) {
         // customize default values of typeaheads used by this component tree
         config.showHint = true;
@@ -151,9 +153,8 @@ export class CostoRepuestoComponent implements OnInit {
     }
 
     updatePedidoDetalle() {
-        console.log(this.costoRepuesto);
-        this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(nuevaCobranza => {
-            this.cobranzaRepuesto = nuevaCobranza;
+        this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(nuevoCosto => {
+            this.costoRepuesto = nuevoCosto;
             this.isSaving = false;
         });
     }
@@ -206,8 +207,10 @@ export class CostoRepuestoComponent implements OnInit {
     }
 
     recibirRepuesto() {
-        this.pedidoService.recibirRepuesto(this.costoRepuesto, this.detallePedido.id).subscribe((cobranza: CobranzaRepuesto) => {
-            this.cobranzaRepuesto = cobranza;
+        this.isSaving = true;
+        this.pedidoService.recibirRepuesto(this.costoRepuesto, this.detallePedido.id).subscribe((costo: CostoRepuesto) => {
+            this.costoRepuesto = costo;
+            this.isSaving = false;
         });
     }
 }

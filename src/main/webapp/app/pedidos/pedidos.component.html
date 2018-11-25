@@ -1,80 +1,87 @@
-<div class="">
+<div class="jh-card">
     <jhi-alert></jhi-alert>
-    <div id="imaginary_container">
-        <div class="input-group stylish-input-group">
-            <input #search type="text" class="form-control search" placeholder="Buscar pedido..." (keydown.enter)="onSearch(search.value)">
-            <span class="input-group-addon">
-                <i class="fa fa-search"></i>
-            </span>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)" placeholder="Buscar pedido...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
-    <br>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Nº Pedido</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Presupuesto</th>
-                <th scope="col">Motor</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Operaciones</th>
-            </tr>
-        </thead>
-        <tbody *ngIf="pedidos">
-            <tr *ngFor="let pedido of pedidos">
-                <th>{{pedido.id}}</th>
-                <td>{{pedido.cliente}}</td>
-                <td>{{pedido.fecha}} </td>
-                <td>{{pedido.presupuestoId}}</td>
-                <td>{{pedido.motor}}</td>
-                <td>{{pedido.tipo}}</td>
-                <td>
-                    <div *ngIf="pedido.estado== 'Pendiente de pedido'" class="text-center">
-                        <div class="alert alert-primary" style="padding: 0px;" role="alert">
-                            {{pedido.estado}}
-                        </div>
-                    </div>
-                    <div *ngIf="pedido.estado== 'Pedido'" class="text-center">
-                        <div class="alert alert-info" role="alert" style="padding: 0px;">
-                            {{pedido.estado}}
-                        </div>
-                    </div>
-                    <div *ngIf="pedido.estado== 'Pedido Parcial'" class="text-center">
-                            <div class="alert alert-info" role="alert" style="padding: 0px;">
-                                {{pedido.estado}}
+    <br/>
+    <div class="container-fluid">
+        <div class="row col">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Nº Pedido</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Presupuesto</th>
+                        <th scope="col">Motor</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Operaciones</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="pedidos">
+                    <tr *ngFor="let pedido of pedidos">
+                        <th>{{pedido.id}}</th>
+                        <td>{{pedido.cliente}}</td>
+                        <td>{{pedido.fecha}} </td>
+                        <td>{{pedido.presupuestoId}}</td>
+                        <td>{{pedido.motor}}</td>
+                        <td>{{pedido.tipo}}</td>
+                        <td>
+                            <div *ngIf="pedido.estado== 'Pendiente de pedido'" class="text-center">
+                                <div class="alert alert-primary" style="padding: 0px;" role="alert">
+                                    {{pedido.estado}}
+                                </div>
                             </div>
-                        </div>
-                    <div *ngIf="pedido.estado== 'Recibido'" class="text-center">
-                        <div class="alert alert-success" role="alert" style="padding: 0px;">
-                            {{pedido.estado}}
-                        </div>
-                    </div>
-                    <div *ngIf="pedido.estado== 'Recibido Parcial'" class="text-center">
-                            <div class="alert alert-success" role="alert" style="padding: 0px;">
-                                {{pedido.estado}}
+                            <div *ngIf="pedido.estado== 'Pedido'" class="text-center">
+                                <div class="alert alert-info" role="alert" style="padding: 0px;">
+                                    {{pedido.estado}}
+                                </div>
                             </div>
-                        </div>
-                    <div *ngIf="pedido.estado== 'Cancelado'" class="text-center">
-                        <div class="alert alert-danger" role="alert" style="padding: 0px;">
-                            {{pedido.estado}}
-                        </div>
-                    </div>
+                            <div *ngIf="pedido.estado== 'Pedido Parcial'" class="text-center">
+                                <div class="alert alert-info" role="alert" style="padding: 0px;">
+                                    {{pedido.estado}}
+                                </div>
+                            </div>
+                            <div *ngIf="pedido.estado== 'Recibido'" class="text-center">
+                                <div class="alert alert-success" role="alert" style="padding: 0px;">
+                                    {{pedido.estado}}
+                                </div>
+                            </div>
+                            <div *ngIf="pedido.estado== 'Recibido Parcial'" class="text-center">
+                                <div class="alert alert-success" role="alert" style="padding: 0px;">
+                                    {{pedido.estado}}
+                                </div>
+                            </div>
+                            <div *ngIf="pedido.estado== 'Cancelado'" class="text-center">
+                                <div class="alert alert-danger" role="alert" style="padding: 0px;">
+                                    {{pedido.estado}}
+                                </div>
+                            </div>
 
 
-                </td>
-                <td>
-                    <button class="btn btn-info" type="submit"
-                    [routerLink]="['/', { outlets: { popup: 'pedidos/'+ pedido.id } }]"
-                    replaceUrl="true"
-                    *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'"
-                        placement="top" ngbTooltip="Operar pedido">
-                        <i class="fa fa-external-link-square"></i>
-                    </button>
-                    <p *ngIf="pedido.estado == 'Recibido' || pedido.estado == 'Cancelado'">No hay operaciones</p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                        </td>
+                        <td>
+                            <button class="btn btn-info" type="submit" [routerLink]="['/', { outlets: { popup: 'pedidos/'+ pedido.id } }]" replaceUrl="true"
+                                *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'" placement="top" ngbTooltip="Operar pedido">
+                                <i class="fa fa-external-link-square"></i>
+                            </button>
+                            <p *ngIf="pedido.estado == 'Recibido' || pedido.estado == 'Cancelado'">No hay operaciones</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

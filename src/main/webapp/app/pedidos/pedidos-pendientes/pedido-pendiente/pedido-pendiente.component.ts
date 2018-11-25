@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { JhiEventManager } from '../../../../../../../node_modules/ng-jhipster';
@@ -27,6 +27,9 @@ export class PedidoPendienteComponent implements OnInit {
     proveedores: DtoBusquedaProveedor[];
     @ViewChildren('detPed')
     detallePedidoComponent: QueryList<DetallePedidoComponentNew>;
+
+    @ViewChild('toastr', { read: ViewContainerRef })
+    toastrContainer: ViewContainerRef;
 
     marcas: IMarca[];
     articulos: IArticulo[];
@@ -63,9 +66,11 @@ export class PedidoPendienteComponent implements OnInit {
                     tipoRepuestoID = tipoRepuestoI.id;
                 }
             });
-            let query = '';
+            let query;
             if (tipoRepuestoID) {
-                query = 'tipoRepuestoId.equals=' + tipoRepuestoID;
+                query = {
+                    'tipoRepuestoId.equals': tipoRepuestoID
+                };
             }
             this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
                 this.articulos = res.body;

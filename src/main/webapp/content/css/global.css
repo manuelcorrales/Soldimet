@@ -11,7 +11,8 @@ h4 {
 }
 
 body {
-    background: #aaaaaa;
+    background: #f8f7fa;
+    background-color: rgb(248, 247, 250) !important;
 }
 
 a {
@@ -53,7 +54,6 @@ Generic styles
 .jh-card {
     padding: 1.5%;
     margin-top: 20px;
-    border: none;
 }
 
 .error {
@@ -137,6 +137,12 @@ Custom alerts for notification
 
 .alerts .toast.bottom {
     bottom: 55px;
+}
+
+.alert {
+    position: fixed;
+    right: 20px !important ;
+    top: 20px !important ;
 }
 
 @media screen and (min-width: 480px) {
@@ -230,3 +236,7 @@ ui bootstrap tweaks
 }
 
 /* jhipster-needle-css-add-main JHipster will add new css style */
+
+.container-fluid {
+    background-color: rgb(255, 255, 255) !important;
+}

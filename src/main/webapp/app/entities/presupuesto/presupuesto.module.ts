@@ -6,11 +6,11 @@ import {
     PresupuestoComponent,
     PresupuestoDetailComponent,
     PresupuestoUpdateComponent,
-    PresupuestoDeleteDialogComponent,
     PresupuestoDeletePopupComponent,
+    PresupuestoDeleteDialogComponent,
     presupuestoRoute,
     presupuestoPopupRoute
-} from 'app/entities/presupuesto';
+} from './';
 
 const ENTITY_STATES = [...presupuestoRoute, ...presupuestoPopupRoute];
 
@@ -18,12 +18,12 @@ const ENTITY_STATES = [...presupuestoRoute, ...presupuestoPopupRoute];
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         PresupuestoComponent,
-        PresupuestoDeleteDialogComponent,
-        PresupuestoDeletePopupComponent,
         PresupuestoDetailComponent,
-        PresupuestoUpdateComponent
+        PresupuestoUpdateComponent,
+        PresupuestoDeleteDialogComponent,
+        PresupuestoDeletePopupComponent
     ],
-    entryComponents: [PresupuestoComponent, PresupuestoUpdateComponent],
+    entryComponents: [PresupuestoComponent, PresupuestoUpdateComponent, PresupuestoDeleteDialogComponent, PresupuestoDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetPresupuestoModule {}

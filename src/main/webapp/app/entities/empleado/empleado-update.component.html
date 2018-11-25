@@ -45,6 +45,13 @@
                         This field is required.
                     </small>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sucursal">Sucursal</label>
+                    <select class="form-control" id="field_sucursal" name="sucursal" [(ngModel)]="empleado.sucursal" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="sucursalOption.id === empleado.sucursal?.id ? empleado.sucursal : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

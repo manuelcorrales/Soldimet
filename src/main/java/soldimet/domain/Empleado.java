@@ -33,6 +33,9 @@ public class Empleado implements Serializable {
     @JoinColumn(unique = true)
     private Persona persona;
 
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    private Sucursal sucursal;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -79,6 +82,19 @@ public class Empleado implements Serializable {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
+    public Empleado sucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
+        return this;
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

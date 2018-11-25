@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="root (generated)" id="1543072559159-1">
+        <addColumn tableName="empleado">
+            <column name="sucursal_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1543072559159-2">
+        <addColumn tableName="presupuesto">
+            <column name="sucursal_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="root (generated)" id="1543072559159-3">
+        <addForeignKeyConstraint baseColumnNames="sucursal_id" baseTableName="presupuesto" constraintName="FK63j0q1q65w3hjmushyiad640j" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sucursal"/>
+    </changeSet>
+    <changeSet author="root (generated)" id="1543072559159-4">
+        <addForeignKeyConstraint baseColumnNames="sucursal_id" baseTableName="empleado" constraintName="FKkv68lx8xpbpv6jprh7taieaej" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sucursal"/>
+    </changeSet>
+</databaseChangeLog>

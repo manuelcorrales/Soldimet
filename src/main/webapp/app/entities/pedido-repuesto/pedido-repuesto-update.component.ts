@@ -5,11 +5,13 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
+import { PedidoRepuestoService } from './pedido-repuesto.service';
 import { IEstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
 import { EstadoPedidoRepuestoService } from 'app/entities/estado-pedido-repuesto';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 import { PresupuestoService } from 'app/entities/presupuesto';
+import { IDocumentationType } from 'app/shared/model/documentation-type.model';
+import { DocumentationTypeService } from 'app/entities/documentation-type';
 
 @Component({
     selector: 'jhi-pedido-repuesto-update',
@@ -22,6 +24,8 @@ export class PedidoRepuestoUpdateComponent implements OnInit {
     estadopedidorepuestos: IEstadoPedidoRepuesto[];
 
     presupuestos: IPresupuesto[];
+
+    documentationtypes: IDocumentationType[];
     fechaCreacionDp: any;
     fechaPedidoDp: any;
     fechaReciboDp: any;
@@ -31,6 +35,7 @@ export class PedidoRepuestoUpdateComponent implements OnInit {
         private pedidoRepuestoService: PedidoRepuestoService,
         private estadoPedidoRepuestoService: EstadoPedidoRepuestoService,
         private presupuestoService: PresupuestoService,
+        private documentationTypeService: DocumentationTypeService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -48,6 +53,12 @@ export class PedidoRepuestoUpdateComponent implements OnInit {
         this.presupuestoService.query().subscribe(
             (res: HttpResponse<IPresupuesto[]>) => {
                 this.presupuestos = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.documentationTypeService.query().subscribe(
+            (res: HttpResponse<IDocumentationType[]>) => {
+                this.documentationtypes = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -88,6 +99,10 @@ export class PedidoRepuestoUpdateComponent implements OnInit {
     }
 
     trackPresupuestoById(index: number, item: IPresupuesto) {
+        return item.id;
+    }
+
+    trackDocumentationTypeById(index: number, item: IDocumentationType) {
         return item.id;
     }
     get pedidoRepuesto() {

@@ -5,9 +5,11 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IEmpleado } from 'app/shared/model/empleado.model';
-import { EmpleadoService } from 'app/entities/empleado/empleado.service';
+import { EmpleadoService } from './empleado.service';
 import { IPersona } from 'app/shared/model/persona.model';
 import { PersonaService } from 'app/entities/persona';
+import { ISucursal } from 'app/shared/model/sucursal.model';
+import { SucursalService } from 'app/entities/sucursal';
 
 @Component({
     selector: 'jhi-empleado-update',
@@ -19,10 +21,13 @@ export class EmpleadoUpdateComponent implements OnInit {
 
     personas: IPersona[];
 
+    sucursals: ISucursal[];
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private empleadoService: EmpleadoService,
         private personaService: PersonaService,
+        private sucursalService: SucursalService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -43,6 +48,12 @@ export class EmpleadoUpdateComponent implements OnInit {
                         (subRes: HttpErrorResponse) => this.onError(subRes.message)
                     );
                 }
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.sucursalService.query().subscribe(
+            (res: HttpResponse<ISucursal[]>) => {
+                this.sucursals = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -79,6 +90,10 @@ export class EmpleadoUpdateComponent implements OnInit {
     }
 
     trackPersonaById(index: number, item: IPersona) {
+        return item.id;
+    }
+
+    trackSucursalById(index: number, item: ISucursal) {
         return item.id;
     }
     get empleado() {

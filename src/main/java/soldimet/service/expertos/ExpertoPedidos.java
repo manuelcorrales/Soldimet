@@ -1,7 +1,6 @@
 package soldimet.service.expertos;
 
 import java.util.List;
-import java.util.concurrent.Delayed;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,7 @@ import soldimet.converter.ProveedorConverter;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.DetallePedido;
+import soldimet.domain.EstadoCostoRepuesto;
 import soldimet.domain.EstadoDetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPersona;
@@ -21,6 +21,7 @@ import soldimet.domain.Proveedor;
 import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CostoRepuestoRepository;
 import soldimet.repository.DetallePedidoRepository;
+import soldimet.repository.EstadoCostoRepuestoRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
 import soldimet.repository.EstadoPersonaRepository;
@@ -73,6 +74,9 @@ public class ExpertoPedidos {
     @Autowired
     private TipoRepuestoRepository tipoRepuestoRepository;
 
+    @Autowired
+    private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
+
     public List<PedidoRepuesto> getPedidosPendientes() {
 
         EstadoPedidoRepuesto estadoPendiente = estadoPedidoRepuestoRepository
@@ -105,13 +109,16 @@ public class ExpertoPedidos {
 
     public CostoRepuesto updateDetallePedido(CostoRepuesto costoRepuesto, Long detallePedidoId) {
         try {
+            EstadoCostoRepuesto estadoPedido = estadoCostoRepuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
+            costoRepuesto.setEstado(estadoPedido);
             costoRepuesto.setArticulo(articuloRepository.getOne(costoRepuesto.getArticulo().getId()));
             costoRepuesto.setProveedor(proveedorRepository.getOne(costoRepuesto.getProveedor().getId()));
             costoRepuesto.setTipoRepuesto(tipoRepuestoRepository.getOne(costoRepuesto.getTipoRepuesto().getId()));
 
             DetallePedido detallePedido = detallePedidoRepository.getOne(detallePedidoId);
             detallePedido.addCostoRepuesto(costoRepuesto);
-            this.updateEstadoDetalle(detallePedido, null);
+            detallePedido = this.updateEstadoDetalle(detallePedido, null);
             PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository
                     .findPedidoRepuestoByDetallePedidosIn(detallePedido);
             EstadoPedidoRepuesto estadoPedidoRepuesto = this.needToUpdatePedido(pedidoRepuesto);
@@ -120,7 +127,6 @@ public class ExpertoPedidos {
                 pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
                 pedidoRepuestoRepository.save(pedidoRepuesto);
                 detallePedido = detallePedidoRepository.getOne(detallePedido.getId());
-
             } else {
                 detallePedido = detallePedidoRepository.save(detallePedido);
             }
@@ -135,37 +141,78 @@ public class ExpertoPedidos {
     }
 
     private EstadoPedidoRepuesto needToUpdatePedido(PedidoRepuesto pedidoRepuesto) {
+        EstadoPedidoRepuesto nuevoEstado = null;
+
         if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO)
-                || pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-                        .equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL)) {
+                .equals(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO)) {
+            //si hay 1 detalle pedido lo dejo parcial
             for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
                 if (!detallePedido.getEstadoDetallePedido().getNombreEstado()
                         .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
-                    return estadoPedidoRepuestoRepository
+                    nuevoEstado = estadoPedidoRepuestoRepository
                             .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL);
                 }
             }
-            return estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO);
+
         }
-        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO)
-                || pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-                        .equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL)) {
+        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL)) {
+            Boolean all_pedidos = true;
+            Boolean any_recibido = false;
+            // si estan todos pedido lo paso de parcial a pedido
+            for (DetallePedido detallePedido: pedidoRepuesto.getDetallePedidos()) {
+                if (!detallePedido.getEstadoDetallePedido().getNombreEstado().equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
+                    all_pedidos = false;
+                    if (detallePedido.getEstadoDetallePedido().getNombreEstado().equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
+                       // si el que no esta pedido, esta recibido, paso a recibido parcial
+                        any_recibido = true;
+                        all_pedidos = true;
+                    }
+                }
+            }
+
+            if (all_pedidos) {
+                //si estan todos pedido y hay al menos 1 recibido, paso a recibido parcial
+                if (any_recibido) {
+                    nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL);
+                } else {
+                    nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO);
+                }
+            }
+
+        }
+        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
+                .equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO)) {
+            //si hay algun detalle recibido lo paso a recibido parcial
             for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
                 if (!detallePedido.getEstadoDetallePedido().getNombreEstado()
                         .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
-                    return estadoPedidoRepuestoRepository
+                    nuevoEstado = estadoPedidoRepuestoRepository
                             .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL);
                 }
             }
-            return estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO);
+
+        }
+        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
+                        .equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL)
+            ) {
+            // si todos los detalles estan recibidos lo paso a recibido
+            Boolean all_recibidos = true;
+            for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
+                String estadoDetalle = detallePedido.getEstadoDetallePedido().getNombreEstado();
+                if (!estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
+                    all_recibidos = false;;
+                }
+            }
+            if (all_recibidos) {
+                nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO);
+            }
         }
 
-        return null;
+        return nuevoEstado;
 
     }
 
-    public void updateEstadoDetalle(DetallePedido detallePedido, EstadoDetallePedido estado) {
+    public DetallePedido updateEstadoDetalle(DetallePedido detallePedido, EstadoDetallePedido estado) {
 
         if (estado == null) {
             estado = this.needsToUpdateDetalle(detallePedido);
@@ -174,10 +221,14 @@ public class ExpertoPedidos {
         if (estado != null) {
             detallePedido.setEstadoDetallePedido(estado);
         }
+
+        return detallePedido;
+
     }
 
     private EstadoDetallePedido needsToUpdateDetalle(DetallePedido detallePedido) {
         Boolean needsToUpdate = true;
+        EstadoDetallePedido estadoDetalle = null;
         if (detallePedido.getEstadoDetallePedido().getNombreEstado()
                 .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO)) {
             // Needs to update to Pedido
@@ -194,28 +245,30 @@ public class ExpertoPedidos {
             }
 
             if (needsToUpdate) {
-                return estadoDetallePedidoRepuestoRepository
+                estadoDetalle = estadoDetallePedidoRepuestoRepository
                         .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO);
             }
         }
 
         if (detallePedido.getEstadoDetallePedido().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
+                .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)
+                || (estadoDetalle != null
+                        && estadoDetalle.getNombreEstado().equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO))) {
             // Needs to update to Recibido
             for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
-                // Falta agregar el atributo de recibido
-                // if (!costoRepuesto.isRecibido()) {
-                    // needsToUpdate = false
-                // }
+                if (!costoRepuesto.getEstado().getNombreEstado()
+                        .equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO)) {
+                    needsToUpdate = false;
+                }
             }
-            // if (needsToUpdate) {
-            //     return estadoDetallePedidoRepuestoRepository
-            //             .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO);
-            // }
+            if (needsToUpdate) {
+                estadoDetalle = estadoDetallePedidoRepuestoRepository
+                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO);
+            }
         }
 
         // Doesn't needs to update
-        return null;
+        return estadoDetalle;
 
     }
 
@@ -223,27 +276,34 @@ public class ExpertoPedidos {
 
         try {
             DetallePedido detallePedido = detallePedidoRepository.getOne(detallePedidoId);
-            for (CostoRepuesto costoRepuesto2: detallePedido.getCostoRepuestos()) {
-                if (costoRepuesto.getId().equals(costoRepuesto2.getId())) {
-                    costoRepuesto = costoRepuesto2;
-                }
-            }
-            //Falta asignar el valor de que esta recibido
-            this.updateEstadoDetalle(detallePedido, null);
             PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository
                     .findPedidoRepuestoByDetallePedidosIn(detallePedido);
+
+            for (DetallePedido detallePedido2 : pedidoRepuesto.getDetallePedidos()) {
+                if (detallePedido2.getId().equals(detallePedido.getId())) {
+                    detallePedido = detallePedido2;
+                    for (CostoRepuesto costoRepuesto2 : detallePedido.getCostoRepuestos()) {
+                        if (costoRepuesto.getId().equals(costoRepuesto2.getId())) {
+                            costoRepuesto = costoRepuesto2;
+                        }
+                    }
+                }
+            }
+
+            EstadoCostoRepuesto estadoRecibido = estadoCostoRepuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO);
+            costoRepuesto.setEstado(estadoRecibido);
+            detallePedido = this.updateEstadoDetalle(detallePedido, null);
             EstadoPedidoRepuesto estadoPedidoRepuesto = this.needToUpdatePedido(pedidoRepuesto);
 
             if (estadoPedidoRepuesto != null) {
                 pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
                 pedidoRepuestoRepository.save(pedidoRepuesto);
-                detallePedido = detallePedidoRepository.getOne(detallePedido.getId());
-
             } else {
-                detallePedido = detallePedidoRepository.save(detallePedido);
+                detallePedidoRepository.save(detallePedido);
             }
 
-            return detallePedido.filterCostoRepuesto(costoRepuesto);
+            return costoRepuesto;
 
         } catch (Exception e) {
             e.printStackTrace();
