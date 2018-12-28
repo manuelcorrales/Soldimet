@@ -44,5 +44,17 @@
                                  referencedColumnNames="id"
                                  referencedTableName="sub_categoria"/>
 
+        <addForeignKeyConstraint baseColumnNames="caja_id"
+                                 baseTableName="movimiento"
+                                 constraintName="fk_movimiento_caja_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="caja"/>
+
+        <addForeignKeyConstraint baseColumnNames="detalle_movimiento_id"
+                                 baseTableName="movimiento"
+                                 constraintName="fk_movimiento_detalle_movimiento_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="detalle_movimiento"/>
+
     </changeSet>
 </databaseChangeLog>

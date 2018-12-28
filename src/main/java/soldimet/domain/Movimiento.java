@@ -1,6 +1,5 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -9,8 +8,6 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -39,33 +36,48 @@ public class Movimiento implements Serializable {
     @Column(name = "importe", nullable = false)
     private Float importe;
 
+    @Column(name = "descuento")
+    private Float descuento;
+
+    @Column(name = "observaciones")
+    private String observaciones;
+
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private EstadoMovimiento estado;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private FormaDePago formaDePago;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private TipoMovimiento tipoMovimiento;
-
-    @OneToMany
-    @JoinColumn(name= "movimiento")
-    @JsonIgnore
-    private Set<DetalleMovimiento> detalleMovimientos = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Empleado empleado;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Persona persona;
 
     @ManyToOne
+    @JsonIgnoreProperties("")
     private SubCategoria subCategoria;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Caja caja;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private DetalleMovimiento detalleMovimiento;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -115,6 +127,32 @@ public class Movimiento implements Serializable {
         this.importe = importe;
     }
 
+    public Float getDescuento() {
+        return descuento;
+    }
+
+    public Movimiento descuento(Float descuento) {
+        this.descuento = descuento;
+        return this;
+    }
+
+    public void setDescuento(Float descuento) {
+        this.descuento = descuento;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public Movimiento observaciones(String observaciones) {
+        this.observaciones = observaciones;
+        return this;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
     public EstadoMovimiento getEstado() {
         return estado;
     }
@@ -152,29 +190,6 @@ public class Movimiento implements Serializable {
 
     public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
-    }
-
-    public Set<DetalleMovimiento> getDetalleMovimientos() {
-        return detalleMovimientos;
-    }
-
-    public Movimiento detalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
-        this.detalleMovimientos = detalleMovimientos;
-        return this;
-    }
-
-    public Movimiento addDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimientos.add(detalleMovimiento);
-        return this;
-    }
-
-    public Movimiento removeDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimientos.remove(detalleMovimiento);
-        return this;
-    }
-
-    public void setDetalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
-        this.detalleMovimientos = detalleMovimientos;
     }
 
     public Empleado getEmpleado() {
@@ -215,6 +230,32 @@ public class Movimiento implements Serializable {
     public void setSubCategoria(SubCategoria subCategoria) {
         this.subCategoria = subCategoria;
     }
+
+    public Caja getCaja() {
+        return caja;
+    }
+
+    public Movimiento caja(Caja caja) {
+        this.caja = caja;
+        return this;
+    }
+
+    public void setCaja(Caja caja) {
+        this.caja = caja;
+    }
+
+    public DetalleMovimiento getDetalleMovimiento() {
+        return detalleMovimiento;
+    }
+
+    public Movimiento detalleMovimiento(DetalleMovimiento detalleMovimiento) {
+        this.detalleMovimiento = detalleMovimiento;
+        return this;
+    }
+
+    public void setDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
+        this.detalleMovimiento = detalleMovimiento;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -244,6 +285,8 @@ public class Movimiento implements Serializable {
             ", fecha='" + getFecha() + "'" +
             ", hora='" + getHora() + "'" +
             ", importe=" + getImporte() +
+            ", descuento=" + getDescuento() +
+            ", observaciones='" + getObservaciones() + "'" +
             "}";
     }
 }

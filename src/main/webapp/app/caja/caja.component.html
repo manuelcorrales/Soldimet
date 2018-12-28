@@ -1,10 +1,76 @@
-<div class=".container-fluid card jh-card">
-
-    <ngx-datatable
-        [rows]="rows"
-        [columns]="columns"
-        [messages]="messages"
-        [limit]="limit"
-        [selectionType]="selectionType">
-    </ngx-datatable>
+<div class="jh-card">
+    <jhi-alert></jhi-alert>
+    <div class="container">
+        <div class="row">
+            <div class="card border-success col-md-3 text-center">
+                Total Mensual: ${{cajaDia.totalMensual}}43.200
+            </div>
+            <div class="col-md-7">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)" placeholder="Buscar movimientos...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+                <!-- /input-group -->
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']">
+                    <span>
+                        Nuevo Movimiento
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="container-fluid">
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-center">Número</th>
+                        <th scope="col" class="text-center">Descripción</th>
+                        <th scope="col" class="text-center">Categoría</th>
+                        <th scope="col" class="text-center">Forma de pago</th>
+                        <th scope="col" class="text-center">Monto</th>
+                        <th scope="col" class="text-center">Operaciones</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="cajaDia">
+                    <tr *ngFor="let Movimiento of cajaDia.movimientos">
+                        <th class="text-center">
+                            {{movimiento.movimientoId}}
+                        </th>
+                        <td class="text-center">{{movimiento.descripcion}}</td>
+                        <td class="text-center">{{movimiento.categoria}}</td>
+                        <td class="text-center">{{movimiento.formaDePago}}</td>
+                        <td class="text-center">{{movimiento.monto}}</td>
+                        <td>
+                            <div class="btn-group flex-btn-group-container">
+                                <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
+                                    <button type="submit" replaceUrl="true" class="btn btn-primary btn-sm">
+                                        <span class="fa fa-pencil"></span>
+                                        <span class="d-none d-md-inline">Editar</span>
+                                    </button>
+                                    <button type="submit" replaceUrl="true" class="btn btn-danger btn-sm">
+                                        <span class="fa fa-remove"></span>
+                                        <span class="d-none d-md-inline">Eliminar</span>
+                                    </button>
+                                </div>
+                                <!-- <div  class="text-right">
+                                    <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
+                                        <span class="fa fa-pencil"></span>
+                                        <span class="d-none d-md-inline" (click)="activarCliente(cliente)">Activar</span>
+                                    </button>
+                                </div> -->
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

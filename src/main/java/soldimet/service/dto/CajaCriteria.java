@@ -34,7 +34,13 @@ public class CajaCriteria implements Serializable {
 
     private InstantFilter horaCierre;
 
-    private LongFilter movimientoId;
+    private FloatFilter saldo;
+
+    private StringFilter observaciones;
+
+    private FloatFilter saldo_fisico;
+
+    private LongFilter sucursalId;
 
     public CajaCriteria() {
     }
@@ -71,12 +77,36 @@ public class CajaCriteria implements Serializable {
         this.horaCierre = horaCierre;
     }
 
-    public LongFilter getMovimientoId() {
-        return movimientoId;
+    public FloatFilter getSaldo() {
+        return saldo;
     }
 
-    public void setMovimientoId(LongFilter movimientoId) {
-        this.movimientoId = movimientoId;
+    public void setSaldo(FloatFilter saldo) {
+        this.saldo = saldo;
+    }
+
+    public StringFilter getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(StringFilter observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public FloatFilter getSaldo_fisico() {
+        return saldo_fisico;
+    }
+
+    public void setSaldo_fisico(FloatFilter saldo_fisico) {
+        this.saldo_fisico = saldo_fisico;
+    }
+
+    public LongFilter getSucursalId() {
+        return sucursalId;
+    }
+
+    public void setSucursalId(LongFilter sucursalId) {
+        this.sucursalId = sucursalId;
     }
 
     @Override
@@ -86,7 +116,10 @@ public class CajaCriteria implements Serializable {
                 (fecha != null ? "fecha=" + fecha + ", " : "") +
                 (horaApertura != null ? "horaApertura=" + horaApertura + ", " : "") +
                 (horaCierre != null ? "horaCierre=" + horaCierre + ", " : "") +
-                (movimientoId != null ? "movimientoId=" + movimientoId + ", " : "") +
+                (saldo != null ? "saldo=" + saldo + ", " : "") +
+                (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
+                (saldo_fisico != null ? "saldo_fisico=" + saldo_fisico + ", " : "") +
+                (sucursalId != null ? "sucursalId=" + sucursalId + ", " : "") +
             "}";
     }
 

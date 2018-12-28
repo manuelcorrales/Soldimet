@@ -4,9 +4,12 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { JhiAlertService } from 'ng-jhipster';
 
 import { ICaja } from 'app/shared/model/caja.model';
-import { CajaService } from 'app/entities/caja/caja.service';
+import { CajaService } from './caja.service';
+import { ISucursal } from 'app/shared/model/sucursal.model';
+import { SucursalService } from 'app/entities/sucursal';
 
 @Component({
     selector: 'jhi-caja-update',
@@ -15,17 +18,30 @@ import { CajaService } from 'app/entities/caja/caja.service';
 export class CajaUpdateComponent implements OnInit {
     private _caja: ICaja;
     isSaving: boolean;
+
+    sucursals: ISucursal[];
     fechaDp: any;
     horaApertura: string;
     horaCierre: string;
 
-    constructor(private cajaService: CajaService, private activatedRoute: ActivatedRoute) {}
+    constructor(
+        private jhiAlertService: JhiAlertService,
+        private cajaService: CajaService,
+        private sucursalService: SucursalService,
+        private activatedRoute: ActivatedRoute
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ caja }) => {
             this.caja = caja;
         });
+        this.sucursalService.query().subscribe(
+            (res: HttpResponse<ISucursal[]>) => {
+                this.sucursals = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     previousState() {
@@ -54,6 +70,14 @@ export class CajaUpdateComponent implements OnInit {
 
     private onSaveError() {
         this.isSaving = false;
+    }
+
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    trackSucursalById(index: number, item: ISucursal) {
+        return item.id;
     }
     get caja() {
         return this._caja;

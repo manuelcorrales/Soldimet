@@ -1,12 +1,15 @@
 import { Moment } from 'moment';
-import { IMovimiento } from 'app/shared/model/movimiento.model';
+import { ISucursal } from 'app/shared/model//sucursal.model';
 
 export interface ICaja {
     id?: number;
     fecha?: Moment;
     horaApertura?: Moment;
     horaCierre?: Moment;
-    movimientos?: IMovimiento[];
+    saldo?: number;
+    observaciones?: string;
+    saldo_fisico?: number;
+    sucursal?: ISucursal;
 }
 
 export class Caja implements ICaja {
@@ -15,6 +18,9 @@ export class Caja implements ICaja {
         public fecha?: Moment,
         public horaApertura?: Moment,
         public horaCierre?: Moment,
-        public movimientos?: IMovimiento[]
+        public saldo?: number,
+        public observaciones?: string,
+        public saldo_fisico?: number,
+        public sucursal?: ISucursal
     ) {}
 }

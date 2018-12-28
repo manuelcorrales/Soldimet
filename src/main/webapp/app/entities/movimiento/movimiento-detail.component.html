@@ -17,6 +17,14 @@
                 <dd>
                     <span>{{movimiento.importe}}</span>
                 </dd>
+                <dt><span>Descuento</span></dt>
+                <dd>
+                    <span>{{movimiento.descuento}}</span>
+                </dd>
+                <dt><span>Observaciones</span></dt>
+                <dd>
+                    <span>{{movimiento.observaciones}}</span>
+                </dd>
                 <dt><span>Estado</span></dt>
                 <dd>
                     <div *ngIf="movimiento.estado">
@@ -51,6 +59,18 @@
                 <dd>
                     <div *ngIf="movimiento.subCategoria">
                         <a [routerLink]="['/sub-categoria', movimiento.subCategoria?.id, 'view']">{{movimiento.subCategoria?.nombreSubCategoria}}</a>
+                    </div>
+                </dd>
+                <dt><span>Caja</span></dt>
+                <dd>
+                    <div *ngIf="movimiento.caja">
+                        <a [routerLink]="['/caja', movimiento.caja?.id, 'view']">{{movimiento.caja?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Detalle Movimiento</span></dt>
+                <dd>
+                    <div *ngIf="movimiento.detalleMovimiento">
+                        <a [routerLink]="['/detalle-movimiento', movimiento.detalleMovimiento?.id, 'view']">{{movimiento.detalleMovimiento?.id}}</a>
                     </div>
                 </dd>
             </dl>

@@ -49,7 +49,29 @@
                         />
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_saldo">Saldo</label>
+                    <input type="number" class="form-control" name="saldo" id="field_saldo"
+                        [(ngModel)]="caja.saldo" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_observaciones">Observaciones</label>
+                    <input type="text" class="form-control" name="observaciones" id="field_observaciones"
+                        [(ngModel)]="caja.observaciones" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_saldo_fisico">Saldo Fisico</label>
+                    <input type="number" class="form-control" name="saldo_fisico" id="field_saldo_fisico"
+                        [(ngModel)]="caja.saldo_fisico" />
+                </div>
 
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sucursal">Sucursal</label>
+                    <select class="form-control" id="field_sucursal" name="sucursal" [(ngModel)]="caja.sucursal" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="sucursalOption.id === caja.sucursal?.id ? caja.sucursal : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

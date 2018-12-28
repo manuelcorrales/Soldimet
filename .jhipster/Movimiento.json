@@ -29,12 +29,6 @@
             "otherEntityField": "nombreTipoMovimiento"
         },
         {
-            "relationshipName": "detalleMovimiento",
-            "otherEntityName": "detalleMovimiento",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "movimiento"
-        },
-        {
             "relationshipName": "empleado",
             "otherEntityName": "empleado",
             "relationshipType": "many-to-one",
@@ -57,6 +51,20 @@
             "otherEntityName": "subCategoria",
             "relationshipType": "many-to-one",
             "otherEntityField": "nombreSubCategoria"
+        },
+        {
+            "relationshipName": "caja",
+            "otherEntityName": "caja",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "detalleMovimiento",
+            "otherEntityName": "detalleMovimiento",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "movimiento"
         }
     ],
     "fields": [
@@ -82,10 +90,19 @@
                 "min"
             ],
             "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "descuento",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "observaciones",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171214012446",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "movimiento",
     "jpaMetamodelFiltering": false,

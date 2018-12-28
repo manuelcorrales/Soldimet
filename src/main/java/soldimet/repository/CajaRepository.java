@@ -3,13 +3,12 @@ package soldimet.repository;
 import java.time.LocalDate;
 import java.util.List;
 import soldimet.domain.Caja;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the Caja entity.
+ * Spring Data  repository for the Caja entity.
  */
 @SuppressWarnings("unused")
 @Repository

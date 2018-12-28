@@ -7,7 +7,7 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IMovimiento } from 'app/shared/model/movimiento.model';
-import { MovimientoService } from 'app/entities/movimiento/movimiento.service';
+import { MovimientoService } from './movimiento.service';
 import { IEstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
 import { EstadoMovimientoService } from 'app/entities/estado-movimiento';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
@@ -20,6 +20,10 @@ import { IPersona } from 'app/shared/model/persona.model';
 import { PersonaService } from 'app/entities/persona';
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 import { SubCategoriaService } from 'app/entities/sub-categoria';
+import { ICaja } from 'app/shared/model/caja.model';
+import { CajaService } from 'app/entities/caja';
+import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
+import { DetalleMovimientoService } from 'app/entities/detalle-movimiento';
 
 @Component({
     selector: 'jhi-movimiento-update',
@@ -40,6 +44,10 @@ export class MovimientoUpdateComponent implements OnInit {
     personas: IPersona[];
 
     subcategorias: ISubCategoria[];
+
+    cajas: ICaja[];
+
+    detallemovimientos: IDetalleMovimiento[];
     fechaDp: any;
     hora: string;
 
@@ -52,6 +60,8 @@ export class MovimientoUpdateComponent implements OnInit {
         private empleadoService: EmpleadoService,
         private personaService: PersonaService,
         private subCategoriaService: SubCategoriaService,
+        private cajaService: CajaService,
+        private detalleMovimientoService: DetalleMovimientoService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -93,6 +103,27 @@ export class MovimientoUpdateComponent implements OnInit {
         this.subCategoriaService.query().subscribe(
             (res: HttpResponse<ISubCategoria[]>) => {
                 this.subcategorias = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.cajaService.query().subscribe(
+            (res: HttpResponse<ICaja[]>) => {
+                this.cajas = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.detalleMovimientoService.query({ filter: 'movimiento-is-null' }).subscribe(
+            (res: HttpResponse<IDetalleMovimiento[]>) => {
+                if (!this.movimiento.detalleMovimiento || !this.movimiento.detalleMovimiento.id) {
+                    this.detallemovimientos = res.body;
+                } else {
+                    this.detalleMovimientoService.find(this.movimiento.detalleMovimiento.id).subscribe(
+                        (subRes: HttpResponse<IDetalleMovimiento>) => {
+                            this.detallemovimientos = [subRes.body].concat(res.body);
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
+                }
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -150,6 +181,14 @@ export class MovimientoUpdateComponent implements OnInit {
     }
 
     trackSubCategoriaById(index: number, item: ISubCategoria) {
+        return item.id;
+    }
+
+    trackCajaById(index: number, item: ICaja) {
+        return item.id;
+    }
+
+    trackDetalleMovimientoById(index: number, item: IDetalleMovimiento) {
         return item.id;
     }
     get movimiento() {

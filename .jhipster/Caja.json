@@ -2,10 +2,10 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "movimiento",
-            "otherEntityName": "movimiento",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "caja"
+            "relationshipName": "sucursal",
+            "otherEntityName": "sucursal",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nombreSucursal"
         }
     ],
     "fields": [
@@ -26,10 +26,23 @@
         {
             "fieldName": "horaCierre",
             "fieldType": "Instant"
+        },
+        {
+            "fieldName": "saldo",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "observaciones",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "saldo_fisico",
+            "fieldType": "Float"
         }
     ],
     "changelogDate": "20171213233926",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "caja",
     "jpaMetamodelFiltering": true,
