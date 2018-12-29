@@ -43,7 +43,6 @@ import { SoldimetTipoMovimientoModule } from 'app/entities/tipo-movimiento/tipo-
 import { SoldimetTipoParteMotorModule } from 'app/entities/tipo-parte-motor/tipo-parte-motor.module';
 import { SoldimetTipoRepuestoModule } from 'app/entities/tipo-repuesto/tipo-repuesto.module';
 import { SoldimetTipoTarjetaModule } from 'app/entities/tipo-tarjeta/tipo-tarjeta.module';
-import { SoldimetDetalleMovimientoModule } from 'app/entities/detalle-movimiento/detalle-movimiento.module';
 import { SoldimetCobranzaOperacionModule } from 'app/entities/cobranza-operacion/cobranza-operacion.module';
 import { SoldimetCobranzaRepuestoModule } from 'app/entities/cobranza-repuesto/cobranza-repuesto.module';
 import { SoldimetMovimientoArticuloModule } from 'app/entities/movimiento-articulo/movimiento-articulo.module';
@@ -55,9 +54,7 @@ import { SoldimetDocumentationTypeModule } from './documentation-type/documentat
 import { SoldimetPresupuestoModule } from './presupuesto/presupuesto.module';
 import { SoldimetPedidoRepuestoModule } from './pedido-repuesto/pedido-repuesto.module';
 import { SoldimetSucursalModule } from './sucursal/sucursal.module';
-import { SoldimetEmpleadoModule } from './empleado/empleado.module';
-import { SoldimetCajaModule } from './caja/caja.module';
-import { SoldimetMovimientoModule } from './movimiento/movimiento.module';
+import { SoldimetDetalleMovimientoModule } from 'app/entities/detalle-movimiento/detalle-movimiento.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({

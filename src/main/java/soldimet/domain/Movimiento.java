@@ -69,15 +69,15 @@ public class Movimiento implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("")
-    private SubCategoria subCategoria;
-
-    @ManyToOne
-    @JsonIgnoreProperties("")
     private Caja caja;
 
     @OneToOne
     @JoinColumn(unique = true)
     private DetalleMovimiento detalleMovimiento;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private SubCategoria subCategoria;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -218,19 +218,6 @@ public class Movimiento implements Serializable {
         this.persona = persona;
     }
 
-    public SubCategoria getSubCategoria() {
-        return subCategoria;
-    }
-
-    public Movimiento subCategoria(SubCategoria subCategoria) {
-        this.subCategoria = subCategoria;
-        return this;
-    }
-
-    public void setSubCategoria(SubCategoria subCategoria) {
-        this.subCategoria = subCategoria;
-    }
-
     public Caja getCaja() {
         return caja;
     }
@@ -255,6 +242,19 @@ public class Movimiento implements Serializable {
 
     public void setDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
         this.detalleMovimiento = detalleMovimiento;
+    }
+
+    public SubCategoria getSubCategoria() {
+        return subCategoria;
+    }
+
+    public Movimiento subCategoria(SubCategoria subCategoria) {
+        this.subCategoria = subCategoria;
+        return this;
+    }
+
+    public void setSubCategoria(SubCategoria subCategoria) {
+        this.subCategoria = subCategoria;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

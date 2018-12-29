@@ -5,9 +5,13 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
-import { DetalleMovimientoService } from 'app/entities/detalle-movimiento/detalle-movimiento.service';
+import { DetalleMovimientoService } from './detalle-movimiento.service';
 import { ITipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
 import { TipoDetalleMovimientoService } from 'app/entities/tipo-detalle-movimiento';
+import { IArticulo } from 'app/shared/model/articulo.model';
+import { ArticuloService } from 'app/entities/articulo';
+import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
+import { PedidoRepuestoService } from 'app/entities/pedido-repuesto';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 import { PresupuestoService } from 'app/entities/presupuesto';
 
@@ -21,12 +25,18 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
 
     tipodetallemovimientos: ITipoDetalleMovimiento[];
 
+    articulos: IArticulo[];
+
+    pedidorepuestos: IPedidoRepuesto[];
+
     presupuestos: IPresupuesto[];
 
     constructor(
         private jhiAlertService: JhiAlertService,
         private detalleMovimientoService: DetalleMovimientoService,
         private tipoDetalleMovimientoService: TipoDetalleMovimientoService,
+        private articuloService: ArticuloService,
+        private pedidoRepuestoService: PedidoRepuestoService,
         private presupuestoService: PresupuestoService,
         private activatedRoute: ActivatedRoute
     ) {}
@@ -39,6 +49,18 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
         this.tipoDetalleMovimientoService.query().subscribe(
             (res: HttpResponse<ITipoDetalleMovimiento[]>) => {
                 this.tipodetallemovimientos = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.articuloService.query().subscribe(
+            (res: HttpResponse<IArticulo[]>) => {
+                this.articulos = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.pedidoRepuestoService.query().subscribe(
+            (res: HttpResponse<IPedidoRepuesto[]>) => {
+                this.pedidorepuestos = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -81,6 +103,14 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
     }
 
     trackTipoDetalleMovimientoById(index: number, item: ITipoDetalleMovimiento) {
+        return item.id;
+    }
+
+    trackArticuloById(index: number, item: IArticulo) {
+        return item.id;
+    }
+
+    trackPedidoRepuestoById(index: number, item: IPedidoRepuesto) {
         return item.id;
     }
 

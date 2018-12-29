@@ -55,12 +55,6 @@
                         <a [routerLink]="['/persona', movimiento.persona?.id, 'view']">{{movimiento.persona?.nombre}}</a>
                     </div>
                 </dd>
-                <dt><span>Sub Categoria</span></dt>
-                <dd>
-                    <div *ngIf="movimiento.subCategoria">
-                        <a [routerLink]="['/sub-categoria', movimiento.subCategoria?.id, 'view']">{{movimiento.subCategoria?.nombreSubCategoria}}</a>
-                    </div>
-                </dd>
                 <dt><span>Caja</span></dt>
                 <dd>
                     <div *ngIf="movimiento.caja">
@@ -71,6 +65,12 @@
                 <dd>
                     <div *ngIf="movimiento.detalleMovimiento">
                         <a [routerLink]="['/detalle-movimiento', movimiento.detalleMovimiento?.id, 'view']">{{movimiento.detalleMovimiento?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Sub Categoria</span></dt>
+                <dd>
+                    <div *ngIf="movimiento.subCategoria">
+                        <a [routerLink]="['/sub-categoria', movimiento.subCategoria?.id, 'view']">{{movimiento.subCategoria?.nombreSubCategoria}}</a>
                     </div>
                 </dd>
             </dl>

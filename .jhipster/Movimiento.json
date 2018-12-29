@@ -47,12 +47,6 @@
             "otherEntityField": "nombre"
         },
         {
-            "relationshipName": "subCategoria",
-            "otherEntityName": "subCategoria",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "nombreSubCategoria"
-        },
-        {
             "relationshipName": "caja",
             "otherEntityName": "caja",
             "relationshipType": "many-to-one",
@@ -65,6 +59,12 @@
             "otherEntityField": "id",
             "ownerSide": true,
             "otherEntityRelationshipName": "movimiento"
+        },
+        {
+            "relationshipName": "subCategoria",
+            "otherEntityName": "subCategoria",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nombreSubCategoria"
         }
     ],
     "fields": [

@@ -9,6 +9,30 @@
                     <input type="text" class="form-control" id="id" name="id"
                         [(ngModel)]="detalleMovimiento.id" readonly />
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_valor_unitario">Valor Unitario</label>
+                    <input type="number" class="form-control" name="valor_unitario" id="field_valor_unitario"
+                        [(ngModel)]="detalleMovimiento.valor_unitario" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_cantidad">Cantidad</label>
+                    <input type="number" class="form-control" name="cantidad" id="field_cantidad"
+                        [(ngModel)]="detalleMovimiento.cantidad" required min="0" jhiMin="0"/>
+                    <div [hidden]="!(editForm.controls.cantidad?.dirty && editForm.controls.cantidad?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.cantidad?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.cantidad?.errors?.min">
+                            This field should be at least 0.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.cantidad?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_tipoDetalleMovimiento">Tipo Detalle Movimiento</label>
@@ -22,6 +46,20 @@
                         [hidden]="!editForm.controls.tipoDetalleMovimiento?.errors?.required">
                         This field is required.
                     </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_articulo">Articulo</label>
+                    <select class="form-control" id="field_articulo" name="articulo" [(ngModel)]="detalleMovimiento.articulo" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="articuloOption.id === detalleMovimiento.articulo?.id ? detalleMovimiento.articulo : articuloOption" *ngFor="let articuloOption of articulos; trackBy: trackArticuloById">{{articuloOption.descripcion}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_pedidoRepuesto">Pedido Repuesto</label>
+                    <select class="form-control" id="field_pedidoRepuesto" name="pedidoRepuesto" [(ngModel)]="detalleMovimiento.pedidoRepuesto" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="pedidoRepuestoOption.id === detalleMovimiento.pedidoRepuesto?.id ? detalleMovimiento.pedidoRepuesto : pedidoRepuestoOption" *ngFor="let pedidoRepuestoOption of pedidorepuestos; trackBy: trackPedidoRepuestoById">{{pedidoRepuestoOption.id}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_presupuesto">Presupuesto</label>

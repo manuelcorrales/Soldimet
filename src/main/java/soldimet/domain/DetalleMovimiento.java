@@ -21,10 +21,26 @@ public class DetalleMovimiento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "valor_unitario")
+    private Float valor_unitario;
+
+    @NotNull
+    @Min(value = 0)
+    @Column(name = "cantidad", nullable = false)
+    private Integer cantidad;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties("")
     private TipoDetalleMovimiento tipoDetalleMovimiento;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Articulo articulo;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private PedidoRepuesto pedidoRepuesto;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -39,6 +55,32 @@ public class DetalleMovimiento implements Serializable {
         this.id = id;
     }
 
+    public Float getValor_unitario() {
+        return valor_unitario;
+    }
+
+    public DetalleMovimiento valor_unitario(Float valor_unitario) {
+        this.valor_unitario = valor_unitario;
+        return this;
+    }
+
+    public void setValor_unitario(Float valor_unitario) {
+        this.valor_unitario = valor_unitario;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public DetalleMovimiento cantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+        return this;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
     public TipoDetalleMovimiento getTipoDetalleMovimiento() {
         return tipoDetalleMovimiento;
     }
@@ -50,6 +92,32 @@ public class DetalleMovimiento implements Serializable {
 
     public void setTipoDetalleMovimiento(TipoDetalleMovimiento tipoDetalleMovimiento) {
         this.tipoDetalleMovimiento = tipoDetalleMovimiento;
+    }
+
+    public Articulo getArticulo() {
+        return articulo;
+    }
+
+    public DetalleMovimiento articulo(Articulo articulo) {
+        this.articulo = articulo;
+        return this;
+    }
+
+    public void setArticulo(Articulo articulo) {
+        this.articulo = articulo;
+    }
+
+    public PedidoRepuesto getPedidoRepuesto() {
+        return pedidoRepuesto;
+    }
+
+    public DetalleMovimiento pedidoRepuesto(PedidoRepuesto pedidoRepuesto) {
+        this.pedidoRepuesto = pedidoRepuesto;
+        return this;
+    }
+
+    public void setPedidoRepuesto(PedidoRepuesto pedidoRepuesto) {
+        this.pedidoRepuesto = pedidoRepuesto;
     }
 
     public Presupuesto getPresupuesto() {
@@ -90,6 +158,8 @@ public class DetalleMovimiento implements Serializable {
     public String toString() {
         return "DetalleMovimiento{" +
             "id=" + getId() +
+            ", valor_unitario=" + getValor_unitario() +
+            ", cantidad=" + getCantidad() +
             "}";
     }
 }

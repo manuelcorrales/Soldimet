@@ -5,10 +5,30 @@
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
+                <dt><span>Valor Unitario</span></dt>
+                <dd>
+                    <span>{{detalleMovimiento.valor_unitario}}</span>
+                </dd>
+                <dt><span>Cantidad</span></dt>
+                <dd>
+                    <span>{{detalleMovimiento.cantidad}}</span>
+                </dd>
                 <dt><span>Tipo Detalle Movimiento</span></dt>
                 <dd>
                     <div *ngIf="detalleMovimiento.tipoDetalleMovimiento">
                         <a [routerLink]="['/tipo-detalle-movimiento', detalleMovimiento.tipoDetalleMovimiento?.id, 'view']">{{detalleMovimiento.tipoDetalleMovimiento?.nombreTipoDetalle}}</a>
+                    </div>
+                </dd>
+                <dt><span>Articulo</span></dt>
+                <dd>
+                    <div *ngIf="detalleMovimiento.articulo">
+                        <a [routerLink]="['/articulo', detalleMovimiento.articulo?.id, 'view']">{{detalleMovimiento.articulo?.descripcion}}</a>
+                    </div>
+                </dd>
+                <dt><span>Pedido Repuesto</span></dt>
+                <dd>
+                    <div *ngIf="detalleMovimiento.pedidoRepuesto">
+                        <a [routerLink]="['/pedido-repuesto', detalleMovimiento.pedidoRepuesto?.id, 'view']">{{detalleMovimiento.pedidoRepuesto?.id}}</a>
                     </div>
                 </dd>
                 <dt><span>Presupuesto</span></dt>

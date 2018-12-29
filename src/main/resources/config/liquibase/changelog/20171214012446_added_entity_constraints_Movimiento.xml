@@ -38,12 +38,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="persona"/>
 
-        <addForeignKeyConstraint baseColumnNames="sub_categoria_id"
-                                 baseTableName="movimiento"
-                                 constraintName="fk_movimiento_sub_categoria_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="sub_categoria"/>
-
         <addForeignKeyConstraint baseColumnNames="caja_id"
                                  baseTableName="movimiento"
                                  constraintName="fk_movimiento_caja_id"
@@ -55,6 +49,12 @@
                                  constraintName="fk_movimiento_detalle_movimiento_id"
                                  referencedColumnNames="id"
                                  referencedTableName="detalle_movimiento"/>
+
+        <addForeignKeyConstraint baseColumnNames="sub_categoria_id"
+                                 baseTableName="movimiento"
+                                 constraintName="fk_movimiento_sub_categoria_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sub_categoria"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -18,12 +18,12 @@ import { IEmpleado } from 'app/shared/model/empleado.model';
 import { EmpleadoService } from 'app/entities/empleado';
 import { IPersona } from 'app/shared/model/persona.model';
 import { PersonaService } from 'app/entities/persona';
-import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
-import { SubCategoriaService } from 'app/entities/sub-categoria';
 import { ICaja } from 'app/shared/model/caja.model';
 import { CajaService } from 'app/entities/caja';
 import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 import { DetalleMovimientoService } from 'app/entities/detalle-movimiento';
+import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
+import { SubCategoriaService } from 'app/entities/sub-categoria';
 
 @Component({
     selector: 'jhi-movimiento-update',
@@ -43,11 +43,11 @@ export class MovimientoUpdateComponent implements OnInit {
 
     personas: IPersona[];
 
-    subcategorias: ISubCategoria[];
-
     cajas: ICaja[];
 
     detallemovimientos: IDetalleMovimiento[];
+
+    subcategorias: ISubCategoria[];
     fechaDp: any;
     hora: string;
 
@@ -59,9 +59,9 @@ export class MovimientoUpdateComponent implements OnInit {
         private tipoMovimientoService: TipoMovimientoService,
         private empleadoService: EmpleadoService,
         private personaService: PersonaService,
-        private subCategoriaService: SubCategoriaService,
         private cajaService: CajaService,
         private detalleMovimientoService: DetalleMovimientoService,
+        private subCategoriaService: SubCategoriaService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -100,12 +100,6 @@ export class MovimientoUpdateComponent implements OnInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
-        this.subCategoriaService.query().subscribe(
-            (res: HttpResponse<ISubCategoria[]>) => {
-                this.subcategorias = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
         this.cajaService.query().subscribe(
             (res: HttpResponse<ICaja[]>) => {
                 this.cajas = res.body;
@@ -124,6 +118,12 @@ export class MovimientoUpdateComponent implements OnInit {
                         (subRes: HttpErrorResponse) => this.onError(subRes.message)
                     );
                 }
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.subCategoriaService.query().subscribe(
+            (res: HttpResponse<ISubCategoria[]>) => {
+                this.subcategorias = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -180,15 +180,15 @@ export class MovimientoUpdateComponent implements OnInit {
         return item.id;
     }
 
-    trackSubCategoriaById(index: number, item: ISubCategoria) {
-        return item.id;
-    }
-
     trackCajaById(index: number, item: ICaja) {
         return item.id;
     }
 
     trackDetalleMovimientoById(index: number, item: IDetalleMovimiento) {
+        return item.id;
+    }
+
+    trackSubCategoriaById(index: number, item: ISubCategoria) {
         return item.id;
     }
     get movimiento() {
