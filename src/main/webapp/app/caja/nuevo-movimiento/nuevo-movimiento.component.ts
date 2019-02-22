@@ -8,6 +8,8 @@ import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
 import { HttpResponse, HttpErrorResponse } from '../../../../../../node_modules/@angular/common/http';
 import { IFormaDePago, FormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { SubCategoriaService } from 'app/entities/sub-categoria';
+import { CategoriaPago, ICategoriaPago } from 'app/shared/model/categoria-pago.model';
+import { CategoriaPagoService } from 'app/entities/categoria-pago';
 
 @Component({
     selector: 'jhi-nuevo-movimiento',
@@ -17,6 +19,7 @@ import { SubCategoriaService } from 'app/entities/sub-categoria';
 export class NuevoMovimientoComponent implements OnInit {
     movimiento: Movimiento;
     tipos: TipoMovimiento[];
+    categorias: CategoriaPago[];
     conceptos: SubCategoria[];
     formasDePago: FormaDePago[];
     isSaving = false;
@@ -25,6 +28,7 @@ export class NuevoMovimientoComponent implements OnInit {
         private tipoMovimientoService: TipoMovimientoService,
         private formaDePagoService: FormaDePagoService,
         private conceptosService: SubCategoriaService,
+        private categoriaService: CategoriaPagoService,
         private cajaService: CajaModuleServiceService
     ) {}
 
@@ -33,6 +37,12 @@ export class NuevoMovimientoComponent implements OnInit {
         this.tipoMovimientoService.query().subscribe(
             (res: HttpResponse<ITipoMovimiento[]>) => {
                 this.tipos = res.body;
+            },
+            (res: HttpErrorResponse) => console.log(res.message)
+        );
+        this.categoriaService.query().subscribe(
+            (res: HttpResponse<ICategoriaPago[]>) => {
+                this.categorias = res.body;
             },
             (res: HttpErrorResponse) => console.log(res.message)
         );
