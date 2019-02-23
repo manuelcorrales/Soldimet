@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 
-
 /**
  * Spring Data  repository for the Movimiento entity.
  */
@@ -17,6 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
 
-    List<Movimiento> findByCaja(Caja caja);
+    public List<Movimiento> findByCaja(Caja caja);
 
 }

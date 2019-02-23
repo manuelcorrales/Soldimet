@@ -4,18 +4,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { ICategoriaPago } from 'app/shared/model/categoria-pago.model';
-import { CategoriaPagoService } from './categoria-pago.service';
+import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
+import { MedioDePagoService } from './medio-de-pago.service';
 
 @Component({
-    selector: 'jhi-categoria-pago-delete-dialog',
-    templateUrl: './categoria-pago-delete-dialog.component.html'
+    selector: 'jhi-medio-de-pago-delete-dialog',
+    templateUrl: './medio-de-pago-delete-dialog.component.html'
 })
-export class CategoriaPagoDeleteDialogComponent {
-    categoriaPago: ICategoriaPago;
+export class MedioDePagoDeleteDialogComponent {
+    medioDePago: IMedioDePago;
 
     constructor(
-        private categoriaPagoService: CategoriaPagoService,
+        private medioDePagoService: MedioDePagoService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
     ) {}
@@ -25,10 +25,10 @@ export class CategoriaPagoDeleteDialogComponent {
     }
 
     confirmDelete(id: number) {
-        this.categoriaPagoService.delete(id).subscribe(response => {
+        this.medioDePagoService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
-                name: 'categoriaPagoListModification',
-                content: 'Deleted an categoriaPago'
+                name: 'medioDePagoListModification',
+                content: 'Deleted an medioDePago'
             });
             this.activeModal.dismiss(true);
         });
@@ -36,22 +36,22 @@ export class CategoriaPagoDeleteDialogComponent {
 }
 
 @Component({
-    selector: 'jhi-categoria-pago-delete-popup',
+    selector: 'jhi-medio-de-pago-delete-popup',
     template: ''
 })
-export class CategoriaPagoDeletePopupComponent implements OnInit, OnDestroy {
+export class MedioDePagoDeletePopupComponent implements OnInit, OnDestroy {
     private ngbModalRef: NgbModalRef;
 
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.activatedRoute.data.subscribe(({ categoriaPago }) => {
+        this.activatedRoute.data.subscribe(({ medioDePago }) => {
             setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(CategoriaPagoDeleteDialogComponent as Component, {
+                this.ngbModalRef = this.modalService.open(MedioDePagoDeleteDialogComponent as Component, {
                     size: 'lg',
                     backdrop: 'static'
                 });
-                this.ngbModalRef.componentInstance.categoriaPago = categoriaPago;
+                this.ngbModalRef.componentInstance.medioDePago = medioDePago;
                 this.ngbModalRef.result.then(
                     result => {
                         this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });

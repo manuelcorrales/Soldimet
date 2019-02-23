@@ -1,5 +1,6 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -8,17 +9,21 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A PagoEfectivo.
+ * A MedioDePago.
  */
 @Entity
-@Table(name = "pago_efectivo")
-public class PagoEfectivo extends MedioDePago implements Serializable {
+@Table(name = "medio_de_pago")
+public class MedioDePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
+    private FormaDePago formaDePago;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -29,6 +34,18 @@ public class PagoEfectivo extends MedioDePago implements Serializable {
         this.id = id;
     }
 
+    public FormaDePago getFormaDePago() {
+        return formaDePago;
+    }
+
+    public MedioDePago formaDePago(FormaDePago formaDePago) {
+        this.formaDePago = formaDePago;
+        return this;
+    }
+
+    public void setFormaDePago(FormaDePago formaDePago) {
+        this.formaDePago = formaDePago;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -39,11 +56,11 @@ public class PagoEfectivo extends MedioDePago implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PagoEfectivo pagoEfectivo = (PagoEfectivo) o;
-        if (pagoEfectivo.getId() == null || getId() == null) {
+        MedioDePago medioDePago = (MedioDePago) o;
+        if (medioDePago.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), pagoEfectivo.getId());
+        return Objects.equals(getId(), medioDePago.getId());
     }
 
     @Override
@@ -53,7 +70,7 @@ public class PagoEfectivo extends MedioDePago implements Serializable {
 
     @Override
     public String toString() {
-        return "PagoEfectivo{" +
+        return "MedioDePago{" +
             "id=" + getId() +
             "}";
     }

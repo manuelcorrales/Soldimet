@@ -11,15 +11,6 @@
             "otherEntityField": "nombreEstado"
         },
         {
-            "relationshipName": "formaDePago",
-            "otherEntityName": "formaDePago",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreFormaDePago"
-        },
-        {
             "relationshipName": "tipoMovimiento",
             "otherEntityName": "tipoMovimiento",
             "relationshipType": "many-to-one",
@@ -65,6 +56,14 @@
             "otherEntityName": "subCategoria",
             "relationshipType": "many-to-one",
             "otherEntityField": "nombreSubCategoria"
+        },
+        {
+            "relationshipName": "medioDePago",
+            "otherEntityName": "medioDePago",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "movimiento"
         }
     ],
     "fields": [

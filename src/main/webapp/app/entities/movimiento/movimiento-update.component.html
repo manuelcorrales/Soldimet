@@ -86,19 +86,6 @@
                     </small>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_formaDePago">Forma De Pago</label>
-                    <select class="form-control" id="field_formaDePago" name="formaDePago" [(ngModel)]="movimiento.formaDePago"  required>
-                        <option *ngIf="!editForm.value.formaDePago" [ngValue]="null" selected></option>
-                        <option [ngValue]="formaDePagoOption.id === movimiento.formaDePago?.id ? movimiento.formaDePago : formaDePagoOption" *ngFor="let formaDePagoOption of formadepagos; trackBy: trackFormaDePagoById">{{formaDePagoOption.nombreFormaDePago}}</option>
-                    </select>
-                </div>
-                <div [hidden]="!(editForm.controls.formaDePago?.dirty && editForm.controls.formaDePago?.invalid)">
-                    <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.formaDePago?.errors?.required">
-                        This field is required.
-                    </small>
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" for="field_tipoMovimiento">Tipo Movimiento</label>
                     <select class="form-control" id="field_tipoMovimiento" name="tipoMovimiento" [(ngModel)]="movimiento.tipoMovimiento"  required>
                         <option *ngIf="!editForm.value.tipoMovimiento" [ngValue]="null" selected></option>
@@ -156,6 +143,13 @@
                     <select class="form-control" id="field_subCategoria" name="subCategoria" [(ngModel)]="movimiento.subCategoria" >
                         <option [ngValue]="null"></option>
                         <option [ngValue]="subCategoriaOption.id === movimiento.subCategoria?.id ? movimiento.subCategoria : subCategoriaOption" *ngFor="let subCategoriaOption of subcategorias; trackBy: trackSubCategoriaById">{{subCategoriaOption.nombreSubCategoria}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_medioDePago">Medio De Pago</label>
+                    <select class="form-control" id="field_medioDePago" name="medioDePago" [(ngModel)]="movimiento.medioDePago">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="medioDePagoOption.id === movimiento.medioDePago?.id ? movimiento.medioDePago : medioDePagoOption" *ngFor="let medioDePagoOption of mediodepagos; trackBy: trackMedioDePagoById">{{medioDePagoOption.id}}</option>
                     </select>
                 </div>
             </div>

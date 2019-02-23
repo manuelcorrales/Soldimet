@@ -31,12 +31,6 @@
                         <a [routerLink]="['/estado-movimiento', movimiento.estado?.id, 'view']">{{movimiento.estado?.nombreEstado}}</a>
                     </div>
                 </dd>
-                <dt><span>Forma De Pago</span></dt>
-                <dd>
-                    <div *ngIf="movimiento.formaDePago">
-                        <a [routerLink]="['/forma-de-pago', movimiento.formaDePago?.id, 'view']">{{movimiento.formaDePago?.nombreFormaDePago}}</a>
-                    </div>
-                </dd>
                 <dt><span>Tipo Movimiento</span></dt>
                 <dd>
                     <div *ngIf="movimiento.tipoMovimiento">
@@ -71,6 +65,12 @@
                 <dd>
                     <div *ngIf="movimiento.subCategoria">
                         <a [routerLink]="['/sub-categoria', movimiento.subCategoria?.id, 'view']">{{movimiento.subCategoria?.nombreSubCategoria}}</a>
+                    </div>
+                </dd>
+                <dt><span>Medio De Pago</span></dt>
+                <dd>
+                    <div *ngIf="movimiento.medioDePago">
+                        <a [routerLink]="['/medio-de-pago', movimiento.medioDePago?.id, 'view']">{{movimiento.medioDePago?.id}}</a>
                     </div>
                 </dd>
             </dl>

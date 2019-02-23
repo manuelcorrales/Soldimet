@@ -21,13 +21,13 @@
             <th jhiSortBy="descuento"><span>Descuento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estado.nombreEstado"><span>Estado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="formaDePago.nombreFormaDePago"><span>Forma De Pago</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="tipoMovimiento.nombreTipoMovimiento"><span>Tipo Movimiento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="empleado.usuario"><span>Empleado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="persona.nombre"><span>Persona</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="caja.id"><span>Caja</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="detalleMovimiento.id"><span>Detalle Movimiento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="subCategoria.nombreSubCategoria"><span>Sub Categoria</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="medioDePago.id"><span>Medio De Pago</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -42,11 +42,6 @@
                 <td>
                     <div *ngIf="movimiento.estado">
                         <a [routerLink]="['../estado-movimiento', movimiento.estado?.id, 'view' ]" >{{movimiento.estado?.nombreEstado}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="movimiento.formaDePago">
-                        <a [routerLink]="['../forma-de-pago', movimiento.formaDePago?.id, 'view' ]" >{{movimiento.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </td>
                 <td>
@@ -77,6 +72,11 @@
                 <td>
                     <div *ngIf="movimiento.subCategoria">
                         <a [routerLink]="['../sub-categoria', movimiento.subCategoria?.id, 'view' ]" >{{movimiento.subCategoria?.nombreSubCategoria}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="movimiento.medioDePago">
+                        <a [routerLink]="['../medio-de-pago', movimiento.medioDePago?.id, 'view' ]" >{{movimiento.medioDePago?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">

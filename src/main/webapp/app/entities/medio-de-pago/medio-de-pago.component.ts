@@ -3,30 +3,30 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import { ICategoriaPago } from 'app/shared/model/categoria-pago.model';
+import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
 import { Principal } from 'app/core';
-import { CategoriaPagoService } from './categoria-pago.service';
+import { MedioDePagoService } from './medio-de-pago.service';
 
 @Component({
-    selector: 'jhi-categoria-pago',
-    templateUrl: './categoria-pago.component.html'
+    selector: 'jhi-medio-de-pago',
+    templateUrl: './medio-de-pago.component.html'
 })
-export class CategoriaPagoComponent implements OnInit, OnDestroy {
-    categoriaPagos: ICategoriaPago[];
+export class MedioDePagoComponent implements OnInit, OnDestroy {
+    medioDePagos: IMedioDePago[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
     constructor(
-        private categoriaPagoService: CategoriaPagoService,
+        private medioDePagoService: MedioDePagoService,
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private principal: Principal
     ) {}
 
     loadAll() {
-        this.categoriaPagoService.query().subscribe(
-            (res: HttpResponse<ICategoriaPago[]>) => {
-                this.categoriaPagos = res.body;
+        this.medioDePagoService.query().subscribe(
+            (res: HttpResponse<IMedioDePago[]>) => {
+                this.medioDePagos = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -37,19 +37,19 @@ export class CategoriaPagoComponent implements OnInit, OnDestroy {
         this.principal.identity().then(account => {
             this.currentAccount = account;
         });
-        this.registerChangeInCategoriaPagos();
+        this.registerChangeInMedioDePagos();
     }
 
     ngOnDestroy() {
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: ICategoriaPago) {
+    trackId(index: number, item: IMedioDePago) {
         return item.id;
     }
 
-    registerChangeInCategoriaPagos() {
-        this.eventSubscriber = this.eventManager.subscribe('categoriaPagoListModification', response => this.loadAll());
+    registerChangeInMedioDePagos() {
+        this.eventSubscriber = this.eventManager.subscribe('medioDePagoListModification', response => this.loadAll());
     }
 
     private onError(errorMessage: string) {

@@ -50,11 +50,6 @@ public class Movimiento implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties("")
-    private FormaDePago formaDePago;
-
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties("")
     private TipoMovimiento tipoMovimiento;
 
     @ManyToOne(optional = false)
@@ -78,6 +73,10 @@ public class Movimiento implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties("")
     private SubCategoria subCategoria;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private MedioDePago medioDePago;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -166,19 +165,6 @@ public class Movimiento implements Serializable {
         this.estado = estadoMovimiento;
     }
 
-    public FormaDePago getFormaDePago() {
-        return formaDePago;
-    }
-
-    public Movimiento formaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-        return this;
-    }
-
-    public void setFormaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-    }
-
     public TipoMovimiento getTipoMovimiento() {
         return tipoMovimiento;
     }
@@ -255,6 +241,19 @@ public class Movimiento implements Serializable {
 
     public void setSubCategoria(SubCategoria subCategoria) {
         this.subCategoria = subCategoria;
+    }
+
+    public MedioDePago getMedioDePago() {
+        return medioDePago;
+    }
+
+    public Movimiento medioDePago(MedioDePago medioDePago) {
+        this.medioDePago = medioDePago;
+        return this;
+    }
+
+    public void setMedioDePago(MedioDePago medioDePago) {
+        this.medioDePago = medioDePago;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

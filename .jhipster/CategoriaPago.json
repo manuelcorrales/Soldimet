@@ -1,6 +1,13 @@
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "subCategoria",
+            "otherEntityName": "subCategoria",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "categoriaPago"
+        }
+    ],
     "fields": [
         {
             "fieldName": "nombreCategoriaPago",
@@ -12,6 +19,7 @@
     ],
     "changelogDate": "20171213234316",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "categoria_pago",
     "jpaMetamodelFiltering": false,

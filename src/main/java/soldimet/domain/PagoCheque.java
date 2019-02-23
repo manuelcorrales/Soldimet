@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "pago_cheque")
-public class PagoCheque implements Serializable {
+public class PagoCheque extends MedioDePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,11 +42,6 @@ public class PagoCheque implements Serializable {
     @NotNull
     @JsonIgnoreProperties("")
     private Banco banco;
-
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
-    private FormaDePago formaDePago;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -122,18 +117,6 @@ public class PagoCheque implements Serializable {
         this.banco = banco;
     }
 
-    public FormaDePago getFormaDePago() {
-        return formaDePago;
-    }
-
-    public PagoCheque formaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-        return this;
-    }
-
-    public void setFormaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

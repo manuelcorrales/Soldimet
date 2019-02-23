@@ -1,7 +1,7 @@
 <form role="form" class="jh-create-entity" (ngSubmit)="guardarMovimiento()">
     <div class="col-auto align-center container jh-card">
         <div>
-            <div class="card-header card-header text-white bg-info">
+            <div class="card-header text-white bg-info">
                 Nuevo Movimiento
             </div>
             <div class="row">
@@ -10,6 +10,7 @@
                 <div class="col">Empleado: Paul Corrales</div>
             </div>
         </div>
+        <!-- Datos del movimiento-->
         <div class="card jh-card border-info">
             <div class="card-header card-header text-white bg-info mb-3">
                 Datos del movimiento
@@ -18,51 +19,180 @@
                 <div class="form-group col-md-3">
                     <p>Tipo</p>
                     <div class="form-check form-check-inline" *ngFor="let tipo of tipos">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="tipo.id" value="option1">
-                        <label class="form-check-label" for="exampleRadios1">
+                        <input class="form-check-input" type="radio" id="tipo.id" [value]="tipo" name="tipoMovimiento" [(ngModel)]="tipoMovimiento">
+                        <label class="form-check-label">
                             {{tipo.nombreTipoMovimiento}}
                         </label>
                     </div>
                 </div>
                 <div class="form-group col-md-3">
                     <label>Categoría</label>
-                    <select class="form-control">
-                        <option *ngFor="let categoria of categorias">{{categoria.nombreCategoriaPago}}</option>
+                    <select class="form-control" (change)="buscarSubCategorias()" [(ngModel)]="categoria" name="categoria">
+                        <option selected disabled>Elija una categoría</option>
+                        <option *ngFor="let categoria of categorias" [ngValue]="categoria">
+                            {{categoria.nombreCategoriaPago}}
+                        </option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label>Concepto</label>
-                    <select class="form-control">
-                        <option *ngFor="let concepto of conceptos">{{concepto.nombreSubCategoria}}</option>
+                    <select class="form-control" [(ngModel)]="subCategoria" name="subCategoria" (change)="checkSubCategory()">
+                        <option selected disabled>Elija una subcategoría</option>
+                        <option *ngFor="let concepto of conceptos" [ngValue]="concepto">
+                            {{concepto.nombreSubCategoria}}
+                        </option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label>Importe</label>
-                    <input type="number" class="form-control" aria-label="Importe" [value]="movimiento.importe" [(ngModel)]="movimiento.importe">
+                    <input type="number" class="form-control" aria-label="Importe" [value]="movimiento.importe" [(ngModel)]="movimiento.importe"
+                        name="importe">
                 </div>
             </div>
         </div>
-        <div class="card jh-card border-info">
-            <div class="card-header card-header text-white bg-info mb-3">
-                Medio de pago
-            </div>
-            <div class="form-group col-auto">
-                <label>Medio de pago</label>
-                <select class="form-control">
-                    <option *ngFor="let medioPago of formasDePago">{{medioPago.nombreFormaDePago}}</option>
-                </select>
-            </div>
-        </div>
+        <!-- Detalle Movimiento-->
         <div class="card jh-card border-info">
             <div class="card-header card-header text-white bg-info mb-3">
                 Detalle Movimiento
             </div>
+            <div class="">
+                <div *ngIf="isArticulo" class="row">
+                    <div class="form-group col-md-4">
+                        <label>Artículo</label>
+                        <select class="form-control" [(ngModel)]="articulo" name="articulo">
+                            <option selected disabled>Elija un artículo</option>
+                            <option *ngFor="let articulo of articulos" [ngValue]="articulo">
+                                {{articulo.descripcion}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Cantidad</label>
+                        <input type="number" class="form-control" aria-label="Cantidad de articulos" name="cantidadArticulo">
+                    </div>
+                </div>
+                <div *ngIf="isPresupuesto" class="row">
+                    <div class="form-group col-md-4">
+                        <label>Presupuesto</label>
+                        <select class="form-control" [(ngModel)]="presupuesto" name="presupuesto">
+                            <option selected disabled>Elija un presupuesto</option>
+                            <option *ngFor="let presupuesto of presupuestos" [ngValue]="presupuesto">
+                                {{presupuesto.codigo}}
+                            </option>
+                        </select>
+                    </div>
+                    <label class="col">{{presupuesto.motor}}</label>
+                    <label class="col">{{presupuesto.cliente}} </label>
+                    <label class="col">${{presupuesto.importe}}</label>
+                    <label class="col">{{presupuesto.fecha}}</label>
+                </div>
+                <div *ngIf="isPedidoRepuesto" class="row">
+                    <div class="form-group col-md-4">
+                        <label>Pedido</label>
+                        <select class="form-control" [(ngModel)]="pedido" name="pedido">
+                            <option selected disabled>Elija un pedido</option>
+                            <option *ngFor="let pedido of pedidos" [ngValue]="pedido">
+                                {{pedido.id}}
+                            </option>
+                        </select>
+                    </div>
+                    <label class="col">{{pedido.cliente}}</label>
+                    <label class="col">{{pedido.fecha}} </label>
+                    <label class="col">{{pedido.presupuestoId}}</label>
+                    <label class="col">{{pedido.motor}}</label>
+                    <label class="col">{{pedido.tipo}}</label>
+                </div>
+            </div>
         </div>
+        <!-- Medio de pago-->
+        <div class="card jh-card border-info">
+            <div class="card-header card-header text-white bg-info mb-3">
+                Medio de pago
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label>Medio de pago</label>
+                    <select class="form-control" [(ngModel)]="formaDePago" name="formaDePago" (change)="buscarMedioDePagoData()">
+                        <option *ngFor="let medioPago of formasDePago" [ngValue]="medioPago">{{medioPago.nombreFormaDePago}}</option>
+                    </select>
+                </div>
+                <!-- Informacion del medio de pago-->
+                <div *ngIf="formaDePago?.nombreFormaDePago == 'Efectivo'" class="row">
+                </div>
+                <div *ngIf="formaDePago?.nombreFormaDePago == 'Débito'" class="row col">
+                    <div class="form-group col">
+                        <label>Tarjeta</label>
+                        <select class="form-control" [(ngModel)]="tarjetaElegida" name="tarjetaElegida">
+                            <option selected disabled>Indique nombre</option>
+                            <option *ngFor="let tarjeta of tarjetas" [ngValue]="tarjeta">
+                                {{tarjeta.nombreTarjeta}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col">
+                        <label>Tipo tarjeta</label>
+                        <select class="form-control" [(ngModel)]="tipoTarjeta" name="tipoTarjeta">
+                            <option selected disabled>Indique tipo tarjeta</option>
+                            <option *ngFor="let tipoTarjeta of tipoTarjetas" [ngValue]="tipoTarjeta">
+                                {{tipoTarjeta.nombreTipoTarjeta}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Últimas 4</label>
+                        <input type="number" class="form-control" aria-label="Últimos 4 dígitos" name="ultimos_cuatro" min='0' max='9999'>
+                    </div>
+                </div>
+                <div *ngIf="formaDePago?.nombreFormaDePago == 'Cheque'" class="col">
+                    <div class="row col">
+                        <div class="form-group col">
+                            <label>Número cheque</label>
+                            <input type="number" class="form-control" aria-label="numero_cheque" name="numero_cheque">
+                        </div>
+                        <div class="form-group col">
+                            <label>Número cuenta</label>
+                            <input type="number" class="form-control" aria-label="numero_cuenta" name="numero_cuenta">
+                        </div>
+                        <div class="form-group col">
+                            <label>Banco</label>
+                            <select class="form-control" [(ngModel)]="banco" name="banco">
+                                <option selected disabled>Elija el banco emisor</option>
+                                <option *ngFor="let banco of bancos" [ngValue]="banco">
+                                    {{banco.nombreBanco}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row col-md-8">
+                        <div class="form-group col">
+                            <div class="input-group">
+                                <label>Fecha recibo</label>
+                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_recibo" [(ngModel)]="fechaRecibo" ngbDatepicker #d1="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                            <div class="input-group">
+                                <label>Fecha cobro</label>
+                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_cobro" [(ngModel)]="fechaCobro" ngbDatepicker #d2="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Obervaciones-->
         <div class="card jh-card border-info">
             <div class="card-header card-header text-white bg-info mb-3">
                 Observaciones
             </div>
-            <textarea class="form-control"></textarea>
+            <textarea class="form-control" name="observaciones" rows="5" [(ngModel)]="movimiento.observaciones" #observaciones='ngModel'></textarea>
         </div>
     </div>
     <div class="card-footer">
@@ -70,7 +200,7 @@
             <button [disabled]="isSaving" type="submit" class="btn btn-primary">
                 Crear
             </button>
-            <button type="button" class="btn btn-danger" [routerLink]="['/movimientos']">
+            <button type="button" class="btn btn-danger" [routerLink]="['/cajas']">
                 Cancelar
             </button>
         </div>

@@ -34,7 +34,7 @@ public class CajaConverter {
         DTOMovimientoCUConsultarMovimientos newDto = new DTOMovimientoCUConsultarMovimientos();
         newDto.setCategoria(movimiento.getSubCategoria().getNombreSubCategoria());
         newDto.setDescripcion("Sin descrpicion por ahora");
-        newDto.setFormaDePago(movimiento.getFormaDePago().getNombreFormaDePago());
+        newDto.setFormaDePago(movimiento.getMedioDePago().getFormaDePago().getNombreFormaDePago());
         newDto.setMonto(movimiento.getImporte());
         newDto.setMovimientoId(movimiento.getId());
         newDto.setTipoMovimiento(movimiento.getTipoMovimiento().getNombreTipoMovimiento());

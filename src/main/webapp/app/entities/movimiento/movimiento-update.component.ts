@@ -10,8 +10,6 @@ import { IMovimiento } from 'app/shared/model/movimiento.model';
 import { MovimientoService } from './movimiento.service';
 import { IEstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
 import { EstadoMovimientoService } from 'app/entities/estado-movimiento';
-import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
-import { FormaDePagoService } from 'app/entities/forma-de-pago';
 import { ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';
 import { TipoMovimientoService } from 'app/entities/tipo-movimiento';
 import { IEmpleado } from 'app/shared/model/empleado.model';
@@ -24,6 +22,8 @@ import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 import { DetalleMovimientoService } from 'app/entities/detalle-movimiento';
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 import { SubCategoriaService } from 'app/entities/sub-categoria';
+import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
+import { MedioDePagoService } from 'app/entities/medio-de-pago';
 
 @Component({
     selector: 'jhi-movimiento-update',
@@ -34,8 +34,6 @@ export class MovimientoUpdateComponent implements OnInit {
     isSaving: boolean;
 
     estadomovimientos: IEstadoMovimiento[];
-
-    formadepagos: IFormaDePago[];
 
     tipomovimientos: ITipoMovimiento[];
 
@@ -48,6 +46,8 @@ export class MovimientoUpdateComponent implements OnInit {
     detallemovimientos: IDetalleMovimiento[];
 
     subcategorias: ISubCategoria[];
+
+    mediodepagos: IMedioDePago[];
     fechaDp: any;
     hora: string;
 
@@ -55,13 +55,13 @@ export class MovimientoUpdateComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private movimientoService: MovimientoService,
         private estadoMovimientoService: EstadoMovimientoService,
-        private formaDePagoService: FormaDePagoService,
         private tipoMovimientoService: TipoMovimientoService,
         private empleadoService: EmpleadoService,
         private personaService: PersonaService,
         private cajaService: CajaService,
         private detalleMovimientoService: DetalleMovimientoService,
         private subCategoriaService: SubCategoriaService,
+        private medioDePagoService: MedioDePagoService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -73,12 +73,6 @@ export class MovimientoUpdateComponent implements OnInit {
         this.estadoMovimientoService.query().subscribe(
             (res: HttpResponse<IEstadoMovimiento[]>) => {
                 this.estadomovimientos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.formaDePagoService.query().subscribe(
-            (res: HttpResponse<IFormaDePago[]>) => {
-                this.formadepagos = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -127,6 +121,21 @@ export class MovimientoUpdateComponent implements OnInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
+        this.medioDePagoService.query({ filter: 'movimiento-is-null' }).subscribe(
+            (res: HttpResponse<IMedioDePago[]>) => {
+                if (!this.movimiento.medioDePago || !this.movimiento.medioDePago.id) {
+                    this.mediodepagos = res.body;
+                } else {
+                    this.medioDePagoService.find(this.movimiento.medioDePago.id).subscribe(
+                        (subRes: HttpResponse<IMedioDePago>) => {
+                            this.mediodepagos = [subRes.body].concat(res.body);
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
+                }
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     previousState() {
@@ -164,10 +173,6 @@ export class MovimientoUpdateComponent implements OnInit {
         return item.id;
     }
 
-    trackFormaDePagoById(index: number, item: IFormaDePago) {
-        return item.id;
-    }
-
     trackTipoMovimientoById(index: number, item: ITipoMovimiento) {
         return item.id;
     }
@@ -189,6 +194,10 @@ export class MovimientoUpdateComponent implements OnInit {
     }
 
     trackSubCategoriaById(index: number, item: ISubCategoria) {
+        return item.id;
+    }
+
+    trackMedioDePagoById(index: number, item: IMedioDePago) {
         return item.id;
     }
     get movimiento() {

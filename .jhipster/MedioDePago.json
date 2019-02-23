@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "formaDePago",
+            "otherEntityName": "formaDePago",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreFormaDePago"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20190222233823",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "medio_de_pago",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

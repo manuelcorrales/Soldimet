@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "pago_tarjeta")
-public class PagoTarjeta implements Serializable {
+public class PagoTarjeta extends MedioDePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,11 +25,6 @@ public class PagoTarjeta implements Serializable {
     @Size(min = 3)
     @Column(name = "numero_tarjeta", nullable = false)
     private String numeroTarjeta;
-
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
-    private FormaDePago formaDePago;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -61,19 +56,6 @@ public class PagoTarjeta implements Serializable {
 
     public void setNumeroTarjeta(String numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
-    }
-
-    public FormaDePago getFormaDePago() {
-        return formaDePago;
-    }
-
-    public PagoTarjeta formaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-        return this;
-    }
-
-    public void setFormaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
     }
 
     public Tarjeta getTarjeta() {
