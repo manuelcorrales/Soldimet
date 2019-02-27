@@ -59,12 +59,10 @@
                 <div *ngIf="isArticulo" class="row">
                     <div class="form-group col-md-4">
                         <label>Artículo</label>
-                        <select class="form-control" [(ngModel)]="articulo" name="articulo">
-                            <option selected disabled>Elija un artículo</option>
-                            <option *ngFor="let articulo of articulos" [ngValue]="articulo">
-                                {{articulo.descripcion}}
-                            </option>
-                        </select>
+                        <input type="text" placeholder="Articulo" [(ngModel)]="articulo" [resultFormatter]="formatterArt" id="typeahead-focusArt"
+                            type="text" class="form-control" [ngbTypeahead]="searchArt" (focus)="focusArt$.next($event.target.value)"
+                            (click)="clickArt$.next($event.target.value)" #instanceNTAArt="ngbTypeahead" [inputFormatter]="formatterArt"
+                            name="arti_search"/>
                     </div>
                     <div class="form-group col-md-4">
                         <label>Cantidad</label>
@@ -81,10 +79,22 @@
                             </option>
                         </select>
                     </div>
-                    <label class="col">{{presupuesto.motor}}</label>
-                    <label class="col">{{presupuesto.cliente}} </label>
-                    <label class="col">${{presupuesto.importe}}</label>
-                    <label class="col">{{presupuesto.fecha}}</label>
+                    <div *ngIf="presupuesto" class="col">
+                        <p>Cliente </p>
+                        <label>{{presupuesto.cliente}} </label>
+                    </div>
+                    <div *ngIf="presupuesto" class="col">
+                        <p>Motor </p>
+                        <label>{{presupuesto.motor}} </label>
+                    </div>
+                    <div *ngIf="presupuesto" class="col">
+                        <p>Importe </p>
+                        <label>{{presupuesto.importe}} </label>
+                    </div>
+                    <div *ngIf="presupuesto" class="col">
+                        <p>Fecha </p>
+                        <label>{{presupuesto.fecha}} </label>
+                    </div>
                 </div>
                 <div *ngIf="isPedidoRepuesto" class="row">
                     <div class="form-group col-md-4">
@@ -96,11 +106,26 @@
                             </option>
                         </select>
                     </div>
-                    <label class="col">{{pedido.cliente}}</label>
-                    <label class="col">{{pedido.fecha}} </label>
-                    <label class="col">{{pedido.presupuestoId}}</label>
-                    <label class="col">{{pedido.motor}}</label>
-                    <label class="col">{{pedido.tipo}}</label>
+                    <div *ngIf="pedido" class="col">
+                        <p>Cliente </p>
+                        <label>{{pedido.cliente}} </label>
+                    </div>
+                    <div *ngIf="pedido" class="col">
+                        <p>Motor </p>
+                        <label>{{pedido.motor}} </label>
+                    </div>
+                    <div *ngIf="pedido" class="col">
+                        <p>Tipo </p>
+                        <label>{{pedido.tipo}} </label>
+                    </div>
+                    <div *ngIf="pedido" class="col">
+                        <p>Presupuesto Nº </p>
+                        <label>{{pedido.presupuestoId}} </label>
+                    </div>
+                    <div *ngIf="pedido" class="col">
+                        <p>Fecha </p>
+                        <label>{{pedido.fecha}} </label>
+                    </div>
                 </div>
             </div>
         </div>

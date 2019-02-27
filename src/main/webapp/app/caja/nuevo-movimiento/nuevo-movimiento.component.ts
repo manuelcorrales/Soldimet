@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Movimiento } from 'app/shared/model/movimiento.model';
 import { TipoMovimiento, ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';
 import { SubCategoria, ISubCategoria } from 'app/shared/model/sub-categoria.model';
 import { TipoMovimientoService } from 'app/entities/tipo-movimiento';
 import { FormaDePagoService } from 'app/entities/forma-de-pago';
 import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
-import { HttpResponse, HttpErrorResponse } from '../../../../../../node_modules/@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { IFormaDePago, FormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { SubCategoriaService } from 'app/entities/sub-categoria';
 import { CategoriaPago, ICategoriaPago } from 'app/shared/model/categoria-pago.model';
@@ -19,6 +19,7 @@ import { Banco, IBanco } from 'app/shared/model/banco.model';
 import { BancoService } from 'app/entities/banco';
 import { Articulo, IArticulo } from 'app/shared/model/articulo.model';
 import { ArticuloService } from 'app/entities/articulo';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { PresupuestoService } from 'app/entities/presupuesto';
 import { PedidoRepuestoService } from 'app/entities/pedido-repuesto';
 import { IPresupuesto, Presupuesto } from 'app/shared/model/presupuesto.model';
@@ -27,6 +28,8 @@ import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
+import { Observable, Subject, merge } from 'rxjs';
+import { NgbTypeaheadConfig, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'jhi-nuevo-movimiento',
@@ -65,6 +68,10 @@ export class NuevoMovimientoComponent implements OnInit {
     fechaCobro: Date;
 
     isArticulo = false;
+    @ViewChild('instanceNTAArt')
+    instanceArt: NgbTypeahead;
+    focusArt$ = new Subject<string>();
+    clickArt$ = new Subject<string>();
     articulo: Articulo;
 
     isPresupuesto = false;
@@ -73,7 +80,10 @@ export class NuevoMovimientoComponent implements OnInit {
     isPedidoRepuesto = false;
     pedido: DtoPedidoCabecera;
 
+    formatterArt = result => result.descripcion;
+
     constructor(
+        config: NgbTypeaheadConfig,
         private tipoMovimientoService: TipoMovimientoService,
         private formaDePagoService: FormaDePagoService,
         private conceptosService: SubCategoriaService,
@@ -173,6 +183,24 @@ export class NuevoMovimientoComponent implements OnInit {
             }
         }
     }
+
+    searchArt = (text$: Observable<string>) => {
+        const debouncedText$ = text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged()
+        );
+        const clicksWithClosedPopup$ = this.clickArt$.pipe(filter(() => !this.instanceArt.isPopupOpen()));
+        const inputFocus$ = this.focusArt$;
+
+        return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+            map(term =>
+                (term === ''
+                    ? this.articulos
+                    : this.articulos.filter(v => v.descripcion.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                ).slice(0, 10)
+            )
+        );
+    };
 
     private guardarMovimiento() {}
 }
