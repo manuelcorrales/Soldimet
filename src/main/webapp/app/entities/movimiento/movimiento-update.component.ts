@@ -18,8 +18,6 @@ import { IPersona } from 'app/shared/model/persona.model';
 import { PersonaService } from 'app/entities/persona';
 import { ICaja } from 'app/shared/model/caja.model';
 import { CajaService } from 'app/entities/caja';
-import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
-import { DetalleMovimientoService } from 'app/entities/detalle-movimiento';
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 import { SubCategoriaService } from 'app/entities/sub-categoria';
 import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
@@ -43,8 +41,6 @@ export class MovimientoUpdateComponent implements OnInit {
 
     cajas: ICaja[];
 
-    detallemovimientos: IDetalleMovimiento[];
-
     subcategorias: ISubCategoria[];
 
     mediodepagos: IMedioDePago[];
@@ -59,7 +55,6 @@ export class MovimientoUpdateComponent implements OnInit {
         private empleadoService: EmpleadoService,
         private personaService: PersonaService,
         private cajaService: CajaService,
-        private detalleMovimientoService: DetalleMovimientoService,
         private subCategoriaService: SubCategoriaService,
         private medioDePagoService: MedioDePagoService,
         private activatedRoute: ActivatedRoute
@@ -97,21 +92,6 @@ export class MovimientoUpdateComponent implements OnInit {
         this.cajaService.query().subscribe(
             (res: HttpResponse<ICaja[]>) => {
                 this.cajas = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.detalleMovimientoService.query({ filter: 'movimiento-is-null' }).subscribe(
-            (res: HttpResponse<IDetalleMovimiento[]>) => {
-                if (!this.movimiento.detalleMovimiento || !this.movimiento.detalleMovimiento.id) {
-                    this.detallemovimientos = res.body;
-                } else {
-                    this.detalleMovimientoService.find(this.movimiento.detalleMovimiento.id).subscribe(
-                        (subRes: HttpResponse<IDetalleMovimiento>) => {
-                            this.detallemovimientos = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -186,10 +166,6 @@ export class MovimientoUpdateComponent implements OnInit {
     }
 
     trackCajaById(index: number, item: ICaja) {
-        return item.id;
-    }
-
-    trackDetalleMovimientoById(index: number, item: IDetalleMovimiento) {
         return item.id;
     }
 

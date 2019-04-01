@@ -1,5 +1,6 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -8,6 +9,8 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -66,10 +69,6 @@ public class Movimiento implements Serializable {
     @JsonIgnoreProperties("")
     private Caja caja;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private DetalleMovimiento detalleMovimiento;
-
     @ManyToOne
     @JsonIgnoreProperties("")
     private SubCategoria subCategoria;
@@ -77,6 +76,10 @@ public class Movimiento implements Serializable {
     @OneToOne
     @JoinColumn(unique = true)
     private MedioDePago medioDePago;
+
+    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
+    @JoinColumn(name= "movimiento")
+    private Set<DetalleMovimiento> detalleMovimientos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -217,19 +220,6 @@ public class Movimiento implements Serializable {
         this.caja = caja;
     }
 
-    public DetalleMovimiento getDetalleMovimiento() {
-        return detalleMovimiento;
-    }
-
-    public Movimiento detalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimiento = detalleMovimiento;
-        return this;
-    }
-
-    public void setDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimiento = detalleMovimiento;
-    }
-
     public SubCategoria getSubCategoria() {
         return subCategoria;
     }
@@ -254,6 +244,29 @@ public class Movimiento implements Serializable {
 
     public void setMedioDePago(MedioDePago medioDePago) {
         this.medioDePago = medioDePago;
+    }
+
+    public Set<DetalleMovimiento> getDetalleMovimientos() {
+        return detalleMovimientos;
+    }
+
+    public Movimiento detalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
+        this.detalleMovimientos = detalleMovimientos;
+        return this;
+    }
+
+    public Movimiento addDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
+        this.detalleMovimientos.add(detalleMovimiento);
+        return this;
+    }
+
+    public Movimiento removeDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
+        this.detalleMovimientos.remove(detalleMovimiento);
+        return this;
+    }
+
+    public void setDetalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
+        this.detalleMovimientos = detalleMovimientos;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

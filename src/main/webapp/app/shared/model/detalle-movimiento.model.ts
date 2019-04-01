@@ -7,6 +7,7 @@ export interface IDetalleMovimiento {
     id?: number;
     valor_unitario?: number;
     cantidad?: number;
+    descripcion?: string;
     tipoDetalleMovimiento?: ITipoDetalleMovimiento;
     articulo?: IArticulo;
     pedidoRepuesto?: IPedidoRepuesto;
@@ -18,6 +19,7 @@ export class DetalleMovimiento implements IDetalleMovimiento {
         public id?: number,
         public valor_unitario?: number,
         public cantidad?: number,
+        public descripcion?: string,
         public tipoDetalleMovimiento?: ITipoDetalleMovimiento,
         public articulo?: IArticulo,
         public pedidoRepuesto?: IPedidoRepuesto,

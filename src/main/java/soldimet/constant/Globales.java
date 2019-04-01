@@ -50,8 +50,12 @@ public class Globales {
 
     //---------------------------------Tipo Articulos------------------------
     public final String nombre_Tipo_Repuesto_Repuesto = "Repuesto";
-    //----------------------------Nombre proveedor----------------------
 
+    //---------------------------------Tipo Detalles------------------------
+    public static final String nombre_Tipo_Detalle_Articulo = "Articulo";
+    public static final String nombre_Tipo_Detalle_Proveedor = "Proveedor";
+    public static final String nombre_Tipo_Detalle_Presupuesto = "Presupuesto";
+    //----------------------------Nombre proveedor----------------------
     public final String PAZZAGLIA = "PAZZAGLIA S.A.";
 
 

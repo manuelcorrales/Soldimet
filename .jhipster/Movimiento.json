@@ -44,14 +44,6 @@
             "otherEntityField": "id"
         },
         {
-            "relationshipName": "detalleMovimiento",
-            "otherEntityName": "detalleMovimiento",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "movimiento"
-        },
-        {
             "relationshipName": "subCategoria",
             "otherEntityName": "subCategoria",
             "relationshipType": "many-to-one",
@@ -63,6 +55,12 @@
             "relationshipType": "one-to-one",
             "otherEntityField": "id",
             "ownerSide": true,
+            "otherEntityRelationshipName": "movimiento"
+        },
+        {
+            "relationshipName": "detalleMovimiento",
+            "otherEntityName": "detalleMovimiento",
+            "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "movimiento"
         }
     ],

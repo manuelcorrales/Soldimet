@@ -1,0 +1,42 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "tarjeta",
+            "otherEntityName": "tarjeta",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTarjeta"
+        },
+        {
+            "relationshipName": "tipoTarjeta",
+            "otherEntityName": "tipoTarjeta",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoTarjeta"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "ultimos4",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": "4"
+        }
+    ],
+    "changelogDate": "20190401202429",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "medio_de_pago_tarjeta",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

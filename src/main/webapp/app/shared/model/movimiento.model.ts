@@ -4,9 +4,9 @@ import { ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';
 import { IEmpleado } from 'app/shared/model/empleado.model';
 import { IPersona } from 'app/shared/model/persona.model';
 import { ICaja } from 'app/shared/model/caja.model';
-import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 import { IMedioDePago } from 'app/shared/model//medio-de-pago.model';
+import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 
 export interface IMovimiento {
     id?: number;
@@ -20,9 +20,9 @@ export interface IMovimiento {
     empleado?: IEmpleado;
     persona?: IPersona;
     caja?: ICaja;
-    detalleMovimiento?: IDetalleMovimiento;
     subCategoria?: ISubCategoria;
     medioDePago?: IMedioDePago;
+    detalleMovimientos?: IDetalleMovimiento[];
 }
 
 export class Movimiento implements IMovimiento {
@@ -38,8 +38,8 @@ export class Movimiento implements IMovimiento {
         public empleado?: IEmpleado,
         public persona?: IPersona,
         public caja?: ICaja,
-        public detalleMovimiento?: IDetalleMovimiento,
         public subCategoria?: ISubCategoria,
-        public medioDePago?: IMedioDePago
+        public medioDePago?: IMedioDePago,
+        public detalleMovimientos?: IDetalleMovimiento[]
     ) {}
 }

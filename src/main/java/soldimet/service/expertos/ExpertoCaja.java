@@ -1,5 +1,8 @@
 package soldimet.service.expertos;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -16,10 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 import io.github.jhipster.config.JHipsterDefaults.Cache.Infinispan.Local;
 import soldimet.constant.Globales;
 import soldimet.converter.CajaConverter;
+import soldimet.domain.Articulo;
 import soldimet.domain.Caja;
+import soldimet.domain.DetalleMovimiento;
+import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.Movimiento;
+import soldimet.domain.TipoDetalleMovimiento;
+import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CajaRepository;
+import soldimet.repository.EstadoMovimientoRepository;
 import soldimet.repository.MovimientoRepository;
+import soldimet.repository.PedidoRepuestoRepository;
+import soldimet.repository.PresupuestoRepository;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMensajeCerrarCaja;
 
@@ -32,6 +43,8 @@ import soldimet.service.dto.DTOMensajeCerrarCaja;
 @Transactional
 public class ExpertoCaja {
 
+    private final Logger log = LoggerFactory.getLogger(ExpertoCaja.class);
+
     @Autowired
     private CajaRepository cajaRepository;
 
@@ -39,16 +52,28 @@ public class ExpertoCaja {
     private MovimientoRepository movimientoRepository;
 
     @Autowired
+    private EstadoMovimientoRepository estadoMovimientoRepository;
+
+    @Autowired
     private Globales globales;
 
     @Autowired
     private CajaConverter cajaConverter;
 
-	public ExpertoCaja(){
+    @Autowired
+    private PresupuestoRepository presupuestoRepository;
 
-	}
+    @Autowired
+    private PedidoRepuestoRepository pedidoRepuestoRepository;
 
-	public DTOCajaCUConsultarMovimientos buscarMovimientosDia() {
+    @Autowired
+    private ArticuloRepository articuloRepository;
+
+    public ExpertoCaja() {
+
+    }
+
+    public DTOCajaCUConsultarMovimientos buscarMovimientosDia() {
 
         Caja cajaDia = cajaRepository.findByFecha(LocalDate.now());
 
@@ -74,11 +99,48 @@ public class ExpertoCaja {
         List<Caja> listaCajaMes = cajaRepository.findByFechaGreaterThanEqual(fechaMesActual);
 
         Float montoTotalMes = new Float(0);
-        for (Caja caja: listaCajaMes) {
+        for (Caja caja : listaCajaMes) {
             montoTotalMes += caja.getSaldo();
         }
         return montoTotalMes;
     }
 
+    public Movimiento guardarNuevoMovimiento(Movimiento movimientoDto) {
+        try {
+
+            Caja cajaDia = cajaRepository.findByFecha(LocalDate.now());
+            EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+
+            // update movimiento params
+            movimientoDto.setCaja(cajaDia);
+            movimientoDto.setFecha(LocalDate.now());
+            movimientoDto.setEstado(estadoAlta);
+
+            // update detalle movimiento params
+            for (DetalleMovimiento detalle: movimientoDto.getDetalleMovimientos()) {
+                TipoDetalleMovimiento tipoDetalleMovimiento = detalle.getTipoDetalleMovimiento();
+                switch (tipoDetalleMovimiento.getNombreTipoDetalle()) {
+                    case Globales.nombre_Tipo_Detalle_Articulo: {
+                        detalle.setArticulo(articuloRepository.findById(detalle.getArticulo().getId()).get());
+                    }
+                    case Globales.nombre_Tipo_Detalle_Presupuesto: {
+                        detalle.setPresupuesto(presupuestoRepository.findById(detalle.getPresupuesto().getId()).get());
+                    }
+                    case Globales.nombre_Tipo_Detalle_Proveedor: {
+                        detalle.setPedidoRepuesto(pedidoRepuestoRepository.findById(detalle.getPedidoRepuesto().getId()).get());
+                    }
+                    default: throw new Exception("No se pudo encontrar el detalle para " + detalle.getTipoDetalleMovimiento().getNombreTipoDetalle());
+                }
+            }
+
+            Movimiento newMovimiento = movimientoRepository.save(movimientoDto);
+
+            return newMovimiento;
+
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
 }

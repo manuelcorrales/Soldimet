@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="manuelc (generated)" id="1554155390505-1">
+        <addColumn tableName="detalle_movimiento">
+            <column name="descripcion" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1554155390505-2">
+        <addColumn tableName="detalle_movimiento">
+            <column name="movimiento" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1554155390505-3">
+        <addForeignKeyConstraint baseColumnNames="movimiento" baseTableName="detalle_movimiento" constraintName="FK5avbui5jrok7evoiyfxtt3cac" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="movimiento"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1554155390505-4">
+        <dropForeignKeyConstraint baseTableName="movimiento" constraintName="FK8k61g6qdg7tnajmp2y5wufink"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1554155390505-5">
+        <dropUniqueConstraint constraintName="UC_MOVIMIENTODETALLE_MOVIMIENTO_ID_COL" tableName="movimiento"/>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1554155390505-6">
+        <dropColumn columnName="detalle_movimiento_id" tableName="movimiento"/>
+    </changeSet>
+</databaseChangeLog>

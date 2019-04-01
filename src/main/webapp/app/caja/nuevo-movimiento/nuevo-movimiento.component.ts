@@ -28,8 +28,17 @@ import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
-import { Observable, Subject, merge } from 'rxjs';
+import { Observable, Subject, merge, Subscription } from 'rxjs';
 import { NgbTypeaheadConfig, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { MedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
+import { MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
+import { MovimientoPedido } from 'app/shared/model/movimiento-pedido.model';
+import { MovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
+import { MovimientoArticulo } from 'app/shared/model/movimiento-articulo.model';
+import { DetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
+import { JhiEventManager, JhiAlertService } from '../../../../../../node_modules/ng-jhipster';
+import { Router, ActivatedRoute } from '../../../../../../node_modules/@angular/router';
+import { CajaService } from 'app/entities/caja';
 
 @Component({
     selector: 'jhi-nuevo-movimiento',
@@ -37,6 +46,11 @@ import { NgbTypeaheadConfig, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
     styles: []
 })
 export class NuevoMovimientoComponent implements OnInit {
+    private eventSubscriber: Subscription;
+
+    formaTipoTarjeta = 'Tarjeta';
+    formaTipoChecke = 'Cheque';
+    formaTipoEfectivo = 'Efectivo';
     subCategoriasArticulo = ['Compra artículos'];
     subCategoriasPresupuesto = ['Cobranza presupuesto'];
     subCategoriasPedidoRepuesto = ['Pedido de repuestos', 'Pago a Proveedor'];
@@ -53,19 +67,16 @@ export class NuevoMovimientoComponent implements OnInit {
     pedidos: DtoPedidoCabecera[];
     presupuestos: DtoPresupuestoCabeceraComponent[];
     isSaving = false;
+    detalleMovimiento: DetalleMovimiento;
 
     categoria: CategoriaPago;
     subCategoria: SubCategoria;
     tipoMovimiento: TipoMovimiento;
 
     formaDePago: FormaDePago = null;
-    tarjeta: Tarjeta;
-    tipoTarjeta: TipoTarjeta;
     medioDePago: MedioDePago;
-
-    banco: Banco;
-    fechaRecibo: Date;
-    fechaCobro: Date;
+    medioPagoTarjeta: MedioDePagoTarjeta;
+    medioPagoCheque: MedioDePagoCheque;
 
     isArticulo = false;
     @ViewChild('instanceNTAArt')
@@ -73,14 +84,23 @@ export class NuevoMovimientoComponent implements OnInit {
     focusArt$ = new Subject<string>();
     clickArt$ = new Subject<string>();
     articulo: Articulo;
+    movimientoArticulo: MovimientoArticulo;
 
     isPresupuesto = false;
+    @ViewChild('instanceNTAPresup')
+    instancePresup: NgbTypeahead;
+    focusPresup$ = new Subject<string>();
+    clickPresup$ = new Subject<string>();
     presupuesto: DtoPresupuestoCabeceraComponent;
+    movimientoPresupuesto: MovimientoPresupuesto;
 
     isPedidoRepuesto = false;
+    @ViewChild('instanceNTAPedido')
+    instancePedido: NgbTypeahead;
+    focusPedido$ = new Subject<string>();
+    clickPedido$ = new Subject<string>();
     pedido: DtoPedidoCabecera;
-
-    formatterArt = result => result.descripcion;
+    movimientoPedido: MovimientoPedido;
 
     constructor(
         config: NgbTypeaheadConfig,
@@ -94,11 +114,18 @@ export class NuevoMovimientoComponent implements OnInit {
         private bancoService: BancoService,
         private articuloService: ArticuloService,
         private _presupuestosService: PresupuestosService,
-        private pedidoService: PedidosService
+        private pedidoService: PedidosService,
+        private eventManager: JhiEventManager,
+        private route: ActivatedRoute,
+        private router: Router,
+        private jhiAlertService: JhiAlertService,
+        private oldCajaService: CajaService
     ) {}
 
     ngOnInit() {
         this.medioDePago = new MedioDePago();
+        this.medioPagoCheque = new MedioDePagoCheque();
+        this.medioPagoTarjeta = new MedioDePagoTarjeta();
         this.movimiento = new Movimiento();
         this.tipoMovimientoService.query().subscribe(
             (res: HttpResponse<ITipoMovimiento[]>) => {
@@ -128,7 +155,7 @@ export class NuevoMovimientoComponent implements OnInit {
     }
 
     buscarMedioDePagoData() {
-        if (this.formaDePago.nombreFormaDePago === 'Débito') {
+        if (this.formaDePago.nombreFormaDePago === this.formaTipoTarjeta) {
             this.tarjetaService.query().subscribe(
                 (res: HttpResponse<ITarjeta[]>) => {
                     this.tarjetas = res.body;
@@ -142,7 +169,7 @@ export class NuevoMovimientoComponent implements OnInit {
                 (res: HttpErrorResponse) => console.log(res.message)
             );
         }
-        if (this.formaDePago.nombreFormaDePago === 'Cheque') {
+        if (this.formaDePago.nombreFormaDePago === this.formaTipoChecke) {
             this.bancoService.query().subscribe(
                 (res: HttpResponse<IBanco[]>) => {
                     this.bancos = res.body;
@@ -154,6 +181,15 @@ export class NuevoMovimientoComponent implements OnInit {
 
     checkSubCategory() {
         if (this.subCategoria) {
+            this.detalleMovimiento = new DetalleMovimiento();
+            // if (this.movimiento.detalleMovimientos) {
+            //     this.movimiento.detalleMovimientos.push(this.detalleMovimiento);
+            // } else {
+            //     this.movimiento.detalleMovimientos = [this.detalleMovimiento];
+            // }
+
+            this.movimiento.detalleMovimientos = [this.detalleMovimiento];
+
             if (this.subCategoriasArticulo.find(x => x === this.subCategoria.nombreSubCategoria)) {
                 this.isArticulo = true;
                 this.isPedidoRepuesto = false;
@@ -184,6 +220,7 @@ export class NuevoMovimientoComponent implements OnInit {
         }
     }
 
+    formatterArt = result => result.descripcion;
     searchArt = (text$: Observable<string>) => {
         const debouncedText$ = text$.pipe(
             debounceTime(200),
@@ -202,5 +239,122 @@ export class NuevoMovimientoComponent implements OnInit {
         );
     };
 
-    private guardarMovimiento() {}
+    formatterPresup = result => `${result.cliente} - ${result.motor}`;
+    searchPresup = (text$: Observable<string>) => {
+        const debouncedText$ = text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged()
+        );
+        const clicksWithClosedPopup$ = this.clickPresup$.pipe(filter(() => !this.instancePresup.isPopupOpen()));
+        const inputFocus$ = this.focusPresup$;
+
+        return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+            map(term =>
+                (term === ''
+                    ? this.presupuestos
+                    : this.presupuestos.filter(
+                          v =>
+                              v.motor.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                              v.cliente.toLowerCase().indexOf(term.toLowerCase()) > -1
+                      )
+                ).slice(0, 10)
+            )
+        );
+    };
+
+    formatterPedido = result => `${result.cliente} - ${result.motor} - (${result.tipo})`;
+    searchPedido = (text$: Observable<string>) => {
+        const debouncedText$ = text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged()
+        );
+        const clicksWithClosedPopup$ = this.clickPedido$.pipe(filter(() => !this.instancePedido.isPopupOpen()));
+        const inputFocus$ = this.focusPedido$;
+
+        return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+            map(term =>
+                (term === ''
+                    ? this.pedidos
+                    : this.pedidos.filter(
+                          v =>
+                              v.cliente.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                              v.motor.toLowerCase().indexOf(term.toLowerCase()) > -1
+                      )
+                ).slice(0, 10)
+            )
+        );
+    };
+
+    private defineMetodoPago() {
+        if (this.formaDePago.nombreFormaDePago === this.formaTipoTarjeta) {
+            this.medioDePago.medioDePagoTarjeta = this.medioPagoTarjeta;
+            this.medioDePago.medioDePagoCheque = null;
+        } else if (this.formaDePago.nombreFormaDePago === this.formaTipoChecke) {
+            this.medioDePago.medioDePagoCheque = this.medioPagoCheque;
+            this.medioDePago.medioDePagoTarjeta = null;
+        } else if (this.formaDePago.nombreFormaDePago === this.formaTipoEfectivo) {
+            // Efectivo no define más nada, solo la forma de pago
+            this.medioDePago.medioDePagoTarjeta = null;
+            this.medioDePago.medioDePagoCheque = null;
+        }
+
+        this.medioDePago.formaDePago = this.formaDePago;
+        this.movimiento.medioDePago = this.medioDePago;
+    }
+
+    private guardarMovimiento() {
+        this.movimiento.tipoMovimiento = this.tipoMovimiento;
+        this.movimiento.subCategoria = this.subCategoria;
+        this.defineMetodoPago();
+
+        this.save();
+    }
+
+    save() {
+        this.isSaving = true;
+        this.subscribeToSaveResponse(this.cajaService.saveMovimiento(this.movimiento));
+    }
+
+    private subscribeToSaveResponse(result: Observable<Movimiento>) {
+        result.subscribe((res: Movimiento) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res));
+    }
+
+    private onSaveSuccess(result: Movimiento) {
+        this.isSaving = false;
+        this.jhiAlertService.success('Se ha creado el movimiento número: ' + result.id, { toast: true }, '.right');
+        this.router.navigate(['/cajas']);
+    }
+
+    private onSaveError(error) {
+        this.isSaving = false;
+        this.onError(error);
+    }
+
+    private onError(error: any) {
+        this.jhiAlertService.error(error.message, null, null);
+    }
+
+    consultarMovimiento() {
+        this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.load(params['id']);
+                this.registerChangeInMovimientos();
+            } else {
+                this.movimiento = new Movimiento();
+                this.medioDePago = new MedioDePago();
+                this.medioPagoCheque = new MedioDePagoCheque();
+                this.medioPagoTarjeta = new MedioDePagoTarjeta();
+            }
+        });
+    }
+
+    registerChangeInMovimientos() {
+        this.eventSubscriber = this.eventManager.subscribe('movimientoListModification', response => this.load(this.movimiento.id));
+    }
+
+    load(id) {
+        this.oldCajaService.find(id).subscribe(movimiento => {
+            this.movimiento = movimiento.body;
+        });
+    }
 }

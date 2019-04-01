@@ -8,6 +8,10 @@ import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
 import { MedioDePagoService } from './medio-de-pago.service';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { FormaDePagoService } from 'app/entities/forma-de-pago';
+import { IMedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
+import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque';
+import { IMedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
+import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta';
 
 @Component({
     selector: 'jhi-medio-de-pago-update',
@@ -19,10 +23,16 @@ export class MedioDePagoUpdateComponent implements OnInit {
 
     formadepagos: IFormaDePago[];
 
+    mediodepagocheques: IMedioDePagoCheque[];
+
+    mediodepagotarjetas: IMedioDePagoTarjeta[];
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private medioDePagoService: MedioDePagoService,
         private formaDePagoService: FormaDePagoService,
+        private medioDePagoChequeService: MedioDePagoChequeService,
+        private medioDePagoTarjetaService: MedioDePagoTarjetaService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -34,6 +44,36 @@ export class MedioDePagoUpdateComponent implements OnInit {
         this.formaDePagoService.query().subscribe(
             (res: HttpResponse<IFormaDePago[]>) => {
                 this.formadepagos = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.medioDePagoChequeService.query({ filter: 'mediodepago-is-null' }).subscribe(
+            (res: HttpResponse<IMedioDePagoCheque[]>) => {
+                if (!this.medioDePago.medioDePagoCheque || !this.medioDePago.medioDePagoCheque.id) {
+                    this.mediodepagocheques = res.body;
+                } else {
+                    this.medioDePagoChequeService.find(this.medioDePago.medioDePagoCheque.id).subscribe(
+                        (subRes: HttpResponse<IMedioDePagoCheque>) => {
+                            this.mediodepagocheques = [subRes.body].concat(res.body);
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
+                }
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.medioDePagoTarjetaService.query({ filter: 'mediodepago-is-null' }).subscribe(
+            (res: HttpResponse<IMedioDePagoTarjeta[]>) => {
+                if (!this.medioDePago.medioDePagoTarjeta || !this.medioDePago.medioDePagoTarjeta.id) {
+                    this.mediodepagotarjetas = res.body;
+                } else {
+                    this.medioDePagoTarjetaService.find(this.medioDePago.medioDePagoTarjeta.id).subscribe(
+                        (subRes: HttpResponse<IMedioDePagoTarjeta>) => {
+                            this.mediodepagotarjetas = [subRes.body].concat(res.body);
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
+                }
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -70,6 +110,14 @@ export class MedioDePagoUpdateComponent implements OnInit {
     }
 
     trackFormaDePagoById(index: number, item: IFormaDePago) {
+        return item.id;
+    }
+
+    trackMedioDePagoChequeById(index: number, item: IMedioDePagoCheque) {
+        return item.id;
+    }
+
+    trackMedioDePagoTarjetaById(index: number, item: IMedioDePagoTarjeta) {
         return item.id;
     }
     get medioDePago() {

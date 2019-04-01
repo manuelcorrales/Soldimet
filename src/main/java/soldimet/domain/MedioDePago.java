@@ -21,9 +21,18 @@ public class MedioDePago implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(optional = false)
     @NotNull
-    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
+    @JsonIgnoreProperties("")
     private FormaDePago formaDePago;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private MedioDePagoCheque medioDePagoCheque;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private MedioDePagoTarjeta medioDePagoTarjeta;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -45,6 +54,32 @@ public class MedioDePago implements Serializable {
 
     public void setFormaDePago(FormaDePago formaDePago) {
         this.formaDePago = formaDePago;
+    }
+
+    public MedioDePagoCheque getMedioDePagoCheque() {
+        return medioDePagoCheque;
+    }
+
+    public MedioDePago medioDePagoCheque(MedioDePagoCheque medioDePagoCheque) {
+        this.medioDePagoCheque = medioDePagoCheque;
+        return this;
+    }
+
+    public void setMedioDePagoCheque(MedioDePagoCheque medioDePagoCheque) {
+        this.medioDePagoCheque = medioDePagoCheque;
+    }
+
+    public MedioDePagoTarjeta getMedioDePagoTarjeta() {
+        return medioDePagoTarjeta;
+    }
+
+    public MedioDePago medioDePagoTarjeta(MedioDePagoTarjeta medioDePagoTarjeta) {
+        this.medioDePagoTarjeta = medioDePagoTarjeta;
+        return this;
+    }
+
+    public void setMedioDePagoTarjeta(MedioDePagoTarjeta medioDePagoTarjeta) {
+        this.medioDePagoTarjeta = medioDePagoTarjeta;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

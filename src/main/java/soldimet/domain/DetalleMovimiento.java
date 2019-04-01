@@ -29,6 +29,9 @@ public class DetalleMovimiento implements Serializable {
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
 
+    @Column(name = "descripcion")
+    private String descripcion;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties("")
@@ -79,6 +82,19 @@ public class DetalleMovimiento implements Serializable {
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public DetalleMovimiento descripcion(String descripcion) {
+        this.descripcion = descripcion;
+        return this;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public TipoDetalleMovimiento getTipoDetalleMovimiento() {
@@ -160,6 +176,7 @@ public class DetalleMovimiento implements Serializable {
             "id=" + getId() +
             ", valor_unitario=" + getValor_unitario() +
             ", cantidad=" + getCantidad() +
+            ", descripcion='" + getDescripcion() + "'" +
             "}";
     }
 }

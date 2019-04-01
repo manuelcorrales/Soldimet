@@ -16,6 +16,8 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Forma De Pago</span></th>
+            <th><span>Medio De Pago Cheque</span></th>
+            <th><span>Medio De Pago Tarjeta</span></th>
             <th></th>
             </tr>
             </thead>
@@ -25,6 +27,16 @@
                 <td>
                     <div *ngIf="medioDePago.formaDePago">
                         <a [routerLink]="['../forma-de-pago', medioDePago.formaDePago?.id, 'view' ]" >{{medioDePago.formaDePago?.nombreFormaDePago}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="medioDePago.medioDePagoCheque">
+                        <a [routerLink]="['../medio-de-pago-cheque', medioDePago.medioDePagoCheque?.id, 'view' ]" >{{medioDePago.medioDePagoCheque?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="medioDePago.medioDePagoTarjeta">
+                        <a [routerLink]="['../medio-de-pago-tarjeta', medioDePago.medioDePagoTarjeta?.id, 'view' ]" >{{medioDePago.medioDePagoTarjeta?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">

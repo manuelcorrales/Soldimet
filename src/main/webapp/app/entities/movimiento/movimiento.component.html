@@ -25,7 +25,6 @@
             <th jhiSortBy="empleado.usuario"><span>Empleado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="persona.nombre"><span>Persona</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="caja.id"><span>Caja</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="detalleMovimiento.id"><span>Detalle Movimiento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="subCategoria.nombreSubCategoria"><span>Sub Categoria</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="medioDePago.id"><span>Medio De Pago</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -62,11 +61,6 @@
                 <td>
                     <div *ngIf="movimiento.caja">
                         <a [routerLink]="['../caja', movimiento.caja?.id, 'view' ]" >{{movimiento.caja?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="movimiento.detalleMovimiento">
-                        <a [routerLink]="['../detalle-movimiento', movimiento.detalleMovimiento?.id, 'view' ]" >{{movimiento.detalleMovimiento?.id}}</a>
                     </div>
                 </td>
                 <td>

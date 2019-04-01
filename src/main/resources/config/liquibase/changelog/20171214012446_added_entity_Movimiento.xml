@@ -61,9 +61,7 @@
             <column name="caja_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="detalle_movimiento_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_movimiento_detalle_movimiento_id" />
-            </column>
+
             <column name="sub_categoria_id" type="bigint">
                 <constraints nullable="true" />
             </column>

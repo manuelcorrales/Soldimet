@@ -132,13 +132,6 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_detalleMovimiento">Detalle Movimiento</label>
-                    <select class="form-control" id="field_detalleMovimiento" name="detalleMovimiento" [(ngModel)]="movimiento.detalleMovimiento">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="detalleMovimientoOption.id === movimiento.detalleMovimiento?.id ? movimiento.detalleMovimiento : detalleMovimientoOption" *ngFor="let detalleMovimientoOption of detallemovimientos; trackBy: trackDetalleMovimientoById">{{detalleMovimientoOption.id}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" for="field_subCategoria">Sub Categoria</label>
                     <select class="form-control" id="field_subCategoria" name="subCategoria" [(ngModel)]="movimiento.subCategoria" >
                         <option [ngValue]="null"></option>

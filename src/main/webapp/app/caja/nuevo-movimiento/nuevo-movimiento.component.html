@@ -59,72 +59,76 @@
                 <div *ngIf="isArticulo" class="row">
                     <div class="form-group col-md-4">
                         <label>Artículo</label>
-                        <input type="text" placeholder="Articulo" [(ngModel)]="articulo" [resultFormatter]="formatterArt" id="typeahead-focusArt"
+                        <input type="text" placeholder="Buscar artículo" [(ngModel)]="detalleMovimiento.articulo" [resultFormatter]="formatterArt" id="typeahead-focusArt"
                             type="text" class="form-control" [ngbTypeahead]="searchArt" (focus)="focusArt$.next($event.target.value)"
                             (click)="clickArt$.next($event.target.value)" #instanceNTAArt="ngbTypeahead" [inputFormatter]="formatterArt"
-                            name="arti_search"/>
+                            name="arti_search" />
                     </div>
                     <div class="form-group col-md-4">
                         <label>Cantidad</label>
-                        <input type="number" class="form-control" aria-label="Cantidad de articulos" name="cantidadArticulo">
+                        <input type="number" class="form-control"
+                        aria-label="Cantidad de articulos" name="cantidadArticulo"
+                        [(ngModel)]="detalleMovimiento.cantidad">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Precio unitario</label>
+                        <input type="number" class="form-control"
+                        aria-label="Precio unitario" name="precioArticulo"
+                        [(ngModel)]="detalleMovimiento.valor_unitario">
                     </div>
                 </div>
                 <div *ngIf="isPresupuesto" class="row">
                     <div class="form-group col-md-4">
                         <label>Presupuesto</label>
-                        <select class="form-control" [(ngModel)]="presupuesto" name="presupuesto">
-                            <option selected disabled>Elija un presupuesto</option>
-                            <option *ngFor="let presupuesto of presupuestos" [ngValue]="presupuesto">
-                                {{presupuesto.codigo}}
-                            </option>
-                        </select>
+                        <input type="text" placeholder="Buscar Presupuesto" [(ngModel)]="detalleMovimiento.presupuesto" [resultFormatter]="formatterPresup" id="typeahead-focusPresup"
+                            type="text" class="form-control" [ngbTypeahead]="searchPresup" (focus)="focusPresup$.next($event.target.value)"
+                            (click)="clickPresup$.next($event.target.value)" #instanceNTAPresup="ngbTypeahead" [inputFormatter]="formatterPresup"
+                            name="presup_search" />
                     </div>
-                    <div *ngIf="presupuesto" class="col">
+                    <div *ngIf="detalleMovimiento.presupuesto" class="col">
                         <p>Cliente </p>
-                        <label>{{presupuesto.cliente}} </label>
+                        <label>{{detalleMovimiento.presupuesto.cliente}} </label>
                     </div>
-                    <div *ngIf="presupuesto" class="col">
+                    <div *ngIf="detalleMovimiento.presupuesto" class="col">
                         <p>Motor </p>
-                        <label>{{presupuesto.motor}} </label>
+                        <label>{{detalleMovimiento.presupuesto.motor}} </label>
                     </div>
-                    <div *ngIf="presupuesto" class="col">
+                    <div *ngIf="detalleMovimiento.presupuesto" class="col">
                         <p>Importe </p>
-                        <label>{{presupuesto.importe}} </label>
+                        <label>{{detalleMovimiento.presupuesto.importe}} </label>
                     </div>
-                    <div *ngIf="presupuesto" class="col">
+                    <div *ngIf="detalleMovimiento.presupuesto" class="col">
                         <p>Fecha </p>
-                        <label>{{presupuesto.fecha}} </label>
+                        <label>{{detalleMovimiento.presupuesto.fecha}} </label>
                     </div>
                 </div>
                 <div *ngIf="isPedidoRepuesto" class="row">
                     <div class="form-group col-md-4">
                         <label>Pedido</label>
-                        <select class="form-control" [(ngModel)]="pedido" name="pedido">
-                            <option selected disabled>Elija un pedido</option>
-                            <option *ngFor="let pedido of pedidos" [ngValue]="pedido">
-                                {{pedido.id}}
-                            </option>
-                        </select>
+                        <input type="text" placeholder="Buscar Pedido" [(ngModel)]="detalleMovimiento.pedidoRepuesto" [resultFormatter]="formatterPedido" id="typeahead-focusPedido"
+                            type="text" class="form-control" [ngbTypeahead]="searchPedido" (focus)="focusPedido$.next($event.target.value)"
+                            (click)="clickPedido$.next($event.target.value)" #instanceNTAPedido="ngbTypeahead" [inputFormatter]="formatterPedido"
+                            name="pedido_search" />
                     </div>
-                    <div *ngIf="pedido" class="col">
+                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
                         <p>Cliente </p>
-                        <label>{{pedido.cliente}} </label>
+                        <label>{{detalleMovimiento.pedidoRepuesto.cliente}} </label>
                     </div>
-                    <div *ngIf="pedido" class="col">
+                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
                         <p>Motor </p>
-                        <label>{{pedido.motor}} </label>
+                        <label>{{detalleMovimiento.pedidoRepuesto.motor}} </label>
                     </div>
-                    <div *ngIf="pedido" class="col">
+                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
                         <p>Tipo </p>
-                        <label>{{pedido.tipo}} </label>
+                        <label>{{detalleMovimiento.pedidoRepuesto.tipo}} </label>
                     </div>
-                    <div *ngIf="pedido" class="col">
+                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
                         <p>Presupuesto Nº </p>
-                        <label>{{pedido.presupuestoId}} </label>
+                        <label>{{detalleMovimiento.pedidoRepuesto.presupuestoId}} </label>
                     </div>
-                    <div *ngIf="pedido" class="col">
+                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
                         <p>Fecha </p>
-                        <label>{{pedido.fecha}} </label>
+                        <label>{{detalleMovimiento.pedidoRepuesto.fecha}} </label>
                     </div>
                 </div>
             </div>
@@ -142,12 +146,12 @@
                     </select>
                 </div>
                 <!-- Informacion del medio de pago-->
-                <div *ngIf="formaDePago?.nombreFormaDePago == 'Efectivo'" class="row">
+                <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoEfectivo" class="row">
                 </div>
-                <div *ngIf="formaDePago?.nombreFormaDePago == 'Débito'" class="row col">
+                <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoTarjeta" class="row col">
                     <div class="form-group col">
                         <label>Tarjeta</label>
-                        <select class="form-control" [(ngModel)]="tarjetaElegida" name="tarjetaElegida">
+                        <select class="form-control" [(ngModel)]="medioPagoTarjeta.tarjeta" name="tarjetaElegida">
                             <option selected disabled>Indique nombre</option>
                             <option *ngFor="let tarjeta of tarjetas" [ngValue]="tarjeta">
                                 {{tarjeta.nombreTarjeta}}
@@ -156,7 +160,7 @@
                     </div>
                     <div class="form-group col">
                         <label>Tipo tarjeta</label>
-                        <select class="form-control" [(ngModel)]="tipoTarjeta" name="tipoTarjeta">
+                        <select class="form-control" [(ngModel)]="medioPagoTarjeta.tipoTarjeta" name="tipoTarjeta">
                             <option selected disabled>Indique tipo tarjeta</option>
                             <option *ngFor="let tipoTarjeta of tipoTarjetas" [ngValue]="tipoTarjeta">
                                 {{tipoTarjeta.nombreTipoTarjeta}}
@@ -165,22 +169,29 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label>Últimas 4</label>
-                        <input type="number" class="form-control" aria-label="Últimos 4 dígitos" name="ultimos_cuatro" min='0' max='9999'>
+                        <input type="number" class="form-control"
+                        aria-label="Últimos 4 dígitos" name="ultimos_cuatro" min='0' max='9999'
+                        [(ngModel)] = "medioPagoTarjeta.ultimos4"
+                        >
                     </div>
                 </div>
-                <div *ngIf="formaDePago?.nombreFormaDePago == 'Cheque'" class="col">
+                <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoChecke" class="col">
                     <div class="row col">
                         <div class="form-group col">
                             <label>Número cheque</label>
-                            <input type="number" class="form-control" aria-label="numero_cheque" name="numero_cheque">
+                            <input type="number" class="form-control"
+                            aria-label="numero_cheque" name="numero_cheque"
+                            [(ngModel)]="medioPagoCheque.numeroCheque">
                         </div>
                         <div class="form-group col">
                             <label>Número cuenta</label>
-                            <input type="number" class="form-control" aria-label="numero_cuenta" name="numero_cuenta">
+                            <input type="number" class="form-control"
+                            aria-label="numero_cuenta" name="numero_cuenta"
+                            [(ngModel)]="medioPagoCheque.numeroCuenta">
                         </div>
                         <div class="form-group col">
                             <label>Banco</label>
-                            <select class="form-control" [(ngModel)]="banco" name="banco">
+                            <select class="form-control" [(ngModel)]="medioPagoCheque.banco" name="banco">
                                 <option selected disabled>Elija el banco emisor</option>
                                 <option *ngFor="let banco of bancos" [ngValue]="banco">
                                     {{banco.nombreBanco}}
@@ -192,7 +203,7 @@
                         <div class="form-group col">
                             <div class="input-group">
                                 <label>Fecha recibo</label>
-                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_recibo" [(ngModel)]="fechaRecibo" ngbDatepicker #d1="ngbDatepicker">
+                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_recibo" [(ngModel)]="medioPagoCheque.fechaRecibo" ngbDatepicker #d1="ngbDatepicker">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
                                 </div>
@@ -201,7 +212,7 @@
                         <div class="form-group col">
                             <div class="input-group">
                                 <label>Fecha cobro</label>
-                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_cobro" [(ngModel)]="fechaCobro" ngbDatepicker #d2="ngbDatepicker">
+                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_cobro" [(ngModel)]="medioPagoCheque.fechaCobro" ngbDatepicker #d2="ngbDatepicker">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
                                 </div>

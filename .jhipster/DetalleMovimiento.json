@@ -42,6 +42,10 @@
                 "min"
             ],
             "fieldValidateRulesMin": "0"
+        },
+        {
+            "fieldName": "descripcion",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171220194500",

@@ -30,6 +30,10 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="descripcion" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="tipo_detalle_movimiento_id" type="bigint">
                 <constraints nullable="false" />
             </column>

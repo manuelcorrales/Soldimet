@@ -10,6 +10,22 @@
                 "required"
             ],
             "otherEntityField": "nombreFormaDePago"
+        },
+        {
+            "relationshipName": "medioDePagoCheque",
+            "otherEntityName": "medioDePagoCheque",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "medioDePago"
+        },
+        {
+            "relationshipName": "medioDePagoTarjeta",
+            "otherEntityName": "medioDePagoTarjeta",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "medioDePago"
         }
     ],
     "fields": [],

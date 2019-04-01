@@ -23,6 +23,20 @@
                         This field is required.
                     </small>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_medioDePagoCheque">Medio De Pago Cheque</label>
+                    <select class="form-control" id="field_medioDePagoCheque" name="medioDePagoCheque" [(ngModel)]="medioDePago.medioDePagoCheque">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="medioDePagoChequeOption.id === medioDePago.medioDePagoCheque?.id ? medioDePago.medioDePagoCheque : medioDePagoChequeOption" *ngFor="let medioDePagoChequeOption of mediodepagocheques; trackBy: trackMedioDePagoChequeById">{{medioDePagoChequeOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_medioDePagoTarjeta">Medio De Pago Tarjeta</label>
+                    <select class="form-control" id="field_medioDePagoTarjeta" name="medioDePagoTarjeta" [(ngModel)]="medioDePago.medioDePagoTarjeta">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="medioDePagoTarjetaOption.id === medioDePago.medioDePagoTarjeta?.id ? medioDePago.medioDePagoTarjeta : medioDePagoTarjetaOption" *ngFor="let medioDePagoTarjetaOption of mediodepagotarjetas; trackBy: trackMedioDePagoTarjetaById">{{medioDePagoTarjetaOption.id}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
