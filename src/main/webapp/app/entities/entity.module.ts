@@ -59,6 +59,7 @@ import { SoldimetMedioDePagoModule } from './medio-de-pago/medio-de-pago.module'
 import { SoldimetMedioDePagoTarjetaModule } from './medio-de-pago-tarjeta/medio-de-pago-tarjeta.module';
 import { SoldimetMedioDePagoChequeModule } from './medio-de-pago-cheque/medio-de-pago-cheque.module';
 
+import { SoldimetMovimientoPresupuestoModule } from './movimiento-presupuesto/movimiento-presupuesto.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({

@@ -34,7 +34,6 @@ import { MedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model
 import { MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
 import { MovimientoPedido } from 'app/shared/model/movimiento-pedido.model';
 import { MovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
-import { MovimientoArticulo } from 'app/shared/model/movimiento-articulo.model';
 import { DetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 import { JhiEventManager, JhiAlertService } from '../../../../../../node_modules/ng-jhipster';
 import { Router, ActivatedRoute } from '../../../../../../node_modules/@angular/router';
@@ -51,14 +50,11 @@ export class NuevoMovimientoComponent implements OnInit {
     formaTipoTarjeta = 'Tarjeta';
     formaTipoChecke = 'Cheque';
     formaTipoEfectivo = 'Efectivo';
-    subCategoriasArticulo = ['Compra artículos'];
-    subCategoriasPresupuesto = ['Cobranza presupuesto'];
-    subCategoriasPedidoRepuesto = ['Pedido de repuestos', 'Pago a Proveedor'];
 
     movimiento: Movimiento;
     tipos: TipoMovimiento[];
     categorias: CategoriaPago[];
-    conceptos: SubCategoria[] = [];
+    conceptos: SubCategoria[];
     formasDePago: FormaDePago[];
     tipoTarjetas: ITipoTarjeta[];
     tarjetas: Tarjeta[];
@@ -70,21 +66,17 @@ export class NuevoMovimientoComponent implements OnInit {
     detalleMovimiento: DetalleMovimiento;
 
     categoria: CategoriaPago;
-    subCategoria: SubCategoria;
     tipoMovimiento: TipoMovimiento;
+    @ViewChild('instanceNTAconcepto')
+    instanceconcepto: NgbTypeahead;
+    focusconcepto$ = new Subject<string>();
+    clickconcepto$ = new Subject<string>();
+    concepto: SubCategoria;
 
     formaDePago: FormaDePago = null;
     medioDePago: MedioDePago;
     medioPagoTarjeta: MedioDePagoTarjeta;
     medioPagoCheque: MedioDePagoCheque;
-
-    isArticulo = false;
-    @ViewChild('instanceNTAArt')
-    instanceArt: NgbTypeahead;
-    focusArt$ = new Subject<string>();
-    clickArt$ = new Subject<string>();
-    articulo: Articulo;
-    movimientoArticulo: MovimientoArticulo;
 
     isPresupuesto = false;
     @ViewChild('instanceNTAPresup')
@@ -93,14 +85,6 @@ export class NuevoMovimientoComponent implements OnInit {
     clickPresup$ = new Subject<string>();
     presupuesto: DtoPresupuestoCabeceraComponent;
     movimientoPresupuesto: MovimientoPresupuesto;
-
-    isPedidoRepuesto = false;
-    @ViewChild('instanceNTAPedido')
-    instancePedido: NgbTypeahead;
-    focusPedido$ = new Subject<string>();
-    clickPedido$ = new Subject<string>();
-    pedido: DtoPedidoCabecera;
-    movimientoPedido: MovimientoPedido;
 
     constructor(
         config: NgbTypeaheadConfig,
@@ -145,13 +129,14 @@ export class NuevoMovimientoComponent implements OnInit {
             },
             (res: HttpErrorResponse) => console.log(res.message)
         );
+        this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
+            this.presupuestos = presupuestos;
+        });
     }
 
     buscarSubCategorias() {
-        this.isArticulo = false;
-        this.isPedidoRepuesto = false;
-        this.isPresupuesto = false;
         this.conceptos = this.categoria.subCategorias;
+        this.concepto = null;
     }
 
     buscarMedioDePagoData() {
@@ -179,61 +164,20 @@ export class NuevoMovimientoComponent implements OnInit {
         }
     }
 
-    checkSubCategory() {
-        if (this.subCategoria) {
-            this.detalleMovimiento = new DetalleMovimiento();
-            // if (this.movimiento.detalleMovimientos) {
-            //     this.movimiento.detalleMovimientos.push(this.detalleMovimiento);
-            // } else {
-            //     this.movimiento.detalleMovimientos = [this.detalleMovimiento];
-            // }
-
-            this.movimiento.detalleMovimientos = [this.detalleMovimiento];
-
-            if (this.subCategoriasArticulo.find(x => x === this.subCategoria.nombreSubCategoria)) {
-                this.isArticulo = true;
-                this.isPedidoRepuesto = false;
-                this.isPresupuesto = false;
-                this.articuloService.query().subscribe(
-                    (res: HttpResponse<IArticulo[]>) => {
-                        this.articulos = res.body;
-                    },
-                    (res: HttpErrorResponse) => console.log(res.message)
-                );
-            }
-            if (this.subCategoriasPresupuesto.find(x => x === this.subCategoria.nombreSubCategoria)) {
-                this.isArticulo = false;
-                this.isPedidoRepuesto = false;
-                this.isPresupuesto = true;
-                this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
-                    this.presupuestos = presupuestos;
-                });
-            }
-            if (this.subCategoriasPedidoRepuesto.find(x => x === this.subCategoria.nombreSubCategoria)) {
-                this.isArticulo = false;
-                this.isPedidoRepuesto = true;
-                this.isPresupuesto = false;
-                this.pedidoService.getPedidosCabecera().subscribe((pedidos: DtoPedidoCabecera[]) => {
-                    this.pedidos = pedidos;
-                });
-            }
-        }
-    }
-
-    formatterArt = result => result.descripcion;
-    searchArt = (text$: Observable<string>) => {
+    formatterconcepto = result => result.nombreSubCategoria;
+    searchconcepto = (text$: Observable<string>) => {
         const debouncedText$ = text$.pipe(
             debounceTime(200),
             distinctUntilChanged()
         );
-        const clicksWithClosedPopup$ = this.clickArt$.pipe(filter(() => !this.instanceArt.isPopupOpen()));
-        const inputFocus$ = this.focusArt$;
+        const clicksWithClosedPopup$ = this.clickconcepto$.pipe(filter(() => !this.instanceconcepto.isPopupOpen()));
+        const inputFocus$ = this.focusconcepto$;
 
         return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
             map(term =>
                 (term === ''
-                    ? this.articulos
-                    : this.articulos.filter(v => v.descripcion.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                    ? this.conceptos
+                    : this.conceptos.filter(v => v.nombreSubCategoria.toLowerCase().indexOf(term.toLowerCase()) > -1)
                 ).slice(0, 10)
             )
         );
@@ -262,29 +206,6 @@ export class NuevoMovimientoComponent implements OnInit {
         );
     };
 
-    formatterPedido = result => `${result.cliente} - ${result.motor} - (${result.tipo})`;
-    searchPedido = (text$: Observable<string>) => {
-        const debouncedText$ = text$.pipe(
-            debounceTime(200),
-            distinctUntilChanged()
-        );
-        const clicksWithClosedPopup$ = this.clickPedido$.pipe(filter(() => !this.instancePedido.isPopupOpen()));
-        const inputFocus$ = this.focusPedido$;
-
-        return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-            map(term =>
-                (term === ''
-                    ? this.pedidos
-                    : this.pedidos.filter(
-                          v =>
-                              v.cliente.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                              v.motor.toLowerCase().indexOf(term.toLowerCase()) > -1
-                      )
-                ).slice(0, 10)
-            )
-        );
-    };
-
     private defineMetodoPago() {
         if (this.formaDePago.nombreFormaDePago === this.formaTipoTarjeta) {
             this.medioDePago.medioDePagoTarjeta = this.medioPagoTarjeta;
@@ -304,7 +225,7 @@ export class NuevoMovimientoComponent implements OnInit {
 
     private guardarMovimiento() {
         this.movimiento.tipoMovimiento = this.tipoMovimiento;
-        this.movimiento.subCategoria = this.subCategoria;
+        this.movimiento.subCategoria = this.concepto;
         this.defineMetodoPago();
 
         this.save();
@@ -341,6 +262,8 @@ export class NuevoMovimientoComponent implements OnInit {
                 this.registerChangeInMovimientos();
             } else {
                 this.movimiento = new Movimiento();
+                this.detalleMovimiento = new DetalleMovimiento();
+                this.movimiento.detalleMovimientos = [this.detalleMovimiento];
                 this.medioDePago = new MedioDePago();
                 this.medioPagoCheque = new MedioDePagoCheque();
                 this.medioPagoTarjeta = new MedioDePagoTarjeta();
@@ -357,4 +280,5 @@ export class NuevoMovimientoComponent implements OnInit {
             this.movimiento = movimiento.body;
         });
     }
+    createConcepto() {}
 }

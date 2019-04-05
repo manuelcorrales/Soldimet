@@ -6,11 +6,11 @@ import {
     MovimientoPresupuestoComponent,
     MovimientoPresupuestoDetailComponent,
     MovimientoPresupuestoUpdateComponent,
-    MovimientoPresupuestoDeleteDialogComponent,
     MovimientoPresupuestoDeletePopupComponent,
+    MovimientoPresupuestoDeleteDialogComponent,
     movimientoPresupuestoRoute,
     movimientoPresupuestoPopupRoute
-} from 'app/entities/movimiento-presupuesto';
+} from './';
 
 const ENTITY_STATES = [...movimientoPresupuestoRoute, ...movimientoPresupuestoPopupRoute];
 
@@ -19,11 +19,16 @@ const ENTITY_STATES = [...movimientoPresupuestoRoute, ...movimientoPresupuestoPo
     declarations: [
         MovimientoPresupuestoComponent,
         MovimientoPresupuestoDetailComponent,
+        MovimientoPresupuestoUpdateComponent,
         MovimientoPresupuestoDeleteDialogComponent,
-        MovimientoPresupuestoDeletePopupComponent,
-        MovimientoPresupuestoUpdateComponent
+        MovimientoPresupuestoDeletePopupComponent
     ],
-    entryComponents: [MovimientoPresupuestoComponent, MovimientoPresupuestoUpdateComponent],
+    entryComponents: [
+        MovimientoPresupuestoComponent,
+        MovimientoPresupuestoUpdateComponent,
+        MovimientoPresupuestoDeleteDialogComponent,
+        MovimientoPresupuestoDeletePopupComponent
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetMovimientoPresupuestoModule {}

@@ -1,11 +1,14 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -23,12 +26,17 @@ public class MovimientoPresupuesto implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Presupuesto presupuesto;
 
     @OneToOne(optional = false)
     @NotNull
     @JoinColumn(unique = true)
     private Movimiento movimiento;
+
+    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch= FetchType.EAGER)
+    @JoinColumn(name= "movimientoPresupuesto")
+    private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -63,6 +71,29 @@ public class MovimientoPresupuesto implements Serializable {
 
     public void setMovimiento(Movimiento movimiento) {
         this.movimiento = movimiento;
+    }
+
+    public Set<CostoRepuesto> getCostoRepuestos() {
+        return costoRepuestos;
+    }
+
+    public MovimientoPresupuesto costoRepuestos(Set<CostoRepuesto> costoRepuestos) {
+        this.costoRepuestos = costoRepuestos;
+        return this;
+    }
+
+    public MovimientoPresupuesto addCostoRepuesto(CostoRepuesto costoRepuesto) {
+        this.costoRepuestos.add(costoRepuesto);
+        return this;
+    }
+
+    public MovimientoPresupuesto removeCostoRepuesto(CostoRepuesto costoRepuesto) {
+        this.costoRepuestos.remove(costoRepuesto);
+        return this;
+    }
+
+    public void setCostoRepuestos(Set<CostoRepuesto> costoRepuestos) {
+        this.costoRepuestos = costoRepuestos;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

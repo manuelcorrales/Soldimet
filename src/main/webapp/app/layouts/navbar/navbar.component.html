@@ -865,6 +865,12 @@
                             <span>Medio De Pago Cheque</span>
                         </a>
                     </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="movimiento-presupuesto" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span>Movimiento Presupuesto</span>
+                        </a>
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
             </li>

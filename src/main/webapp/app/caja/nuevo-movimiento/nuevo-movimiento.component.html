@@ -36,12 +36,10 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label>Concepto</label>
-                    <select class="form-control" [(ngModel)]="subCategoria" name="subCategoria" (change)="checkSubCategory()">
-                        <option selected disabled>Elija una subcategoría</option>
-                        <option *ngFor="let concepto of conceptos" [ngValue]="concepto">
-                            {{concepto.nombreSubCategoria}}
-                        </option>
-                    </select>
+                    <input type="text" [disabled]="!conceptos" placeholder="Buscar concepto" [(ngModel)]="concepto" [resultFormatter]="formatterconcepto" id="typeahead-focusconcepto"
+                        type="text" class="form-control" [ngbTypeahead]="searchconcepto" (focus)="focusconcepto$.next($event.target.value)"
+                        (click)="clickconcepto$.next($event.target.value)" #instanceNTAconcepto="ngbTypeahead" [inputFormatter]="formatterconcepto"
+                        name="concepto_search" />
                 </div>
                 <div class="form-group col-md-3">
                     <label>Importe</label>
@@ -56,79 +54,29 @@
                 Detalle Movimiento
             </div>
             <div class="">
-                <div *ngIf="isArticulo" class="row">
-                    <div class="form-group col-md-4">
-                        <label>Artículo</label>
-                        <input type="text" placeholder="Buscar artículo" [(ngModel)]="detalleMovimiento.articulo" [resultFormatter]="formatterArt" id="typeahead-focusArt"
-                            type="text" class="form-control" [ngbTypeahead]="searchArt" (focus)="focusArt$.next($event.target.value)"
-                            (click)="clickArt$.next($event.target.value)" #instanceNTAArt="ngbTypeahead" [inputFormatter]="formatterArt"
-                            name="arti_search" />
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Cantidad</label>
-                        <input type="number" class="form-control"
-                        aria-label="Cantidad de articulos" name="cantidadArticulo"
-                        [(ngModel)]="detalleMovimiento.cantidad">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Precio unitario</label>
-                        <input type="number" class="form-control"
-                        aria-label="Precio unitario" name="precioArticulo"
-                        [(ngModel)]="detalleMovimiento.valor_unitario">
-                    </div>
-                </div>
-                <div *ngIf="isPresupuesto" class="row">
+                <div class="row">
                     <div class="form-group col-md-4">
                         <label>Presupuesto</label>
-                        <input type="text" placeholder="Buscar Presupuesto" [(ngModel)]="detalleMovimiento.presupuesto" [resultFormatter]="formatterPresup" id="typeahead-focusPresup"
+                        <input type="text" placeholder="Buscar Presupuesto" [(ngModel)]="detalleMovimiento?.presupuesto" [resultFormatter]="formatterPresup" id="typeahead-focusPresup"
                             type="text" class="form-control" [ngbTypeahead]="searchPresup" (focus)="focusPresup$.next($event.target.value)"
                             (click)="clickPresup$.next($event.target.value)" #instanceNTAPresup="ngbTypeahead" [inputFormatter]="formatterPresup"
                             name="presup_search" />
                     </div>
-                    <div *ngIf="detalleMovimiento.presupuesto" class="col">
+                    <div *ngIf="detalleMovimiento?.presupuesto" class="col">
                         <p>Cliente </p>
                         <label>{{detalleMovimiento.presupuesto.cliente}} </label>
                     </div>
-                    <div *ngIf="detalleMovimiento.presupuesto" class="col">
+                    <div *ngIf="detalleMovimiento?.presupuesto" class="col">
                         <p>Motor </p>
-                        <label>{{detalleMovimiento.presupuesto.motor}} </label>
+                        <label>{{detalleMovimiento?.presupuesto.motor}} </label>
                     </div>
                     <div *ngIf="detalleMovimiento.presupuesto" class="col">
                         <p>Importe </p>
-                        <label>{{detalleMovimiento.presupuesto.importe}} </label>
+                        <label>{{detalleMovimiento?.presupuesto.importe}} </label>
                     </div>
-                    <div *ngIf="detalleMovimiento.presupuesto" class="col">
+                    <div *ngIf="detalleMovimiento?.presupuesto" class="col">
                         <p>Fecha </p>
                         <label>{{detalleMovimiento.presupuesto.fecha}} </label>
-                    </div>
-                </div>
-                <div *ngIf="isPedidoRepuesto" class="row">
-                    <div class="form-group col-md-4">
-                        <label>Pedido</label>
-                        <input type="text" placeholder="Buscar Pedido" [(ngModel)]="detalleMovimiento.pedidoRepuesto" [resultFormatter]="formatterPedido" id="typeahead-focusPedido"
-                            type="text" class="form-control" [ngbTypeahead]="searchPedido" (focus)="focusPedido$.next($event.target.value)"
-                            (click)="clickPedido$.next($event.target.value)" #instanceNTAPedido="ngbTypeahead" [inputFormatter]="formatterPedido"
-                            name="pedido_search" />
-                    </div>
-                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
-                        <p>Cliente </p>
-                        <label>{{detalleMovimiento.pedidoRepuesto.cliente}} </label>
-                    </div>
-                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
-                        <p>Motor </p>
-                        <label>{{detalleMovimiento.pedidoRepuesto.motor}} </label>
-                    </div>
-                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
-                        <p>Tipo </p>
-                        <label>{{detalleMovimiento.pedidoRepuesto.tipo}} </label>
-                    </div>
-                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
-                        <p>Presupuesto Nº </p>
-                        <label>{{detalleMovimiento.pedidoRepuesto.presupuestoId}} </label>
-                    </div>
-                    <div *ngIf="detalleMovimiento.pedidoRepuesto" class="col">
-                        <p>Fecha </p>
-                        <label>{{detalleMovimiento.pedidoRepuesto.fecha}} </label>
                     </div>
                 </div>
             </div>
