@@ -18,6 +18,7 @@ import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { map } from 'rxjs-compat/operator/map';
+import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 
 @Injectable()
 export class PresupuestosService {
@@ -29,6 +30,7 @@ export class PresupuestosService {
     private urlPresupuestoRepuestos = '/getRepuestos';
     private urlPresupuestoClientesAll = '/getAllClientes';
     private urlEstadoPrespuestoCreado = '/getEstadoPresupuestoCreado';
+    private urlPresupuestoCostoRepuesto = '/getCostoRepuestoPresupuesto/';
     private urlSavePresupuesto = '/save';
     private urlAceptarPresupuesto = '/aceptar';
     private urlCancelarPresupuesto = '/cancelar';
@@ -81,6 +83,11 @@ export class PresupuestosService {
             datos.idCilindrada
         }&idAplicacion=${datos.idAplicacion}&idTiposPartesMotores=${datos.idTiposPartesMotores}`;
         return this.http.get<CostoOperacion[]>(urlLlamada);
+    }
+
+    findCostoRepuestoPresupuesto(presupuestoId): Observable<CostoRepuesto[]> {
+        const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoCostoRepuesto}${presupuestoId}`;
+        return this.http.get<CostoRepuesto[]>(urlLlamada);
     }
 
     buscarEstadoCreado(): Observable<EstadoPresupuesto> {

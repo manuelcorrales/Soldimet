@@ -9,10 +9,6 @@
                 <dd>
                     <span>{{movimiento.fecha}}</span>
                 </dd>
-                <dt><span>Hora</span></dt>
-                <dd>
-                    <span>{{movimiento.hora}}</span>
-                </dd>
                 <dt><span>Importe</span></dt>
                 <dd>
                     <span>{{movimiento.importe}}</span>
@@ -41,12 +37,6 @@
                 <dd>
                     <div *ngIf="movimiento.empleado">
                         <a [routerLink]="['/empleado', movimiento.empleado?.id, 'view']">{{movimiento.empleado?.usuario}}</a>
-                    </div>
-                </dd>
-                <dt><span>Persona</span></dt>
-                <dd>
-                    <div *ngIf="movimiento.persona">
-                        <a [routerLink]="['/persona', movimiento.persona?.id, 'view']">{{movimiento.persona?.nombre}}</a>
                     </div>
                 </dd>
                 <dt><span>Caja</span></dt>

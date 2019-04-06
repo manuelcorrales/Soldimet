@@ -26,10 +26,6 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="hora" type="datetime">
-                <constraints nullable="false" />
-            </column>
-
             <column name="importe" type="${floatType}">
                 <constraints nullable="false" />
             </column>
@@ -54,10 +50,6 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="persona_id" type="bigint">
-                <constraints nullable="false" />
-            </column>
-
             <column name="caja_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -70,7 +62,6 @@
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="movimiento" columnName="hora" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

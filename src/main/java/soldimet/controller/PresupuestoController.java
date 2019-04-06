@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import soldimet.domain.Aplicacion;
 import soldimet.domain.Cliente;
+import soldimet.domain.CobranzaOperacion;
+import soldimet.domain.CostoRepuesto;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
@@ -79,6 +81,12 @@ public class PresupuestoController {
     public List<CostoOperacion> buscarOperacionesPresupuesto(DTODatosMotorCUHacerPresupuesto dtoDatosMotor) {
 
         return expertoPresupuesto.buscarOperacionesPresupuesto(dtoDatosMotor);
+    }
+
+    @GetMapping("/getCostoRepuestoPresupuesto/{presupuestoId}")
+    public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(@PathVariable("presupuestoId") Long presupuestoId) {
+
+        return expertoPresupuesto.buscarCostoRepuestoPresupuesto(presupuestoId);
     }
 
     @GetMapping("/getClientesByNombre/{nombreCliente}")

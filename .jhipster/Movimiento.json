@@ -29,15 +29,6 @@
             "otherEntityField": "usuario"
         },
         {
-            "relationshipName": "persona",
-            "otherEntityName": "persona",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombre"
-        },
-        {
             "relationshipName": "caja",
             "otherEntityName": "caja",
             "relationshipType": "many-to-one",
@@ -56,25 +47,12 @@
             "otherEntityField": "id",
             "ownerSide": true,
             "otherEntityRelationshipName": "movimiento"
-        },
-        {
-            "relationshipName": "detalleMovimiento",
-            "otherEntityName": "detalleMovimiento",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "movimiento"
         }
     ],
     "fields": [
         {
             "fieldName": "fecha",
             "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "hora",
-            "fieldType": "Instant",
             "fieldValidateRules": [
                 "required"
             ]

@@ -11,33 +11,28 @@ import { SubCategoriaService } from 'app/entities/sub-categoria';
 import { CategoriaPago, ICategoriaPago } from 'app/shared/model/categoria-pago.model';
 import { CategoriaPagoService } from 'app/entities/categoria-pago';
 import { Tarjeta, ITarjeta } from 'app/shared/model/tarjeta.model';
-import { TipoTarjeta, ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
+import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
 import { MedioDePago } from 'app/shared/model/medio-de-pago.model';
 import { TarjetaService } from 'app/entities/tarjeta';
 import { TipoTarjetaService } from 'app/entities/tipo-tarjeta';
 import { Banco, IBanco } from 'app/shared/model/banco.model';
 import { BancoService } from 'app/entities/banco';
-import { Articulo, IArticulo } from 'app/shared/model/articulo.model';
-import { ArticuloService } from 'app/entities/articulo';
+import { Articulo } from 'app/shared/model/articulo.model';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { PresupuestoService } from 'app/entities/presupuesto';
-import { PedidoRepuestoService } from 'app/entities/pedido-repuesto';
-import { IPresupuesto, Presupuesto } from 'app/shared/model/presupuesto.model';
-import { IPedidoRepuesto, PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
-import { PedidosService } from 'app/pedidos/pedidos-services';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { Observable, Subject, merge, Subscription } from 'rxjs';
-import { NgbTypeaheadConfig, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTypeaheadConfig, NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
 import { MedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
 import { MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
-import { MovimientoPedido } from 'app/shared/model/movimiento-pedido.model';
-import { MovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
+import { MovimientoPresupuesto, IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
 import { DetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 import { JhiEventManager, JhiAlertService } from '../../../../../../node_modules/ng-jhipster';
 import { Router, ActivatedRoute } from '../../../../../../node_modules/@angular/router';
 import { CajaService } from 'app/entities/caja';
+import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
+import { MovimientoPresupuestoUpdateComponent, MovimientoPresupuestoService } from 'app/entities/movimiento-presupuesto';
 
 @Component({
     selector: 'jhi-nuevo-movimiento',
@@ -62,8 +57,8 @@ export class NuevoMovimientoComponent implements OnInit {
     articulos: Articulo[];
     pedidos: DtoPedidoCabecera[];
     presupuestos: DtoPresupuestoCabeceraComponent[];
+    costoRepuestos: CostoRepuesto[];
     isSaving = false;
-    detalleMovimiento: DetalleMovimiento;
 
     categoria: CategoriaPago;
     tipoMovimiento: TipoMovimiento;
@@ -96,21 +91,17 @@ export class NuevoMovimientoComponent implements OnInit {
         private tarjetaService: TarjetaService,
         private tipoTarjetaService: TipoTarjetaService,
         private bancoService: BancoService,
-        private articuloService: ArticuloService,
         private _presupuestosService: PresupuestosService,
-        private pedidoService: PedidosService,
         private eventManager: JhiEventManager,
         private route: ActivatedRoute,
         private router: Router,
         private jhiAlertService: JhiAlertService,
-        private oldCajaService: CajaService
+        private oldCajaService: CajaService,
+        private movimientoPresupuestoService: MovimientoPresupuestoService
     ) {}
 
     ngOnInit() {
-        this.medioDePago = new MedioDePago();
-        this.medioPagoCheque = new MedioDePagoCheque();
-        this.medioPagoTarjeta = new MedioDePagoTarjeta();
-        this.movimiento = new Movimiento();
+        this.consultarMovimiento();
         this.tipoMovimientoService.query().subscribe(
             (res: HttpResponse<ITipoMovimiento[]>) => {
                 this.tipos = res.body;
@@ -162,6 +153,23 @@ export class NuevoMovimientoComponent implements OnInit {
                 (res: HttpErrorResponse) => console.log(res.message)
             );
         }
+    }
+
+    buscarCostoRepuestos(event: NgbTypeaheadSelectItemEvent) {
+        const presupuestoId = event.item.codigo;
+        this._presupuestosService.findCostoRepuestoPresupuesto(presupuestoId).subscribe(
+            (costoRepuestos: CostoRepuesto[]) => {
+                this.costoRepuestos = costoRepuestos;
+            },
+            (res: HttpErrorResponse) => console.log(res.message)
+        );
+    }
+
+    agregarRepuestoADetalle(costoRepuesto: CostoRepuesto) {
+        if (!this.movimientoPresupuesto.costoRepuestos) {
+            this.movimientoPresupuesto.costoRepuestos = [];
+        }
+        this.movimientoPresupuesto.costoRepuestos.push(costoRepuesto);
     }
 
     formatterconcepto = result => result.nombreSubCategoria;
@@ -233,17 +241,16 @@ export class NuevoMovimientoComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        console.log(this.movimiento);
         this.subscribeToSaveResponse(this.cajaService.saveMovimiento(this.movimiento));
     }
 
     private subscribeToSaveResponse(result: Observable<Movimiento>) {
-        result.subscribe((res: Movimiento) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res));
+        result.subscribe((res: Movimiento) => this.onSaveMovimientoSuccess(res), (res: Response) => this.onSaveError(res));
     }
 
-    private onSaveSuccess(result: Movimiento) {
-        this.isSaving = false;
-        this.jhiAlertService.success('Se ha creado el movimiento número: ' + result.id, { toast: true }, '.right');
-        this.router.navigate(['/cajas']);
+    private onSaveMovimientoSuccess(result: Movimiento) {
+        this.saveDetalles(result);
     }
 
     private onSaveError(error) {
@@ -262,8 +269,7 @@ export class NuevoMovimientoComponent implements OnInit {
                 this.registerChangeInMovimientos();
             } else {
                 this.movimiento = new Movimiento();
-                this.detalleMovimiento = new DetalleMovimiento();
-                this.movimiento.detalleMovimientos = [this.detalleMovimiento];
+                this.movimientoPresupuesto = new MovimientoPresupuesto();
                 this.medioDePago = new MedioDePago();
                 this.medioPagoCheque = new MedioDePagoCheque();
                 this.medioPagoTarjeta = new MedioDePagoTarjeta();
@@ -281,4 +287,32 @@ export class NuevoMovimientoComponent implements OnInit {
         });
     }
     createConcepto() {}
+
+    saveDetalles(movimiento: Movimiento) {
+        this.movimientoPresupuesto.movimiento = movimiento;
+        this.saveDetalle();
+        this.jhiAlertService.success('Se ha creado el movimiento número: ' + movimiento.id, { toast: true }, '.right');
+        this.router.navigate(['/cajas']);
+    }
+
+    saveDetalle() {
+        if (this.movimientoPresupuesto.id !== undefined) {
+            this.subscribeToSaveDetalleResponse(this.movimientoPresupuestoService.update(this.movimientoPresupuesto));
+        } else {
+            this.subscribeToSaveDetalleResponse(this.movimientoPresupuestoService.create(this.movimientoPresupuesto));
+        }
+    }
+
+    subscribeToSaveDetalleResponse(result: Observable<HttpResponse<IMovimientoPresupuesto>>) {
+        result.subscribe(
+            (res: HttpResponse<IMovimientoPresupuesto>) => this.onSaveDetalleSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError(res)
+        );
+    }
+
+    private onSaveDetalleSuccess(detalle: IMovimientoPresupuesto) {
+        this.isSaving = false;
+        this.jhiAlertService.success('Se ha creado el movimiento número: ' + detalle.movimiento.id, { toast: true }, '.right');
+        this.router.navigate(['/cajas']);
+    }
 }

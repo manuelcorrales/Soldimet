@@ -2,6 +2,7 @@ package soldimet.service.expertos;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,7 @@ import soldimet.domain.Cliente;
 import soldimet.domain.CobranzaOperacion;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
+import soldimet.domain.CostoRepuesto;
 import soldimet.domain.DetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPersona;
@@ -425,5 +427,29 @@ public class ExpertoPresupuesto {
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         return presupuesto.getEstadoPresupuesto().getNombreEstado()
                 .equals(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+    }
+
+    public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(Long presupuestoId) {
+
+        List<CostoRepuesto> costosRepuestos = new ArrayList<CostoRepuesto>();
+        try {
+
+            Presupuesto presupuesto = presupuestoRepository.getOne(presupuestoId);
+            PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
+            String estadoPedido = pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado();
+            if (Arrays.asList(globales.PEDIDOS_POSIBLES_DE_MOVIMIENTOS).contains(estadoPedido)) {
+                for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
+                    for (CostoRepuesto CostoRepuesto : detallePedido.getCostoRepuestos()) {
+                        costosRepuestos.add(CostoRepuesto);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return costosRepuestos;
+        }
+
     }
 }

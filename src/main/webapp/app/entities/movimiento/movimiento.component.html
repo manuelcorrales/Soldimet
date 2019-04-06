@@ -16,14 +16,12 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="fecha"><span>Fecha</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="hora"><span>Hora</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="importe"><span>Importe</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="descuento"><span>Descuento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estado.nombreEstado"><span>Estado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="tipoMovimiento.nombreTipoMovimiento"><span>Tipo Movimiento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="empleado.usuario"><span>Empleado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="persona.nombre"><span>Persona</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="caja.id"><span>Caja</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="subCategoria.nombreSubCategoria"><span>Sub Categoria</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="medioDePago.id"><span>Medio De Pago</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -34,7 +32,6 @@
             <tr *ngFor="let movimiento of movimientos ;trackBy: trackId">
                 <td><a [routerLink]="['/movimiento', movimiento.id, 'view' ]">{{movimiento.id}}</a></td>
                 <td>{{movimiento.fecha | date:'mediumDate'}}</td>
-                <td>{{movimiento.hora | date:'medium'}}</td>
                 <td>{{movimiento.importe}}</td>
                 <td>{{movimiento.descuento}}</td>
                 <td>{{movimiento.observaciones}}</td>
@@ -51,11 +48,6 @@
                 <td>
                     <div *ngIf="movimiento.empleado">
                         <a [routerLink]="['../empleado', movimiento.empleado?.id, 'view' ]" >{{movimiento.empleado?.usuario}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="movimiento.persona">
-                        <a [routerLink]="['../persona', movimiento.persona?.id, 'view' ]" >{{movimiento.persona?.nombre}}</a>
                     </div>
                 </td>
                 <td>

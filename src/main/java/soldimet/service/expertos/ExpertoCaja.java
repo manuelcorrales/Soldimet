@@ -108,6 +108,7 @@ public class ExpertoCaja {
     public Movimiento guardarNuevoMovimiento(Movimiento movimientoDto) {
         try {
 
+            System.out.println(movimientoDto);
             Caja cajaDia = cajaRepository.findByFecha(LocalDate.now());
             EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
@@ -115,23 +116,9 @@ public class ExpertoCaja {
             movimientoDto.setCaja(cajaDia);
             movimientoDto.setFecha(LocalDate.now());
             movimientoDto.setEstado(estadoAlta);
-
-            // update detalle movimiento params
-            for (DetalleMovimiento detalle: movimientoDto.getDetalleMovimientos()) {
-                TipoDetalleMovimiento tipoDetalleMovimiento = detalle.getTipoDetalleMovimiento();
-                switch (tipoDetalleMovimiento.getNombreTipoDetalle()) {
-                    case Globales.nombre_Tipo_Detalle_Articulo: {
-                        detalle.setArticulo(articuloRepository.findById(detalle.getArticulo().getId()).get());
-                    }
-                    case Globales.nombre_Tipo_Detalle_Presupuesto: {
-                        detalle.setPresupuesto(presupuestoRepository.findById(detalle.getPresupuesto().getId()).get());
-                    }
-                    case Globales.nombre_Tipo_Detalle_Proveedor: {
-                        detalle.setPedidoRepuesto(pedidoRepuestoRepository.findById(detalle.getPedidoRepuesto().getId()).get());
-                    }
-                    default: throw new Exception("No se pudo encontrar el detalle para " + detalle.getTipoDetalleMovimiento().getNombreTipoDetalle());
-                }
-            }
+            movimientoDto.setTipoMovimiento(null);
+            movimientoDto.setImporte(null);
+            movimientoDto.setEmpleado(null);
 
             Movimiento newMovimiento = movimientoRepository.save(movimientoDto);
 

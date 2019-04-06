@@ -8,6 +8,14 @@ public class Globales {
     //-----------------------SIMBOLO REEMPLAZAR---------------------
     public final String SIMBOLO_REEMPLAZAR = "%";
 
+    //---------------------ESTADOS AGRUPADOS----------------------
+    public final String  PEDIDOS_POSIBLES_DE_MOVIMIENTOS [] = {
+        this.NOMBRE_ESTADO_PEDIDO_PEDIDO,
+        this.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL,
+        this.NOMBRE_ESTADO_PEDIDO_RECIBIDO,
+        this.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL
+    };
+
     //-------------------------ESTADOS------------------------
     public final String NOMBRE_ESTADO_ARTICULO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA = "Alta";

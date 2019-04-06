@@ -26,12 +26,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="empleado"/>
 
-        <addForeignKeyConstraint baseColumnNames="persona_id"
-                                 baseTableName="movimiento"
-                                 constraintName="fk_movimiento_persona_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="persona"/>
-
         <addForeignKeyConstraint baseColumnNames="caja_id"
                                  baseTableName="movimiento"
                                  constraintName="fk_movimiento_caja_id"

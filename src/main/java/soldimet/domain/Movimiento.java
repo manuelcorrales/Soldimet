@@ -1,16 +1,12 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -31,10 +27,6 @@ public class Movimiento implements Serializable {
     private LocalDate fecha;
 
     @NotNull
-    @Column(name = "hora", nullable = false)
-    private Instant hora;
-
-    @NotNull
     @DecimalMin(value = "0")
     @Column(name = "importe", nullable = false)
     private Float importe;
@@ -46,40 +38,24 @@ public class Movimiento implements Serializable {
     private String observaciones;
 
     @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties("")
     private EstadoMovimiento estado;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
     private TipoMovimiento tipoMovimiento;
 
     @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties("")
     private Empleado empleado;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties("")
-    private Persona persona;
-
     @ManyToOne
-    @JsonIgnoreProperties("")
     private Caja caja;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
     private SubCategoria subCategoria;
 
     @OneToOne
     @JoinColumn(unique = true)
     private MedioDePago medioDePago;
-
-    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
-    @JoinColumn(name= "movimiento")
-    private Set<DetalleMovimiento> detalleMovimientos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -101,19 +77,6 @@ public class Movimiento implements Serializable {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
-    }
-
-    public Instant getHora() {
-        return hora;
-    }
-
-    public Movimiento hora(Instant hora) {
-        this.hora = hora;
-        return this;
-    }
-
-    public void setHora(Instant hora) {
-        this.hora = hora;
     }
 
     public Float getImporte() {
@@ -194,19 +157,6 @@ public class Movimiento implements Serializable {
         this.empleado = empleado;
     }
 
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public Movimiento persona(Persona persona) {
-        this.persona = persona;
-        return this;
-    }
-
-    public void setPersona(Persona persona) {
-        this.persona = persona;
-    }
-
     public Caja getCaja() {
         return caja;
     }
@@ -245,29 +195,6 @@ public class Movimiento implements Serializable {
     public void setMedioDePago(MedioDePago medioDePago) {
         this.medioDePago = medioDePago;
     }
-
-    public Set<DetalleMovimiento> getDetalleMovimientos() {
-        return detalleMovimientos;
-    }
-
-    public Movimiento detalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
-        this.detalleMovimientos = detalleMovimientos;
-        return this;
-    }
-
-    public Movimiento addDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimientos.add(detalleMovimiento);
-        return this;
-    }
-
-    public Movimiento removeDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimientos.remove(detalleMovimiento);
-        return this;
-    }
-
-    public void setDetalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
-        this.detalleMovimientos = detalleMovimientos;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -295,7 +222,6 @@ public class Movimiento implements Serializable {
         return "Movimiento{" +
             "id=" + getId() +
             ", fecha='" + getFecha() + "'" +
-            ", hora='" + getHora() + "'" +
             ", importe=" + getImporte() +
             ", descuento=" + getDescuento() +
             ", observaciones='" + getObservaciones() + "'" +
