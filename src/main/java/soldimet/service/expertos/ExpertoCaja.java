@@ -7,12 +7,14 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.joda.time.DateTimeUtils;
 import org.joda.time.Days;
 import org.joda.time.MonthDay;
 import org.joda.time.Months;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +24,26 @@ import soldimet.converter.CajaConverter;
 import soldimet.domain.Articulo;
 import soldimet.domain.Caja;
 import soldimet.domain.DetalleMovimiento;
+import soldimet.domain.Empleado;
 import soldimet.domain.EstadoMovimiento;
+import soldimet.domain.MedioDePago;
 import soldimet.domain.Movimiento;
+import soldimet.domain.Persona;
 import soldimet.domain.TipoDetalleMovimiento;
+import soldimet.domain.User;
 import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CajaRepository;
+import soldimet.repository.EmpleadoRepository;
 import soldimet.repository.EstadoMovimientoRepository;
+import soldimet.repository.MedioDePagoRepository;
 import soldimet.repository.MovimientoRepository;
 import soldimet.repository.PedidoRepuestoRepository;
+import soldimet.repository.PersonaRepository;
 import soldimet.repository.PresupuestoRepository;
+import soldimet.repository.UserRepository;
+import soldimet.security.DomainUserDetailsService;
+import soldimet.security.SecurityUtils;
+import soldimet.service.UserService;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMensajeCerrarCaja;
 
@@ -44,6 +57,12 @@ import soldimet.service.dto.DTOMensajeCerrarCaja;
 public class ExpertoCaja {
 
     private final Logger log = LoggerFactory.getLogger(ExpertoCaja.class);
+
+    @Autowired
+    private PersonaRepository personaRepository;
+
+    @Autowired
+    private EmpleadoRepository empleadoRepository;
 
     @Autowired
     private CajaRepository cajaRepository;
@@ -61,13 +80,7 @@ public class ExpertoCaja {
     private CajaConverter cajaConverter;
 
     @Autowired
-    private PresupuestoRepository presupuestoRepository;
-
-    @Autowired
-    private PedidoRepuestoRepository pedidoRepuestoRepository;
-
-    @Autowired
-    private ArticuloRepository articuloRepository;
+    private MedioDePagoRepository medioDePagoRepository;
 
     public ExpertoCaja() {
 
@@ -108,17 +121,24 @@ public class ExpertoCaja {
     public Movimiento guardarNuevoMovimiento(Movimiento movimientoDto) {
         try {
 
-            System.out.println(movimientoDto);
             Caja cajaDia = cajaRepository.findByFecha(LocalDate.now());
+            if (cajaDia == null) {
+                cajaDia = this.AbrirCaja();
+            }
+
             EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
             // update movimiento params
             movimientoDto.setCaja(cajaDia);
             movimientoDto.setFecha(LocalDate.now());
             movimientoDto.setEstado(estadoAlta);
-            movimientoDto.setTipoMovimiento(null);
-            movimientoDto.setImporte(null);
-            movimientoDto.setEmpleado(null);
+            movimientoDto.setEmpleado(this.getCurrentEmployee());
+
+            // Guardo el medio de pago creado con los datos puntuales de este movimiento
+            // antes de guardar el movimiento
+            MedioDePago medioDePagoMovimiento = movimientoDto.getMedioDePago();
+            medioDePagoMovimiento = medioDePagoRepository.save(medioDePagoMovimiento);
+            movimientoDto.setMedioDePago(medioDePagoMovimiento);
 
             Movimiento newMovimiento = movimientoRepository.save(movimientoDto);
 
@@ -129,5 +149,32 @@ public class ExpertoCaja {
             return null;
         }
     }
+
+    private Caja AbrirCaja() {
+
+        //creo una fecha actual y le doy formato (puede ser yyyy/MM/dd HH:mm:ss)
+        Caja cajaDiaHoy = new Caja();
+
+        cajaDiaHoy.setFecha(LocalDate.now());
+
+        cajaDiaHoy.setHoraApertura(Instant.now());
+
+        //GUARDO LA CAJA
+        return cajaRepository.save(cajaDiaHoy);
+
+
+    }
+
+    private Empleado getCurrentEmployee() {
+
+        List<Persona> personas = personaRepository.findByUserIsCurrentUser();
+        if (personas.isEmpty()) {
+            return null;
+        }
+
+        Empleado empleado = empleadoRepository.findByPersona(personas.get(0));
+        return empleado;
+    }
+
 
 }

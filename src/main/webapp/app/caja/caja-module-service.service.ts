@@ -22,8 +22,10 @@ export class CajaModuleServiceService {
         return this.http.get<DtoCajaDiaComponent>(urlLlamada);
     }
 
-    saveMovimiento(presupuesto: Movimiento): Observable<Movimiento> {
+    saveMovimiento(movimiento: Movimiento): Observable<Movimiento> {
         const urlLlamada = `${this.resourceUrlCaja}${this.urlSaveMovimiento}`;
-        return this.http.post<Movimiento>(urlLlamada, presupuesto);
+        console.log(urlLlamada);
+        console.log(movimiento);
+        return this.http.post<Movimiento>(urlLlamada, movimiento);
     }
 }

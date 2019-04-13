@@ -241,7 +241,6 @@ export class NuevoMovimientoComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        console.log(this.movimiento);
         this.subscribeToSaveResponse(this.cajaService.saveMovimiento(this.movimiento));
     }
 

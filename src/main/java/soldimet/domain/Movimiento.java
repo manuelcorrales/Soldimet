@@ -37,27 +37,31 @@ public class Movimiento implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.EAGER)
     private EstadoMovimiento estado;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @NotNull
     private TipoMovimiento tipoMovimiento;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.EAGER)
     private Empleado empleado;
 
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     private Caja caja;
 
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     private SubCategoria subCategoria;
 
-    @OneToOne
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private MedioDePago medioDePago;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -195,7 +199,8 @@ public class Movimiento implements Serializable {
     public void setMedioDePago(MedioDePago medioDePago) {
         this.medioDePago = medioDePago;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -219,12 +224,7 @@ public class Movimiento implements Serializable {
 
     @Override
     public String toString() {
-        return "Movimiento{" +
-            "id=" + getId() +
-            ", fecha='" + getFecha() + "'" +
-            ", importe=" + getImporte() +
-            ", descuento=" + getDescuento() +
-            ", observaciones='" + getObservaciones() + "'" +
-            "}";
+        return "Movimiento{" + "id=" + getId() + ", fecha='" + getFecha() + "'" + ", importe=" + getImporte()
+                + ", descuento=" + getDescuento() + ", observaciones='" + getObservaciones() + "'" + "}";
     }
 }
