@@ -25,11 +25,11 @@ public class MedioDePago implements Serializable {
     @NotNull
     private FormaDePago formaDePago;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.ALL}, optional = true)
     @JoinColumn(unique = true, nullable = true)
     private MedioDePagoCheque medioDePagoCheque;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.ALL}, optional = true)
     @JoinColumn(unique = true, nullable = true)
     private MedioDePagoTarjeta medioDePagoTarjeta;
 

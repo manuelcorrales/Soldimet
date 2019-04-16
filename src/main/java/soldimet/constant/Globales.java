@@ -59,6 +59,10 @@ public class Globales {
     //---------------------------------Tipo Articulos------------------------
     public final String nombre_Tipo_Repuesto_Repuesto = "Repuesto";
 
+    //---------------------------------Tipo Movimientos------------------------
+    public final String nombre_Tipo_Movimiento_Ingreso = "Ingreso";
+    public final String nombre_Tipo_Movimiento_Egreso = "Egreso";
+
     //---------------------------------Tipo Detalles------------------------
     public static final String nombre_Tipo_Detalle_Articulo = "Articulo";
     public static final String nombre_Tipo_Detalle_Proveedor = "Proveedor";

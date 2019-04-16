@@ -3,6 +3,8 @@ package soldimet.repository;
 import java.time.LocalDate;
 import java.util.List;
 import soldimet.domain.Caja;
+import soldimet.domain.Sucursal;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +19,12 @@ public interface CajaRepository extends JpaRepository<Caja, Long>, JpaSpecificat
     public List<Caja> findByFechaGreaterThanEqual(LocalDate fecha);
 
     public Caja findByFecha(LocalDate fechaInicio);
+
+    public Caja findByFechaAndSucursal(LocalDate date, Sucursal sucursal);
+
+    // public Caja findByFechaGreaterThanEqualAndSucursal(LocalDate date, Sucursal sucursal);
+
+    public Caja findTopByOrderByIdDesc();
+
+    public Caja findFirstByFechaGreaterThanEqualAndSucursal(LocalDate fecha, Sucursal sucursal);
 }

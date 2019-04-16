@@ -24,8 +24,6 @@ export class CajaModuleServiceService {
 
     saveMovimiento(movimiento: Movimiento): Observable<Movimiento> {
         const urlLlamada = `${this.resourceUrlCaja}${this.urlSaveMovimiento}`;
-        console.log(urlLlamada);
-        console.log(movimiento);
         return this.http.post<Movimiento>(urlLlamada, movimiento);
     }
 }

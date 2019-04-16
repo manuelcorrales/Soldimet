@@ -35,7 +35,7 @@ public class MovimientoPresupuesto implements Serializable {
     private Movimiento movimiento;
 
     @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch= FetchType.EAGER)
-    @JoinColumn(name= "movimientoPresupuesto")
+    @JoinColumn(name= "movimientoPresupuesto", nullable=true)
     private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

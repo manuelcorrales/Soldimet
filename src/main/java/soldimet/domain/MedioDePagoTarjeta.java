@@ -26,12 +26,12 @@ public class MedioDePagoTarjeta implements Serializable {
     @Column(name = "ultimos_4", nullable = false)
     private String ultimos4;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
     @JsonIgnoreProperties("")
     private Tarjeta tarjeta;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
     @JsonIgnoreProperties("")
     private TipoTarjeta tipoTarjeta;

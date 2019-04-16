@@ -22,10 +22,10 @@ public class MedioDePagoCheque implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "fecha_recibo")
+    @Column(name = "fecha_recibo", columnDefinition = "DATE")
     private LocalDate fechaRecibo;
 
-    @Column(name = "fecha_cobro")
+    @Column(name = "fecha_cobro", columnDefinition = "DATE")
     private LocalDate fechaCobro;
 
     @NotNull
@@ -35,7 +35,7 @@ public class MedioDePagoCheque implements Serializable {
     @Column(name = "numero_cuenta")
     private String numeroCuenta;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
     @JsonIgnoreProperties("")
     private Banco banco;

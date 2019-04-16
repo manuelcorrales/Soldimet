@@ -29,13 +29,13 @@ public class PedidoRepuesto implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha_creacion", nullable = false)
+    @Column(name = "fecha_creacion", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaCreacion;
 
-    @Column(name = "fecha_pedido")
+    @Column(name = "fecha_pedido", columnDefinition = "DATE")
     private LocalDate fechaPedido;
 
-    @Column(name = "fecha_recibo")
+    @Column(name = "fecha_recibo", columnDefinition = "DATE")
     private LocalDate fechaRecibo;
 
     @ManyToOne(optional = false)

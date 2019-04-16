@@ -25,10 +25,10 @@ public class ListaPrecioDesdeHasta implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha_desde", nullable = false)
+    @Column(name = "fecha_desde", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaDesde;
 
-    @Column(name = "fecha_hasta")
+    @Column(name = "fecha_hasta", columnDefinition = "DATE")
     private LocalDate fechaHasta;
 
     @OneToMany(cascade = { CascadeType.ALL })

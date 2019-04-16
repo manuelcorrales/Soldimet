@@ -34,13 +34,13 @@ public class Presupuesto implements Serializable {
     @Column(name = "descuento")
     private Float descuento;
 
-    @Column(name = "fecha_creacion")
+    @Column(name = "fecha_creacion", columnDefinition = "DATE")
     private LocalDate fechaCreacion;
 
-    @Column(name = "fecha_aceptado")
+    @Column(name = "fecha_aceptado", columnDefinition = "DATE")
     private LocalDate fechaAceptado;
 
-    @Column(name = "fecha_entregado")
+    @Column(name = "fecha_entregado", columnDefinition = "DATE")
     private LocalDate fechaEntregado;
 
     @NotNull
@@ -51,11 +51,11 @@ public class Presupuesto implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @NotNull
     private Cliente cliente;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @NotNull
     private EstadoPresupuesto estadoPresupuesto;
 
@@ -63,10 +63,10 @@ public class Presupuesto implements Serializable {
     @JoinColumn(name= "presupuesto")
     private Set<DetallePresupuesto> detallePresupuestos = new HashSet<DetallePresupuesto>();
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch= FetchType.EAGER)
     private DocumentationType documentType;
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE , CascadeType.REFRESH}, fetch= FetchType.EAGER)
     private Sucursal sucursal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

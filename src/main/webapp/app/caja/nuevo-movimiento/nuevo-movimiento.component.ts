@@ -33,6 +33,8 @@ import { Router, ActivatedRoute } from '../../../../../../node_modules/@angular/
 import { CajaService } from 'app/entities/caja';
 import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { MovimientoPresupuestoUpdateComponent, MovimientoPresupuestoService } from 'app/entities/movimiento-presupuesto';
+import { PresupuestoService } from 'app/entities/presupuesto';
+import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 
 @Component({
     selector: 'jhi-nuevo-movimiento',
@@ -97,6 +99,7 @@ export class NuevoMovimientoComponent implements OnInit {
         private router: Router,
         private jhiAlertService: JhiAlertService,
         private oldCajaService: CajaService,
+        private presupuestoService: PresupuestoService,
         private movimientoPresupuestoService: MovimientoPresupuestoService
     ) {}
 
@@ -290,11 +293,22 @@ export class NuevoMovimientoComponent implements OnInit {
     saveDetalles(movimiento: Movimiento) {
         this.movimientoPresupuesto.movimiento = movimiento;
         this.saveDetalle();
-        this.jhiAlertService.success('Se ha creado el movimiento número: ' + movimiento.id, { toast: true }, '.right');
-        this.router.navigate(['/cajas']);
     }
 
     saveDetalle() {
+        if (this.movimientoPresupuesto.presupuesto) {
+            this.presupuestoService
+                .find(this.movimientoPresupuesto.presupuesto.codigo)
+                .subscribe((presupuesto: HttpResponse<IPresupuesto>) => {
+                    this.movimientoPresupuesto.presupuesto = presupuesto.body;
+                    this._saveMovimientoPresupuesto();
+                });
+        } else {
+            this.onSaveFinalSuccess();
+        }
+    }
+
+    _saveMovimientoPresupuesto() {
         if (this.movimientoPresupuesto.id !== undefined) {
             this.subscribeToSaveDetalleResponse(this.movimientoPresupuestoService.update(this.movimientoPresupuesto));
         } else {
@@ -304,14 +318,14 @@ export class NuevoMovimientoComponent implements OnInit {
 
     subscribeToSaveDetalleResponse(result: Observable<HttpResponse<IMovimientoPresupuesto>>) {
         result.subscribe(
-            (res: HttpResponse<IMovimientoPresupuesto>) => this.onSaveDetalleSuccess(res.body),
+            (res: HttpResponse<IMovimientoPresupuesto>) => this.onSaveFinalSuccess(),
             (res: HttpErrorResponse) => this.onSaveError(res)
         );
     }
 
-    private onSaveDetalleSuccess(detalle: IMovimientoPresupuesto) {
+    private onSaveFinalSuccess() {
         this.isSaving = false;
-        this.jhiAlertService.success('Se ha creado el movimiento número: ' + detalle.movimiento.id, { toast: true }, '.right');
+        this.jhiAlertService.success('Se ha creado el movimiento número: ' + this.movimiento.id, { toast: true }, '.right');
         this.router.navigate(['/cajas']);
     }
 }
