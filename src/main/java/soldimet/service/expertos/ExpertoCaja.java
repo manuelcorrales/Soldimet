@@ -128,9 +128,9 @@ public class ExpertoCaja {
             medioDePagoMovimiento = medioDePagoRepository.save(medioDePagoMovimiento);
             movimientoDto.setMedioDePago(medioDePagoMovimiento);
 
-            Movimiento newMovimiento = movimientoRepository.save(movimientoDto);
+            this.actualizarSaldoCaja(cajaDia, movimientoDto);
 
-            this.actualizarSaldoCaja(cajaDia, newMovimiento);
+            Movimiento newMovimiento = movimientoRepository.save(movimientoDto);
 
             return newMovimiento;
 
@@ -183,11 +183,14 @@ public class ExpertoCaja {
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {
         Float saldo = caja.getSaldo();
         if ( movimiento.getTipoMovimiento().getNombreTipoMovimiento().equals(globales.nombre_Tipo_Movimiento_Ingreso)) {
-            saldo += movimiento.getImporte();
+            saldo = saldo + movimiento.getImporte();
         } else {
-            saldo -= movimiento.getImporte();
+            saldo = saldo - movimiento.getImporte();
         }
-        return cajaRepository.save(caja);
+
+        caja.setSaldo(saldo);
+
+        return caja;
     }
 
 

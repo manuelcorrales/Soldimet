@@ -125,8 +125,8 @@ public class ExpertoPedidos {
 
             if (estadoPedidoRepuesto != null) {
                 pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
-                pedidoRepuestoRepository.save(pedidoRepuesto);
-                detallePedido = detallePedidoRepository.getOne(detallePedido.getId());
+                pedidoRepuesto = pedidoRepuestoRepository.save(pedidoRepuesto);
+                detallePedido = pedidoRepuesto.filterDetallePedido(detallePedido);
             } else {
                 detallePedido = detallePedidoRepository.save(detallePedido);
             }

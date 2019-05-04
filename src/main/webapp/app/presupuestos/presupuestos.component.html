@@ -86,7 +86,7 @@
                                 ngbTooltip="Entregar trabajo">
                                 <i class="fa fa-check-square"></i>
                             </button>
-                            <button class="btn btn-danger" *ngIf="presupuesto.estado != 'Cancelado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"
+                            <button class="btn btn-danger" *ngIf="presupuesto.estado == 'Aceptado' || presupuesto.estado == 'Creado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Eliminar">
                                 <i class="fa fa-close"></i>
                             </button>

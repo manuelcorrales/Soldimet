@@ -7,16 +7,46 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import soldimet.constant.Globales;
 import soldimet.domain.Caja;
+import soldimet.domain.CategoriaPago;
+import soldimet.domain.CostoRepuesto;
 import soldimet.domain.DetalleMovimiento;
+import soldimet.domain.FormaDePago;
+import soldimet.domain.MedioDePago;
+import soldimet.domain.MedioDePagoCheque;
+import soldimet.domain.MedioDePagoTarjeta;
 import soldimet.domain.Movimiento;
+import soldimet.domain.MovimientoArticulo;
+import soldimet.domain.MovimientoPedido;
+import soldimet.domain.MovimientoPresupuesto;
+import soldimet.repository.CategoriaPagoRepository;
+import soldimet.repository.MovimientoArticuloRepository;
+import soldimet.repository.MovimientoPedidoRepository;
+import soldimet.repository.MovimientoPresupuestoRepository;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMovimientoCUConsultarMovimientos;
 
 @Component
 public class CajaConverter {
+
+    @Autowired
+    private Globales globales;
+
+    @Autowired
+    private MovimientoArticuloRepository movimientoArticuloRepository;
+
+    @Autowired
+    private MovimientoPedidoRepository movimientoPedidoRepository;
+
+    @Autowired
+    private MovimientoPresupuestoRepository movimientoPresupuestoRepository;
+
+    @Autowired
+    private CategoriaPagoRepository categoriaPagoRepository;
 
 
     public DTOCajaCUConsultarMovimientos cajaACajaMovimiento(Caja caja, List<Movimiento> movimientos) {
@@ -33,11 +63,13 @@ public class CajaConverter {
     public DTOMovimientoCUConsultarMovimientos movimientoToDtoMovimientoCabecera( Movimiento movimiento) {
         DTOMovimientoCUConsultarMovimientos newDto = new DTOMovimientoCUConsultarMovimientos();
         newDto.setCategoria(movimiento.getSubCategoria().getNombreSubCategoria());
-        newDto.setDescripcion("Sin descrpicion por ahora");
+        newDto.setDescripcion(this.getDescripcionMovimiento(movimiento));
         newDto.setFormaDePago(movimiento.getMedioDePago().getFormaDePago().getNombreFormaDePago());
+        newDto.setFormaDePagoTip(this.formaDePagoTip(movimiento.getMedioDePago()));
         newDto.setMonto(movimiento.getImporte());
         newDto.setMovimientoId(movimiento.getId());
         newDto.setTipoMovimiento(movimiento.getTipoMovimiento().getNombreTipoMovimiento());
+        newDto.setEstado(movimiento.getEstado().getNombreEstado());
 
         return newDto;
     }
@@ -49,5 +81,63 @@ public class CajaConverter {
         }
 
         return listaDto;
+    }
+
+    private String getDescripcionMovimiento(Movimiento movimiento) {
+        String descripcion = "";
+
+        MovimientoArticulo movimientoArticulo = movimientoArticuloRepository.findByMovimiento(movimiento);
+        if (movimientoArticulo != null) {
+            descripcion = movimientoArticulo.getCantidad() + " " + movimientoArticulo.getArticulo().getDescripcion();
+        }
+
+        MovimientoPedido movimientoPedido = movimientoPedidoRepository.findByMovimiento(movimiento);
+        if (movimientoPedido != null) {
+            descripcion = "Nº pedido: " + movimientoPedido.getPedidoRepuesto().getId();
+        }
+
+        MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoRepository.findByMovimiento(movimiento);
+        if (movimientoPresupuesto != null) {
+            descripcion = "Nº presupuesto: " + movimientoPresupuesto.getPresupuesto().getId();
+            if (!movimientoPresupuesto.getCostoRepuestos().isEmpty()) {
+                descripcion = descripcion + " (";
+                for (CostoRepuesto costoRepuesto: movimientoPresupuesto.getCostoRepuestos()) {
+                    descripcion = descripcion + " " + costoRepuesto.getTipoRepuesto().getNombreTipoRepuesto();
+                }
+                descripcion = descripcion + ")";
+            }
+        }
+
+        if (descripcion == "" && movimiento.getObservaciones() != null) {
+            descripcion = movimiento.getObservaciones();
+        }
+
+        if (descripcion == "") {
+            CategoriaPago categoriaPago = categoriaPagoRepository.findBySubCategoriasContaining(movimiento.getSubCategoria());
+            if (categoriaPago != null) {
+                descripcion = categoriaPago.getNombreCategoriaPago();
+            }
+        }
+
+        return descripcion;
+    }
+
+    private String formaDePagoTip(MedioDePago medioDePago) {
+        String tip = null;
+        String formaDePago = medioDePago.getFormaDePago().getNombreFormaDePago();
+
+        if (formaDePago.equals(globales.NOMBRE_FORMA_DE_PAGO_EFECTIVO)) {
+            // No agrego más nada a la forma de pago
+        }
+        if (formaDePago.equals(globales.NOMBRE_FORMA_DE_PAGO_TARJETA)) {
+             MedioDePagoTarjeta medioDePagoTarjeta = medioDePago.getMedioDePagoTarjeta();
+            tip = medioDePagoTarjeta.getTarjeta().getNombreTarjeta() + " " + medioDePagoTarjeta.getTipoTarjeta() + "(" + medioDePagoTarjeta.getUltimos4()+")";
+        }
+        if (formaDePago.equals(globales.NOMBRE_FORMA_DE_PAGO_CHEQUE)) {
+            MedioDePagoCheque medioDePagoCheque = medioDePago.getMedioDePagoCheque();
+            tip = medioDePagoCheque.getBanco().getNombreBanco() + " (" + medioDePagoCheque.getNumeroCheque() + ") " + medioDePagoCheque.getFechaCobro().toString();
+        }
+
+        return tip;
     }
 }

@@ -227,4 +227,5 @@ public class Movimiento implements Serializable {
         return "Movimiento{" + "id=" + getId() + ", fecha='" + getFecha() + "'" + ", importe=" + getImporte()
                 + ", descuento=" + getDescuento() + ", observaciones='" + getObservaciones() + "'" + "}";
     }
+
 }

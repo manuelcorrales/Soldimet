@@ -7,6 +7,7 @@ export class DtoCajaDiaComponent {
         public estadoCaja: string,
         public totalCaja: Number,
         public totalMensual: Number,
+        public estado: string,
         public movimientos: DtoMovimientoCabecera[]
     ) {}
 }
@@ -18,6 +19,7 @@ export class DtoMovimientoCabecera {
         public categoria: string,
         public monto: Number,
         public tipoMovimiento: string,
+        public formaDePagoTip: string,
         public formaDePago: string
     ) {}
 }

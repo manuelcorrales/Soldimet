@@ -28,29 +28,42 @@
     <br/>
     <div class="container-fluid">
         <div class="row">
-            <table class="table table-hover">
+            <table class="table table-hover table-bordered table-sm">
                 <thead>
                     <tr>
                         <th scope="col" class="text-center">Número</th>
                         <th scope="col" class="text-center">Descripción</th>
-                        <th scope="col" class="text-center">Categoría</th>
+                        <th scope="col" class="text-center">Concepto</th>
                         <th scope="col" class="text-center">Forma de pago</th>
                         <th scope="col" class="text-center">Monto</th>
                         <th scope="col" class="text-center">Operaciones</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="cajaDia">
-                    <tr *ngFor="let Movimiento of cajaDia.movimientos">
-                        <th class="text-center">
+                    <tr [ngClass]="{
+                        'table-success': movimiento.tipoMovimiento=='Ingreso',
+                        'table-danger': movimiento.tipoMovimiento=='Egreso'
+                    }"
+                    *ngFor="let movimiento of cajaDia.movimientos">
+                        <th class="text-center text-dark">
                             {{movimiento.movimientoId}}
                         </th>
-                        <td class="text-center">{{movimiento.descripcion}}</td>
-                        <td class="text-center">{{movimiento.categoria}}</td>
-                        <td class="text-center">{{movimiento.formaDePago}}</td>
-                        <td class="text-center">{{movimiento.monto}}</td>
+                        <td class="text-center text-dark">{{movimiento.descripcion}}</td>
+                        <td class="text-center text-dark">{{movimiento.categoria}}</td>
+                        <td class="text-center text-dark">
+                            <span *ngIf="movimiento?.formaDePagoTip" container="body" placement="top" ngbTooltip="{{movimiento.formaDePagoTip}}"></span>
+                            {{movimiento.formaDePago}}
+                            <span *ngIf="movimiento.formaDePago == 'Tarjeta'"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                            </span>
+                            <span *ngIf="movimiento.formaDePago == 'Efectivo'"><i class="fa fa-money" aria-hidden="true"></i>
+                            </span>
+                            <span *ngIf="movimiento.formaDePago == 'Cheque'" ><i class="fa fa-list-alt" aria-hidden="true"></i>
+                            </span>
+                        </td>
+                        <td class="text-center text-dark">${{movimiento.monto}}</td>
                         <td>
-                            <div class="btn-group flex-btn-group-container">
-                                <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
+                            <div class="text-center">
+                                <div *ngIf="movimiento?.estado== 'Alta'">
                                     <button type="submit" replaceUrl="true" class="btn btn-primary btn-sm">
                                         <span class="fa fa-pencil"></span>
                                         <span class="d-none d-md-inline">Editar</span>

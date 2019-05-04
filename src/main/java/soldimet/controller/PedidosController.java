@@ -2,6 +2,8 @@ package soldimet.controller;
 
 import java.util.List;
 
+import com.codahale.metrics.annotation.Timed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import soldimet.domain.CobranzaOperacion;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.PedidoRepuesto;
-import soldimet.domain.Proveedor;
 import soldimet.service.dto.DTOPedidoCabecera;
 import soldimet.service.dto.DTOProveedor;
 import soldimet.service.expertos.ExpertoPedidos;
-
-import com.codahale.metrics.annotation.Timed;
 
 @RestController
 @RequestMapping("/api/pedidos")

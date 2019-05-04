@@ -291,18 +291,23 @@ export class NuevoMovimientoComponent implements OnInit {
     createConcepto() {}
 
     saveDetalles(movimiento: Movimiento) {
+        console.log(movimiento);
         this.movimientoPresupuesto.movimiento = movimiento;
         this.saveDetalle();
     }
 
     saveDetalle() {
         if (this.movimientoPresupuesto.presupuesto) {
-            this.presupuestoService
-                .find(this.movimientoPresupuesto.presupuesto.codigo)
-                .subscribe((presupuesto: HttpResponse<IPresupuesto>) => {
+            this.presupuestoService.find(this.movimientoPresupuesto.presupuesto.codigo).subscribe(
+                (presupuesto: HttpResponse<IPresupuesto>) => {
+                    console.log(presupuesto);
                     this.movimientoPresupuesto.presupuesto = presupuesto.body;
                     this._saveMovimientoPresupuesto();
-                });
+                },
+                error => {
+                    console.log(error);
+                }
+            );
         } else {
             this.onSaveFinalSuccess();
         }

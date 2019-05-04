@@ -340,8 +340,10 @@ public class ExpertoPresupuesto {
 
     public DTOPresupuesto cancelarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
+
             EstadoPresupuesto estadoPresupuestoCancelado = estadoPresupuestoRepository
                     .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO);
+            this.puedeCancelarPresupuesto(dtoPresupuesto);
             Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoPresupuestoCancelado);
 
             cancelarPedido(editado);
@@ -350,15 +352,16 @@ public class ExpertoPresupuesto {
 
             return presupuestoConverter.convertirEntidadAModelo(editado);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    private void cancelarMovimientos(Presupuesto presupuesto) {
+    private void cancelarMovimientos(Presupuesto presupuesto) throws Exception{
         // falta cancelar los movimientos cuando los tenga :)
     }
 
-    private void cancelarPedido(Presupuesto presupuesto) {
+    private void cancelarPedido(Presupuesto presupuesto){
         EstadoPedidoRepuesto estadoPedidoRepuestoCancelado = estadoPedidoRepuestoRepository
                 .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_CANCELADO);
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
@@ -402,7 +405,7 @@ public class ExpertoPresupuesto {
     }
 
     private Presupuesto cambiarEstadoPresupuesto(DTOPresupuesto dtoPresupuesto, EstadoPresupuesto estado)
-            throws NullPointerException {
+            throws Exception {
         Presupuesto presupuesto = presupuestoRepository.findById(dtoPresupuesto.getCodigo()).get();
         presupuesto.setEstadoPresupuesto(estado);
         Presupuesto editado = presupuestoRepository.save(presupuesto);
@@ -413,11 +416,9 @@ public class ExpertoPresupuesto {
         Boolean puedeTerminar = true;
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
-        for (DetallePedido detallePedido : pedido.getDetallePedidos()) {
-            if (!detallePedido.getEstadoDetallePedido().getNombreEstado()
-                    .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
-                puedeTerminar = false;
-            }
+        if (pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO ||
+        pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_CANCELADO ) {
+            puedeTerminar = false;
         }
         return puedeTerminar;
 
@@ -428,6 +429,14 @@ public class ExpertoPresupuesto {
         return presupuesto.getEstadoPresupuesto().getNombreEstado()
                 .equals(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
     }
+
+    private void puedeCancelarPresupuesto(DTOPresupuesto dto) throws Exception {
+        Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
+        if (!Arrays.asList(globales.PRESUPUESTO_POSIBLE_CANCELAR).contains(presupuesto.getEstadoPresupuesto().getNombreEstado())) {
+            throw new Exception();
+        }
+    }
+
 
     public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(Long presupuestoId) {
 

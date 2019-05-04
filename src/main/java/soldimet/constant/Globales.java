@@ -16,6 +16,12 @@ public class Globales {
         this.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL
     };
 
+    public final String  PRESUPUESTO_POSIBLE_CANCELAR [] = {
+        this.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO,
+        this.NOMBRE_ESTADO_PRESUPUESTO_CREADO,
+        this.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO
+    };
+
     //-------------------------ESTADOS------------------------
     public final String NOMBRE_ESTADO_ARTICULO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA = "Alta";
@@ -69,6 +75,11 @@ public class Globales {
     public static final String nombre_Tipo_Detalle_Presupuesto = "Presupuesto";
     //----------------------------Nombre proveedor----------------------
     public final String PAZZAGLIA = "PAZZAGLIA S.A.";
+
+    //----------------------------Nombre proveedor----------------------
+    public final String NOMBRE_FORMA_DE_PAGO_EFECTIVO = "Efectivo";
+    public final String NOMBRE_FORMA_DE_PAGO_TARJETA = "Tarjega";
+    public final String NOMBRE_FORMA_DE_PAGO_CHEQUE = "Cheque";
 
 
     //--------------------MENSAJES CAJA-------------------------

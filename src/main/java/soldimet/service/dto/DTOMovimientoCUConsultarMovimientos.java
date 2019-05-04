@@ -13,9 +13,39 @@ public class DTOMovimientoCUConsultarMovimientos {
     private Float monto;
     private String tipoMovimiento;
     private String formaDePago;
+    private String estado;
+    private String formaDePagoTip;
 
 	public DTOMovimientoCUConsultarMovimientos(){
 
+    }
+
+    /**
+     * @return the formaDePagoTip
+     */
+    public String getFormaDePagoTip() {
+        return formaDePagoTip;
+    }
+
+    /**
+     * @param formaDePagoTip the formaDePagoTip to set
+     */
+    public void setFormaDePagoTip(String formaDePagoTip) {
+        this.formaDePagoTip = formaDePagoTip;
+    }
+
+    /**
+     * @return the estado
+     */
+    public String getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     /**

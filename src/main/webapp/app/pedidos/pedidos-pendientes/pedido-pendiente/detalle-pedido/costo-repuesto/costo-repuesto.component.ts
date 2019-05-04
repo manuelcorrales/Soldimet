@@ -153,10 +153,15 @@ export class CostoRepuestoComponent implements OnInit {
     }
 
     updatePedidoDetalle() {
-        this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(nuevoCosto => {
-            this.costoRepuesto = nuevoCosto;
-            this.isSaving = false;
-        });
+        this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(
+            nuevoCosto => {
+                this.costoRepuesto = nuevoCosto;
+                this.isSaving = false;
+            },
+            error => {
+                console.log(error);
+            }
+        );
     }
 
     preUpdateCostoRepuesto() {

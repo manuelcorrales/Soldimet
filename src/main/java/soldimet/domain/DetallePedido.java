@@ -104,9 +104,7 @@ public class DetallePedido implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+
         DetallePedido detallePedido = (DetallePedido) o;
         if (detallePedido.getId() == null || getId() == null) {
             return false;
@@ -127,20 +125,12 @@ public class DetallePedido implements Serializable {
     }
 
     public CostoRepuesto filterCostoRepuesto(CostoRepuesto costoRepuesto) {
-        System.out.println("id: "+costoRepuesto.getId());
 
         for(CostoRepuesto costoInList: this.getCostoRepuestos()) {
-            if (
-                (costoInList.getArticulo().getId() == costoRepuesto.getArticulo().getId() )&&
-                (costoInList.getProveedor().getId() == costoRepuesto.getProveedor().getId()) &&
-                (costoInList.getTipoRepuesto().getId() == costoRepuesto.getTipoRepuesto().getId()) &&
-                (costoInList.getValor() == costoRepuesto.getValor())
-            ){
-                System.out.println("id: "+costoInList.getId());
+            if (costoInList.equals(costoRepuesto)){
                 return costoInList;
             }
         }
-        System.out.println("no encuentro otro");
         return null;
     }
 }

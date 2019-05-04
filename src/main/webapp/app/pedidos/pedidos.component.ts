@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, Injectable } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, Injectable, ViewContainerRef } from '@angular/core';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { EventEmitter } from 'events';
@@ -13,41 +13,8 @@ import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
     styles: ['.pedidos-style.css']
 })
 export class PedidosComponent implements OnInit {
-    columns = [
-        {
-            prop: 'id',
-            name: 'Nº Pedido',
-            draggable: false
-        },
-        {
-            name: 'Fecha',
-            draggable: false
-        },
-        {
-            name: 'PresupuestoId',
-            draggable: false
-        },
-        {
-            name: 'Cliente',
-            draggable: false
-        },
-        {
-            name: 'Motor',
-            draggable: false
-        },
-        {
-            name: 'Tipo',
-            draggable: false
-        },
-        {
-            name: 'Estado',
-            draggable: false
-        },
-        {
-            name: 'Acciones',
-            draggable: false
-        }
-    ];
+    @ViewChild('toastr', { read: ViewContainerRef })
+    toastrContainer: ViewContainerRef;
 
     pedidos: DtoPedidoCabecera[];
 
