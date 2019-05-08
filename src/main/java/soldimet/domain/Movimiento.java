@@ -1,16 +1,12 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -27,47 +23,45 @@ public class Movimiento implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha", nullable = false, columnDefinition = "DATE")
     private LocalDate fecha;
-
-    @NotNull
-    @Column(name = "hora", nullable = false)
-    private Instant hora;
 
     @NotNull
     @DecimalMin(value = "0")
     @Column(name = "importe", nullable = false)
     private Float importe;
 
-    @ManyToOne(optional = false)
-    @NotNull
+    @Column(name = "descuento")
+    private Float descuento;
+
+    @Column(name = "observaciones")
+    private String observaciones;
+
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.EAGER)
     private EstadoMovimiento estado;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    private FormaDePago formaDePago;
-
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @NotNull
     private TipoMovimiento tipoMovimiento;
 
-    @OneToMany
-    @JoinColumn(name= "movimiento")
-    @JsonIgnore
-    private Set<DetalleMovimiento> detalleMovimientos = new HashSet<>();
-
-    @ManyToOne(optional = false)
-    @NotNull
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.EAGER)
     private Empleado empleado;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    private Persona persona;
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    private Caja caja;
 
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     private SubCategoria subCategoria;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JoinColumn(unique = true)
+    private MedioDePago medioDePago;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -89,19 +83,6 @@ public class Movimiento implements Serializable {
         this.fecha = fecha;
     }
 
-    public Instant getHora() {
-        return hora;
-    }
-
-    public Movimiento hora(Instant hora) {
-        this.hora = hora;
-        return this;
-    }
-
-    public void setHora(Instant hora) {
-        this.hora = hora;
-    }
-
     public Float getImporte() {
         return importe;
     }
@@ -113,6 +94,32 @@ public class Movimiento implements Serializable {
 
     public void setImporte(Float importe) {
         this.importe = importe;
+    }
+
+    public Float getDescuento() {
+        return descuento;
+    }
+
+    public Movimiento descuento(Float descuento) {
+        this.descuento = descuento;
+        return this;
+    }
+
+    public void setDescuento(Float descuento) {
+        this.descuento = descuento;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public Movimiento observaciones(String observaciones) {
+        this.observaciones = observaciones;
+        return this;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public EstadoMovimiento getEstado() {
@@ -128,19 +135,6 @@ public class Movimiento implements Serializable {
         this.estado = estadoMovimiento;
     }
 
-    public FormaDePago getFormaDePago() {
-        return formaDePago;
-    }
-
-    public Movimiento formaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-        return this;
-    }
-
-    public void setFormaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-    }
-
     public TipoMovimiento getTipoMovimiento() {
         return tipoMovimiento;
     }
@@ -152,29 +146,6 @@ public class Movimiento implements Serializable {
 
     public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
-    }
-
-    public Set<DetalleMovimiento> getDetalleMovimientos() {
-        return detalleMovimientos;
-    }
-
-    public Movimiento detalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
-        this.detalleMovimientos = detalleMovimientos;
-        return this;
-    }
-
-    public Movimiento addDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimientos.add(detalleMovimiento);
-        return this;
-    }
-
-    public Movimiento removeDetalleMovimiento(DetalleMovimiento detalleMovimiento) {
-        this.detalleMovimientos.remove(detalleMovimiento);
-        return this;
-    }
-
-    public void setDetalleMovimientos(Set<DetalleMovimiento> detalleMovimientos) {
-        this.detalleMovimientos = detalleMovimientos;
     }
 
     public Empleado getEmpleado() {
@@ -190,17 +161,17 @@ public class Movimiento implements Serializable {
         this.empleado = empleado;
     }
 
-    public Persona getPersona() {
-        return persona;
+    public Caja getCaja() {
+        return caja;
     }
 
-    public Movimiento persona(Persona persona) {
-        this.persona = persona;
+    public Movimiento caja(Caja caja) {
+        this.caja = caja;
         return this;
     }
 
-    public void setPersona(Persona persona) {
-        this.persona = persona;
+    public void setCaja(Caja caja) {
+        this.caja = caja;
     }
 
     public SubCategoria getSubCategoria() {
@@ -215,7 +186,21 @@ public class Movimiento implements Serializable {
     public void setSubCategoria(SubCategoria subCategoria) {
         this.subCategoria = subCategoria;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public MedioDePago getMedioDePago() {
+        return medioDePago;
+    }
+
+    public Movimiento medioDePago(MedioDePago medioDePago) {
+        this.medioDePago = medioDePago;
+        return this;
+    }
+
+    public void setMedioDePago(MedioDePago medioDePago) {
+        this.medioDePago = medioDePago;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -239,11 +224,8 @@ public class Movimiento implements Serializable {
 
     @Override
     public String toString() {
-        return "Movimiento{" +
-            "id=" + getId() +
-            ", fecha='" + getFecha() + "'" +
-            ", hora='" + getHora() + "'" +
-            ", importe=" + getImporte() +
-            "}";
+        return "Movimiento{" + "id=" + getId() + ", fecha='" + getFecha() + "'" + ", importe=" + getImporte()
+                + ", descuento=" + getDescuento() + ", observaciones='" + getObservaciones() + "'" + "}";
     }
+
 }

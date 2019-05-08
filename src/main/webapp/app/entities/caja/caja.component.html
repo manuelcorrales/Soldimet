@@ -18,6 +18,10 @@
             <th jhiSortBy="fecha"><span>Fecha</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="horaApertura"><span>Hora Apertura</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="horaCierre"><span>Hora Cierre</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="saldo"><span>Saldo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="saldo_fisico"><span>Saldo Fisico</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sucursal.nombreSucursal"><span>Sucursal</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -27,6 +31,14 @@
                 <td>{{caja.fecha | date:'mediumDate'}}</td>
                 <td>{{caja.horaApertura | date:'medium'}}</td>
                 <td>{{caja.horaCierre | date:'medium'}}</td>
+                <td>{{caja.saldo}}</td>
+                <td>{{caja.observaciones}}</td>
+                <td>{{caja.saldo_fisico}}</td>
+                <td>
+                    <div *ngIf="caja.sucursal">
+                        <a [routerLink]="['../sucursal', caja.sucursal?.id, 'view' ]" >{{caja.sucursal?.nombreSucursal}}</a>
+                    </div>
+                </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

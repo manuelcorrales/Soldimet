@@ -51,22 +51,19 @@ export class MovimientoService {
 
     private convertDateFromClient(movimiento: IMovimiento): IMovimiento {
         const copy: IMovimiento = Object.assign({}, movimiento, {
-            fecha: movimiento.fecha != null && movimiento.fecha.isValid() ? movimiento.fecha.format(DATE_FORMAT) : null,
-            hora: movimiento.hora != null && movimiento.hora.isValid() ? movimiento.hora.toJSON() : null
+            fecha: movimiento.fecha != null && movimiento.fecha.isValid() ? movimiento.fecha.format(DATE_FORMAT) : null
         });
         return copy;
     }
 
     private convertDateFromServer(res: EntityResponseType): EntityResponseType {
         res.body.fecha = res.body.fecha != null ? moment(res.body.fecha) : null;
-        res.body.hora = res.body.hora != null ? moment(res.body.hora) : null;
         return res;
     }
 
     private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
         res.body.forEach((movimiento: IMovimiento) => {
             movimiento.fecha = movimiento.fecha != null ? moment(movimiento.fecha) : null;
-            movimiento.hora = movimiento.hora != null ? moment(movimiento.hora) : null;
         });
         return res;
     }

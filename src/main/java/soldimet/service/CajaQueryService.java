@@ -79,8 +79,17 @@ public class CajaQueryService extends QueryService<Caja> {
             if (criteria.getHoraCierre() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getHoraCierre(), Caja_.horaCierre));
             }
-            if (criteria.getMovimientoId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getMovimientoId(), Caja_.movimientos, Movimiento_.id));
+            if (criteria.getSaldo() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getSaldo(), Caja_.saldo));
+            }
+            if (criteria.getObservaciones() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getObservaciones(), Caja_.observaciones));
+            }
+            if (criteria.getSaldo_fisico() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getSaldo_fisico(), Caja_.saldo_fisico));
+            }
+            if (criteria.getSucursalId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getSucursalId(), Caja_.sucursal, Sucursal_.id));
             }
         }
         return specification;

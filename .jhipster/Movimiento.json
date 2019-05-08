@@ -11,15 +11,6 @@
             "otherEntityField": "nombreEstado"
         },
         {
-            "relationshipName": "formaDePago",
-            "otherEntityName": "formaDePago",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreFormaDePago"
-        },
-        {
             "relationshipName": "tipoMovimiento",
             "otherEntityName": "tipoMovimiento",
             "relationshipType": "many-to-one",
@@ -27,12 +18,6 @@
                 "required"
             ],
             "otherEntityField": "nombreTipoMovimiento"
-        },
-        {
-            "relationshipName": "detalleMovimiento",
-            "otherEntityName": "detalleMovimiento",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "movimiento"
         },
         {
             "relationshipName": "empleado",
@@ -44,32 +29,30 @@
             "otherEntityField": "usuario"
         },
         {
-            "relationshipName": "persona",
-            "otherEntityName": "persona",
+            "relationshipName": "caja",
+            "otherEntityName": "caja",
             "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombre"
+            "otherEntityField": "id"
         },
         {
             "relationshipName": "subCategoria",
             "otherEntityName": "subCategoria",
             "relationshipType": "many-to-one",
             "otherEntityField": "nombreSubCategoria"
+        },
+        {
+            "relationshipName": "medioDePago",
+            "otherEntityName": "medioDePago",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "movimiento"
         }
     ],
     "fields": [
         {
             "fieldName": "fecha",
             "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "hora",
-            "fieldType": "Instant",
             "fieldValidateRules": [
                 "required"
             ]
@@ -82,10 +65,19 @@
                 "min"
             ],
             "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "descuento",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "observaciones",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171214012446",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "movimiento",
     "jpaMetamodelFiltering": false,

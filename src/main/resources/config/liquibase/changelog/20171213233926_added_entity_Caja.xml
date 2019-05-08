@@ -34,6 +34,22 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="saldo" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="observaciones" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="saldo_fisico" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="sucursal_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="caja" columnName="hora_apertura" columnDataType="datetime"/>

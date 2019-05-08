@@ -26,10 +26,10 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha_vigencia_desde", nullable = false)
+    @Column(name = "fecha_vigencia_desde", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaVigenciaDesde;
 
-    @Column(name = "fecha_vigencia_hasta")
+    @Column(name = "fecha_vigencia_hasta", columnDefinition = "DATE")
     private LocalDate fechaVigenciaHasta;
 
     @NotNull

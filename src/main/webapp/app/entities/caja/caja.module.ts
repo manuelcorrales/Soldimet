@@ -6,18 +6,18 @@ import {
     CajaComponent,
     CajaDetailComponent,
     CajaUpdateComponent,
-    CajaDeleteDialogComponent,
     CajaDeletePopupComponent,
+    CajaDeleteDialogComponent,
     cajaRoute,
     cajaPopupRoute
-} from 'app/entities/caja';
+} from './';
 
 const ENTITY_STATES = [...cajaRoute, ...cajaPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [CajaComponent, CajaDetailComponent, CajaUpdateComponent, CajaDeleteDialogComponent, CajaDeletePopupComponent],
-    entryComponents: [CajaComponent, CajaUpdateComponent],
+    entryComponents: [CajaComponent, CajaUpdateComponent, CajaDeleteDialogComponent, CajaDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoldimetCajaModule {}

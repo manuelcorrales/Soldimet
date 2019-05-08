@@ -1,0 +1,43 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "banco",
+            "otherEntityName": "banco",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreBanco"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "fechaRecibo",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "fechaCobro",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "numeroCheque",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "numeroCuenta",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190401202736",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "medio_de_pago_cheque",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

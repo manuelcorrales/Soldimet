@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
+import { DtoCajaDiaComponent, DtoMovimientoCabecera } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
+import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
 
 @Component({
     selector: 'jhi-caja',
@@ -6,24 +8,28 @@ import { Component, OnInit } from '@angular/core';
     styles: []
 })
 export class CajaComponent implements OnInit {
-    columns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
-    rows = [
-        { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-        { name: 'Dany', gender: 'Male', company: 'KFC' },
-        { name: 'Molly', gender: 'Female', company: 'Burger King' }
-    ];
-    messages = {
-        // Message to show when array is presented
-        // but contains no values
-        emptyMessage: 'No data to display',
+    @ViewChild('toastr', { read: ViewContainerRef })
+    toastrContainer: ViewContainerRef;
 
-        // Footer total message
-        totalMessage: 'total'
-    };
-    limit = 25;
-    selectionType = 'single';
+    cajaDia: DtoCajaDiaComponent;
 
-    constructor() {}
+    constructor(private cajaService: CajaModuleServiceService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.cajaService.getMovimientosDia().subscribe((cajaDia: DtoCajaDiaComponent) => {
+            const movimientos = cajaDia.movimientos;
+            cajaDia.movimientos = movimientos.sort(this._sortMovimientos);
+            this.cajaDia = cajaDia;
+        });
+    }
+
+    _sortMovimientos(a: DtoMovimientoCabecera, b: DtoMovimientoCabecera) {
+        if (a.movimientoId > b.movimientoId) {
+            return -1;
+        }
+        if (a.movimientoId < b.movimientoId) {
+            return 1;
+        }
+        return 0;
+    }
 }

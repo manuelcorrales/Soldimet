@@ -1,0 +1,203 @@
+<form role="form" class="jh-create-entity" (ngSubmit)="guardarMovimiento()">
+    <div class="col-auto align-center container jh-card">
+        <div>
+            <div class="card-header text-white bg-info">
+                Nuevo Movimiento
+            </div>
+            <div class="row">
+                <div class="col">Fecha: 3/2/2019</div>
+                <div class="col">Sucursal: San martin</div>
+                <div class="col">Empleado: Paul Corrales</div>
+            </div>
+        </div>
+        <!-- Datos del movimiento-->
+        <div class="card jh-card border-info">
+            <div class="card-header card-header text-white bg-info mb-3">
+                Datos del movimiento
+            </div>
+            <div class="container-fluid row">
+                <div class="form-group col-md-3">
+                    <p>Tipo</p>
+                    <div class="form-check form-check-inline" *ngFor="let tipo of tipos">
+                        <input class="form-check-input" type="radio" id="tipo.id" [value]="tipo" name="tipoMovimiento" [(ngModel)]="tipoMovimiento">
+                        <label class="form-check-label">
+                            {{tipo.nombreTipoMovimiento}}
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Categoría</label>
+                    <select class="form-control" (change)="buscarSubCategorias()" [(ngModel)]="categoria" name="categoria">
+                        <option selected disabled>Elija una categoría</option>
+                        <option *ngFor="let categoria of categorias" [ngValue]="categoria">
+                            {{categoria.nombreCategoriaPago}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Concepto</label>
+                    <input type="text" [disabled]="!conceptos" placeholder="Buscar concepto" [(ngModel)]="concepto" [resultFormatter]="formatterconcepto"
+                        id="typeahead-focusconcepto" type="text" class="form-control" [ngbTypeahead]="searchconcepto" (focus)="focusconcepto$.next($event.target.value)"
+                        (click)="clickconcepto$.next($event.target.value)" #instanceNTAconcepto="ngbTypeahead" [inputFormatter]="formatterconcepto"
+                        name="concepto_search" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Importe</label>
+                    <input type="number" class="form-control" aria-label="Importe" [value]="movimiento.importe" [(ngModel)]="movimiento.importe"
+                        name="importe">
+                </div>
+            </div>
+        </div>
+        <!-- Detalle Movimiento-->
+        <div class="card jh-card border-info">
+            <div class="card-header card-header text-white bg-info mb-3">
+                Detalle Movimiento
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Presupuesto</label>
+                        <input type="text" placeholder="Buscar Presupuesto" [(ngModel)]="movimientoPresupuesto.presupuesto" [resultFormatter]="formatterPresup"
+                            id="typeahead-focusPresup" type="text" class="form-control" [ngbTypeahead]="searchPresup" (focus)="focusPresup$.next($event.target.value)"
+                            (click)="clickPresup$.next($event.target.value)" #instanceNTAPresup="ngbTypeahead" [inputFormatter]="formatterPresup"
+                            name="presup_search" (selectItem)="buscarCostoRepuestos($event)" />
+                    </div>
+                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                        <p>Cliente </p>
+                        <label>{{movimientoPresupuesto.presupuesto.cliente}} </label>
+                    </div>
+                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                        <p>Motor </p>
+                        <label>{{movimientoPresupuesto.presupuesto.motor}} </label>
+                    </div>
+                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                        <p>Importe </p>
+                        <label>{{movimientoPresupuesto.presupuesto.importe}} </label>
+                    </div>
+                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                        <p>Fecha </p>
+                        <label>{{movimientoPresupuesto.presupuesto.fecha}} </label>
+                    </div>
+                </div>
+                <div *ngIf="costoRepuestos" class="container-fluid">
+                    <label>Repuestos</label>
+                    <div class="row">
+                        <div class="col-md-3" *ngFor="let costoRepuesto of costoRepuestos">
+                            <input class="form-check-input" type="checkbox"
+                            [defaultValue]="false" id="{{costoRepuesto.id}}"
+                            name="{{costoRepuesto.tipoRepuesto.nombreTipoRepuesto}}"
+                            (click)="agregarRepuestoADetalle(costoRepuesto)">
+                            <label class="form-check-label" for="{{costoRepuesto.id}}">
+                                {{costoRepuesto.articulo.descripcion}}
+                            </label>
+                            <label class="form-check-label" for="{{costoRepuesto.id}}"> ${{costoRepuesto.valor}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Medio de pago-->
+        <div class="card jh-card border-info">
+            <div class="card-header card-header text-white bg-info mb-3">
+                Medio de pago
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label>Medio de pago</label>
+                    <select class="form-control" [(ngModel)]="formaDePago" name="formaDePago" (change)="buscarMedioDePagoData()">
+                        <option *ngFor="let medioPago of formasDePago" [ngValue]="medioPago">{{medioPago.nombreFormaDePago}}</option>
+                    </select>
+                </div>
+                <!-- Informacion del medio de pago-->
+                <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoEfectivo" class="row">
+                </div>
+                <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoTarjeta" class="row col">
+                    <div class="form-group col">
+                        <label>Tarjeta</label>
+                        <select class="form-control" [(ngModel)]="medioPagoTarjeta.tarjeta" name="tarjetaElegida">
+                            <option selected disabled>Indique nombre</option>
+                            <option *ngFor="let tarjeta of tarjetas" [ngValue]="tarjeta">
+                                {{tarjeta.nombreTarjeta}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col">
+                        <label>Tipo tarjeta</label>
+                        <select class="form-control" [(ngModel)]="medioPagoTarjeta.tipoTarjeta" name="tipoTarjeta">
+                            <option selected disabled>Indique tipo tarjeta</option>
+                            <option *ngFor="let tipoTarjeta of tipoTarjetas" [ngValue]="tipoTarjeta">
+                                {{tipoTarjeta.nombreTipoTarjeta}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Últimas 4</label>
+                        <input type="number" class="form-control" aria-label="Últimos 4 dígitos" name="ultimos_cuatro" min='0' max='9999' [(ngModel)]="medioPagoTarjeta.ultimos4">
+                    </div>
+                </div>
+                <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoChecke" class="col">
+                    <div class="row col">
+                        <div class="form-group col">
+                            <label>Número cheque</label>
+                            <input type="number" class="form-control" aria-label="numero_cheque" name="numero_cheque" [(ngModel)]="medioPagoCheque.numeroCheque">
+                        </div>
+                        <div class="form-group col">
+                            <label>Número cuenta</label>
+                            <input type="number" class="form-control" aria-label="numero_cuenta" name="numero_cuenta" [(ngModel)]="medioPagoCheque.numeroCuenta">
+                        </div>
+                        <div class="form-group col">
+                            <label>Banco</label>
+                            <select class="form-control" [(ngModel)]="medioPagoCheque.banco" name="banco">
+                                <option selected disabled>Elija el banco emisor</option>
+                                <option *ngFor="let banco of bancos" [ngValue]="banco">
+                                    {{banco.nombreBanco}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row col-md-8">
+                        <div class="form-group col">
+                                <label>Fecha recibo</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_recibo" [(ngModel)]="medioPagoCheque.fechaRecibo" ngbDatepicker
+                                    #d1="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                                <label>Fecha cobro</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_cobro" [(ngModel)]="medioPagoCheque.fechaCobro" ngbDatepicker
+                                    #d2="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Obervaciones-->
+        <div class="card jh-card border-info">
+            <div class="card-header card-header text-white bg-info mb-3">
+                Observaciones
+            </div>
+            <textarea class="form-control" name="observaciones" rows="5" [(ngModel)]="movimiento.observaciones" #observaciones='ngModel'></textarea>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="text-right">
+            <button [disabled]="isSaving" type="submit" class="btn btn-primary">
+                Crear
+            </button>
+            <button type="button" class="btn btn-danger" [routerLink]="['/cajas']">
+                Cancelar
+            </button>
+        </div>
+
+    </div>
+</form>

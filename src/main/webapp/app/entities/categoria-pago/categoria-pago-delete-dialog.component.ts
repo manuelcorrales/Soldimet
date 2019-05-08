@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ICategoriaPago } from 'app/shared/model/categoria-pago.model';
-import { CategoriaPagoService } from 'app/entities/categoria-pago/categoria-pago.service';
+import { CategoriaPagoService } from './categoria-pago.service';
 
 @Component({
     selector: 'jhi-categoria-pago-delete-dialog',

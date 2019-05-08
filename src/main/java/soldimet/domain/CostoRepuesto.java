@@ -1,12 +1,19 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 
 /**
  * A CostoRepuesto.
@@ -26,22 +33,19 @@ public class CostoRepuesto implements Serializable {
     @Column(name = "valor", nullable = false)
     private Float valor;
 
-    @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties("")
     private TipoRepuesto tipoRepuesto;
 
-    @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
-    @NotNull
-    @JsonIgnoreProperties("")
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     private Articulo articulo;
 
-    @ManyToOne( cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
+    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
+    @NotNull
     private Proveedor proveedor;
 
-    @ManyToOne(optional = false, cascade=CascadeType.DETACH, fetch=FetchType.EAGER)
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties("")
     private EstadoCostoRepuesto estado;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -124,9 +128,6 @@ public class CostoRepuesto implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
         CostoRepuesto costoRepuesto = (CostoRepuesto) o;
         if (costoRepuesto.getId() == null || getId() == null) {
             return false;
@@ -144,6 +145,8 @@ public class CostoRepuesto implements Serializable {
         return "CostoRepuesto{" +
             "id=" + getId() +
             ", valor=" + getValor() +
+            ", articulo=" + getArticulo() +
+            ", proveedor=" + getProveedor() +
             "}";
     }
 }

@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
 import { Principal } from 'app/core';
-import { MovimientoPresupuestoService } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto.service';
+import { MovimientoPresupuestoService } from './movimiento-presupuesto.service';
 
 @Component({
     selector: 'jhi-movimiento-presupuesto',

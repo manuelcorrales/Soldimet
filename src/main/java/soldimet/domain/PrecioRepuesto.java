@@ -22,7 +22,7 @@ public class PrecioRepuesto implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha", nullable = false, columnDefinition = "DATE")
     private LocalDate fecha;
 
     @DecimalMin(value = "0")

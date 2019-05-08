@@ -1,6 +1,6 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -8,8 +8,6 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -26,7 +24,7 @@ public class Caja implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha", nullable = false, columnDefinition = "DATE")
     private LocalDate fecha;
 
     @NotNull
@@ -36,10 +34,18 @@ public class Caja implements Serializable {
     @Column(name = "hora_cierre")
     private Instant horaCierre;
 
-    @OneToMany
-    @JoinColumn(name= "caja")
-    @JsonIgnore
-    private Set<Movimiento> movimientos = new HashSet<>();
+    @Column(name = "saldo")
+    private Float saldo;
+
+    @Column(name = "observaciones")
+    private String observaciones;
+
+    @Column(name = "saldo_fisico")
+    private Float saldo_fisico;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Sucursal sucursal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -89,27 +95,56 @@ public class Caja implements Serializable {
         this.horaCierre = horaCierre;
     }
 
-    public Set<Movimiento> getMovimientos() {
-        return movimientos;
+    public Float getSaldo() {
+        return saldo;
     }
 
-    public Caja movimientos(Set<Movimiento> movimientos) {
-        this.movimientos = movimientos;
+    public Caja saldo(Float saldo) {
+        this.saldo = saldo;
         return this;
     }
 
-    public Caja addMovimiento(Movimiento movimiento) {
-        this.movimientos.add(movimiento);
+    public void setSaldo(Float saldo) {
+        this.saldo = saldo;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public Caja observaciones(String observaciones) {
+        this.observaciones = observaciones;
         return this;
     }
 
-    public Caja removeMovimiento(Movimiento movimiento) {
-        this.movimientos.remove(movimiento);
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public Float getSaldo_fisico() {
+        return saldo_fisico;
+    }
+
+    public Caja saldo_fisico(Float saldo_fisico) {
+        this.saldo_fisico = saldo_fisico;
         return this;
     }
 
-    public void setMovimientos(Set<Movimiento> movimientos) {
-        this.movimientos = movimientos;
+    public void setSaldo_fisico(Float saldo_fisico) {
+        this.saldo_fisico = saldo_fisico;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
+    public Caja sucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
+        return this;
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -140,6 +175,9 @@ public class Caja implements Serializable {
             ", fecha='" + getFecha() + "'" +
             ", horaApertura='" + getHoraApertura() + "'" +
             ", horaCierre='" + getHoraCierre() + "'" +
+            ", saldo=" + getSaldo() +
+            ", observaciones='" + getObservaciones() + "'" +
+            ", saldo_fisico=" + getSaldo_fisico() +
             "}";
     }
 }

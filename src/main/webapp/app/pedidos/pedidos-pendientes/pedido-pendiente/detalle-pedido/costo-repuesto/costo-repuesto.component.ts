@@ -112,7 +112,7 @@ export class CostoRepuestoComponent implements OnInit {
             debounceTime(200),
             distinctUntilChanged()
         );
-        const clicksWithClosedPopup$ = this.clickProv$.pipe(filter(() => !this.instanceArt.isPopupOpen()));
+        const clicksWithClosedPopup$ = this.clickArt$.pipe(filter(() => !this.instanceArt.isPopupOpen()));
         const inputFocus$ = this.focusArt$;
 
         return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
@@ -130,7 +130,7 @@ export class CostoRepuestoComponent implements OnInit {
             debounceTime(200),
             distinctUntilChanged()
         );
-        const clicksWithClosedPopup$ = this.clickProv$.pipe(filter(() => !this.instanceMarca.isPopupOpen()));
+        const clicksWithClosedPopup$ = this.clickMarca$.pipe(filter(() => !this.instanceMarca.isPopupOpen()));
         const inputFocus$ = this.focusMarca$;
 
         return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
@@ -153,10 +153,15 @@ export class CostoRepuestoComponent implements OnInit {
     }
 
     updatePedidoDetalle() {
-        this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(nuevoCosto => {
-            this.costoRepuesto = nuevoCosto;
-            this.isSaving = false;
-        });
+        this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(
+            nuevoCosto => {
+                this.costoRepuesto = nuevoCosto;
+                this.isSaving = false;
+            },
+            error => {
+                console.log(error);
+            }
+        );
     }
 
     preUpdateCostoRepuesto() {

@@ -17,6 +17,24 @@
                 <dd>
                     <span>{{caja.horaCierre}}</span>
                 </dd>
+                <dt><span>Saldo</span></dt>
+                <dd>
+                    <span>{{caja.saldo}}</span>
+                </dd>
+                <dt><span>Observaciones</span></dt>
+                <dd>
+                    <span>{{caja.observaciones}}</span>
+                </dd>
+                <dt><span>Saldo Fisico</span></dt>
+                <dd>
+                    <span>{{caja.saldo_fisico}}</span>
+                </dd>
+                <dt><span>Sucursal</span></dt>
+                <dd>
+                    <div *ngIf="caja.sucursal">
+                        <a [routerLink]="['/sucursal', caja.sucursal?.id, 'view']">{{caja.sucursal?.nombreSucursal}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

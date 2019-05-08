@@ -9,24 +9,22 @@
                 <dd>
                     <span>{{movimiento.fecha}}</span>
                 </dd>
-                <dt><span>Hora</span></dt>
-                <dd>
-                    <span>{{movimiento.hora}}</span>
-                </dd>
                 <dt><span>Importe</span></dt>
                 <dd>
                     <span>{{movimiento.importe}}</span>
+                </dd>
+                <dt><span>Descuento</span></dt>
+                <dd>
+                    <span>{{movimiento.descuento}}</span>
+                </dd>
+                <dt><span>Observaciones</span></dt>
+                <dd>
+                    <span>{{movimiento.observaciones}}</span>
                 </dd>
                 <dt><span>Estado</span></dt>
                 <dd>
                     <div *ngIf="movimiento.estado">
                         <a [routerLink]="['/estado-movimiento', movimiento.estado?.id, 'view']">{{movimiento.estado?.nombreEstado}}</a>
-                    </div>
-                </dd>
-                <dt><span>Forma De Pago</span></dt>
-                <dd>
-                    <div *ngIf="movimiento.formaDePago">
-                        <a [routerLink]="['/forma-de-pago', movimiento.formaDePago?.id, 'view']">{{movimiento.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </dd>
                 <dt><span>Tipo Movimiento</span></dt>
@@ -41,16 +39,22 @@
                         <a [routerLink]="['/empleado', movimiento.empleado?.id, 'view']">{{movimiento.empleado?.usuario}}</a>
                     </div>
                 </dd>
-                <dt><span>Persona</span></dt>
+                <dt><span>Caja</span></dt>
                 <dd>
-                    <div *ngIf="movimiento.persona">
-                        <a [routerLink]="['/persona', movimiento.persona?.id, 'view']">{{movimiento.persona?.nombre}}</a>
+                    <div *ngIf="movimiento.caja">
+                        <a [routerLink]="['/caja', movimiento.caja?.id, 'view']">{{movimiento.caja?.id}}</a>
                     </div>
                 </dd>
                 <dt><span>Sub Categoria</span></dt>
                 <dd>
                     <div *ngIf="movimiento.subCategoria">
                         <a [routerLink]="['/sub-categoria', movimiento.subCategoria?.id, 'view']">{{movimiento.subCategoria?.nombreSubCategoria}}</a>
+                    </div>
+                </dd>
+                <dt><span>Medio De Pago</span></dt>
+                <dd>
+                    <div *ngIf="movimiento.medioDePago">
+                        <a [routerLink]="['/medio-de-pago', movimiento.medioDePago?.id, 'view']">{{movimiento.medioDePago?.id}}</a>
                     </div>
                 </dd>
             </dl>

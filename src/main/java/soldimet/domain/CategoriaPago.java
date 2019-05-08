@@ -1,10 +1,13 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -23,6 +26,11 @@ public class CategoriaPago implements Serializable {
     @NotNull
     @Column(name = "nombre_categoria_pago", nullable = false)
     private String nombreCategoriaPago;
+
+    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
+    @JoinColumn(name= "categoria_pago")
+    @JsonInclude
+    private Set<SubCategoria> subCategorias = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -44,6 +52,29 @@ public class CategoriaPago implements Serializable {
 
     public void setNombreCategoriaPago(String nombreCategoriaPago) {
         this.nombreCategoriaPago = nombreCategoriaPago;
+    }
+
+    public Set<SubCategoria> getSubCategorias() {
+        return subCategorias;
+    }
+
+    public CategoriaPago subCategorias(Set<SubCategoria> subCategorias) {
+        this.subCategorias = subCategorias;
+        return this;
+    }
+
+    public CategoriaPago addSubCategoria(SubCategoria subCategoria) {
+        this.subCategorias.add(subCategoria);
+        return this;
+    }
+
+    public CategoriaPago removeSubCategoria(SubCategoria subCategoria) {
+        this.subCategorias.remove(subCategoria);
+        return this;
+    }
+
+    public void setSubCategorias(Set<SubCategoria> subCategorias) {
+        this.subCategorias = subCategorias;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

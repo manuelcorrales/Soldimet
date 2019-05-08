@@ -8,6 +8,7 @@ import {
     SubCategoriaUpdateComponent,
     subCategoriaRoute,
     SubCategoriaDeletePopupComponent,
+    SubCategoriaDeleteDialogComponent,
     subCategoriaPopupRoute
 } from 'app/entities/sub-categoria';
 
@@ -15,7 +16,13 @@ const ENTITY_STATES = [...subCategoriaRoute, ...subCategoriaPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [SubCategoriaComponent, SubCategoriaDetailComponent, SubCategoriaDeletePopupComponent, SubCategoriaUpdateComponent],
+    declarations: [
+        SubCategoriaComponent,
+        SubCategoriaDetailComponent,
+        SubCategoriaDeletePopupComponent,
+        SubCategoriaDeleteDialogComponent,
+        SubCategoriaUpdateComponent
+    ],
     entryComponents: [SubCategoriaComponent, SubCategoriaUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

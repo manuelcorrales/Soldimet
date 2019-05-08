@@ -26,7 +26,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="movimiento_id" type="bigint">
-                <constraints unique="true" nullable="false" />
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_movimiento_presupuesto_movimiento_id" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>

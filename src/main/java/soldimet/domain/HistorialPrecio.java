@@ -22,7 +22,7 @@ public class HistorialPrecio implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha_historial", nullable = false)
+    @Column(name = "fecha_historial", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaHistorial;
 
     @OneToOne(optional = false)

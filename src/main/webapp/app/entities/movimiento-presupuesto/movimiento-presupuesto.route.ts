@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
-import { MovimientoPresupuestoService } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto.service';
-import { MovimientoPresupuestoComponent } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto.component';
-import { MovimientoPresupuestoDetailComponent } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto-detail.component';
-import { MovimientoPresupuestoUpdateComponent } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto-update.component';
-import { MovimientoPresupuestoDeletePopupComponent } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto-delete-dialog.component';
+import { MovimientoPresupuestoService } from './movimiento-presupuesto.service';
+import { MovimientoPresupuestoComponent } from './movimiento-presupuesto.component';
+import { MovimientoPresupuestoDetailComponent } from './movimiento-presupuesto-detail.component';
+import { MovimientoPresupuestoUpdateComponent } from './movimiento-presupuesto-update.component';
+import { MovimientoPresupuestoDeletePopupComponent } from './movimiento-presupuesto-delete-dialog.component';
 import { IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
 
 @Injectable({ providedIn: 'root' })

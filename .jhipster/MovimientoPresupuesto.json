@@ -20,11 +20,18 @@
             "otherEntityField": "id",
             "ownerSide": true,
             "otherEntityRelationshipName": "movimientoPresupuesto"
+        },
+        {
+            "relationshipName": "costoRepuesto",
+            "otherEntityName": "costoRepuesto",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "movimientoPresupuesto"
         }
     ],
     "fields": [],
     "changelogDate": "20180616212814",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "movimiento_presupuesto",
     "jpaMetamodelFiltering": false,

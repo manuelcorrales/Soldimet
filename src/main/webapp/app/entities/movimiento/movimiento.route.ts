@@ -6,11 +6,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Movimiento } from 'app/shared/model/movimiento.model';
-import { MovimientoService } from 'app/entities/movimiento/movimiento.service';
-import { MovimientoComponent } from 'app/entities/movimiento/movimiento.component';
-import { MovimientoDetailComponent } from 'app/entities/movimiento/movimiento-detail.component';
-import { MovimientoUpdateComponent } from 'app/entities/movimiento/movimiento-update.component';
-import { MovimientoDeletePopupComponent } from 'app/entities/movimiento/movimiento-delete-dialog.component';
+import { MovimientoService } from './movimiento.service';
+import { MovimientoComponent } from './movimiento.component';
+import { MovimientoDetailComponent } from './movimiento-detail.component';
+import { MovimientoUpdateComponent } from './movimiento-update.component';
+import { MovimientoDeletePopupComponent } from './movimiento-delete-dialog.component';
 import { IMovimiento } from 'app/shared/model/movimiento.model';
 
 @Injectable({ providedIn: 'root' })

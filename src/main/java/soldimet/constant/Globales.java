@@ -8,6 +8,20 @@ public class Globales {
     //-----------------------SIMBOLO REEMPLAZAR---------------------
     public final String SIMBOLO_REEMPLAZAR = "%";
 
+    //---------------------ESTADOS AGRUPADOS----------------------
+    public final String  PEDIDOS_POSIBLES_DE_MOVIMIENTOS [] = {
+        this.NOMBRE_ESTADO_PEDIDO_PEDIDO,
+        this.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL,
+        this.NOMBRE_ESTADO_PEDIDO_RECIBIDO,
+        this.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL
+    };
+
+    public final String  PRESUPUESTO_POSIBLE_CANCELAR [] = {
+        this.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO,
+        this.NOMBRE_ESTADO_PRESUPUESTO_CREADO,
+        this.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO
+    };
+
     //-------------------------ESTADOS------------------------
     public final String NOMBRE_ESTADO_ARTICULO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA = "Alta";
@@ -50,9 +64,22 @@ public class Globales {
 
     //---------------------------------Tipo Articulos------------------------
     public final String nombre_Tipo_Repuesto_Repuesto = "Repuesto";
-    //----------------------------Nombre proveedor----------------------
 
+    //---------------------------------Tipo Movimientos------------------------
+    public final String nombre_Tipo_Movimiento_Ingreso = "Ingreso";
+    public final String nombre_Tipo_Movimiento_Egreso = "Egreso";
+
+    //---------------------------------Tipo Detalles------------------------
+    public static final String nombre_Tipo_Detalle_Articulo = "Articulo";
+    public static final String nombre_Tipo_Detalle_Proveedor = "Proveedor";
+    public static final String nombre_Tipo_Detalle_Presupuesto = "Presupuesto";
+    //----------------------------Nombre proveedor----------------------
     public final String PAZZAGLIA = "PAZZAGLIA S.A.";
+
+    //----------------------------Nombre proveedor----------------------
+    public final String NOMBRE_FORMA_DE_PAGO_EFECTIVO = "Efectivo";
+    public final String NOMBRE_FORMA_DE_PAGO_TARJETA = "Tarjega";
+    public final String NOMBRE_FORMA_DE_PAGO_CHEQUE = "Cheque";
 
 
     //--------------------MENSAJES CAJA-------------------------

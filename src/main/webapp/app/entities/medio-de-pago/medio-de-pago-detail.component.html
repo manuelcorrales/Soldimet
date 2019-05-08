@@ -1,0 +1,41 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="medioDePago">
+            <h2><span>Medio De Pago</span> {{medioDePago.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Forma De Pago</span></dt>
+                <dd>
+                    <div *ngIf="medioDePago.formaDePago">
+                        <a [routerLink]="['/forma-de-pago', medioDePago.formaDePago?.id, 'view']">{{medioDePago.formaDePago?.nombreFormaDePago}}</a>
+                    </div>
+                </dd>
+                <dt><span>Medio De Pago Cheque</span></dt>
+                <dd>
+                    <div *ngIf="medioDePago.medioDePagoCheque">
+                        <a [routerLink]="['/medio-de-pago-cheque', medioDePago.medioDePagoCheque?.id, 'view']">{{medioDePago.medioDePagoCheque?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Medio De Pago Tarjeta</span></dt>
+                <dd>
+                    <div *ngIf="medioDePago.medioDePagoTarjeta">
+                        <a [routerLink]="['/medio-de-pago-tarjeta', medioDePago.medioDePagoTarjeta?.id, 'view']">{{medioDePago.medioDePagoTarjeta?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/medio-de-pago', medioDePago.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
