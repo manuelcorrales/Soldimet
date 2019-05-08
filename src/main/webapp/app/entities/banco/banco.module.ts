@@ -8,6 +8,7 @@ import {
     BancoUpdateComponent,
     BancoDeletePopupComponent,
     bancoRoute,
+    BancoDeleteDialogComponent,
     bancoPopupRoute
 } from 'app/entities/banco';
 
@@ -15,7 +16,7 @@ const ENTITY_STATES = [...bancoRoute, ...bancoPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [BancoComponent, BancoDetailComponent, BancoUpdateComponent, BancoDeletePopupComponent],
+    declarations: [BancoComponent, BancoDetailComponent, BancoUpdateComponent, BancoDeletePopupComponent, BancoDeleteDialogComponent],
     entryComponents: [BancoComponent, BancoUpdateComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

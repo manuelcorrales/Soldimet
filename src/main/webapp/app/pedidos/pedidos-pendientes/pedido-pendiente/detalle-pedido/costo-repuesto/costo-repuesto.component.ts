@@ -190,7 +190,7 @@ export class CostoRepuestoComponent implements OnInit {
 
     createAsync(descripcion: string) {
         const articulo: IArticulo = new Articulo();
-        articulo.descripcion = this.articulo as string;
+        articulo.descripcion = this.articulo.descripcion;
         this.articuloService.create(articulo).subscribe((resp: HttpResponse<IArticulo>) => {
             this.articulo = resp.body;
             this.costoRepuesto.articulo = this.articulo;
@@ -200,7 +200,7 @@ export class CostoRepuestoComponent implements OnInit {
     createProvAsync(nombre: string) {
         let proveedor = new Proveedor();
         proveedor.persona = new Persona();
-        proveedor.persona.nombre = this.proveedor as string;
+        proveedor.persona.nombre = this.proveedor.nombreProveedor;
         this.personaService.create(proveedor.persona).subscribe((resp: HttpResponse<IPersona>) => {
             proveedor.persona = resp.body;
             this.proveedorService.create(proveedor).subscribe((respProv: HttpResponse<IProveedor>) => {

@@ -27,6 +27,8 @@ export class PedidosComponent implements OnInit {
     }
 
     verPedido(id: number) {}
+
+    onSearch(searchValue) {}
 }
 
 @Injectable()

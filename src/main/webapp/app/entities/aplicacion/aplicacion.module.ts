@@ -8,6 +8,7 @@ import {
     AplicacionUpdateComponent,
     aplicacionRoute,
     aplicacionPopupRoute,
+    AplicacionDeleteDialogComponent,
     AplicacionDeletePopupComponent
 } from 'app/entities/aplicacion';
 
@@ -15,7 +16,13 @@ const ENTITY_STATES = [...aplicacionRoute, ...aplicacionPopupRoute];
 
 @NgModule({
     imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [AplicacionComponent, AplicacionDetailComponent, AplicacionUpdateComponent, AplicacionDeletePopupComponent],
+    declarations: [
+        AplicacionComponent,
+        AplicacionDetailComponent,
+        AplicacionUpdateComponent,
+        AplicacionDeletePopupComponent,
+        AplicacionDeleteDialogComponent
+    ],
     entryComponents: [AplicacionComponent, AplicacionUpdateComponent, AplicacionDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

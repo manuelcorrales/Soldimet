@@ -234,7 +234,7 @@ export class NuevoMovimientoComponent implements OnInit {
         this.movimiento.medioDePago = this.medioDePago;
     }
 
-    private guardarMovimiento() {
+    guardarMovimiento() {
         this.movimiento.tipoMovimiento = this.tipoMovimiento;
         this.movimiento.subCategoria = this.concepto;
         this.defineMetodoPago();
@@ -291,14 +291,13 @@ export class NuevoMovimientoComponent implements OnInit {
     createConcepto() {}
 
     saveDetalles(movimiento: Movimiento) {
-        console.log(movimiento);
         this.movimientoPresupuesto.movimiento = movimiento;
         this.saveDetalle();
     }
 
     saveDetalle() {
-        if (this.movimientoPresupuesto.presupuesto) {
-            this.presupuestoService.find(this.movimientoPresupuesto.presupuesto.codigo).subscribe(
+        if (this.presupuesto) {
+            this.presupuestoService.find(this.presupuesto.codigo).subscribe(
                 (presupuesto: HttpResponse<IPresupuesto>) => {
                     console.log(presupuesto);
                     this.movimientoPresupuesto.presupuesto = presupuesto.body;

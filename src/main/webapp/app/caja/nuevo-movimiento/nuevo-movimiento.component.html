@@ -57,26 +57,26 @@
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>Presupuesto</label>
-                        <input type="text" placeholder="Buscar Presupuesto" [(ngModel)]="movimientoPresupuesto.presupuesto" [resultFormatter]="formatterPresup"
+                        <input type="text" placeholder="Buscar Presupuesto" [(ngModel)]="presupuesto" [resultFormatter]="formatterPresup"
                             id="typeahead-focusPresup" type="text" class="form-control" [ngbTypeahead]="searchPresup" (focus)="focusPresup$.next($event.target.value)"
                             (click)="clickPresup$.next($event.target.value)" #instanceNTAPresup="ngbTypeahead" [inputFormatter]="formatterPresup"
                             name="presup_search" (selectItem)="buscarCostoRepuestos($event)" />
                     </div>
-                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                    <div *ngIf="presupuesto" class="col">
                         <p>Cliente </p>
-                        <label>{{movimientoPresupuesto.presupuesto.cliente}} </label>
+                        <label>{{presupuesto.cliente}} </label>
                     </div>
-                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                    <div *ngIf="presupuesto" class="col">
                         <p>Motor </p>
-                        <label>{{movimientoPresupuesto.presupuesto.motor}} </label>
+                        <label>{{presupuesto.motor}} </label>
                     </div>
-                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                    <div *ngIf="presupuesto" class="col">
                         <p>Importe </p>
-                        <label>{{movimientoPresupuesto.presupuesto.importe}} </label>
+                        <label>{{presupuesto.importe}} </label>
                     </div>
-                    <div *ngIf="movimientoPresupuesto.presupuesto" class="col">
+                    <div *ngIf="presupuesto" class="col">
                         <p>Fecha </p>
-                        <label>{{movimientoPresupuesto.presupuesto.fecha}} </label>
+                        <label>{{presupuesto.fecha}} </label>
                     </div>
                 </div>
                 <div *ngIf="costoRepuestos" class="container-fluid">

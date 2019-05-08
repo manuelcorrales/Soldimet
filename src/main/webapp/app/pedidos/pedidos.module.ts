@@ -16,13 +16,13 @@ import { PedidosService } from 'app/pedidos/pedidos-services';
 import { CostoRepuestoComponent } from './pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '../../../../../node_modules/@angular/forms';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+// import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 const PEDIDOS_NEW_ROUTES_ALL = [...PEDIDOS_NEW_POPUP_ROUTE, ...PEDIDOS_SUBROUTES];
 
 @NgModule({
     imports: [
-        NgxDatatableModule,
+        // NgxDatatableModule,
         NgbModule.forRoot(),
         CommonModule,
         BrowserModule,

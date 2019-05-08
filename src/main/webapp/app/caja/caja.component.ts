@@ -32,4 +32,6 @@ export class CajaComponent implements OnInit {
         }
         return 0;
     }
+
+    onSearch(searchValue) {}
 }
