@@ -67,4 +67,6 @@ export class ClientesComponent implements OnInit, OnDestroy {
             this.loadAll();
         });
     }
+
+    onSearch(searchValue) {}
 }

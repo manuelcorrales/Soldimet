@@ -77,4 +77,6 @@ export class PresupuestosComponent implements OnInit {
         }
         return 0;
     }
+
+    onSearch(searchValue) {}
 }

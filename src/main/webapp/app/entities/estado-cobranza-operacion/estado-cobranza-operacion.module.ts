@@ -8,6 +8,7 @@ import {
     EstadoCobranzaOperacionUpdateComponent,
     EstadoCobranzaOperacionDeletePopupComponent,
     estadoCobranzaOperacionRoute,
+    EstadoCobranzaOperacionDeleteDialogComponent,
     estadoCobranzaOperacionPopupRoute
 } from 'app/entities/estado-cobranza-operacion';
 
@@ -19,6 +20,7 @@ const ENTITY_STATES = [...estadoCobranzaOperacionRoute, ...estadoCobranzaOperaci
         EstadoCobranzaOperacionComponent,
         EstadoCobranzaOperacionDetailComponent,
         EstadoCobranzaOperacionDeletePopupComponent,
+        EstadoCobranzaOperacionDeleteDialogComponent,
         EstadoCobranzaOperacionUpdateComponent
     ],
     entryComponents: [EstadoCobranzaOperacionComponent, EstadoCobranzaOperacionUpdateComponent],

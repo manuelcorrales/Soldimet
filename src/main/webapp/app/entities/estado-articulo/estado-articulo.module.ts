@@ -8,6 +8,7 @@ import {
     EstadoArticuloUpdateComponent,
     estadoArticuloRoute,
     EstadoArticuloDeletePopupComponent,
+    EstadoArticuloDeleteDialogComponent,
     estadoArticuloPopupRoute
 } from 'app/entities/estado-articulo';
 
@@ -19,6 +20,7 @@ const ENTITY_STATES = [...estadoArticuloRoute, ...estadoArticuloPopupRoute];
         EstadoArticuloComponent,
         EstadoArticuloDetailComponent,
         EstadoArticuloDeletePopupComponent,
+        EstadoArticuloDeleteDialogComponent,
         EstadoArticuloUpdateComponent
     ],
     entryComponents: [EstadoArticuloComponent, EstadoArticuloUpdateComponent],

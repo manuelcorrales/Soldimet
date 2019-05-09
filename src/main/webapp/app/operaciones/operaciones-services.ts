@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DTOListaPrecioManoDeObraComponent } from 'app/dto/dto-operaciones/dto-lista-costo-operaciones';
+import { DTOListaPrecioManoDeObra } from 'app/dto/dto-operaciones/dto-lista-costo-operaciones';
 import { SERVER_API_URL } from 'app/app.constants';
 
 @Injectable()
@@ -12,12 +12,12 @@ export class OperacionesService {
 
     constructor(private http: HttpClient) {}
 
-    getListasOperacionesAutorizadas(): Observable<DTOListaPrecioManoDeObraComponent[]> {
+    getListasOperacionesAutorizadas(): Observable<DTOListaPrecioManoDeObra[]> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarListasActivas}`;
-        return this.http.get<DTOListaPrecioManoDeObraComponent[]>(urlLlamada);
+        return this.http.get<DTOListaPrecioManoDeObra[]>(urlLlamada);
     }
-    saveListaActualizada(lista: DTOListaPrecioManoDeObraComponent): Observable<DTOListaPrecioManoDeObraComponent> {
+    saveListaActualizada(lista: DTOListaPrecioManoDeObra): Observable<DTOListaPrecioManoDeObra> {
         const urlLlamada = `${this.resourceUrlOperaciones}${this.urlActualizarPrecioLista}`;
-        return this.http.post<DTOListaPrecioManoDeObraComponent>(urlLlamada, lista);
+        return this.http.post<DTOListaPrecioManoDeObra>(urlLlamada, lista);
     }
 }

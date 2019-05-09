@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
-import { DTOListaPrecioManoDeObraComponent } from 'app/dto/dto-operaciones/dto-lista-costo-operaciones';
+import { DTOListaPrecioManoDeObra } from 'app/dto/dto-operaciones/dto-lista-costo-operaciones';
 import { OperacionListaPrecioComponent } from 'app/operaciones/operacion-lista/operacion-lista-precio.component';
 import { OperacionesService } from 'app/operaciones/operaciones-services';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
@@ -10,8 +10,10 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
     styles: []
 })
 export class OperacionListaComponent implements OnInit {
-    @Input() lista: DTOListaPrecioManoDeObraComponent;
-    @ViewChildren('costosOperaciones') children: QueryList<OperacionListaPrecioComponent>;
+    @Input()
+    lista: DTOListaPrecioManoDeObra;
+    @ViewChildren('costosOperaciones')
+    children: QueryList<OperacionListaPrecioComponent>;
 
     constructor(
         private _operacionesService: OperacionesService,
@@ -21,7 +23,7 @@ export class OperacionListaComponent implements OnInit {
 
     ngOnInit() {}
 
-    getListaOperaciones(): DTOListaPrecioManoDeObraComponent {
+    getListaOperaciones(): DTOListaPrecioManoDeObra {
         return this.lista;
     }
 

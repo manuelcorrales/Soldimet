@@ -15,27 +15,27 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
     clienteElegido: Cliente;
     // configuración autocompleter
     // Seleccionar el elemento al hacer click sobre la sugerencia
-    protected elegirConClick = true;
+    elegirConClick = true;
     // abrir/cerrar el dropwdown al hacer click
-    protected abrirDropEnclick = true;
+    abrirDropEnclick = true;
     // cantidad de caracteres ingresados como mínimo al hacer la búsqueda
-    protected cantidadCaracteresMinimos = 2;
+    cantidadCaracteresMinimos = 2;
     // numero en milisegundos de espera antes de realizar la búsqueda
-    protected milisegundos = 100;
+    milisegundos = 100;
     // Auto elegir una coincidencia
-    protected resaltarCoincidencia = false;
+    resaltarCoincidencia = false;
     // enfocar automaticamente cuando carga la página
-    protected autofocus = true;
+    autofocus = true;
     // mensaje 'sin resultados'
-    protected textNoResults = 'No se encontraron resultados';
+    textNoResults = 'No se encontraron resultados';
     // texto durante la busqueda
-    protected textSearching = 'buscando clientes...';
+    textSearching = 'buscando clientes...';
     // titulo
-    protected titleField = 'Cliente';
+    titleField = 'Cliente';
     // limpiar lista de busqueda
-    protected clearSelected = true;
+    clearSelected = true;
     // controlando estado del buscador
-    protected buscandoClientes = false;
+    buscandoClientes = false;
 
     constructor(
         private _presupuestosService: PresupuestosService,
