@@ -2,8 +2,8 @@ package soldimet.service.expertos;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.joda.time.MonthDay;
 import org.slf4j.Logger;
@@ -74,15 +74,13 @@ public class ExpertoCaja {
         Sucursal sucursal = empleado.getSucursal();
 
         Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(this.currentMonth(), sucursal);
-        log.debug("Caja día : {}", cajaDia);
 
         if (cajaDia == null) {
             cajaDia = this.AbrirCaja(sucursal);
         }
 
-        // Float montoMensual = calcularTotalMesActual();
-
-        List<Movimiento> movimientos = movimientoRepository.findByCaja(cajaDia);
+        EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+        List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(cajaDia, estadoAlta);
 
         DTOCajaCUConsultarMovimientos dto = cajaConverter.cajaACajaMovimiento(cajaDia, movimientos);
         dto.setTotalMensual(cajaDia.getSaldo());
@@ -97,6 +95,7 @@ public class ExpertoCaja {
 
         Float montoTotalMes = new Float(0);
         for (Caja caja : listaCajaMes) {
+
             montoTotalMes += caja.getSaldo();
         }
         return montoTotalMes;
@@ -107,10 +106,15 @@ public class ExpertoCaja {
             EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
             // update movimiento params
-
             movimientoDto.setFecha(LocalDate.now());
             movimientoDto.setEstado(estadoAlta);
             movimientoDto.setEmpleado(this.getCurrentEmployee());
+
+            // Ajusto el signo del total del movimiento dependiento si es un ingreso o egreso
+            if (movimientoDto.getTipoMovimiento().getNombreTipoMovimiento().equals(globales.nombre_Tipo_Movimiento_Egreso)) {
+                Float totalMovimiento = movimientoDto.getImporte() * -1;
+                movimientoDto.setImporte(totalMovimiento);
+            }
 
             Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(
                 this.currentMonth(),
@@ -182,7 +186,24 @@ public class ExpertoCaja {
 
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {
         Float saldo = caja.getSaldo();
-        if ( movimiento.getTipoMovimiento().getNombreTipoMovimiento().equals(globales.nombre_Tipo_Movimiento_Ingreso)) {
+        String tipoMoviento =  movimiento.getTipoMovimiento().getNombreTipoMovimiento();
+        String estadoMovimiento = movimiento.getEstado().getNombreEstado();
+
+        /*
+            Los valores de los movimientos y el saldo de caja se guardan con SIGNO
+            Saldo = 10
+            Movimiento = 3
+            EL VALOR DEL SALDO EN CAJA ES DIARIO
+            * Ingreso Alta:
+                Saldo = 13
+            * Ingreso Baja:
+                Saldo = 7
+            *Egreso Alta:
+                Saldo = 7
+            *Egreso Baja:
+                Saldo = 13
+        */
+        if(estadoMovimiento.equals(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA)){
             saldo = saldo + movimiento.getImporte();
         } else {
             saldo = saldo - movimiento.getImporte();
@@ -192,6 +213,17 @@ public class ExpertoCaja {
 
         return caja;
     }
+
+	public Movimiento borrarMovimiento(Long idMovimiento) throws NoSuchElementException{
+
+        Movimiento movimientoAEliminar = movimientoRepository.findById(idMovimiento).get();
+        EstadoMovimiento estadoBaja = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_BAJA);
+        movimientoAEliminar.setEstado(estadoBaja);
+        this.actualizarSaldoCaja(movimientoAEliminar.getCaja(), movimientoAEliminar);
+        Movimiento movimiento = movimientoRepository.save(movimientoAEliminar);
+        return movimiento;
+
+	}
 
 
 }

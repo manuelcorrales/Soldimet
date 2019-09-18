@@ -14,9 +14,13 @@ import { ClientesService } from 'app/clientes/clientes.service';
     styles: []
 })
 export class ClientesComponent implements OnInit, OnDestroy {
-    clientes: ICliente[];
+    clientes: ICliente[] = [];
+    totalClientes: ICliente[] = [];
     currentAccount: any;
     eventSubscriber: Subscription;
+
+    page = 1;
+    pageSize = 15;
 
     constructor(
         private clienteService: ClienteService,
@@ -29,6 +33,7 @@ export class ClientesComponent implements OnInit, OnDestroy {
     loadAll() {
         this.clienteService.query().subscribe(
             (res: HttpResponse<ICliente[]>) => {
+                this.totalClientes = res.body;
                 this.clientes = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
@@ -68,5 +73,25 @@ export class ClientesComponent implements OnInit, OnDestroy {
         });
     }
 
-    onSearch(searchValue) {}
+    _sortCliente(a: ICliente, b: ICliente) {
+        if (a.id < b.id) {
+            return 1;
+        }
+        if (a.id > b.id) {
+            return -1;
+        }
+        return 0;
+    }
+
+    search(text: string) {
+        const clientes = this.totalClientes.filter(cliente => {
+            const term = text.toLowerCase();
+            return (
+                cliente.apellido.toLowerCase().includes(term) ||
+                cliente.persona.nombre.toLowerCase().includes(term) ||
+                cliente.persona.direccion.calle.toString().includes(term)
+            );
+        });
+        this.clientes = clientes.sort(this._sortCliente);
+    }
 }

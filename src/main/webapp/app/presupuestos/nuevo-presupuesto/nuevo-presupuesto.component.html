@@ -1,13 +1,18 @@
 <jhi-alert></jhi-alert>
 <form role="form" class="jh-create-entity" (ngSubmit)="guardarPresupuesto()">
     <div class="col-auto align-center container jh-card">
-        <h3>Nuevo Presupuesto</h3>
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-2 text-left">Fecha: {{fecha | date:'mediumDate'}}</div>
+            <div class="col-md-2 text-left">Sucursal: {{this.empleado?.sucursal}}</div>
+            <div class="col-md-2 text-left">Empleado: {{this.empleado?.nombre}}</div>
+        </div>
         <jhi-clientes-nuevopresupuesto #cliente></jhi-clientes-nuevopresupuesto>
         <jhi-motor-nuevo-presupuesto (eventoDetallePresupuesto)="recibirDetalle($event)"></jhi-motor-nuevo-presupuesto>
         <div class="row row-eq-height">
             <div class="col-md-6">
                 <div class="card jh-card border-info mb-3">
-                    <div class="card-header card-header text-white bg-info mb-3">
+                    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                         Operaciones
                     </div>
                     <div *ngFor="let detalle of detallesPresupuestos">
@@ -16,14 +21,14 @@
                     </div>
                     <div class="card-footer">
                         <div>
-                            <label>Total Operaciones: ${{totalOperaciones}}</label>
+                            <label>Total Operaciones: ${{totalOperaciones | number:'1.2-2'}}</label>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="card jh-card border-info mb-3">
-                    <div class="card-header card-header text-white bg-info mb-3">
+                    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                         Repuestos
                     </div>
                     <div *ngFor="let detalle of detallesPresupuestos">
@@ -32,7 +37,7 @@
                     </div>
                     <div class="card-footer">
                         <div>
-                            <label>Total Repuestos: ${{totalRepuestos}}</label>
+                            <label>Total Repuestos: ${{totalRepuestos | number:'1.2-2'}}</label>
                         </div>
                     </div>
                 </div>

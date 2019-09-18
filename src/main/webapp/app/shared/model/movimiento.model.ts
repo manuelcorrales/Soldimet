@@ -4,7 +4,7 @@ import { ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';
 import { IEmpleado } from 'app/shared/model/empleado.model';
 import { ICaja } from 'app/shared/model/caja.model';
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
-import { IMedioDePago } from 'app/shared/model//medio-de-pago.model';
+import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
 
 export interface IMovimiento {
     id?: number;

@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
 import { DtoCajaDiaComponent, DtoMovimientoCabecera } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
 import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
+import { Subscription } from '../../../../../node_modules/rxjs';
+import { JhiEventManager } from '../../../../../node_modules/ng-jhipster';
 
 @Component({
     selector: 'jhi-caja',
@@ -10,16 +12,29 @@ import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
 export class CajaComponent implements OnInit {
     @ViewChild('toastr', { read: ViewContainerRef })
     toastrContainer: ViewContainerRef;
+    eventSubscriber: Subscription;
+
+    page = 1;
+    pageSize = 25;
 
     cajaDia: DtoCajaDiaComponent;
+    totalMovimientos: DtoMovimientoCabecera[] = [];
+    movimientos: DtoMovimientoCabecera[] = [];
 
-    constructor(private cajaService: CajaModuleServiceService) {}
+    constructor(private cajaService: CajaModuleServiceService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
+        this.eventSubscriber = this.eventManager.subscribe('movimientosDiaModificacion', response => this._buscarMovimientosDelDia());
+        this._buscarMovimientosDelDia();
+    }
+
+    _buscarMovimientosDelDia() {
         this.cajaService.getMovimientosDia().subscribe((cajaDia: DtoCajaDiaComponent) => {
             const movimientos = cajaDia.movimientos;
             cajaDia.movimientos = movimientos.sort(this._sortMovimientos);
             this.cajaDia = cajaDia;
+            this.movimientos = cajaDia.movimientos;
+            this.totalMovimientos = cajaDia.movimientos;
         });
     }
 
@@ -33,5 +48,11 @@ export class CajaComponent implements OnInit {
         return 0;
     }
 
-    onSearch(searchValue) {}
+    search(text: string) {
+        const movimientos = this.totalMovimientos.filter(movimiento => {
+            const term = text.toLowerCase();
+            return movimiento.descripcion.toLowerCase().includes(term) || movimiento.categoria.toLowerCase().includes(term);
+        });
+        this.movimientos = movimientos.sort(this._sortMovimientos);
+    }
 }

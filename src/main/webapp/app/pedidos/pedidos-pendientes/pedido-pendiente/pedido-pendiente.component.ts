@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChildren, QueryList, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { PedidosService } from 'app/pedidos/pedidos-services';
-import { JhiEventManager } from '../../../../../../../node_modules/ng-jhipster';
-import { ActivatedRoute } from '../../../../../../../node_modules/@angular/router';
+import { JhiEventManager } from 'ng-jhipster';
+import { ActivatedRoute } from '@angular/router';
 import { PedidoModalPopupService } from 'app/pedidos/pedidos.component';
 import { DetallePedidoComponentNew } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
-import { HttpResponse } from '../../../../../../../node_modules/@angular/common/http';
-import { Observable } from '../../../../../../../node_modules/rxjs';
-import { NgbActiveModal } from '../../../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { DtoBusquedaProveedor } from 'app/dto/dto-pedidos/dto-proveedor-search';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { ArticuloService } from 'app/entities/articulo';

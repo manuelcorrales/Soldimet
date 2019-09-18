@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { PedidoRepuestoService } from './pedido-repuesto.service';
+import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
 import { IEstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
 import { EstadoPedidoRepuestoService } from 'app/entities/estado-pedido-repuesto';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';

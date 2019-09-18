@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IMedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
-import { MedioDePagoTarjetaService } from './medio-de-pago-tarjeta.service';
+import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.service';
 import { ITarjeta } from 'app/shared/model/tarjeta.model';
 import { TarjetaService } from 'app/entities/tarjeta';
 import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';

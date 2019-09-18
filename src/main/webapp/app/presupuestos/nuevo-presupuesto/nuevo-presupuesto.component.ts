@@ -12,6 +12,9 @@ import { EstadoPresupuestoService } from 'app/entities/estado-presupuesto';
 import { Presupuesto } from 'app/shared/model/presupuesto.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
+import { DtoEmpleado } from 'app/dto/dto-empleado/dto-empleado.component';
+import { UserService } from 'app/core';
+import { HttpErrorResponse } from '../../../../../../node_modules/@angular/common/http';
 
 @Component({
     selector: 'jhi-nuevo-presupuesto',
@@ -19,6 +22,9 @@ import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
     styles: []
 })
 export class NuevoPresupuestoComponent implements OnInit {
+    fecha: Date;
+    empleado: DtoEmpleado;
+
     presupuesto: Presupuesto;
     @Output()
     detallesPresupuestos: DetallePresupuesto[] = [];
@@ -40,11 +46,20 @@ export class NuevoPresupuestoComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         public activeModal: NgbActiveModal,
-        private jhiAlertService: JhiAlertService
-    ) {}
+        private jhiAlertService: JhiAlertService,
+        private userService: UserService
+    ) {
+        this.fecha = new Date();
+    }
 
     ngOnInit() {
         this.consultarPresupuesto();
+        this.userService.getCurrentEmpleado().subscribe(
+            (res: DtoEmpleado) => {
+                this.empleado = res;
+            },
+            (res: HttpErrorResponse) => console.log(res.message)
+        );
     }
 
     consultarPresupuesto() {

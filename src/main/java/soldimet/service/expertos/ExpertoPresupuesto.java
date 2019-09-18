@@ -3,9 +3,9 @@ package soldimet.service.expertos;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import soldimet.constant.Globales;
 import soldimet.converter.PresupuestoConverter;
 import soldimet.domain.Aplicacion;
-import soldimet.domain.Articulo;
+import soldimet.domain.Authority;
 import soldimet.domain.Cilindrada;
 import soldimet.domain.Cliente;
 import soldimet.domain.CobranzaOperacion;
@@ -22,25 +22,27 @@ import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.DetallePedido;
+import soldimet.domain.DetallePresupuesto;
+import soldimet.domain.Empleado;
+import soldimet.domain.EstadoCobranzaOperacion;
+import soldimet.domain.EstadoDetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPersona;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.ListaPrecioDesdeHasta;
 import soldimet.domain.ListaPrecioRectificacionCRAM;
 import soldimet.domain.Motor;
-import soldimet.domain.Operacion;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Persona;
 import soldimet.domain.Presupuesto;
+import soldimet.domain.Sucursal;
 import soldimet.domain.TipoParteMotor;
 import soldimet.domain.TipoRepuesto;
-import soldimet.domain.DetallePresupuesto;
-import soldimet.domain.EstadoCobranzaOperacion;
-import soldimet.domain.EstadoDetallePedido;
 import soldimet.repository.AplicacionRepository;
 import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CilindradaRepository;
 import soldimet.repository.ClienteRepository;
+import soldimet.repository.EmpleadoRepository;
 import soldimet.repository.EstadoCobranzaOperacionRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
@@ -51,10 +53,12 @@ import soldimet.repository.MotorRepository;
 import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.repository.PersonaRepository;
 import soldimet.repository.PresupuestoRepository;
+import soldimet.repository.SucursalRepository;
 import soldimet.repository.TipoParteMotorRepository;
 import soldimet.repository.TipoRepuestoRepository;
+import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
-import soldimet.service.dto.DTOParOperacionPresupuestoCUHacerPresupuesto;
+import soldimet.service.dto.DTOEmpleado;
 import soldimet.service.dto.DTOPresupuesto;
 
 @Service
@@ -65,9 +69,13 @@ public class ExpertoPresupuesto {
     private Globales globales;
 
     @Autowired
-    private TipoRepuestoRepository tipoRepuestoRepository;
+    private ExpertoUsuarios expertoUsuarios;
+
     @Autowired
-    private ArticuloRepository articuloRepository;
+    private SucursalRepository sucursalRepository;
+
+    @Autowired
+    private TipoRepuestoRepository tipoRepuestoRepository;
 
     @Autowired
     private EstadoPresupuestoRepository estadoPresupuestoRepository;
@@ -113,6 +121,9 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private EstadoDetallePedidoRepository estadoDetallePedidoRepository;
+
+    @Autowired
+    private EmpleadoRepository empleadoRepository;
 
     // Cambio el estado del presupuesto y del pedido de repuestos
     public void aceptarPresupuesto(Long idPresupuesto) {
@@ -179,8 +190,17 @@ public class ExpertoPresupuesto {
     }
 
     public List<DTOPresupuesto> buscarPresupuestos() {
+        // Busco todos los presupuestos a mostrar dependiendo los permisos del usuario
+        // Jefe o Admin pueden ver todos
+        // Encargado y usuario pueden ver los asignados
+        List<Presupuesto> presupuestos = null;
+        Empleado empleado = this.getCurrentEmployee();
 
-        List<Presupuesto> presupuestos = presupuestoRepository.findAllByOrderByIdDesc();
+        if (this.tieneAccesoATodosLosPresupuestos(empleado)){
+            presupuestos = presupuestoRepository.findAllByOrderByIdDesc();
+        } else {
+            presupuestos = presupuestoRepository.findBySucursal(empleado.getSucursal());
+        }
 
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);
     }
@@ -273,6 +293,12 @@ public class ExpertoPresupuesto {
         }
         EstadoCobranzaOperacion estadoCobranzaOperacion = estadoCobranzaOperacionRepository
                 .findByNombreEstado(globales.NOMBRE_ESTADO_COBRANZA_OPERACION_CREADO);
+
+        DTOEmpleado empleado = expertoUsuarios.getEmpleadoActual();
+
+        Sucursal sucursal = sucursalRepository.findById(empleado.getSucursalId()).get();
+        presupuesto.setSucursal(sucursal);
+
         for (DetallePresupuesto detalle : presupuesto.getDetallePresupuestos()) {
             Float totalDetalle = new Float(0);
             for (CobranzaOperacion cobranzaOperacion : detalle.getCobranzaOperacions()) {
@@ -324,7 +350,7 @@ public class ExpertoPresupuesto {
         nuevoPedido.setFechaCreacion(LocalDate.now());
         nuevoPedido.setPresupuesto(presupuesto);
         EstadoDetallePedido estadoPendiente = estadoDetallePedidoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
+                .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_DE_PEDIDO);
         for (DetallePresupuesto detallePresupuesto : presupuesto.getDetallePresupuestos()) {
             if (!detallePresupuesto.getCobranzaRepuestos().isEmpty()) {
                 DetallePedido nuevoDetallePedido = new DetallePedido();
@@ -460,5 +486,32 @@ public class ExpertoPresupuesto {
             return costosRepuestos;
         }
 
+    }
+
+    private Empleado getCurrentEmployee() {
+
+        List<Persona> personas = personaRepository.findByUserIsCurrentUser();
+        if (personas.isEmpty()) {
+            return null;
+        }
+
+        Empleado empleado = empleadoRepository.findByPersona(personas.get(0));
+        return empleado;
+    }
+
+    private Boolean tieneAccesoATodosLosPresupuestos(Empleado empleado) {
+        Set<Authority> authorities = empleado.getPersona().getUser().getAuthorities();
+
+        List<String> authoritiesNames = new ArrayList<String>();
+        // Spring permite filtrar todo a nivel de endpoint por eso filtro así internamente
+        // Tambien se puede pero creando una relacion entre el objeto presupuesto y el user (malisimo)
+        for (Authority authority: authorities) {
+            authoritiesNames.add(authority.getName());
+        }
+
+        return
+            authoritiesNames.contains(AuthoritiesConstants.ADMIN) ||
+            authoritiesNames.contains(AuthoritiesConstants.BOSS)
+        ;
     }
 }

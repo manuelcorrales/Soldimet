@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
 import { Principal } from 'app/core';
-import { MedioDePagoService } from './medio-de-pago.service';
+import { MedioDePagoService } from 'app/entities/medio-de-pago/medio-de-pago.service';
 
 @Component({
     selector: 'jhi-medio-de-pago',

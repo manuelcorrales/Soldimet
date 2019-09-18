@@ -22,8 +22,23 @@ public class DTOPedidoCabecera {
     private String motor;
     private String tipo;
     private Long presupuestoId;
+    private String sucursal;
 
     public DTOPedidoCabecera() {
+    }
+
+    /**
+     * @return the sucursal
+     */
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    /**
+     * @param sucursal the sucursal to set
+     */
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
 
     /**

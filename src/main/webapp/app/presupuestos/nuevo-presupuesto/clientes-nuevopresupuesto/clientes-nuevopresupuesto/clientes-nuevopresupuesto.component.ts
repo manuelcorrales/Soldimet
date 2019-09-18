@@ -54,10 +54,9 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
         });
     }
 
-    filtrarClientes(term: string, item: any): boolean {
-        console.log(term);
-        console.log(item);
-        return item.appelido.match(term) || item.persona.nombre.match(term);
+    filtrarClientes(term: string, cliente: Cliente): boolean {
+        const busqueda = term.toLowerCase();
+        return cliente.apellido.toLowerCase().includes(busqueda) || cliente.persona.nombre.toLowerCase().includes(busqueda);
     }
 
     getCliente() {

@@ -10,7 +10,7 @@ import {
     SucursalDeleteDialogComponent,
     sucursalRoute,
     sucursalPopupRoute
-} from './';
+} from 'app/entities/sucursal';
 
 const ENTITY_STATES = [...sucursalRoute, ...sucursalPopupRoute];
 

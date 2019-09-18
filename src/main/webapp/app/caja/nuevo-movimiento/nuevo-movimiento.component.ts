@@ -28,13 +28,15 @@ import { MedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model
 import { MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
 import { MovimientoPresupuesto, IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
 import { DetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
-import { JhiEventManager, JhiAlertService } from '../../../../../../node_modules/ng-jhipster';
-import { Router, ActivatedRoute } from '../../../../../../node_modules/@angular/router';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CajaService } from 'app/entities/caja';
 import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { MovimientoPresupuestoUpdateComponent, MovimientoPresupuestoService } from 'app/entities/movimiento-presupuesto';
 import { PresupuestoService } from 'app/entities/presupuesto';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
+import { UserService } from 'app/core';
+import { DtoEmpleado } from 'app/dto/dto-empleado/dto-empleado.component';
 
 @Component({
     selector: 'jhi-nuevo-movimiento',
@@ -42,7 +44,9 @@ import { IPresupuesto } from 'app/shared/model/presupuesto.model';
     styles: []
 })
 export class NuevoMovimientoComponent implements OnInit {
-    private eventSubscriber: Subscription;
+    eventSubscriber: Subscription;
+    fecha: Date;
+    empleado: DtoEmpleado;
 
     formaTipoTarjeta = 'Tarjeta';
     formaTipoChecke = 'Cheque';
@@ -100,8 +104,11 @@ export class NuevoMovimientoComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private oldCajaService: CajaService,
         private presupuestoService: PresupuestoService,
-        private movimientoPresupuestoService: MovimientoPresupuestoService
-    ) {}
+        private movimientoPresupuestoService: MovimientoPresupuestoService,
+        private userService: UserService
+    ) {
+        this.fecha = new Date();
+    }
 
     ngOnInit() {
         this.consultarMovimiento();
@@ -126,6 +133,12 @@ export class NuevoMovimientoComponent implements OnInit {
         this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
             this.presupuestos = presupuestos;
         });
+        this.userService.getCurrentEmpleado().subscribe(
+            (res: DtoEmpleado) => {
+                this.empleado = res;
+            },
+            (res: HttpErrorResponse) => console.log(res.message)
+        );
     }
 
     buscarSubCategorias() {
@@ -329,7 +342,11 @@ export class NuevoMovimientoComponent implements OnInit {
 
     private onSaveFinalSuccess() {
         this.isSaving = false;
-        this.jhiAlertService.success('Se ha creado el movimiento número: ' + this.movimiento.id, { toast: true }, '.right');
+        this.jhiAlertService.success(
+            'Se ha creado el movimiento número: ' + this.movimientoPresupuesto.movimiento.id,
+            { toast: true },
+            '.right'
+        );
         this.router.navigate(['/cajas']);
     }
 }

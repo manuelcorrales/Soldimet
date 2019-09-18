@@ -4,13 +4,13 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="input-group custom-search-form">
-                  <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)"  placeholder="Buscar presupuesto..." >
-                  <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">
-                  <span class="glyphicon glyphicon-search"></span>
-                 </button>
-                 </span>
-                 </div><!-- /input-group -->
+                    <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)"  placeholder="Buscar presupuesto...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" (onClick)="search(searchBar.value)">
+                            <span an class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
             </div>
             <div class="col-md-2">
                 <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['nuevo']">
@@ -38,35 +38,36 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="presupuestos">
-                    <tr *ngFor="let presupuesto of presupuestos">
+                    <tr *ngFor="let presupuesto of presupuestos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                    >
                         <th>{{presupuesto.codigo}}</th>
                         <td>{{presupuesto.motor}}</td>
                         <td>{{presupuesto.cliente}} </td>
-                        <td>${{presupuesto.importe}}</td>
+                        <td>${{presupuesto.importe | number:'1.2-2'}}</td>
                         <td>{{presupuesto.fecha}}</td>
                         <td>
                             <div *ngIf="presupuesto.estado== 'Creado'" class="text-center">
-                                <div class="alert alert-primary" style="padding: 0px;" role="alert">
+                                <div class="alert-primary" role="alert" style="border-radius: .25rem;">
                                     {{presupuesto.estado}}
                                 </div>
                             </div>
                             <div *ngIf="presupuesto.estado== 'Terminado'" class="text-center">
-                                <div class="alert alert-info" role="alert" style="padding: 0px;">
+                                <div class="alert-info" role="alert" style="border-radius: .25rem;">
                                     {{presupuesto.estado}}
                                 </div>
                             </div>
                             <div *ngIf="presupuesto.estado== 'Aceptado'" class="text-center">
-                                <div class="alert alert-warning" role="alert" style="padding: 0px;">
+                                <div class="alert-warning" role="alert" style="border-radius: .25rem;">
                                     {{presupuesto.estado}}
                                 </div>
                             </div>
                             <div *ngIf="presupuesto.estado== 'Entregado'" class="text-center">
-                                <div class="alert alert-success" role="alert" style="padding: 0px;">
+                                <div class="alert-success" role="alert" style="border-radius: .25rem;">
                                     {{presupuesto.estado}}
                                 </div>
                             </div>
                             <div *ngIf="presupuesto.estado== 'Cancelado'" class="text-center">
-                                <div class="alert alert-danger" role="alert" style="padding: 0px;">
+                                <div class="alert-danger" role="alert" style="border-radius: .25rem;">
                                     {{presupuesto.estado}}
                                 </div>
                             </div>
@@ -90,11 +91,19 @@
                                 ngbTooltip="Eliminar">
                                 <i class="fa fa-close"></i>
                             </button>
-                            <p *ngIf="presupuesto.estado == 'Cancelado'">No hay operaciones</p>
+                            <!-- <p *ngIf="presupuesto.estado == 'Cancelado'">No hay operaciones</p> -->
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <ngb-pagination
+                class="d-flex justify-content-center"
+                [collectionSize]="presupuestos.length"
+                #numPages
+                [pageSize]="pageSize"
+                [(page)]="page"
+                >
+            </ngb-pagination>
         </div>
     </div>
 </div>

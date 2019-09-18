@@ -10,7 +10,7 @@ import {
     MedioDePagoTarjetaDeleteDialogComponent,
     medioDePagoTarjetaRoute,
     medioDePagoTarjetaPopupRoute
-} from './';
+} from 'app/entities/medio-de-pago-tarjeta';
 
 const ENTITY_STATES = [...medioDePagoTarjetaRoute, ...medioDePagoTarjetaPopupRoute];
 

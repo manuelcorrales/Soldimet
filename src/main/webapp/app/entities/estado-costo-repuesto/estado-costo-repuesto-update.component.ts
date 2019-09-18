@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
-import { EstadoCostoRepuestoService } from './estado-costo-repuesto.service';
+import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.service';
 
 @Component({
     selector: 'jhi-estado-costo-repuesto-update',

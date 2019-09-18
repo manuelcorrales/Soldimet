@@ -1,18 +1,14 @@
 <form role="form" class="jh-create-entity" (ngSubmit)="guardarMovimiento()">
     <div class="col-auto align-center container jh-card">
-        <div>
-            <div class="card-header text-white bg-info">
-                Nuevo Movimiento
-            </div>
-            <div class="row">
-                <div class="col">Fecha: 3/2/2019</div>
-                <div class="col">Sucursal: San martin</div>
-                <div class="col">Empleado: Paul Corrales</div>
-            </div>
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-2 text-left">Fecha: {{fecha | date:'mediumDate'}}</div>
+            <div class="col-md-2 text-left">Sucursal: {{this.empleado?.sucursal}}</div>
+            <div class="col-md-2 text-left">Empleado: {{this.empleado?.nombre}}</div>
         </div>
         <!-- Datos del movimiento-->
         <div class="card jh-card border-info">
-            <div class="card-header card-header text-white bg-info mb-3">
+            <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Datos del movimiento
             </div>
             <div class="container-fluid row">
@@ -50,7 +46,7 @@
         </div>
         <!-- Detalle Movimiento-->
         <div class="card jh-card border-info">
-            <div class="card-header card-header text-white bg-info mb-3">
+            <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Detalle Movimiento
             </div>
             <div class="container-fluid">
@@ -98,7 +94,7 @@
         </div>
         <!-- Medio de pago-->
         <div class="card jh-card border-info">
-            <div class="card-header card-header text-white bg-info mb-3">
+            <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Medio de pago
             </div>
             <div class="row">
@@ -183,7 +179,7 @@
 
         <!--Obervaciones-->
         <div class="card jh-card border-info">
-            <div class="card-header card-header text-white bg-info mb-3">
+            <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Observaciones
             </div>
             <textarea class="form-control" name="observaciones" rows="5" [(ngModel)]="movimiento.observaciones" #observaciones='ngModel'></textarea>

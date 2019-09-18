@@ -3,6 +3,7 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import locale from '@angular/common/locales/en';
+import localeEsAr from '@angular/common/locales/es-AR';
 
 @NgModule({
     imports: [HttpClientModule],
@@ -12,7 +13,7 @@ import locale from '@angular/common/locales/en';
         Title,
         {
             provide: LOCALE_ID,
-            useValue: 'en'
+            useValue: 'es-Ar'
         },
         DatePipe
     ]
@@ -20,5 +21,6 @@ import locale from '@angular/common/locales/en';
 export class SoldimetCoreModule {
     constructor() {
         registerLocaleData(locale);
+        registerLocaleData(localeEsAr);
     }
 }

@@ -6,6 +6,7 @@ export class DtoPedidoCabecera {
         public estado: string,
         public presupuestoId: number,
         public motor: string,
+        public sucursal: string,
         public tipo: string
     ) {}
 }

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IMovimiento } from 'app/shared/model/movimiento.model';
-import { MovimientoService } from './movimiento.service';
+import { MovimientoService } from 'app/entities/movimiento/movimiento.service';
 import { IEstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
 import { EstadoMovimientoService } from 'app/entities/estado-movimiento';
 import { ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';

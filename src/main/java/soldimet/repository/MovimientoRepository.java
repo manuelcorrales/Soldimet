@@ -1,6 +1,7 @@
 package soldimet.repository;
 
 import soldimet.domain.Caja;
+import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.Movimiento;
 
 import java.util.List;
@@ -16,5 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
 
-        List<Movimiento> findByCaja(Caja caja);
+        List<Movimiento> findByCajaAndEstado(Caja caja, EstadoMovimiento estado);
 }

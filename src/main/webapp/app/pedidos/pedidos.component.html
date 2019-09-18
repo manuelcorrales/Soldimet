@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)" placeholder="Buscar pedido...">
+                    <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)"  placeholder="Buscar pedido...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
+                        <button class="btn btn-default" type="button" (onClick)="search(searchBar.value)">
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
                     </span>
@@ -26,51 +26,51 @@
                         <th scope="col">Presupuesto</th>
                         <th scope="col">Motor</th>
                         <th scope="col">Tipo</th>
+                        <th scope="col">Sucursal</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Operaciones</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="pedidos">
-                    <tr *ngFor="let pedido of pedidos">
+                    <tr *ngFor="let pedido of pedidos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
                         <th>{{pedido.id}}</th>
                         <td>{{pedido.cliente}}</td>
                         <td>{{pedido.fecha}} </td>
                         <td>{{pedido.presupuestoId}}</td>
                         <td>{{pedido.motor}}</td>
                         <td>{{pedido.tipo}}</td>
+                        <td>{{pedido.sucursal}}</td>
                         <td>
                             <div *ngIf="pedido.estado== 'Pendiente de pedido'" class="text-center">
-                                <div class="alert alert-primary" style="padding: 0px;" role="alert">
+                                <div class="alert-primary" style="border-radius: .25rem;" role="alert">
                                     {{pedido.estado}}
                                 </div>
                             </div>
                             <div *ngIf="pedido.estado== 'Pedido'" class="text-center">
-                                <div class="alert alert-info" role="alert" style="padding: 0px;">
+                                <div class="alert-info" role="alert" style="border-radius: .25rem;">
                                     {{pedido.estado}}
                                 </div>
                             </div>
                             <div *ngIf="pedido.estado== 'Pedido Parcial'" class="text-center">
-                                <div class="alert alert-info" role="alert" style="padding: 0px;">
+                                <div class="alert-info" role="alert" style="border-radius: .25rem;">
                                     {{pedido.estado}}
                                 </div>
                             </div>
                             <div *ngIf="pedido.estado== 'Recibido'" class="text-center">
-                                <div class="alert alert-success" role="alert" style="padding: 0px;">
+                                <div class="alert-success" role="alert" style="border-radius: .25rem;">
                                     {{pedido.estado}}
                                 </div>
                             </div>
                             <div *ngIf="pedido.estado== 'Recibido Parcial'" class="text-center">
-                                <div class="alert alert-success" role="alert" style="padding: 0px;">
+                                <div class="alert-success" role="alert" style="border-radius: .25rem;">
                                     {{pedido.estado}}
                                 </div>
                             </div>
                             <div *ngIf="pedido.estado== 'Cancelado'" class="text-center">
-                                <div class="alert alert-danger" role="alert" style="padding: 0px;">
+                                <div class="alert-danger" role="alert" style="border-radius: .25rem;">
                                     {{pedido.estado}}
                                 </div>
                             </div>
-
-
                         </td>
                         <td>
                             <button class="btn btn-info" type="submit" [routerLink]="['/', { outlets: { popup: 'pedidos/'+ pedido.id } }]" replaceUrl="true"
@@ -83,5 +83,13 @@
                 </tbody>
             </table>
         </div>
+        <ngb-pagination
+                class="d-flex justify-content-center"
+                [collectionSize]="pedidos.length"
+                #numPages
+                [pageSize]="pageSize"
+                [(page)]="page"
+                >
+            </ngb-pagination>
     </div>
 </div>

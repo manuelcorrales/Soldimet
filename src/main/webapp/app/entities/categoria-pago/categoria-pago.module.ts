@@ -10,7 +10,7 @@ import {
     CategoriaPagoDeleteDialogComponent,
     categoriaPagoRoute,
     categoriaPagoPopupRoute
-} from './';
+} from 'app/entities/categoria-pago';
 
 const ENTITY_STATES = [...categoriaPagoRoute, ...categoriaPagoPopupRoute];
 

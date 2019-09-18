@@ -2,10 +2,12 @@ import { Component, OnInit, Input, Output, ViewChild, Injectable, ViewContainerR
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { EventEmitter } from 'events';
-import { NgbModalRef, NgbModal } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
-import { Router } from '../../../../../node_modules/@angular/router';
+import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 import { PedidoRepuestoService } from 'app/entities/pedido-repuesto';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
+import { JhiEventManager } from '../../../../../node_modules/ng-jhipster';
+import { Subscription } from '../../../../../node_modules/rxjs';
 
 @Component({
     selector: 'jhi-pedidos',
@@ -16,19 +18,52 @@ export class PedidosComponent implements OnInit {
     @ViewChild('toastr', { read: ViewContainerRef })
     toastrContainer: ViewContainerRef;
 
-    pedidos: DtoPedidoCabecera[];
+    eventSubscriber: Subscription;
 
-    constructor(private newPedidoService: PedidosService) {}
+    page = 1;
+    pageSize = 25;
+
+    pedidos: DtoPedidoCabecera[] = [];
+    totalPedidos: DtoPedidoCabecera[] = [];
+
+    constructor(private newPedidoService: PedidosService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
+        this.loadPedidos();
+        this.eventSubscriber = this.eventManager.subscribe('pedidoListModification', response => this.loadPedidos());
+    }
+
+    loadPedidos() {
         this.newPedidoService.getPedidosCabecera().subscribe((pedidos: DtoPedidoCabecera[]) => {
-            this.pedidos = pedidos;
+            const pedidosOrdenados = pedidos.sort(this._sortPedidos);
+            this.totalPedidos = pedidosOrdenados;
+            this.pedidos = pedidosOrdenados;
         });
     }
 
     verPedido(id: number) {}
 
-    onSearch(searchValue) {}
+    _sortPedidos(a: DtoPedidoCabecera, b: DtoPedidoCabecera) {
+        if (a.id < b.id) {
+            return 1;
+        }
+        if (a.id > b.id) {
+            return -1;
+        }
+        return 0;
+    }
+
+    search(text: string) {
+        const pedidos = this.totalPedidos.filter(pedido => {
+            const term = text.toLowerCase();
+            return (
+                pedido.motor.toLowerCase().includes(term) ||
+                pedido.cliente.toLowerCase().includes(term) ||
+                pedido.presupuestoId.toString().includes(term)
+            );
+        });
+        this.pedidos = pedidos.sort(this._sortPedidos);
+    }
 }
 
 @Injectable()

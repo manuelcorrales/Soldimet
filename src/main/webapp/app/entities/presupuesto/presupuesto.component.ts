@@ -8,7 +8,7 @@ import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { PresupuestoService } from './presupuesto.service';
+import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
 
 @Component({
     selector: 'jhi-presupuesto',

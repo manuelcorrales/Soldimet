@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
 import { Principal } from 'app/core';
-import { EstadoCostoRepuestoService } from './estado-costo-repuesto.service';
+import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.service';
 
 @Component({
     selector: 'jhi-estado-costo-repuesto',

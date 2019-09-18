@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
-import { MedioDePagoTarjetaService } from './medio-de-pago-tarjeta.service';
-import { MedioDePagoTarjetaComponent } from './medio-de-pago-tarjeta.component';
-import { MedioDePagoTarjetaDetailComponent } from './medio-de-pago-tarjeta-detail.component';
-import { MedioDePagoTarjetaUpdateComponent } from './medio-de-pago-tarjeta-update.component';
-import { MedioDePagoTarjetaDeletePopupComponent } from './medio-de-pago-tarjeta-delete-dialog.component';
+import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.service';
+import { MedioDePagoTarjetaComponent } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.component';
+import { MedioDePagoTarjetaDetailComponent } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta-detail.component';
+import { MedioDePagoTarjetaUpdateComponent } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta-update.component';
+import { MedioDePagoTarjetaDeletePopupComponent } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta-delete-dialog.component';
 import { IMedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
 
 @Injectable({ providedIn: 'root' })

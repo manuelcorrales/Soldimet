@@ -3,13 +3,13 @@
     <div class="container">
         <div class="row">
             <div class="card border-success col-md-3 text-center">
-                Total Mensual: ${{cajaDia?.totalMensual}}
+                Total Día: ${{cajaDia?.totalMensual | number:'1.2-2'}}
             </div>
             <div class="col-md-7">
                 <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)" placeholder="Buscar movimientos...">
+                    <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)" placeholder="Buscar movimientos...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
+                        <button class="btn btn-default" type="button" (onClick)="search(searchBar.value)">
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
                     </span>
@@ -44,7 +44,7 @@
                         'table-success': movimiento.tipoMovimiento=='Ingreso',
                         'table-danger': movimiento.tipoMovimiento=='Egreso'
                     }"
-                    *ngFor="let movimiento of cajaDia.movimientos">
+                    *ngFor="let movimiento of movimientos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
                         <th class="text-center text-dark">
                             {{movimiento.movimientoId}}
                         </th>
@@ -60,30 +60,34 @@
                             <span *ngIf="movimiento.formaDePago == 'Cheque'" ><i class="fa fa-list-alt" aria-hidden="true"></i>
                             </span>
                         </td>
-                        <td class="text-center text-dark">${{movimiento.monto}}</td>
+                        <td class="text-center text-dark">${{movimiento.monto | number:'1.2-2'}}</td>
                         <td>
                             <div class="text-center">
                                 <div *ngIf="movimiento?.estado== 'Alta'">
-                                    <button type="submit" replaceUrl="true" class="btn btn-primary btn-sm">
+                                    <!--
+                                        FALTA AGREGAR EL EDITAR MOVIMIENTO
+                                        <button type="submit" replaceUrl="true" class="btn btn-primary btn-sm">
                                         <span class="fa fa-pencil"></span>
-                                        <span class="d-none d-md-inline">Editar</span>
-                                    </button>
+                                        <span class="d-none d-md-inline" [routerLink]="['editar_movimiento']">Editar</span>
+                                    </button> -->
                                     <button type="submit" replaceUrl="true" class="btn btn-danger btn-sm">
                                         <span class="fa fa-remove"></span>
-                                        <span class="d-none d-md-inline">Eliminar</span>
+                                        <span class="d-none d-md-inline" [routerLink]="['/', { outlets: { popup: 'cajas/'+ movimiento.movimientoId + '/eliminar_movimiento'} }]" replaceUrl="true">Eliminar</span>
                                     </button>
                                 </div>
-                                <!-- <div  class="text-right">
-                                    <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
-                                        <span class="fa fa-pencil"></span>
-                                        <span class="d-none d-md-inline" (click)="activarCliente(cliente)">Activar</span>
-                                    </button>
-                                </div> -->
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <ngb-pagination
+                class="d-flex justify-content-center"
+                [collectionSize]="movimientos.length"
+                #numPages
+                [pageSize]="pageSize"
+                [(page)]="page"
+                >
+            </ngb-pagination>
     </div>
 </div>

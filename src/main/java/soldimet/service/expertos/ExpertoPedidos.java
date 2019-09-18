@@ -1,6 +1,8 @@
 package soldimet.service.expertos;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,9 +10,11 @@ import org.springframework.stereotype.Service;
 import soldimet.constant.Globales;
 import soldimet.converter.PedidoConverter;
 import soldimet.converter.ProveedorConverter;
+import soldimet.domain.Authority;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.DetallePedido;
+import soldimet.domain.Empleado;
 import soldimet.domain.EstadoCostoRepuesto;
 import soldimet.domain.EstadoDetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
@@ -21,6 +25,7 @@ import soldimet.domain.Proveedor;
 import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CostoRepuestoRepository;
 import soldimet.repository.DetallePedidoRepository;
+import soldimet.repository.EmpleadoRepository;
 import soldimet.repository.EstadoCostoRepuestoRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
@@ -29,6 +34,7 @@ import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.repository.PersonaRepository;
 import soldimet.repository.ProveedorRepository;
 import soldimet.repository.TipoRepuestoRepository;
+import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOPedidoCabecera;
 import soldimet.service.dto.DTOProveedor;
 
@@ -77,6 +83,9 @@ public class ExpertoPedidos {
     @Autowired
     private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
 
+    @Autowired
+    private EmpleadoRepository empleadoRepository;
+
     public List<PedidoRepuesto> getPedidosPendientes() {
 
         EstadoPedidoRepuesto estadoPendiente = estadoPedidoRepuestoRepository
@@ -102,7 +111,23 @@ public class ExpertoPedidos {
 
     public List<DTOPedidoCabecera> getPedidosCabecera() {
 
+        Empleado empleado = this.getCurrentEmployee();
+
         List<PedidoRepuesto> pedidos = pedidoRepuestoRepository.findAllByOrderByIdDesc();
+
+
+        // Filtro por sucursal
+        if (!this.tieneAccesoATodosLosPedidos(empleado)){
+            List<PedidoRepuesto> pedidosFiltrados = new ArrayList<PedidoRepuesto>();
+            for (PedidoRepuesto pedido: pedidos){
+                if (pedido.getPresupuesto().getSucursal().equals(
+                    empleado.getSucursal())
+                    ){
+                        pedidosFiltrados.add(pedido);
+                }
+            }
+            return pedidoConverter.convertirPedidosAPedidosCabeceras(pedidosFiltrados);
+        }
 
         return pedidoConverter.convertirPedidosAPedidosCabeceras(pedidos);
     }
@@ -145,7 +170,8 @@ public class ExpertoPedidos {
 
         if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
                 .equals(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO)) {
-            //si hay 1 detalle pedido lo dejo parcial
+
+            //si hay al menos 1 detalle Pedido lo dejo parcial
             for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
                 if (!detallePedido.getEstadoDetallePedido().getNombreEstado()
                         .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
@@ -155,7 +181,8 @@ public class ExpertoPedidos {
             }
 
         }
-        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL)) {
+        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
+            .equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL)) {
             Boolean all_pedidos = true;
             Boolean any_recibido = false;
             // si estan todos pedido lo paso de parcial a pedido
@@ -230,7 +257,7 @@ public class ExpertoPedidos {
         Boolean needsToUpdate = true;
         EstadoDetallePedido estadoDetalle = null;
         if (detallePedido.getEstadoDetallePedido().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO)) {
+                .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_DE_PEDIDO)) {
             // Needs to update to Pedido
             for (CobranzaRepuesto cobranzaRepuesto : detallePedido.getDetallePresupuesto().getCobranzaRepuestos()) {
                 Boolean isPedido = false;
@@ -267,7 +294,6 @@ public class ExpertoPedidos {
             }
         }
 
-        // Doesn't needs to update
         return estadoDetalle;
 
     }
@@ -309,6 +335,33 @@ public class ExpertoPedidos {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Empleado getCurrentEmployee() {
+
+        List<Persona> personas = personaRepository.findByUserIsCurrentUser();
+        if (personas.isEmpty()) {
+            return null;
+        }
+
+        Empleado empleado = empleadoRepository.findByPersona(personas.get(0));
+        return empleado;
+    }
+
+    private Boolean tieneAccesoATodosLosPedidos(Empleado empleado) {
+        Set<Authority> authorities = empleado.getPersona().getUser().getAuthorities();
+
+        List<String> authoritiesNames = new ArrayList<String>();
+        // Spring permite filtrar todo a nivel de endpoint por eso filtro así internamente
+        // Tambien se puede pero creando una relacion entre el objeto presupuesto y el user (malisimo)
+        for (Authority authority: authorities) {
+            authoritiesNames.add(authority.getName());
+        }
+
+        return
+            authoritiesNames.contains(AuthoritiesConstants.ADMIN) ||
+            authoritiesNames.contains(AuthoritiesConstants.BOSS)
+        ;
     }
 
 }

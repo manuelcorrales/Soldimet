@@ -19,7 +19,7 @@ public class PresupuestoConverter {
         dtoPresupuesto.setFecha(presupuesto.getFechaCreacion());
         dtoPresupuesto.setImporte(presupuesto.getImporteTotal());
         dtoPresupuesto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
-        dtoPresupuesto.setSucursal("INDEFINIDO");
+        dtoPresupuesto.setSucursal(presupuesto.getSucursal().getNombreSucursal());
         return dtoPresupuesto;
     }
 

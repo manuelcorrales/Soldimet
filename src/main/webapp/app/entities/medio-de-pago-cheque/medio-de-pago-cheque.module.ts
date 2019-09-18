@@ -10,7 +10,7 @@ import {
     MedioDePagoChequeDeleteDialogComponent,
     medioDePagoChequeRoute,
     medioDePagoChequePopupRoute
-} from './';
+} from 'app/entities/medio-de-pago-cheque';
 
 const ENTITY_STATES = [...medioDePagoChequeRoute, ...medioDePagoChequePopupRoute];
 

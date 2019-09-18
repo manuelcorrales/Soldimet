@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MedioDePago } from 'app/shared/model/medio-de-pago.model';
-import { MedioDePagoService } from './medio-de-pago.service';
-import { MedioDePagoComponent } from './medio-de-pago.component';
-import { MedioDePagoDetailComponent } from './medio-de-pago-detail.component';
-import { MedioDePagoUpdateComponent } from './medio-de-pago-update.component';
-import { MedioDePagoDeletePopupComponent } from './medio-de-pago-delete-dialog.component';
+import { MedioDePagoService } from 'app/entities/medio-de-pago/medio-de-pago.service';
+import { MedioDePagoComponent } from 'app/entities/medio-de-pago/medio-de-pago.component';
+import { MedioDePagoDetailComponent } from 'app/entities/medio-de-pago/medio-de-pago-detail.component';
+import { MedioDePagoUpdateComponent } from 'app/entities/medio-de-pago/medio-de-pago-update.component';
+import { MedioDePagoDeletePopupComponent } from 'app/entities/medio-de-pago/medio-de-pago-delete-dialog.component';
 import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
 
 @Injectable({ providedIn: 'root' })

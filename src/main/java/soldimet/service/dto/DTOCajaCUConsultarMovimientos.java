@@ -1,5 +1,4 @@
 package soldimet.service.dto;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -89,13 +88,13 @@ public class DTOCajaCUConsultarMovimientos {
     }
 
     /**
-     * @return the totalMensual
+     * @return the totalDia
      */
     public Float getTotalMensual() {
         return totalMensual;
     }
     /**
-     * @param totalMensual the totalMensual to set
+     * @param totalMensual the totalDia to set
      */
     public void setTotalMensual(Float totalMensual) {
         this.totalMensual = totalMensual;

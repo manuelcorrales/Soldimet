@@ -10,7 +10,7 @@ import {
     DocumentationTypeDeleteDialogComponent,
     documentationTypeRoute,
     documentationTypePopupRoute
-} from './';
+} from 'app/entities/documentation-type';
 
 const ENTITY_STATES = [...documentationTypeRoute, ...documentationTypePopupRoute];
 

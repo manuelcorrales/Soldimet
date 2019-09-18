@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" #search (keydown.enter)="onSearch(search.value)" placeholder="Buscar cliente...">
+                    <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)" placeholder="Buscar cliente...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
+                        <button class="btn btn-default" type="button" (onClick)="search(searchBar.value)">
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
                     </span>
@@ -38,7 +38,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let cliente of clientes">
+                    <tr *ngFor="let cliente of clientes | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
                         <th class="text-center">
                             {{cliente.persona?.nombre}}
                         </th>
@@ -48,12 +48,12 @@
                         <td class="text-center">{{cliente?.persona?.direccion?.localidad?.nombreLocalidad}}</td>
                         <td>
                             <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
-                                <div class="alert alert-success" style="padding: 0px;" role="alert">
+                                <div class="alert-success" style="border-radius: .25rem;" role="alert">
                                     Alta
                                 </div>
                             </div>
                             <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-center">
-                                <div class="alert alert-warning" role="alert" style="padding: 0px;">
+                                <div class="alert-warning" role="alert" style="border-radius: .25rem;">
                                     Baja
                                 </div>
                             </div>
@@ -84,5 +84,13 @@
                 </tbody>
             </table>
         </div>
+        <ngb-pagination
+                class="d-flex justify-content-center"
+                [collectionSize]="clientes.length"
+                #numPages
+                [pageSize]="pageSize"
+                [(page)]="page"
+                >
+            </ngb-pagination>
     </div>
 </div>

@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { IDocumentationType } from 'app/shared/model/documentation-type.model';
-import { DocumentationTypeService } from './documentation-type.service';
+import { DocumentationTypeService } from 'app/entities/documentation-type/documentation-type.service';
 
 @Component({
     selector: 'jhi-documentation-type-update',

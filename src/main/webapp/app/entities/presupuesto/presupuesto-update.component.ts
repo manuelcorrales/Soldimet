@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
-import { PresupuestoService } from './presupuesto.service';
+import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
 import { ICliente } from 'app/shared/model/cliente.model';
 import { ClienteService } from 'app/entities/cliente';
 import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';

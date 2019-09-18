@@ -10,7 +10,7 @@ import {
     DetalleMovimientoDeleteDialogComponent,
     detalleMovimientoRoute,
     detalleMovimientoPopupRoute
-} from './';
+} from 'app/entities/detalle-movimiento';
 
 const ENTITY_STATES = [...detalleMovimientoRoute, ...detalleMovimientoPopupRoute];
 

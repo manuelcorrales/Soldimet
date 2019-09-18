@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { ICostoRepuesto } from 'app/shared/model/costo-repuesto.model';
-import { CostoRepuestoService } from './costo-repuesto.service';
+import { CostoRepuestoService } from 'app/entities/costo-repuesto/costo-repuesto.service';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { TipoRepuestoService } from 'app/entities/tipo-repuesto';
 import { IArticulo } from 'app/shared/model/articulo.model';

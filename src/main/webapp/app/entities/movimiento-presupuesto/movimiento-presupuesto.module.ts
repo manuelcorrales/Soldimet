@@ -10,7 +10,7 @@ import {
     MovimientoPresupuestoDeleteDialogComponent,
     movimientoPresupuestoRoute,
     movimientoPresupuestoPopupRoute
-} from './';
+} from 'app/entities/movimiento-presupuesto';
 
 const ENTITY_STATES = [...movimientoPresupuestoRoute, ...movimientoPresupuestoPopupRoute];
 

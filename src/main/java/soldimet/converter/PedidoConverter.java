@@ -28,6 +28,7 @@ public class PedidoConverter {
         dtoPedidoCabecera.setTipo(tipo.replaceFirst("-", " "));
         dtoPedidoCabecera.setMotor(pedido.getPresupuesto().getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
         dtoPedidoCabecera.setPresupuestoId(pedido.getPresupuesto().getId());
+        dtoPedidoCabecera.setSucursal(pedido.getPresupuesto().getSucursal().getNombreSucursal());
         return dtoPedidoCabecera;
     }
 

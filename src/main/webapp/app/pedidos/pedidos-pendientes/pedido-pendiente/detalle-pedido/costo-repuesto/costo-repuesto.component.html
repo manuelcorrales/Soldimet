@@ -1,5 +1,5 @@
 <div class="row">
-    <p for="example-number-input" class="col-md-2 col-form-label">{{cobranzaRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}</p>
+    <p for="example-number-input" class="col-md-2">{{cobranzaRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}</p>
     <ng-container *ngIf="costoRepuesto.id; else elseTemplate">
         <div class="col-md-2">
             <p>{{costoRepuesto.proveedor?.persona?.nombre}}</p>
@@ -15,13 +15,13 @@
         </div>
         <div class="col-md-2">
             <ng-container *ngIf="costoRepuesto.estado.nombreEstado != 'Recibido' && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else elseTemplate">
-                <label class="alert alert-primary" role="alert" style="padding: 0px;">
+                <label class="alert-primary" role="alert" style="border-radius: .25rem;">
                     {{costoRepuesto.estado.nombreEstado}}
                 </label>
                 <button class="btn btn-outline-success" [disabled]="isSaving" (click)="recibirRepuesto()">Recibir</button>
             </ng-container>
             <ng-template #elseTemplate>
-                <label class="alert alert-success" role="alert" style="padding: 0px;">
+                <label class="alert-success" role="alert" style="border-radius: .25rem;">
                     {{costoRepuesto.estado.nombreEstado}}
                 </label>
             </ng-template>

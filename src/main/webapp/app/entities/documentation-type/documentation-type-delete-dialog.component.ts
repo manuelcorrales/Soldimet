@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IDocumentationType } from 'app/shared/model/documentation-type.model';
-import { DocumentationTypeService } from './documentation-type.service';
+import { DocumentationTypeService } from 'app/entities/documentation-type/documentation-type.service';
 
 @Component({
     selector: 'jhi-documentation-type-delete-dialog',

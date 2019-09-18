@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { DatePipe } from '@angular/common';
-import { JhiAlertService } from '../../../../../node_modules/ng-jhipster';
+import { FormControl } from '@angular/forms';
+import { JhiAlertService } from 'ng-jhipster';
 
 @Component({
     selector: 'jhi-presupuestos',
@@ -13,13 +14,18 @@ export class PresupuestosComponent implements OnInit {
     @ViewChild('toastr', { read: ViewContainerRef })
     toastrContainer: ViewContainerRef;
 
+    totalPresupuestos: DtoPresupuestoCabeceraComponent[] = [];
     presupuestos: DtoPresupuestoCabeceraComponent[] = [];
+
+    page = 1;
+    pageSize = 15;
 
     constructor(private _presupuestosService: PresupuestosService, private jhiAlertService: JhiAlertService) {}
 
     ngOnInit() {
         this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
-            this.presupuestos.push(...presupuestos);
+            this.totalPresupuestos.push(...presupuestos);
+            this.presupuestos = this.totalPresupuestos;
         });
     }
 
@@ -78,5 +84,15 @@ export class PresupuestosComponent implements OnInit {
         return 0;
     }
 
-    onSearch(searchValue) {}
+    search(text: string) {
+        const presupuestos = this.totalPresupuestos.filter(presupuesto => {
+            const term = text.toLowerCase();
+            return (
+                presupuesto.motor.toLowerCase().includes(term) ||
+                presupuesto.cliente.toLowerCase().includes(term) ||
+                presupuesto.codigo.toString().includes(term)
+            );
+        });
+        this.presupuestos = presupuestos.sort(this._sortPresupuesto);
+    }
 }

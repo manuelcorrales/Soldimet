@@ -12,24 +12,54 @@ package soldimet.service.dto;
 public class DTOEmpleado {
 
 
-    private int empleadoID;
+    private Long empleadoID;
     private String nombre;
-    private String apellido;
+    private String sucursal;
+    private Long sucursalId;
 
     public DTOEmpleado() {
     }
 
-    public DTOEmpleado(int empleadoID, String nombre, String apellido) {
-        this.empleadoID = empleadoID;
-        this.nombre = nombre;
-        this.apellido = apellido;
+    /**
+     * @return the sucursalId
+     */
+    public Long getSucursalId() {
+        return sucursalId;
     }
 
-    public int getEmpleadoID() {
+    /**
+     * @param sucursalId the sucursalId to set
+     */
+    public void setSucursalId(Long sucursalId) {
+        this.sucursalId = sucursalId;
+    }
+
+    /**
+     * @return the sucursal
+     */
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    /**
+     * @param sucursal the sucursal to set
+     */
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
+    }
+
+    public DTOEmpleado(Long empleadoID, String nombre, String sucursal, Long sucursalId) {
+        this.empleadoID = empleadoID;
+        this.nombre = nombre;
+        this.sucursal = sucursal;
+        this.sucursalId = sucursalId;
+    }
+
+    public Long getEmpleadoID() {
         return empleadoID;
     }
 
-    public void setEmpleadoID(int empleadoID) {
+    public void setEmpleadoID(Long empleadoID) {
         this.empleadoID = empleadoID;
     }
 
@@ -40,15 +70,5 @@ public class DTOEmpleado {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-
 
 }

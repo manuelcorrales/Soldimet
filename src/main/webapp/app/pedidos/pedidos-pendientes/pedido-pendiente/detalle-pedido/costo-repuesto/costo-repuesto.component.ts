@@ -15,8 +15,8 @@ import { Persona, IPersona } from 'app/shared/model/persona.model';
 import { ArticuloService } from 'app/entities/articulo';
 import { PersonaService } from 'app/entities/persona';
 import { ProveedorService } from 'app/entities/proveedor';
-import { HttpResponse } from '../../../../../../../../../node_modules/@angular/common/http';
-import { JhiAlertService } from 'ng-jhipster';
+import { HttpResponse } from '@angular/common/http';
+import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 
 @Component({
     selector: 'jhi-costo-repuesto',
@@ -68,6 +68,7 @@ export class CostoRepuestoComponent implements OnInit {
         private articuloService: ArticuloService,
         private personaService: PersonaService,
         private proveedorService: ProveedorService,
+        private eventManager: JhiEventManager,
         private jhiAlertService: JhiAlertService
     ) {
         // customize default values of typeaheads used by this component tree
@@ -156,6 +157,7 @@ export class CostoRepuestoComponent implements OnInit {
         this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(
             nuevoCosto => {
                 this.costoRepuesto = nuevoCosto;
+                this.eventManager.broadcast({ name: 'pedidoListModification', content: 'OK' });
                 this.isSaving = false;
             },
             error => {
@@ -216,6 +218,7 @@ export class CostoRepuestoComponent implements OnInit {
         this.pedidoService.recibirRepuesto(this.costoRepuesto, this.detallePedido.id).subscribe((costo: CostoRepuesto) => {
             this.costoRepuesto = costo;
             this.isSaving = false;
+            this.eventManager.broadcast({ name: 'pedidoListModification', content: 'OK' });
         });
     }
 }

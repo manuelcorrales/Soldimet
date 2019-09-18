@@ -2,7 +2,7 @@ import { Moment } from 'moment';
 import { IEstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
 import { IDetallePedido } from 'app/shared/model/detalle-pedido.model';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
-import { IDocumentationType } from 'app/shared/model//documentation-type.model';
+import { IDocumentationType } from 'app/shared/model/documentation-type.model';
 
 export interface IPedidoRepuesto {
     id?: number;

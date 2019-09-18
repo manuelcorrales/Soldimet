@@ -1,12 +1,8 @@
 package soldimet.converter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +10,6 @@ import soldimet.constant.Globales;
 import soldimet.domain.Caja;
 import soldimet.domain.CategoriaPago;
 import soldimet.domain.CostoRepuesto;
-import soldimet.domain.DetalleMovimiento;
-import soldimet.domain.FormaDePago;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.MedioDePagoCheque;
 import soldimet.domain.MedioDePagoTarjeta;
@@ -66,7 +60,12 @@ public class CajaConverter {
         newDto.setDescripcion(this.getDescripcionMovimiento(movimiento));
         newDto.setFormaDePago(movimiento.getMedioDePago().getFormaDePago().getNombreFormaDePago());
         newDto.setFormaDePagoTip(this.formaDePagoTip(movimiento.getMedioDePago()));
-        newDto.setMonto(movimiento.getImporte());
+        if (movimiento.getImporte() < 0) {
+            newDto.setMonto(movimiento.getImporte() * -1);
+        } else {
+            newDto.setMonto(movimiento.getImporte());
+        }
+
         newDto.setMovimientoId(movimiento.getId());
         newDto.setTipoMovimiento(movimiento.getTipoMovimiento().getNombreTipoMovimiento());
         newDto.setEstado(movimiento.getEstado().getNombreEstado());

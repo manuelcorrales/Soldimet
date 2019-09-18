@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { PresupuestosComponent } from 'app/presupuestos/presupuestos.component';
 import { NuevoPresupuestoComponent } from 'app/presupuestos/nuevo-presupuesto/nuevo-presupuesto.component';
 import { UserRouteAccessService } from 'app/core';
-import { JhiResolvePagingParams } from '../../../../../node_modules/ng-jhipster';
+import { JhiResolvePagingParams } from 'ng-jhipster';
 
 export const PRESUPUESTOS_ROUTES: Routes = [
     {

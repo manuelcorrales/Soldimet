@@ -48,16 +48,16 @@ import { SoldimetCobranzaRepuestoModule } from 'app/entities/cobranza-repuesto/c
 import { SoldimetMovimientoArticuloModule } from 'app/entities/movimiento-articulo/movimiento-articulo.module';
 import { SoldimetMovimientoPresupuestoModule } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto.module';
 import { SoldimetMovimientoPedidoModule } from 'app/entities/movimiento-pedido/movimiento-pedido.module';
-import { SoldimetEstadoCostoRepuestoModule } from './estado-costo-repuesto/estado-costo-repuesto.module';
-import { SoldimetCostoRepuestoModule } from './costo-repuesto/costo-repuesto.module';
-import { SoldimetDocumentationTypeModule } from './documentation-type/documentation-type.module';
-import { SoldimetPresupuestoModule } from './presupuesto/presupuesto.module';
-import { SoldimetPedidoRepuestoModule } from './pedido-repuesto/pedido-repuesto.module';
-import { SoldimetSucursalModule } from './sucursal/sucursal.module';
+import { SoldimetEstadoCostoRepuestoModule } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.module';
+import { SoldimetCostoRepuestoModule } from 'app/entities/costo-repuesto/costo-repuesto.module';
+import { SoldimetDocumentationTypeModule } from 'app/entities/documentation-type/documentation-type.module';
+import { SoldimetPresupuestoModule } from 'app/entities/presupuesto/presupuesto.module';
+import { SoldimetPedidoRepuestoModule } from 'app/entities/pedido-repuesto/pedido-repuesto.module';
+import { SoldimetSucursalModule } from 'app/entities/sucursal/sucursal.module';
 import { SoldimetDetalleMovimientoModule } from 'app/entities/detalle-movimiento/detalle-movimiento.module';
-import { SoldimetMedioDePagoModule } from './medio-de-pago/medio-de-pago.module';
-import { SoldimetMedioDePagoTarjetaModule } from './medio-de-pago-tarjeta/medio-de-pago-tarjeta.module';
-import { SoldimetMedioDePagoChequeModule } from './medio-de-pago-cheque/medio-de-pago-cheque.module';
+import { SoldimetMedioDePagoModule } from 'app/entities/medio-de-pago/medio-de-pago.module';
+import { SoldimetMedioDePagoTarjetaModule } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.module';
+import { SoldimetMedioDePagoChequeModule } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.module';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 

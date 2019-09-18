@@ -2,8 +2,8 @@ import { Moment } from 'moment';
 import { ICliente } from 'app/shared/model/cliente.model';
 import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
 import { IDetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
-import { IDocumentationType } from 'app/shared/model//documentation-type.model';
-import { ISucursal } from 'app/shared/model//sucursal.model';
+import { IDocumentationType } from 'app/shared/model/documentation-type.model';
+import { ISucursal } from 'app/shared/model/sucursal.model';
 
 export interface IPresupuesto {
     id?: number;
