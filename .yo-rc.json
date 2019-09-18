@@ -16,7 +16,7 @@
     "prodDatabaseType": "mysql",
     "searchEngine": false,
     "messageBroker": false,
-    "serviceDiscoveryType": "eureka",
+    "languages": ["es-Ar"],
     "buildTool": "maven",
     "enableSocialSignIn": false,
     "enableSwaggerCodegen": false,
@@ -27,8 +27,6 @@
     "applicationType": "monolith",
     "testFrameworks": [],
     "jhiPrefix": "jhi",
-    "enableTranslation": false,
-    "herokuAppName": "soldimet-qa",
-    "herokuDeployType": "jar"
+    "enableTranslation": false
   }
 }
