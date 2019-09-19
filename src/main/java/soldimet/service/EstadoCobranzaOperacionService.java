@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing EstadoCobranzaOperacion.
+ * Service Implementation for managing {@link EstadoCobranzaOperacion}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class EstadoCobranzaOperacionService {
     /**
      * Save a estadoCobranzaOperacion.
      *
-     * @param estadoCobranzaOperacion the entity to save
-     * @return the persisted entity
+     * @param estadoCobranzaOperacion the entity to save.
+     * @return the persisted entity.
      */
     public EstadoCobranzaOperacion save(EstadoCobranzaOperacion estadoCobranzaOperacion) {
-        log.debug("Request to save EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);        return estadoCobranzaOperacionRepository.save(estadoCobranzaOperacion);
+        log.debug("Request to save EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);
+        return estadoCobranzaOperacionRepository.save(estadoCobranzaOperacion);
     }
 
     /**
      * Get all the estadoCobranzaOperacions.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<EstadoCobranzaOperacion> findAll() {
@@ -51,8 +52,8 @@ public class EstadoCobranzaOperacionService {
     /**
      * Get one estadoCobranzaOperacion by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<EstadoCobranzaOperacion> findOne(Long id) {
@@ -63,7 +64,7 @@ public class EstadoCobranzaOperacionService {
     /**
      * Delete the estadoCobranzaOperacion by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoCobranzaOperacion : {}", id);

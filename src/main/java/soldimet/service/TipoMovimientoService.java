@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing TipoMovimiento.
+ * Service Implementation for managing {@link TipoMovimiento}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class TipoMovimientoService {
     /**
      * Save a tipoMovimiento.
      *
-     * @param tipoMovimiento the entity to save
-     * @return the persisted entity
+     * @param tipoMovimiento the entity to save.
+     * @return the persisted entity.
      */
     public TipoMovimiento save(TipoMovimiento tipoMovimiento) {
-        log.debug("Request to save TipoMovimiento : {}", tipoMovimiento);        return tipoMovimientoRepository.save(tipoMovimiento);
+        log.debug("Request to save TipoMovimiento : {}", tipoMovimiento);
+        return tipoMovimientoRepository.save(tipoMovimiento);
     }
 
     /**
      * Get all the tipoMovimientos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<TipoMovimiento> findAll() {
@@ -51,8 +52,8 @@ public class TipoMovimientoService {
     /**
      * Get one tipoMovimiento by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<TipoMovimiento> findOne(Long id) {
@@ -63,7 +64,7 @@ public class TipoMovimientoService {
     /**
      * Delete the tipoMovimiento by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete TipoMovimiento : {}", id);

@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Persona.
  */
 @Entity
 @Table(name = "persona")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Persona implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,16 +32,18 @@ public class Persona implements Serializable {
     @Column(name = "numero_telefono", nullable = false)
     private String numeroTelefono;
 
-    @OneToOne(optional = false)
-    @NotNull
+    @OneToOne(optional = false)    @NotNull
+
     @JoinColumn(unique = true)
     private Direccion direccion;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("personas")
     private EstadoPersona estadoPersona;
 
     @ManyToOne
+    @JsonIgnoreProperties("personas")
     private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -123,19 +126,15 @@ public class Persona implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Persona)) {
             return false;
         }
-        Persona persona = (Persona) o;
-        if (persona.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), persona.getId());
+        return id != null && id.equals(((Persona) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

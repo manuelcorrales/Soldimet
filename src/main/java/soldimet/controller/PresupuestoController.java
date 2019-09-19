@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import com.codahale.metrics.annotation.Timed;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.jhipster.web.util.HeaderUtil;
 import soldimet.domain.Aplicacion;
 import soldimet.domain.Cliente;
 import soldimet.domain.CobranzaOperacion;
@@ -36,17 +36,16 @@ import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
 import soldimet.service.dto.DTOPresupuesto;
 import soldimet.service.expertos.ExpertoPresupuesto;
-import soldimet.web.rest.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/api/presupuestos")
 @Transactional()
-@Timed
 public class PresupuestoController {
 
     private final Logger log = LoggerFactory.getLogger(PresupuestoController.class);
 
     private static final String ENTITY_NAME = "Presupuesto";
+    private static final String APP_NAME = "PresupuestoController";
 
     @Autowired
     private ExpertoPresupuesto expertoPresupuesto;
@@ -119,7 +118,7 @@ public class PresupuestoController {
         log.debug("REST request to save Presupuesto : {}", presupuesto);
         Presupuesto result = expertoPresupuesto.savePresupuesto(presupuesto);
         return ResponseEntity.created(new URI("/api/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(APP_NAME, false, ENTITY_NAME, result.getId().toString())).body(result);
     }
 
     @PostMapping("/aceptar")
@@ -128,7 +127,7 @@ public class PresupuestoController {
         DTOPresupuesto result = expertoPresupuesto.aceptarPresupuesto(dtoPresupuesto);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
                     .body(result);
         } else {
             log.debug("Error :) ", dtoPresupuesto);
@@ -142,7 +141,7 @@ public class PresupuestoController {
         DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
                     .body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);
@@ -155,7 +154,7 @@ public class PresupuestoController {
         DTOPresupuesto result = expertoPresupuesto.entregarPresupuesto(dtoPresupuesto);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
                     .body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);
@@ -168,7 +167,7 @@ public class PresupuestoController {
         DTOPresupuesto result = expertoPresupuesto.terminarPresupuesto(dtoPresupuesto);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(Presupuesto.class.toGenericString(), String.valueOf(result.getCodigo())))
+                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
                     .body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);

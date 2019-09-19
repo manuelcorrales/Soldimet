@@ -1,7 +1,7 @@
 package soldimet.domain;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -9,13 +9,13 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A MovimientoPresupuesto.
  */
 @Entity
 @Table(name = "movimiento_presupuesto")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MovimientoPresupuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,16 +26,17 @@ public class MovimientoPresupuesto implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("movimientoPresupuestos")
     private Presupuesto presupuesto;
 
-    @OneToOne(optional = false)
-    @NotNull
+    @OneToOne(optional = false)    @NotNull
+
     @JoinColumn(unique = true)
     private Movimiento movimiento;
 
     @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch= FetchType.EAGER)
     @JoinColumn(name= "movimientoPresupuesto", nullable=true)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -102,19 +103,15 @@ public class MovimientoPresupuesto implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof MovimientoPresupuesto)) {
             return false;
         }
-        MovimientoPresupuesto movimientoPresupuesto = (MovimientoPresupuesto) o;
-        if (movimientoPresupuesto.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), movimientoPresupuesto.getId());
+        return id != null && id.equals(((MovimientoPresupuesto) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

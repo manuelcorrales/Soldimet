@@ -2,6 +2,8 @@ package soldimet.service;
 
 import java.util.List;
 
+import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,9 +19,8 @@ import soldimet.domain.*; // for static metamodels
 import soldimet.repository.CajaRepository;
 import soldimet.service.dto.CajaCriteria;
 
-
 /**
- * Service for executing complex queries for Caja entities in the database.
+ * Service for executing complex queries for {@link Caja} entities in the database.
  * The main input is a {@link CajaCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
  * It returns a {@link List} of {@link Caja} or a {@link Page} of {@link Caja} which fulfills the criteria.
@@ -37,7 +38,7 @@ public class CajaQueryService extends QueryService<Caja> {
     }
 
     /**
-     * Return a {@link List} of {@link Caja} which matches the criteria from the database
+     * Return a {@link List} of {@link Caja} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
@@ -49,7 +50,7 @@ public class CajaQueryService extends QueryService<Caja> {
     }
 
     /**
-     * Return a {@link Page} of {@link Caja} which matches the criteria from the database
+     * Return a {@link Page} of {@link Caja} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
@@ -62,9 +63,23 @@ public class CajaQueryService extends QueryService<Caja> {
     }
 
     /**
-     * Function to convert CajaCriteria to a {@link Specification}
+     * Return the number of matching entities in the database.
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @return the number of matching entities.
      */
-    private Specification<Caja> createSpecification(CajaCriteria criteria) {
+    @Transactional(readOnly = true)
+    public long countByCriteria(CajaCriteria criteria) {
+        log.debug("count by criteria : {}", criteria);
+        final Specification<Caja> specification = createSpecification(criteria);
+        return cajaRepository.count(specification);
+    }
+
+    /**
+     * Function to convert ConsumerCriteria to a {@link Specification}
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @return the matching {@link Specification} of the entity.
+     */    
+    protected Specification<Caja> createSpecification(CajaCriteria criteria) {
         Specification<Caja> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {
@@ -89,10 +104,10 @@ public class CajaQueryService extends QueryService<Caja> {
                 specification = specification.and(buildRangeSpecification(criteria.getSaldo_fisico(), Caja_.saldo_fisico));
             }
             if (criteria.getSucursalId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getSucursalId(), Caja_.sucursal, Sucursal_.id));
+                specification = specification.and(buildSpecification(criteria.getSucursalId(),
+                    root -> root.join(Caja_.sucursal, JoinType.LEFT).get(Sucursal_.id)));
             }
         }
         return specification;
     }
-
 }

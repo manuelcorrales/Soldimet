@@ -1,18 +1,19 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * A HistorialPrecio.
  */
 @Entity
 @Table(name = "historial_precio")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class HistorialPrecio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,8 +26,8 @@ public class HistorialPrecio implements Serializable {
     @Column(name = "fecha_historial", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaHistorial;
 
-    @OneToOne(optional = false)
-    @NotNull
+    @OneToOne(optional = false)    @NotNull
+
     @JoinColumn(unique = true)
     private PrecioRepuesto precioRepuesto;
 
@@ -71,19 +72,15 @@ public class HistorialPrecio implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof HistorialPrecio)) {
             return false;
         }
-        HistorialPrecio historialPrecio = (HistorialPrecio) o;
-        if (historialPrecio.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), historialPrecio.getId());
+        return id != null && id.equals(((HistorialPrecio) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

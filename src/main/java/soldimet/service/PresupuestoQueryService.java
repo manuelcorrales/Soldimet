@@ -2,6 +2,8 @@ package soldimet.service;
 
 import java.util.List;
 
+import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,9 +19,8 @@ import soldimet.domain.*; // for static metamodels
 import soldimet.repository.PresupuestoRepository;
 import soldimet.service.dto.PresupuestoCriteria;
 
-
 /**
- * Service for executing complex queries for Presupuesto entities in the database.
+ * Service for executing complex queries for {@link Presupuesto} entities in the database.
  * The main input is a {@link PresupuestoCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
  * It returns a {@link List} of {@link Presupuesto} or a {@link Page} of {@link Presupuesto} which fulfills the criteria.
@@ -37,7 +38,7 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
     }
 
     /**
-     * Return a {@link List} of {@link Presupuesto} which matches the criteria from the database
+     * Return a {@link List} of {@link Presupuesto} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
@@ -49,7 +50,7 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
     }
 
     /**
-     * Return a {@link Page} of {@link Presupuesto} which matches the criteria from the database
+     * Return a {@link Page} of {@link Presupuesto} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
@@ -62,9 +63,23 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
     }
 
     /**
-     * Function to convert PresupuestoCriteria to a {@link Specification}
+     * Return the number of matching entities in the database.
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @return the number of matching entities.
      */
-    private Specification<Presupuesto> createSpecification(PresupuestoCriteria criteria) {
+    @Transactional(readOnly = true)
+    public long countByCriteria(PresupuestoCriteria criteria) {
+        log.debug("count by criteria : {}", criteria);
+        final Specification<Presupuesto> specification = createSpecification(criteria);
+        return presupuestoRepository.count(specification);
+    }
+
+    /**
+     * Function to convert ConsumerCriteria to a {@link Specification}
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @return the matching {@link Specification} of the entity.
+     */    
+    protected Specification<Presupuesto> createSpecification(PresupuestoCriteria criteria) {
         Specification<Presupuesto> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {
@@ -92,22 +107,26 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
                 specification = specification.and(buildStringSpecification(criteria.getObservaciones(), Presupuesto_.observaciones));
             }
             if (criteria.getClienteId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getClienteId(), Presupuesto_.cliente, Cliente_.id));
+                specification = specification.and(buildSpecification(criteria.getClienteId(),
+                    root -> root.join(Presupuesto_.cliente, JoinType.LEFT).get(Cliente_.id)));
             }
             if (criteria.getEstadoPresupuestoId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getEstadoPresupuestoId(), Presupuesto_.estadoPresupuesto, EstadoPresupuesto_.id));
+                specification = specification.and(buildSpecification(criteria.getEstadoPresupuestoId(),
+                    root -> root.join(Presupuesto_.estadoPresupuesto, JoinType.LEFT).get(EstadoPresupuesto_.id)));
             }
             if (criteria.getDetallePresupuestoId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getDetallePresupuestoId(), Presupuesto_.detallePresupuestos, DetallePresupuesto_.id));
+                specification = specification.and(buildSpecification(criteria.getDetallePresupuestoId(),
+                    root -> root.join(Presupuesto_.detallePresupuestos, JoinType.LEFT).get(DetallePresupuesto_.id)));
             }
             if (criteria.getDocumentTypeId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getDocumentTypeId(), Presupuesto_.documentType, DocumentationType_.id));
+                specification = specification.and(buildSpecification(criteria.getDocumentTypeId(),
+                    root -> root.join(Presupuesto_.documentType, JoinType.LEFT).get(DocumentationType_.id)));
             }
             if (criteria.getSucursalId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getSucursalId(), Presupuesto_.sucursal, Sucursal_.id));
+                specification = specification.and(buildSpecification(criteria.getSucursalId(),
+                    root -> root.join(Presupuesto_.sucursal, JoinType.LEFT).get(Sucursal_.id)));
             }
         }
         return specification;
     }
-
 }

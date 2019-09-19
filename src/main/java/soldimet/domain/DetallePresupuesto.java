@@ -1,8 +1,9 @@
 package soldimet.domain;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -10,13 +11,13 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A DetallePresupuesto.
  */
 @Entity
 @Table(name = "detalle_presupuesto")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DetallePresupuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,29 +33,35 @@ public class DetallePresupuesto implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("detallePresupuestos")
     private Aplicacion aplicacion;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("detallePresupuestos")
     private Cilindrada cilindrada;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("detallePresupuestos")
     private Motor motor;
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
     @JoinColumn(name= "detallePresupuesto")
     @JsonInclude
-    private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<CobranzaOperacion>();
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("detallePresupuestos")
     private TipoParteMotor tipoParteMotor;
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
     @JoinColumn(name= "detallePresupuesto")
     @JsonInclude
-    private Set<CobranzaRepuesto> cobranzaRepuestos = new HashSet<CobranzaRepuesto>();
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<CobranzaRepuesto> cobranzaRepuestos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -182,19 +189,15 @@ public class DetallePresupuesto implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DetallePresupuesto)) {
             return false;
         }
-        DetallePresupuesto detallePresupuesto = (DetallePresupuesto) o;
-        if (detallePresupuesto.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), detallePresupuesto.getId());
+        return id != null && id.equals(((DetallePresupuesto) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

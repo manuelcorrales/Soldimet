@@ -1,11 +1,9 @@
 package soldimet.service.expertos;
 
 
-import com.netflix.discovery.converters.Auto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import jdk.nashorn.internal.objects.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import soldimet.constant.Globales;

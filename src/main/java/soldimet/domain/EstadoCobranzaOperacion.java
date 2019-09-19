@@ -1,17 +1,18 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A EstadoCobranzaOperacion.
  */
 @Entity
 @Table(name = "estado_cobranza_operacion")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EstadoCobranzaOperacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,19 +54,15 @@ public class EstadoCobranzaOperacion implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof EstadoCobranzaOperacion)) {
             return false;
         }
-        EstadoCobranzaOperacion estadoCobranzaOperacion = (EstadoCobranzaOperacion) o;
-        if (estadoCobranzaOperacion.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), estadoCobranzaOperacion.getId());
+        return id != null && id.equals(((EstadoCobranzaOperacion) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

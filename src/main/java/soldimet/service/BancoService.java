@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing Banco.
+ * Service Implementation for managing {@link Banco}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class BancoService {
     /**
      * Save a banco.
      *
-     * @param banco the entity to save
-     * @return the persisted entity
+     * @param banco the entity to save.
+     * @return the persisted entity.
      */
     public Banco save(Banco banco) {
-        log.debug("Request to save Banco : {}", banco);        return bancoRepository.save(banco);
+        log.debug("Request to save Banco : {}", banco);
+        return bancoRepository.save(banco);
     }
 
     /**
      * Get all the bancos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<Banco> findAll() {
@@ -51,8 +52,8 @@ public class BancoService {
     /**
      * Get one banco by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<Banco> findOne(Long id) {
@@ -63,7 +64,7 @@ public class BancoService {
     /**
      * Delete the banco by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete Banco : {}", id);

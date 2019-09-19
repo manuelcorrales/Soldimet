@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing EstadoPresupuesto.
+ * Service Implementation for managing {@link EstadoPresupuesto}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class EstadoPresupuestoService {
     /**
      * Save a estadoPresupuesto.
      *
-     * @param estadoPresupuesto the entity to save
-     * @return the persisted entity
+     * @param estadoPresupuesto the entity to save.
+     * @return the persisted entity.
      */
     public EstadoPresupuesto save(EstadoPresupuesto estadoPresupuesto) {
-        log.debug("Request to save EstadoPresupuesto : {}", estadoPresupuesto);        return estadoPresupuestoRepository.save(estadoPresupuesto);
+        log.debug("Request to save EstadoPresupuesto : {}", estadoPresupuesto);
+        return estadoPresupuestoRepository.save(estadoPresupuesto);
     }
 
     /**
      * Get all the estadoPresupuestos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<EstadoPresupuesto> findAll() {
@@ -51,8 +52,8 @@ public class EstadoPresupuestoService {
     /**
      * Get one estadoPresupuesto by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<EstadoPresupuesto> findOne(Long id) {
@@ -63,7 +64,7 @@ public class EstadoPresupuestoService {
     /**
      * Delete the estadoPresupuesto by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoPresupuesto : {}", id);

@@ -1,20 +1,22 @@
 package soldimet.domain;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A Motor.
  */
 @Entity
 @Table(name = "motor")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Motor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +33,7 @@ public class Motor implements Serializable {
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name= "motor")
     @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Aplicacion> aplicacions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -84,19 +87,15 @@ public class Motor implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Motor)) {
             return false;
         }
-        Motor motor = (Motor) o;
-        if (motor.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), motor.getId());
+        return id != null && id.equals(((Motor) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

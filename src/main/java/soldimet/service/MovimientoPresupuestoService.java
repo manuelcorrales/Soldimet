@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing MovimientoPresupuesto.
+ * Service Implementation for managing {@link MovimientoPresupuesto}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class MovimientoPresupuestoService {
     /**
      * Save a movimientoPresupuesto.
      *
-     * @param movimientoPresupuesto the entity to save
-     * @return the persisted entity
+     * @param movimientoPresupuesto the entity to save.
+     * @return the persisted entity.
      */
     public MovimientoPresupuesto save(MovimientoPresupuesto movimientoPresupuesto) {
-        log.debug("Request to save MovimientoPresupuesto : {}", movimientoPresupuesto);        return movimientoPresupuestoRepository.save(movimientoPresupuesto);
+        log.debug("Request to save MovimientoPresupuesto : {}", movimientoPresupuesto);
+        return movimientoPresupuestoRepository.save(movimientoPresupuesto);
     }
 
     /**
      * Get all the movimientoPresupuestos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<MovimientoPresupuesto> findAll() {
@@ -51,8 +52,8 @@ public class MovimientoPresupuestoService {
     /**
      * Get one movimientoPresupuesto by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<MovimientoPresupuesto> findOne(Long id) {
@@ -63,7 +64,7 @@ public class MovimientoPresupuestoService {
     /**
      * Delete the movimientoPresupuesto by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete MovimientoPresupuesto : {}", id);

@@ -1,17 +1,18 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Cilindrada.
  */
 @Entity
 @Table(name = "cilindrada")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Cilindrada implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,19 +55,15 @@ public class Cilindrada implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Cilindrada)) {
             return false;
         }
-        Cilindrada cilindrada = (Cilindrada) o;
-        if (cilindrada.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), cilindrada.getId());
+        return id != null && id.equals(((Cilindrada) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

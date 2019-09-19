@@ -1,17 +1,18 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A DocumentationType.
  */
 @Entity
 @Table(name = "documentation_type")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DocumentationType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,19 +53,15 @@ public class DocumentationType implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DocumentationType)) {
             return false;
         }
-        DocumentationType documentationType = (DocumentationType) o;
-        if (documentationType.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), documentationType.getId());
+        return id != null && id.equals(((DocumentationType) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

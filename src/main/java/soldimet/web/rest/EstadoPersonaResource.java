@@ -1,13 +1,14 @@
 package soldimet.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoPersona;
 import soldimet.service.EstadoPersonaService;
 import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing EstadoPersona.
+ * REST controller for managing {@link soldimet.domain.EstadoPersona}.
  */
 @RestController
 @RequestMapping("/api")
@@ -29,6 +30,9 @@ public class EstadoPersonaResource {
 
     private static final String ENTITY_NAME = "estadoPersona";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final EstadoPersonaService estadoPersonaService;
 
     public EstadoPersonaResource(EstadoPersonaService estadoPersonaService) {
@@ -36,14 +40,13 @@ public class EstadoPersonaResource {
     }
 
     /**
-     * POST  /estado-personas : Create a new estadoPersona.
+     * {@code POST  /estado-personas} : Create a new estadoPersona.
      *
-     * @param estadoPersona the estadoPersona to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new estadoPersona, or with status 400 (Bad Request) if the estadoPersona has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param estadoPersona the estadoPersona to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new estadoPersona, or with status {@code 400 (Bad Request)} if the estadoPersona has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/estado-personas")
-    @Timed
     public ResponseEntity<EstadoPersona> createEstadoPersona(@Valid @RequestBody EstadoPersona estadoPersona) throws URISyntaxException {
         log.debug("REST request to save EstadoPersona : {}", estadoPersona);
         if (estadoPersona.getId() != null) {
@@ -51,21 +54,20 @@ public class EstadoPersonaResource {
         }
         EstadoPersona result = estadoPersonaService.save(estadoPersona);
         return ResponseEntity.created(new URI("/api/estado-personas/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /estado-personas : Updates an existing estadoPersona.
+     * {@code PUT  /estado-personas} : Updates an existing estadoPersona.
      *
-     * @param estadoPersona the estadoPersona to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated estadoPersona,
-     * or with status 400 (Bad Request) if the estadoPersona is not valid,
-     * or with status 500 (Internal Server Error) if the estadoPersona couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param estadoPersona the estadoPersona to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated estadoPersona,
+     * or with status {@code 400 (Bad Request)} if the estadoPersona is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the estadoPersona couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/estado-personas")
-    @Timed
     public ResponseEntity<EstadoPersona> updateEstadoPersona(@Valid @RequestBody EstadoPersona estadoPersona) throws URISyntaxException {
         log.debug("REST request to update EstadoPersona : {}", estadoPersona);
         if (estadoPersona.getId() == null) {
@@ -73,30 +75,29 @@ public class EstadoPersonaResource {
         }
         EstadoPersona result = estadoPersonaService.save(estadoPersona);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, estadoPersona.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, estadoPersona.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /estado-personas : get all the estadoPersonas.
+     * {@code GET  /estado-personas} : get all the estadoPersonas.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of estadoPersonas in body
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of estadoPersonas in body.
      */
     @GetMapping("/estado-personas")
-    @Timed
     public List<EstadoPersona> getAllEstadoPersonas() {
         log.debug("REST request to get all EstadoPersonas");
         return estadoPersonaService.findAll();
     }
 
     /**
-     * GET  /estado-personas/:id : get the "id" estadoPersona.
+     * {@code GET  /estado-personas/:id} : get the "id" estadoPersona.
      *
-     * @param id the id of the estadoPersona to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the estadoPersona, or with status 404 (Not Found)
+     * @param id the id of the estadoPersona to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the estadoPersona, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/estado-personas/{id}")
-    @Timed
     public ResponseEntity<EstadoPersona> getEstadoPersona(@PathVariable Long id) {
         log.debug("REST request to get EstadoPersona : {}", id);
         Optional<EstadoPersona> estadoPersona = estadoPersonaService.findOne(id);
@@ -104,16 +105,15 @@ public class EstadoPersonaResource {
     }
 
     /**
-     * DELETE  /estado-personas/:id : delete the "id" estadoPersona.
+     * {@code DELETE  /estado-personas/:id} : delete the "id" estadoPersona.
      *
-     * @param id the id of the estadoPersona to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the estadoPersona to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/estado-personas/{id}")
-    @Timed
     public ResponseEntity<Void> deleteEstadoPersona(@PathVariable Long id) {
         log.debug("REST request to delete EstadoPersona : {}", id);
         estadoPersonaService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

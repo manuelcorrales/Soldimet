@@ -1,13 +1,14 @@
 package soldimet.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Sucursal;
 import soldimet.repository.SucursalRepository;
 import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Sucursal.
+ * REST controller for managing {@link soldimet.domain.Sucursal}.
  */
 @RestController
 @RequestMapping("/api")
@@ -29,6 +30,9 @@ public class SucursalResource {
 
     private static final String ENTITY_NAME = "sucursal";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final SucursalRepository sucursalRepository;
 
     public SucursalResource(SucursalRepository sucursalRepository) {
@@ -36,14 +40,13 @@ public class SucursalResource {
     }
 
     /**
-     * POST  /sucursals : Create a new sucursal.
+     * {@code POST  /sucursals} : Create a new sucursal.
      *
-     * @param sucursal the sucursal to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new sucursal, or with status 400 (Bad Request) if the sucursal has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param sucursal the sucursal to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new sucursal, or with status {@code 400 (Bad Request)} if the sucursal has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/sucursals")
-    @Timed
     public ResponseEntity<Sucursal> createSucursal(@Valid @RequestBody Sucursal sucursal) throws URISyntaxException {
         log.debug("REST request to save Sucursal : {}", sucursal);
         if (sucursal.getId() != null) {
@@ -51,21 +54,20 @@ public class SucursalResource {
         }
         Sucursal result = sucursalRepository.save(sucursal);
         return ResponseEntity.created(new URI("/api/sucursals/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /sucursals : Updates an existing sucursal.
+     * {@code PUT  /sucursals} : Updates an existing sucursal.
      *
-     * @param sucursal the sucursal to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated sucursal,
-     * or with status 400 (Bad Request) if the sucursal is not valid,
-     * or with status 500 (Internal Server Error) if the sucursal couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param sucursal the sucursal to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated sucursal,
+     * or with status {@code 400 (Bad Request)} if the sucursal is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the sucursal couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/sucursals")
-    @Timed
     public ResponseEntity<Sucursal> updateSucursal(@Valid @RequestBody Sucursal sucursal) throws URISyntaxException {
         log.debug("REST request to update Sucursal : {}", sucursal);
         if (sucursal.getId() == null) {
@@ -73,30 +75,29 @@ public class SucursalResource {
         }
         Sucursal result = sucursalRepository.save(sucursal);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sucursal.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, sucursal.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /sucursals : get all the sucursals.
+     * {@code GET  /sucursals} : get all the sucursals.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of sucursals in body
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of sucursals in body.
      */
     @GetMapping("/sucursals")
-    @Timed
     public List<Sucursal> getAllSucursals() {
         log.debug("REST request to get all Sucursals");
         return sucursalRepository.findAll();
     }
 
     /**
-     * GET  /sucursals/:id : get the "id" sucursal.
+     * {@code GET  /sucursals/:id} : get the "id" sucursal.
      *
-     * @param id the id of the sucursal to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the sucursal, or with status 404 (Not Found)
+     * @param id the id of the sucursal to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the sucursal, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/sucursals/{id}")
-    @Timed
     public ResponseEntity<Sucursal> getSucursal(@PathVariable Long id) {
         log.debug("REST request to get Sucursal : {}", id);
         Optional<Sucursal> sucursal = sucursalRepository.findById(id);
@@ -104,17 +105,15 @@ public class SucursalResource {
     }
 
     /**
-     * DELETE  /sucursals/:id : delete the "id" sucursal.
+     * {@code DELETE  /sucursals/:id} : delete the "id" sucursal.
      *
-     * @param id the id of the sucursal to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the sucursal to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/sucursals/{id}")
-    @Timed
     public ResponseEntity<Void> deleteSucursal(@PathVariable Long id) {
         log.debug("REST request to delete Sucursal : {}", id);
-
         sucursalRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

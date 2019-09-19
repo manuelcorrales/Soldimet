@@ -1,17 +1,18 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Cliente.
  */
 @Entity
 @Table(name = "cliente")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,8 +26,8 @@ public class Cliente implements Serializable {
     @Column(name = "apellido", length = 30, nullable = false)
     private String apellido;
 
-    @OneToOne(optional = false, cascade= CascadeType.ALL)
-    @NotNull
+    @OneToOne(optional = false)    @NotNull
+
     @JoinColumn(unique = true)
     private Persona persona;
 
@@ -71,19 +72,15 @@ public class Cliente implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Cliente)) {
             return false;
         }
-        Cliente cliente = (Cliente) o;
-        if (cliente.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), cliente.getId());
+        return id != null && id.equals(((Cliente) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

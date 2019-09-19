@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing Localidad.
+ * Service Implementation for managing {@link Localidad}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class LocalidadService {
     /**
      * Save a localidad.
      *
-     * @param localidad the entity to save
-     * @return the persisted entity
+     * @param localidad the entity to save.
+     * @return the persisted entity.
      */
     public Localidad save(Localidad localidad) {
-        log.debug("Request to save Localidad : {}", localidad);        return localidadRepository.save(localidad);
+        log.debug("Request to save Localidad : {}", localidad);
+        return localidadRepository.save(localidad);
     }
 
     /**
      * Get all the localidads.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<Localidad> findAll() {
@@ -51,8 +52,8 @@ public class LocalidadService {
     /**
      * Get one localidad by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<Localidad> findOne(Long id) {
@@ -63,7 +64,7 @@ public class LocalidadService {
     /**
      * Delete the localidad by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete Localidad : {}", id);

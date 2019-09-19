@@ -1,23 +1,22 @@
 package soldimet.domain;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A Presupuesto.
  */
 @Entity
 @Table(name = "presupuesto")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Presupuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,7 +33,8 @@ public class Presupuesto implements Serializable {
     @Column(name = "descuento")
     private Float descuento;
 
-    @Column(name = "fecha_creacion", columnDefinition = "DATE")
+    @NotNull
+    @Column(name = "fecha_creacion", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaCreacion;
 
     @Column(name = "fecha_aceptado", columnDefinition = "DATE")
@@ -53,20 +53,25 @@ public class Presupuesto implements Serializable {
 
     @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @NotNull
+    @JsonIgnoreProperties("presupuestos")
     private Cliente cliente;
 
     @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @NotNull
+    @JsonIgnoreProperties("presupuestos")
     private EstadoPresupuesto estadoPresupuesto;
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
     @JoinColumn(name= "presupuesto")
-    private Set<DetallePresupuesto> detallePresupuestos = new HashSet<DetallePresupuesto>();
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<DetallePresupuesto> detallePresupuestos = new HashSet<>();
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch= FetchType.EAGER)
+    @JsonIgnoreProperties("presupuestos")
     private DocumentationType documentType;
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE , CascadeType.REFRESH}, fetch= FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch= FetchType.EAGER)
+    @JsonIgnoreProperties("presupuestos")
     private Sucursal sucursal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -250,19 +255,15 @@ public class Presupuesto implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Presupuesto)) {
             return false;
         }
-        Presupuesto presupuesto = (Presupuesto) o;
-        if (presupuesto.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), presupuesto.getId());
+        return id != null && id.equals(((Presupuesto) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

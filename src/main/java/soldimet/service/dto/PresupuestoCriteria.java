@@ -1,6 +1,8 @@
 package soldimet.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
+import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -8,23 +10,20 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-
-
 import io.github.jhipster.service.filter.LocalDateFilter;
 
-
-
 /**
- * Criteria class for the Presupuesto entity. This class is used in PresupuestoResource to
- * receive all the possible filtering options from the Http GET request parameters.
- * For example the following could be a valid requests:
- * <code> /presupuestos?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
+ * Criteria class for the {@link soldimet.domain.Presupuesto} entity. This class is used
+ * in {@link soldimet.web.rest.PresupuestoResource} to receive all the possible filtering options from
+ * the Http GET request parameters.
+ * For example the following could be a valid request:
+ * {@code /presupuestos?id.greaterThan=5&attr1.contains=something&attr2.specified=false}
  * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
  * fix type specific filters.
  */
-public class PresupuestoCriteria implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class PresupuestoCriteria implements Serializable, Criteria {
 
+    private static final long serialVersionUID = 1L;
 
     private LongFilter id;
 
@@ -52,7 +51,28 @@ public class PresupuestoCriteria implements Serializable {
 
     private LongFilter sucursalId;
 
-    public PresupuestoCriteria() {
+    public PresupuestoCriteria(){
+    }
+
+    public PresupuestoCriteria(PresupuestoCriteria other){
+        this.id = other.id == null ? null : other.id.copy();
+        this.descripcionDescuento = other.descripcionDescuento == null ? null : other.descripcionDescuento.copy();
+        this.descuento = other.descuento == null ? null : other.descuento.copy();
+        this.fechaCreacion = other.fechaCreacion == null ? null : other.fechaCreacion.copy();
+        this.fechaAceptado = other.fechaAceptado == null ? null : other.fechaAceptado.copy();
+        this.fechaEntregado = other.fechaEntregado == null ? null : other.fechaEntregado.copy();
+        this.importeTotal = other.importeTotal == null ? null : other.importeTotal.copy();
+        this.observaciones = other.observaciones == null ? null : other.observaciones.copy();
+        this.clienteId = other.clienteId == null ? null : other.clienteId.copy();
+        this.estadoPresupuestoId = other.estadoPresupuestoId == null ? null : other.estadoPresupuestoId.copy();
+        this.detallePresupuestoId = other.detallePresupuestoId == null ? null : other.detallePresupuestoId.copy();
+        this.documentTypeId = other.documentTypeId == null ? null : other.documentTypeId.copy();
+        this.sucursalId = other.sucursalId == null ? null : other.sucursalId.copy();
+    }
+
+    @Override
+    public PresupuestoCriteria copy() {
+        return new PresupuestoCriteria(this);
     }
 
     public LongFilter getId() {
@@ -157,6 +177,51 @@ public class PresupuestoCriteria implements Serializable {
 
     public void setSucursalId(LongFilter sucursalId) {
         this.sucursalId = sucursalId;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final PresupuestoCriteria that = (PresupuestoCriteria) o;
+        return
+            Objects.equals(id, that.id) &&
+            Objects.equals(descripcionDescuento, that.descripcionDescuento) &&
+            Objects.equals(descuento, that.descuento) &&
+            Objects.equals(fechaCreacion, that.fechaCreacion) &&
+            Objects.equals(fechaAceptado, that.fechaAceptado) &&
+            Objects.equals(fechaEntregado, that.fechaEntregado) &&
+            Objects.equals(importeTotal, that.importeTotal) &&
+            Objects.equals(observaciones, that.observaciones) &&
+            Objects.equals(clienteId, that.clienteId) &&
+            Objects.equals(estadoPresupuestoId, that.estadoPresupuestoId) &&
+            Objects.equals(detallePresupuestoId, that.detallePresupuestoId) &&
+            Objects.equals(documentTypeId, that.documentTypeId) &&
+            Objects.equals(sucursalId, that.sucursalId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+        id,
+        descripcionDescuento,
+        descuento,
+        fechaCreacion,
+        fechaAceptado,
+        fechaEntregado,
+        importeTotal,
+        observaciones,
+        clienteId,
+        estadoPresupuestoId,
+        detallePresupuestoId,
+        documentTypeId,
+        sucursalId
+        );
     }
 
     @Override

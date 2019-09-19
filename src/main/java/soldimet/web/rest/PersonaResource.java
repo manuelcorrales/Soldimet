@@ -1,20 +1,22 @@
 package soldimet.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.Persona;
 import soldimet.service.PersonaService;
 import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.web.rest.util.HeaderUtil;
-import soldimet.web.rest.util.PaginationUtil;
 import soldimet.service.dto.PersonaCriteria;
 import soldimet.service.PersonaQueryService;
+
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Persona.
+ * REST controller for managing {@link soldimet.domain.Persona}.
  */
 @RestController
 @RequestMapping("/api")
@@ -35,6 +37,9 @@ public class PersonaResource {
     private final Logger log = LoggerFactory.getLogger(PersonaResource.class);
 
     private static final String ENTITY_NAME = "persona";
+
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
 
     private final PersonaService personaService;
 
@@ -46,14 +51,13 @@ public class PersonaResource {
     }
 
     /**
-     * POST  /personas : Create a new persona.
+     * {@code POST  /personas} : Create a new persona.
      *
-     * @param persona the persona to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new persona, or with status 400 (Bad Request) if the persona has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param persona the persona to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new persona, or with status {@code 400 (Bad Request)} if the persona has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/personas")
-    @Timed
     public ResponseEntity<Persona> createPersona(@Valid @RequestBody Persona persona) throws URISyntaxException {
         log.debug("REST request to save Persona : {}", persona);
         if (persona.getId() != null) {
@@ -61,21 +65,20 @@ public class PersonaResource {
         }
         Persona result = personaService.save(persona);
         return ResponseEntity.created(new URI("/api/personas/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /personas : Updates an existing persona.
+     * {@code PUT  /personas} : Updates an existing persona.
      *
-     * @param persona the persona to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated persona,
-     * or with status 400 (Bad Request) if the persona is not valid,
-     * or with status 500 (Internal Server Error) if the persona couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param persona the persona to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated persona,
+     * or with status {@code 400 (Bad Request)} if the persona is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the persona couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/personas")
-    @Timed
     public ResponseEntity<Persona> updatePersona(@Valid @RequestBody Persona persona) throws URISyntaxException {
         log.debug("REST request to update Persona : {}", persona);
         if (persona.getId() == null) {
@@ -83,34 +86,46 @@ public class PersonaResource {
         }
         Persona result = personaService.save(persona);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, persona.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, persona.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /personas : get all the personas.
+     * {@code GET  /personas} : get all the personas.
      *
-     * @param pageable the pagination information
-     * @param criteria the criterias which the requested entities should match
-     * @return the ResponseEntity with status 200 (OK) and the list of personas in body
+
+     * @param pageable the pagination information.
+
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of personas in body.
      */
     @GetMapping("/personas")
-    @Timed
     public ResponseEntity<List<Persona>> getAllPersonas(PersonaCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Personas by criteria: {}", criteria);
         Page<Persona> page = personaQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/personas");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
-     * GET  /personas/:id : get the "id" persona.
+    * {@code GET  /personas/count} : count all the personas.
+    *
+    * @param criteria the criteria which the requested entities should match.
+    * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+    */
+    @GetMapping("/personas/count")
+    public ResponseEntity<Long> countPersonas(PersonaCriteria criteria) {
+        log.debug("REST request to count Personas by criteria: {}", criteria);
+        return ResponseEntity.ok().body(personaQueryService.countByCriteria(criteria));
+    }
+
+    /**
+     * {@code GET  /personas/:id} : get the "id" persona.
      *
-     * @param id the id of the persona to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the persona, or with status 404 (Not Found)
+     * @param id the id of the persona to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the persona, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/personas/{id}")
-    @Timed
     public ResponseEntity<Persona> getPersona(@PathVariable Long id) {
         log.debug("REST request to get Persona : {}", id);
         Optional<Persona> persona = personaService.findOne(id);
@@ -118,16 +133,15 @@ public class PersonaResource {
     }
 
     /**
-     * DELETE  /personas/:id : delete the "id" persona.
+     * {@code DELETE  /personas/:id} : delete the "id" persona.
      *
-     * @param id the id of the persona to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the persona to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/personas/{id}")
-    @Timed
     public ResponseEntity<Void> deletePersona(@PathVariable Long id) {
         log.debug("REST request to delete Persona : {}", id);
         personaService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

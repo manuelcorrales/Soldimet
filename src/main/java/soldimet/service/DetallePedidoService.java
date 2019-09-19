@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing DetallePedido.
+ * Service Implementation for managing {@link DetallePedido}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class DetallePedidoService {
     /**
      * Save a detallePedido.
      *
-     * @param detallePedido the entity to save
-     * @return the persisted entity
+     * @param detallePedido the entity to save.
+     * @return the persisted entity.
      */
     public DetallePedido save(DetallePedido detallePedido) {
-        log.debug("Request to save DetallePedido : {}", detallePedido);        return detallePedidoRepository.save(detallePedido);
+        log.debug("Request to save DetallePedido : {}", detallePedido);
+        return detallePedidoRepository.save(detallePedido);
     }
 
     /**
      * Get all the detallePedidos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<DetallePedido> findAll() {
@@ -51,8 +52,8 @@ public class DetallePedidoService {
     /**
      * Get one detallePedido by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<DetallePedido> findOne(Long id) {
@@ -63,7 +64,7 @@ public class DetallePedidoService {
     /**
      * Delete the detallePedido by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete DetallePedido : {}", id);

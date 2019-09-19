@@ -1,21 +1,23 @@
 package soldimet.domain;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A ListaPrecioDesdeHasta.
  */
 @Entity
 @Table(name = "lista_precio_desde_hasta")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ListaPrecioDesdeHasta implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,6 +36,7 @@ public class ListaPrecioDesdeHasta implements Serializable {
     @OneToMany(cascade = { CascadeType.ALL })
     @JoinColumn(name = "lista")
     @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CostoOperacion> costoOperacions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -100,19 +103,15 @@ public class ListaPrecioDesdeHasta implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof ListaPrecioDesdeHasta)) {
             return false;
         }
-        ListaPrecioDesdeHasta listaPrecioDesdeHasta = (ListaPrecioDesdeHasta) o;
-        if (listaPrecioDesdeHasta.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), listaPrecioDesdeHasta.getId());
+        return id != null && id.equals(((ListaPrecioDesdeHasta) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

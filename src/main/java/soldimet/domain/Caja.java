@@ -1,6 +1,7 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -8,13 +9,13 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * A Caja.
  */
 @Entity
 @Table(name = "caja")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Caja implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +25,7 @@ public class Caja implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha", nullable = false, columnDefinition = "DATE")
+    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
     @NotNull
@@ -44,7 +45,7 @@ public class Caja implements Serializable {
     private Float saldo_fisico;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("cajas")
     private Sucursal sucursal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -153,19 +154,15 @@ public class Caja implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Caja)) {
             return false;
         }
-        Caja caja = (Caja) o;
-        if (caja.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), caja.getId());
+        return id != null && id.equals(((Caja) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

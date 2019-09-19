@@ -1,13 +1,14 @@
 package soldimet.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.EstadoCobranzaOperacion;
 import soldimet.service.EstadoCobranzaOperacionService;
 import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing EstadoCobranzaOperacion.
+ * REST controller for managing {@link soldimet.domain.EstadoCobranzaOperacion}.
  */
 @RestController
 @RequestMapping("/api")
@@ -29,6 +30,9 @@ public class EstadoCobranzaOperacionResource {
 
     private static final String ENTITY_NAME = "estadoCobranzaOperacion";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final EstadoCobranzaOperacionService estadoCobranzaOperacionService;
 
     public EstadoCobranzaOperacionResource(EstadoCobranzaOperacionService estadoCobranzaOperacionService) {
@@ -36,14 +40,13 @@ public class EstadoCobranzaOperacionResource {
     }
 
     /**
-     * POST  /estado-cobranza-operacions : Create a new estadoCobranzaOperacion.
+     * {@code POST  /estado-cobranza-operacions} : Create a new estadoCobranzaOperacion.
      *
-     * @param estadoCobranzaOperacion the estadoCobranzaOperacion to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new estadoCobranzaOperacion, or with status 400 (Bad Request) if the estadoCobranzaOperacion has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param estadoCobranzaOperacion the estadoCobranzaOperacion to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new estadoCobranzaOperacion, or with status {@code 400 (Bad Request)} if the estadoCobranzaOperacion has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/estado-cobranza-operacions")
-    @Timed
     public ResponseEntity<EstadoCobranzaOperacion> createEstadoCobranzaOperacion(@Valid @RequestBody EstadoCobranzaOperacion estadoCobranzaOperacion) throws URISyntaxException {
         log.debug("REST request to save EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);
         if (estadoCobranzaOperacion.getId() != null) {
@@ -51,21 +54,20 @@ public class EstadoCobranzaOperacionResource {
         }
         EstadoCobranzaOperacion result = estadoCobranzaOperacionService.save(estadoCobranzaOperacion);
         return ResponseEntity.created(new URI("/api/estado-cobranza-operacions/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /estado-cobranza-operacions : Updates an existing estadoCobranzaOperacion.
+     * {@code PUT  /estado-cobranza-operacions} : Updates an existing estadoCobranzaOperacion.
      *
-     * @param estadoCobranzaOperacion the estadoCobranzaOperacion to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated estadoCobranzaOperacion,
-     * or with status 400 (Bad Request) if the estadoCobranzaOperacion is not valid,
-     * or with status 500 (Internal Server Error) if the estadoCobranzaOperacion couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param estadoCobranzaOperacion the estadoCobranzaOperacion to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated estadoCobranzaOperacion,
+     * or with status {@code 400 (Bad Request)} if the estadoCobranzaOperacion is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the estadoCobranzaOperacion couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/estado-cobranza-operacions")
-    @Timed
     public ResponseEntity<EstadoCobranzaOperacion> updateEstadoCobranzaOperacion(@Valid @RequestBody EstadoCobranzaOperacion estadoCobranzaOperacion) throws URISyntaxException {
         log.debug("REST request to update EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);
         if (estadoCobranzaOperacion.getId() == null) {
@@ -73,30 +75,29 @@ public class EstadoCobranzaOperacionResource {
         }
         EstadoCobranzaOperacion result = estadoCobranzaOperacionService.save(estadoCobranzaOperacion);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, estadoCobranzaOperacion.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, estadoCobranzaOperacion.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /estado-cobranza-operacions : get all the estadoCobranzaOperacions.
+     * {@code GET  /estado-cobranza-operacions} : get all the estadoCobranzaOperacions.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of estadoCobranzaOperacions in body
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of estadoCobranzaOperacions in body.
      */
     @GetMapping("/estado-cobranza-operacions")
-    @Timed
     public List<EstadoCobranzaOperacion> getAllEstadoCobranzaOperacions() {
         log.debug("REST request to get all EstadoCobranzaOperacions");
         return estadoCobranzaOperacionService.findAll();
     }
 
     /**
-     * GET  /estado-cobranza-operacions/:id : get the "id" estadoCobranzaOperacion.
+     * {@code GET  /estado-cobranza-operacions/:id} : get the "id" estadoCobranzaOperacion.
      *
-     * @param id the id of the estadoCobranzaOperacion to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the estadoCobranzaOperacion, or with status 404 (Not Found)
+     * @param id the id of the estadoCobranzaOperacion to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the estadoCobranzaOperacion, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/estado-cobranza-operacions/{id}")
-    @Timed
     public ResponseEntity<EstadoCobranzaOperacion> getEstadoCobranzaOperacion(@PathVariable Long id) {
         log.debug("REST request to get EstadoCobranzaOperacion : {}", id);
         Optional<EstadoCobranzaOperacion> estadoCobranzaOperacion = estadoCobranzaOperacionService.findOne(id);
@@ -104,16 +105,15 @@ public class EstadoCobranzaOperacionResource {
     }
 
     /**
-     * DELETE  /estado-cobranza-operacions/:id : delete the "id" estadoCobranzaOperacion.
+     * {@code DELETE  /estado-cobranza-operacions/:id} : delete the "id" estadoCobranzaOperacion.
      *
-     * @param id the id of the estadoCobranzaOperacion to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the estadoCobranzaOperacion to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/estado-cobranza-operacions/{id}")
-    @Timed
     public ResponseEntity<Void> deleteEstadoCobranzaOperacion(@PathVariable Long id) {
         log.debug("REST request to delete EstadoCobranzaOperacion : {}", id);
         estadoCobranzaOperacionService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

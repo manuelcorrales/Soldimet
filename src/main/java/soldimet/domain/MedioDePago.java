@@ -1,28 +1,21 @@
 package soldimet.domain;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * A MedioDePago.
  */
 @Entity
 @Table(name = "medio_de_pago")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MedioDePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,15 +26,16 @@ public class MedioDePago implements Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
+    @JsonIgnoreProperties("medioDePagos")
     private FormaDePago formaDePago;
 
     @OneToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(unique = true, nullable = true, updatable=false)
+    @JoinColumn(unique = true, nullable = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private MedioDePagoCheque medioDePagoCheque;
 
     @OneToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(unique = true, nullable = true, updatable=false)
+    @JoinColumn(unique = true, nullable = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private MedioDePagoTarjeta medioDePagoTarjeta;
 
@@ -99,19 +93,15 @@ public class MedioDePago implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof MedioDePago)) {
             return false;
         }
-        MedioDePago medioDePago = (MedioDePago) o;
-        if (medioDePago.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), medioDePago.getId());
+        return id != null && id.equals(((MedioDePago) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

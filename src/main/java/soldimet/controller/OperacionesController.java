@@ -14,12 +14,10 @@ import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOListaPrecioManoDeObra;
 import soldimet.service.expertos.ExpertoCUModificarCostosDeManoDeObra;
 
-import com.codahale.metrics.annotation.Timed;
 
 @RestController
 @RequestMapping("/api/operaciones")
 @Transactional
-@Timed
 public class OperacionesController {
 
     private final Logger log = LoggerFactory.getLogger(PresupuestoController.class);

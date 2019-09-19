@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing CostoOperacion.
+ * Service Implementation for managing {@link CostoOperacion}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class CostoOperacionService {
     /**
      * Save a costoOperacion.
      *
-     * @param costoOperacion the entity to save
-     * @return the persisted entity
+     * @param costoOperacion the entity to save.
+     * @return the persisted entity.
      */
     public CostoOperacion save(CostoOperacion costoOperacion) {
-        log.debug("Request to save CostoOperacion : {}", costoOperacion);        return costoOperacionRepository.save(costoOperacion);
+        log.debug("Request to save CostoOperacion : {}", costoOperacion);
+        return costoOperacionRepository.save(costoOperacion);
     }
 
     /**
      * Get all the costoOperacions.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<CostoOperacion> findAll() {
@@ -51,8 +52,8 @@ public class CostoOperacionService {
     /**
      * Get one costoOperacion by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<CostoOperacion> findOne(Long id) {
@@ -63,7 +64,7 @@ public class CostoOperacionService {
     /**
      * Delete the costoOperacion by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete CostoOperacion : {}", id);

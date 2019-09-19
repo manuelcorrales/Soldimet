@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing Tarjeta.
+ * Service Implementation for managing {@link Tarjeta}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class TarjetaService {
     /**
      * Save a tarjeta.
      *
-     * @param tarjeta the entity to save
-     * @return the persisted entity
+     * @param tarjeta the entity to save.
+     * @return the persisted entity.
      */
     public Tarjeta save(Tarjeta tarjeta) {
-        log.debug("Request to save Tarjeta : {}", tarjeta);        return tarjetaRepository.save(tarjeta);
+        log.debug("Request to save Tarjeta : {}", tarjeta);
+        return tarjetaRepository.save(tarjeta);
     }
 
     /**
      * Get all the tarjetas.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<Tarjeta> findAll() {
@@ -51,8 +52,8 @@ public class TarjetaService {
     /**
      * Get one tarjeta by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<Tarjeta> findOne(Long id) {
@@ -63,7 +64,7 @@ public class TarjetaService {
     /**
      * Delete the tarjeta by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete Tarjeta : {}", id);

@@ -1,13 +1,14 @@
 package soldimet.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.HistorialPrecio;
 import soldimet.service.HistorialPrecioService;
 import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing HistorialPrecio.
+ * REST controller for managing {@link soldimet.domain.HistorialPrecio}.
  */
 @RestController
 @RequestMapping("/api")
@@ -29,6 +30,9 @@ public class HistorialPrecioResource {
 
     private static final String ENTITY_NAME = "historialPrecio";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final HistorialPrecioService historialPrecioService;
 
     public HistorialPrecioResource(HistorialPrecioService historialPrecioService) {
@@ -36,14 +40,13 @@ public class HistorialPrecioResource {
     }
 
     /**
-     * POST  /historial-precios : Create a new historialPrecio.
+     * {@code POST  /historial-precios} : Create a new historialPrecio.
      *
-     * @param historialPrecio the historialPrecio to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new historialPrecio, or with status 400 (Bad Request) if the historialPrecio has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param historialPrecio the historialPrecio to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new historialPrecio, or with status {@code 400 (Bad Request)} if the historialPrecio has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/historial-precios")
-    @Timed
     public ResponseEntity<HistorialPrecio> createHistorialPrecio(@Valid @RequestBody HistorialPrecio historialPrecio) throws URISyntaxException {
         log.debug("REST request to save HistorialPrecio : {}", historialPrecio);
         if (historialPrecio.getId() != null) {
@@ -51,21 +54,20 @@ public class HistorialPrecioResource {
         }
         HistorialPrecio result = historialPrecioService.save(historialPrecio);
         return ResponseEntity.created(new URI("/api/historial-precios/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /historial-precios : Updates an existing historialPrecio.
+     * {@code PUT  /historial-precios} : Updates an existing historialPrecio.
      *
-     * @param historialPrecio the historialPrecio to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated historialPrecio,
-     * or with status 400 (Bad Request) if the historialPrecio is not valid,
-     * or with status 500 (Internal Server Error) if the historialPrecio couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param historialPrecio the historialPrecio to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated historialPrecio,
+     * or with status {@code 400 (Bad Request)} if the historialPrecio is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the historialPrecio couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/historial-precios")
-    @Timed
     public ResponseEntity<HistorialPrecio> updateHistorialPrecio(@Valid @RequestBody HistorialPrecio historialPrecio) throws URISyntaxException {
         log.debug("REST request to update HistorialPrecio : {}", historialPrecio);
         if (historialPrecio.getId() == null) {
@@ -73,30 +75,29 @@ public class HistorialPrecioResource {
         }
         HistorialPrecio result = historialPrecioService.save(historialPrecio);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, historialPrecio.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, historialPrecio.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /historial-precios : get all the historialPrecios.
+     * {@code GET  /historial-precios} : get all the historialPrecios.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of historialPrecios in body
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of historialPrecios in body.
      */
     @GetMapping("/historial-precios")
-    @Timed
     public List<HistorialPrecio> getAllHistorialPrecios() {
         log.debug("REST request to get all HistorialPrecios");
         return historialPrecioService.findAll();
     }
 
     /**
-     * GET  /historial-precios/:id : get the "id" historialPrecio.
+     * {@code GET  /historial-precios/:id} : get the "id" historialPrecio.
      *
-     * @param id the id of the historialPrecio to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the historialPrecio, or with status 404 (Not Found)
+     * @param id the id of the historialPrecio to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the historialPrecio, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/historial-precios/{id}")
-    @Timed
     public ResponseEntity<HistorialPrecio> getHistorialPrecio(@PathVariable Long id) {
         log.debug("REST request to get HistorialPrecio : {}", id);
         Optional<HistorialPrecio> historialPrecio = historialPrecioService.findOne(id);
@@ -104,16 +105,15 @@ public class HistorialPrecioResource {
     }
 
     /**
-     * DELETE  /historial-precios/:id : delete the "id" historialPrecio.
+     * {@code DELETE  /historial-precios/:id} : delete the "id" historialPrecio.
      *
-     * @param id the id of the historialPrecio to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the historialPrecio to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/historial-precios/{id}")
-    @Timed
     public ResponseEntity<Void> deleteHistorialPrecio(@PathVariable Long id) {
         log.debug("REST request to delete HistorialPrecio : {}", id);
         historialPrecioService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }
