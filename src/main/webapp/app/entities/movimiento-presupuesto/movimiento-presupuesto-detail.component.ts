@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
 
 @Component({
-    selector: 'jhi-movimiento-presupuesto-detail',
-    templateUrl: './movimiento-presupuesto-detail.component.html'
+  selector: 'jhi-movimiento-presupuesto-detail',
+  templateUrl: './movimiento-presupuesto-detail.component.html'
 })
 export class MovimientoPresupuestoDetailComponent implements OnInit {
-    movimientoPresupuesto: IMovimientoPresupuesto;
+  movimientoPresupuesto: IMovimientoPresupuesto;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ movimientoPresupuesto }) => {
-            this.movimientoPresupuesto = movimientoPresupuesto;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ movimientoPresupuesto }) => {
+      this.movimientoPresupuesto = movimientoPresupuesto;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

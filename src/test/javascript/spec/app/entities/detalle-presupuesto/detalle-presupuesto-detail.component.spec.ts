@@ -1,4 +1,3 @@
-/* tslint:disable max-line-length */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
@@ -8,33 +7,33 @@ import { DetallePresupuestoDetailComponent } from 'app/entities/detalle-presupue
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 
 describe('Component Tests', () => {
-    describe('DetallePresupuesto Management Detail Component', () => {
-        let comp: DetallePresupuestoDetailComponent;
-        let fixture: ComponentFixture<DetallePresupuestoDetailComponent>;
-        const route = ({ data: of({ detallePresupuesto: new DetallePresupuesto(123) }) } as any) as ActivatedRoute;
+  describe('DetallePresupuesto Management Detail Component', () => {
+    let comp: DetallePresupuestoDetailComponent;
+    let fixture: ComponentFixture<DetallePresupuestoDetailComponent>;
+    const route = ({ data: of({ detallePresupuesto: new DetallePresupuesto(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [SoldimetTestModule],
-                declarations: [DetallePresupuestoDetailComponent],
-                providers: [{ provide: ActivatedRoute, useValue: route }]
-            })
-                .overrideTemplate(DetallePresupuestoDetailComponent, '')
-                .compileComponents();
-            fixture = TestBed.createComponent(DetallePresupuestoDetailComponent);
-            comp = fixture.componentInstance;
-        });
-
-        describe('OnInit', () => {
-            it('Should call load all on init', () => {
-                // GIVEN
-
-                // WHEN
-                comp.ngOnInit();
-
-                // THEN
-                expect(comp.detallePresupuesto).toEqual(jasmine.objectContaining({ id: 123 }));
-            });
-        });
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [SoldimetTestModule],
+        declarations: [DetallePresupuestoDetailComponent],
+        providers: [{ provide: ActivatedRoute, useValue: route }]
+      })
+        .overrideTemplate(DetallePresupuestoDetailComponent, '')
+        .compileComponents();
+      fixture = TestBed.createComponent(DetallePresupuestoDetailComponent);
+      comp = fixture.componentInstance;
     });
+
+    describe('OnInit', () => {
+      it('Should call load all on init', () => {
+        // GIVEN
+
+        // WHEN
+        comp.ngOnInit();
+
+        // THEN
+        expect(comp.detallePresupuesto).toEqual(jasmine.objectContaining({ id: 123 }));
+      });
+    });
+  });
 });

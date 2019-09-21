@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 
 @Component({
-    selector: 'jhi-sub-categoria-detail',
-    templateUrl: './sub-categoria-detail.component.html'
+  selector: 'jhi-sub-categoria-detail',
+  templateUrl: './sub-categoria-detail.component.html'
 })
 export class SubCategoriaDetailComponent implements OnInit {
-    subCategoria: ISubCategoria;
+  subCategoria: ISubCategoria;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ subCategoria }) => {
-            this.subCategoria = subCategoria;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ subCategoria }) => {
+      this.subCategoria = subCategoria;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

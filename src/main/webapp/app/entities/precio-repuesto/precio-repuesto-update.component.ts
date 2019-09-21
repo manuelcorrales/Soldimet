@@ -1,59 +1,80 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IPrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
-import { PrecioRepuestoService } from 'app/entities/precio-repuesto/precio-repuesto.service';
+import { IPrecioRepuesto, PrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
+import { PrecioRepuestoService } from './precio-repuesto.service';
 
 @Component({
-    selector: 'jhi-precio-repuesto-update',
-    templateUrl: './precio-repuesto-update.component.html'
+  selector: 'jhi-precio-repuesto-update',
+  templateUrl: './precio-repuesto-update.component.html'
 })
 export class PrecioRepuestoUpdateComponent implements OnInit {
-    private _precioRepuesto: IPrecioRepuesto;
-    isSaving: boolean;
-    fechaDp: any;
+  isSaving: boolean;
+  fechaDp: any;
 
-    constructor(private precioRepuestoService: PrecioRepuestoService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    fecha: [null, [Validators.required]],
+    precioPrivado: [null, [Validators.min(0)]],
+    precioPublico: [null, [Validators.required, Validators.min(0)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ precioRepuesto }) => {
-            this.precioRepuesto = precioRepuesto;
-        });
-    }
+  constructor(protected precioRepuestoService: PrecioRepuestoService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ precioRepuesto }) => {
+      this.updateForm(precioRepuesto);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.precioRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(this.precioRepuestoService.update(this.precioRepuesto));
-        } else {
-            this.subscribeToSaveResponse(this.precioRepuestoService.create(this.precioRepuesto));
-        }
-    }
+  updateForm(precioRepuesto: IPrecioRepuesto) {
+    this.editForm.patchValue({
+      id: precioRepuesto.id,
+      fecha: precioRepuesto.fecha,
+      precioPrivado: precioRepuesto.precioPrivado,
+      precioPublico: precioRepuesto.precioPublico
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IPrecioRepuesto>>) {
-        result.subscribe((res: HttpResponse<IPrecioRepuesto>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const precioRepuesto = this.createFromForm();
+    if (precioRepuesto.id !== undefined) {
+      this.subscribeToSaveResponse(this.precioRepuestoService.update(precioRepuesto));
+    } else {
+      this.subscribeToSaveResponse(this.precioRepuestoService.create(precioRepuesto));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get precioRepuesto() {
-        return this._precioRepuesto;
-    }
+  private createFromForm(): IPrecioRepuesto {
+    return {
+      ...new PrecioRepuesto(),
+      id: this.editForm.get(['id']).value,
+      fecha: this.editForm.get(['fecha']).value,
+      precioPrivado: this.editForm.get(['precioPrivado']).value,
+      precioPublico: this.editForm.get(['precioPublico']).value
+    };
+  }
 
-    set precioRepuesto(precioRepuesto: IPrecioRepuesto) {
-        this._precioRepuesto = precioRepuesto;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IPrecioRepuesto>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

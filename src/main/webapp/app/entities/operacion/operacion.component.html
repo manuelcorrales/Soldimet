@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-operacion" [routerLink]="['/operacion/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Operacion
+            Create a new Operacion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="operacions">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="operacions?.length === 0">
+        <span>No operacions found</span>
+    </div>
+    <div class="table-responsive" *ngIf="operacions?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -27,16 +30,16 @@
                 <td>{{operacion.nombreOperacion}}</td>
                 <td>
                     <div *ngIf="operacion.tipoParteMotor">
-                        <a [routerLink]="['../tipo-parte-motor', operacion.tipoParteMotor?.id, 'view' ]" >{{operacion.tipoParteMotor?.nombreTipoParteMotor}}</a>
+                        <a [routerLink]="['/tipo-parte-motor', operacion.tipoParteMotor?.id, 'view' ]" >{{operacion.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="operacion.estadoOperacion">
-                        <a [routerLink]="['../estado-operacion', operacion.estadoOperacion?.id, 'view' ]" >{{operacion.estadoOperacion?.nombreEstado}}</a>
+                        <a [routerLink]="['/estado-operacion', operacion.estadoOperacion?.id, 'view' ]" >{{operacion.estadoOperacion?.nombreEstado}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/operacion', operacion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -50,7 +53,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'operacion/'+ operacion.id + '/delete'} }]"
+                                [routerLink]="['/operacion', { outlets: { popup: operacion.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

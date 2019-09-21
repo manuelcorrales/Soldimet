@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-direccion" [routerLink]="['/direccion/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Direccion
+            Create a new Direccion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="direccions">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="direccions?.length === 0">
+        <span>No direccions found</span>
+    </div>
+    <div class="table-responsive" *ngIf="direccions?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -28,11 +31,11 @@
                 <td>{{direccion.numero}}</td>
                 <td>
                     <div *ngIf="direccion.localidad">
-                        <a [routerLink]="['../localidad', direccion.localidad?.id, 'view' ]" >{{direccion.localidad?.nombreLocalidad}}</a>
+                        <a [routerLink]="['/localidad', direccion.localidad?.id, 'view' ]" >{{direccion.localidad?.nombreLocalidad}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/direccion', direccion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -46,7 +49,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'direccion/'+ direccion.id + '/delete'} }]"
+                                [routerLink]="['/direccion', { outlets: { popup: direccion.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

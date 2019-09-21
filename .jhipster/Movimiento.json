@@ -61,10 +61,8 @@
             "fieldName": "importe",
             "fieldType": "Float",
             "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": 0
+                "required"
+            ]
         },
         {
             "fieldName": "descuento",

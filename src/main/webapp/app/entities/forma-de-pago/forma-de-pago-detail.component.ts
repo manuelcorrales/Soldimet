@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 
 @Component({
-    selector: 'jhi-forma-de-pago-detail',
-    templateUrl: './forma-de-pago-detail.component.html'
+  selector: 'jhi-forma-de-pago-detail',
+  templateUrl: './forma-de-pago-detail.component.html'
 })
 export class FormaDePagoDetailComponent implements OnInit {
-    formaDePago: IFormaDePago;
+  formaDePago: IFormaDePago;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ formaDePago }) => {
-            this.formaDePago = formaDePago;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ formaDePago }) => {
+      this.formaDePago = formaDePago;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

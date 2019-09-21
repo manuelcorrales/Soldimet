@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-estado-operacion" [routerLink]="['/estado-operacion/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Estado Operacion
+            Create a new Estado Operacion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="estadoOperacions">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="estadoOperacions?.length === 0">
+        <span>No estadoOperacions found</span>
+    </div>
+    <div class="table-responsive" *ngIf="estadoOperacions?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -24,7 +27,7 @@
                 <td><a [routerLink]="['/estado-operacion', estadoOperacion.id, 'view' ]">{{estadoOperacion.id}}</a></td>
                 <td>{{estadoOperacion.nombreEstado}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/estado-operacion', estadoOperacion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -38,7 +41,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'estado-operacion/'+ estadoOperacion.id + '/delete'} }]"
+                                [routerLink]="['/estado-operacion', { outlets: { popup: estadoOperacion.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

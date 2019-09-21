@@ -1,58 +1,77 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
-import { EstadoPresupuestoService } from 'app/entities/estado-presupuesto/estado-presupuesto.service';
+import { IEstadoPresupuesto, EstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
+import { EstadoPresupuestoService } from './estado-presupuesto.service';
 
 @Component({
-    selector: 'jhi-estado-presupuesto-update',
-    templateUrl: './estado-presupuesto-update.component.html'
+  selector: 'jhi-estado-presupuesto-update',
+  templateUrl: './estado-presupuesto-update.component.html'
 })
 export class EstadoPresupuestoUpdateComponent implements OnInit {
-    private _estadoPresupuesto: IEstadoPresupuesto;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private estadoPresupuestoService: EstadoPresupuestoService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreEstado: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ estadoPresupuesto }) => {
-            this.estadoPresupuesto = estadoPresupuesto;
-        });
-    }
+  constructor(
+    protected estadoPresupuestoService: EstadoPresupuestoService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ estadoPresupuesto }) => {
+      this.updateForm(estadoPresupuesto);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.estadoPresupuesto.id !== undefined) {
-            this.subscribeToSaveResponse(this.estadoPresupuestoService.update(this.estadoPresupuesto));
-        } else {
-            this.subscribeToSaveResponse(this.estadoPresupuestoService.create(this.estadoPresupuesto));
-        }
-    }
+  updateForm(estadoPresupuesto: IEstadoPresupuesto) {
+    this.editForm.patchValue({
+      id: estadoPresupuesto.id,
+      nombreEstado: estadoPresupuesto.nombreEstado
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoPresupuesto>>) {
-        result.subscribe((res: HttpResponse<IEstadoPresupuesto>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const estadoPresupuesto = this.createFromForm();
+    if (estadoPresupuesto.id !== undefined) {
+      this.subscribeToSaveResponse(this.estadoPresupuestoService.update(estadoPresupuesto));
+    } else {
+      this.subscribeToSaveResponse(this.estadoPresupuestoService.create(estadoPresupuesto));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get estadoPresupuesto() {
-        return this._estadoPresupuesto;
-    }
+  private createFromForm(): IEstadoPresupuesto {
+    return {
+      ...new EstadoPresupuesto(),
+      id: this.editForm.get(['id']).value,
+      nombreEstado: this.editForm.get(['nombreEstado']).value
+    };
+  }
 
-    set estadoPresupuesto(estadoPresupuesto: IEstadoPresupuesto) {
-        this._estadoPresupuesto = estadoPresupuesto;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoPresupuesto>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

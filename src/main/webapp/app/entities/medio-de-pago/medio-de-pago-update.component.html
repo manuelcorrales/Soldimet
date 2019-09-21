@@ -1,40 +1,40 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-medio-de-pago-heading">Create or edit a Medio De Pago</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!medioDePago.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="medioDePago.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_formaDePago">Forma De Pago</label>
-                    <select class="form-control" id="field_formaDePago" name="formaDePago" [(ngModel)]="medioDePago.formaDePago"  required>
-                        <option *ngIf="!editForm.value.formaDePago" [ngValue]="null" selected></option>
-                        <option [ngValue]="formaDePagoOption.id === medioDePago.formaDePago?.id ? medioDePago.formaDePago : formaDePagoOption" *ngFor="let formaDePagoOption of formadepagos; trackBy: trackFormaDePagoById">{{formaDePagoOption.nombreFormaDePago}}</option>
+                    <select class="form-control" id="field_formaDePago" name="formaDePago" formControlName="formaDePago">
+                        <option *ngIf="!editForm.get('formaDePago').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="formaDePagoOption.id === editForm.get('formaDePago').value?.id ? editForm.get('formaDePago').value : formaDePagoOption" *ngFor="let formaDePagoOption of formadepagos; trackBy: trackFormaDePagoById">{{formaDePagoOption.nombreFormaDePago}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.formaDePago?.dirty && editForm.controls.formaDePago?.invalid)">
+                <div *ngIf="editForm.get('formaDePago').invalid && (editForm.get('formaDePago').dirty || editForm.get('formaDePago').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.formaDePago?.errors?.required">
+                           *ngIf="editForm.get('formaDePago').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_medioDePagoCheque">Medio De Pago Cheque</label>
-                    <select class="form-control" id="field_medioDePagoCheque" name="medioDePagoCheque" [(ngModel)]="medioDePago.medioDePagoCheque">
+                    <select class="form-control" id="field_medioDePagoCheque" name="medioDePagoCheque" formControlName="medioDePagoCheque">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="medioDePagoChequeOption.id === medioDePago.medioDePagoCheque?.id ? medioDePago.medioDePagoCheque : medioDePagoChequeOption" *ngFor="let medioDePagoChequeOption of mediodepagocheques; trackBy: trackMedioDePagoChequeById">{{medioDePagoChequeOption.id}}</option>
+                        <option [ngValue]="medioDePagoChequeOption.id === editForm.get('medioDePagoCheque').value?.id ? editForm.get('medioDePagoCheque').value : medioDePagoChequeOption" *ngFor="let medioDePagoChequeOption of mediodepagocheques; trackBy: trackMedioDePagoChequeById">{{medioDePagoChequeOption.id}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_medioDePagoTarjeta">Medio De Pago Tarjeta</label>
-                    <select class="form-control" id="field_medioDePagoTarjeta" name="medioDePagoTarjeta" [(ngModel)]="medioDePago.medioDePagoTarjeta">
+                    <select class="form-control" id="field_medioDePagoTarjeta" name="medioDePagoTarjeta" formControlName="medioDePagoTarjeta">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="medioDePagoTarjetaOption.id === medioDePago.medioDePagoTarjeta?.id ? medioDePago.medioDePagoTarjeta : medioDePagoTarjetaOption" *ngFor="let medioDePagoTarjetaOption of mediodepagotarjetas; trackBy: trackMedioDePagoTarjetaById">{{medioDePagoTarjetaOption.id}}</option>
+                        <option [ngValue]="medioDePagoTarjetaOption.id === editForm.get('medioDePagoTarjeta').value?.id ? editForm.get('medioDePagoTarjeta').value : medioDePagoTarjetaOption" *ngFor="let medioDePagoTarjetaOption of mediodepagotarjetas; trackBy: trackMedioDePagoTarjetaById">{{medioDePagoTarjetaOption.id}}</option>
                     </select>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

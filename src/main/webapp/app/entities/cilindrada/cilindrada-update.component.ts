@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { ICilindrada } from 'app/shared/model/cilindrada.model';
-import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
+import { ICilindrada, Cilindrada } from 'app/shared/model/cilindrada.model';
+import { CilindradaService } from './cilindrada.service';
 
 @Component({
-    selector: 'jhi-cilindrada-update',
-    templateUrl: './cilindrada-update.component.html'
+  selector: 'jhi-cilindrada-update',
+  templateUrl: './cilindrada-update.component.html'
 })
 export class CilindradaUpdateComponent implements OnInit {
-    private _cilindrada: ICilindrada;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private cilindradaService: CilindradaService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    cantidadDeCilindros: [null, [Validators.required, Validators.min(1), Validators.max(20)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ cilindrada }) => {
-            this.cilindrada = cilindrada;
-        });
-    }
+  constructor(protected cilindradaService: CilindradaService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ cilindrada }) => {
+      this.updateForm(cilindrada);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.cilindrada.id !== undefined) {
-            this.subscribeToSaveResponse(this.cilindradaService.update(this.cilindrada));
-        } else {
-            this.subscribeToSaveResponse(this.cilindradaService.create(this.cilindrada));
-        }
-    }
+  updateForm(cilindrada: ICilindrada) {
+    this.editForm.patchValue({
+      id: cilindrada.id,
+      cantidadDeCilindros: cilindrada.cantidadDeCilindros
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ICilindrada>>) {
-        result.subscribe((res: HttpResponse<ICilindrada>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const cilindrada = this.createFromForm();
+    if (cilindrada.id !== undefined) {
+      this.subscribeToSaveResponse(this.cilindradaService.update(cilindrada));
+    } else {
+      this.subscribeToSaveResponse(this.cilindradaService.create(cilindrada));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get cilindrada() {
-        return this._cilindrada;
-    }
+  private createFromForm(): ICilindrada {
+    return {
+      ...new Cilindrada(),
+      id: this.editForm.get(['id']).value,
+      cantidadDeCilindros: this.editForm.get(['cantidadDeCilindros']).value
+    };
+  }
 
-    set cilindrada(cilindrada: ICilindrada) {
-        this._cilindrada = cilindrada;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ICilindrada>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

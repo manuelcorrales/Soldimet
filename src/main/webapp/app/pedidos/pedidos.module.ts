@@ -8,10 +8,10 @@ import { PedidosPendientesComponent } from 'app/pedidos/pedidos-pendientes/pedid
 import { PedidosRecibidosComponent } from 'app/pedidos/pedidos-recibidos/pedidos-recibidos.component';
 import { PedidosRealizadosComponent } from 'app/pedidos/pedidos-realizados/pedidos-realizados.component';
 import {
-    PedidoPendienteComponent,
-    PedidoPendienteModalPopupComponent
+  PedidoPendienteComponent,
+  PedidoPendienteModalPopupComponent
 } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/pedido-pendiente.component';
-import { DetallePedidoComponentNew } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
+import { DetallePedidoNewComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { CostoRepuestoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -21,27 +21,27 @@ import { FormsModule } from '@angular/forms';
 const PEDIDOS_NEW_ROUTES_ALL = [...PEDIDOS_NEW_POPUP_ROUTE, ...PEDIDOS_SUBROUTES];
 
 @NgModule({
-    imports: [
-        // NgxDatatableModule,
-        NgbModule.forRoot(),
-        CommonModule,
-        BrowserModule,
-        FormsModule,
-        RouterModule.forChild(PEDIDOS_NEW_ROUTES_ALL)
-    ],
-    exports: [RouterModule, NgbModule],
-    entryComponents: [PedidosComponent, PedidoPendienteModalPopupComponent, PedidoPendienteComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    providers: [PedidosService, PedidoModalPopupService],
-    declarations: [
-        PedidosComponent,
-        PedidosPendientesComponent,
-        PedidosRecibidosComponent,
-        PedidosRealizadosComponent,
-        PedidoPendienteComponent,
-        DetallePedidoComponentNew,
-        CostoRepuestoComponent,
-        PedidoPendienteModalPopupComponent
-    ]
+  imports: [
+    // NgxDatatableModule,
+    NgbModule,
+    CommonModule,
+    BrowserModule,
+    FormsModule,
+    RouterModule.forChild(PEDIDOS_NEW_ROUTES_ALL)
+  ],
+  exports: [RouterModule, NgbModule],
+  entryComponents: [PedidosComponent, PedidoPendienteModalPopupComponent, PedidoPendienteComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [PedidosService, PedidoModalPopupService],
+  declarations: [
+    PedidosComponent,
+    PedidosPendientesComponent,
+    PedidosRecibidosComponent,
+    PedidosRealizadosComponent,
+    PedidoPendienteComponent,
+    DetallePedidoNewComponent,
+    CostoRepuestoComponent,
+    PedidoPendienteModalPopupComponent
+  ]
 })
 export class PedidosModule {}

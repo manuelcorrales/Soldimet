@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-aplicacion" [routerLink]="['/aplicacion/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Aplicacion
+            Create a new Aplicacion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="aplicacions">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="aplicacions?.length === 0">
+        <span>No aplicacions found</span>
+    </div>
+    <div class="table-responsive" *ngIf="aplicacions?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -26,7 +29,7 @@
                 <td>{{aplicacion.nombreAplicacion}}</td>
                 <td>{{aplicacion.numeroGrupo}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/aplicacion', aplicacion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -40,7 +43,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'aplicacion/'+ aplicacion.id + '/delete'} }]"
+                                [routerLink]="['/aplicacion', { outlets: { popup: aplicacion.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

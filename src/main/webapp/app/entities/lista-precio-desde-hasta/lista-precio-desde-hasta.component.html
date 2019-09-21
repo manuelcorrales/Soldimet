@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-lista-precio-desde-hasta" [routerLink]="['/lista-precio-desde-hasta/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Lista Precio Desde Hasta
+            Create a new Lista Precio Desde Hasta
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="listaPrecioDesdeHastas">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="listaPrecioDesdeHastas?.length === 0">
+        <span>No listaPrecioDesdeHastas found</span>
+    </div>
+    <div class="table-responsive" *ngIf="listaPrecioDesdeHastas?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -26,7 +29,7 @@
                 <td>{{listaPrecioDesdeHasta.fechaDesde | date:'mediumDate'}}</td>
                 <td>{{listaPrecioDesdeHasta.fechaHasta | date:'mediumDate'}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/lista-precio-desde-hasta', listaPrecioDesdeHasta.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -40,7 +43,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'lista-precio-desde-hasta/'+ listaPrecioDesdeHasta.id + '/delete'} }]"
+                                [routerLink]="['/lista-precio-desde-hasta', { outlets: { popup: listaPrecioDesdeHasta.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

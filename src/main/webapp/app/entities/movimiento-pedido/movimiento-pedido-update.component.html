@@ -1,38 +1,38 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-movimiento-pedido-heading">Create or edit a Movimiento Pedido</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!movimientoPedido.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="movimientoPedido.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_pedidoRepuesto">Pedido Repuesto</label>
-                    <select class="form-control" id="field_pedidoRepuesto" name="pedidoRepuesto" [(ngModel)]="movimientoPedido.pedidoRepuesto"  required>
-                        <option *ngIf="!editForm.value.pedidoRepuesto" [ngValue]="null" selected></option>
-                        <option [ngValue]="pedidoRepuestoOption.id === movimientoPedido.pedidoRepuesto?.id ? movimientoPedido.pedidoRepuesto : pedidoRepuestoOption" *ngFor="let pedidoRepuestoOption of pedidorepuestos; trackBy: trackPedidoRepuestoById">{{pedidoRepuestoOption.id}}</option>
+                    <select class="form-control" id="field_pedidoRepuesto" name="pedidoRepuesto" formControlName="pedidoRepuesto">
+                        <option *ngIf="!editForm.get('pedidoRepuesto').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="pedidoRepuestoOption.id === editForm.get('pedidoRepuesto').value?.id ? editForm.get('pedidoRepuesto').value : pedidoRepuestoOption" *ngFor="let pedidoRepuestoOption of pedidorepuestos; trackBy: trackPedidoRepuestoById">{{pedidoRepuestoOption.id}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.pedidoRepuesto?.dirty && editForm.controls.pedidoRepuesto?.invalid)">
+                <div *ngIf="editForm.get('pedidoRepuesto').invalid && (editForm.get('pedidoRepuesto').dirty || editForm.get('pedidoRepuesto').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.pedidoRepuesto?.errors?.required">
+                           *ngIf="editForm.get('pedidoRepuesto').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_movimiento">Movimiento</label>
-                    <select class="form-control" id="field_movimiento" name="movimiento" [(ngModel)]="movimientoPedido.movimiento" required>
-                        <option *ngIf="!editForm.value.movimiento" [ngValue]="null" selected></option>
-                        <option [ngValue]="movimientoOption.id === movimientoPedido.movimiento?.id ? movimientoPedido.movimiento : movimientoOption" *ngFor="let movimientoOption of movimientos; trackBy: trackMovimientoById">{{movimientoOption.id}}</option>
+                    <select class="form-control" id="field_movimiento" name="movimiento" formControlName="movimiento">
+                        <option *ngIf="!editForm.get('movimiento').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="movimientoOption.id === editForm.get('movimiento').value?.id ? editForm.get('movimiento').value : movimientoOption" *ngFor="let movimientoOption of movimientos; trackBy: trackMovimientoById">{{movimientoOption.id}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.movimiento?.dirty && editForm.controls.movimiento?.invalid)">
+                <div *ngIf="editForm.get('movimiento').invalid && (editForm.get('movimiento').dirty || editForm.get('movimiento').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.movimiento?.errors?.required">
+                           *ngIf="editForm.get('movimiento').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -41,7 +41,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

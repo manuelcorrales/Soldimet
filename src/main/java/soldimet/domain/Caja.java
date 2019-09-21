@@ -25,7 +25,7 @@ public class Caja implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha", nullable = false, columnDefinition = "DATE")
     private LocalDate fecha;
 
     @NotNull
@@ -42,7 +42,7 @@ public class Caja implements Serializable {
     private String observaciones;
 
     @Column(name = "saldo_fisico")
-    private Float saldo_fisico;
+    private Float saldoFisico;
 
     @ManyToOne
     @JsonIgnoreProperties("cajas")
@@ -122,17 +122,17 @@ public class Caja implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public Float getSaldo_fisico() {
-        return saldo_fisico;
+    public Float getSaldoFisico() {
+        return saldoFisico;
     }
 
-    public Caja saldo_fisico(Float saldo_fisico) {
-        this.saldo_fisico = saldo_fisico;
+    public Caja saldoFisico(Float saldoFisico) {
+        this.saldoFisico = saldoFisico;
         return this;
     }
 
-    public void setSaldo_fisico(Float saldo_fisico) {
-        this.saldo_fisico = saldo_fisico;
+    public void setSaldoFisico(Float saldoFisico) {
+        this.saldoFisico = saldoFisico;
     }
 
     public Sucursal getSucursal() {
@@ -174,7 +174,7 @@ public class Caja implements Serializable {
             ", horaCierre='" + getHoraCierre() + "'" +
             ", saldo=" + getSaldo() +
             ", observaciones='" + getObservaciones() + "'" +
-            ", saldo_fisico=" + getSaldo_fisico() +
+            ", saldoFisico=" + getSaldoFisico() +
             "}";
     }
 }

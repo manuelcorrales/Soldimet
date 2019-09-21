@@ -80,7 +80,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private String resetKey;
 
-    @Column(name = "reset_date")
+    @Column(name = "reset_date", columnDefinition = "TIMESTAMP")
     private Instant resetDate = null;
 
     @JsonIgnore

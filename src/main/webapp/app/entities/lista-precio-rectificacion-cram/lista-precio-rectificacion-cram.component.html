@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-lista-precio-rectificacion-cram" [routerLink]="['/lista-precio-rectificacion-cram/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Lista Precio Rectificacion CRAM
+            Create a new Lista Precio Rectificacion CRAM
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="listaPrecioRectificacionCRAMS">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="listaPrecioRectificacionCRAMS?.length === 0">
+        <span>No listaPrecioRectificacionCRAMS found</span>
+    </div>
+    <div class="table-responsive" *ngIf="listaPrecioRectificacionCRAMS?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -30,11 +33,11 @@
                 <td>{{listaPrecioRectificacionCRAM.numeroGrupo}}</td>
                 <td>
                     <div *ngIf="listaPrecioRectificacionCRAM.costoOperacion">
-                        <a [routerLink]="['../costo-operacion', listaPrecioRectificacionCRAM.costoOperacion?.id, 'view' ]" >{{listaPrecioRectificacionCRAM.costoOperacion?.id}}</a>
+                        <a [routerLink]="['/costo-operacion', listaPrecioRectificacionCRAM.costoOperacion?.id, 'view' ]" >{{listaPrecioRectificacionCRAM.costoOperacion?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/lista-precio-rectificacion-cram', listaPrecioRectificacionCRAM.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -48,7 +51,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'lista-precio-rectificacion-cram/'+ listaPrecioRectificacionCRAM.id + '/delete'} }]"
+                                [routerLink]="['/lista-precio-rectificacion-cram', { outlets: { popup: listaPrecioRectificacionCRAM.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

@@ -1,58 +1,66 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
-import { Principal } from 'app/core';
-import { EstadoCobranzaOperacionService } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.service';
 
 @Component({
-    selector: 'jhi-estado-cobranza-operacion',
-    templateUrl: './estado-cobranza-operacion.component.html'
+  selector: 'jhi-estado-cobranza-operacion',
+  templateUrl: './estado-cobranza-operacion.component.html'
 })
 export class EstadoCobranzaOperacionComponent implements OnInit, OnDestroy {
-    estadoCobranzaOperacions: IEstadoCobranzaOperacion[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  estadoCobranzaOperacions: IEstadoCobranzaOperacion[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        private estadoCobranzaOperacionService: EstadoCobranzaOperacionService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private principal: Principal
-    ) {}
+  constructor(
+    protected estadoCobranzaOperacionService: EstadoCobranzaOperacionService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.estadoCobranzaOperacionService.query().subscribe(
-            (res: HttpResponse<IEstadoCobranzaOperacion[]>) => {
-                this.estadoCobranzaOperacions = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-    }
+  loadAll() {
+    this.estadoCobranzaOperacionService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<IEstadoCobranzaOperacion[]>) => res.ok),
+        map((res: HttpResponse<IEstadoCobranzaOperacion[]>) => res.body)
+      )
+      .subscribe(
+        (res: IEstadoCobranzaOperacion[]) => {
+          this.estadoCobranzaOperacions = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInEstadoCobranzaOperacions();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInEstadoCobranzaOperacions();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: IEstadoCobranzaOperacion) {
-        return item.id;
-    }
+  trackId(index: number, item: IEstadoCobranzaOperacion) {
+    return item.id;
+  }
 
-    registerChangeInEstadoCobranzaOperacions() {
-        this.eventSubscriber = this.eventManager.subscribe('estadoCobranzaOperacionListModification', response => this.loadAll());
-    }
+  registerChangeInEstadoCobranzaOperacions() {
+    this.eventSubscriber = this.eventManager.subscribe('estadoCobranzaOperacionListModification', response => this.loadAll());
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

@@ -1,61 +1,77 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IEstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
-import { EstadoPedidoRepuestoService } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.service';
+import { IEstadoPedidoRepuesto, EstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
+import { EstadoPedidoRepuestoService } from './estado-pedido-repuesto.service';
 
 @Component({
-    selector: 'jhi-estado-pedido-repuesto-update',
-    templateUrl: './estado-pedido-repuesto-update.component.html'
+  selector: 'jhi-estado-pedido-repuesto-update',
+  templateUrl: './estado-pedido-repuesto-update.component.html'
 })
 export class EstadoPedidoRepuestoUpdateComponent implements OnInit {
-    private _estadoPedidoRepuesto: IEstadoPedidoRepuesto;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private estadoPedidoRepuestoService: EstadoPedidoRepuestoService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreEstado: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ estadoPedidoRepuesto }) => {
-            this.estadoPedidoRepuesto = estadoPedidoRepuesto;
-        });
-    }
+  constructor(
+    protected estadoPedidoRepuestoService: EstadoPedidoRepuestoService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ estadoPedidoRepuesto }) => {
+      this.updateForm(estadoPedidoRepuesto);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.estadoPedidoRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(this.estadoPedidoRepuestoService.update(this.estadoPedidoRepuesto));
-        } else {
-            this.subscribeToSaveResponse(this.estadoPedidoRepuestoService.create(this.estadoPedidoRepuesto));
-        }
-    }
+  updateForm(estadoPedidoRepuesto: IEstadoPedidoRepuesto) {
+    this.editForm.patchValue({
+      id: estadoPedidoRepuesto.id,
+      nombreEstado: estadoPedidoRepuesto.nombreEstado
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoPedidoRepuesto>>) {
-        result.subscribe(
-            (res: HttpResponse<IEstadoPedidoRepuesto>) => this.onSaveSuccess(),
-            (res: HttpErrorResponse) => this.onSaveError()
-        );
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const estadoPedidoRepuesto = this.createFromForm();
+    if (estadoPedidoRepuesto.id !== undefined) {
+      this.subscribeToSaveResponse(this.estadoPedidoRepuestoService.update(estadoPedidoRepuesto));
+    } else {
+      this.subscribeToSaveResponse(this.estadoPedidoRepuestoService.create(estadoPedidoRepuesto));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get estadoPedidoRepuesto() {
-        return this._estadoPedidoRepuesto;
-    }
+  private createFromForm(): IEstadoPedidoRepuesto {
+    return {
+      ...new EstadoPedidoRepuesto(),
+      id: this.editForm.get(['id']).value,
+      nombreEstado: this.editForm.get(['nombreEstado']).value
+    };
+  }
 
-    set estadoPedidoRepuesto(estadoPedidoRepuesto: IEstadoPedidoRepuesto) {
-        this._estadoPedidoRepuesto = estadoPedidoRepuesto;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoPedidoRepuesto>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

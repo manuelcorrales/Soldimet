@@ -1,58 +1,66 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICategoriaPago } from 'app/shared/model/categoria-pago.model';
-import { Principal } from 'app/core';
+import { AccountService } from 'app/core/auth/account.service';
 import { CategoriaPagoService } from './categoria-pago.service';
 
 @Component({
-    selector: 'jhi-categoria-pago',
-    templateUrl: './categoria-pago.component.html'
+  selector: 'jhi-categoria-pago',
+  templateUrl: './categoria-pago.component.html'
 })
 export class CategoriaPagoComponent implements OnInit, OnDestroy {
-    categoriaPagos: ICategoriaPago[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  categoriaPagos: ICategoriaPago[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        private categoriaPagoService: CategoriaPagoService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private principal: Principal
-    ) {}
+  constructor(
+    protected categoriaPagoService: CategoriaPagoService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.categoriaPagoService.query().subscribe(
-            (res: HttpResponse<ICategoriaPago[]>) => {
-                this.categoriaPagos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-    }
+  loadAll() {
+    this.categoriaPagoService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<ICategoriaPago[]>) => res.ok),
+        map((res: HttpResponse<ICategoriaPago[]>) => res.body)
+      )
+      .subscribe(
+        (res: ICategoriaPago[]) => {
+          this.categoriaPagos = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInCategoriaPagos();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInCategoriaPagos();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: ICategoriaPago) {
-        return item.id;
-    }
+  trackId(index: number, item: ICategoriaPago) {
+    return item.id;
+  }
 
-    registerChangeInCategoriaPagos() {
-        this.eventSubscriber = this.eventManager.subscribe('categoriaPagoListModification', response => this.loadAll());
-    }
+  registerChangeInCategoriaPagos() {
+    this.eventSubscriber = this.eventManager.subscribe('categoriaPagoListModification', response => this.loadAll());
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

@@ -3,21 +3,21 @@ import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
 import { IUser } from 'app/core/user/user.model';
 
 export interface IPersona {
-    id?: number;
-    nombre?: string;
-    numeroTelefono?: string;
-    direccion?: IDireccion;
-    estadoPersona?: IEstadoPersona;
-    user?: IUser;
+  id?: number;
+  nombre?: string;
+  numeroTelefono?: string;
+  direccion?: IDireccion;
+  estadoPersona?: IEstadoPersona;
+  user?: IUser;
 }
 
 export class Persona implements IPersona {
-    constructor(
-        public id?: number,
-        public nombre?: string,
-        public numeroTelefono?: string,
-        public direccion?: IDireccion,
-        public estadoPersona?: IEstadoPersona,
-        public user?: IUser
-    ) {}
+  constructor(
+    public id?: number,
+    public nombre?: string,
+    public numeroTelefono?: string,
+    public direccion?: IDireccion,
+    public estadoPersona?: IEstadoPersona,
+    public user?: IUser
+  ) {}
 }

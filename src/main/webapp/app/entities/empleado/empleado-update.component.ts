@@ -1,106 +1,142 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { IEmpleado } from 'app/shared/model/empleado.model';
-import { EmpleadoService } from 'app/entities/empleado/empleado.service';
+import { IEmpleado, Empleado } from 'app/shared/model/empleado.model';
+import { EmpleadoService } from './empleado.service';
 import { IPersona } from 'app/shared/model/persona.model';
-import { PersonaService } from 'app/entities/persona';
+import { PersonaService } from 'app/entities/persona/persona.service';
 import { ISucursal } from 'app/shared/model/sucursal.model';
-import { SucursalService } from 'app/entities/sucursal';
+import { SucursalService } from 'app/entities/sucursal/sucursal.service';
 
 @Component({
-    selector: 'jhi-empleado-update',
-    templateUrl: './empleado-update.component.html'
+  selector: 'jhi-empleado-update',
+  templateUrl: './empleado-update.component.html'
 })
 export class EmpleadoUpdateComponent implements OnInit {
-    private _empleado: IEmpleado;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    personas: IPersona[];
+  personas: IPersona[];
 
-    sucursals: ISucursal[];
+  sucursals: ISucursal[];
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private empleadoService: EmpleadoService,
-        private personaService: PersonaService,
-        private sucursalService: SucursalService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    usuario: [null, [Validators.required]],
+    contrasenia: [null, [Validators.required]],
+    persona: [null, Validators.required],
+    sucursal: []
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ empleado }) => {
-            this.empleado = empleado;
-        });
-        this.personaService.query({ filter: 'empleado-is-null' }).subscribe(
-            (res: HttpResponse<IPersona[]>) => {
-                if (!this.empleado.persona || !this.empleado.persona.id) {
-                    this.personas = res.body;
-                } else {
-                    this.personaService.find(this.empleado.persona.id).subscribe(
-                        (subRes: HttpResponse<IPersona>) => {
-                            this.personas = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.sucursalService.query().subscribe(
-            (res: HttpResponse<ISucursal[]>) => {
-                this.sucursals = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected empleadoService: EmpleadoService,
+    protected personaService: PersonaService,
+    protected sucursalService: SucursalService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ empleado }) => {
+      this.updateForm(empleado);
+    });
+    this.personaService
+      .query({ filter: 'empleado-is-null' })
+      .pipe(
+        filter((mayBeOk: HttpResponse<IPersona[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IPersona[]>) => response.body)
+      )
+      .subscribe(
+        (res: IPersona[]) => {
+          if (!this.editForm.get('persona').value || !this.editForm.get('persona').value.id) {
+            this.personas = res;
+          } else {
+            this.personaService
+              .find(this.editForm.get('persona').value.id)
+              .pipe(
+                filter((subResMayBeOk: HttpResponse<IPersona>) => subResMayBeOk.ok),
+                map((subResponse: HttpResponse<IPersona>) => subResponse.body)
+              )
+              .subscribe(
+                (subRes: IPersona) => (this.personas = [subRes].concat(res)),
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+              );
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+    this.sucursalService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ISucursal[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ISucursal[]>) => response.body)
+      )
+      .subscribe((res: ISucursal[]) => (this.sucursals = res), (res: HttpErrorResponse) => this.onError(res.message));
+  }
+
+  updateForm(empleado: IEmpleado) {
+    this.editForm.patchValue({
+      id: empleado.id,
+      usuario: empleado.usuario,
+      contrasenia: empleado.contrasenia,
+      persona: empleado.persona,
+      sucursal: empleado.sucursal
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const empleado = this.createFromForm();
+    if (empleado.id !== undefined) {
+      this.subscribeToSaveResponse(this.empleadoService.update(empleado));
+    } else {
+      this.subscribeToSaveResponse(this.empleadoService.create(empleado));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): IEmpleado {
+    return {
+      ...new Empleado(),
+      id: this.editForm.get(['id']).value,
+      usuario: this.editForm.get(['usuario']).value,
+      contrasenia: this.editForm.get(['contrasenia']).value,
+      persona: this.editForm.get(['persona']).value,
+      sucursal: this.editForm.get(['sucursal']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.empleado.id !== undefined) {
-            this.subscribeToSaveResponse(this.empleadoService.update(this.empleado));
-        } else {
-            this.subscribeToSaveResponse(this.empleadoService.create(this.empleado));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IEmpleado>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IEmpleado>>) {
-        result.subscribe((res: HttpResponse<IEmpleado>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
+  trackPersonaById(index: number, item: IPersona) {
+    return item.id;
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
-
-    trackPersonaById(index: number, item: IPersona) {
-        return item.id;
-    }
-
-    trackSucursalById(index: number, item: ISucursal) {
-        return item.id;
-    }
-    get empleado() {
-        return this._empleado;
-    }
-
-    set empleado(empleado: IEmpleado) {
-        this._empleado = empleado;
-    }
+  trackSucursalById(index: number, item: ISucursal) {
+    return item.id;
+  }
 }

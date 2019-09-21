@@ -24,11 +24,11 @@ public class PagoCheque implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha_cobro", nullable = false)
+    @Column(name = "fecha_cobro", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaCobro;
 
     @NotNull
-    @Column(name = "fecha_recibo", nullable = false)
+    @Column(name = "fecha_recibo", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaRecibo;
 
     @NotNull

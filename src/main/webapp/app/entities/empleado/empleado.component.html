@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-empleado" [routerLink]="['/empleado/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Empleado
+            Create a new Empleado
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="empleados">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="empleados?.length === 0">
+        <span>No empleados found</span>
+    </div>
+    <div class="table-responsive" *ngIf="empleados?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -29,16 +32,16 @@
                 <td>{{empleado.contrasenia}}</td>
                 <td>
                     <div *ngIf="empleado.persona">
-                        <a [routerLink]="['../persona', empleado.persona?.id, 'view' ]" >{{empleado.persona?.nombre}}</a>
+                        <a [routerLink]="['/persona', empleado.persona?.id, 'view' ]" >{{empleado.persona?.nombre}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="empleado.sucursal">
-                        <a [routerLink]="['../sucursal', empleado.sucursal?.id, 'view' ]" >{{empleado.sucursal?.nombreSucursal}}</a>
+                        <a [routerLink]="['/sucursal', empleado.sucursal?.id, 'view' ]" >{{empleado.sucursal?.nombreSucursal}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/empleado', empleado.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -52,7 +55,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'empleado/'+ empleado.id + '/delete'} }]"
+                                [routerLink]="['/empleado', { outlets: { popup: empleado.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

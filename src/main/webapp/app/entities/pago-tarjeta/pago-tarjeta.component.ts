@@ -1,58 +1,66 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IPagoTarjeta } from 'app/shared/model/pago-tarjeta.model';
-import { Principal } from 'app/core';
-import { PagoTarjetaService } from 'app/entities/pago-tarjeta/pago-tarjeta.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { PagoTarjetaService } from './pago-tarjeta.service';
 
 @Component({
-    selector: 'jhi-pago-tarjeta',
-    templateUrl: './pago-tarjeta.component.html'
+  selector: 'jhi-pago-tarjeta',
+  templateUrl: './pago-tarjeta.component.html'
 })
 export class PagoTarjetaComponent implements OnInit, OnDestroy {
-    pagoTarjetas: IPagoTarjeta[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  pagoTarjetas: IPagoTarjeta[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        private pagoTarjetaService: PagoTarjetaService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private principal: Principal
-    ) {}
+  constructor(
+    protected pagoTarjetaService: PagoTarjetaService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.pagoTarjetaService.query().subscribe(
-            (res: HttpResponse<IPagoTarjeta[]>) => {
-                this.pagoTarjetas = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-    }
+  loadAll() {
+    this.pagoTarjetaService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<IPagoTarjeta[]>) => res.ok),
+        map((res: HttpResponse<IPagoTarjeta[]>) => res.body)
+      )
+      .subscribe(
+        (res: IPagoTarjeta[]) => {
+          this.pagoTarjetas = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInPagoTarjetas();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInPagoTarjetas();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: IPagoTarjeta) {
-        return item.id;
-    }
+  trackId(index: number, item: IPagoTarjeta) {
+    return item.id;
+  }
 
-    registerChangeInPagoTarjetas() {
-        this.eventSubscriber = this.eventManager.subscribe('pagoTarjetaListModification', response => this.loadAll());
-    }
+  registerChangeInPagoTarjetas() {
+    this.eventSubscriber = this.eventManager.subscribe('pagoTarjetaListModification', response => this.loadAll());
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

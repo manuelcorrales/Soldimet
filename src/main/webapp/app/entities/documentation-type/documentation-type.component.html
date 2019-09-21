@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-documentation-type" [routerLink]="['/documentation-type/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Documentation Type
+            Create a new Documentation Type
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="documentationTypes">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="documentationTypes?.length === 0">
+        <span>No documentationTypes found</span>
+    </div>
+    <div class="table-responsive" *ngIf="documentationTypes?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -24,7 +27,7 @@
                 <td><a [routerLink]="['/documentation-type', documentationType.id, 'view' ]">{{documentationType.id}}</a></td>
                 <td>{{documentationType.documentName}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/documentation-type', documentationType.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -38,7 +41,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'documentation-type/'+ documentationType.id + '/delete'} }]"
+                                [routerLink]="['/documentation-type', { outlets: { popup: documentationType.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

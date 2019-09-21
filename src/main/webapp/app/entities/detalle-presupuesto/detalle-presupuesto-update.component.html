@@ -1,29 +1,29 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-detalle-presupuesto-heading">Create or edit a Detalle Presupuesto</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!detallePresupuesto.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="detallePresupuesto.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_importe">Importe</label>
                     <input type="number" class="form-control" name="importe" id="field_importe"
-                        [(ngModel)]="detallePresupuesto.importe" required min="0" jhiMin="0"/>
-                    <div [hidden]="!(editForm.controls.importe?.dirty && editForm.controls.importe?.invalid)">
+                           formControlName="importe"/>
+                    <div *ngIf="editForm.get('importe').invalid && (editForm.get('importe').dirty || editForm.get('importe').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.importe?.errors?.required">
+                               *ngIf="editForm.get('importe').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.importe?.errors?.min">
+                               *ngIf="editForm.get('importe').errors.min">
                             This field should be at least 0.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.importe?.errors?.number">
+                            [hidden]="!editForm.get('importe')?.errors?.number">
                             This field should be a number.
                         </small>
                     </div>
@@ -31,53 +31,53 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_aplicacion">Aplicacion</label>
-                    <select class="form-control" id="field_aplicacion" name="aplicacion" [(ngModel)]="detallePresupuesto.aplicacion"  required>
-                        <option *ngIf="!editForm.value.aplicacion" [ngValue]="null" selected></option>
-                        <option [ngValue]="aplicacionOption.id === detallePresupuesto.aplicacion?.id ? detallePresupuesto.aplicacion : aplicacionOption" *ngFor="let aplicacionOption of aplicacions; trackBy: trackAplicacionById">{{aplicacionOption.nombreAplicacion}}</option>
+                    <select class="form-control" id="field_aplicacion" name="aplicacion" formControlName="aplicacion">
+                        <option *ngIf="!editForm.get('aplicacion').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="aplicacionOption.id === editForm.get('aplicacion').value?.id ? editForm.get('aplicacion').value : aplicacionOption" *ngFor="let aplicacionOption of aplicacions; trackBy: trackAplicacionById">{{aplicacionOption.nombreAplicacion}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.aplicacion?.dirty && editForm.controls.aplicacion?.invalid)">
+                <div *ngIf="editForm.get('aplicacion').invalid && (editForm.get('aplicacion').dirty || editForm.get('aplicacion').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.aplicacion?.errors?.required">
+                           *ngIf="editForm.get('aplicacion').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_cilindrada">Cilindrada</label>
-                    <select class="form-control" id="field_cilindrada" name="cilindrada" [(ngModel)]="detallePresupuesto.cilindrada"  required>
-                        <option *ngIf="!editForm.value.cilindrada" [ngValue]="null" selected></option>
-                        <option [ngValue]="cilindradaOption.id === detallePresupuesto.cilindrada?.id ? detallePresupuesto.cilindrada : cilindradaOption" *ngFor="let cilindradaOption of cilindradas; trackBy: trackCilindradaById">{{cilindradaOption.cantidadDeCilindros}}</option>
+                    <select class="form-control" id="field_cilindrada" name="cilindrada" formControlName="cilindrada">
+                        <option *ngIf="!editForm.get('cilindrada').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="cilindradaOption.id === editForm.get('cilindrada').value?.id ? editForm.get('cilindrada').value : cilindradaOption" *ngFor="let cilindradaOption of cilindradas; trackBy: trackCilindradaById">{{cilindradaOption.cantidadDeCilindros}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.cilindrada?.dirty && editForm.controls.cilindrada?.invalid)">
+                <div *ngIf="editForm.get('cilindrada').invalid && (editForm.get('cilindrada').dirty || editForm.get('cilindrada').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.cilindrada?.errors?.required">
+                           *ngIf="editForm.get('cilindrada').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_motor">Motor</label>
-                    <select class="form-control" id="field_motor" name="motor" [(ngModel)]="detallePresupuesto.motor"  required>
-                        <option *ngIf="!editForm.value.motor" [ngValue]="null" selected></option>
-                        <option [ngValue]="motorOption.id === detallePresupuesto.motor?.id ? detallePresupuesto.motor : motorOption" *ngFor="let motorOption of motors; trackBy: trackMotorById">{{motorOption.id}}</option>
+                    <select class="form-control" id="field_motor" name="motor" formControlName="motor">
+                        <option *ngIf="!editForm.get('motor').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="motorOption.id === editForm.get('motor').value?.id ? editForm.get('motor').value : motorOption" *ngFor="let motorOption of motors; trackBy: trackMotorById">{{motorOption.id}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.motor?.dirty && editForm.controls.motor?.invalid)">
+                <div *ngIf="editForm.get('motor').invalid && (editForm.get('motor').dirty || editForm.get('motor').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.motor?.errors?.required">
+                           *ngIf="editForm.get('motor').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_tipoParteMotor">Tipo Parte Motor</label>
-                    <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" [(ngModel)]="detallePresupuesto.tipoParteMotor"  required>
-                        <option *ngIf="!editForm.value.tipoParteMotor" [ngValue]="null" selected></option>
-                        <option [ngValue]="tipoParteMotorOption.id === detallePresupuesto.tipoParteMotor?.id ? detallePresupuesto.tipoParteMotor : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
+                    <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" formControlName="tipoParteMotor">
+                        <option *ngIf="!editForm.get('tipoParteMotor').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoParteMotorOption.id === editForm.get('tipoParteMotor').value?.id ? editForm.get('tipoParteMotor').value : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.tipoParteMotor?.dirty && editForm.controls.tipoParteMotor?.invalid)">
+                <div *ngIf="editForm.get('tipoParteMotor').invalid && (editForm.get('tipoParteMotor').dirty || editForm.get('tipoParteMotor').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.tipoParteMotor?.errors?.required">
+                           *ngIf="editForm.get('tipoParteMotor').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -86,7 +86,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

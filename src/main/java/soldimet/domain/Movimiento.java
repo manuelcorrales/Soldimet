@@ -28,7 +28,6 @@ public class Movimiento implements Serializable {
     private LocalDate fecha;
 
     @NotNull
-    @DecimalMin(value = "0")
     @Column(name = "importe", nullable = false)
     private Float importe;
 

@@ -1,29 +1,29 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-cliente-heading">Create or edit a Cliente</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!cliente.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="cliente.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_apellido">Apellido</label>
                     <input type="text" class="form-control" name="apellido" id="field_apellido"
-                        [(ngModel)]="cliente.apellido" required minlength="3" maxlength="30"/>
-                    <div [hidden]="!(editForm.controls.apellido?.dirty && editForm.controls.apellido?.invalid)">
+                           formControlName="apellido"/>
+                    <div *ngIf="editForm.get('apellido').invalid && (editForm.get('apellido').dirty || editForm.get('apellido').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.apellido?.errors?.required">
+                               *ngIf="editForm.get('apellido').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.apellido?.errors?.minlength">
+                               *ngIf="editForm.get('apellido').errors.minlength">
                         This field is required to be at least 3 characters.
                         </small>
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.apellido?.errors?.maxlength">
+                               *ngIf="editForm.get('apellido').errors.maxlength">
                         This field cannot be longer than 30 characters.
                         </small>
                     </div>
@@ -31,14 +31,14 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_persona">Persona</label>
-                    <select class="form-control" id="field_persona" name="persona" [(ngModel)]="cliente.persona" required>
-                        <option *ngIf="!editForm.value.persona" [ngValue]="null" selected></option>
-                        <option [ngValue]="personaOption.id === cliente.persona?.id ? cliente.persona : personaOption" *ngFor="let personaOption of personas; trackBy: trackPersonaById">{{personaOption.nombre}}</option>
+                    <select class="form-control" id="field_persona" name="persona" formControlName="persona">
+                        <option *ngIf="!editForm.get('persona').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="personaOption.id === editForm.get('persona').value?.id ? editForm.get('persona').value : personaOption" *ngFor="let personaOption of personas; trackBy: trackPersonaById">{{personaOption.nombre}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.persona?.dirty && editForm.controls.persona?.invalid)">
+                <div *ngIf="editForm.get('persona').invalid && (editForm.get('persona').dirty || editForm.get('persona').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.persona?.errors?.required">
+                           *ngIf="editForm.get('persona').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -47,7 +47,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { ITarjeta } from 'app/shared/model/tarjeta.model';
-import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
+import { ITarjeta, Tarjeta } from 'app/shared/model/tarjeta.model';
+import { TarjetaService } from './tarjeta.service';
 
 @Component({
-    selector: 'jhi-tarjeta-update',
-    templateUrl: './tarjeta-update.component.html'
+  selector: 'jhi-tarjeta-update',
+  templateUrl: './tarjeta-update.component.html'
 })
 export class TarjetaUpdateComponent implements OnInit {
-    private _tarjeta: ITarjeta;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private tarjetaService: TarjetaService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreTarjeta: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ tarjeta }) => {
-            this.tarjeta = tarjeta;
-        });
-    }
+  constructor(protected tarjetaService: TarjetaService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ tarjeta }) => {
+      this.updateForm(tarjeta);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.tarjeta.id !== undefined) {
-            this.subscribeToSaveResponse(this.tarjetaService.update(this.tarjeta));
-        } else {
-            this.subscribeToSaveResponse(this.tarjetaService.create(this.tarjeta));
-        }
-    }
+  updateForm(tarjeta: ITarjeta) {
+    this.editForm.patchValue({
+      id: tarjeta.id,
+      nombreTarjeta: tarjeta.nombreTarjeta
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ITarjeta>>) {
-        result.subscribe((res: HttpResponse<ITarjeta>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const tarjeta = this.createFromForm();
+    if (tarjeta.id !== undefined) {
+      this.subscribeToSaveResponse(this.tarjetaService.update(tarjeta));
+    } else {
+      this.subscribeToSaveResponse(this.tarjetaService.create(tarjeta));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get tarjeta() {
-        return this._tarjeta;
-    }
+  private createFromForm(): ITarjeta {
+    return {
+      ...new Tarjeta(),
+      id: this.editForm.get(['id']).value,
+      nombreTarjeta: this.editForm.get(['nombreTarjeta']).value
+    };
+  }
 
-    set tarjeta(tarjeta: ITarjeta) {
-        this._tarjeta = tarjeta;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ITarjeta>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

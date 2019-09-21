@@ -23,7 +23,7 @@ public class DetalleMovimiento implements Serializable {
     private Long id;
 
     @Column(name = "valor_unitario")
-    private Float valor_unitario;
+    private Float valorUnitario;
 
     @NotNull
     @Min(value = 0)
@@ -60,16 +60,16 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public Float getValor_unitario() {
-        return valor_unitario;
+        return valorUnitario;
     }
 
-    public DetalleMovimiento valor_unitario(Float valor_unitario) {
-        this.valor_unitario = valor_unitario;
+    public DetalleMovimiento valorUnitario(Float valorUnitario) {
+        this.valorUnitario = valorUnitario;
         return this;
     }
 
-    public void setValor_unitario(Float valor_unitario) {
-        this.valor_unitario = valor_unitario;
+    public void setValor_unitario(Float valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 
     public Integer getCantidad() {
@@ -171,7 +171,7 @@ public class DetalleMovimiento implements Serializable {
     public String toString() {
         return "DetalleMovimiento{" +
             "id=" + getId() +
-            ", valor_unitario=" + getValor_unitario() +
+            ", valorUnitario=" + getValor_unitario() +
             ", cantidad=" + getCantidad() +
             ", descripcion='" + getDescripcion() + "'" +
             "}";

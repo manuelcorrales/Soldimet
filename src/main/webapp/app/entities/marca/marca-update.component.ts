@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IMarca } from 'app/shared/model/marca.model';
-import { MarcaService } from 'app/entities/marca/marca.service';
+import { IMarca, Marca } from 'app/shared/model/marca.model';
+import { MarcaService } from './marca.service';
 
 @Component({
-    selector: 'jhi-marca-update',
-    templateUrl: './marca-update.component.html'
+  selector: 'jhi-marca-update',
+  templateUrl: './marca-update.component.html'
 })
 export class MarcaUpdateComponent implements OnInit {
-    private _marca: IMarca;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private marcaService: MarcaService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreMarca: [null, [Validators.required, Validators.minLength(2)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ marca }) => {
-            this.marca = marca;
-        });
-    }
+  constructor(protected marcaService: MarcaService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ marca }) => {
+      this.updateForm(marca);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.marca.id !== undefined) {
-            this.subscribeToSaveResponse(this.marcaService.update(this.marca));
-        } else {
-            this.subscribeToSaveResponse(this.marcaService.create(this.marca));
-        }
-    }
+  updateForm(marca: IMarca) {
+    this.editForm.patchValue({
+      id: marca.id,
+      nombreMarca: marca.nombreMarca
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IMarca>>) {
-        result.subscribe((res: HttpResponse<IMarca>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const marca = this.createFromForm();
+    if (marca.id !== undefined) {
+      this.subscribeToSaveResponse(this.marcaService.update(marca));
+    } else {
+      this.subscribeToSaveResponse(this.marcaService.create(marca));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get marca() {
-        return this._marca;
-    }
+  private createFromForm(): IMarca {
+    return {
+      ...new Marca(),
+      id: this.editForm.get(['id']).value,
+      nombreMarca: this.editForm.get(['nombreMarca']).value
+    };
+  }
 
-    set marca(marca: IMarca) {
-        this._marca = marca;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IMarca>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-pago-tarjeta" [routerLink]="['/pago-tarjeta/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Pago Tarjeta
+            Create a new Pago Tarjeta
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="pagoTarjetas">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="pagoTarjetas?.length === 0">
+        <span>No pagoTarjetas found</span>
+    </div>
+    <div class="table-responsive" *ngIf="pagoTarjetas?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -28,21 +31,21 @@
                 <td>{{pagoTarjeta.numeroTarjeta}}</td>
                 <td>
                     <div *ngIf="pagoTarjeta.formaDePago">
-                        <a [routerLink]="['../forma-de-pago', pagoTarjeta.formaDePago?.id, 'view' ]" >{{pagoTarjeta.formaDePago?.nombreFormaDePago}}</a>
+                        <a [routerLink]="['/forma-de-pago', pagoTarjeta.formaDePago?.id, 'view' ]" >{{pagoTarjeta.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="pagoTarjeta.tarjeta">
-                        <a [routerLink]="['../tarjeta', pagoTarjeta.tarjeta?.id, 'view' ]" >{{pagoTarjeta.tarjeta?.nombreTarjeta}}</a>
+                        <a [routerLink]="['/tarjeta', pagoTarjeta.tarjeta?.id, 'view' ]" >{{pagoTarjeta.tarjeta?.nombreTarjeta}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="pagoTarjeta.tipoTarjeta">
-                        <a [routerLink]="['../tipo-tarjeta', pagoTarjeta.tipoTarjeta?.id, 'view' ]" >{{pagoTarjeta.tipoTarjeta?.nombreTipoTarjeta}}</a>
+                        <a [routerLink]="['/tipo-tarjeta', pagoTarjeta.tipoTarjeta?.id, 'view' ]" >{{pagoTarjeta.tipoTarjeta?.nombreTipoTarjeta}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/pago-tarjeta', pagoTarjeta.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -56,7 +59,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'pago-tarjeta/'+ pagoTarjeta.id + '/delete'} }]"
+                                [routerLink]="['/pago-tarjeta', { outlets: { popup: pagoTarjeta.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

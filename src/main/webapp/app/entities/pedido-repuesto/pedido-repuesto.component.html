@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-pedido-repuesto" [routerLink]="['/pedido-repuesto/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Pedido Repuesto
+            Create a new Pedido Repuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="pedidoRepuestos">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="pedidoRepuestos?.length === 0">
+        <span>No pedidoRepuestos found</span>
+    </div>
+    <div class="table-responsive" *ngIf="pedidoRepuestos?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -32,21 +35,21 @@
                 <td>{{pedidoRepuesto.fechaRecibo | date:'mediumDate'}}</td>
                 <td>
                     <div *ngIf="pedidoRepuesto.estadoPedidoRepuesto">
-                        <a [routerLink]="['../estado-pedido-repuesto', pedidoRepuesto.estadoPedidoRepuesto?.id, 'view' ]" >{{pedidoRepuesto.estadoPedidoRepuesto?.nombreEstado}}</a>
+                        <a [routerLink]="['/estado-pedido-repuesto', pedidoRepuesto.estadoPedidoRepuesto?.id, 'view' ]" >{{pedidoRepuesto.estadoPedidoRepuesto?.nombreEstado}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="pedidoRepuesto.presupuesto">
-                        <a [routerLink]="['../presupuesto', pedidoRepuesto.presupuesto?.id, 'view' ]" >{{pedidoRepuesto.presupuesto?.id}}</a>
+                        <a [routerLink]="['/presupuesto', pedidoRepuesto.presupuesto?.id, 'view' ]" >{{pedidoRepuesto.presupuesto?.id}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="pedidoRepuesto.documentType">
-                        <a [routerLink]="['../documentation-type', pedidoRepuesto.documentType?.id, 'view' ]" >{{pedidoRepuesto.documentType?.documentName}}</a>
+                        <a [routerLink]="['/documentation-type', pedidoRepuesto.documentType?.id, 'view' ]" >{{pedidoRepuesto.documentType?.documentName}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/pedido-repuesto', pedidoRepuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -60,7 +63,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'pedido-repuesto/'+ pedidoRepuesto.id + '/delete'} }]"
+                                [routerLink]="['/pedido-repuesto', { outlets: { popup: pedidoRepuesto.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
@@ -73,9 +76,9 @@
             </tbody>
         </table>
     </div>
-    <div *ngIf="pedidoRepuestos && pedidoRepuestos.length">
+    <div [hidden]="pedidoRepuestos?.length === 0">
         <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>
         <div class="row justify-content-center">
             <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>

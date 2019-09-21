@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-tarjeta" [routerLink]="['/tarjeta/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Tarjeta
+            Create a new Tarjeta
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="tarjetas">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="tarjetas?.length === 0">
+        <span>No tarjetas found</span>
+    </div>
+    <div class="table-responsive" *ngIf="tarjetas?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -24,7 +27,7 @@
                 <td><a [routerLink]="['/tarjeta', tarjeta.id, 'view' ]">{{tarjeta.id}}</a></td>
                 <td>{{tarjeta.nombreTarjeta}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/tarjeta', tarjeta.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -38,7 +41,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'tarjeta/'+ tarjeta.id + '/delete'} }]"
+                                [routerLink]="['/tarjeta', { outlets: { popup: tarjeta.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

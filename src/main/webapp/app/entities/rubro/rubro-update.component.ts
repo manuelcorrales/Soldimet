@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IRubro } from 'app/shared/model/rubro.model';
-import { RubroService } from 'app/entities/rubro/rubro.service';
+import { IRubro, Rubro } from 'app/shared/model/rubro.model';
+import { RubroService } from './rubro.service';
 
 @Component({
-    selector: 'jhi-rubro-update',
-    templateUrl: './rubro-update.component.html'
+  selector: 'jhi-rubro-update',
+  templateUrl: './rubro-update.component.html'
 })
 export class RubroUpdateComponent implements OnInit {
-    private _rubro: IRubro;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private rubroService: RubroService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreRubro: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ rubro }) => {
-            this.rubro = rubro;
-        });
-    }
+  constructor(protected rubroService: RubroService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ rubro }) => {
+      this.updateForm(rubro);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.rubro.id !== undefined) {
-            this.subscribeToSaveResponse(this.rubroService.update(this.rubro));
-        } else {
-            this.subscribeToSaveResponse(this.rubroService.create(this.rubro));
-        }
-    }
+  updateForm(rubro: IRubro) {
+    this.editForm.patchValue({
+      id: rubro.id,
+      nombreRubro: rubro.nombreRubro
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IRubro>>) {
-        result.subscribe((res: HttpResponse<IRubro>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const rubro = this.createFromForm();
+    if (rubro.id !== undefined) {
+      this.subscribeToSaveResponse(this.rubroService.update(rubro));
+    } else {
+      this.subscribeToSaveResponse(this.rubroService.create(rubro));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get rubro() {
-        return this._rubro;
-    }
+  private createFromForm(): IRubro {
+    return {
+      ...new Rubro(),
+      id: this.editForm.get(['id']).value,
+      nombreRubro: this.editForm.get(['nombreRubro']).value
+    };
+  }
 
-    set rubro(rubro: IRubro) {
-        this._rubro = rubro;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IRubro>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

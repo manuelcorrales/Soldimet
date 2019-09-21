@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-tipo-repuesto" [routerLink]="['/tipo-repuesto/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Tipo Repuesto
+            Create a new Tipo Repuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="tipoRepuestos">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="tipoRepuestos?.length === 0">
+        <span>No tipoRepuestos found</span>
+    </div>
+    <div class="table-responsive" *ngIf="tipoRepuestos?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -26,11 +29,11 @@
                 <td>{{tipoRepuesto.nombreTipoRepuesto}}</td>
                 <td>
                     <div *ngIf="tipoRepuesto.tipoParteMotor">
-                        <a [routerLink]="['../tipo-parte-motor', tipoRepuesto.tipoParteMotor?.id, 'view' ]" >{{tipoRepuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
+                        <a [routerLink]="['/tipo-parte-motor', tipoRepuesto.tipoParteMotor?.id, 'view' ]" >{{tipoRepuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/tipo-repuesto', tipoRepuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -44,7 +47,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'tipo-repuesto/'+ tipoRepuesto.id + '/delete'} }]"
+                                [routerLink]="['/tipo-repuesto', { outlets: { popup: tipoRepuesto.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

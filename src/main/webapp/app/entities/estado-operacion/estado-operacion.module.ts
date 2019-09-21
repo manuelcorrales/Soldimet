@@ -1,29 +1,29 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
-import {
-    EstadoOperacionComponent,
-    EstadoOperacionDetailComponent,
-    EstadoOperacionUpdateComponent,
-    estadoOperacionRoute,
-    EstadoOperacionDeleteDialogComponent,
-    EstadoOperacionDeletePopupComponent,
-    estadoOperacionPopupRoute
-} from 'app/entities/estado-operacion';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { EstadoOperacionComponent } from './estado-operacion.component';
+import { EstadoOperacionDetailComponent } from './estado-operacion-detail.component';
+import { EstadoOperacionUpdateComponent } from './estado-operacion-update.component';
+import { EstadoOperacionDeletePopupComponent, EstadoOperacionDeleteDialogComponent } from './estado-operacion-delete-dialog.component';
+import { estadoOperacionRoute, estadoOperacionPopupRoute } from './estado-operacion.route';
 
 const ENTITY_STATES = [...estadoOperacionRoute, ...estadoOperacionPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        EstadoOperacionComponent,
-        EstadoOperacionDeleteDialogComponent,
-        EstadoOperacionDeletePopupComponent,
-        EstadoOperacionDetailComponent,
-        EstadoOperacionUpdateComponent
-    ],
-    entryComponents: [EstadoOperacionComponent, EstadoOperacionUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    EstadoOperacionComponent,
+    EstadoOperacionDetailComponent,
+    EstadoOperacionUpdateComponent,
+    EstadoOperacionDeleteDialogComponent,
+    EstadoOperacionDeletePopupComponent
+  ],
+  entryComponents: [
+    EstadoOperacionComponent,
+    EstadoOperacionUpdateComponent,
+    EstadoOperacionDeleteDialogComponent,
+    EstadoOperacionDeletePopupComponent
+  ]
 })
 export class SoldimetEstadoOperacionModule {}

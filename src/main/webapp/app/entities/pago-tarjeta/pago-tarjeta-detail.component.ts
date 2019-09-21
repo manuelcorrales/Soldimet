@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IPagoTarjeta } from 'app/shared/model/pago-tarjeta.model';
 
 @Component({
-    selector: 'jhi-pago-tarjeta-detail',
-    templateUrl: './pago-tarjeta-detail.component.html'
+  selector: 'jhi-pago-tarjeta-detail',
+  templateUrl: './pago-tarjeta-detail.component.html'
 })
 export class PagoTarjetaDetailComponent implements OnInit {
-    pagoTarjeta: IPagoTarjeta;
+  pagoTarjeta: IPagoTarjeta;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ pagoTarjeta }) => {
-            this.pagoTarjeta = pagoTarjeta;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ pagoTarjeta }) => {
+      this.pagoTarjeta = pagoTarjeta;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

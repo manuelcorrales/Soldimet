@@ -1,115 +1,152 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
+import { IPedidoRepuesto, PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
+import { PedidoRepuestoService } from './pedido-repuesto.service';
 import { IEstadoPedidoRepuesto } from 'app/shared/model/estado-pedido-repuesto.model';
-import { EstadoPedidoRepuestoService } from 'app/entities/estado-pedido-repuesto';
+import { EstadoPedidoRepuestoService } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.service';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
-import { PresupuestoService } from 'app/entities/presupuesto';
+import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
 import { IDocumentationType } from 'app/shared/model/documentation-type.model';
-import { DocumentationTypeService } from 'app/entities/documentation-type';
+import { DocumentationTypeService } from 'app/entities/documentation-type/documentation-type.service';
 
 @Component({
-    selector: 'jhi-pedido-repuesto-update',
-    templateUrl: './pedido-repuesto-update.component.html'
+  selector: 'jhi-pedido-repuesto-update',
+  templateUrl: './pedido-repuesto-update.component.html'
 })
 export class PedidoRepuestoUpdateComponent implements OnInit {
-    private _pedidoRepuesto: IPedidoRepuesto;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    estadopedidorepuestos: IEstadoPedidoRepuesto[];
+  estadopedidorepuestos: IEstadoPedidoRepuesto[];
 
-    presupuestos: IPresupuesto[];
+  presupuestos: IPresupuesto[];
 
-    documentationtypes: IDocumentationType[];
-    fechaCreacionDp: any;
-    fechaPedidoDp: any;
-    fechaReciboDp: any;
+  documentationtypes: IDocumentationType[];
+  fechaCreacionDp: any;
+  fechaPedidoDp: any;
+  fechaReciboDp: any;
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private pedidoRepuestoService: PedidoRepuestoService,
-        private estadoPedidoRepuestoService: EstadoPedidoRepuestoService,
-        private presupuestoService: PresupuestoService,
-        private documentationTypeService: DocumentationTypeService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    fechaCreacion: [null, [Validators.required]],
+    fechaPedido: [],
+    fechaRecibo: [],
+    estadoPedidoRepuesto: [null, Validators.required],
+    presupuesto: [null, Validators.required],
+    documentType: []
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ pedidoRepuesto }) => {
-            this.pedidoRepuesto = pedidoRepuesto;
-        });
-        this.estadoPedidoRepuestoService.query().subscribe(
-            (res: HttpResponse<IEstadoPedidoRepuesto[]>) => {
-                this.estadopedidorepuestos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.presupuestoService.query().subscribe(
-            (res: HttpResponse<IPresupuesto[]>) => {
-                this.presupuestos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.documentationTypeService.query().subscribe(
-            (res: HttpResponse<IDocumentationType[]>) => {
-                this.documentationtypes = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected pedidoRepuestoService: PedidoRepuestoService,
+    protected estadoPedidoRepuestoService: EstadoPedidoRepuestoService,
+    protected presupuestoService: PresupuestoService,
+    protected documentationTypeService: DocumentationTypeService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ pedidoRepuesto }) => {
+      this.updateForm(pedidoRepuesto);
+    });
+    this.estadoPedidoRepuestoService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IEstadoPedidoRepuesto[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IEstadoPedidoRepuesto[]>) => response.body)
+      )
+      .subscribe(
+        (res: IEstadoPedidoRepuesto[]) => (this.estadopedidorepuestos = res),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+    this.presupuestoService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IPresupuesto[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IPresupuesto[]>) => response.body)
+      )
+      .subscribe((res: IPresupuesto[]) => (this.presupuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.documentationTypeService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IDocumentationType[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IDocumentationType[]>) => response.body)
+      )
+      .subscribe((res: IDocumentationType[]) => (this.documentationtypes = res), (res: HttpErrorResponse) => this.onError(res.message));
+  }
+
+  updateForm(pedidoRepuesto: IPedidoRepuesto) {
+    this.editForm.patchValue({
+      id: pedidoRepuesto.id,
+      fechaCreacion: pedidoRepuesto.fechaCreacion,
+      fechaPedido: pedidoRepuesto.fechaPedido,
+      fechaRecibo: pedidoRepuesto.fechaRecibo,
+      estadoPedidoRepuesto: pedidoRepuesto.estadoPedidoRepuesto,
+      presupuesto: pedidoRepuesto.presupuesto,
+      documentType: pedidoRepuesto.documentType
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const pedidoRepuesto = this.createFromForm();
+    if (pedidoRepuesto.id !== undefined) {
+      this.subscribeToSaveResponse(this.pedidoRepuestoService.update(pedidoRepuesto));
+    } else {
+      this.subscribeToSaveResponse(this.pedidoRepuestoService.create(pedidoRepuesto));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): IPedidoRepuesto {
+    return {
+      ...new PedidoRepuesto(),
+      id: this.editForm.get(['id']).value,
+      fechaCreacion: this.editForm.get(['fechaCreacion']).value,
+      fechaPedido: this.editForm.get(['fechaPedido']).value,
+      fechaRecibo: this.editForm.get(['fechaRecibo']).value,
+      estadoPedidoRepuesto: this.editForm.get(['estadoPedidoRepuesto']).value,
+      presupuesto: this.editForm.get(['presupuesto']).value,
+      documentType: this.editForm.get(['documentType']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.pedidoRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(this.pedidoRepuestoService.update(this.pedidoRepuesto));
-        } else {
-            this.subscribeToSaveResponse(this.pedidoRepuestoService.create(this.pedidoRepuesto));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IPedidoRepuesto>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IPedidoRepuesto>>) {
-        result.subscribe((res: HttpResponse<IPedidoRepuesto>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
+  trackEstadoPedidoRepuestoById(index: number, item: IEstadoPedidoRepuesto) {
+    return item.id;
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  trackPresupuestoById(index: number, item: IPresupuesto) {
+    return item.id;
+  }
 
-    trackEstadoPedidoRepuestoById(index: number, item: IEstadoPedidoRepuesto) {
-        return item.id;
-    }
-
-    trackPresupuestoById(index: number, item: IPresupuesto) {
-        return item.id;
-    }
-
-    trackDocumentationTypeById(index: number, item: IDocumentationType) {
-        return item.id;
-    }
-    get pedidoRepuesto() {
-        return this._pedidoRepuesto;
-    }
-
-    set pedidoRepuesto(pedidoRepuesto: IPedidoRepuesto) {
-        this._pedidoRepuesto = pedidoRepuesto;
-    }
+  trackDocumentationTypeById(index: number, item: IDocumentationType) {
+    return item.id;
+  }
 }

@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-pago-cheque" [routerLink]="['/pago-cheque/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Pago Cheque
+            Create a new Pago Cheque
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="pagoCheques">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="pagoCheques?.length === 0">
+        <span>No pagoCheques found</span>
+    </div>
+    <div class="table-responsive" *ngIf="pagoCheques?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -33,16 +36,16 @@
                 <td>{{pagoCheque.numeroCuenta}}</td>
                 <td>
                     <div *ngIf="pagoCheque.banco">
-                        <a [routerLink]="['../banco', pagoCheque.banco?.id, 'view' ]" >{{pagoCheque.banco?.nombreBanco}}</a>
+                        <a [routerLink]="['/banco', pagoCheque.banco?.id, 'view' ]" >{{pagoCheque.banco?.nombreBanco}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="pagoCheque.formaDePago">
-                        <a [routerLink]="['../forma-de-pago', pagoCheque.formaDePago?.id, 'view' ]" >{{pagoCheque.formaDePago?.nombreFormaDePago}}</a>
+                        <a [routerLink]="['/forma-de-pago', pagoCheque.formaDePago?.id, 'view' ]" >{{pagoCheque.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/pago-cheque', pagoCheque.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -56,7 +59,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'pago-cheque/'+ pagoCheque.id + '/delete'} }]"
+                                [routerLink]="['/pago-cheque', { outlets: { popup: pagoCheque.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

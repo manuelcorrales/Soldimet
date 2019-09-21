@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
-import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
+import { IFormaDePago, FormaDePago } from 'app/shared/model/forma-de-pago.model';
+import { FormaDePagoService } from './forma-de-pago.service';
 
 @Component({
-    selector: 'jhi-forma-de-pago-update',
-    templateUrl: './forma-de-pago-update.component.html'
+  selector: 'jhi-forma-de-pago-update',
+  templateUrl: './forma-de-pago-update.component.html'
 })
 export class FormaDePagoUpdateComponent implements OnInit {
-    private _formaDePago: IFormaDePago;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private formaDePagoService: FormaDePagoService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreFormaDePago: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ formaDePago }) => {
-            this.formaDePago = formaDePago;
-        });
-    }
+  constructor(protected formaDePagoService: FormaDePagoService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ formaDePago }) => {
+      this.updateForm(formaDePago);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.formaDePago.id !== undefined) {
-            this.subscribeToSaveResponse(this.formaDePagoService.update(this.formaDePago));
-        } else {
-            this.subscribeToSaveResponse(this.formaDePagoService.create(this.formaDePago));
-        }
-    }
+  updateForm(formaDePago: IFormaDePago) {
+    this.editForm.patchValue({
+      id: formaDePago.id,
+      nombreFormaDePago: formaDePago.nombreFormaDePago
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IFormaDePago>>) {
-        result.subscribe((res: HttpResponse<IFormaDePago>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const formaDePago = this.createFromForm();
+    if (formaDePago.id !== undefined) {
+      this.subscribeToSaveResponse(this.formaDePagoService.update(formaDePago));
+    } else {
+      this.subscribeToSaveResponse(this.formaDePagoService.create(formaDePago));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get formaDePago() {
-        return this._formaDePago;
-    }
+  private createFromForm(): IFormaDePago {
+    return {
+      ...new FormaDePago(),
+      id: this.editForm.get(['id']).value,
+      nombreFormaDePago: this.editForm.get(['nombreFormaDePago']).value
+    };
+  }
 
-    set formaDePago(formaDePago: IFormaDePago) {
-        this._formaDePago = formaDePago;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IFormaDePago>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

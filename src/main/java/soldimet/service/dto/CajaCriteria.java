@@ -38,7 +38,7 @@ public class CajaCriteria implements Serializable, Criteria {
 
     private StringFilter observaciones;
 
-    private FloatFilter saldo_fisico;
+    private FloatFilter saldoFisico;
 
     private LongFilter sucursalId;
 
@@ -52,7 +52,7 @@ public class CajaCriteria implements Serializable, Criteria {
         this.horaCierre = other.horaCierre == null ? null : other.horaCierre.copy();
         this.saldo = other.saldo == null ? null : other.saldo.copy();
         this.observaciones = other.observaciones == null ? null : other.observaciones.copy();
-        this.saldo_fisico = other.saldo_fisico == null ? null : other.saldo_fisico.copy();
+        this.saldoFisico = other.saldoFisico == null ? null : other.saldoFisico.copy();
         this.sucursalId = other.sucursalId == null ? null : other.sucursalId.copy();
     }
 
@@ -109,12 +109,12 @@ public class CajaCriteria implements Serializable, Criteria {
         this.observaciones = observaciones;
     }
 
-    public FloatFilter getSaldo_fisico() {
-        return saldo_fisico;
+    public FloatFilter getSaldoFisico() {
+        return saldoFisico;
     }
 
-    public void setSaldo_fisico(FloatFilter saldo_fisico) {
-        this.saldo_fisico = saldo_fisico;
+    public void setSaldoFisico(FloatFilter saldoFisico) {
+        this.saldoFisico = saldoFisico;
     }
 
     public LongFilter getSucursalId() {
@@ -142,7 +142,7 @@ public class CajaCriteria implements Serializable, Criteria {
             Objects.equals(horaCierre, that.horaCierre) &&
             Objects.equals(saldo, that.saldo) &&
             Objects.equals(observaciones, that.observaciones) &&
-            Objects.equals(saldo_fisico, that.saldo_fisico) &&
+            Objects.equals(saldoFisico, that.saldoFisico) &&
             Objects.equals(sucursalId, that.sucursalId);
     }
 
@@ -155,7 +155,7 @@ public class CajaCriteria implements Serializable, Criteria {
         horaCierre,
         saldo,
         observaciones,
-        saldo_fisico,
+        saldoFisico,
         sucursalId
         );
     }
@@ -169,7 +169,7 @@ public class CajaCriteria implements Serializable, Criteria {
                 (horaCierre != null ? "horaCierre=" + horaCierre + ", " : "") +
                 (saldo != null ? "saldo=" + saldo + ", " : "") +
                 (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
-                (saldo_fisico != null ? "saldo_fisico=" + saldo_fisico + ", " : "") +
+                (saldoFisico != null ? "saldoFisico=" + saldoFisico + ", " : "") +
                 (sucursalId != null ? "sucursalId=" + sucursalId + ", " : "") +
             "}";
     }

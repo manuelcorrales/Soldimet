@@ -1,58 +1,77 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IDocumentationType } from 'app/shared/model/documentation-type.model';
-import { DocumentationTypeService } from 'app/entities/documentation-type/documentation-type.service';
+import { IDocumentationType, DocumentationType } from 'app/shared/model/documentation-type.model';
+import { DocumentationTypeService } from './documentation-type.service';
 
 @Component({
-    selector: 'jhi-documentation-type-update',
-    templateUrl: './documentation-type-update.component.html'
+  selector: 'jhi-documentation-type-update',
+  templateUrl: './documentation-type-update.component.html'
 })
 export class DocumentationTypeUpdateComponent implements OnInit {
-    private _documentationType: IDocumentationType;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private documentationTypeService: DocumentationTypeService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    documentName: [null, [Validators.required]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ documentationType }) => {
-            this.documentationType = documentationType;
-        });
-    }
+  constructor(
+    protected documentationTypeService: DocumentationTypeService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ documentationType }) => {
+      this.updateForm(documentationType);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.documentationType.id !== undefined) {
-            this.subscribeToSaveResponse(this.documentationTypeService.update(this.documentationType));
-        } else {
-            this.subscribeToSaveResponse(this.documentationTypeService.create(this.documentationType));
-        }
-    }
+  updateForm(documentationType: IDocumentationType) {
+    this.editForm.patchValue({
+      id: documentationType.id,
+      documentName: documentationType.documentName
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IDocumentationType>>) {
-        result.subscribe((res: HttpResponse<IDocumentationType>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const documentationType = this.createFromForm();
+    if (documentationType.id !== undefined) {
+      this.subscribeToSaveResponse(this.documentationTypeService.update(documentationType));
+    } else {
+      this.subscribeToSaveResponse(this.documentationTypeService.create(documentationType));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get documentationType() {
-        return this._documentationType;
-    }
+  private createFromForm(): IDocumentationType {
+    return {
+      ...new DocumentationType(),
+      id: this.editForm.get(['id']).value,
+      documentName: this.editForm.get(['documentName']).value
+    };
+  }
 
-    set documentationType(documentationType: IDocumentationType) {
-        this._documentationType = documentationType;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IDocumentationType>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

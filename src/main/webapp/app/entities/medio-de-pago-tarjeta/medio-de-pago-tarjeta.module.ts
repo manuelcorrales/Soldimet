@@ -1,34 +1,32 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { MedioDePagoTarjetaComponent } from './medio-de-pago-tarjeta.component';
+import { MedioDePagoTarjetaDetailComponent } from './medio-de-pago-tarjeta-detail.component';
+import { MedioDePagoTarjetaUpdateComponent } from './medio-de-pago-tarjeta-update.component';
 import {
-    MedioDePagoTarjetaComponent,
-    MedioDePagoTarjetaDetailComponent,
-    MedioDePagoTarjetaUpdateComponent,
-    MedioDePagoTarjetaDeletePopupComponent,
-    MedioDePagoTarjetaDeleteDialogComponent,
-    medioDePagoTarjetaRoute,
-    medioDePagoTarjetaPopupRoute
-} from 'app/entities/medio-de-pago-tarjeta';
+  MedioDePagoTarjetaDeletePopupComponent,
+  MedioDePagoTarjetaDeleteDialogComponent
+} from './medio-de-pago-tarjeta-delete-dialog.component';
+import { medioDePagoTarjetaRoute, medioDePagoTarjetaPopupRoute } from './medio-de-pago-tarjeta.route';
 
 const ENTITY_STATES = [...medioDePagoTarjetaRoute, ...medioDePagoTarjetaPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        MedioDePagoTarjetaComponent,
-        MedioDePagoTarjetaDetailComponent,
-        MedioDePagoTarjetaUpdateComponent,
-        MedioDePagoTarjetaDeleteDialogComponent,
-        MedioDePagoTarjetaDeletePopupComponent
-    ],
-    entryComponents: [
-        MedioDePagoTarjetaComponent,
-        MedioDePagoTarjetaUpdateComponent,
-        MedioDePagoTarjetaDeleteDialogComponent,
-        MedioDePagoTarjetaDeletePopupComponent
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    MedioDePagoTarjetaComponent,
+    MedioDePagoTarjetaDetailComponent,
+    MedioDePagoTarjetaUpdateComponent,
+    MedioDePagoTarjetaDeleteDialogComponent,
+    MedioDePagoTarjetaDeletePopupComponent
+  ],
+  entryComponents: [
+    MedioDePagoTarjetaComponent,
+    MedioDePagoTarjetaUpdateComponent,
+    MedioDePagoTarjetaDeleteDialogComponent,
+    MedioDePagoTarjetaDeletePopupComponent
+  ]
 })
 export class SoldimetMedioDePagoTarjetaModule {}

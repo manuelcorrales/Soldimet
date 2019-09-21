@@ -92,12 +92,12 @@ public class CajaConverter {
 
         MovimientoPedido movimientoPedido = movimientoPedidoRepository.findByMovimiento(movimiento);
         if (movimientoPedido != null) {
-            descripcion = "Nº pedido: " + movimientoPedido.getPedidoRepuesto().getId();
+            descripcion = "Pedido: " + movimientoPedido.getPedidoRepuesto().getId();
         }
 
         MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoRepository.findByMovimiento(movimiento);
         if (movimientoPresupuesto != null) {
-            descripcion = "Nº presupuesto: " + movimientoPresupuesto.getPresupuesto().getId();
+            descripcion = "Presupuesto: " + movimientoPresupuesto.getPresupuesto().getId();
             if (!movimientoPresupuesto.getCostoRepuestos().isEmpty()) {
                 descripcion = descripcion + " (";
                 for (CostoRepuesto costoRepuesto: movimientoPresupuesto.getCostoRepuestos()) {

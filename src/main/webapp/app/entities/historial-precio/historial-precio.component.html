@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-historial-precio" [routerLink]="['/historial-precio/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Historial Precio
+            Create a new Historial Precio
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="historialPrecios">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="historialPrecios?.length === 0">
+        <span>No historialPrecios found</span>
+    </div>
+    <div class="table-responsive" *ngIf="historialPrecios?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -26,11 +29,11 @@
                 <td>{{historialPrecio.fechaHistorial | date:'mediumDate'}}</td>
                 <td>
                     <div *ngIf="historialPrecio.precioRepuesto">
-                        <a [routerLink]="['../precio-repuesto', historialPrecio.precioRepuesto?.id, 'view' ]" >{{historialPrecio.precioRepuesto?.id}}</a>
+                        <a [routerLink]="['/precio-repuesto', historialPrecio.precioRepuesto?.id, 'view' ]" >{{historialPrecio.precioRepuesto?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/historial-precio', historialPrecio.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -44,7 +47,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'historial-precio/'+ historialPrecio.id + '/delete'} }]"
+                                [routerLink]="['/historial-precio', { outlets: { popup: historialPrecio.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

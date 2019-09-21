@@ -1,58 +1,77 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IEstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
-import { EstadoMovimientoService } from 'app/entities/estado-movimiento/estado-movimiento.service';
+import { IEstadoMovimiento, EstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
+import { EstadoMovimientoService } from './estado-movimiento.service';
 
 @Component({
-    selector: 'jhi-estado-movimiento-update',
-    templateUrl: './estado-movimiento-update.component.html'
+  selector: 'jhi-estado-movimiento-update',
+  templateUrl: './estado-movimiento-update.component.html'
 })
 export class EstadoMovimientoUpdateComponent implements OnInit {
-    private _estadoMovimiento: IEstadoMovimiento;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private estadoMovimientoService: EstadoMovimientoService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreEstado: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ estadoMovimiento }) => {
-            this.estadoMovimiento = estadoMovimiento;
-        });
-    }
+  constructor(
+    protected estadoMovimientoService: EstadoMovimientoService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ estadoMovimiento }) => {
+      this.updateForm(estadoMovimiento);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.estadoMovimiento.id !== undefined) {
-            this.subscribeToSaveResponse(this.estadoMovimientoService.update(this.estadoMovimiento));
-        } else {
-            this.subscribeToSaveResponse(this.estadoMovimientoService.create(this.estadoMovimiento));
-        }
-    }
+  updateForm(estadoMovimiento: IEstadoMovimiento) {
+    this.editForm.patchValue({
+      id: estadoMovimiento.id,
+      nombreEstado: estadoMovimiento.nombreEstado
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoMovimiento>>) {
-        result.subscribe((res: HttpResponse<IEstadoMovimiento>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const estadoMovimiento = this.createFromForm();
+    if (estadoMovimiento.id !== undefined) {
+      this.subscribeToSaveResponse(this.estadoMovimientoService.update(estadoMovimiento));
+    } else {
+      this.subscribeToSaveResponse(this.estadoMovimientoService.create(estadoMovimiento));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get estadoMovimiento() {
-        return this._estadoMovimiento;
-    }
+  private createFromForm(): IEstadoMovimiento {
+    return {
+      ...new EstadoMovimiento(),
+      id: this.editForm.get(['id']).value,
+      nombreEstado: this.editForm.get(['nombreEstado']).value
+    };
+  }
 
-    set estadoMovimiento(estadoMovimiento: IEstadoMovimiento) {
-        this._estadoMovimiento = estadoMovimiento;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoMovimiento>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

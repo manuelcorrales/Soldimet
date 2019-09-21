@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
 
 @Component({
-    selector: 'jhi-tipo-tarjeta-detail',
-    templateUrl: './tipo-tarjeta-detail.component.html'
+  selector: 'jhi-tipo-tarjeta-detail',
+  templateUrl: './tipo-tarjeta-detail.component.html'
 })
 export class TipoTarjetaDetailComponent implements OnInit {
-    tipoTarjeta: ITipoTarjeta;
+  tipoTarjeta: ITipoTarjeta;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ tipoTarjeta }) => {
-            this.tipoTarjeta = tipoTarjeta;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ tipoTarjeta }) => {
+      this.tipoTarjeta = tipoTarjeta;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

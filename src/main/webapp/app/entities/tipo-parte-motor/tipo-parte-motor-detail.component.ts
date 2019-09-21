@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 
 @Component({
-    selector: 'jhi-tipo-parte-motor-detail',
-    templateUrl: './tipo-parte-motor-detail.component.html'
+  selector: 'jhi-tipo-parte-motor-detail',
+  templateUrl: './tipo-parte-motor-detail.component.html'
 })
 export class TipoParteMotorDetailComponent implements OnInit {
-    tipoParteMotor: ITipoParteMotor;
+  tipoParteMotor: ITipoParteMotor;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ tipoParteMotor }) => {
-            this.tipoParteMotor = tipoParteMotor;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ tipoParteMotor }) => {
+      this.tipoParteMotor = tipoParteMotor;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

@@ -34,7 +34,7 @@ public class Presupuesto implements Serializable {
     private Float descuento;
 
     @NotNull
-    @Column(name = "fecha_creacion", nullable = false, columnDefinition = "DATE")
+    @Column(name = "fecha_creacion", columnDefinition = "DATE")
     private LocalDate fechaCreacion;
 
     @Column(name = "fecha_aceptado", columnDefinition = "DATE")

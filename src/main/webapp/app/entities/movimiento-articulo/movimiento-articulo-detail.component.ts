@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IMovimientoArticulo } from 'app/shared/model/movimiento-articulo.model';
 
 @Component({
-    selector: 'jhi-movimiento-articulo-detail',
-    templateUrl: './movimiento-articulo-detail.component.html'
+  selector: 'jhi-movimiento-articulo-detail',
+  templateUrl: './movimiento-articulo-detail.component.html'
 })
 export class MovimientoArticuloDetailComponent implements OnInit {
-    movimientoArticulo: IMovimientoArticulo;
+  movimientoArticulo: IMovimientoArticulo;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ movimientoArticulo }) => {
-            this.movimientoArticulo = movimientoArticulo;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ movimientoArticulo }) => {
+      this.movimientoArticulo = movimientoArticulo;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

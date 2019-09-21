@@ -1,29 +1,24 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
-import {
-    TipoRepuestoComponent,
-    TipoRepuestoDetailComponent,
-    TipoRepuestoUpdateComponent,
-    TipoRepuestoDeleteDialogComponent,
-    TipoRepuestoDeletePopupComponent,
-    tipoRepuestoRoute,
-    tipoRepuestoPopupRoute
-} from 'app/entities/tipo-repuesto';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { TipoRepuestoComponent } from './tipo-repuesto.component';
+import { TipoRepuestoDetailComponent } from './tipo-repuesto-detail.component';
+import { TipoRepuestoUpdateComponent } from './tipo-repuesto-update.component';
+import { TipoRepuestoDeletePopupComponent, TipoRepuestoDeleteDialogComponent } from './tipo-repuesto-delete-dialog.component';
+import { tipoRepuestoRoute, tipoRepuestoPopupRoute } from './tipo-repuesto.route';
 
 const ENTITY_STATES = [...tipoRepuestoRoute, ...tipoRepuestoPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        TipoRepuestoComponent,
-        TipoRepuestoDetailComponent,
-        TipoRepuestoDeleteDialogComponent,
-        TipoRepuestoDeletePopupComponent,
-        TipoRepuestoUpdateComponent
-    ],
-    entryComponents: [TipoRepuestoComponent, TipoRepuestoUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    TipoRepuestoComponent,
+    TipoRepuestoDetailComponent,
+    TipoRepuestoUpdateComponent,
+    TipoRepuestoDeleteDialogComponent,
+    TipoRepuestoDeletePopupComponent
+  ],
+  entryComponents: [TipoRepuestoComponent, TipoRepuestoUpdateComponent, TipoRepuestoDeleteDialogComponent, TipoRepuestoDeletePopupComponent]
 })
 export class SoldimetTipoRepuestoModule {}

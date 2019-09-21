@@ -1,26 +1,25 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-lista-precio-rectificacion-cram-heading">Create or edit a Lista Precio Rectificacion CRAM</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!listaPrecioRectificacionCRAM.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="listaPrecioRectificacionCRAM.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaVigenciaDesde">Fecha Vigencia Desde</label>
                     <div class="input-group">
-                        <input id="field_fechaVigenciaDesde" type="text" class="form-control" name="fechaVigenciaDesde" ngbDatepicker  #fechaVigenciaDesdeDp="ngbDatepicker" [(ngModel)]="listaPrecioRectificacionCRAM.fechaVigenciaDesde"
-                        required/>
+                        <input id="field_fechaVigenciaDesde" type="text" class="form-control" name="fechaVigenciaDesde" ngbDatepicker  #fechaVigenciaDesdeDp="ngbDatepicker" formControlName="fechaVigenciaDesde"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaVigenciaDesdeDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
                     </div>
-                    <div [hidden]="!(editForm.controls.fechaVigenciaDesde?.dirty && editForm.controls.fechaVigenciaDesde?.invalid)">
+                    <div *ngIf="editForm.get('fechaVigenciaDesde').invalid && (editForm.get('fechaVigenciaDesde').dirty || editForm.get('fechaVigenciaDesde').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.fechaVigenciaDesde?.errors?.required">
+                               *ngIf="editForm.get('fechaVigenciaDesde').errors.required">
                         This field is required.
                         </small>
                     </div>
@@ -28,8 +27,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaVigenciaHasta">Fecha Vigencia Hasta</label>
                     <div class="input-group">
-                        <input id="field_fechaVigenciaHasta" type="text" class="form-control" name="fechaVigenciaHasta" ngbDatepicker  #fechaVigenciaHastaDp="ngbDatepicker" [(ngModel)]="listaPrecioRectificacionCRAM.fechaVigenciaHasta"
-                        />
+                        <input id="field_fechaVigenciaHasta" type="text" class="form-control" name="fechaVigenciaHasta" ngbDatepicker  #fechaVigenciaHastaDp="ngbDatepicker" formControlName="fechaVigenciaHasta"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaVigenciaHastaDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
@@ -38,22 +36,22 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_numeroGrupo">Numero Grupo</label>
                     <input type="number" class="form-control" name="numeroGrupo" id="field_numeroGrupo"
-                        [(ngModel)]="listaPrecioRectificacionCRAM.numeroGrupo" required min="1" jhiMin="1" max="25" jhiMax="25"/>
-                    <div [hidden]="!(editForm.controls.numeroGrupo?.dirty && editForm.controls.numeroGrupo?.invalid)">
+                           formControlName="numeroGrupo"/>
+                    <div *ngIf="editForm.get('numeroGrupo').invalid && (editForm.get('numeroGrupo').dirty || editForm.get('numeroGrupo').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.numeroGrupo?.errors?.required">
+                               *ngIf="editForm.get('numeroGrupo').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.numeroGrupo?.errors?.min">
+                               *ngIf="editForm.get('numeroGrupo').errors.min">
                             This field should be at least 1.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.numeroGrupo?.errors?.max">
+                               *ngIf="editForm.get('numeroGrupo').errors.max">
                             This field cannot be more than 25.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.numeroGrupo?.errors?.number">
+                            [hidden]="!editForm.get('numeroGrupo')?.errors?.number">
                             This field should be a number.
                         </small>
                     </div>
@@ -61,14 +59,14 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_costoOperacion">Costo Operacion</label>
-                    <select class="form-control" id="field_costoOperacion" name="costoOperacion" [(ngModel)]="listaPrecioRectificacionCRAM.costoOperacion"  required>
-                        <option *ngIf="!editForm.value.costoOperacion" [ngValue]="null" selected></option>
-                        <option [ngValue]="costoOperacionOption.id === listaPrecioRectificacionCRAM.costoOperacion?.id ? listaPrecioRectificacionCRAM.costoOperacion : costoOperacionOption" *ngFor="let costoOperacionOption of costooperacions; trackBy: trackCostoOperacionById">{{costoOperacionOption.id}}</option>
+                    <select class="form-control" id="field_costoOperacion" name="costoOperacion" formControlName="costoOperacion">
+                        <option *ngIf="!editForm.get('costoOperacion').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="costoOperacionOption.id === editForm.get('costoOperacion').value?.id ? editForm.get('costoOperacion').value : costoOperacionOption" *ngFor="let costoOperacionOption of costooperacions; trackBy: trackCostoOperacionById">{{costoOperacionOption.id}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.costoOperacion?.dirty && editForm.controls.costoOperacion?.invalid)">
+                <div *ngIf="editForm.get('costoOperacion').invalid && (editForm.get('costoOperacion').dirty || editForm.get('costoOperacion').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.costoOperacion?.errors?.required">
+                           *ngIf="editForm.get('costoOperacion').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -77,7 +75,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

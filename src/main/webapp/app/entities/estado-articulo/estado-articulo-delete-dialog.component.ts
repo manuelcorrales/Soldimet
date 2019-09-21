@@ -5,68 +5,65 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
-import { EstadoArticuloService } from 'app/entities/estado-articulo/estado-articulo.service';
+import { EstadoArticuloService } from './estado-articulo.service';
 
 @Component({
-    selector: 'jhi-estado-articulo-delete-dialog',
-    templateUrl: './estado-articulo-delete-dialog.component.html'
+  selector: 'jhi-estado-articulo-delete-dialog',
+  templateUrl: './estado-articulo-delete-dialog.component.html'
 })
 export class EstadoArticuloDeleteDialogComponent {
-    estadoArticulo: IEstadoArticulo;
+  estadoArticulo: IEstadoArticulo;
 
-    constructor(
-        private estadoArticuloService: EstadoArticuloService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {}
+  constructor(
+    protected estadoArticuloService: EstadoArticuloService,
+    public activeModal: NgbActiveModal,
+    protected eventManager: JhiEventManager
+  ) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.estadoArticuloService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'estadoArticuloListModification',
-                content: 'Deleted an estadoArticulo'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.estadoArticuloService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'estadoArticuloListModification',
+        content: 'Deleted an estadoArticulo'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-estado-articulo-delete-popup',
-    template: ''
+  selector: 'jhi-estado-articulo-delete-popup',
+  template: ''
 })
 export class EstadoArticuloDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ estadoArticulo }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(EstadoArticuloDeleteDialogComponent as Component, {
-                    size: 'lg',
-                    backdrop: 'static'
-                });
-                this.ngbModalRef.componentInstance.estadoArticulo = estadoArticulo;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ estadoArticulo }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(EstadoArticuloDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.estadoArticulo = estadoArticulo;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/estado-articulo', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/estado-articulo', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

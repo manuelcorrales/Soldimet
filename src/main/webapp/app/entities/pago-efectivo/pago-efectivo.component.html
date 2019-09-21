@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-pago-efectivo" [routerLink]="['/pago-efectivo/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Pago Efectivo
+            Create a new Pago Efectivo
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="pagoEfectivos">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="pagoEfectivos?.length === 0">
+        <span>No pagoEfectivos found</span>
+    </div>
+    <div class="table-responsive" *ngIf="pagoEfectivos?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -24,11 +27,11 @@
                 <td><a [routerLink]="['/pago-efectivo', pagoEfectivo.id, 'view' ]">{{pagoEfectivo.id}}</a></td>
                 <td>
                     <div *ngIf="pagoEfectivo.formaDePago">
-                        <a [routerLink]="['../forma-de-pago', pagoEfectivo.formaDePago?.id, 'view' ]" >{{pagoEfectivo.formaDePago?.nombreFormaDePago}}</a>
+                        <a [routerLink]="['/forma-de-pago', pagoEfectivo.formaDePago?.id, 'view' ]" >{{pagoEfectivo.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/pago-efectivo', pagoEfectivo.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -42,7 +45,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'pago-efectivo/'+ pagoEfectivo.id + '/delete'} }]"
+                                [routerLink]="['/pago-efectivo', { outlets: { popup: pagoEfectivo.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

@@ -1,23 +1,18 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
-import {
-    BancoComponent,
-    BancoDetailComponent,
-    BancoUpdateComponent,
-    BancoDeletePopupComponent,
-    bancoRoute,
-    BancoDeleteDialogComponent,
-    bancoPopupRoute
-} from 'app/entities/banco';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { BancoComponent } from './banco.component';
+import { BancoDetailComponent } from './banco-detail.component';
+import { BancoUpdateComponent } from './banco-update.component';
+import { BancoDeletePopupComponent, BancoDeleteDialogComponent } from './banco-delete-dialog.component';
+import { bancoRoute, bancoPopupRoute } from './banco.route';
 
 const ENTITY_STATES = [...bancoRoute, ...bancoPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [BancoComponent, BancoDetailComponent, BancoUpdateComponent, BancoDeletePopupComponent, BancoDeleteDialogComponent],
-    entryComponents: [BancoComponent, BancoUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [BancoComponent, BancoDetailComponent, BancoUpdateComponent, BancoDeleteDialogComponent, BancoDeletePopupComponent],
+  entryComponents: [BancoComponent, BancoUpdateComponent, BancoDeleteDialogComponent, BancoDeletePopupComponent]
 })
 export class SoldimetBancoModule {}

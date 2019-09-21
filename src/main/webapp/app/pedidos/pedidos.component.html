@@ -15,7 +15,7 @@
         </div>
     </div>
     <br/>
-    <div class="container-fluid">
+    <div class="container-fluid card">
         <div class="row col">
             <table class="table table-hover">
                 <thead>
@@ -75,7 +75,7 @@
                         <td>
                             <button class="btn btn-info" type="submit" [routerLink]="['/', { outlets: { popup: 'pedidos/'+ pedido.id } }]" replaceUrl="true"
                                 *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'" placement="top" ngbTooltip="Operar pedido">
-                                <i class="fa fa-external-link-square"></i>
+                                <fa-icon icon="fa-bars"></fa-icon>
                             </button>
                             <p *ngIf="pedido.estado == 'Recibido' || pedido.estado == 'Cancelado'">No hay operaciones</p>
                         </td>

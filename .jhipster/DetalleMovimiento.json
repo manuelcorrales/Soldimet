@@ -31,7 +31,7 @@
     ],
     "fields": [
         {
-            "fieldName": "valor_unitario",
+            "fieldName": "valorUnitario",
             "fieldType": "Float"
         },
         {

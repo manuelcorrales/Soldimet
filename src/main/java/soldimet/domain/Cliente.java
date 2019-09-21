@@ -26,8 +26,8 @@ public class Cliente implements Serializable {
     @Column(name = "apellido", length = 30, nullable = false)
     private String apellido;
 
-    @OneToOne(optional = false)    @NotNull
-
+    @OneToOne(optional = false)
+    @NotNull
     @JoinColumn(unique = true)
     private Persona persona;
 

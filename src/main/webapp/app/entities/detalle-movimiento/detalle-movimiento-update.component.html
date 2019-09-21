@@ -1,34 +1,34 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-detalle-movimiento-heading">Create or edit a Detalle Movimiento</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!detalleMovimiento.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="detalleMovimiento.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_valor_unitario">Valor Unitario</label>
-                    <input type="number" class="form-control" name="valor_unitario" id="field_valor_unitario"
-                        [(ngModel)]="detalleMovimiento.valor_unitario" />
+                    <label class="form-control-label" for="field_valorUnitario">Valor Unitario</label>
+                    <input type="number" class="form-control" name="valorUnitario" id="field_valorUnitario"
+                           formControlName="valorUnitario"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_cantidad">Cantidad</label>
                     <input type="number" class="form-control" name="cantidad" id="field_cantidad"
-                        [(ngModel)]="detalleMovimiento.cantidad" required min="0" jhiMin="0"/>
-                    <div [hidden]="!(editForm.controls.cantidad?.dirty && editForm.controls.cantidad?.invalid)">
+                           formControlName="cantidad"/>
+                    <div *ngIf="editForm.get('cantidad').invalid && (editForm.get('cantidad').dirty || editForm.get('cantidad').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.cantidad?.errors?.required">
+                               *ngIf="editForm.get('cantidad').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.cantidad?.errors?.min">
+                               *ngIf="editForm.get('cantidad').errors.min">
                             This field should be at least 0.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.cantidad?.errors?.number">
+                            [hidden]="!editForm.get('cantidad')?.errors?.number">
                             This field should be a number.
                         </small>
                     </div>
@@ -36,41 +36,41 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_descripcion">Descripcion</label>
                     <input type="text" class="form-control" name="descripcion" id="field_descripcion"
-                        [(ngModel)]="detalleMovimiento.descripcion" />
+                           formControlName="descripcion"/>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_tipoDetalleMovimiento">Tipo Detalle Movimiento</label>
-                    <select class="form-control" id="field_tipoDetalleMovimiento" name="tipoDetalleMovimiento" [(ngModel)]="detalleMovimiento.tipoDetalleMovimiento"  required>
-                        <option *ngIf="!editForm.value.tipoDetalleMovimiento" [ngValue]="null" selected></option>
-                        <option [ngValue]="tipoDetalleMovimientoOption.id === detalleMovimiento.tipoDetalleMovimiento?.id ? detalleMovimiento.tipoDetalleMovimiento : tipoDetalleMovimientoOption" *ngFor="let tipoDetalleMovimientoOption of tipodetallemovimientos; trackBy: trackTipoDetalleMovimientoById">{{tipoDetalleMovimientoOption.nombreTipoDetalle}}</option>
+                    <select class="form-control" id="field_tipoDetalleMovimiento" name="tipoDetalleMovimiento" formControlName="tipoDetalleMovimiento">
+                        <option *ngIf="!editForm.get('tipoDetalleMovimiento').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoDetalleMovimientoOption.id === editForm.get('tipoDetalleMovimiento').value?.id ? editForm.get('tipoDetalleMovimiento').value : tipoDetalleMovimientoOption" *ngFor="let tipoDetalleMovimientoOption of tipodetallemovimientos; trackBy: trackTipoDetalleMovimientoById">{{tipoDetalleMovimientoOption.nombreTipoDetalle}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.tipoDetalleMovimiento?.dirty && editForm.controls.tipoDetalleMovimiento?.invalid)">
+                <div *ngIf="editForm.get('tipoDetalleMovimiento').invalid && (editForm.get('tipoDetalleMovimiento').dirty || editForm.get('tipoDetalleMovimiento').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.tipoDetalleMovimiento?.errors?.required">
+                           *ngIf="editForm.get('tipoDetalleMovimiento').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_articulo">Articulo</label>
-                    <select class="form-control" id="field_articulo" name="articulo" [(ngModel)]="detalleMovimiento.articulo" >
+                    <select class="form-control" id="field_articulo" name="articulo" formControlName="articulo">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="articuloOption.id === detalleMovimiento.articulo?.id ? detalleMovimiento.articulo : articuloOption" *ngFor="let articuloOption of articulos; trackBy: trackArticuloById">{{articuloOption.descripcion}}</option>
+                        <option [ngValue]="articuloOption.id === editForm.get('articulo').value?.id ? editForm.get('articulo').value : articuloOption" *ngFor="let articuloOption of articulos; trackBy: trackArticuloById">{{articuloOption.descripcion}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_pedidoRepuesto">Pedido Repuesto</label>
-                    <select class="form-control" id="field_pedidoRepuesto" name="pedidoRepuesto" [(ngModel)]="detalleMovimiento.pedidoRepuesto" >
+                    <select class="form-control" id="field_pedidoRepuesto" name="pedidoRepuesto" formControlName="pedidoRepuesto">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="pedidoRepuestoOption.id === detalleMovimiento.pedidoRepuesto?.id ? detalleMovimiento.pedidoRepuesto : pedidoRepuestoOption" *ngFor="let pedidoRepuestoOption of pedidorepuestos; trackBy: trackPedidoRepuestoById">{{pedidoRepuestoOption.id}}</option>
+                        <option [ngValue]="pedidoRepuestoOption.id === editForm.get('pedidoRepuesto').value?.id ? editForm.get('pedidoRepuesto').value : pedidoRepuestoOption" *ngFor="let pedidoRepuestoOption of pedidorepuestos; trackBy: trackPedidoRepuestoById">{{pedidoRepuestoOption.id}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_presupuesto">Presupuesto</label>
-                    <select class="form-control" id="field_presupuesto" name="presupuesto" [(ngModel)]="detalleMovimiento.presupuesto" >
+                    <select class="form-control" id="field_presupuesto" name="presupuesto" formControlName="presupuesto">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="presupuestoOption.id === detalleMovimiento.presupuesto?.id ? detalleMovimiento.presupuesto : presupuestoOption" *ngFor="let presupuestoOption of presupuestos; trackBy: trackPresupuestoById">{{presupuestoOption.id}}</option>
+                        <option [ngValue]="presupuestoOption.id === editForm.get('presupuesto').value?.id ? editForm.get('presupuesto').value : presupuestoOption" *ngFor="let presupuestoOption of presupuestos; trackBy: trackPresupuestoById">{{presupuestoOption.id}}</option>
                     </select>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

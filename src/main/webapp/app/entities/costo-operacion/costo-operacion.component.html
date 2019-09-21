@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-costo-operacion" [routerLink]="['/costo-operacion/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Costo Operacion
+            Create a new Costo Operacion
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="costoOperacions">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="costoOperacions?.length === 0">
+        <span>No costoOperacions found</span>
+    </div>
+    <div class="table-responsive" *ngIf="costoOperacions?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -28,21 +31,21 @@
                 <td>{{costoOperacion.costoOperacion}}</td>
                 <td>
                     <div *ngIf="costoOperacion.cilindrada">
-                        <a [routerLink]="['../cilindrada', costoOperacion.cilindrada?.id, 'view' ]" >{{costoOperacion.cilindrada?.cantidadDeCilindros}}</a>
+                        <a [routerLink]="['/cilindrada', costoOperacion.cilindrada?.id, 'view' ]" >{{costoOperacion.cilindrada?.cantidadDeCilindros}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="costoOperacion.operacion">
-                        <a [routerLink]="['../operacion', costoOperacion.operacion?.id, 'view' ]" >{{costoOperacion.operacion?.nombreOperacion}}</a>
+                        <a [routerLink]="['/operacion', costoOperacion.operacion?.id, 'view' ]" >{{costoOperacion.operacion?.nombreOperacion}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="costoOperacion.tipoParteMotor">
-                        <a [routerLink]="['../tipo-parte-motor', costoOperacion.tipoParteMotor?.id, 'view' ]" >{{costoOperacion.tipoParteMotor?.nombreTipoParteMotor}}</a>
+                        <a [routerLink]="['/tipo-parte-motor', costoOperacion.tipoParteMotor?.id, 'view' ]" >{{costoOperacion.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/costo-operacion', costoOperacion.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -56,7 +59,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'costo-operacion/'+ costoOperacion.id + '/delete'} }]"
+                                [routerLink]="['/costo-operacion', { outlets: { popup: costoOperacion.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 
 @Component({
-    selector: 'jhi-tipo-repuesto-detail',
-    templateUrl: './tipo-repuesto-detail.component.html'
+  selector: 'jhi-tipo-repuesto-detail',
+  templateUrl: './tipo-repuesto-detail.component.html'
 })
 export class TipoRepuestoDetailComponent implements OnInit {
-    tipoRepuesto: ITipoRepuesto;
+  tipoRepuesto: ITipoRepuesto;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ tipoRepuesto }) => {
-            this.tipoRepuesto = tipoRepuesto;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ tipoRepuesto }) => {
+      this.tipoRepuesto = tipoRepuesto;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

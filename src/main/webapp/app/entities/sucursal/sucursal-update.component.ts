@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { ISucursal } from 'app/shared/model/sucursal.model';
+import { ISucursal, Sucursal } from 'app/shared/model/sucursal.model';
 import { SucursalService } from './sucursal.service';
 
 @Component({
-    selector: 'jhi-sucursal-update',
-    templateUrl: './sucursal-update.component.html'
+  selector: 'jhi-sucursal-update',
+  templateUrl: './sucursal-update.component.html'
 })
 export class SucursalUpdateComponent implements OnInit {
-    private _sucursal: ISucursal;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private sucursalService: SucursalService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreSucursal: [null, [Validators.required]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ sucursal }) => {
-            this.sucursal = sucursal;
-        });
-    }
+  constructor(protected sucursalService: SucursalService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ sucursal }) => {
+      this.updateForm(sucursal);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.sucursal.id !== undefined) {
-            this.subscribeToSaveResponse(this.sucursalService.update(this.sucursal));
-        } else {
-            this.subscribeToSaveResponse(this.sucursalService.create(this.sucursal));
-        }
-    }
+  updateForm(sucursal: ISucursal) {
+    this.editForm.patchValue({
+      id: sucursal.id,
+      nombreSucursal: sucursal.nombreSucursal
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ISucursal>>) {
-        result.subscribe((res: HttpResponse<ISucursal>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const sucursal = this.createFromForm();
+    if (sucursal.id !== undefined) {
+      this.subscribeToSaveResponse(this.sucursalService.update(sucursal));
+    } else {
+      this.subscribeToSaveResponse(this.sucursalService.create(sucursal));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get sucursal() {
-        return this._sucursal;
-    }
+  private createFromForm(): ISucursal {
+    return {
+      ...new Sucursal(),
+      id: this.editForm.get(['id']).value,
+      nombreSucursal: this.editForm.get(['nombreSucursal']).value
+    };
+  }
 
-    set sucursal(sucursal: ISucursal) {
-        this._sucursal = sucursal;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ISucursal>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

@@ -1,63 +1,82 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
-import { ListaPrecioDesdeHastaService } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta.service';
+import { IListaPrecioDesdeHasta, ListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
+import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service';
 
 @Component({
-    selector: 'jhi-lista-precio-desde-hasta-update',
-    templateUrl: './lista-precio-desde-hasta-update.component.html'
+  selector: 'jhi-lista-precio-desde-hasta-update',
+  templateUrl: './lista-precio-desde-hasta-update.component.html'
 })
 export class ListaPrecioDesdeHastaUpdateComponent implements OnInit {
-    private _listaPrecioDesdeHasta: IListaPrecioDesdeHasta;
-    isSaving: boolean;
-    fechaDesdeDp: any;
-    fechaHastaDp: any;
+  isSaving: boolean;
+  fechaDesdeDp: any;
+  fechaHastaDp: any;
 
-    constructor(private listaPrecioDesdeHastaService: ListaPrecioDesdeHastaService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    fechaDesde: [null, [Validators.required]],
+    fechaHasta: []
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ listaPrecioDesdeHasta }) => {
-            this.listaPrecioDesdeHasta = listaPrecioDesdeHasta;
-        });
-    }
+  constructor(
+    protected listaPrecioDesdeHastaService: ListaPrecioDesdeHastaService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ listaPrecioDesdeHasta }) => {
+      this.updateForm(listaPrecioDesdeHasta);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.listaPrecioDesdeHasta.id !== undefined) {
-            this.subscribeToSaveResponse(this.listaPrecioDesdeHastaService.update(this.listaPrecioDesdeHasta));
-        } else {
-            this.subscribeToSaveResponse(this.listaPrecioDesdeHastaService.create(this.listaPrecioDesdeHasta));
-        }
-    }
+  updateForm(listaPrecioDesdeHasta: IListaPrecioDesdeHasta) {
+    this.editForm.patchValue({
+      id: listaPrecioDesdeHasta.id,
+      fechaDesde: listaPrecioDesdeHasta.fechaDesde,
+      fechaHasta: listaPrecioDesdeHasta.fechaHasta
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IListaPrecioDesdeHasta>>) {
-        result.subscribe(
-            (res: HttpResponse<IListaPrecioDesdeHasta>) => this.onSaveSuccess(),
-            (res: HttpErrorResponse) => this.onSaveError()
-        );
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const listaPrecioDesdeHasta = this.createFromForm();
+    if (listaPrecioDesdeHasta.id !== undefined) {
+      this.subscribeToSaveResponse(this.listaPrecioDesdeHastaService.update(listaPrecioDesdeHasta));
+    } else {
+      this.subscribeToSaveResponse(this.listaPrecioDesdeHastaService.create(listaPrecioDesdeHasta));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get listaPrecioDesdeHasta() {
-        return this._listaPrecioDesdeHasta;
-    }
+  private createFromForm(): IListaPrecioDesdeHasta {
+    return {
+      ...new ListaPrecioDesdeHasta(),
+      id: this.editForm.get(['id']).value,
+      fechaDesde: this.editForm.get(['fechaDesde']).value,
+      fechaHasta: this.editForm.get(['fechaHasta']).value
+    };
+  }
 
-    set listaPrecioDesdeHasta(listaPrecioDesdeHasta: IListaPrecioDesdeHasta) {
-        this._listaPrecioDesdeHasta = listaPrecioDesdeHasta;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IListaPrecioDesdeHasta>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

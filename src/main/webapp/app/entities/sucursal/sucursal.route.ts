@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-import { UserRouteAccessService } from 'app/core';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
+import { Observable, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { Sucursal } from 'app/shared/model/sucursal.model';
 import { SucursalService } from './sucursal.service';
 import { SucursalComponent } from './sucursal.component';
@@ -14,77 +14,80 @@ import { ISucursal } from 'app/shared/model/sucursal.model';
 
 @Injectable({ providedIn: 'root' })
 export class SucursalResolve implements Resolve<ISucursal> {
-    constructor(private service: SucursalService) {}
+  constructor(private service: SucursalService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(map((sucursal: HttpResponse<Sucursal>) => sucursal.body));
-        }
-        return of(new Sucursal());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ISucursal> {
+    const id = route.params['id'];
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Sucursal>) => response.ok),
+        map((sucursal: HttpResponse<Sucursal>) => sucursal.body)
+      );
     }
+    return of(new Sucursal());
+  }
 }
 
 export const sucursalRoute: Routes = [
-    {
-        path: 'sucursal',
-        component: SucursalComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Sucursals'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: SucursalComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Sucursals'
     },
-    {
-        path: 'sucursal/:id/view',
-        component: SucursalDetailComponent,
-        resolve: {
-            sucursal: SucursalResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Sucursals'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: SucursalDetailComponent,
+    resolve: {
+      sucursal: SucursalResolve
     },
-    {
-        path: 'sucursal/new',
-        component: SucursalUpdateComponent,
-        resolve: {
-            sucursal: SucursalResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Sucursals'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Sucursals'
     },
-    {
-        path: 'sucursal/:id/edit',
-        component: SucursalUpdateComponent,
-        resolve: {
-            sucursal: SucursalResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Sucursals'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: SucursalUpdateComponent,
+    resolve: {
+      sucursal: SucursalResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Sucursals'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: SucursalUpdateComponent,
+    resolve: {
+      sucursal: SucursalResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Sucursals'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const sucursalPopupRoute: Routes = [
-    {
-        path: 'sucursal/:id/delete',
-        component: SucursalDeletePopupComponent,
-        resolve: {
-            sucursal: SucursalResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Sucursals'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: SucursalDeletePopupComponent,
+    resolve: {
+      sucursal: SucursalResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Sucursals'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

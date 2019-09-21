@@ -1,21 +1,21 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-empleado-heading">Create or edit a Empleado</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!empleado.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="empleado.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_usuario">Usuario</label>
                     <input type="text" class="form-control" name="usuario" id="field_usuario"
-                        [(ngModel)]="empleado.usuario" required/>
-                    <div [hidden]="!(editForm.controls.usuario?.dirty && editForm.controls.usuario?.invalid)">
+                           formControlName="usuario"/>
+                    <div *ngIf="editForm.get('usuario').invalid && (editForm.get('usuario').dirty || editForm.get('usuario').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.usuario?.errors?.required">
+                               *ngIf="editForm.get('usuario').errors.required">
                         This field is required.
                         </small>
                     </div>
@@ -23,10 +23,10 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_contrasenia">Contrasenia</label>
                     <input type="text" class="form-control" name="contrasenia" id="field_contrasenia"
-                        [(ngModel)]="empleado.contrasenia" required/>
-                    <div [hidden]="!(editForm.controls.contrasenia?.dirty && editForm.controls.contrasenia?.invalid)">
+                           formControlName="contrasenia"/>
+                    <div *ngIf="editForm.get('contrasenia').invalid && (editForm.get('contrasenia').dirty || editForm.get('contrasenia').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.contrasenia?.errors?.required">
+                               *ngIf="editForm.get('contrasenia').errors.required">
                         This field is required.
                         </small>
                     </div>
@@ -34,22 +34,22 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_persona">Persona</label>
-                    <select class="form-control" id="field_persona" name="persona" [(ngModel)]="empleado.persona" required>
-                        <option *ngIf="!editForm.value.persona" [ngValue]="null" selected></option>
-                        <option [ngValue]="personaOption.id === empleado.persona?.id ? empleado.persona : personaOption" *ngFor="let personaOption of personas; trackBy: trackPersonaById">{{personaOption.nombre}}</option>
+                    <select class="form-control" id="field_persona" name="persona" formControlName="persona">
+                        <option *ngIf="!editForm.get('persona').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="personaOption.id === editForm.get('persona').value?.id ? editForm.get('persona').value : personaOption" *ngFor="let personaOption of personas; trackBy: trackPersonaById">{{personaOption.nombre}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.persona?.dirty && editForm.controls.persona?.invalid)">
+                <div *ngIf="editForm.get('persona').invalid && (editForm.get('persona').dirty || editForm.get('persona').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.persona?.errors?.required">
+                           *ngIf="editForm.get('persona').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_sucursal">Sucursal</label>
-                    <select class="form-control" id="field_sucursal" name="sucursal" [(ngModel)]="empleado.sucursal" >
+                    <select class="form-control" id="field_sucursal" name="sucursal" formControlName="sucursal">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="sucursalOption.id === empleado.sucursal?.id ? empleado.sucursal : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
+                        <option [ngValue]="sucursalOption.id === editForm.get('sucursal').value?.id ? editForm.get('sucursal').value : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
                     </select>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

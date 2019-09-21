@@ -78,7 +78,7 @@ public class CajaQueryService extends QueryService<Caja> {
      * Function to convert ConsumerCriteria to a {@link Specification}
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
-     */    
+     */
     protected Specification<Caja> createSpecification(CajaCriteria criteria) {
         Specification<Caja> specification = Specification.where(null);
         if (criteria != null) {
@@ -100,8 +100,8 @@ public class CajaQueryService extends QueryService<Caja> {
             if (criteria.getObservaciones() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getObservaciones(), Caja_.observaciones));
             }
-            if (criteria.getSaldo_fisico() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getSaldo_fisico(), Caja_.saldo_fisico));
+            if (criteria.getSaldoFisico() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getSaldoFisico(), Caja_.saldoFisico));
             }
             if (criteria.getSucursalId() != null) {
                 specification = specification.and(buildSpecification(criteria.getSucursalId(),

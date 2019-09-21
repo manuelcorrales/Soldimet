@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ISucursal } from 'app/shared/model/sucursal.model';
 
 @Component({
-    selector: 'jhi-sucursal-detail',
-    templateUrl: './sucursal-detail.component.html'
+  selector: 'jhi-sucursal-detail',
+  templateUrl: './sucursal-detail.component.html'
 })
 export class SucursalDetailComponent implements OnInit {
-    sucursal: ISucursal;
+  sucursal: ISucursal;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ sucursal }) => {
-            this.sucursal = sucursal;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ sucursal }) => {
+      this.sucursal = sucursal;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

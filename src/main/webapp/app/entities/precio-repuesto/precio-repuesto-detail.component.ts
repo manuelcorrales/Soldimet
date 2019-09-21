@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IPrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
 
 @Component({
-    selector: 'jhi-precio-repuesto-detail',
-    templateUrl: './precio-repuesto-detail.component.html'
+  selector: 'jhi-precio-repuesto-detail',
+  templateUrl: './precio-repuesto-detail.component.html'
 })
 export class PrecioRepuestoDetailComponent implements OnInit {
-    precioRepuesto: IPrecioRepuesto;
+  precioRepuesto: IPrecioRepuesto;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ precioRepuesto }) => {
-            this.precioRepuesto = precioRepuesto;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ precioRepuesto }) => {
+      this.precioRepuesto = precioRepuesto;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

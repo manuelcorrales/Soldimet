@@ -22,7 +22,7 @@
         </div>
     </div>
     <br/>
-    <div class="container-fluid">
+    <div class="container-fluid card">
         <div class="">
             <table class="table table-hover">
                 <thead>
@@ -77,19 +77,19 @@
 
                             <button class="btn btn-success" *ngIf="presupuesto.estado == 'Creado'" (click)="aceptarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Aceptar presupuesto">
-                                <i class="fa fa-check-square"></i>
+                                <fa-icon icon="check"></fa-icon>
                             </button>
                             <button class="btn btn-info" *ngIf="presupuesto.estado == 'Aceptado'" (click)="terminarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Terminar trabajo">
-                                <i class="fa fa-check-square"></i>
+                                <fa-icon icon="check-double"></fa-icon>
                             </button>
                             <button class="btn btn-primary" *ngIf="presupuesto.estado == 'Terminado'" (click)="entregarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Entregar trabajo">
-                                <i class="fa fa-check-square"></i>
+                                <fa-icon icon="check-square"></fa-icon>
                             </button>
                             <button class="btn btn-danger" *ngIf="presupuesto.estado == 'Aceptado' || presupuesto.estado == 'Creado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Eliminar">
-                                <i class="fa fa-close"></i>
+                                <fa-icon icon="trash"></fa-icon>
                             </button>
                             <!-- <p *ngIf="presupuesto.estado == 'Cancelado'">No hay operaciones</p> -->
                         </td>

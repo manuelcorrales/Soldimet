@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IMotor } from 'app/shared/model/motor.model';
-import { MotorService } from 'app/entities/motor/motor.service';
+import { IMotor, Motor } from 'app/shared/model/motor.model';
+import { MotorService } from './motor.service';
 
 @Component({
-    selector: 'jhi-motor-update',
-    templateUrl: './motor-update.component.html'
+  selector: 'jhi-motor-update',
+  templateUrl: './motor-update.component.html'
 })
 export class MotorUpdateComponent implements OnInit {
-    private _motor: IMotor;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private motorService: MotorService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    marcaMotor: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(25)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ motor }) => {
-            this.motor = motor;
-        });
-    }
+  constructor(protected motorService: MotorService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ motor }) => {
+      this.updateForm(motor);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.motor.id !== undefined) {
-            this.subscribeToSaveResponse(this.motorService.update(this.motor));
-        } else {
-            this.subscribeToSaveResponse(this.motorService.create(this.motor));
-        }
-    }
+  updateForm(motor: IMotor) {
+    this.editForm.patchValue({
+      id: motor.id,
+      marcaMotor: motor.marcaMotor
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IMotor>>) {
-        result.subscribe((res: HttpResponse<IMotor>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const motor = this.createFromForm();
+    if (motor.id !== undefined) {
+      this.subscribeToSaveResponse(this.motorService.update(motor));
+    } else {
+      this.subscribeToSaveResponse(this.motorService.create(motor));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get motor() {
-        return this._motor;
-    }
+  private createFromForm(): IMotor {
+    return {
+      ...new Motor(),
+      id: this.editForm.get(['id']).value,
+      marcaMotor: this.editForm.get(['marcaMotor']).value
+    };
+  }
 
-    set motor(motor: IMotor) {
-        this._motor = motor;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IMotor>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

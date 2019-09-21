@@ -1,61 +1,77 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
-import { EstadoCobranzaOperacionService } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.service';
+import { IEstadoCobranzaOperacion, EstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
+import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.service';
 
 @Component({
-    selector: 'jhi-estado-cobranza-operacion-update',
-    templateUrl: './estado-cobranza-operacion-update.component.html'
+  selector: 'jhi-estado-cobranza-operacion-update',
+  templateUrl: './estado-cobranza-operacion-update.component.html'
 })
 export class EstadoCobranzaOperacionUpdateComponent implements OnInit {
-    private _estadoCobranzaOperacion: IEstadoCobranzaOperacion;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private estadoCobranzaOperacionService: EstadoCobranzaOperacionService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreEstado: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ estadoCobranzaOperacion }) => {
-            this.estadoCobranzaOperacion = estadoCobranzaOperacion;
-        });
-    }
+  constructor(
+    protected estadoCobranzaOperacionService: EstadoCobranzaOperacionService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ estadoCobranzaOperacion }) => {
+      this.updateForm(estadoCobranzaOperacion);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.estadoCobranzaOperacion.id !== undefined) {
-            this.subscribeToSaveResponse(this.estadoCobranzaOperacionService.update(this.estadoCobranzaOperacion));
-        } else {
-            this.subscribeToSaveResponse(this.estadoCobranzaOperacionService.create(this.estadoCobranzaOperacion));
-        }
-    }
+  updateForm(estadoCobranzaOperacion: IEstadoCobranzaOperacion) {
+    this.editForm.patchValue({
+      id: estadoCobranzaOperacion.id,
+      nombreEstado: estadoCobranzaOperacion.nombreEstado
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoCobranzaOperacion>>) {
-        result.subscribe(
-            (res: HttpResponse<IEstadoCobranzaOperacion>) => this.onSaveSuccess(),
-            (res: HttpErrorResponse) => this.onSaveError()
-        );
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const estadoCobranzaOperacion = this.createFromForm();
+    if (estadoCobranzaOperacion.id !== undefined) {
+      this.subscribeToSaveResponse(this.estadoCobranzaOperacionService.update(estadoCobranzaOperacion));
+    } else {
+      this.subscribeToSaveResponse(this.estadoCobranzaOperacionService.create(estadoCobranzaOperacion));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get estadoCobranzaOperacion() {
-        return this._estadoCobranzaOperacion;
-    }
+  private createFromForm(): IEstadoCobranzaOperacion {
+    return {
+      ...new EstadoCobranzaOperacion(),
+      id: this.editForm.get(['id']).value,
+      nombreEstado: this.editForm.get(['nombreEstado']).value
+    };
+  }
 
-    set estadoCobranzaOperacion(estadoCobranzaOperacion: IEstadoCobranzaOperacion) {
-        this._estadoCobranzaOperacion = estadoCobranzaOperacion;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoCobranzaOperacion>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

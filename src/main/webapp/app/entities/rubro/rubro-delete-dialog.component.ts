@@ -5,61 +5,61 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IRubro } from 'app/shared/model/rubro.model';
-import { RubroService } from 'app/entities/rubro/rubro.service';
+import { RubroService } from './rubro.service';
 
 @Component({
-    selector: 'jhi-rubro-delete-dialog',
-    templateUrl: './rubro-delete-dialog.component.html'
+  selector: 'jhi-rubro-delete-dialog',
+  templateUrl: './rubro-delete-dialog.component.html'
 })
 export class RubroDeleteDialogComponent {
-    rubro: IRubro;
+  rubro: IRubro;
 
-    constructor(private rubroService: RubroService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+  constructor(protected rubroService: RubroService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.rubroService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'rubroListModification',
-                content: 'Deleted an rubro'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.rubroService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'rubroListModification',
+        content: 'Deleted an rubro'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-rubro-delete-popup',
-    template: ''
+  selector: 'jhi-rubro-delete-popup',
+  template: ''
 })
 export class RubroDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ rubro }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(RubroDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
-                this.ngbModalRef.componentInstance.rubro = rubro;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ rubro }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(RubroDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.rubro = rubro;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/rubro', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/rubro', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }
