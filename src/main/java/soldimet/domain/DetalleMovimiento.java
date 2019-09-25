@@ -59,7 +59,7 @@ public class DetalleMovimiento implements Serializable {
         this.id = id;
     }
 
-    public Float getValor_unitario() {
+    public Float getValorUnitario() {
         return valorUnitario;
     }
 
@@ -68,7 +68,7 @@ public class DetalleMovimiento implements Serializable {
         return this;
     }
 
-    public void setValor_unitario(Float valorUnitario) {
+    public void setValorUnitario(Float valorUnitario) {
         this.valorUnitario = valorUnitario;
     }
 
@@ -171,7 +171,7 @@ public class DetalleMovimiento implements Serializable {
     public String toString() {
         return "DetalleMovimiento{" +
             "id=" + getId() +
-            ", valorUnitario=" + getValor_unitario() +
+            ", valorUnitario=" + getValorUnitario() +
             ", cantidad=" + getCantidad() +
             ", descripcion='" + getDescripcion() + "'" +
             "}";

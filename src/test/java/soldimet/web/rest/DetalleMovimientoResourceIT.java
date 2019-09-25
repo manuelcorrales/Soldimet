@@ -150,7 +150,7 @@ public class DetalleMovimientoResourceIT {
         List<DetalleMovimiento> detalleMovimientoList = detalleMovimientoRepository.findAll();
         assertThat(detalleMovimientoList).hasSize(databaseSizeBeforeCreate + 1);
         DetalleMovimiento testDetalleMovimiento = detalleMovimientoList.get(detalleMovimientoList.size() - 1);
-        assertThat(testDetalleMovimiento.getValor_unitario()).isEqualTo(DEFAULT_VALOR_UNITARIO);
+        assertThat(testDetalleMovimiento.getValorUnitario()).isEqualTo(DEFAULT_VALOR_UNITARIO);
         assertThat(testDetalleMovimiento.getCantidad()).isEqualTo(DEFAULT_CANTIDAD);
         assertThat(testDetalleMovimiento.getDescripcion()).isEqualTo(DEFAULT_DESCRIPCION);
     }
@@ -259,7 +259,7 @@ public class DetalleMovimientoResourceIT {
         List<DetalleMovimiento> detalleMovimientoList = detalleMovimientoRepository.findAll();
         assertThat(detalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
         DetalleMovimiento testDetalleMovimiento = detalleMovimientoList.get(detalleMovimientoList.size() - 1);
-        assertThat(testDetalleMovimiento.getValor_unitario()).isEqualTo(UPDATED_VALOR_UNITARIO);
+        assertThat(testDetalleMovimiento.getValorUnitario()).isEqualTo(UPDATED_VALOR_UNITARIO);
         assertThat(testDetalleMovimiento.getCantidad()).isEqualTo(UPDATED_CANTIDAD);
         assertThat(testDetalleMovimiento.getDescripcion()).isEqualTo(UPDATED_DESCRIPCION);
     }

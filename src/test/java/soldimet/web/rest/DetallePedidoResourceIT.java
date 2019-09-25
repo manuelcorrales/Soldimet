@@ -3,6 +3,7 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 import soldimet.domain.DetallePedido;
 import soldimet.domain.DetallePresupuesto;
+import soldimet.domain.EstadoDetallePedido;
 import soldimet.repository.DetallePedidoRepository;
 import soldimet.service.DetallePedidoService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -82,6 +83,7 @@ public class DetallePedidoResourceIT {
         DetallePedido detallePedido = new DetallePedido();
         // Add required entity
         DetallePresupuesto detallePresupuesto;
+        EstadoDetallePedido estadoDetallePedido;
         if (TestUtil.findAll(em, DetallePresupuesto.class).isEmpty()) {
             detallePresupuesto = DetallePresupuestoResourceIT.createEntity(em);
             em.persist(detallePresupuesto);
@@ -89,7 +91,17 @@ public class DetallePedidoResourceIT {
         } else {
             detallePresupuesto = TestUtil.findAll(em, DetallePresupuesto.class).get(0);
         }
+
+        if (TestUtil.findAll(em, EstadoDetallePedido.class).isEmpty()) {
+            estadoDetallePedido = EstadoDetallePedidoResourceIT.createEntity(em);
+            em.persist(estadoDetallePedido);
+            em.flush();
+        } else {
+            estadoDetallePedido = TestUtil.findAll(em, EstadoDetallePedido.class).get(0);
+        }
+
         detallePedido.setDetallePresupuesto(detallePresupuesto);
+        detallePedido.setEstadoDetallePedido(estadoDetallePedido);
         return detallePedido;
     }
     /**
@@ -167,7 +179,7 @@ public class DetallePedidoResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(detallePedido.getId().intValue())));
     }
-    
+
     @Test
     @Transactional
     public void getDetallePedido() throws Exception {
