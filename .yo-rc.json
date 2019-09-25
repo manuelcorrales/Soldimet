@@ -36,6 +36,17 @@
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
-    "blueprints": []
+    "blueprints": [],
+    "gcpProjectId": "soldimetqa",
+    "gcpCloudSqlInstanceName": "soldimetqa:us-central1:soldimet",
+    "gcpCloudSqlUserName": "soldimetqa",
+    "gcpCloudSqlDatabaseName": "Soldimet",
+    "gaeServiceName": "default",
+    "gaeLocation": "us-central",
+    "gaeInstanceClass": "F1",
+    "gaeScalingType": "automatic",
+    "gaeMinInstances": "1",
+    "gaeMaxInstances": "1",
+    "gaeCloudSQLInstanceNeeded": "Y"
   }
 }
