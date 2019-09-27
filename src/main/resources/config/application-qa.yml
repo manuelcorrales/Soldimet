@@ -1,5 +1,5 @@
 # ===================================================================
-# Spring Boot configuration for the "prod" profile.
+# Spring Boot configuration for the "qa" profile.
 #
 # This configuration overrides the application.yml file.
 #
@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: INFO
-    soldimet: INFO
-    io.github.jhipster: INFO
+    ROOT: DEBUG
+    soldimet: DEBUG
+    io.github.jhipster: DEBUG
 
 management:
   metrics:
@@ -33,7 +33,7 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password:
     hikari:
@@ -47,7 +47,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     database: MYSQL
-    show-sql: false
+    show-sql: true
     properties:
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true

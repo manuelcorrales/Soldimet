@@ -43,10 +43,9 @@
     "gcpCloudSqlDatabaseName": "Soldimet",
     "gaeServiceName": "default",
     "gaeLocation": "us-central",
-    "gaeInstanceClass": "F1",
-    "gaeScalingType": "automatic",
-    "gaeMinInstances": "1",
-    "gaeMaxInstances": "1",
-    "gaeCloudSQLInstanceNeeded": "Y"
+    "gaeInstanceClass": "B2",
+    "gaeScalingType": "manual",
+    "gaeCloudSQLInstanceNeeded": "Y",
+    "gaeInstances": "1"
   }
 }

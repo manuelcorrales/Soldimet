@@ -5,12 +5,11 @@
 # ========================================================================
 
 runtime: java11
-instance_class: F1
+instance_class: B2
 service: default
 handlers:
 - url: /(.*)
   script: auto
   secure: always
-automatic_scaling:
-  min_instances: 1
-  max_instances: 1
+manual_scaling:
+  instances: 1
