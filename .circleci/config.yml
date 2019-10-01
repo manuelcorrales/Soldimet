@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
-version: 01
+version: 1
 jobs:
   build:
     docker:
@@ -13,15 +13,21 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
-    working_directory: ~/repo
+    working_directory: ~/
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
 
     steps:
       - checkout
+      # Download and cache dependencies
+      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key:
+            - dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-      #TODO create custom Docker image with Node and Yarn Installed
       # Install Node for JH Build
       - run:
         name: Download Node
@@ -32,7 +38,7 @@ jobs:
       - run:
         name: update-npm
         command: sudo npm install -g npm@latest
-
+      - run: mvn dependency:go-offline # gets the project dependencies
       # Install Yarn
       - run:
         name: Download Yarn
@@ -41,15 +47,19 @@ jobs:
         name: Install Yarn
         command: sudo apt-get update && sudo apt-get install yarn
 
-      # Download and cache dependencies
-      - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "pom.xml" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.m2
+          key: dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      # - run: mvn integration-test
+      # - run: mvn package # run the actual tests
+
+      # - store_test_results:
+      #     path: build/test-results/test
+      # - store_artifacts:
+      #     path: build/test-results/test
+      #     when: always
 
       # Package
       - run: ./mvnw -ntp verify -Pprod -DskipTests
