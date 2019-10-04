@@ -55,11 +55,11 @@ jobs:
       # run tests!
       # - run: mvn package # run the actual tests
 
-      # - store_test_results:
-      #     path: build/test-results/test
-      # - store_artifacts:
-      #     path: build/test-results/test
-      #     when: always
+      # - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+      #     path: target/surefire-reports
+
+      # - store_artifacts: # store the uberjar as an artifact
+      #     path: target/demo-java-spring-0.0.1-SNAPSHOT.ja
 
       # Package
       - run: ./mvnw -ntp verify -Pprod -DskipTests
