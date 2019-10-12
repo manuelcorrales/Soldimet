@@ -24,7 +24,7 @@ export class JhiAlertComponent implements OnInit, OnDestroy {
 
   setClasses(alert) {
     return {
-      'jhi-toast': alert.toast,
+      'jhi-toast': true,
       [alert.position]: true
     };
   }

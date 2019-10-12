@@ -23,17 +23,20 @@ public class Persona implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 3)
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
-
-    @NotNull
     @Size(min = 5)
     @Column(name = "numero_telefono", nullable = false)
     private String numeroTelefono;
 
-    @OneToOne(optional = false)    @NotNull
+    @NotNull
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
 
+    @NotNull
+    @Column(name = "apellido", nullable = false)
+    private String apellido;
+
+    @OneToOne(optional = false)
+    @NotNull
     @JoinColumn(unique = true)
     private Direccion direccion;
 
@@ -55,6 +58,19 @@ public class Persona implements Serializable {
         this.id = id;
     }
 
+    public String getNumeroTelefono() {
+        return numeroTelefono;
+    }
+
+    public Persona numeroTelefono(String numeroTelefono) {
+        this.numeroTelefono = numeroTelefono;
+        return this;
+    }
+
+    public void setNumeroTelefono(String numeroTelefono) {
+        this.numeroTelefono = numeroTelefono;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -68,17 +84,17 @@ public class Persona implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getNumeroTelefono() {
-        return numeroTelefono;
+    public String getApellido() {
+        return apellido;
     }
 
-    public Persona numeroTelefono(String numeroTelefono) {
-        this.numeroTelefono = numeroTelefono;
+    public Persona apellido(String apellido) {
+        this.apellido = apellido;
         return this;
     }
 
-    public void setNumeroTelefono(String numeroTelefono) {
-        this.numeroTelefono = numeroTelefono;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public Direccion getDireccion() {
@@ -141,8 +157,9 @@ public class Persona implements Serializable {
     public String toString() {
         return "Persona{" +
             "id=" + getId() +
-            ", nombre='" + getNombre() + "'" +
             ", numeroTelefono='" + getNumeroTelefono() + "'" +
+            ", nombre='" + getNombre() + "'" +
+            ", apellido='" + getApellido() + "'" +
             "}";
     }
 }

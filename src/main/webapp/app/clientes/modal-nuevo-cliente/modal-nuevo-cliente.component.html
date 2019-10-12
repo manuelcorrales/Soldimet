@@ -33,7 +33,7 @@
             <!-- Apellido-->
             <div class="">
                 <label class="form-control-label" for="field_apellido">Apellido</label>
-                <input type="text" class="form-control" name="apellido" id="field_apellido" [(ngModel)]="cliente.apellido" required minlength="3"
+                <input type="text" class="form-control" name="apellido" id="field_apellido" [(ngModel)]="persona.apellido" required minlength="3"
                     maxlength="30" />
                 <div [hidden]="!(editForm.controls.apellido?.dirty && editForm.controls.apellido?.invalid)">
                     <small class="form-text text-danger" [hidden]="!editForm.controls.apellido?.errors?.required">

@@ -35,6 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class ProveedorResourceIT {
 
+    private static final String DEFAULT_NOMBRE_PROVEEDOR = "AAAAAAAAAA";
+    private static final String UPDATED_NOMBRE_PROVEEDOR = "BBBBBBBBBB";
+
     @Autowired
     private ProveedorRepository proveedorRepository;
 
@@ -79,7 +82,8 @@ public class ProveedorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Proveedor createEntity(EntityManager em) {
-        Proveedor proveedor = new Proveedor();
+        Proveedor proveedor = new Proveedor()
+            .nombreProveedor(DEFAULT_NOMBRE_PROVEEDOR);
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -99,7 +103,8 @@ public class ProveedorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Proveedor createUpdatedEntity(EntityManager em) {
-        Proveedor proveedor = new Proveedor();
+        Proveedor proveedor = new Proveedor()
+            .nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -133,6 +138,7 @@ public class ProveedorResourceIT {
         List<Proveedor> proveedorList = proveedorRepository.findAll();
         assertThat(proveedorList).hasSize(databaseSizeBeforeCreate + 1);
         Proveedor testProveedor = proveedorList.get(proveedorList.size() - 1);
+        assertThat(testProveedor.getNombreProveedor()).isEqualTo(DEFAULT_NOMBRE_PROVEEDOR);
     }
 
     @Test
@@ -157,6 +163,24 @@ public class ProveedorResourceIT {
 
     @Test
     @Transactional
+    public void checkNombreProveedorIsRequired() throws Exception {
+        int databaseSizeBeforeTest = proveedorRepository.findAll().size();
+        // set the field null
+        proveedor.setNombreProveedor(null);
+
+        // Create the Proveedor, which fails.
+
+        restProveedorMockMvc.perform(post("/api/proveedors")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(proveedor)))
+            .andExpect(status().isBadRequest());
+
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllProveedors() throws Exception {
         // Initialize the database
         proveedorRepository.saveAndFlush(proveedor);
@@ -165,7 +189,8 @@ public class ProveedorResourceIT {
         restProveedorMockMvc.perform(get("/api/proveedors?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(proveedor.getId().intValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(proveedor.getId().intValue())))
+            .andExpect(jsonPath("$.[*].nombreProveedor").value(hasItem(DEFAULT_NOMBRE_PROVEEDOR.toString())));
     }
     
     @Test
@@ -178,7 +203,8 @@ public class ProveedorResourceIT {
         restProveedorMockMvc.perform(get("/api/proveedors/{id}", proveedor.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(proveedor.getId().intValue()));
+            .andExpect(jsonPath("$.id").value(proveedor.getId().intValue()))
+            .andExpect(jsonPath("$.nombreProveedor").value(DEFAULT_NOMBRE_PROVEEDOR.toString()));
     }
 
     @Test
@@ -201,6 +227,8 @@ public class ProveedorResourceIT {
         Proveedor updatedProveedor = proveedorRepository.findById(proveedor.getId()).get();
         // Disconnect from session so that the updates on updatedProveedor are not directly saved in db
         em.detach(updatedProveedor);
+        updatedProveedor
+            .nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
 
         restProveedorMockMvc.perform(put("/api/proveedors")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -211,6 +239,7 @@ public class ProveedorResourceIT {
         List<Proveedor> proveedorList = proveedorRepository.findAll();
         assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
         Proveedor testProveedor = proveedorList.get(proveedorList.size() - 1);
+        assertThat(testProveedor.getNombreProveedor()).isEqualTo(UPDATED_NOMBRE_PROVEEDOR);
     }
 
     @Test

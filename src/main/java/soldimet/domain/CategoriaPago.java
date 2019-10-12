@@ -1,11 +1,10 @@
+
 package soldimet.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -29,9 +28,8 @@ public class CategoriaPago implements Serializable {
     @Column(name = "nombre_categoria_pago", nullable = false)
     private String nombreCategoriaPago;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
-    @JoinColumn(name= "categoria_pago")
-    @JsonInclude
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name= "categoriaPago")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<SubCategoria> subCategorias = new HashSet<>();
 

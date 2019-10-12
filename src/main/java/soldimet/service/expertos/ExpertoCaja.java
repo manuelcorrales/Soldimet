@@ -41,10 +41,7 @@ public class ExpertoCaja {
     private final Logger log = LoggerFactory.getLogger(ExpertoCaja.class);
 
     @Autowired
-    private PersonaRepository personaRepository;
-
-    @Autowired
-    private EmpleadoRepository empleadoRepository;
+    private ExpertoUsuarios expertoUsuarios;
 
     @Autowired
     private CajaRepository cajaRepository;
@@ -70,7 +67,7 @@ public class ExpertoCaja {
 
     public DTOCajaCUConsultarMovimientos buscarMovimientosDia() {
 
-        Empleado empleado = this.getCurrentEmployee();
+        Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
         Sucursal sucursal = empleado.getSucursal();
 
         Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(this.currentMonth(), sucursal);
@@ -108,7 +105,7 @@ public class ExpertoCaja {
             // update movimiento params
             movimientoDto.setFecha(LocalDate.now());
             movimientoDto.setEstado(estadoAlta);
-            movimientoDto.setEmpleado(this.getCurrentEmployee());
+            movimientoDto.setEmpleado(expertoUsuarios.getEmpleadoLogeado());
 
             // Ajusto el signo del total del movimiento dependiento si es un ingreso o egreso
             if (movimientoDto.getTipoMovimiento().getNombreTipoMovimiento().equals(globales.nombre_Tipo_Movimiento_Egreso)) {
@@ -167,17 +164,6 @@ public class ExpertoCaja {
         return cajaRepository.save(cajaDiaHoy);
 
 
-    }
-
-    private Empleado getCurrentEmployee() {
-
-        List<Persona> personas = personaRepository.findByUserIsCurrentUser();
-        if (personas.isEmpty()) {
-            return null;
-        }
-
-        Empleado empleado = empleadoRepository.findByPersona(personas.get(0));
-        return empleado;
     }
 
     private LocalDate currentMonth() {

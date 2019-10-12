@@ -6,15 +6,15 @@
         <ng-select [loadingText]='textSearching' [items]='clientes' [loading]= 'buscandoClientes'
          [notFoundText]='textNoResults' [(ngModel)]="clienteElegido" [searchFn]="filtrarClientes">
          <ng-template ng-label-tmp let-item="item">
-                {{item.persona.nombre}}, {{item.apellido}}
+                {{item.persona.nombre}}, {{item.persona.apellido}}
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-index="index" >
-                    {{item.persona.nombre}}, {{item.apellido}}
+                    {{item.persona.nombre}}, {{item.persona.apellido}}
             </ng-template>
         </ng-select>
         <div class="row" *ngIf="clienteElegido?.persona" style="padding-top: 15px;">
             <div class="col">
-                <span [routerLink]="['/persona', clienteElegido.persona?.id]"><strong>Nombre:</strong> {{clienteElegido.persona?.nombre}},{{clienteElegido.apellido}}</span>
+                <span [routerLink]="['/persona', clienteElegido.persona?.id]"><strong>Nombre:</strong> {{clienteElegido.persona?.nombre}},{{clienteElegido.persona?.apellido}}</span>
             </div>
             <div class="col">
                 <strong>Número de cliente:</strong> {{clienteElegido?.id}}

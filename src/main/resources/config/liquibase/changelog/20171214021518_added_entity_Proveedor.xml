@@ -16,7 +16,11 @@
         <createTable tableName="proveedor">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
-            </column>            <column name="persona_id" type="bigint">
+            </column>
+            <column name="nombre_proveedor" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="persona_id" type="bigint">
                 <constraints unique="true" nullable="false" uniqueConstraintName="ux_proveedor_persona_id" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
@@ -43,6 +47,7 @@
                   separator=";"
                   tableName="proveedor">
             <column name="id" type="numeric"/>
+            <column name="nombre_proveedor" type="string"/>
             <column name="persona_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>

@@ -20,6 +20,7 @@
             <th><span>ID</span></th>
             <th><span>Nombre Aplicacion</span></th>
             <th><span>Numero Grupo</span></th>
+            <th><span>Motor</span></th>
             <th></th>
             </tr>
             </thead>
@@ -28,6 +29,11 @@
                 <td><a [routerLink]="['/aplicacion', aplicacion.id, 'view' ]">{{aplicacion.id}}</a></td>
                 <td>{{aplicacion.nombreAplicacion}}</td>
                 <td>{{aplicacion.numeroGrupo}}</td>
+                <td>
+                    <div *ngIf="aplicacion.motor">
+                        <a [routerLink]="['/motor', aplicacion.motor?.id, 'view' ]" >{{aplicacion.motor?.nombre_motor}}</a>
+                    </div>
+                </td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"

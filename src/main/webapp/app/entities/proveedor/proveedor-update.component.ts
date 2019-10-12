@@ -23,6 +23,7 @@ export class ProveedorUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
+    nombreProveedor: [null, [Validators.required]],
     persona: [null, Validators.required]
   });
 
@@ -69,6 +70,7 @@ export class ProveedorUpdateComponent implements OnInit {
   updateForm(proveedor: IProveedor) {
     this.editForm.patchValue({
       id: proveedor.id,
+      nombreProveedor: proveedor.nombreProveedor,
       persona: proveedor.persona
     });
   }
@@ -91,6 +93,7 @@ export class ProveedorUpdateComponent implements OnInit {
     return {
       ...new Proveedor(),
       id: this.editForm.get(['id']).value,
+      nombreProveedor: this.editForm.get(['nombreProveedor']).value,
       persona: this.editForm.get(['persona']).value
     };
   }

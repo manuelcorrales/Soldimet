@@ -21,8 +21,12 @@ public class Proveedor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false, fetch=FetchType.EAGER)
     @NotNull
+    @Column(name = "nombre_proveedor", nullable = false)
+    private String nombreProveedor;
+
+    @OneToOne(optional = false)    @NotNull
+
     @JoinColumn(unique = true)
     private Persona persona;
 
@@ -33,6 +37,19 @@ public class Proveedor implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNombreProveedor() {
+        return nombreProveedor;
+    }
+
+    public Proveedor nombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
+        return this;
+    }
+
+    public void setNombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
     }
 
     public Persona getPersona() {
@@ -69,6 +86,7 @@ public class Proveedor implements Serializable {
     public String toString() {
         return "Proveedor{" +
             "id=" + getId() +
+            ", nombreProveedor='" + getNombreProveedor() + "'" +
             "}";
     }
 }

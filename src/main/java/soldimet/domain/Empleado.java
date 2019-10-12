@@ -22,14 +22,6 @@ public class Empleado implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(name = "usuario", nullable = false)
-    private String usuario;
-
-    @NotNull
-    @Column(name = "contrasenia", nullable = false)
-    private String contrasenia;
-
     @OneToOne(optional = false)    @NotNull
 
     @JoinColumn(unique = true)
@@ -46,32 +38,6 @@ public class Empleado implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public Empleado usuario(String usuario) {
-        this.usuario = usuario;
-        return this;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getContrasenia() {
-        return contrasenia;
-    }
-
-    public Empleado contrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-        return this;
-    }
-
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
     }
 
     public Persona getPersona() {
@@ -121,8 +87,6 @@ public class Empleado implements Serializable {
     public String toString() {
         return "Empleado{" +
             "id=" + getId() +
-            ", usuario='" + getUsuario() + "'" +
-            ", contrasenia='" + getContrasenia() + "'" +
             "}";
     }
 }

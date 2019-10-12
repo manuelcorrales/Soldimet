@@ -19,22 +19,7 @@
             "otherEntityField": "nombreSucursal"
         }
     ],
-    "fields": [
-        {
-            "fieldName": "usuario",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "contrasenia",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
+    "fields": [],
     "changelogDate": "20171214001419",
     "dto": "no",
     "searchEngine": false,

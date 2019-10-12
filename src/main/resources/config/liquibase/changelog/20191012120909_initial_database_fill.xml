@@ -1,0 +1,369 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!-- Nombres de estados -->
+    <changeSet author="manuelc" id="1554155390506-6">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/estados.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="estado_articulo">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_estado" type="STRING"/>
+        </ext:loadData>
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/estados.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="estado_cobranza_operacion">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_estado" type="STRING"/>
+        </ext:loadData>
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/estados.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="estado_movimiento">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_estado" type="STRING"/>
+        </ext:loadData>
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/estados.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="estado_operacion">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_estado" type="STRING"/>
+        </ext:loadData>
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/estados.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="estado_persona">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_estado" type="STRING"/>
+        </ext:loadData>
+    </changeSet>
+    <changeSet author="manuelc" id="1554155390507-1">
+        <insert tableName="estado_presupuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Creado"/>
+        </insert>
+        <insert tableName="estado_presupuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Aceptado"/>
+        </insert>
+        <insert tableName="estado_presupuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Entregado"/>
+        </insert>
+        <insert tableName="estado_presupuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Cancelado"/>
+        </insert>
+        <insert tableName="estado_presupuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Terminado"/>
+        </insert>
+    </changeSet>
+    <changeSet author="manuelc" id="1554155390507-2">
+        <insert tableName="estado_costo_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pedido"/>
+        </insert>
+        <insert tableName="estado_costo_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Recibido"/>
+        </insert>
+        <insert tableName="estado_costo_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Devuelto"/>
+        </insert>
+        <insert tableName="estado_costo_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Cancelado"/>
+        </insert>
+        <insert tableName="estado_costo_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pendiente de pedido"/>
+        </insert>
+    </changeSet>
+    <changeSet author="manuelc" id="1554155390507-3">
+        <insert tableName="estado_detalle_pedido">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pedido"/>
+        </insert>
+        <insert tableName="estado_detalle_pedido">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Recibido"/>
+        </insert>
+        <insert tableName="estado_detalle_pedido">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Cancelado"/>
+        </insert>
+        <insert tableName="estado_detalle_pedido">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pendiente de pedido"/>
+        </insert>
+    </changeSet>
+    <changeSet author="manuelc" id="1554155390507-4">
+        <insert tableName="estado_pedido_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pedido"/>
+        </insert>
+        <insert tableName="estado_pedido_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Recibido"/>
+        </insert>
+        <insert tableName="estado_pedido_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Cancelado"/>
+        </insert>
+        <insert tableName="estado_pedido_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pendiente de pedido"/>
+        </insert>
+        <insert tableName="estado_pedido_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="En progreso"/>
+        </insert>
+        <insert tableName="estado_pedido_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pedido Parcial"/>
+        </insert>
+    </changeSet>
+    <!-- Motores -->
+    <changeSet author="manuelc" id="1554155390507-5">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/motor.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="motor">
+            <column name="id" type="NUMERIC"/>
+            <column name="marca_motor" type="STRING"/>
+        </ext:loadData>
+    </changeSet>
+    <!-- Aplicaciones -->
+    <changeSet author="manuelc" id="1554155390507-7">
+    <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/aplicaciones.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="aplicacion">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_aplicacion" type="STRING"/>
+            <column name="numero_grupo" type="NUMERIC"/>
+            <column name="motor_id" type="NUMERIC"/>
+        </ext:loadData>
+    </changeSet>
+    <!-- Tipos -->
+    <changeSet author="manuelc" id="1554155390507-10">
+        <insert tableName="tipo_parte_motor">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_parte_motor" value="Block"/>
+        </insert>
+        <insert tableName="tipo_parte_motor">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_parte_motor" value="Tapa de cilindros"/>
+        </insert>
+    </changeSet>
+    <changeSet author="manuelc" id="1554155390507-11">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/tipo_repuesto.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="tipo_repuesto">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_tipo_repuesto" type="STRING"/>
+            <column name="tipo_parte_motor_id" type="NUMERIC"/>
+        </ext:loadData>
+    </changeSet>
+    <changeSet author="manuelc" id="1554155390507-12">
+        <insert tableName="tipo_tarjeta">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_tarjeta" value="Débito"/>
+        </insert>
+        <insert tableName="tipo_tarjeta">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_tarjeta" value="Crédito"/>
+        </insert>
+    </changeSet>
+    <changeSet author="manuelc" id="1554155390507-14">
+        <insert tableName="tipo_movimiento">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_movimiento" value="Ingreso"/>
+        </insert>
+        <insert tableName="tipo_movimiento">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_movimiento" value="Egreso"/>
+        </insert>
+    </changeSet>
+    <!-- Categoria pagos -->
+    <changeSet author="manuelc" id="1554155390507-6">
+        <insert tableName="categoria_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_categoria_pago" value="Taller"/>
+        </insert>
+        <insert tableName="categoria_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_categoria_pago" value="Proveedores"/>
+        </insert>
+        <insert tableName="categoria_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_categoria_pago" value="Ferretería"/>
+        </insert>
+        <insert tableName="categoria_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_categoria_pago" value="Comisiones"/>
+        </insert>
+        <insert tableName="categoria_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_categoria_pago" value="Automovil"/>
+        </insert>
+    </changeSet>
+    <!-- Clindradas -->
+    <changeSet author="manuelc" id="15545390508-6">
+        <insert tableName="cilindrada">
+            <column name="id" autoIncrement="true"/>
+            <column name="cantidad_de_cilindros" value="4"/>
+        </insert>
+        <insert tableName="cilindrada">
+            <column name="id" autoIncrement="true"/>
+            <column name="cantidad_de_cilindros" value="6"/>
+        </insert>
+        <insert tableName="cilindrada">
+            <column name="id" autoIncrement="true"/>
+            <column name="cantidad_de_cilindros" value="8"/>
+        </insert>
+    </changeSet>
+    <!-- Tipo documentacion -->
+    <!-- Forma de pago -->
+    <changeSet author="manuelc" id="155415530508-6">
+        <insert tableName="forma_de_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_forma_de_pago" value="Tarjeta"/>
+        </insert>
+        <insert tableName="forma_de_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_forma_de_pago" value="Efectivo"/>
+        </insert>
+        <insert tableName="forma_de_pago">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_forma_de_pago" value="Cheque"/>
+        </insert>
+    </changeSet>
+    <!-- Localidades-Departamentos -->
+    <changeSet author="manuelc" id="15155390507-3">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/departamentos.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="localidad">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_localidad" type="STRING"/>
+        </ext:loadData>
+    </changeSet>
+    <!-- Operaciones -->
+    <changeSet author="manuelc" id="155415390507-3">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/operaciones.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="operacion">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_operacion" type="STRING"/>
+            <column name="estado_operacion_id" type="NUMERIC"/>
+            <column name="tipo_parte_motor_id" type="NUMERIC"/>
+        </ext:loadData>
+    </changeSet>
+    <!-- Rubros -->
+    <changeSet author="manuelc" id="1554155390508-6">
+        <insert tableName="rubro">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_rubro" value="Repuestos generales"/>
+        </insert>
+    </changeSet>
+    <!-- SubCategoria -->
+    <changeSet author="manuelc" id="155390507-14">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/sub_categoria.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="sub_categoria">
+            <column name="id" type="NUMERIC"/>
+            <column name="nombre_sub_categoria" type="STRING"/>
+            <column name="categoria_pago_id" type="NUMERIC"/>
+        </ext:loadData>
+    </changeSet>
+    <!-- Tarjeta -->
+    <changeSet author="manuelc" id="1554155390508-15">
+        <insert tableName="tarjeta">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tarjeta" value="Visa"/>
+        </insert>
+        <insert tableName="tarjeta">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tarjeta" value="Mastercard"/>
+        </insert>
+        <insert tableName="tarjeta">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tarjeta" value="American Express"/>
+        </insert>
+        <insert tableName="tarjeta">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tarjeta" value="Maestro"/>
+        </insert>
+        <insert tableName="tarjeta">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tarjeta" value="Nativa"/>
+        </insert>
+    </changeSet>
+    <!-- Banco -->
+    <changeSet author="manuelc" id="1554155398-6">
+        <insert tableName="banco">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_banco" value="Banco Ciudad"/>
+        </insert>
+        <insert tableName="banco">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_banco" value="Banco nación"/>
+        </insert>
+        <insert tableName="banco">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_banco" value="ICBC"/>
+        </insert>
+        <insert tableName="banco">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_banco" value="HSBC"/>
+        </insert>
+        <insert tableName="banco">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_banco" value="Galicia"/>
+        </insert>
+        <insert tableName="banco">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_banco" value="Santander"/>
+        </insert>
+    </changeSet>
+    <!-- Sucursal -->
+    <changeSet author="manuelc" id="1554155390535-6">
+        <insert tableName="sucursal">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_sucursal" value="Guaymallen"/>
+        </insert>
+        <insert tableName="sucursal">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_sucursal" value="San martin"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

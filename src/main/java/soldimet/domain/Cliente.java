@@ -5,6 +5,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 
 /**
@@ -22,13 +24,9 @@ public class Cliente implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 3, max = 30)
-    @Column(name = "apellido", length = 30, nullable = false)
-    private String apellido;
-
-    @OneToOne(optional = false)
-    @NotNull
+    @OneToOne(cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch= FetchType.EAGER)
     @JoinColumn(unique = true)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Persona persona;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -38,19 +36,6 @@ public class Cliente implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public Cliente apellido(String apellido) {
-        this.apellido = apellido;
-        return this;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public Persona getPersona() {
@@ -87,7 +72,6 @@ public class Cliente implements Serializable {
     public String toString() {
         return "Cliente{" +
             "id=" + getId() +
-            ", apellido='" + getApellido() + "'" +
             "}";
     }
 }

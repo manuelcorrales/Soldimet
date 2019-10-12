@@ -13,6 +13,12 @@
                 <dd>
                     <span>{{aplicacion.numeroGrupo}}</span>
                 </dd>
+                <dt><span>Motor</span></dt>
+                <dd>
+                    <div *ngIf="aplicacion.motor">
+                        <a [routerLink]="['/motor', aplicacion.motor?.id, 'view']">{{aplicacion.motor?.nombre_motor}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

@@ -18,8 +18,9 @@
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="nombre"><span>Nombre</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="numeroTelefono"><span>Numero Telefono</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="nombre"><span>Nombre</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="apellido"><span>Apellido</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="direccion.id"><span>Direccion</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estadoPersona.nombreEstado"><span>Estado Persona</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="user.login"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -29,8 +30,9 @@
             <tbody>
             <tr *ngFor="let persona of personas ;trackBy: trackId">
                 <td><a [routerLink]="['/persona', persona.id, 'view' ]">{{persona.id}}</a></td>
-                <td>{{persona.nombre}}</td>
                 <td>{{persona.numeroTelefono}}</td>
+                <td>{{persona.nombre}}</td>
+                <td>{{persona.apellido}}</td>
                 <td>
                     <div *ngIf="persona.direccion">
                         <a [routerLink]="['/direccion', persona.direccion?.id, 'view' ]" >{{persona.direccion?.id}}</a>

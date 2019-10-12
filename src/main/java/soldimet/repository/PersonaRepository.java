@@ -1,32 +1,25 @@
 package soldimet.repository;
-
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import soldimet.domain.EstadoPersona;
 import soldimet.domain.Persona;
 import soldimet.domain.User;
 
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
 /**
- * Spring Data JPA repository for the Persona entity.
+ * Spring Data  repository for the Persona entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface PersonaRepository extends JpaRepository<Persona, Long>,
-    JpaSpecificationExecutor<Persona> {
-
-    public Persona findPersonaByNombre(String nombrePersona);
-
-    public List<Persona> findPersonasByNombreIgnoreCaseContaining(String nombrePersona);
-
-    public List<Persona> findByEstadoPersona(EstadoPersona estadoPersona);
-
-    public Persona findByUser(User usuario);
+public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpecificationExecutor<Persona> {
 
     @Query("select persona from Persona persona where persona.user.login = ?#{principal.username}")
-    List<Persona> findByUserIsCurrentUser();
+    Persona findByUserIsCurrentUser();
+
+    Persona findByUser(User usuario);
+
+    List<Persona> findByEstadoPersona(EstadoPersona estadoPersona);
 
 }

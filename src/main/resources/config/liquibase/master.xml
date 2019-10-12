@@ -103,5 +103,7 @@
     <include file="config/liquibase/changelog/20190222233823_added_entity_constraints_MedioDePago.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190401202429_added_entity_constraints_MedioDePagoTarjeta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190401202736_added_entity_constraints_MedioDePagoCheque.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20191012120909_changelog.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+    <include file="config/liquibase/changelog/20191012120909_initial_database_fill.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

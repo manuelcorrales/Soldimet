@@ -17,7 +17,7 @@ public class PedidoConverter {
 
     public DTOPedidoCabecera convertirPedidoAPedidoCabecera(PedidoRepuesto pedido){
         DTOPedidoCabecera dtoPedidoCabecera = new DTOPedidoCabecera();
-        dtoPedidoCabecera.setCliente(pedido.getPresupuesto().getCliente().getApellido()+", "+pedido.getPresupuesto().getCliente().getPersona().getNombre());
+        dtoPedidoCabecera.setCliente(pedido.getPresupuesto().getCliente().getPersona().getUser().getLastName()+", "+pedido.getPresupuesto().getCliente().getPersona().getUser().getFirstName());
         dtoPedidoCabecera.setEstado(pedido.getEstadoPedidoRepuesto().getNombreEstado());
         dtoPedidoCabecera.setFecha(pedido.getFechaCreacion());
         dtoPedidoCabecera.setId(pedido.getId());

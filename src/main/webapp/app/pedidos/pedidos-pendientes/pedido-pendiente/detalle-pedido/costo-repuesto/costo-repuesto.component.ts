@@ -196,7 +196,6 @@ export class CostoRepuestoComponent implements OnInit {
   createProvAsync(nombre: string) {
     let proveedor = new Proveedor();
     proveedor.persona = new Persona();
-    proveedor.persona.nombre = this.proveedor.nombreProveedor;
     this.personaService.create(proveedor.persona).subscribe((resp: HttpResponse<IPersona>) => {
       proveedor.persona = resp.body;
       this.proveedorService.create(proveedor).subscribe((respProv: HttpResponse<IProveedor>) => {

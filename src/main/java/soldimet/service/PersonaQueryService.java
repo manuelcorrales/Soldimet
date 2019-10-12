@@ -85,11 +85,14 @@ public class PersonaQueryService extends QueryService<Persona> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Persona_.id));
             }
+            if (criteria.getNumeroTelefono() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNumeroTelefono(), Persona_.numeroTelefono));
+            }
             if (criteria.getNombre() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNombre(), Persona_.nombre));
             }
-            if (criteria.getNumeroTelefono() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNumeroTelefono(), Persona_.numeroTelefono));
+            if (criteria.getApellido() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getApellido(), Persona_.apellido));
             }
             if (criteria.getDireccionId() != null) {
                 specification = specification.and(buildSpecification(criteria.getDireccionId(),

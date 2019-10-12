@@ -45,6 +45,9 @@ public class ExpertoPedidos {
     private Globales globales;
 
     @Autowired
+    private ExpertoUsuarios expertoUsuarios;
+
+    @Autowired
     private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
 
     @Autowired
@@ -71,8 +74,6 @@ public class ExpertoPedidos {
     @Autowired
     private DetallePedidoRepository detallePedidoRepository;
 
-    @Autowired
-    private CostoRepuestoRepository costoRepuestoRepository;
 
     @Autowired
     private ArticuloRepository articuloRepository;
@@ -82,9 +83,6 @@ public class ExpertoPedidos {
 
     @Autowired
     private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
-
-    @Autowired
-    private EmpleadoRepository empleadoRepository;
 
     public List<PedidoRepuesto> getPedidosPendientes() {
 
@@ -111,7 +109,7 @@ public class ExpertoPedidos {
 
     public List<DTOPedidoCabecera> getPedidosCabecera() {
 
-        Empleado empleado = this.getCurrentEmployee();
+        Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
 
         List<PedidoRepuesto> pedidos = pedidoRepuestoRepository.findAllByOrderByIdDesc();
 
@@ -337,17 +335,6 @@ public class ExpertoPedidos {
         }
     }
 
-    private Empleado getCurrentEmployee() {
-
-        List<Persona> personas = personaRepository.findByUserIsCurrentUser();
-        if (personas.isEmpty()) {
-            return null;
-        }
-
-        Empleado empleado = empleadoRepository.findByPersona(personas.get(0));
-        return empleado;
-    }
-
     private Boolean tieneAccesoATodosLosPedidos(Empleado empleado) {
         Set<Authority> authorities = empleado.getPersona().getUser().getAuthorities();
 
@@ -360,7 +347,7 @@ public class ExpertoPedidos {
 
         return
             authoritiesNames.contains(AuthoritiesConstants.ADMIN) ||
-            authoritiesNames.contains(AuthoritiesConstants.BOSS)
+            authoritiesNames.contains(AuthoritiesConstants.JEFE)
         ;
     }
 

@@ -2,6 +2,7 @@ package soldimet.web.rest;
 
 import soldimet.SoldimetApp;
 import soldimet.domain.Aplicacion;
+import soldimet.domain.Motor;
 import soldimet.repository.AplicacionRepository;
 import soldimet.service.AplicacionService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -88,6 +89,16 @@ public class AplicacionResourceIT {
         Aplicacion aplicacion = new Aplicacion()
             .nombreAplicacion(DEFAULT_NOMBRE_APLICACION)
             .numeroGrupo(DEFAULT_NUMERO_GRUPO);
+        // Add required entity
+        Motor motor;
+        if (TestUtil.findAll(em, Motor.class).isEmpty()) {
+            motor = MotorResourceIT.createEntity(em);
+            em.persist(motor);
+            em.flush();
+        } else {
+            motor = TestUtil.findAll(em, Motor.class).get(0);
+        }
+        aplicacion.setMotor(motor);
         return aplicacion;
     }
     /**
@@ -100,6 +111,16 @@ public class AplicacionResourceIT {
         Aplicacion aplicacion = new Aplicacion()
             .nombreAplicacion(UPDATED_NOMBRE_APLICACION)
             .numeroGrupo(UPDATED_NUMERO_GRUPO);
+        // Add required entity
+        Motor motor;
+        if (TestUtil.findAll(em, Motor.class).isEmpty()) {
+            motor = MotorResourceIT.createUpdatedEntity(em);
+            em.persist(motor);
+            em.flush();
+        } else {
+            motor = TestUtil.findAll(em, Motor.class).get(0);
+        }
+        aplicacion.setMotor(motor);
         return aplicacion;
     }
 

@@ -19,7 +19,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreEstado"
+            "otherEntityField": "nombreEstado",
+            "otherEntityRelationshipName": "persona"
         },
         {
             "relationshipName": "user",
@@ -32,15 +33,6 @@
     ],
     "fields": [
         {
-            "fieldName": "nombre",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "3"
-        },
-        {
             "fieldName": "numeroTelefono",
             "fieldType": "String",
             "fieldValidateRules": [
@@ -48,12 +40,28 @@
                 "minlength"
             ],
             "fieldValidateRulesMinlength": "5"
+        },
+        {
+            "fieldName": "nombre",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "apellido",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20171214020013",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "persona",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination"
 }

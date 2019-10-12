@@ -20,7 +20,7 @@ public class ProveedorConverter {
     public DTOProveedor convertirProveedorAProveedorBusquedaDTO(Proveedor proveedor){
         DTOProveedor dtoProveedorBusqueda = new DTOProveedor();
         dtoProveedorBusqueda.setIdProveedor(proveedor.getId().toString());
-        dtoProveedorBusqueda.setNombreProveedor(proveedor.getPersona().getNombre());
+        dtoProveedorBusqueda.setNombreProveedor(proveedor.getPersona().getUser().getFirstName());
         return dtoProveedorBusqueda;
     }
 

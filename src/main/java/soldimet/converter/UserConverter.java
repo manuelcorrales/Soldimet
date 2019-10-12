@@ -11,7 +11,7 @@ public class UserConverter {
     public DTOEmpleado convertirEntidadAModelo(Empleado empleado){
         DTOEmpleado dtoEmpleado = new DTOEmpleado(
             empleado.getId(),
-            empleado.getPersona().getNombre(),
+            empleado.getPersona().getNombre() + ' ' + empleado.getPersona().getApellido(),
             empleado.getSucursal().getNombreSucursal(),
             empleado.getSucursal().getId()
         );

@@ -9,28 +9,6 @@
                     <input type="text" class="form-control" id="id" name="id" formControlName="id"
                         readonly />
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_usuario">Usuario</label>
-                    <input type="text" class="form-control" name="usuario" id="field_usuario"
-                           formControlName="usuario"/>
-                    <div *ngIf="editForm.get('usuario').invalid && (editForm.get('usuario').dirty || editForm.get('usuario').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('usuario').errors.required">
-                        This field is required.
-                        </small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_contrasenia">Contrasenia</label>
-                    <input type="text" class="form-control" name="contrasenia" id="field_contrasenia"
-                           formControlName="contrasenia"/>
-                    <div *ngIf="editForm.get('contrasenia').invalid && (editForm.get('contrasenia').dirty || editForm.get('contrasenia').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('contrasenia').errors.required">
-                        This field is required.
-                        </small>
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_persona">Persona</label>

@@ -35,12 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class EmpleadoResourceIT {
 
-    private static final String DEFAULT_USUARIO = "AAAAAAAAAA";
-    private static final String UPDATED_USUARIO = "BBBBBBBBBB";
-
-    private static final String DEFAULT_CONTRASENIA = "AAAAAAAAAA";
-    private static final String UPDATED_CONTRASENIA = "BBBBBBBBBB";
-
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
@@ -85,9 +79,7 @@ public class EmpleadoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Empleado createEntity(EntityManager em) {
-        Empleado empleado = new Empleado()
-            .usuario(DEFAULT_USUARIO)
-            .contrasenia(DEFAULT_CONTRASENIA);
+        Empleado empleado = new Empleado();
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -107,9 +99,7 @@ public class EmpleadoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Empleado createUpdatedEntity(EntityManager em) {
-        Empleado empleado = new Empleado()
-            .usuario(UPDATED_USUARIO)
-            .contrasenia(UPDATED_CONTRASENIA);
+        Empleado empleado = new Empleado();
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -143,8 +133,6 @@ public class EmpleadoResourceIT {
         List<Empleado> empleadoList = empleadoRepository.findAll();
         assertThat(empleadoList).hasSize(databaseSizeBeforeCreate + 1);
         Empleado testEmpleado = empleadoList.get(empleadoList.size() - 1);
-        assertThat(testEmpleado.getUsuario()).isEqualTo(DEFAULT_USUARIO);
-        assertThat(testEmpleado.getContrasenia()).isEqualTo(DEFAULT_CONTRASENIA);
     }
 
     @Test
@@ -169,42 +157,6 @@ public class EmpleadoResourceIT {
 
     @Test
     @Transactional
-    public void checkUsuarioIsRequired() throws Exception {
-        int databaseSizeBeforeTest = empleadoRepository.findAll().size();
-        // set the field null
-        empleado.setUsuario(null);
-
-        // Create the Empleado, which fails.
-
-        restEmpleadoMockMvc.perform(post("/api/empleados")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(empleado)))
-            .andExpect(status().isBadRequest());
-
-        List<Empleado> empleadoList = empleadoRepository.findAll();
-        assertThat(empleadoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkContraseniaIsRequired() throws Exception {
-        int databaseSizeBeforeTest = empleadoRepository.findAll().size();
-        // set the field null
-        empleado.setContrasenia(null);
-
-        // Create the Empleado, which fails.
-
-        restEmpleadoMockMvc.perform(post("/api/empleados")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(empleado)))
-            .andExpect(status().isBadRequest());
-
-        List<Empleado> empleadoList = empleadoRepository.findAll();
-        assertThat(empleadoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllEmpleados() throws Exception {
         // Initialize the database
         empleadoRepository.saveAndFlush(empleado);
@@ -213,9 +165,7 @@ public class EmpleadoResourceIT {
         restEmpleadoMockMvc.perform(get("/api/empleados?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(empleado.getId().intValue())))
-            .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())))
-            .andExpect(jsonPath("$.[*].contrasenia").value(hasItem(DEFAULT_CONTRASENIA.toString())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(empleado.getId().intValue())));
     }
     
     @Test
@@ -228,9 +178,7 @@ public class EmpleadoResourceIT {
         restEmpleadoMockMvc.perform(get("/api/empleados/{id}", empleado.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(empleado.getId().intValue()))
-            .andExpect(jsonPath("$.usuario").value(DEFAULT_USUARIO.toString()))
-            .andExpect(jsonPath("$.contrasenia").value(DEFAULT_CONTRASENIA.toString()));
+            .andExpect(jsonPath("$.id").value(empleado.getId().intValue()));
     }
 
     @Test
@@ -253,9 +201,6 @@ public class EmpleadoResourceIT {
         Empleado updatedEmpleado = empleadoRepository.findById(empleado.getId()).get();
         // Disconnect from session so that the updates on updatedEmpleado are not directly saved in db
         em.detach(updatedEmpleado);
-        updatedEmpleado
-            .usuario(UPDATED_USUARIO)
-            .contrasenia(UPDATED_CONTRASENIA);
 
         restEmpleadoMockMvc.perform(put("/api/empleados")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -266,8 +211,6 @@ public class EmpleadoResourceIT {
         List<Empleado> empleadoList = empleadoRepository.findAll();
         assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
         Empleado testEmpleado = empleadoList.get(empleadoList.size() - 1);
-        assertThat(testEmpleado.getUsuario()).isEqualTo(UPDATED_USUARIO);
-        assertThat(testEmpleado.getContrasenia()).isEqualTo(UPDATED_CONTRASENIA);
     }
 
     @Test

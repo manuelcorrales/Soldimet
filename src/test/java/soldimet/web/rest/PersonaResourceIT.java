@@ -39,11 +39,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class PersonaResourceIT {
 
+    private static final String DEFAULT_NUMERO_TELEFONO = "AAAAAAAAAA";
+    private static final String UPDATED_NUMERO_TELEFONO = "BBBBBBBBBB";
+
     private static final String DEFAULT_NOMBRE = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_NUMERO_TELEFONO = "AAAAAAAAAA";
-    private static final String UPDATED_NUMERO_TELEFONO = "BBBBBBBBBB";
+    private static final String DEFAULT_APELLIDO = "AAAAAAAAAA";
+    private static final String UPDATED_APELLIDO = "BBBBBBBBBB";
 
     @Autowired
     private PersonaRepository personaRepository;
@@ -93,8 +96,9 @@ public class PersonaResourceIT {
      */
     public static Persona createEntity(EntityManager em) {
         Persona persona = new Persona()
+            .numeroTelefono(DEFAULT_NUMERO_TELEFONO)
             .nombre(DEFAULT_NOMBRE)
-            .numeroTelefono(DEFAULT_NUMERO_TELEFONO);
+            .apellido(DEFAULT_APELLIDO);
         // Add required entity
         Direccion direccion;
         if (TestUtil.findAll(em, Direccion.class).isEmpty()) {
@@ -125,8 +129,9 @@ public class PersonaResourceIT {
      */
     public static Persona createUpdatedEntity(EntityManager em) {
         Persona persona = new Persona()
+            .numeroTelefono(UPDATED_NUMERO_TELEFONO)
             .nombre(UPDATED_NOMBRE)
-            .numeroTelefono(UPDATED_NUMERO_TELEFONO);
+            .apellido(UPDATED_APELLIDO);
         // Add required entity
         Direccion direccion;
         if (TestUtil.findAll(em, Direccion.class).isEmpty()) {
@@ -170,8 +175,9 @@ public class PersonaResourceIT {
         List<Persona> personaList = personaRepository.findAll();
         assertThat(personaList).hasSize(databaseSizeBeforeCreate + 1);
         Persona testPersona = personaList.get(personaList.size() - 1);
-        assertThat(testPersona.getNombre()).isEqualTo(DEFAULT_NOMBRE);
         assertThat(testPersona.getNumeroTelefono()).isEqualTo(DEFAULT_NUMERO_TELEFONO);
+        assertThat(testPersona.getNombre()).isEqualTo(DEFAULT_NOMBRE);
+        assertThat(testPersona.getApellido()).isEqualTo(DEFAULT_APELLIDO);
     }
 
     @Test
@@ -196,6 +202,24 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
+    public void checkNumeroTelefonoIsRequired() throws Exception {
+        int databaseSizeBeforeTest = personaRepository.findAll().size();
+        // set the field null
+        persona.setNumeroTelefono(null);
+
+        // Create the Persona, which fails.
+
+        restPersonaMockMvc.perform(post("/api/personas")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(persona)))
+            .andExpect(status().isBadRequest());
+
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void checkNombreIsRequired() throws Exception {
         int databaseSizeBeforeTest = personaRepository.findAll().size();
         // set the field null
@@ -214,10 +238,10 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void checkNumeroTelefonoIsRequired() throws Exception {
+    public void checkApellidoIsRequired() throws Exception {
         int databaseSizeBeforeTest = personaRepository.findAll().size();
         // set the field null
-        persona.setNumeroTelefono(null);
+        persona.setApellido(null);
 
         // Create the Persona, which fails.
 
@@ -241,8 +265,9 @@ public class PersonaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persona.getId().intValue())))
+            .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO.toString())))
             .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE.toString())))
-            .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO.toString())));
+            .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO.toString())));
     }
     
     @Test
@@ -256,8 +281,48 @@ public class PersonaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(persona.getId().intValue()))
+            .andExpect(jsonPath("$.numeroTelefono").value(DEFAULT_NUMERO_TELEFONO.toString()))
             .andExpect(jsonPath("$.nombre").value(DEFAULT_NOMBRE.toString()))
-            .andExpect(jsonPath("$.numeroTelefono").value(DEFAULT_NUMERO_TELEFONO.toString()));
+            .andExpect(jsonPath("$.apellido").value(DEFAULT_APELLIDO.toString()));
+    }
+
+    @Test
+    @Transactional
+    public void getAllPersonasByNumeroTelefonoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where numeroTelefono equals to DEFAULT_NUMERO_TELEFONO
+        defaultPersonaShouldBeFound("numeroTelefono.equals=" + DEFAULT_NUMERO_TELEFONO);
+
+        // Get all the personaList where numeroTelefono equals to UPDATED_NUMERO_TELEFONO
+        defaultPersonaShouldNotBeFound("numeroTelefono.equals=" + UPDATED_NUMERO_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPersonasByNumeroTelefonoIsInShouldWork() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where numeroTelefono in DEFAULT_NUMERO_TELEFONO or UPDATED_NUMERO_TELEFONO
+        defaultPersonaShouldBeFound("numeroTelefono.in=" + DEFAULT_NUMERO_TELEFONO + "," + UPDATED_NUMERO_TELEFONO);
+
+        // Get all the personaList where numeroTelefono equals to UPDATED_NUMERO_TELEFONO
+        defaultPersonaShouldNotBeFound("numeroTelefono.in=" + UPDATED_NUMERO_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPersonasByNumeroTelefonoIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where numeroTelefono is not null
+        defaultPersonaShouldBeFound("numeroTelefono.specified=true");
+
+        // Get all the personaList where numeroTelefono is null
+        defaultPersonaShouldNotBeFound("numeroTelefono.specified=false");
     }
 
     @Test
@@ -301,41 +366,41 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByNumeroTelefonoIsEqualToSomething() throws Exception {
+    public void getAllPersonasByApellidoIsEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numeroTelefono equals to DEFAULT_NUMERO_TELEFONO
-        defaultPersonaShouldBeFound("numeroTelefono.equals=" + DEFAULT_NUMERO_TELEFONO);
+        // Get all the personaList where apellido equals to DEFAULT_APELLIDO
+        defaultPersonaShouldBeFound("apellido.equals=" + DEFAULT_APELLIDO);
 
-        // Get all the personaList where numeroTelefono equals to UPDATED_NUMERO_TELEFONO
-        defaultPersonaShouldNotBeFound("numeroTelefono.equals=" + UPDATED_NUMERO_TELEFONO);
+        // Get all the personaList where apellido equals to UPDATED_APELLIDO
+        defaultPersonaShouldNotBeFound("apellido.equals=" + UPDATED_APELLIDO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumeroTelefonoIsInShouldWork() throws Exception {
+    public void getAllPersonasByApellidoIsInShouldWork() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numeroTelefono in DEFAULT_NUMERO_TELEFONO or UPDATED_NUMERO_TELEFONO
-        defaultPersonaShouldBeFound("numeroTelefono.in=" + DEFAULT_NUMERO_TELEFONO + "," + UPDATED_NUMERO_TELEFONO);
+        // Get all the personaList where apellido in DEFAULT_APELLIDO or UPDATED_APELLIDO
+        defaultPersonaShouldBeFound("apellido.in=" + DEFAULT_APELLIDO + "," + UPDATED_APELLIDO);
 
-        // Get all the personaList where numeroTelefono equals to UPDATED_NUMERO_TELEFONO
-        defaultPersonaShouldNotBeFound("numeroTelefono.in=" + UPDATED_NUMERO_TELEFONO);
+        // Get all the personaList where apellido equals to UPDATED_APELLIDO
+        defaultPersonaShouldNotBeFound("apellido.in=" + UPDATED_APELLIDO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumeroTelefonoIsNullOrNotNull() throws Exception {
+    public void getAllPersonasByApellidoIsNullOrNotNull() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numeroTelefono is not null
-        defaultPersonaShouldBeFound("numeroTelefono.specified=true");
+        // Get all the personaList where apellido is not null
+        defaultPersonaShouldBeFound("apellido.specified=true");
 
-        // Get all the personaList where numeroTelefono is null
-        defaultPersonaShouldNotBeFound("numeroTelefono.specified=false");
+        // Get all the personaList where apellido is null
+        defaultPersonaShouldNotBeFound("apellido.specified=false");
     }
 
     @Test
@@ -397,8 +462,9 @@ public class PersonaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persona.getId().intValue())))
+            .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO)))
             .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE)))
-            .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO)));
+            .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO)));
 
         // Check, that the count call also returns 1
         restPersonaMockMvc.perform(get("/api/personas/count?sort=id,desc&" + filter))
@@ -446,8 +512,9 @@ public class PersonaResourceIT {
         // Disconnect from session so that the updates on updatedPersona are not directly saved in db
         em.detach(updatedPersona);
         updatedPersona
+            .numeroTelefono(UPDATED_NUMERO_TELEFONO)
             .nombre(UPDATED_NOMBRE)
-            .numeroTelefono(UPDATED_NUMERO_TELEFONO);
+            .apellido(UPDATED_APELLIDO);
 
         restPersonaMockMvc.perform(put("/api/personas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -458,8 +525,9 @@ public class PersonaResourceIT {
         List<Persona> personaList = personaRepository.findAll();
         assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
         Persona testPersona = personaList.get(personaList.size() - 1);
-        assertThat(testPersona.getNombre()).isEqualTo(UPDATED_NOMBRE);
         assertThat(testPersona.getNumeroTelefono()).isEqualTo(UPDATED_NUMERO_TELEFONO);
+        assertThat(testPersona.getNombre()).isEqualTo(UPDATED_NOMBRE);
+        assertThat(testPersona.getApellido()).isEqualTo(UPDATED_APELLIDO);
     }
 
     @Test

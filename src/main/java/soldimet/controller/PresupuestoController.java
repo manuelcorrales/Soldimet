@@ -57,7 +57,7 @@ public class PresupuestoController {
         if (authentication.getAuthorities().contains(AuthoritiesConstants.ADMIN)) {
             return expertoPresupuesto.buscarPresupuestos();
         } else {
-            if (authentication.getAuthorities().contains(AuthoritiesConstants.EMPLOYEE)) {
+            if (authentication.getAuthorities().contains(AuthoritiesConstants.EMPLEADO)) {
                 return expertoPresupuesto.buscarPresupuestos();
             } else {
                 if (authentication.getAuthorities().contains(AuthoritiesConstants.ENCARGADO_TALLER)) {
@@ -88,11 +88,11 @@ public class PresupuestoController {
         return expertoPresupuesto.buscarCostoRepuestoPresupuesto(presupuestoId);
     }
 
-    @GetMapping("/getClientesByNombre/{nombreCliente}")
-    public List<Cliente> buscarClientesPorNombre(@PathVariable("nombreCliente") String nombreCliente) {
+    // @GetMapping("/getClientesByNombre/{nombreCliente}")
+    // public List<Cliente> buscarClientesPorNombre(@PathVariable("nombreCliente") String nombreCliente) {
 
-        return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
-    }
+    //     return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
+    // }
 
     @GetMapping("/getAllClientes")
     public List<Cliente> buscarTodosLosclientes() {

@@ -18,8 +18,6 @@
             <thead>
             <tr>
             <th><span>ID</span></th>
-            <th><span>Usuario</span></th>
-            <th><span>Contrasenia</span></th>
             <th><span>Persona</span></th>
             <th><span>Sucursal</span></th>
             <th></th>
@@ -28,8 +26,6 @@
             <tbody>
             <tr *ngFor="let empleado of empleados ;trackBy: trackId">
                 <td><a [routerLink]="['/empleado', empleado.id, 'view' ]">{{empleado.id}}</a></td>
-                <td>{{empleado.usuario}}</td>
-                <td>{{empleado.contrasenia}}</td>
                 <td>
                     <div *ngIf="empleado.persona">
                         <a [routerLink]="['/persona', empleado.persona?.id, 'view' ]" >{{empleado.persona?.nombre}}</a>

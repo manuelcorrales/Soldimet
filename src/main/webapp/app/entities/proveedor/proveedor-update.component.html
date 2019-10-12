@@ -9,6 +9,17 @@
                     <input type="text" class="form-control" id="id" name="id" formControlName="id"
                         readonly />
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nombreProveedor">Nombre Proveedor</label>
+                    <input type="text" class="form-control" name="nombreProveedor" id="field_nombreProveedor"
+                           formControlName="nombreProveedor"/>
+                    <div *ngIf="editForm.get('nombreProveedor').invalid && (editForm.get('nombreProveedor').dirty || editForm.get('nombreProveedor').touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('nombreProveedor').errors.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_persona">Persona</label>

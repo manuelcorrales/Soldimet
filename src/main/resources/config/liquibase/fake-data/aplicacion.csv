@@ -1,11 +1,11 @@
-id;nombre_aplicacion;numero_grupo
-1;mobile Fish;78
-2;Savings Account Dam;10
-3;Trace;34
-4;Metal deposit;6
-5;transmitter Implementation Electronics;100
-6;Money Market Account;62
-7;Grocery Home;53
-8;enable Gorgeous Frozen Pants;24
-9;Licensed Savings Account;39
-10;Planner Canyon;86
+id;nombre_aplicacion;numero_grupo;motor_id
+1;mobile Fish;78;1
+2;Savings Account Dam;10;2
+3;Trace;34;3
+4;Metal deposit;6;4
+5;transmitter Implementation Electronics;100;5
+6;Money Market Account;62;6
+7;Grocery Home;53;7
+8;enable Gorgeous Frozen Pants;24;8
+9;Licensed Savings Account;39;9
+10;Planner Canyon;86;10

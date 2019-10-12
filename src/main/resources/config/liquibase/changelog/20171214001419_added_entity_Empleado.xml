@@ -16,15 +16,7 @@
         <createTable tableName="empleado">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="usuario" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
-            <column name="contrasenia" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-            <column name="persona_id" type="bigint">
+            </column>            <column name="persona_id" type="bigint">
                 <constraints unique="true" nullable="false" uniqueConstraintName="ux_empleado_persona_id" />
             </column>
             <column name="sucursal_id" type="bigint">
@@ -55,8 +47,6 @@
                   separator=";"
                   tableName="empleado">
             <column name="id" type="numeric"/>
-            <column name="usuario" type="string"/>
-            <column name="contrasenia" type="string"/>
             <column name="persona_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>

@@ -86,8 +86,8 @@ export class ClientesComponent implements OnInit, OnDestroy {
     const clientes = this.totalClientes.filter(cliente => {
       const term = text.toLowerCase();
       return (
-        cliente.apellido.toLowerCase().includes(term) ||
         cliente.persona.nombre.toLowerCase().includes(term) ||
+        cliente.persona.apellido.toLowerCase().includes(term) ||
         cliente.persona.direccion.calle.toString().includes(term)
       );
     });

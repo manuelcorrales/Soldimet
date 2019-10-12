@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(PersonaService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Persona(0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Persona(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -56,8 +56,9 @@ describe('Service Tests', () => {
       it('should update a Persona', () => {
         const returnedFromService = Object.assign(
           {
+            numeroTelefono: 'BBBBBB',
             nombre: 'BBBBBB',
-            numeroTelefono: 'BBBBBB'
+            apellido: 'BBBBBB'
           },
           elemDefault
         );
@@ -75,8 +76,9 @@ describe('Service Tests', () => {
       it('should return a list of Persona', () => {
         const returnedFromService = Object.assign(
           {
+            numeroTelefono: 'BBBBBB',
             nombre: 'BBBBBB',
-            numeroTelefono: 'BBBBBB'
+            apellido: 'BBBBBB'
           },
           elemDefault
         );

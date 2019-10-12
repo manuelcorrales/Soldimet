@@ -1,0 +1,26 @@
+id,nombre_sub_categoria,categoria_pago
+1,Electrodos,2
+2,Pegamento,2
+3,Tornillos,2
+4,Combustible,2
+5,Aluminio,2
+6,Aerosol,2
+7,Mechas,2
+8,Ferretería,1
+9,Luz,1
+10,Alquiler y Agua,1
+11,Teléfono,1
+12,Rentas,1
+13,AFIP,1
+14,Contador,1
+15,Lapos,1
+16,Fara,1
+17,Oxigas,1
+18,Nafta,3
+19,Gas,3
+20,Seguro,3
+21,Comida,4
+22,Alimento perro,4
+23,Baño,4
+24,Empleados,5
+25,Mecánico,5

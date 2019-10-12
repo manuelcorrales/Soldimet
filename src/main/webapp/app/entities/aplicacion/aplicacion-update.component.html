@@ -44,6 +44,19 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-control-label" for="field_motor">Motor</label>
+                    <select class="form-control" id="field_motor" name="motor" formControlName="motor">
+                        <option *ngIf="!editForm.get('motor').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="motorOption.id === editForm.get('motor').value?.id ? editForm.get('motor').value : motorOption" *ngFor="let motorOption of motors; trackBy: trackMotorById">{{motorOption.nombre_motor}}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('motor').invalid && (editForm.get('motor').dirty || editForm.get('motor').touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('motor').errors.required">
+                        This field is required.
+                    </small>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

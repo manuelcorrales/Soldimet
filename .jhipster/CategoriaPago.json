@@ -22,6 +22,7 @@
     "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "categoria_pago",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
     "pagination": "no"
 }

@@ -12,7 +12,7 @@ public class PresupuestoConverter {
 
     public DTOPresupuesto convertirEntidadAModelo(Presupuesto presupuesto){
         DTOPresupuesto dtoPresupuesto = new DTOPresupuesto();
-        String nombreCliente = presupuesto.getCliente().getApellido()+' '+presupuesto.getCliente().getPersona().getNombre();
+        String nombreCliente = presupuesto.getCliente().getPersona().getUser().getLastName()+' '+presupuesto.getCliente().getPersona().getUser().getFirstName();
         dtoPresupuesto.setCliente(nombreCliente);
         dtoPresupuesto.setCodigo(presupuesto.getId());
         dtoPresupuesto.setEstado(presupuesto.getEstadoPresupuesto().getNombreEstado());

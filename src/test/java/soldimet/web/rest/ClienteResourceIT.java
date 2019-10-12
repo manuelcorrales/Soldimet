@@ -35,9 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class ClienteResourceIT {
 
-    private static final String DEFAULT_APELLIDO = "AAAAAAAAAA";
-    private static final String UPDATED_APELLIDO = "BBBBBBBBBB";
-
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -82,8 +79,7 @@ public class ClienteResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Cliente createEntity(EntityManager em) {
-        Cliente cliente = new Cliente()
-            .apellido(DEFAULT_APELLIDO);
+        Cliente cliente = new Cliente();
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -103,8 +99,7 @@ public class ClienteResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Cliente createUpdatedEntity(EntityManager em) {
-        Cliente cliente = new Cliente()
-            .apellido(UPDATED_APELLIDO);
+        Cliente cliente = new Cliente();
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -138,7 +133,6 @@ public class ClienteResourceIT {
         List<Cliente> clienteList = clienteRepository.findAll();
         assertThat(clienteList).hasSize(databaseSizeBeforeCreate + 1);
         Cliente testCliente = clienteList.get(clienteList.size() - 1);
-        assertThat(testCliente.getApellido()).isEqualTo(DEFAULT_APELLIDO);
     }
 
     @Test
@@ -163,24 +157,6 @@ public class ClienteResourceIT {
 
     @Test
     @Transactional
-    public void checkApellidoIsRequired() throws Exception {
-        int databaseSizeBeforeTest = clienteRepository.findAll().size();
-        // set the field null
-        cliente.setApellido(null);
-
-        // Create the Cliente, which fails.
-
-        restClienteMockMvc.perform(post("/api/clientes")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(cliente)))
-            .andExpect(status().isBadRequest());
-
-        List<Cliente> clienteList = clienteRepository.findAll();
-        assertThat(clienteList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllClientes() throws Exception {
         // Initialize the database
         clienteRepository.saveAndFlush(cliente);
@@ -189,8 +165,7 @@ public class ClienteResourceIT {
         restClienteMockMvc.perform(get("/api/clientes?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(cliente.getId().intValue())))
-            .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO.toString())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(cliente.getId().intValue())));
     }
     
     @Test
@@ -203,8 +178,7 @@ public class ClienteResourceIT {
         restClienteMockMvc.perform(get("/api/clientes/{id}", cliente.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(cliente.getId().intValue()))
-            .andExpect(jsonPath("$.apellido").value(DEFAULT_APELLIDO.toString()));
+            .andExpect(jsonPath("$.id").value(cliente.getId().intValue()));
     }
 
     @Test
@@ -227,8 +201,6 @@ public class ClienteResourceIT {
         Cliente updatedCliente = clienteRepository.findById(cliente.getId()).get();
         // Disconnect from session so that the updates on updatedCliente are not directly saved in db
         em.detach(updatedCliente);
-        updatedCliente
-            .apellido(UPDATED_APELLIDO);
 
         restClienteMockMvc.perform(put("/api/clientes")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -239,7 +211,6 @@ public class ClienteResourceIT {
         List<Cliente> clienteList = clienteRepository.findAll();
         assertThat(clienteList).hasSize(databaseSizeBeforeUpdate);
         Cliente testCliente = clienteList.get(clienteList.size() - 1);
-        assertThat(testCliente.getApellido()).isEqualTo(UPDATED_APELLIDO);
     }
 
     @Test

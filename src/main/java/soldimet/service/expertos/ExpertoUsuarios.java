@@ -40,22 +40,30 @@ public class ExpertoUsuarios {
 
     }
 
-	public DTOEmpleado getEmpleadoActual() {
-
-
+    public DTOEmpleado getEmpleadoActual() {
         try {
-            Optional<User> user =  userService.getUserWithAuthorities();
+            return userConverver.convertirEntidadAModelo(this.getEmpleadoLogeado());
 
-            if (user.isPresent()){
-                User usuario = user.get();
-                Persona persona = personaRepository.findByUser(usuario);
-                Empleado empleado = empleadoRepository.findByPersona(persona);
-                return userConverver.convertirEntidadAModelo(empleado);
-            }
-        }catch( Exception e) {
+        } catch (
+
+        Exception e) {
             e.printStackTrace();
         }
-		return null;
-	}
+        return null;
+    }
+
+    public Empleado getEmpleadoLogeado() {
+        try {
+            Optional<User> user = userService.getUserWithAuthorities();
+
+            if (user.isPresent()) {
+                Persona persona = personaRepository.findByUser(user.get());
+                return empleadoRepository.findByPersona(persona);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

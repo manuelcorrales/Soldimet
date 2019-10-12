@@ -7,50 +7,61 @@ import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { CobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 
 @Component({
-    selector: 'jhi-operaciones-nuevopresupuesto',
-    templateUrl: './operaciones-nuevopresupuesto.component.html',
-    styles: []
+  selector: 'jhi-operaciones-nuevopresupuesto',
+  templateUrl: './operaciones-nuevopresupuesto.component.html',
+  styles: []
 })
 export class OperacionesNuevopresupuestoComponent implements OnInit {
-    @Input() detalle: DetallePresupuesto;
-    operaciones: CostoOperacion[] = [];
-    total = 0;
-    @ViewChildren('operaciones') children: QueryList<OperacionPrecioComponent>;
-    @Output() eventoTotalOperaciones = new EventEmitter<number>();
+  @Input() detalle: DetallePresupuesto;
+  operaciones: CostoOperacion[] = [];
+  total = 0;
+  @ViewChildren('operaciones') children: QueryList<OperacionPrecioComponent>;
+  @Output() eventoTotalOperaciones = new EventEmitter<number>();
 
-    constructor(private presupuestosService: PresupuestosService) {}
+  constructor(private presupuestosService: PresupuestosService) {}
 
-    ngOnInit() {
-        this.update();
+  ngOnInit() {
+    this.update();
+  }
+
+  completarDetalle() {
+    const cobranzaOperaciones: CobranzaOperacion[] = [];
+    this.children.forEach(componente => {
+      if (componente.seleccionado) {
+        cobranzaOperaciones.push(componente.getOperacionAcobrar());
+      }
+    });
+    this.detalle.cobranzaOperacions = cobranzaOperaciones;
+  }
+
+  update() {
+    const dto: DTODatosMotorComponent = new DTODatosMotorComponent();
+    dto.idAplicacion = this.detalle.aplicacion.id;
+    dto.idCilindrada = this.detalle.cilindrada.id;
+    dto.idMotor = this.detalle.motor.id;
+    dto.idTiposPartesMotores = this.detalle.tipoParteMotor.id;
+    this.presupuestosService.findOperacionesPresupuesto(dto).subscribe(result => {
+      this.operaciones.push(...result);
+      this.operaciones.sort(this._sortCostoRepuesto);
+    });
+  }
+
+  @Input()
+  cambioTotalOperaciones() {
+    this.total = 0;
+    this.children.forEach(componente => {
+      this.total = this.total + componente.getPrecio();
+    });
+    this.eventoTotalOperaciones.emit();
+  }
+
+  _sortCostoRepuesto(a: CostoOperacion, b: CostoOperacion) {
+    if (a.tipoParteMotor.nombreTipoParteMotor > b.tipoParteMotor.nombreTipoParteMotor) {
+      return 1;
     }
-
-    completarDetalle() {
-        const cobranzaOperaciones: CobranzaOperacion[] = [];
-        this.children.forEach(componente => {
-            if (componente.seleccionado) {
-                cobranzaOperaciones.push(componente.getOperacionAcobrar());
-            }
-        });
-        this.detalle.cobranzaOperacions = cobranzaOperaciones;
+    if (a.tipoParteMotor.nombreTipoParteMotor < b.tipoParteMotor.nombreTipoParteMotor) {
+      return -1;
     }
-
-    update() {
-        const dto: DTODatosMotorComponent = new DTODatosMotorComponent();
-        dto.idAplicacion = this.detalle.aplicacion.id;
-        dto.idCilindrada = this.detalle.cilindrada.id;
-        dto.idMotor = this.detalle.motor.id;
-        dto.idTiposPartesMotores = this.detalle.tipoParteMotor.id;
-        this.presupuestosService.findOperacionesPresupuesto(dto).subscribe(result => {
-            this.operaciones.push(...result);
-        });
-    }
-
-    @Input()
-    cambioTotalOperaciones() {
-        this.total = 0;
-        this.children.forEach(componente => {
-            this.total = this.total + componente.getPrecio();
-        });
-        this.eventoTotalOperaciones.emit();
-    }
+    return 0;
+  }
 }

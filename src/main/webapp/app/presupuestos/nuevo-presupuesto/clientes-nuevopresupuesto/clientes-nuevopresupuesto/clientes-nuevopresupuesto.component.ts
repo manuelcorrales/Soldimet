@@ -55,7 +55,7 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
 
   filtrarClientes(term: string, cliente: Cliente): boolean {
     const busqueda = term.toLowerCase();
-    return cliente.apellido.toLowerCase().includes(busqueda) || cliente.persona.nombre.toLowerCase().includes(busqueda);
+    return cliente.persona.nombre.toLowerCase().includes(busqueda) || cliente.persona.apellido.toLowerCase().includes(busqueda);
   }
 
   getCliente() {

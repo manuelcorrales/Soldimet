@@ -11,7 +11,6 @@
             <column name="numero_grupo" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="motor" type="BIGINT"/>
         </createTable>
     </changeSet>
     <changeSet author="manu (generated)" id="1520902021335-2">

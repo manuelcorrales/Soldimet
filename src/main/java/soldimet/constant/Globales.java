@@ -24,12 +24,12 @@ public class Globales {
 
     //-------------------------ESTADOS------------------------
     public final String NOMBRE_ESTADO_ARTICULO_ALTA = "Alta";
-    public final String NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA = "Alta";
     public final String NOMBRE_ESTADO_MOVIMIENTO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_OPERACION_ALTA = "Alta";
     // public final String NOMBRE_ESTADO_PEDIDO_REPUESTO_ALTA = "Alta";
     public final String NOMBRE_ESTADO_PERSONA_ALTA = "Alta";
     public final String NOMBRE_ESTADO_PRESUPUESTO_ALTA = "Alta";
+    public final String NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA = "Alta";
     public final String NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO = "Pedido";
     public final String NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO = "Recibido";
     public final String NOMBRE_ESTADO_COSTO_REPUESTO_DEVUELTO = "Devuelto";
@@ -60,7 +60,6 @@ public class Globales {
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO = "Recibido";
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO = "Cancelado";
 
-    public final String NOMBRE_ESTADO_COBRANZA_OPERACION_CREADO = "Creado";
 
     //---------------------------------Tipo Articulos------------------------
     public final String nombre_Tipo_Repuesto_Repuesto = "Repuesto";

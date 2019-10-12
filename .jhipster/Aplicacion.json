@@ -1,6 +1,17 @@
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "motor",
+            "otherEntityName": "motor",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombre_motor",
+            "otherEntityRelationshipName": "aplicacion"
+        }
+    ],
     "fields": [
         {
             "fieldName": "nombreAplicacion",
@@ -23,8 +34,10 @@
     ],
     "changelogDate": "20171213225248",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "aplicacion",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
     "pagination": "no"
 }
