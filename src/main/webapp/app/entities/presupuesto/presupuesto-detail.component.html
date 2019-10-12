@@ -36,7 +36,7 @@
                 <dt><span>Cliente</span></dt>
                 <dd>
                     <div *ngIf="presupuesto.cliente">
-                        <a [routerLink]="['/cliente', presupuesto.cliente?.id, 'view']">{{presupuesto.cliente?.apellido}}</a>
+                        <a [routerLink]="['/cliente', presupuesto.cliente?.id, 'view']">{{presupuesto.cliente?.persona?.apellido}}</a>
                     </div>
                 </dd>
                 <dt><span>Estado Presupuesto</span></dt>
