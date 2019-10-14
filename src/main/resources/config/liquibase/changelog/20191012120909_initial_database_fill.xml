@@ -259,6 +259,18 @@
             <column name="nombre_forma_de_pago" value="Cheque"/>
         </insert>
     </changeSet>
+     <!-- Lista_precio_CRAM -->
+    <changeSet author="manuelc" id="1553905456407-20">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/lista_precio_CRAM.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="lista_precio_rectificacioncram">
+            <column name="id" type="NUMERIC"/>
+            <column name="numero_grupo" type="NUMERIC"/>
+        </ext:loadData>
+    </changeSet>
     <!-- Localidades-Departamentos -->
     <changeSet author="manuelc" id="15155390507-3">
         <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"

@@ -1,39 +1,35 @@
 #imaginary_container {
-    margin-top: 20%; /* Don't copy this */
+  margin-top: 20%; /* Don't copy this */
 }
 .stylish-input-group .input-group-addon {
-    background: white !important;
+  background: white !important;
 }
 .stylish-input-group .form-control {
-    border-right: 0;
-    box-shadow: 0 0 0;
-    border-color: #ccc;
+  border-right: 0;
+  box-shadow: 0 0 0;
+  border-color: #ccc;
 }
 .stylish-input-group button {
-    border: 0;
-    background: transparent;
+  border: 0;
+  background: transparent;
 }
 
 :host /deep/ ng2-st-tbody-edit-delete {
-    display: flex !important;
-    height: 0 !important;
+  display: flex !important;
+  height: 0 !important;
 }
 
 :host /deep/ ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
-    display: inline-block;
-    width: 50px;
-    text-align: center;
-    font-size: 1.1em;
+  display: inline-block;
+  width: 50px;
+  text-align: center;
+  font-size: 1.1em;
 }
 
 :host /deep/ ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom:hover {
-    color: #5dcfe3;
+  color: #5dcfe3;
 }
 
 .modal-lg {
-    max-width: 90% !important;
+  max-width: 1200 !important;
 }
-
-/* @import '~@swimlane/ngx-datatable/release/index.css';
-@import '~@swimlane/ngx-datatable/release/themes/material.css';
-@import '~@swimlane/ngx-datatable/release/assets/icons.css'; */

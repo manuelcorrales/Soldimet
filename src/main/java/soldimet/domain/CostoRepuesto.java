@@ -1,5 +1,7 @@
 package soldimet.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,13 +34,13 @@ public class CostoRepuesto implements Serializable {
     @JsonIgnoreProperties("costoRepuestos")
     private TipoRepuesto tipoRepuesto;
 
-    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
-    @NotNull
+    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     @JsonIgnoreProperties("costoRepuestos")
     private Articulo articulo;
 
     @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     @JsonIgnoreProperties("costoRepuestos")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Proveedor proveedor;
 
     @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)

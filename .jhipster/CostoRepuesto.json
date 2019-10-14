@@ -14,9 +14,6 @@
             "relationshipName": "articulo",
             "otherEntityName": "articulo",
             "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
             "otherEntityField": "descripcion"
         },
         {

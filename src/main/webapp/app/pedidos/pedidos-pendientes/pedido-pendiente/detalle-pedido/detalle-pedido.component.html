@@ -1,10 +1,9 @@
 <div class="">
-    <div class="row">
-        <h3><b>{{detallePedido.detallePresupuesto.tipoParteMotor.nombreTipoParteMotor}}</b></h3>
-    </div>
-    <div *ngFor="let cobranzaRepuesto of detallePedido.detallePresupuesto.cobranzaRepuestos">
-        <jhi-costo-repuesto #costoRepuestoComponent
-        [cobranzaRepuesto]="cobranzaRepuesto" [proveedores]="proveedores"
-        [marcas]="marcas" [articulos]="articulos" [detallePedido]="detallePedido"></jhi-costo-repuesto>
-    </div>
+    <h3>
+        <b>{{detallePedido.detallePresupuesto.tipoParteMotor.nombreTipoParteMotor}}</b>
+    </h3>
+</div>
+<div *ngFor="let cobranzaRepuesto of detallePedido.detallePresupuesto.cobranzaRepuestos">
+    <jhi-costo-repuesto #costoRepuestoComponent [cobranzaRepuesto]="cobranzaRepuesto" [proveedores]="proveedores"
+        [detallePedido]="detallePedido"></jhi-costo-repuesto>
 </div>

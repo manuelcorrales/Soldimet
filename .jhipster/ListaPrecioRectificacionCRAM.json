@@ -2,15 +2,6 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "costoOperacion",
-            "otherEntityName": "costoOperacion",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id"
-        },
-        {
             "relationshipName": "fechas",
             "otherEntityName": "listaPrecioDesdeHasta",
             "relationshipType": "one-to-many",
@@ -18,17 +9,6 @@
         }
     ],
     "fields": [
-        {
-            "fieldName": "fechaVigenciaDesde",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "fechaVigenciaHasta",
-            "fieldType": "LocalDate"
-        },
         {
             "fieldName": "numeroGrupo",
             "fieldType": "Integer",

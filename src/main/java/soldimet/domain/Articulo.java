@@ -35,8 +35,7 @@ public class Articulo implements Serializable {
     @JsonIgnoreProperties("articulos")
     private EstadoArticulo estado;
 
-    @ManyToOne(optional = false)
-    @NotNull
+    @ManyToOne
     @JsonIgnoreProperties("articulos")
     private Marca marca;
 

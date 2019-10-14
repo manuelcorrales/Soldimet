@@ -22,26 +22,21 @@ public class Persona implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Size(min = 5)
-    @Column(name = "numero_telefono", nullable = false)
+    @Column(name = "numero_telefono")
     private String numeroTelefono;
 
     @NotNull
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @NotNull
-    @Column(name = "apellido", nullable = false)
+    @Column(name = "apellido")
     private String apellido;
 
-    @OneToOne(optional = false)
-    @NotNull
+    @OneToOne
     @JoinColumn(unique = true)
     private Direccion direccion;
 
-    @ManyToOne(optional = false)
-    @NotNull
+    @ManyToOne
     @JsonIgnoreProperties("personas")
     private EstadoPersona estadoPersona;
 

@@ -6,13 +6,13 @@ import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { DtoBusquedaProveedor } from 'app/dto/dto-pedidos/dto-proveedor-search';
 import { Observable, Subject, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { IArticulo, Articulo } from 'app/shared/model/articulo.model';
-import { IMarca } from 'app/shared/model/marca.model';
+// import { IArticulo, Articulo } from 'app/shared/model/articulo.model';
+// import { IMarca } from 'app/shared/model/marca.model';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { DetallePedido } from 'app/shared/model/detalle-pedido.model';
 import { Proveedor, IProveedor } from 'app/shared/model/proveedor.model';
 import { Persona, IPersona } from 'app/shared/model/persona.model';
-import { ArticuloService } from 'app/entities/articulo';
+// import { ArticuloService } from 'app/entities/articulo';
 import { PersonaService } from 'app/entities/persona';
 import { ProveedorService } from 'app/entities/proveedor';
 import { HttpResponse } from '@angular/common/http';
@@ -29,18 +29,18 @@ export class CostoRepuestoComponent implements OnInit {
   cobranzaRepuesto: CobranzaRepuesto;
   @Input()
   proveedores: DtoBusquedaProveedor[];
-  @Input()
-  articulos: IArticulo[];
-  @Input()
-  marcas: IMarca[];
+  // @Input()
+  // articulos: IArticulo[];
+  // @Input()
+  // marcas: IMarca[];
   @Input()
   detallePedido: DetallePedido;
 
   isSaving = false;
 
   proveedor: DtoBusquedaProveedor = null;
-  articulo: IArticulo = null;
-  marca: IMarca = null;
+  // articulo: IArticulo = null;
+  // marca: IMarca = null;
   valor: number = null;
 
   @ViewChild('instanceNTAProv', { static: false })
@@ -48,20 +48,20 @@ export class CostoRepuestoComponent implements OnInit {
   focusProv$ = new Subject<string>();
   clickProv$ = new Subject<string>();
 
-  @ViewChild('instanceNTAArt', { static: false })
-  instanceArt: NgbTypeahead;
-  focusArt$ = new Subject<string>();
-  clickArt$ = new Subject<string>();
+  // @ViewChild('instanceNTAArt', { static: false })
+  // instanceArt: NgbTypeahead;
+  // focusArt$ = new Subject<string>();
+  // clickArt$ = new Subject<string>();
 
-  @ViewChild('instanceNTAMarca', { static: false })
-  instanceMarca: NgbTypeahead;
-  focusMarca$ = new Subject<string>();
-  clickMarca$ = new Subject<string>();
+  // @ViewChild('instanceNTAMarca', { static: false })
+  // instanceMarca: NgbTypeahead;
+  // focusMarca$ = new Subject<string>();
+  // clickMarca$ = new Subject<string>();
 
   constructor(
     config: NgbTypeaheadConfig,
     private pedidoService: PedidosService,
-    private articuloService: ArticuloService,
+    // private articuloService: ArticuloService,
     private personaService: PersonaService,
     private proveedorService: ProveedorService,
     private eventManager: JhiEventManager,
@@ -73,8 +73,8 @@ export class CostoRepuestoComponent implements OnInit {
   }
 
   formatterProv = result => result.nombreProveedor;
-  formatterArt = result => result.descripcion;
-  formatterMarca = result => result.nombreMarca;
+  // formatterArt = result => result.descripcion;
+  // formatterMarca = result => result.nombreMarca;
 
   ngOnInit() {
     if (this.detallePedido.costoRepuestos != null) {
@@ -108,39 +108,39 @@ export class CostoRepuestoComponent implements OnInit {
     );
   };
 
-  searchArt = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged()
-    );
-    const clicksWithClosedPopup$ = this.clickArt$.pipe(filter(() => !this.instanceArt.isPopupOpen()));
-    const inputFocus$ = this.focusArt$;
+  // searchArt = (text$: Observable<string>) => {
+  //   const debouncedText$ = text$.pipe(
+  //     debounceTime(200),
+  //     distinctUntilChanged()
+  //   );
+  //   const clicksWithClosedPopup$ = this.clickArt$.pipe(filter(() => !this.instanceArt.isPopupOpen()));
+  //   const inputFocus$ = this.focusArt$;
 
-    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term =>
-        (term === '' ? this.articulos : this.articulos.filter(v => v.descripcion.toLowerCase().includes(term.toLowerCase()))).slice(0, 10)
-      )
-    );
-  };
+  //   return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+  //     map(term =>
+  //       (term === '' ? this.articulos : this.articulos.filter(v => v.descripcion.toLowerCase().includes(term.toLowerCase()))).slice(0, 10)
+  //     )
+  //   );
+  // };
 
-  searchMarca = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged()
-    );
-    const clicksWithClosedPopup$ = this.clickMarca$.pipe(filter(() => !this.instanceMarca.isPopupOpen()));
-    const inputFocus$ = this.focusMarca$;
+  // searchMarca = (text$: Observable<string>) => {
+  //   const debouncedText$ = text$.pipe(
+  //     debounceTime(200),
+  //     distinctUntilChanged()
+  //   );
+  //   const clicksWithClosedPopup$ = this.clickMarca$.pipe(filter(() => !this.instanceMarca.isPopupOpen()));
+  //   const inputFocus$ = this.focusMarca$;
 
-    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term =>
-        (term === '' ? this.marcas : this.marcas.filter(v => v.nombreMarca.toLowerCase().includes(term.toLowerCase()))).slice(0, 10)
-      )
-    );
-  };
+  //   return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+  //     map(term =>
+  //       (term === '' ? this.marcas : this.marcas.filter(v => v.nombreMarca.toLowerCase().includes(term.toLowerCase()))).slice(0, 10)
+  //     )
+  //   );
+  // };
 
-  articuloSelected(articuloSelected) {
-    this.marca = this.articulo.marca;
-  }
+  // articuloSelected(articuloSelected) {
+  //   this.marca = this.articulo.marca;
+  // }
 
   actualizarPedidoDetalle() {
     this.preUpdateCostoRepuesto();
@@ -151,11 +151,13 @@ export class CostoRepuestoComponent implements OnInit {
     this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(
       nuevoCosto => {
         this.costoRepuesto = nuevoCosto;
+        // eslint-disable-next-line no-console
+        console.log(nuevoCosto);
         this.eventManager.broadcast({ name: 'pedidoListModification', content: 'OK' });
         this.isSaving = false;
       },
       error => {
-        this.jhiAlertService.error(error);
+        this.jhiAlertService.error(error.message);
       }
     );
   }
@@ -163,17 +165,18 @@ export class CostoRepuestoComponent implements OnInit {
   preUpdateCostoRepuesto() {
     this.costoRepuesto.tipoRepuesto = this.cobranzaRepuesto.tipoRepuesto;
     this.costoRepuesto.valor = this.valor;
-    this.updateArticulo();
+    // this.updateArticulo();
+    this.updateProveedor();
   }
 
-  updateArticulo() {
-    if (typeof this.articulo === 'string') {
-      this.createAsync(this.articulo as string);
-    } else {
-      this.costoRepuesto.articulo = this.articulo;
-      this.updateProveedor();
-    }
-  }
+  // updateArticulo() {
+  //   if (typeof this.articulo === 'string') {
+  //     this.createAsync(this.articulo as string);
+  //   } else {
+  //     this.costoRepuesto.articulo = this.articulo;
+  //     this.updateProveedor();
+  //   }
+  // }
 
   updateProveedor() {
     if (typeof this.proveedor === 'string') {
@@ -184,34 +187,52 @@ export class CostoRepuestoComponent implements OnInit {
     }
   }
 
-  createAsync(descripcion: string) {
-    const articulo: IArticulo = new Articulo();
-    articulo.descripcion = this.articulo.descripcion;
-    this.articuloService.create(articulo).subscribe((resp: HttpResponse<IArticulo>) => {
-      this.articulo = resp.body;
-      this.costoRepuesto.articulo = this.articulo;
-    });
-  }
+  // createAsync(descripcion: string) {
+  //   const articulo: IArticulo = new Articulo();
+  //   articulo.descripcion = this.articulo.descripcion;
+  //   this.articuloService.create(articulo).subscribe((resp: HttpResponse<IArticulo>) => {
+  //     this.articulo = resp.body;
+  //     this.costoRepuesto.articulo = this.articulo;
+  //   });
+  // }
 
   createProvAsync(nombre: string) {
     let proveedor = new Proveedor();
+    proveedor.nombreProveedor = nombre;
     proveedor.persona = new Persona();
-    this.personaService.create(proveedor.persona).subscribe((resp: HttpResponse<IPersona>) => {
-      proveedor.persona = resp.body;
-      this.proveedorService.create(proveedor).subscribe((respProv: HttpResponse<IProveedor>) => {
-        proveedor = respProv.body;
-        this.costoRepuesto.proveedor = proveedor;
-        this.updatePedidoDetalle();
-      });
-    });
+    proveedor.persona.nombre = nombre;
+    proveedor.persona.apellido = '';
+    this.personaService.create(proveedor.persona).subscribe(
+      (resp: HttpResponse<IPersona>) => {
+        proveedor.persona = resp.body;
+        this.proveedorService.create(proveedor).subscribe(
+          (respProv: HttpResponse<IProveedor>) => {
+            proveedor = respProv.body;
+            this.costoRepuesto.proveedor = proveedor;
+            this.updatePedidoDetalle();
+          },
+          error => {
+            this.jhiAlertService.error(error.message);
+          }
+        );
+      },
+      error => {
+        this.jhiAlertService.error(error.message);
+      }
+    );
   }
 
   recibirRepuesto() {
     this.isSaving = true;
-    this.pedidoService.recibirRepuesto(this.costoRepuesto, this.detallePedido.id).subscribe((costo: CostoRepuesto) => {
-      this.costoRepuesto = costo;
-      this.isSaving = false;
-      this.eventManager.broadcast({ name: 'pedidoListModification', content: 'OK' });
-    });
+    this.pedidoService.recibirRepuesto(this.costoRepuesto, this.detallePedido.id).subscribe(
+      (costo: CostoRepuesto) => {
+        this.costoRepuesto = costo;
+        this.isSaving = false;
+        this.eventManager.broadcast({ name: 'pedidoListModification', content: 'OK' });
+      },
+      error => {
+        this.jhiAlertService.error(error.message);
+      }
+    );
   }
 }

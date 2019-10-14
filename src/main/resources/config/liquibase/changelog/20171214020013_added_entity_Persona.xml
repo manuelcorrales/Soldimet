@@ -18,7 +18,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="numero_telefono" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="nombre" type="varchar(255)">
@@ -26,13 +26,13 @@
             </column>
 
             <column name="apellido" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="direccion_id" type="bigint">
-                <constraints unique="true" nullable="false" uniqueConstraintName="ux_persona_direccion_id" />
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_persona_direccion_id" />
             </column>
             <column name="estado_persona_id" type="bigint">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="user_id" type="bigint">

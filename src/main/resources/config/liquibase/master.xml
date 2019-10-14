@@ -37,8 +37,8 @@
     <include file="config/liquibase/changelog/20171214003010_added_entity_EstadoPresupuesto.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214003147_added_entity_FormaDePago.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214003329_added_entity_HistorialPrecio.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20171214003754_added_entity_ListaPrecioDesdeHasta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214004029_added_entity_ListaPrecioRectificacionCRAM.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171214003754_added_entity_ListaPrecioDesdeHasta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214011418_added_entity_Localidad.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214011703_added_entity_Marca.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214012206_added_entity_Motor.xml" relativeToChangelogFile="false"/>
@@ -82,7 +82,6 @@
     <include file="config/liquibase/changelog/20171214001005_added_entity_constraints_Direccion.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214001419_added_entity_constraints_Empleado.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214003329_added_entity_constraints_HistorialPrecio.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20171214004029_added_entity_constraints_ListaPrecioRectificacionCRAM.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214012446_added_entity_constraints_Movimiento.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214014359_added_entity_constraints_Operacion.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214014657_added_entity_constraints_PagoCheque.xml" relativeToChangelogFile="false"/>

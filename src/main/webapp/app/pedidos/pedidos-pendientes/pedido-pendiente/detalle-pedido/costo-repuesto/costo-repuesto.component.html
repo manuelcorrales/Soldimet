@@ -1,58 +1,62 @@
-<div class="row">
-    <p for="example-number-input" class="col-md-2">{{cobranzaRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}</p>
+<div class="d-flex mb-2">
+    <label for="example-number-input" class="col-md-3">{{cobranzaRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}</label>
     <ng-container *ngIf="costoRepuesto.id; else elseTemplate">
-        <div class="col-md-2">
-            <p>{{costoRepuesto.proveedor?.persona?.nombre}}</p>
+        <div class="col-md-3">
+            <p>{{costoRepuesto.proveedor.nombreProveedor}}</p>
         </div>
-        <div class="col-md-2">
+        <!-- <div class="col-md-2">
             <p>{{costoRepuesto.articulo?.descripcion}}</p>
         </div>
         <div class="col-md-2">
             <p>{{costoRepuesto.articulo?.marca?.nombreMarca}}</p>
-        </div>
-        <div class="col-md-2">
+        </div> -->
+        <div class="col-md-3">
             <p>${{costoRepuesto.valor}}</p>
         </div>
-        <div class="col-md-2">
-            <ng-container *ngIf="costoRepuesto.estado.nombreEstado != 'Recibido' && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else elseTemplate">
+        <ng-container *ngIf="costoRepuesto.estado.nombreEstado != 'Recibido' && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else elseTemplate">
+            <div class="col-md-1">
                 <label class="alert-primary" role="alert" style="border-radius: .25rem;">
                     {{costoRepuesto.estado.nombreEstado}}
                 </label>
+            </div>
+                <div class="col-md-2">
                 <button class="btn btn-outline-success" [disabled]="isSaving" (click)="recibirRepuesto()">Recibir</button>
+            </div>
             </ng-container>
             <ng-template #elseTemplate>
-                <label class="alert-success" role="alert" style="border-radius: .25rem;">
-                    {{costoRepuesto.estado.nombreEstado}}
-                </label>
+                <div class="col-md-3">
+                    <label class="alert-success" role="alert" style="border-radius: .25rem;">
+                        {{costoRepuesto.estado.nombreEstado}}
+                    </label>
+                </div>
             </ng-template>
-
-
         </div>
     </ng-container>
     <ng-template #elseTemplate>
-        <div class="col-md-2">
-            <input type="text" placeholder="Proveedor" [(ngModel)]="proveedor" [resultFormatter]="formatterProv" id="typeahead-focusProv_{{cobranzaRepuesto.id}}"
+        <div class="col-md-3">
+            <!-- <input type="text" placeholder="Proveedor" [(ngModel)]="proveedor" [resultFormatter]="formatterProv" id="typeahead-focusProv_{{cobranzaRepuesto.id}}"
                 type="text" class="form-control" [ngbTypeahead]="searchProv" (focus)="focusProv$.next($event.target.value)" (click)="clickProv$.next($event.target.value)"
-                #instanceNTAProv="ngbTypeahead" [inputFormatter]="formatterProv" />
+                #instanceNTAProv="ngbTypeahead" [inputFormatter]="formatterProv" /> -->
+            <input placeholder="Proveedor" [(ngModel)]="proveedor" id="typeahead-focusProv_{{cobranzaRepuesto.id}}" type="text" class="form-control"
+            />
         </div>
-        <div class="col-md-2">
+        <!-- <div class="col-md-3">
             <input type="text" placeholder="Articulo" [(ngModel)]="articulo" [resultFormatter]="formatterArt" id="typeahead-focusArt_{{cobranzaRepuesto.id}}"
                 type="text" class="form-control" [ngbTypeahead]="searchArt" (focus)="focusArt$.next($event.target.value)" (click)="clickArt$.next($event.target.value)"
                 #instanceNTAArt="ngbTypeahead" [inputFormatter]="formatterArt" (selectItem)="articuloSelected(articulo)" />
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <input type="text" placeholder="Marca" [(ngModel)]="marca" [resultFormatter]="formatterMarca" id="typeahead-focusMarca_{{cobranzaRepuesto.id}}"
                 type="text" class="form-control" [ngbTypeahead]="searchMarca" (focus)="focusMarca$.next($event.target.value)"
                 (click)="clickMarca$.next($event.target.value)" #instanceNTAMarca="ngbTypeahead" [inputFormatter]="formatterMarca"
-            />
-        </div>
-        <div class="col-md-2">
+                />
+         </div>-->
+        <div class="col-md-3">
             <input class="form-control" [(ngModel)]="valor" type="number" step="0.01" min=0 value="{{costoRepuesto.valor}}" placeholder="Costo repuesto">
         </div>
-        <div class="col-md-2">
-
-            <button class="btn btn-primary" [disabled]="isSaving || (marca==null || articulo==null || proveedor==null || valor==null)"
-             (click)="actualizarPedidoDetalle()">Pedir</button>
+        <div class="col-md-3">
+            <button class="btn btn-primary" [disabled]="isSaving || (proveedor==null || valor==null)"
+                (click)="actualizarPedidoDetalle()">Pedir</button>
         </div>
     </ng-template>
 </div>

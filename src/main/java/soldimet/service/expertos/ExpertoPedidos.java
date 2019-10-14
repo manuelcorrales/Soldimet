@@ -135,7 +135,6 @@ public class ExpertoPedidos {
             EstadoCostoRepuesto estadoPedido = estadoCostoRepuestoRepository
                     .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
             costoRepuesto.setEstado(estadoPedido);
-            costoRepuesto.setArticulo(articuloRepository.getOne(costoRepuesto.getArticulo().getId()));
             costoRepuesto.setProveedor(proveedorRepository.getOne(costoRepuesto.getProveedor().getId()));
             costoRepuesto.setTipoRepuesto(tipoRepuestoRepository.getOne(costoRepuesto.getTipoRepuesto().getId()));
 

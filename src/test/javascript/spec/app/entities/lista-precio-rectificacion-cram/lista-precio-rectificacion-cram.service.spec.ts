@@ -1,8 +1,6 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { take, map } from 'rxjs/operators';
-import * as moment from 'moment';
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { ListaPrecioRectificacionCRAMService } from 'app/entities/lista-precio-rectificacion-cram/lista-precio-rectificacion-cram.service';
 import { IListaPrecioRectificacionCRAM, ListaPrecioRectificacionCRAM } from 'app/shared/model/lista-precio-rectificacion-cram.model';
 
@@ -13,7 +11,6 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let elemDefault: IListaPrecioRectificacionCRAM;
     let expectedResult;
-    let currentDate: moment.Moment;
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule]
@@ -22,20 +19,13 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(ListaPrecioRectificacionCRAMService);
       httpMock = injector.get(HttpTestingController);
-      currentDate = moment();
 
-      elemDefault = new ListaPrecioRectificacionCRAM(0, currentDate, currentDate, 0);
+      elemDefault = new ListaPrecioRectificacionCRAM(0, 0);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
-        const returnedFromService = Object.assign(
-          {
-            fechaVigenciaDesde: currentDate.format(DATE_FORMAT),
-            fechaVigenciaHasta: currentDate.format(DATE_FORMAT)
-          },
-          elemDefault
-        );
+        const returnedFromService = Object.assign({}, elemDefault);
         service
           .find(123)
           .pipe(take(1))
@@ -49,19 +39,11 @@ describe('Service Tests', () => {
       it('should create a ListaPrecioRectificacionCRAM', () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
-            fechaVigenciaDesde: currentDate.format(DATE_FORMAT),
-            fechaVigenciaHasta: currentDate.format(DATE_FORMAT)
+            id: 0
           },
           elemDefault
         );
-        const expected = Object.assign(
-          {
-            fechaVigenciaDesde: currentDate,
-            fechaVigenciaHasta: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
         service
           .create(new ListaPrecioRectificacionCRAM(null))
           .pipe(take(1))
@@ -74,20 +56,12 @@ describe('Service Tests', () => {
       it('should update a ListaPrecioRectificacionCRAM', () => {
         const returnedFromService = Object.assign(
           {
-            fechaVigenciaDesde: currentDate.format(DATE_FORMAT),
-            fechaVigenciaHasta: currentDate.format(DATE_FORMAT),
             numeroGrupo: 1
           },
           elemDefault
         );
 
-        const expected = Object.assign(
-          {
-            fechaVigenciaDesde: currentDate,
-            fechaVigenciaHasta: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
         service
           .update(expected)
           .pipe(take(1))
@@ -100,19 +74,11 @@ describe('Service Tests', () => {
       it('should return a list of ListaPrecioRectificacionCRAM', () => {
         const returnedFromService = Object.assign(
           {
-            fechaVigenciaDesde: currentDate.format(DATE_FORMAT),
-            fechaVigenciaHasta: currentDate.format(DATE_FORMAT),
             numeroGrupo: 1
           },
           elemDefault
         );
-        const expected = Object.assign(
-          {
-            fechaVigenciaDesde: currentDate,
-            fechaVigenciaHasta: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
         service
           .query(expected)
           .pipe(

@@ -2,7 +2,6 @@ package soldimet.web.rest;
 
 import soldimet.SoldimetApp;
 import soldimet.domain.ListaPrecioRectificacionCRAM;
-import soldimet.domain.CostoOperacion;
 import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
 import soldimet.service.ListaPrecioRectificacionCRAMService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -21,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 import static soldimet.web.rest.TestUtil.createFormattingConversionService;
@@ -36,14 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = SoldimetApp.class)
 public class ListaPrecioRectificacionCRAMResourceIT {
-
-    private static final LocalDate DEFAULT_FECHA_VIGENCIA_DESDE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_VIGENCIA_DESDE = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_VIGENCIA_DESDE = LocalDate.ofEpochDay(-1L);
-
-    private static final LocalDate DEFAULT_FECHA_VIGENCIA_HASTA = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_VIGENCIA_HASTA = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_VIGENCIA_HASTA = LocalDate.ofEpochDay(-1L);
 
     private static final Integer DEFAULT_NUMERO_GRUPO = 1;
     private static final Integer UPDATED_NUMERO_GRUPO = 2;
@@ -94,19 +83,7 @@ public class ListaPrecioRectificacionCRAMResourceIT {
      */
     public static ListaPrecioRectificacionCRAM createEntity(EntityManager em) {
         ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM = new ListaPrecioRectificacionCRAM()
-            .fechaVigenciaDesde(DEFAULT_FECHA_VIGENCIA_DESDE)
-            .fechaVigenciaHasta(DEFAULT_FECHA_VIGENCIA_HASTA)
             .numeroGrupo(DEFAULT_NUMERO_GRUPO);
-        // Add required entity
-        CostoOperacion costoOperacion;
-        if (TestUtil.findAll(em, CostoOperacion.class).isEmpty()) {
-            costoOperacion = CostoOperacionResourceIT.createEntity(em);
-            em.persist(costoOperacion);
-            em.flush();
-        } else {
-            costoOperacion = TestUtil.findAll(em, CostoOperacion.class).get(0);
-        }
-        listaPrecioRectificacionCRAM.setCostoOperacion(costoOperacion);
         return listaPrecioRectificacionCRAM;
     }
     /**
@@ -117,19 +94,7 @@ public class ListaPrecioRectificacionCRAMResourceIT {
      */
     public static ListaPrecioRectificacionCRAM createUpdatedEntity(EntityManager em) {
         ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM = new ListaPrecioRectificacionCRAM()
-            .fechaVigenciaDesde(UPDATED_FECHA_VIGENCIA_DESDE)
-            .fechaVigenciaHasta(UPDATED_FECHA_VIGENCIA_HASTA)
             .numeroGrupo(UPDATED_NUMERO_GRUPO);
-        // Add required entity
-        CostoOperacion costoOperacion;
-        if (TestUtil.findAll(em, CostoOperacion.class).isEmpty()) {
-            costoOperacion = CostoOperacionResourceIT.createUpdatedEntity(em);
-            em.persist(costoOperacion);
-            em.flush();
-        } else {
-            costoOperacion = TestUtil.findAll(em, CostoOperacion.class).get(0);
-        }
-        listaPrecioRectificacionCRAM.setCostoOperacion(costoOperacion);
         return listaPrecioRectificacionCRAM;
     }
 
@@ -153,8 +118,6 @@ public class ListaPrecioRectificacionCRAMResourceIT {
         List<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAMList = listaPrecioRectificacionCRAMRepository.findAll();
         assertThat(listaPrecioRectificacionCRAMList).hasSize(databaseSizeBeforeCreate + 1);
         ListaPrecioRectificacionCRAM testListaPrecioRectificacionCRAM = listaPrecioRectificacionCRAMList.get(listaPrecioRectificacionCRAMList.size() - 1);
-        assertThat(testListaPrecioRectificacionCRAM.getFechaVigenciaDesde()).isEqualTo(DEFAULT_FECHA_VIGENCIA_DESDE);
-        assertThat(testListaPrecioRectificacionCRAM.getFechaVigenciaHasta()).isEqualTo(DEFAULT_FECHA_VIGENCIA_HASTA);
         assertThat(testListaPrecioRectificacionCRAM.getNumeroGrupo()).isEqualTo(DEFAULT_NUMERO_GRUPO);
     }
 
@@ -177,24 +140,6 @@ public class ListaPrecioRectificacionCRAMResourceIT {
         assertThat(listaPrecioRectificacionCRAMList).hasSize(databaseSizeBeforeCreate);
     }
 
-
-    @Test
-    @Transactional
-    public void checkFechaVigenciaDesdeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = listaPrecioRectificacionCRAMRepository.findAll().size();
-        // set the field null
-        listaPrecioRectificacionCRAM.setFechaVigenciaDesde(null);
-
-        // Create the ListaPrecioRectificacionCRAM, which fails.
-
-        restListaPrecioRectificacionCRAMMockMvc.perform(post("/api/lista-precio-rectificacion-crams")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(listaPrecioRectificacionCRAM)))
-            .andExpect(status().isBadRequest());
-
-        List<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAMList = listaPrecioRectificacionCRAMRepository.findAll();
-        assertThat(listaPrecioRectificacionCRAMList).hasSize(databaseSizeBeforeTest);
-    }
 
     @Test
     @Transactional
@@ -225,8 +170,6 @@ public class ListaPrecioRectificacionCRAMResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(listaPrecioRectificacionCRAM.getId().intValue())))
-            .andExpect(jsonPath("$.[*].fechaVigenciaDesde").value(hasItem(DEFAULT_FECHA_VIGENCIA_DESDE.toString())))
-            .andExpect(jsonPath("$.[*].fechaVigenciaHasta").value(hasItem(DEFAULT_FECHA_VIGENCIA_HASTA.toString())))
             .andExpect(jsonPath("$.[*].numeroGrupo").value(hasItem(DEFAULT_NUMERO_GRUPO)));
     }
     
@@ -241,8 +184,6 @@ public class ListaPrecioRectificacionCRAMResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(listaPrecioRectificacionCRAM.getId().intValue()))
-            .andExpect(jsonPath("$.fechaVigenciaDesde").value(DEFAULT_FECHA_VIGENCIA_DESDE.toString()))
-            .andExpect(jsonPath("$.fechaVigenciaHasta").value(DEFAULT_FECHA_VIGENCIA_HASTA.toString()))
             .andExpect(jsonPath("$.numeroGrupo").value(DEFAULT_NUMERO_GRUPO));
     }
 
@@ -267,8 +208,6 @@ public class ListaPrecioRectificacionCRAMResourceIT {
         // Disconnect from session so that the updates on updatedListaPrecioRectificacionCRAM are not directly saved in db
         em.detach(updatedListaPrecioRectificacionCRAM);
         updatedListaPrecioRectificacionCRAM
-            .fechaVigenciaDesde(UPDATED_FECHA_VIGENCIA_DESDE)
-            .fechaVigenciaHasta(UPDATED_FECHA_VIGENCIA_HASTA)
             .numeroGrupo(UPDATED_NUMERO_GRUPO);
 
         restListaPrecioRectificacionCRAMMockMvc.perform(put("/api/lista-precio-rectificacion-crams")
@@ -280,8 +219,6 @@ public class ListaPrecioRectificacionCRAMResourceIT {
         List<ListaPrecioRectificacionCRAM> listaPrecioRectificacionCRAMList = listaPrecioRectificacionCRAMRepository.findAll();
         assertThat(listaPrecioRectificacionCRAMList).hasSize(databaseSizeBeforeUpdate);
         ListaPrecioRectificacionCRAM testListaPrecioRectificacionCRAM = listaPrecioRectificacionCRAMList.get(listaPrecioRectificacionCRAMList.size() - 1);
-        assertThat(testListaPrecioRectificacionCRAM.getFechaVigenciaDesde()).isEqualTo(UPDATED_FECHA_VIGENCIA_DESDE);
-        assertThat(testListaPrecioRectificacionCRAM.getFechaVigenciaHasta()).isEqualTo(UPDATED_FECHA_VIGENCIA_HASTA);
         assertThat(testListaPrecioRectificacionCRAM.getNumeroGrupo()).isEqualTo(UPDATED_NUMERO_GRUPO);
     }
 

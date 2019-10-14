@@ -5,23 +5,9 @@
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
-                <dt><span>Fecha Vigencia Desde</span></dt>
-                <dd>
-                    <span>{{listaPrecioRectificacionCRAM.fechaVigenciaDesde}}</span>
-                </dd>
-                <dt><span>Fecha Vigencia Hasta</span></dt>
-                <dd>
-                    <span>{{listaPrecioRectificacionCRAM.fechaVigenciaHasta}}</span>
-                </dd>
                 <dt><span>Numero Grupo</span></dt>
                 <dd>
                     <span>{{listaPrecioRectificacionCRAM.numeroGrupo}}</span>
-                </dd>
-                <dt><span>Costo Operacion</span></dt>
-                <dd>
-                    <div *ngIf="listaPrecioRectificacionCRAM.costoOperacion">
-                        <a [routerLink]="['/costo-operacion', listaPrecioRectificacionCRAM.costoOperacion?.id, 'view']">{{listaPrecioRectificacionCRAM.costoOperacion?.id}}</a>
-                    </div>
                 </dd>
             </dl>
 
