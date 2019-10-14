@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A CostoOperacion.
  */
 @Entity
 @Table(name = "costo_operacion")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CostoOperacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,19 +27,19 @@ public class CostoOperacion implements Serializable {
     @Column(name = "costo_operacion", nullable = false)
     private Float costoOperacion;
 
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.DETACH })
+    @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("costoOperacions")
     private Cilindrada cilindrada;
 
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.DETACH })
+    @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("costoOperacions")
     private Operacion operacion;
 
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.DETACH })
+    @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("costoOperacions")
     private TipoParteMotor tipoParteMotor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -108,19 +109,15 @@ public class CostoOperacion implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof CostoOperacion)) {
             return false;
         }
-        CostoOperacion costoOperacion = (CostoOperacion) o;
-        if (costoOperacion.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), costoOperacion.getId());
+        return id != null && id.equals(((CostoOperacion) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

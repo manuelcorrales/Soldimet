@@ -1,21 +1,21 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-operacion-heading">Create or edit a Operacion</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!operacion.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="operacion.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_nombreOperacion">Nombre Operacion</label>
                     <input type="text" class="form-control" name="nombreOperacion" id="field_nombreOperacion"
-                        [(ngModel)]="operacion.nombreOperacion" required/>
-                    <div [hidden]="!(editForm.controls.nombreOperacion?.dirty && editForm.controls.nombreOperacion?.invalid)">
+                           formControlName="nombreOperacion"/>
+                    <div *ngIf="editForm.get('nombreOperacion').invalid && (editForm.get('nombreOperacion').dirty || editForm.get('nombreOperacion').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.nombreOperacion?.errors?.required">
+                               *ngIf="editForm.get('nombreOperacion').errors.required">
                         This field is required.
                         </small>
                     </div>
@@ -23,27 +23,27 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_tipoParteMotor">Tipo Parte Motor</label>
-                    <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" [(ngModel)]="operacion.tipoParteMotor"  required>
-                        <option *ngIf="!editForm.value.tipoParteMotor" [ngValue]="null" selected></option>
-                        <option [ngValue]="tipoParteMotorOption.id === operacion.tipoParteMotor?.id ? operacion.tipoParteMotor : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
+                    <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" formControlName="tipoParteMotor">
+                        <option *ngIf="!editForm.get('tipoParteMotor').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoParteMotorOption.id === editForm.get('tipoParteMotor').value?.id ? editForm.get('tipoParteMotor').value : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.tipoParteMotor?.dirty && editForm.controls.tipoParteMotor?.invalid)">
+                <div *ngIf="editForm.get('tipoParteMotor').invalid && (editForm.get('tipoParteMotor').dirty || editForm.get('tipoParteMotor').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.tipoParteMotor?.errors?.required">
+                           *ngIf="editForm.get('tipoParteMotor').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_estadoOperacion">Estado Operacion</label>
-                    <select class="form-control" id="field_estadoOperacion" name="estadoOperacion" [(ngModel)]="operacion.estadoOperacion"  required>
-                        <option *ngIf="!editForm.value.estadoOperacion" [ngValue]="null" selected></option>
-                        <option [ngValue]="estadoOperacionOption.id === operacion.estadoOperacion?.id ? operacion.estadoOperacion : estadoOperacionOption" *ngFor="let estadoOperacionOption of estadooperacions; trackBy: trackEstadoOperacionById">{{estadoOperacionOption.nombreEstado}}</option>
+                    <select class="form-control" id="field_estadoOperacion" name="estadoOperacion" formControlName="estadoOperacion">
+                        <option *ngIf="!editForm.get('estadoOperacion').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="estadoOperacionOption.id === editForm.get('estadoOperacion').value?.id ? editForm.get('estadoOperacion').value : estadoOperacionOption" *ngFor="let estadoOperacionOption of estadooperacions; trackBy: trackEstadoOperacionById">{{estadoOperacionOption.nombreEstado}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.estadoOperacion?.dirty && editForm.controls.estadoOperacion?.invalid)">
+                <div *ngIf="editForm.get('estadoOperacion').invalid && (editForm.get('estadoOperacion').dirty || editForm.get('estadoOperacion').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.estadoOperacion?.errors?.required">
+                           *ngIf="editForm.get('estadoOperacion').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -52,7 +52,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

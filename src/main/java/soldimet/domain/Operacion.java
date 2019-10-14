@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Operacion.
  */
 @Entity
 @Table(name = "operacion")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Operacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,12 +28,12 @@ public class Operacion implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("operacions")
     private TipoParteMotor tipoParteMotor;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("operacions")
     private EstadoOperacion estadoOperacion;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -89,19 +90,15 @@ public class Operacion implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Operacion)) {
             return false;
         }
-        Operacion operacion = (Operacion) o;
-        if (operacion.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), operacion.getId());
+        return id != null && id.equals(((Operacion) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ICobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 
 @Component({
-    selector: 'jhi-cobranza-operacion-detail',
-    templateUrl: './cobranza-operacion-detail.component.html'
+  selector: 'jhi-cobranza-operacion-detail',
+  templateUrl: './cobranza-operacion-detail.component.html'
 })
 export class CobranzaOperacionDetailComponent implements OnInit {
-    cobranzaOperacion: ICobranzaOperacion;
+  cobranzaOperacion: ICobranzaOperacion;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ cobranzaOperacion }) => {
-            this.cobranzaOperacion = cobranzaOperacion;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ cobranzaOperacion }) => {
+      this.cobranzaOperacion = cobranzaOperacion;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

@@ -1,0 +1,65 @@
+# Java Maven CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 1
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+    working_directory: ~/
+    environment:
+      # Customize the JVM maximum heap limit
+      MAVEN_OPTS: -Xmx3200m
+
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key:
+            - dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      # Install Node for JH Build
+      - run:
+        name: Download Node
+        command: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
+      - run:
+        name: Install Node
+        command: sudo apt-get install -y nodejs
+      - run:
+        name: update-npm
+        command: sudo npm install -g npm@latest
+      - run: mvn dependency:go-offline # gets the project dependencies
+      # Install Yarn
+      - run:
+        name: Download Yarn
+        command: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run:
+        name: Install Yarn
+        command: sudo apt-get update && sudo apt-get install yarn
+
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.m2
+          key: dependencies-{{ checksum "pom.xml" }}
+
+      # run tests!
+      # - run: mvn package # run the actual tests
+
+      # - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+      #     path: target/surefire-reports
+
+      # - store_artifacts: # store the uberjar as an artifact
+      #     path: target/demo-java-spring-0.0.1-SNAPSHOT.ja
+
+      # Package
+      - run: ./mvnw -ntp verify -Pprod -DskipTests

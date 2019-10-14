@@ -1,13 +1,14 @@
 package soldimet.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.DetallePresupuesto;
 import soldimet.service.DetallePresupuestoService;
 import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing DetallePresupuesto.
+ * REST controller for managing {@link soldimet.domain.DetallePresupuesto}.
  */
 @RestController
 @RequestMapping("/api")
@@ -29,6 +30,9 @@ public class DetallePresupuestoResource {
 
     private static final String ENTITY_NAME = "detallePresupuesto";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final DetallePresupuestoService detallePresupuestoService;
 
     public DetallePresupuestoResource(DetallePresupuestoService detallePresupuestoService) {
@@ -36,14 +40,13 @@ public class DetallePresupuestoResource {
     }
 
     /**
-     * POST  /detalle-presupuestos : Create a new detallePresupuesto.
+     * {@code POST  /detalle-presupuestos} : Create a new detallePresupuesto.
      *
-     * @param detallePresupuesto the detallePresupuesto to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new detallePresupuesto, or with status 400 (Bad Request) if the detallePresupuesto has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param detallePresupuesto the detallePresupuesto to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new detallePresupuesto, or with status {@code 400 (Bad Request)} if the detallePresupuesto has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/detalle-presupuestos")
-    @Timed
     public ResponseEntity<DetallePresupuesto> createDetallePresupuesto(@Valid @RequestBody DetallePresupuesto detallePresupuesto) throws URISyntaxException {
         log.debug("REST request to save DetallePresupuesto : {}", detallePresupuesto);
         if (detallePresupuesto.getId() != null) {
@@ -51,21 +54,20 @@ public class DetallePresupuestoResource {
         }
         DetallePresupuesto result = detallePresupuestoService.save(detallePresupuesto);
         return ResponseEntity.created(new URI("/api/detalle-presupuestos/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /detalle-presupuestos : Updates an existing detallePresupuesto.
+     * {@code PUT  /detalle-presupuestos} : Updates an existing detallePresupuesto.
      *
-     * @param detallePresupuesto the detallePresupuesto to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated detallePresupuesto,
-     * or with status 400 (Bad Request) if the detallePresupuesto is not valid,
-     * or with status 500 (Internal Server Error) if the detallePresupuesto couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param detallePresupuesto the detallePresupuesto to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated detallePresupuesto,
+     * or with status {@code 400 (Bad Request)} if the detallePresupuesto is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the detallePresupuesto couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/detalle-presupuestos")
-    @Timed
     public ResponseEntity<DetallePresupuesto> updateDetallePresupuesto(@Valid @RequestBody DetallePresupuesto detallePresupuesto) throws URISyntaxException {
         log.debug("REST request to update DetallePresupuesto : {}", detallePresupuesto);
         if (detallePresupuesto.getId() == null) {
@@ -73,30 +75,29 @@ public class DetallePresupuestoResource {
         }
         DetallePresupuesto result = detallePresupuestoService.save(detallePresupuesto);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, detallePresupuesto.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, detallePresupuesto.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /detalle-presupuestos : get all the detallePresupuestos.
+     * {@code GET  /detalle-presupuestos} : get all the detallePresupuestos.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of detallePresupuestos in body
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of detallePresupuestos in body.
      */
     @GetMapping("/detalle-presupuestos")
-    @Timed
     public List<DetallePresupuesto> getAllDetallePresupuestos() {
         log.debug("REST request to get all DetallePresupuestos");
         return detallePresupuestoService.findAll();
     }
 
     /**
-     * GET  /detalle-presupuestos/:id : get the "id" detallePresupuesto.
+     * {@code GET  /detalle-presupuestos/:id} : get the "id" detallePresupuesto.
      *
-     * @param id the id of the detallePresupuesto to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the detallePresupuesto, or with status 404 (Not Found)
+     * @param id the id of the detallePresupuesto to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the detallePresupuesto, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/detalle-presupuestos/{id}")
-    @Timed
     public ResponseEntity<DetallePresupuesto> getDetallePresupuesto(@PathVariable Long id) {
         log.debug("REST request to get DetallePresupuesto : {}", id);
         Optional<DetallePresupuesto> detallePresupuesto = detallePresupuestoService.findOne(id);
@@ -104,16 +105,15 @@ public class DetallePresupuestoResource {
     }
 
     /**
-     * DELETE  /detalle-presupuestos/:id : delete the "id" detallePresupuesto.
+     * {@code DELETE  /detalle-presupuestos/:id} : delete the "id" detallePresupuesto.
      *
-     * @param id the id of the detallePresupuesto to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the detallePresupuesto to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/detalle-presupuestos/{id}")
-    @Timed
     public ResponseEntity<Void> deleteDetallePresupuesto(@PathVariable Long id) {
         log.debug("REST request to delete DetallePresupuesto : {}", id);
         detallePresupuestoService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

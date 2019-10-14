@@ -8,58 +8,58 @@ import { ISucursal } from 'app/shared/model/sucursal.model';
 import { SucursalService } from './sucursal.service';
 
 @Component({
-    selector: 'jhi-sucursal-delete-dialog',
-    templateUrl: './sucursal-delete-dialog.component.html'
+  selector: 'jhi-sucursal-delete-dialog',
+  templateUrl: './sucursal-delete-dialog.component.html'
 })
 export class SucursalDeleteDialogComponent {
-    sucursal: ISucursal;
+  sucursal: ISucursal;
 
-    constructor(private sucursalService: SucursalService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+  constructor(protected sucursalService: SucursalService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.sucursalService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'sucursalListModification',
-                content: 'Deleted an sucursal'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.sucursalService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'sucursalListModification',
+        content: 'Deleted an sucursal'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-sucursal-delete-popup',
-    template: ''
+  selector: 'jhi-sucursal-delete-popup',
+  template: ''
 })
 export class SucursalDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ sucursal }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(SucursalDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
-                this.ngbModalRef.componentInstance.sucursal = sucursal;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ sucursal }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(SucursalDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.sucursal = sucursal;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/sucursal', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/sucursal', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

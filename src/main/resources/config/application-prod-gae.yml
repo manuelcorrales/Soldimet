@@ -1,0 +1,20 @@
+# ===================================================================
+# Spring Boot configuration for the "gae" profile.
+#
+# This configuration overrides the application.yml file.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: 'jdbc:mysql://google/Soldimet?cloudSqlInstance=soldimetqa:us-central1:soldimet&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false'
+    username: 'soldimetqa'
+    password: 'soldimetqa'
+    hikari:
+      maximumPoolSize: 8

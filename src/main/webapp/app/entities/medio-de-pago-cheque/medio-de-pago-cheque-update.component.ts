@@ -1,84 +1,113 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { IMedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
-import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.service';
+import { IMedioDePagoCheque, MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
+import { MedioDePagoChequeService } from './medio-de-pago-cheque.service';
 import { IBanco } from 'app/shared/model/banco.model';
-import { BancoService } from 'app/entities/banco';
+import { BancoService } from 'app/entities/banco/banco.service';
 
 @Component({
-    selector: 'jhi-medio-de-pago-cheque-update',
-    templateUrl: './medio-de-pago-cheque-update.component.html'
+  selector: 'jhi-medio-de-pago-cheque-update',
+  templateUrl: './medio-de-pago-cheque-update.component.html'
 })
 export class MedioDePagoChequeUpdateComponent implements OnInit {
-    private _medioDePagoCheque: IMedioDePagoCheque;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    bancos: IBanco[];
-    fechaReciboDp: any;
-    fechaCobroDp: any;
+  bancos: IBanco[];
+  fechaReciboDp: any;
+  fechaCobroDp: any;
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private medioDePagoChequeService: MedioDePagoChequeService,
-        private bancoService: BancoService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    fechaRecibo: [],
+    fechaCobro: [],
+    numeroCheque: [null, [Validators.required]],
+    numeroCuenta: [],
+    banco: [null, Validators.required]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ medioDePagoCheque }) => {
-            this.medioDePagoCheque = medioDePagoCheque;
-        });
-        this.bancoService.query().subscribe(
-            (res: HttpResponse<IBanco[]>) => {
-                this.bancos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected medioDePagoChequeService: MedioDePagoChequeService,
+    protected bancoService: BancoService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ medioDePagoCheque }) => {
+      this.updateForm(medioDePagoCheque);
+    });
+    this.bancoService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IBanco[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IBanco[]>) => response.body)
+      )
+      .subscribe((res: IBanco[]) => (this.bancos = res), (res: HttpErrorResponse) => this.onError(res.message));
+  }
+
+  updateForm(medioDePagoCheque: IMedioDePagoCheque) {
+    this.editForm.patchValue({
+      id: medioDePagoCheque.id,
+      fechaRecibo: medioDePagoCheque.fechaRecibo,
+      fechaCobro: medioDePagoCheque.fechaCobro,
+      numeroCheque: medioDePagoCheque.numeroCheque,
+      numeroCuenta: medioDePagoCheque.numeroCuenta,
+      banco: medioDePagoCheque.banco
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const medioDePagoCheque = this.createFromForm();
+    if (medioDePagoCheque.id !== undefined) {
+      this.subscribeToSaveResponse(this.medioDePagoChequeService.update(medioDePagoCheque));
+    } else {
+      this.subscribeToSaveResponse(this.medioDePagoChequeService.create(medioDePagoCheque));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): IMedioDePagoCheque {
+    return {
+      ...new MedioDePagoCheque(),
+      id: this.editForm.get(['id']).value,
+      fechaRecibo: this.editForm.get(['fechaRecibo']).value,
+      fechaCobro: this.editForm.get(['fechaCobro']).value,
+      numeroCheque: this.editForm.get(['numeroCheque']).value,
+      numeroCuenta: this.editForm.get(['numeroCuenta']).value,
+      banco: this.editForm.get(['banco']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.medioDePagoCheque.id !== undefined) {
-            this.subscribeToSaveResponse(this.medioDePagoChequeService.update(this.medioDePagoCheque));
-        } else {
-            this.subscribeToSaveResponse(this.medioDePagoChequeService.create(this.medioDePagoCheque));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IMedioDePagoCheque>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IMedioDePagoCheque>>) {
-        result.subscribe((res: HttpResponse<IMedioDePagoCheque>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
-
-    trackBancoById(index: number, item: IBanco) {
-        return item.id;
-    }
-    get medioDePagoCheque() {
-        return this._medioDePagoCheque;
-    }
-
-    set medioDePagoCheque(medioDePagoCheque: IMedioDePagoCheque) {
-        this._medioDePagoCheque = medioDePagoCheque;
-    }
+  trackBancoById(index: number, item: IBanco) {
+    return item.id;
+  }
 }

@@ -341,7 +341,7 @@ public final class ExpertoImpresionPresupuesto implements Printable{
         DTOCabeceraImpresionPresupuesto dtoCabecera = new DTOCabeceraImpresionPresupuesto();
 
         Persona persona = client.getPersona();
-        dtoCabecera.setCliente(client.getApellido() + ", " + persona.getNombre());
+        dtoCabecera.setCliente(persona.getUser().getLastName() + ", " + persona.getUser().getFirstName());
         dtoCabecera.setDomicilio(persona.getDireccion().getCalle());
         dtoCabecera.setLocalidad(persona.getDireccion().getLocalidad().getNombreLocalidad());
         dtoCabecera.setTelefono(persona.getNumeroTelefono());

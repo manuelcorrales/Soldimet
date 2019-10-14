@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-sub-categoria" [routerLink]="['/sub-categoria/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Sub Categoria
+            Create a new Sub Categoria
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="subCategorias">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="subCategorias?.length === 0">
+        <span>No subCategorias found</span>
+    </div>
+    <div class="table-responsive" *ngIf="subCategorias?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -24,7 +27,7 @@
                 <td><a [routerLink]="['/sub-categoria', subCategoria.id, 'view' ]">{{subCategoria.id}}</a></td>
                 <td>{{subCategoria.nombreSubCategoria}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/sub-categoria', subCategoria.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -38,7 +41,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'sub-categoria/'+ subCategoria.id + '/delete'} }]"
+                                [routerLink]="['/sub-categoria', { outlets: { popup: subCategoria.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

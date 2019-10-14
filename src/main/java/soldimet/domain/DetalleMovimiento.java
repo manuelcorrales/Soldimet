@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A DetalleMovimiento.
  */
 @Entity
 @Table(name = "detalle_movimiento")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DetalleMovimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +23,7 @@ public class DetalleMovimiento implements Serializable {
     private Long id;
 
     @Column(name = "valor_unitario")
-    private Float valor_unitario;
+    private Float valorUnitario;
 
     @NotNull
     @Min(value = 0)
@@ -34,19 +35,19 @@ public class DetalleMovimiento implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("detalleMovimientos")
     private TipoDetalleMovimiento tipoDetalleMovimiento;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("detalleMovimientos")
     private Articulo articulo;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("detalleMovimientos")
     private PedidoRepuesto pedidoRepuesto;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("detalleMovimientos")
     private Presupuesto presupuesto;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -58,17 +59,17 @@ public class DetalleMovimiento implements Serializable {
         this.id = id;
     }
 
-    public Float getValor_unitario() {
-        return valor_unitario;
+    public Float getValorUnitario() {
+        return valorUnitario;
     }
 
-    public DetalleMovimiento valor_unitario(Float valor_unitario) {
-        this.valor_unitario = valor_unitario;
+    public DetalleMovimiento valorUnitario(Float valorUnitario) {
+        this.valorUnitario = valorUnitario;
         return this;
     }
 
-    public void setValor_unitario(Float valor_unitario) {
-        this.valor_unitario = valor_unitario;
+    public void setValorUnitario(Float valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 
     public Integer getCantidad() {
@@ -155,26 +156,22 @@ public class DetalleMovimiento implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DetalleMovimiento)) {
             return false;
         }
-        DetalleMovimiento detalleMovimiento = (DetalleMovimiento) o;
-        if (detalleMovimiento.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), detalleMovimiento.getId());
+        return id != null && id.equals(((DetalleMovimiento) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
     public String toString() {
         return "DetalleMovimiento{" +
             "id=" + getId() +
-            ", valor_unitario=" + getValor_unitario() +
+            ", valorUnitario=" + getValorUnitario() +
             ", cantidad=" + getCantidad() +
             ", descripcion='" + getDescripcion() + "'" +
             "}";

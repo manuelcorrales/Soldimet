@@ -1,8 +1,8 @@
 export interface ICilindrada {
-    id?: number;
-    cantidadDeCilindros?: number;
+  id?: number;
+  cantidadDeCilindros?: number;
 }
 
 export class Cilindrada implements ICilindrada {
-    constructor(public id?: number, public cantidadDeCilindros?: number) {}
+  constructor(public id?: number, public cantidadDeCilindros?: number) {}
 }

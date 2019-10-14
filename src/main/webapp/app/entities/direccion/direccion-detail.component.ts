@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IDireccion } from 'app/shared/model/direccion.model';
 
 @Component({
-    selector: 'jhi-direccion-detail',
-    templateUrl: './direccion-detail.component.html'
+  selector: 'jhi-direccion-detail',
+  templateUrl: './direccion-detail.component.html'
 })
 export class DireccionDetailComponent implements OnInit {
-    direccion: IDireccion;
+  direccion: IDireccion;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ direccion }) => {
-            this.direccion = direccion;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ direccion }) => {
+      this.direccion = direccion;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

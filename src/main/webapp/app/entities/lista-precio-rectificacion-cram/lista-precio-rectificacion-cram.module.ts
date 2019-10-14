@@ -1,29 +1,32 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { ListaPrecioRectificacionCRAMComponent } from './lista-precio-rectificacion-cram.component';
+import { ListaPrecioRectificacionCRAMDetailComponent } from './lista-precio-rectificacion-cram-detail.component';
+import { ListaPrecioRectificacionCRAMUpdateComponent } from './lista-precio-rectificacion-cram-update.component';
 import {
-    ListaPrecioRectificacionCRAMComponent,
-    ListaPrecioRectificacionCRAMDetailComponent,
-    ListaPrecioRectificacionCRAMUpdateComponent,
-    ListaPrecioRectificacionCRAMDeleteDialogComponent,
-    ListaPrecioRectificacionCRAMDeletePopupComponent,
-    listaPrecioRectificacionCRAMRoute,
-    listaPrecioRectificacionCRAMPopupRoute
-} from 'app/entities/lista-precio-rectificacion-cram';
+  ListaPrecioRectificacionCRAMDeletePopupComponent,
+  ListaPrecioRectificacionCRAMDeleteDialogComponent
+} from './lista-precio-rectificacion-cram-delete-dialog.component';
+import { listaPrecioRectificacionCRAMRoute, listaPrecioRectificacionCRAMPopupRoute } from './lista-precio-rectificacion-cram.route';
 
 const ENTITY_STATES = [...listaPrecioRectificacionCRAMRoute, ...listaPrecioRectificacionCRAMPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        ListaPrecioRectificacionCRAMComponent,
-        ListaPrecioRectificacionCRAMDeleteDialogComponent,
-        ListaPrecioRectificacionCRAMDeletePopupComponent,
-        ListaPrecioRectificacionCRAMDetailComponent,
-        ListaPrecioRectificacionCRAMUpdateComponent
-    ],
-    entryComponents: [ListaPrecioRectificacionCRAMComponent, ListaPrecioRectificacionCRAMUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    ListaPrecioRectificacionCRAMComponent,
+    ListaPrecioRectificacionCRAMDetailComponent,
+    ListaPrecioRectificacionCRAMUpdateComponent,
+    ListaPrecioRectificacionCRAMDeleteDialogComponent,
+    ListaPrecioRectificacionCRAMDeletePopupComponent
+  ],
+  entryComponents: [
+    ListaPrecioRectificacionCRAMComponent,
+    ListaPrecioRectificacionCRAMUpdateComponent,
+    ListaPrecioRectificacionCRAMDeleteDialogComponent,
+    ListaPrecioRectificacionCRAMDeletePopupComponent
+  ]
 })
 export class SoldimetListaPrecioRectificacionCRAMModule {}

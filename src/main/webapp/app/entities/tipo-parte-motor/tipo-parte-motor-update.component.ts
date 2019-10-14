@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
-import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
+import { ITipoParteMotor, TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
+import { TipoParteMotorService } from './tipo-parte-motor.service';
 
 @Component({
-    selector: 'jhi-tipo-parte-motor-update',
-    templateUrl: './tipo-parte-motor-update.component.html'
+  selector: 'jhi-tipo-parte-motor-update',
+  templateUrl: './tipo-parte-motor-update.component.html'
 })
 export class TipoParteMotorUpdateComponent implements OnInit {
-    private _tipoParteMotor: ITipoParteMotor;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private tipoParteMotorService: TipoParteMotorService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreTipoParteMotor: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ tipoParteMotor }) => {
-            this.tipoParteMotor = tipoParteMotor;
-        });
-    }
+  constructor(protected tipoParteMotorService: TipoParteMotorService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ tipoParteMotor }) => {
+      this.updateForm(tipoParteMotor);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.tipoParteMotor.id !== undefined) {
-            this.subscribeToSaveResponse(this.tipoParteMotorService.update(this.tipoParteMotor));
-        } else {
-            this.subscribeToSaveResponse(this.tipoParteMotorService.create(this.tipoParteMotor));
-        }
-    }
+  updateForm(tipoParteMotor: ITipoParteMotor) {
+    this.editForm.patchValue({
+      id: tipoParteMotor.id,
+      nombreTipoParteMotor: tipoParteMotor.nombreTipoParteMotor
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ITipoParteMotor>>) {
-        result.subscribe((res: HttpResponse<ITipoParteMotor>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const tipoParteMotor = this.createFromForm();
+    if (tipoParteMotor.id !== undefined) {
+      this.subscribeToSaveResponse(this.tipoParteMotorService.update(tipoParteMotor));
+    } else {
+      this.subscribeToSaveResponse(this.tipoParteMotorService.create(tipoParteMotor));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get tipoParteMotor() {
-        return this._tipoParteMotor;
-    }
+  private createFromForm(): ITipoParteMotor {
+    return {
+      ...new TipoParteMotor(),
+      id: this.editForm.get(['id']).value,
+      nombreTipoParteMotor: this.editForm.get(['nombreTipoParteMotor']).value
+    };
+  }
 
-    set tipoParteMotor(tipoParteMotor: ITipoParteMotor) {
-        this._tipoParteMotor = tipoParteMotor;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ITipoParteMotor>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

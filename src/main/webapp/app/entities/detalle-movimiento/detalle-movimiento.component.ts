@@ -1,58 +1,66 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
-import { Principal } from 'app/core';
-import { DetalleMovimientoService } from 'app/entities/detalle-movimiento/detalle-movimiento.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { DetalleMovimientoService } from './detalle-movimiento.service';
 
 @Component({
-    selector: 'jhi-detalle-movimiento',
-    templateUrl: './detalle-movimiento.component.html'
+  selector: 'jhi-detalle-movimiento',
+  templateUrl: './detalle-movimiento.component.html'
 })
 export class DetalleMovimientoComponent implements OnInit, OnDestroy {
-    detalleMovimientos: IDetalleMovimiento[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  detalleMovimientos: IDetalleMovimiento[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        private detalleMovimientoService: DetalleMovimientoService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private principal: Principal
-    ) {}
+  constructor(
+    protected detalleMovimientoService: DetalleMovimientoService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.detalleMovimientoService.query().subscribe(
-            (res: HttpResponse<IDetalleMovimiento[]>) => {
-                this.detalleMovimientos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-    }
+  loadAll() {
+    this.detalleMovimientoService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<IDetalleMovimiento[]>) => res.ok),
+        map((res: HttpResponse<IDetalleMovimiento[]>) => res.body)
+      )
+      .subscribe(
+        (res: IDetalleMovimiento[]) => {
+          this.detalleMovimientos = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInDetalleMovimientos();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInDetalleMovimientos();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: IDetalleMovimiento) {
-        return item.id;
-    }
+  trackId(index: number, item: IDetalleMovimiento) {
+    return item.id;
+  }
 
-    registerChangeInDetalleMovimientos() {
-        this.eventSubscriber = this.eventManager.subscribe('detalleMovimientoListModification', response => this.loadAll());
-    }
+  registerChangeInDetalleMovimientos() {
+    this.eventSubscriber = this.eventManager.subscribe('detalleMovimientoListModification', response => this.loadAll());
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

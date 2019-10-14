@@ -1,19 +1,20 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * A MedioDePagoCheque.
  */
 @Entity
 @Table(name = "medio_de_pago_cheque")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MedioDePagoCheque implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,7 +38,7 @@ public class MedioDePagoCheque implements Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("medioDePagoCheques")
     private Banco banco;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -120,19 +121,15 @@ public class MedioDePagoCheque implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof MedioDePagoCheque)) {
             return false;
         }
-        MedioDePagoCheque medioDePagoCheque = (MedioDePagoCheque) o;
-        if (medioDePagoCheque.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), medioDePagoCheque.getId());
+        return id != null && id.equals(((MedioDePagoCheque) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

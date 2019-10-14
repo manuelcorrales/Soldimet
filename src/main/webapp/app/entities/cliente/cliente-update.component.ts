@@ -1,91 +1,117 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { ICliente } from 'app/shared/model/cliente.model';
-import { ClienteService } from 'app/entities/cliente/cliente.service';
+import { ICliente, Cliente } from 'app/shared/model/cliente.model';
+import { ClienteService } from './cliente.service';
 import { IPersona } from 'app/shared/model/persona.model';
-import { PersonaService } from 'app/entities/persona';
+import { PersonaService } from 'app/entities/persona/persona.service';
 
 @Component({
-    selector: 'jhi-cliente-update',
-    templateUrl: './cliente-update.component.html'
+  selector: 'jhi-cliente-update',
+  templateUrl: './cliente-update.component.html'
 })
 export class ClienteUpdateComponent implements OnInit {
-    private _cliente: ICliente;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    personas: IPersona[];
+  personas: IPersona[];
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private clienteService: ClienteService,
-        private personaService: PersonaService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    persona: [null, Validators.required]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ cliente }) => {
-            this.cliente = cliente;
-        });
-        this.personaService.query({ filter: 'cliente-is-null' }).subscribe(
-            (res: HttpResponse<IPersona[]>) => {
-                if (!this.cliente.persona || !this.cliente.persona.id) {
-                    this.personas = res.body;
-                } else {
-                    this.personaService.find(this.cliente.persona.id).subscribe(
-                        (subRes: HttpResponse<IPersona>) => {
-                            this.personas = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected clienteService: ClienteService,
+    protected personaService: PersonaService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ cliente }) => {
+      this.updateForm(cliente);
+    });
+    this.personaService
+      .query({ filter: 'cliente-is-null' })
+      .pipe(
+        filter((mayBeOk: HttpResponse<IPersona[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IPersona[]>) => response.body)
+      )
+      .subscribe(
+        (res: IPersona[]) => {
+          if (!this.editForm.get('persona').value || !this.editForm.get('persona').value.id) {
+            this.personas = res;
+          } else {
+            this.personaService
+              .find(this.editForm.get('persona').value.id)
+              .pipe(
+                filter((subResMayBeOk: HttpResponse<IPersona>) => subResMayBeOk.ok),
+                map((subResponse: HttpResponse<IPersona>) => subResponse.body)
+              )
+              .subscribe(
+                (subRes: IPersona) => (this.personas = [subRes].concat(res)),
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+              );
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
+
+  updateForm(cliente: ICliente) {
+    this.editForm.patchValue({
+      id: cliente.id,
+      persona: cliente.persona
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const cliente = this.createFromForm();
+    if (cliente.id !== undefined) {
+      this.subscribeToSaveResponse(this.clienteService.update(cliente));
+    } else {
+      this.subscribeToSaveResponse(this.clienteService.create(cliente));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): ICliente {
+    return {
+      ...new Cliente(),
+      id: this.editForm.get(['id']).value,
+      persona: this.editForm.get(['persona']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.cliente.id !== undefined) {
-            this.subscribeToSaveResponse(this.clienteService.update(this.cliente));
-        } else {
-            this.subscribeToSaveResponse(this.clienteService.create(this.cliente));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ICliente>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ICliente>>) {
-        result.subscribe((res: HttpResponse<ICliente>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
-
-    trackPersonaById(index: number, item: IPersona) {
-        return item.id;
-    }
-    get cliente() {
-        return this._cliente;
-    }
-
-    set cliente(cliente: ICliente) {
-        this._cliente = cliente;
-    }
+  trackPersonaById(index: number, item: IPersona) {
+    return item.id;
+  }
 }

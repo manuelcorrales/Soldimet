@@ -10,10 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.Optional;
+
 /**
- * Service Implementation for managing Articulo.
+ * Service Implementation for managing {@link Articulo}.
  */
 @Service
 @Transactional
@@ -30,18 +30,19 @@ public class ArticuloService {
     /**
      * Save a articulo.
      *
-     * @param articulo the entity to save
-     * @return the persisted entity
+     * @param articulo the entity to save.
+     * @return the persisted entity.
      */
     public Articulo save(Articulo articulo) {
-        log.debug("Request to save Articulo : {}", articulo);        return articuloRepository.save(articulo);
+        log.debug("Request to save Articulo : {}", articulo);
+        return articuloRepository.save(articulo);
     }
 
     /**
      * Get all the articulos.
      *
-     * @param pageable the pagination information
-     * @return the list of entities
+     * @param pageable the pagination information.
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public Page<Articulo> findAll(Pageable pageable) {
@@ -53,8 +54,8 @@ public class ArticuloService {
     /**
      * Get one articulo by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<Articulo> findOne(Long id) {
@@ -65,7 +66,7 @@ public class ArticuloService {
     /**
      * Delete the articulo by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete Articulo : {}", id);

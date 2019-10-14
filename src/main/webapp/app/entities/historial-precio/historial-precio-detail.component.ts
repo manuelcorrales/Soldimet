@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
 
 @Component({
-    selector: 'jhi-historial-precio-detail',
-    templateUrl: './historial-precio-detail.component.html'
+  selector: 'jhi-historial-precio-detail',
+  templateUrl: './historial-precio-detail.component.html'
 })
 export class HistorialPrecioDetailComponent implements OnInit {
-    historialPrecio: IHistorialPrecio;
+  historialPrecio: IHistorialPrecio;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ historialPrecio }) => {
-            this.historialPrecio = historialPrecio;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ historialPrecio }) => {
+      this.historialPrecio = historialPrecio;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

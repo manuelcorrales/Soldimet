@@ -1,19 +1,18 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-medio-de-pago-cheque-heading">Create or edit a Medio De Pago Cheque</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!medioDePagoCheque.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="medioDePagoCheque.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaRecibo">Fecha Recibo</label>
                     <div class="input-group">
-                        <input id="field_fechaRecibo" type="text" class="form-control" name="fechaRecibo" ngbDatepicker  #fechaReciboDp="ngbDatepicker" [(ngModel)]="medioDePagoCheque.fechaRecibo"
-                        />
+                        <input id="field_fechaRecibo" type="text" class="form-control" name="fechaRecibo" ngbDatepicker  #fechaReciboDp="ngbDatepicker" formControlName="fechaRecibo"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaReciboDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
@@ -22,8 +21,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaCobro">Fecha Cobro</label>
                     <div class="input-group">
-                        <input id="field_fechaCobro" type="text" class="form-control" name="fechaCobro" ngbDatepicker  #fechaCobroDp="ngbDatepicker" [(ngModel)]="medioDePagoCheque.fechaCobro"
-                        />
+                        <input id="field_fechaCobro" type="text" class="form-control" name="fechaCobro" ngbDatepicker  #fechaCobroDp="ngbDatepicker" formControlName="fechaCobro"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaCobroDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
@@ -32,10 +30,10 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_numeroCheque">Numero Cheque</label>
                     <input type="text" class="form-control" name="numeroCheque" id="field_numeroCheque"
-                        [(ngModel)]="medioDePagoCheque.numeroCheque" required/>
-                    <div [hidden]="!(editForm.controls.numeroCheque?.dirty && editForm.controls.numeroCheque?.invalid)">
+                           formControlName="numeroCheque"/>
+                    <div *ngIf="editForm.get('numeroCheque').invalid && (editForm.get('numeroCheque').dirty || editForm.get('numeroCheque').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.numeroCheque?.errors?.required">
+                               *ngIf="editForm.get('numeroCheque').errors.required">
                         This field is required.
                         </small>
                     </div>
@@ -43,19 +41,19 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_numeroCuenta">Numero Cuenta</label>
                     <input type="text" class="form-control" name="numeroCuenta" id="field_numeroCuenta"
-                        [(ngModel)]="medioDePagoCheque.numeroCuenta" />
+                           formControlName="numeroCuenta"/>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_banco">Banco</label>
-                    <select class="form-control" id="field_banco" name="banco" [(ngModel)]="medioDePagoCheque.banco"  required>
-                        <option *ngIf="!editForm.value.banco" [ngValue]="null" selected></option>
-                        <option [ngValue]="bancoOption.id === medioDePagoCheque.banco?.id ? medioDePagoCheque.banco : bancoOption" *ngFor="let bancoOption of bancos; trackBy: trackBancoById">{{bancoOption.nombreBanco}}</option>
+                    <select class="form-control" id="field_banco" name="banco" formControlName="banco">
+                        <option *ngIf="!editForm.get('banco').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="bancoOption.id === editForm.get('banco').value?.id ? editForm.get('banco').value : bancoOption" *ngFor="let bancoOption of bancos; trackBy: trackBancoById">{{bancoOption.nombreBanco}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.banco?.dirty && editForm.controls.banco?.invalid)">
+                <div *ngIf="editForm.get('banco').invalid && (editForm.get('banco').dirty || editForm.get('banco').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.banco?.errors?.required">
+                           *ngIf="editForm.get('banco').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -64,7 +62,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

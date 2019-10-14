@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-precio-repuesto" [routerLink]="['/precio-repuesto/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Precio Repuesto
+            Create a new Precio Repuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="precioRepuestos">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="precioRepuestos?.length === 0">
+        <span>No precioRepuestos found</span>
+    </div>
+    <div class="table-responsive" *ngIf="precioRepuestos?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -28,7 +31,7 @@
                 <td>{{precioRepuesto.precioPrivado}}</td>
                 <td>{{precioRepuesto.precioPublico}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/precio-repuesto', precioRepuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -42,7 +45,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'precio-repuesto/'+ precioRepuesto.id + '/delete'} }]"
+                                [routerLink]="['/precio-repuesto', { outlets: { popup: precioRepuesto.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

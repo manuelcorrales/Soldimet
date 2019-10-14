@@ -1,5 +1,4 @@
 package soldimet.repository;
-
 import soldimet.domain.Empleado;
 import soldimet.domain.Persona;
 

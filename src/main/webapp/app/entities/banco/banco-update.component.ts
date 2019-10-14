@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IBanco } from 'app/shared/model/banco.model';
-import { BancoService } from 'app/entities/banco/banco.service';
+import { IBanco, Banco } from 'app/shared/model/banco.model';
+import { BancoService } from './banco.service';
 
 @Component({
-    selector: 'jhi-banco-update',
-    templateUrl: './banco-update.component.html'
+  selector: 'jhi-banco-update',
+  templateUrl: './banco-update.component.html'
 })
 export class BancoUpdateComponent implements OnInit {
-    private _banco: IBanco;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private bancoService: BancoService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreBanco: [null, [Validators.required]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ banco }) => {
-            this.banco = banco;
-        });
-    }
+  constructor(protected bancoService: BancoService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ banco }) => {
+      this.updateForm(banco);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.banco.id !== undefined) {
-            this.subscribeToSaveResponse(this.bancoService.update(this.banco));
-        } else {
-            this.subscribeToSaveResponse(this.bancoService.create(this.banco));
-        }
-    }
+  updateForm(banco: IBanco) {
+    this.editForm.patchValue({
+      id: banco.id,
+      nombreBanco: banco.nombreBanco
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IBanco>>) {
-        result.subscribe((res: HttpResponse<IBanco>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const banco = this.createFromForm();
+    if (banco.id !== undefined) {
+      this.subscribeToSaveResponse(this.bancoService.update(banco));
+    } else {
+      this.subscribeToSaveResponse(this.bancoService.create(banco));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get banco() {
-        return this._banco;
-    }
+  private createFromForm(): IBanco {
+    return {
+      ...new Banco(),
+      id: this.editForm.get(['id']).value,
+      nombreBanco: this.editForm.get(['nombreBanco']).value
+    };
+  }
 
-    set banco(banco: IBanco) {
-        this._banco = banco;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IBanco>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

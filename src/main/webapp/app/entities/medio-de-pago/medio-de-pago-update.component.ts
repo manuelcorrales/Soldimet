@@ -1,130 +1,173 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { IMedioDePago } from 'app/shared/model/medio-de-pago.model';
-import { MedioDePagoService } from 'app/entities/medio-de-pago/medio-de-pago.service';
+import { IMedioDePago, MedioDePago } from 'app/shared/model/medio-de-pago.model';
+import { MedioDePagoService } from './medio-de-pago.service';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
-import { FormaDePagoService } from 'app/entities/forma-de-pago';
+import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
 import { IMedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
-import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque';
+import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.service';
 import { IMedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
-import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta';
+import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.service';
 
 @Component({
-    selector: 'jhi-medio-de-pago-update',
-    templateUrl: './medio-de-pago-update.component.html'
+  selector: 'jhi-medio-de-pago-update',
+  templateUrl: './medio-de-pago-update.component.html'
 })
 export class MedioDePagoUpdateComponent implements OnInit {
-    private _medioDePago: IMedioDePago;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    formadepagos: IFormaDePago[];
+  formadepagos: IFormaDePago[];
 
-    mediodepagocheques: IMedioDePagoCheque[];
+  mediodepagocheques: IMedioDePagoCheque[];
 
-    mediodepagotarjetas: IMedioDePagoTarjeta[];
+  mediodepagotarjetas: IMedioDePagoTarjeta[];
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private medioDePagoService: MedioDePagoService,
-        private formaDePagoService: FormaDePagoService,
-        private medioDePagoChequeService: MedioDePagoChequeService,
-        private medioDePagoTarjetaService: MedioDePagoTarjetaService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    formaDePago: [null, Validators.required],
+    medioDePagoCheque: [],
+    medioDePagoTarjeta: []
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ medioDePago }) => {
-            this.medioDePago = medioDePago;
-        });
-        this.formaDePagoService.query().subscribe(
-            (res: HttpResponse<IFormaDePago[]>) => {
-                this.formadepagos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.medioDePagoChequeService.query({ filter: 'mediodepago-is-null' }).subscribe(
-            (res: HttpResponse<IMedioDePagoCheque[]>) => {
-                if (!this.medioDePago.medioDePagoCheque || !this.medioDePago.medioDePagoCheque.id) {
-                    this.mediodepagocheques = res.body;
-                } else {
-                    this.medioDePagoChequeService.find(this.medioDePago.medioDePagoCheque.id).subscribe(
-                        (subRes: HttpResponse<IMedioDePagoCheque>) => {
-                            this.mediodepagocheques = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.medioDePagoTarjetaService.query({ filter: 'mediodepago-is-null' }).subscribe(
-            (res: HttpResponse<IMedioDePagoTarjeta[]>) => {
-                if (!this.medioDePago.medioDePagoTarjeta || !this.medioDePago.medioDePagoTarjeta.id) {
-                    this.mediodepagotarjetas = res.body;
-                } else {
-                    this.medioDePagoTarjetaService.find(this.medioDePago.medioDePagoTarjeta.id).subscribe(
-                        (subRes: HttpResponse<IMedioDePagoTarjeta>) => {
-                            this.mediodepagotarjetas = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected medioDePagoService: MedioDePagoService,
+    protected formaDePagoService: FormaDePagoService,
+    protected medioDePagoChequeService: MedioDePagoChequeService,
+    protected medioDePagoTarjetaService: MedioDePagoTarjetaService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ medioDePago }) => {
+      this.updateForm(medioDePago);
+    });
+    this.formaDePagoService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IFormaDePago[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IFormaDePago[]>) => response.body)
+      )
+      .subscribe((res: IFormaDePago[]) => (this.formadepagos = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.medioDePagoChequeService
+      .query({ filter: 'mediodepago-is-null' })
+      .pipe(
+        filter((mayBeOk: HttpResponse<IMedioDePagoCheque[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IMedioDePagoCheque[]>) => response.body)
+      )
+      .subscribe(
+        (res: IMedioDePagoCheque[]) => {
+          if (!this.editForm.get('medioDePagoCheque').value || !this.editForm.get('medioDePagoCheque').value.id) {
+            this.mediodepagocheques = res;
+          } else {
+            this.medioDePagoChequeService
+              .find(this.editForm.get('medioDePagoCheque').value.id)
+              .pipe(
+                filter((subResMayBeOk: HttpResponse<IMedioDePagoCheque>) => subResMayBeOk.ok),
+                map((subResponse: HttpResponse<IMedioDePagoCheque>) => subResponse.body)
+              )
+              .subscribe(
+                (subRes: IMedioDePagoCheque) => (this.mediodepagocheques = [subRes].concat(res)),
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+              );
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+    this.medioDePagoTarjetaService
+      .query({ filter: 'mediodepago-is-null' })
+      .pipe(
+        filter((mayBeOk: HttpResponse<IMedioDePagoTarjeta[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IMedioDePagoTarjeta[]>) => response.body)
+      )
+      .subscribe(
+        (res: IMedioDePagoTarjeta[]) => {
+          if (!this.editForm.get('medioDePagoTarjeta').value || !this.editForm.get('medioDePagoTarjeta').value.id) {
+            this.mediodepagotarjetas = res;
+          } else {
+            this.medioDePagoTarjetaService
+              .find(this.editForm.get('medioDePagoTarjeta').value.id)
+              .pipe(
+                filter((subResMayBeOk: HttpResponse<IMedioDePagoTarjeta>) => subResMayBeOk.ok),
+                map((subResponse: HttpResponse<IMedioDePagoTarjeta>) => subResponse.body)
+              )
+              .subscribe(
+                (subRes: IMedioDePagoTarjeta) => (this.mediodepagotarjetas = [subRes].concat(res)),
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+              );
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
+
+  updateForm(medioDePago: IMedioDePago) {
+    this.editForm.patchValue({
+      id: medioDePago.id,
+      formaDePago: medioDePago.formaDePago,
+      medioDePagoCheque: medioDePago.medioDePagoCheque,
+      medioDePagoTarjeta: medioDePago.medioDePagoTarjeta
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const medioDePago = this.createFromForm();
+    if (medioDePago.id !== undefined) {
+      this.subscribeToSaveResponse(this.medioDePagoService.update(medioDePago));
+    } else {
+      this.subscribeToSaveResponse(this.medioDePagoService.create(medioDePago));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): IMedioDePago {
+    return {
+      ...new MedioDePago(),
+      id: this.editForm.get(['id']).value,
+      formaDePago: this.editForm.get(['formaDePago']).value,
+      medioDePagoCheque: this.editForm.get(['medioDePagoCheque']).value,
+      medioDePagoTarjeta: this.editForm.get(['medioDePagoTarjeta']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.medioDePago.id !== undefined) {
-            this.subscribeToSaveResponse(this.medioDePagoService.update(this.medioDePago));
-        } else {
-            this.subscribeToSaveResponse(this.medioDePagoService.create(this.medioDePago));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IMedioDePago>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IMedioDePago>>) {
-        result.subscribe((res: HttpResponse<IMedioDePago>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
+  trackFormaDePagoById(index: number, item: IFormaDePago) {
+    return item.id;
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  trackMedioDePagoChequeById(index: number, item: IMedioDePagoCheque) {
+    return item.id;
+  }
 
-    trackFormaDePagoById(index: number, item: IFormaDePago) {
-        return item.id;
-    }
-
-    trackMedioDePagoChequeById(index: number, item: IMedioDePagoCheque) {
-        return item.id;
-    }
-
-    trackMedioDePagoTarjetaById(index: number, item: IMedioDePagoTarjeta) {
-        return item.id;
-    }
-    get medioDePago() {
-        return this._medioDePago;
-    }
-
-    set medioDePago(medioDePago: IMedioDePago) {
-        this._medioDePago = medioDePago;
-    }
+  trackMedioDePagoTarjetaById(index: number, item: IMedioDePagoTarjeta) {
+    return item.id;
+  }
 }

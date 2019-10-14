@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IPersona } from 'app/shared/model/persona.model';
 
 @Component({
-    selector: 'jhi-persona-detail',
-    templateUrl: './persona-detail.component.html'
+  selector: 'jhi-persona-detail',
+  templateUrl: './persona-detail.component.html'
 })
 export class PersonaDetailComponent implements OnInit {
-    persona: IPersona;
+  persona: IPersona;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ persona }) => {
-            this.persona = persona;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ persona }) => {
+      this.persona = persona;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

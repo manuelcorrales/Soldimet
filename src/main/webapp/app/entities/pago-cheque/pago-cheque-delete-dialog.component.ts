@@ -5,61 +5,65 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IPagoCheque } from 'app/shared/model/pago-cheque.model';
-import { PagoChequeService } from 'app/entities/pago-cheque/pago-cheque.service';
+import { PagoChequeService } from './pago-cheque.service';
 
 @Component({
-    selector: 'jhi-pago-cheque-delete-dialog',
-    templateUrl: './pago-cheque-delete-dialog.component.html'
+  selector: 'jhi-pago-cheque-delete-dialog',
+  templateUrl: './pago-cheque-delete-dialog.component.html'
 })
 export class PagoChequeDeleteDialogComponent {
-    pagoCheque: IPagoCheque;
+  pagoCheque: IPagoCheque;
 
-    constructor(private pagoChequeService: PagoChequeService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+  constructor(
+    protected pagoChequeService: PagoChequeService,
+    public activeModal: NgbActiveModal,
+    protected eventManager: JhiEventManager
+  ) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.pagoChequeService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'pagoChequeListModification',
-                content: 'Deleted an pagoCheque'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.pagoChequeService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'pagoChequeListModification',
+        content: 'Deleted an pagoCheque'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-pago-cheque-delete-popup',
-    template: ''
+  selector: 'jhi-pago-cheque-delete-popup',
+  template: ''
 })
 export class PagoChequeDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ pagoCheque }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(PagoChequeDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
-                this.ngbModalRef.componentInstance.pagoCheque = pagoCheque;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ pagoCheque }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(PagoChequeDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.pagoCheque = pagoCheque;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/pago-cheque', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/pago-cheque', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

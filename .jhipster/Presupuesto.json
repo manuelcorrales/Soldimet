@@ -57,10 +57,7 @@
         },
         {
             "fieldName": "fechaCreacion",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "LocalDate"
         },
         {
             "fieldName": "fechaAceptado",

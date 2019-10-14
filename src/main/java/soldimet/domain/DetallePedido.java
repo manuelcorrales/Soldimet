@@ -1,22 +1,22 @@
 package soldimet.domain;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import soldimet.constant.Globales;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A DetallePedido.
  */
 @Entity
 @Table(name = "detalle_pedido")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DetallePedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,7 +33,8 @@ public class DetallePedido implements Serializable {
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinColumn(name="detallePedido")
     @JsonInclude
-    private Set<CostoRepuesto> costoRepuestos = new HashSet<CostoRepuesto>();
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
     @ManyToOne (cascade ={CascadeType.DETACH, CascadeType.MERGE}, optional = false)
     @NotNull
@@ -97,6 +98,7 @@ public class DetallePedido implements Serializable {
     public void setEstadoDetallePedido(EstadoDetallePedido estadoDetallePedido) {
         this.estadoDetallePedido = estadoDetallePedido;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -104,17 +106,15 @@ public class DetallePedido implements Serializable {
         if (this == o) {
             return true;
         }
-
-        DetallePedido detallePedido = (DetallePedido) o;
-        if (detallePedido.getId() == null || getId() == null) {
+        if (!(o instanceof DetallePedido)) {
             return false;
         }
-        return Objects.equals(getId(), detallePedido.getId());
+        return id != null && id.equals(((DetallePedido) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
@@ -125,7 +125,6 @@ public class DetallePedido implements Serializable {
     }
 
     public CostoRepuesto filterCostoRepuesto(CostoRepuesto costoRepuesto) {
-
         for(CostoRepuesto costoInList: this.getCostoRepuestos()) {
             if (costoInList.equals(costoRepuesto)){
                 return costoInList;

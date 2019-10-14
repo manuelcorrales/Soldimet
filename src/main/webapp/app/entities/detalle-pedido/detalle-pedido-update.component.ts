@@ -1,91 +1,117 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { IDetallePedido } from 'app/shared/model/detalle-pedido.model';
-import { DetallePedidoService } from 'app/entities/detalle-pedido/detalle-pedido.service';
+import { IDetallePedido, DetallePedido } from 'app/shared/model/detalle-pedido.model';
+import { DetallePedidoService } from './detalle-pedido.service';
 import { IDetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
-import { DetallePresupuestoService } from 'app/entities/detalle-presupuesto';
+import { DetallePresupuestoService } from 'app/entities/detalle-presupuesto/detalle-presupuesto.service';
 
 @Component({
-    selector: 'jhi-detalle-pedido-update',
-    templateUrl: './detalle-pedido-update.component.html'
+  selector: 'jhi-detalle-pedido-update',
+  templateUrl: './detalle-pedido-update.component.html'
 })
 export class DetallePedidoUpdateComponent implements OnInit {
-    private _detallePedido: IDetallePedido;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    detallepresupuestos: IDetallePresupuesto[];
+  detallepresupuestos: IDetallePresupuesto[];
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private detallePedidoService: DetallePedidoService,
-        private detallePresupuestoService: DetallePresupuestoService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    detallePresupuesto: [null, Validators.required]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ detallePedido }) => {
-            this.detallePedido = detallePedido;
-        });
-        this.detallePresupuestoService.query({ filter: 'detallepedido-is-null' }).subscribe(
-            (res: HttpResponse<IDetallePresupuesto[]>) => {
-                if (!this.detallePedido.detallePresupuesto || !this.detallePedido.detallePresupuesto.id) {
-                    this.detallepresupuestos = res.body;
-                } else {
-                    this.detallePresupuestoService.find(this.detallePedido.detallePresupuesto.id).subscribe(
-                        (subRes: HttpResponse<IDetallePresupuesto>) => {
-                            this.detallepresupuestos = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected detallePedidoService: DetallePedidoService,
+    protected detallePresupuestoService: DetallePresupuestoService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ detallePedido }) => {
+      this.updateForm(detallePedido);
+    });
+    this.detallePresupuestoService
+      .query({ filter: 'detallepedido-is-null' })
+      .pipe(
+        filter((mayBeOk: HttpResponse<IDetallePresupuesto[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IDetallePresupuesto[]>) => response.body)
+      )
+      .subscribe(
+        (res: IDetallePresupuesto[]) => {
+          if (!this.editForm.get('detallePresupuesto').value || !this.editForm.get('detallePresupuesto').value.id) {
+            this.detallepresupuestos = res;
+          } else {
+            this.detallePresupuestoService
+              .find(this.editForm.get('detallePresupuesto').value.id)
+              .pipe(
+                filter((subResMayBeOk: HttpResponse<IDetallePresupuesto>) => subResMayBeOk.ok),
+                map((subResponse: HttpResponse<IDetallePresupuesto>) => subResponse.body)
+              )
+              .subscribe(
+                (subRes: IDetallePresupuesto) => (this.detallepresupuestos = [subRes].concat(res)),
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+              );
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
+
+  updateForm(detallePedido: IDetallePedido) {
+    this.editForm.patchValue({
+      id: detallePedido.id,
+      detallePresupuesto: detallePedido.detallePresupuesto
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const detallePedido = this.createFromForm();
+    if (detallePedido.id !== undefined) {
+      this.subscribeToSaveResponse(this.detallePedidoService.update(detallePedido));
+    } else {
+      this.subscribeToSaveResponse(this.detallePedidoService.create(detallePedido));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): IDetallePedido {
+    return {
+      ...new DetallePedido(),
+      id: this.editForm.get(['id']).value,
+      detallePresupuesto: this.editForm.get(['detallePresupuesto']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.detallePedido.id !== undefined) {
-            this.subscribeToSaveResponse(this.detallePedidoService.update(this.detallePedido));
-        } else {
-            this.subscribeToSaveResponse(this.detallePedidoService.create(this.detallePedido));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IDetallePedido>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IDetallePedido>>) {
-        result.subscribe((res: HttpResponse<IDetallePedido>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
-
-    trackDetallePresupuestoById(index: number, item: IDetallePresupuesto) {
-        return item.id;
-    }
-    get detallePedido() {
-        return this._detallePedido;
-    }
-
-    set detallePedido(detallePedido: IDetallePedido) {
-        this._detallePedido = detallePedido;
-    }
+  trackDetallePresupuestoById(index: number, item: IDetallePresupuesto) {
+    return item.id;
+  }
 }

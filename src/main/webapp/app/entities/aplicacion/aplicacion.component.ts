@@ -1,58 +1,66 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IAplicacion } from 'app/shared/model/aplicacion.model';
-import { Principal } from 'app/core';
-import { AplicacionService } from 'app/entities/aplicacion/aplicacion.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { AplicacionService } from './aplicacion.service';
 
 @Component({
-    selector: 'jhi-aplicacion',
-    templateUrl: './aplicacion.component.html'
+  selector: 'jhi-aplicacion',
+  templateUrl: './aplicacion.component.html'
 })
 export class AplicacionComponent implements OnInit, OnDestroy {
-    aplicacions: IAplicacion[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  aplicacions: IAplicacion[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        private aplicacionService: AplicacionService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private principal: Principal
-    ) {}
+  constructor(
+    protected aplicacionService: AplicacionService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.aplicacionService.query().subscribe(
-            (res: HttpResponse<IAplicacion[]>) => {
-                this.aplicacions = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-    }
+  loadAll() {
+    this.aplicacionService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<IAplicacion[]>) => res.ok),
+        map((res: HttpResponse<IAplicacion[]>) => res.body)
+      )
+      .subscribe(
+        (res: IAplicacion[]) => {
+          this.aplicacions = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInAplicacions();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInAplicacions();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: IAplicacion) {
-        return item.id;
-    }
+  trackId(index: number, item: IAplicacion) {
+    return item.id;
+  }
 
-    registerChangeInAplicacions() {
-        this.eventSubscriber = this.eventManager.subscribe('aplicacionListModification', response => this.loadAll());
-    }
+  registerChangeInAplicacions() {
+    this.eventSubscriber = this.eventManager.subscribe('aplicacionListModification', response => this.loadAll());
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

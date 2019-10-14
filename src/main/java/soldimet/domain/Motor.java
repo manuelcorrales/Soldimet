@@ -1,20 +1,25 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Motor.
  */
 @Entity
 @Table(name = "motor")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Motor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,11 +32,6 @@ public class Motor implements Serializable {
     @Size(min = 2, max = 25)
     @Column(name = "marca_motor", length = 25, nullable = false)
     private String marcaMotor;
-
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name= "motor")
-    @JsonIgnore
-    private Set<Aplicacion> aplicacions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -54,29 +54,6 @@ public class Motor implements Serializable {
     public void setMarcaMotor(String marcaMotor) {
         this.marcaMotor = marcaMotor;
     }
-
-    public Set<Aplicacion> getAplicacions() {
-        return aplicacions;
-    }
-
-    public Motor aplicacions(Set<Aplicacion> aplicacions) {
-        this.aplicacions = aplicacions;
-        return this;
-    }
-
-    public Motor addAplicacion(Aplicacion aplicacion) {
-        this.aplicacions.add(aplicacion);
-        return this;
-    }
-
-    public Motor removeAplicacion(Aplicacion aplicacion) {
-        this.aplicacions.remove(aplicacion);
-        return this;
-    }
-
-    public void setAplicacions(Set<Aplicacion> aplicacions) {
-        this.aplicacions = aplicacions;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -84,19 +61,15 @@ public class Motor implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Motor)) {
             return false;
         }
-        Motor motor = (Motor) o;
-        if (motor.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), motor.getId());
+        return id != null && id.equals(((Motor) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ITipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
 
 @Component({
-    selector: 'jhi-tipo-detalle-movimiento-detail',
-    templateUrl: './tipo-detalle-movimiento-detail.component.html'
+  selector: 'jhi-tipo-detalle-movimiento-detail',
+  templateUrl: './tipo-detalle-movimiento-detail.component.html'
 })
 export class TipoDetalleMovimientoDetailComponent implements OnInit {
-    tipoDetalleMovimiento: ITipoDetalleMovimiento;
+  tipoDetalleMovimiento: ITipoDetalleMovimiento;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ tipoDetalleMovimiento }) => {
-            this.tipoDetalleMovimiento = tipoDetalleMovimiento;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ tipoDetalleMovimiento }) => {
+      this.tipoDetalleMovimiento = tipoDetalleMovimiento;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

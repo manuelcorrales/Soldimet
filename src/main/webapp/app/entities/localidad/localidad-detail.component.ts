@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ILocalidad } from 'app/shared/model/localidad.model';
 
 @Component({
-    selector: 'jhi-localidad-detail',
-    templateUrl: './localidad-detail.component.html'
+  selector: 'jhi-localidad-detail',
+  templateUrl: './localidad-detail.component.html'
 })
 export class LocalidadDetailComponent implements OnInit {
-    localidad: ILocalidad;
+  localidad: ILocalidad;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ localidad }) => {
-            this.localidad = localidad;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ localidad }) => {
+      this.localidad = localidad;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

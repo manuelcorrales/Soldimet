@@ -1,13 +1,14 @@
 package soldimet.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import soldimet.domain.MedioDePagoCheque;
 import soldimet.repository.MedioDePagoChequeRepository;
 import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing MedioDePagoCheque.
+ * REST controller for managing {@link soldimet.domain.MedioDePagoCheque}.
  */
 @RestController
 @RequestMapping("/api")
@@ -29,6 +30,9 @@ public class MedioDePagoChequeResource {
 
     private static final String ENTITY_NAME = "medioDePagoCheque";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final MedioDePagoChequeRepository medioDePagoChequeRepository;
 
     public MedioDePagoChequeResource(MedioDePagoChequeRepository medioDePagoChequeRepository) {
@@ -36,14 +40,13 @@ public class MedioDePagoChequeResource {
     }
 
     /**
-     * POST  /medio-de-pago-cheques : Create a new medioDePagoCheque.
+     * {@code POST  /medio-de-pago-cheques} : Create a new medioDePagoCheque.
      *
-     * @param medioDePagoCheque the medioDePagoCheque to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new medioDePagoCheque, or with status 400 (Bad Request) if the medioDePagoCheque has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param medioDePagoCheque the medioDePagoCheque to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new medioDePagoCheque, or with status {@code 400 (Bad Request)} if the medioDePagoCheque has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/medio-de-pago-cheques")
-    @Timed
     public ResponseEntity<MedioDePagoCheque> createMedioDePagoCheque(@Valid @RequestBody MedioDePagoCheque medioDePagoCheque) throws URISyntaxException {
         log.debug("REST request to save MedioDePagoCheque : {}", medioDePagoCheque);
         if (medioDePagoCheque.getId() != null) {
@@ -51,21 +54,20 @@ public class MedioDePagoChequeResource {
         }
         MedioDePagoCheque result = medioDePagoChequeRepository.save(medioDePagoCheque);
         return ResponseEntity.created(new URI("/api/medio-de-pago-cheques/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /medio-de-pago-cheques : Updates an existing medioDePagoCheque.
+     * {@code PUT  /medio-de-pago-cheques} : Updates an existing medioDePagoCheque.
      *
-     * @param medioDePagoCheque the medioDePagoCheque to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated medioDePagoCheque,
-     * or with status 400 (Bad Request) if the medioDePagoCheque is not valid,
-     * or with status 500 (Internal Server Error) if the medioDePagoCheque couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param medioDePagoCheque the medioDePagoCheque to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated medioDePagoCheque,
+     * or with status {@code 400 (Bad Request)} if the medioDePagoCheque is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the medioDePagoCheque couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/medio-de-pago-cheques")
-    @Timed
     public ResponseEntity<MedioDePagoCheque> updateMedioDePagoCheque(@Valid @RequestBody MedioDePagoCheque medioDePagoCheque) throws URISyntaxException {
         log.debug("REST request to update MedioDePagoCheque : {}", medioDePagoCheque);
         if (medioDePagoCheque.getId() == null) {
@@ -73,30 +75,29 @@ public class MedioDePagoChequeResource {
         }
         MedioDePagoCheque result = medioDePagoChequeRepository.save(medioDePagoCheque);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, medioDePagoCheque.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, medioDePagoCheque.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /medio-de-pago-cheques : get all the medioDePagoCheques.
+     * {@code GET  /medio-de-pago-cheques} : get all the medioDePagoCheques.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of medioDePagoCheques in body
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of medioDePagoCheques in body.
      */
     @GetMapping("/medio-de-pago-cheques")
-    @Timed
     public List<MedioDePagoCheque> getAllMedioDePagoCheques() {
         log.debug("REST request to get all MedioDePagoCheques");
         return medioDePagoChequeRepository.findAll();
     }
 
     /**
-     * GET  /medio-de-pago-cheques/:id : get the "id" medioDePagoCheque.
+     * {@code GET  /medio-de-pago-cheques/:id} : get the "id" medioDePagoCheque.
      *
-     * @param id the id of the medioDePagoCheque to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the medioDePagoCheque, or with status 404 (Not Found)
+     * @param id the id of the medioDePagoCheque to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the medioDePagoCheque, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/medio-de-pago-cheques/{id}")
-    @Timed
     public ResponseEntity<MedioDePagoCheque> getMedioDePagoCheque(@PathVariable Long id) {
         log.debug("REST request to get MedioDePagoCheque : {}", id);
         Optional<MedioDePagoCheque> medioDePagoCheque = medioDePagoChequeRepository.findById(id);
@@ -104,17 +105,15 @@ public class MedioDePagoChequeResource {
     }
 
     /**
-     * DELETE  /medio-de-pago-cheques/:id : delete the "id" medioDePagoCheque.
+     * {@code DELETE  /medio-de-pago-cheques/:id} : delete the "id" medioDePagoCheque.
      *
-     * @param id the id of the medioDePagoCheque to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the medioDePagoCheque to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/medio-de-pago-cheques/{id}")
-    @Timed
     public ResponseEntity<Void> deleteMedioDePagoCheque(@PathVariable Long id) {
         log.debug("REST request to delete MedioDePagoCheque : {}", id);
-
         medioDePagoChequeRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

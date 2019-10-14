@@ -7,53 +7,53 @@ import { BorrarMovimientoPopupService } from 'app/caja/borrar-movimiento/borrar-
 import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
 
 @Component({
-    selector: 'jhi-borrar-movimiento',
-    templateUrl: './borrar-movimiento.component.html',
-    styles: []
+  selector: 'jhi-borrar-movimiento',
+  templateUrl: './borrar-movimiento.component.html',
+  styles: []
 })
 export class BorrarMovimientoDialogComponent {
-    movimiento: Movimiento;
+  movimiento: Movimiento;
 
-    constructor(
-        public movimientoService: CajaModuleServiceService,
-        public activeModal: NgbActiveModal,
-        public eventManager: JhiEventManager
-    ) {}
+  constructor(
+    public movimientoService: CajaModuleServiceService,
+    public activeModal: NgbActiveModal,
+    public eventManager: JhiEventManager
+  ) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.movimientoService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'movimientosDiaModificacion',
-                content: 'Movimiento eliminado'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete() {
+    this.movimientoService.delete(this.movimiento.id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'movimientosDiaModificacion',
+        content: 'Movimiento eliminado'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-movimiento-borrar-popup',
-    template: ''
+  selector: 'jhi-movimiento-borrar-popup',
+  template: ''
 })
 export class BorrarMovimientoPopupComponent implements OnInit, OnDestroy {
-    routeSub: any;
+  routeSub: any;
 
-    constructor(private route: ActivatedRoute, private movimientoPopupService: BorrarMovimientoPopupService) {}
-    ngOnInit() {
-        this.routeSub = this.route.params.subscribe(params => {
-            if (params['id']) {
-                this.movimientoPopupService.open(BorrarMovimientoDialogComponent as Component, params['id']);
-            } else {
-                this.movimientoPopupService.open(BorrarMovimientoDialogComponent as Component);
-            }
-        });
-    }
+  constructor(private route: ActivatedRoute, private movimientoPopupService: BorrarMovimientoPopupService) {}
+  ngOnInit() {
+    this.routeSub = this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.movimientoPopupService.open(BorrarMovimientoDialogComponent as Component, params['id']);
+      } else {
+        this.movimientoPopupService.open(BorrarMovimientoDialogComponent as Component);
+      }
+    });
+  }
 
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+  }
 }

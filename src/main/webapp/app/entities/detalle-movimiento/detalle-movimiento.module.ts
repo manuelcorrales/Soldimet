@@ -1,34 +1,32 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { DetalleMovimientoComponent } from './detalle-movimiento.component';
+import { DetalleMovimientoDetailComponent } from './detalle-movimiento-detail.component';
+import { DetalleMovimientoUpdateComponent } from './detalle-movimiento-update.component';
 import {
-    DetalleMovimientoComponent,
-    DetalleMovimientoDetailComponent,
-    DetalleMovimientoUpdateComponent,
-    DetalleMovimientoDeletePopupComponent,
-    DetalleMovimientoDeleteDialogComponent,
-    detalleMovimientoRoute,
-    detalleMovimientoPopupRoute
-} from 'app/entities/detalle-movimiento';
+  DetalleMovimientoDeletePopupComponent,
+  DetalleMovimientoDeleteDialogComponent
+} from './detalle-movimiento-delete-dialog.component';
+import { detalleMovimientoRoute, detalleMovimientoPopupRoute } from './detalle-movimiento.route';
 
 const ENTITY_STATES = [...detalleMovimientoRoute, ...detalleMovimientoPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        DetalleMovimientoComponent,
-        DetalleMovimientoDetailComponent,
-        DetalleMovimientoUpdateComponent,
-        DetalleMovimientoDeleteDialogComponent,
-        DetalleMovimientoDeletePopupComponent
-    ],
-    entryComponents: [
-        DetalleMovimientoComponent,
-        DetalleMovimientoUpdateComponent,
-        DetalleMovimientoDeleteDialogComponent,
-        DetalleMovimientoDeletePopupComponent
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    DetalleMovimientoComponent,
+    DetalleMovimientoDetailComponent,
+    DetalleMovimientoUpdateComponent,
+    DetalleMovimientoDeleteDialogComponent,
+    DetalleMovimientoDeletePopupComponent
+  ],
+  entryComponents: [
+    DetalleMovimientoComponent,
+    DetalleMovimientoUpdateComponent,
+    DetalleMovimientoDeleteDialogComponent,
+    DetalleMovimientoDeletePopupComponent
+  ]
 })
 export class SoldimetDetalleMovimientoModule {}

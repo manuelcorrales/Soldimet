@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IArticulo } from 'app/shared/model/articulo.model';
 
 @Component({
-    selector: 'jhi-articulo-detail',
-    templateUrl: './articulo-detail.component.html'
+  selector: 'jhi-articulo-detail',
+  templateUrl: './articulo-detail.component.html'
 })
 export class ArticuloDetailComponent implements OnInit {
-    articulo: IArticulo;
+  articulo: IArticulo;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ articulo }) => {
-            this.articulo = articulo;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ articulo }) => {
+      this.articulo = articulo;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

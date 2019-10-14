@@ -1,21 +1,21 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-presupuesto-heading">Create or edit a Presupuesto</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!presupuesto.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="presupuesto.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_descripcionDescuento">Descripcion Descuento</label>
                     <input type="text" class="form-control" name="descripcionDescuento" id="field_descripcionDescuento"
-                        [(ngModel)]="presupuesto.descripcionDescuento" minlength="5"/>
-                    <div [hidden]="!(editForm.controls.descripcionDescuento?.dirty && editForm.controls.descripcionDescuento?.invalid)">
+                           formControlName="descripcionDescuento"/>
+                    <div *ngIf="editForm.get('descripcionDescuento').invalid && (editForm.get('descripcionDescuento').dirty || editForm.get('descripcionDescuento').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.descripcionDescuento?.errors?.minlength">
+                               *ngIf="editForm.get('descripcionDescuento').errors.minlength">
                         This field is required to be at least 5 characters.
                         </small>
                     </div>
@@ -23,14 +23,14 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_descuento">Descuento</label>
                     <input type="number" class="form-control" name="descuento" id="field_descuento"
-                        [(ngModel)]="presupuesto.descuento" min="0" jhiMin="0"/>
-                    <div [hidden]="!(editForm.controls.descuento?.dirty && editForm.controls.descuento?.invalid)">
+                           formControlName="descuento"/>
+                    <div *ngIf="editForm.get('descuento').invalid && (editForm.get('descuento').dirty || editForm.get('descuento').touched)">
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.descuento?.errors?.min">
+                               *ngIf="editForm.get('descuento').errors.min">
                             This field should be at least 0.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.descuento?.errors?.number">
+                            [hidden]="!editForm.get('descuento')?.errors?.number">
                             This field should be a number.
                         </small>
                     </div>
@@ -38,15 +38,14 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaCreacion">Fecha Creacion</label>
                     <div class="input-group">
-                        <input id="field_fechaCreacion" type="text" class="form-control" name="fechaCreacion" ngbDatepicker  #fechaCreacionDp="ngbDatepicker" [(ngModel)]="presupuesto.fechaCreacion"
-                        required/>
+                        <input id="field_fechaCreacion" type="text" class="form-control" name="fechaCreacion" ngbDatepicker  #fechaCreacionDp="ngbDatepicker" formControlName="fechaCreacion"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaCreacionDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
                     </div>
-                    <div [hidden]="!(editForm.controls.fechaCreacion?.dirty && editForm.controls.fechaCreacion?.invalid)">
+                    <div *ngIf="editForm.get('fechaCreacion').invalid && (editForm.get('fechaCreacion').dirty || editForm.get('fechaCreacion').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.fechaCreacion?.errors?.required">
+                               *ngIf="editForm.get('fechaCreacion').errors.required">
                         This field is required.
                         </small>
                     </div>
@@ -54,8 +53,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaAceptado">Fecha Aceptado</label>
                     <div class="input-group">
-                        <input id="field_fechaAceptado" type="text" class="form-control" name="fechaAceptado" ngbDatepicker  #fechaAceptadoDp="ngbDatepicker" [(ngModel)]="presupuesto.fechaAceptado"
-                        />
+                        <input id="field_fechaAceptado" type="text" class="form-control" name="fechaAceptado" ngbDatepicker  #fechaAceptadoDp="ngbDatepicker" formControlName="fechaAceptado"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaAceptadoDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
@@ -64,8 +62,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaEntregado">Fecha Entregado</label>
                     <div class="input-group">
-                        <input id="field_fechaEntregado" type="text" class="form-control" name="fechaEntregado" ngbDatepicker  #fechaEntregadoDp="ngbDatepicker" [(ngModel)]="presupuesto.fechaEntregado"
-                        />
+                        <input id="field_fechaEntregado" type="text" class="form-control" name="fechaEntregado" ngbDatepicker  #fechaEntregadoDp="ngbDatepicker" formControlName="fechaEntregado"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaEntregadoDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
@@ -74,18 +71,18 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_importeTotal">Importe Total</label>
                     <input type="number" class="form-control" name="importeTotal" id="field_importeTotal"
-                        [(ngModel)]="presupuesto.importeTotal" required min="0" jhiMin="0"/>
-                    <div [hidden]="!(editForm.controls.importeTotal?.dirty && editForm.controls.importeTotal?.invalid)">
+                           formControlName="importeTotal"/>
+                    <div *ngIf="editForm.get('importeTotal').invalid && (editForm.get('importeTotal').dirty || editForm.get('importeTotal').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.importeTotal?.errors?.required">
+                               *ngIf="editForm.get('importeTotal').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.importeTotal?.errors?.min">
+                               *ngIf="editForm.get('importeTotal').errors.min">
                             This field should be at least 0.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.importeTotal?.errors?.number">
+                            [hidden]="!editForm.get('importeTotal')?.errors?.number">
                             This field should be a number.
                         </small>
                     </div>
@@ -93,47 +90,47 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_observaciones">Observaciones</label>
                     <input type="text" class="form-control" name="observaciones" id="field_observaciones"
-                        [(ngModel)]="presupuesto.observaciones" />
+                           formControlName="observaciones"/>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_cliente">Cliente</label>
-                    <select class="form-control" id="field_cliente" name="cliente" [(ngModel)]="presupuesto.cliente"  required>
-                        <option *ngIf="!editForm.value.cliente" [ngValue]="null" selected></option>
-                        <option [ngValue]="clienteOption.id === presupuesto.cliente?.id ? presupuesto.cliente : clienteOption" *ngFor="let clienteOption of clientes; trackBy: trackClienteById">{{clienteOption.apellido}}</option>
+                    <select class="form-control" id="field_cliente" name="cliente" formControlName="cliente">
+                        <option *ngIf="!editForm.get('cliente').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="clienteOption.id === editForm.get('cliente').value?.id ? editForm.get('cliente').value : clienteOption" *ngFor="let clienteOption of clientes; trackBy: trackClienteById">{{clienteOption.apellido}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.cliente?.dirty && editForm.controls.cliente?.invalid)">
+                <div *ngIf="editForm.get('cliente').invalid && (editForm.get('cliente').dirty || editForm.get('cliente').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.cliente?.errors?.required">
+                           *ngIf="editForm.get('cliente').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_estadoPresupuesto">Estado Presupuesto</label>
-                    <select class="form-control" id="field_estadoPresupuesto" name="estadoPresupuesto" [(ngModel)]="presupuesto.estadoPresupuesto"  required>
-                        <option *ngIf="!editForm.value.estadoPresupuesto" [ngValue]="null" selected></option>
-                        <option [ngValue]="estadoPresupuestoOption.id === presupuesto.estadoPresupuesto?.id ? presupuesto.estadoPresupuesto : estadoPresupuestoOption" *ngFor="let estadoPresupuestoOption of estadopresupuestos; trackBy: trackEstadoPresupuestoById">{{estadoPresupuestoOption.nombreEstado}}</option>
+                    <select class="form-control" id="field_estadoPresupuesto" name="estadoPresupuesto" formControlName="estadoPresupuesto">
+                        <option *ngIf="!editForm.get('estadoPresupuesto').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="estadoPresupuestoOption.id === editForm.get('estadoPresupuesto').value?.id ? editForm.get('estadoPresupuesto').value : estadoPresupuestoOption" *ngFor="let estadoPresupuestoOption of estadopresupuestos; trackBy: trackEstadoPresupuestoById">{{estadoPresupuestoOption.nombreEstado}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.estadoPresupuesto?.dirty && editForm.controls.estadoPresupuesto?.invalid)">
+                <div *ngIf="editForm.get('estadoPresupuesto').invalid && (editForm.get('estadoPresupuesto').dirty || editForm.get('estadoPresupuesto').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.estadoPresupuesto?.errors?.required">
+                           *ngIf="editForm.get('estadoPresupuesto').errors.required">
                         This field is required.
                     </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_documentType">Document Type</label>
-                    <select class="form-control" id="field_documentType" name="documentType" [(ngModel)]="presupuesto.documentType" >
+                    <select class="form-control" id="field_documentType" name="documentType" formControlName="documentType">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="documentationTypeOption.id === presupuesto.documentType?.id ? presupuesto.documentType : documentationTypeOption" *ngFor="let documentationTypeOption of documentationtypes; trackBy: trackDocumentationTypeById">{{documentationTypeOption.documentName}}</option>
+                        <option [ngValue]="documentationTypeOption.id === editForm.get('documentType').value?.id ? editForm.get('documentType').value : documentationTypeOption" *ngFor="let documentationTypeOption of documentationtypes; trackBy: trackDocumentationTypeById">{{documentationTypeOption.documentName}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_sucursal">Sucursal</label>
-                    <select class="form-control" id="field_sucursal" name="sucursal" [(ngModel)]="presupuesto.sucursal" >
+                    <select class="form-control" id="field_sucursal" name="sucursal" formControlName="sucursal">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="sucursalOption.id === presupuesto.sucursal?.id ? presupuesto.sucursal : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
+                        <option [ngValue]="sucursalOption.id === editForm.get('sucursal').value?.id ? editForm.get('sucursal').value : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
                     </select>
                 </div>
             </div>
@@ -141,7 +138,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

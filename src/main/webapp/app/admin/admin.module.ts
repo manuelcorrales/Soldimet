@@ -1,45 +1,40 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SoldimetSharedModule } from 'app/shared';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
 /* jhipster-needle-add-admin-module-import - JHipster will add admin modules imports here */
 
-import {
-    adminState,
+import { adminState } from './admin.route';
+import { AuditsComponent } from './audits/audits.component';
+import { UserMgmtComponent } from './user-management/user-management.component';
+import { UserMgmtDetailComponent } from './user-management/user-management-detail.component';
+import { UserMgmtUpdateComponent } from './user-management/user-management-update.component';
+import { UserMgmtDeleteDialogComponent } from './user-management/user-management-delete-dialog.component';
+import { LogsComponent } from './logs/logs.component';
+import { JhiMetricsMonitoringComponent } from './metrics/metrics.component';
+import { JhiHealthModalComponent } from './health/health-modal.component';
+import { JhiHealthCheckComponent } from './health/health.component';
+import { JhiConfigurationComponent } from './configuration/configuration.component';
+import { JhiDocsComponent } from './docs/docs.component';
+
+@NgModule({
+  imports: [
+    SoldimetSharedModule,
+    /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
+    RouterModule.forChild(adminState)
+  ],
+  declarations: [
     AuditsComponent,
     UserMgmtComponent,
     UserMgmtDetailComponent,
     UserMgmtUpdateComponent,
     UserMgmtDeleteDialogComponent,
     LogsComponent,
-    JhiMetricsMonitoringModalComponent,
-    JhiMetricsMonitoringComponent,
-    JhiHealthModalComponent,
-    JhiHealthCheckComponent,
     JhiConfigurationComponent,
-    JhiDocsComponent
-} from 'app/admin';
-
-@NgModule({
-    imports: [
-        SoldimetSharedModule,
-        RouterModule.forChild(adminState)
-        /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
-    ],
-    declarations: [
-        AuditsComponent,
-        UserMgmtComponent,
-        UserMgmtDetailComponent,
-        UserMgmtUpdateComponent,
-        UserMgmtDeleteDialogComponent,
-        LogsComponent,
-        JhiConfigurationComponent,
-        JhiHealthCheckComponent,
-        JhiHealthModalComponent,
-        JhiDocsComponent,
-        JhiMetricsMonitoringComponent,
-        JhiMetricsMonitoringModalComponent
-    ],
-    entryComponents: [UserMgmtDeleteDialogComponent, JhiHealthModalComponent, JhiMetricsMonitoringModalComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    JhiHealthCheckComponent,
+    JhiHealthModalComponent,
+    JhiDocsComponent,
+    JhiMetricsMonitoringComponent
+  ],
+  entryComponents: [UserMgmtDeleteDialogComponent, JhiHealthModalComponent]
 })
 export class SoldimetAdminModule {}

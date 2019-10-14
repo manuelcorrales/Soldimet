@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IProveedor } from 'app/shared/model/proveedor.model';
 
 @Component({
-    selector: 'jhi-proveedor-detail',
-    templateUrl: './proveedor-detail.component.html'
+  selector: 'jhi-proveedor-detail',
+  templateUrl: './proveedor-detail.component.html'
 })
 export class ProveedorDetailComponent implements OnInit {
-    proveedor: IProveedor;
+  proveedor: IProveedor;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ proveedor }) => {
-            this.proveedor = proveedor;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ proveedor }) => {
+      this.proveedor = proveedor;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

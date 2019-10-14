@@ -1,0 +1,38 @@
+id,nombre_tipo_repuesto,tipo_parte_motor_id
+1,Válvulas,2
+2,Guías,2
+3,Casquillos,2
+4,Juego juntas descarb.,2
+5,Juego tapones block,2
+6,Tapa de cilindros,2
+7,Botadores,2
+8,Juego de tornillos,2
+9,Kit de retenes,2
+10,Conjunto motor,1
+11,Sub conjunto motor,1
+12,Camisas,1
+13,Pistones,1
+14,Pernos,1
+15,Aros,1
+16,Aros compresor,1
+17,Bujes de biela,1
+18,Juego cojinetes de biela,1
+19,Juego cojinetes de bancada,1
+20,Juego cojinetes axiales,1
+21,Juego cojinetes de levas,1
+22,Juego cojinetes de eje de mando,1
+23,Juego de cojinetes de compresor,1
+24,Juego juntas,1
+25,Juego tapones de block,1
+26,Bomba de aceite,1
+27,Arbol de leva,1
+28,Block,1
+29,Cigüenal,1
+30,Botadores,1
+31,Juego de tornillos,1
+32,Kit de distribución,1
+33,Kit de retenes,1
+34,Kit de compresor,1
+35,Kit de embrague,1
+36,Juego de juntas para camisas,1
+37,Proceso tecnifer cigüeñal,1

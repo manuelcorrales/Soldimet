@@ -1,6 +1,7 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -8,13 +9,13 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * A Caja.
  */
 @Entity
 @Table(name = "caja")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Caja implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,10 +42,10 @@ public class Caja implements Serializable {
     private String observaciones;
 
     @Column(name = "saldo_fisico")
-    private Float saldo_fisico;
+    private Float saldoFisico;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("cajas")
     private Sucursal sucursal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -121,17 +122,17 @@ public class Caja implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public Float getSaldo_fisico() {
-        return saldo_fisico;
+    public Float getSaldoFisico() {
+        return saldoFisico;
     }
 
-    public Caja saldo_fisico(Float saldo_fisico) {
-        this.saldo_fisico = saldo_fisico;
+    public Caja saldoFisico(Float saldoFisico) {
+        this.saldoFisico = saldoFisico;
         return this;
     }
 
-    public void setSaldo_fisico(Float saldo_fisico) {
-        this.saldo_fisico = saldo_fisico;
+    public void setSaldoFisico(Float saldoFisico) {
+        this.saldoFisico = saldoFisico;
     }
 
     public Sucursal getSucursal() {
@@ -153,19 +154,15 @@ public class Caja implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Caja)) {
             return false;
         }
-        Caja caja = (Caja) o;
-        if (caja.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), caja.getId());
+        return id != null && id.equals(((Caja) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
@@ -177,7 +174,7 @@ public class Caja implements Serializable {
             ", horaCierre='" + getHoraCierre() + "'" +
             ", saldo=" + getSaldo() +
             ", observaciones='" + getObservaciones() + "'" +
-            ", saldo_fisico=" + getSaldo_fisico() +
+            ", saldoFisico=" + getSaldoFisico() +
             "}";
     }
 }

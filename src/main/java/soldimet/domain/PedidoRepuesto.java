@@ -1,25 +1,24 @@
 package soldimet.domain;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A PedidoRepuesto.
  */
 @Entity
 @Table(name = "pedido_repuesto")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PedidoRepuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,19 +39,23 @@ public class PedidoRepuesto implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("pedidoRepuestos")
     private EstadoPedidoRepuesto estadoPedidoRepuesto;
 
     @OneToMany(cascade=CascadeType.ALL, fetch= FetchType.EAGER)
     @JoinColumn(name= "pedidoRepuesto")
     @NotNull
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Set<DetallePedido> detallePedidos = new HashSet<DetallePedido>();
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<DetallePedido> detallePedidos = new HashSet<>();
 
-    @ManyToOne(optional = false, cascade=CascadeType.ALL)
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("pedidoRepuestos")
     private Presupuesto presupuesto;
 
     @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
+    @JsonIgnoreProperties("pedidoRepuestos")
     private DocumentationType documentType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -116,7 +119,6 @@ public class PedidoRepuesto implements Serializable {
         this.estadoPedidoRepuesto = estadoPedidoRepuesto;
     }
 
-    @JsonGetter("detallePedidos")
     public Set<DetallePedido> getDetallePedidos() {
         return detallePedidos;
     }
@@ -172,19 +174,15 @@ public class PedidoRepuesto implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof PedidoRepuesto)) {
             return false;
         }
-        PedidoRepuesto pedidoRepuesto = (PedidoRepuesto) o;
-        if (pedidoRepuesto.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), pedidoRepuesto.getId());
+        return id != null && id.equals(((PedidoRepuesto) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
@@ -196,21 +194,18 @@ public class PedidoRepuesto implements Serializable {
             ", fechaRecibo='" + getFechaRecibo() + "'" +
             "}";
     }
-
     public void cambiarEstadoADetalles( EstadoDetallePedido estadoDetallePedido) {
         for( DetallePedido detalle: this.detallePedidos) {
             detalle.setEstadoDetallePedido(estadoDetallePedido);
         }
-
     }
 
-	public DetallePedido filterDetallePedido(DetallePedido detallePedido) {
-
+    public DetallePedido filterDetallePedido(DetallePedido detallePedido) {
         for(DetallePedido detalleInList: this.getDetallePedidos()) {
             if ( detalleInList.equals(detallePedido)){
                 return detalleInList;
             }
         }
         return null;
-	}
+    }
 }

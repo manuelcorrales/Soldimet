@@ -1,19 +1,18 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Proveedor.
  */
 @Entity
 @Table(name = "proveedor")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Proveedor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,10 +21,13 @@ public class Proveedor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false, fetch=FetchType.EAGER)
     @NotNull
+    @Column(name = "nombre_proveedor", nullable = false)
+    private String nombreProveedor;
+
+    @OneToOne(optional = false)    @NotNull
+
     @JoinColumn(unique = true)
-    @JsonInclude
     private Persona persona;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -35,6 +37,19 @@ public class Proveedor implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNombreProveedor() {
+        return nombreProveedor;
+    }
+
+    public Proveedor nombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
+        return this;
+    }
+
+    public void setNombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
     }
 
     public Persona getPersona() {
@@ -56,25 +71,22 @@ public class Proveedor implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Proveedor)) {
             return false;
         }
-        Proveedor proveedor = (Proveedor) o;
-        if (proveedor.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), proveedor.getId());
+        return id != null && id.equals(((Proveedor) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
     public String toString() {
         return "Proveedor{" +
             "id=" + getId() +
+            ", nombreProveedor='" + getNombreProveedor() + "'" +
             "}";
     }
 }

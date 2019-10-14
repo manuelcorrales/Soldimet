@@ -10,10 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.Optional;
+
 /**
- * Service Implementation for managing PedidoRepuesto.
+ * Service Implementation for managing {@link PedidoRepuesto}.
  */
 @Service
 @Transactional
@@ -30,18 +30,19 @@ public class PedidoRepuestoService {
     /**
      * Save a pedidoRepuesto.
      *
-     * @param pedidoRepuesto the entity to save
-     * @return the persisted entity
+     * @param pedidoRepuesto the entity to save.
+     * @return the persisted entity.
      */
     public PedidoRepuesto save(PedidoRepuesto pedidoRepuesto) {
-        log.debug("Request to save PedidoRepuesto : {}", pedidoRepuesto);        return pedidoRepuestoRepository.save(pedidoRepuesto);
+        log.debug("Request to save PedidoRepuesto : {}", pedidoRepuesto);
+        return pedidoRepuestoRepository.save(pedidoRepuesto);
     }
 
     /**
      * Get all the pedidoRepuestos.
      *
-     * @param pageable the pagination information
-     * @return the list of entities
+     * @param pageable the pagination information.
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public Page<PedidoRepuesto> findAll(Pageable pageable) {
@@ -53,8 +54,8 @@ public class PedidoRepuestoService {
     /**
      * Get one pedidoRepuesto by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<PedidoRepuesto> findOne(Long id) {
@@ -65,7 +66,7 @@ public class PedidoRepuestoService {
     /**
      * Delete the pedidoRepuesto by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete PedidoRepuesto : {}", id);

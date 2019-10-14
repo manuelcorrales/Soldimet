@@ -5,61 +5,61 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IDireccion } from 'app/shared/model/direccion.model';
-import { DireccionService } from 'app/entities/direccion/direccion.service';
+import { DireccionService } from './direccion.service';
 
 @Component({
-    selector: 'jhi-direccion-delete-dialog',
-    templateUrl: './direccion-delete-dialog.component.html'
+  selector: 'jhi-direccion-delete-dialog',
+  templateUrl: './direccion-delete-dialog.component.html'
 })
 export class DireccionDeleteDialogComponent {
-    direccion: IDireccion;
+  direccion: IDireccion;
 
-    constructor(private direccionService: DireccionService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+  constructor(protected direccionService: DireccionService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.direccionService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'direccionListModification',
-                content: 'Deleted an direccion'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.direccionService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'direccionListModification',
+        content: 'Deleted an direccion'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-direccion-delete-popup',
-    template: ''
+  selector: 'jhi-direccion-delete-popup',
+  template: ''
 })
 export class DireccionDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ direccion }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(DireccionDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
-                this.ngbModalRef.componentInstance.direccion = direccion;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ direccion }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(DireccionDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.direccion = direccion;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/direccion', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/direccion', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

@@ -1,34 +1,32 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { MovimientoPresupuestoComponent } from './movimiento-presupuesto.component';
+import { MovimientoPresupuestoDetailComponent } from './movimiento-presupuesto-detail.component';
+import { MovimientoPresupuestoUpdateComponent } from './movimiento-presupuesto-update.component';
 import {
-    MovimientoPresupuestoComponent,
-    MovimientoPresupuestoDetailComponent,
-    MovimientoPresupuestoUpdateComponent,
-    MovimientoPresupuestoDeletePopupComponent,
-    MovimientoPresupuestoDeleteDialogComponent,
-    movimientoPresupuestoRoute,
-    movimientoPresupuestoPopupRoute
-} from 'app/entities/movimiento-presupuesto';
+  MovimientoPresupuestoDeletePopupComponent,
+  MovimientoPresupuestoDeleteDialogComponent
+} from './movimiento-presupuesto-delete-dialog.component';
+import { movimientoPresupuestoRoute, movimientoPresupuestoPopupRoute } from './movimiento-presupuesto.route';
 
 const ENTITY_STATES = [...movimientoPresupuestoRoute, ...movimientoPresupuestoPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        MovimientoPresupuestoComponent,
-        MovimientoPresupuestoDetailComponent,
-        MovimientoPresupuestoUpdateComponent,
-        MovimientoPresupuestoDeleteDialogComponent,
-        MovimientoPresupuestoDeletePopupComponent
-    ],
-    entryComponents: [
-        MovimientoPresupuestoComponent,
-        MovimientoPresupuestoUpdateComponent,
-        MovimientoPresupuestoDeleteDialogComponent,
-        MovimientoPresupuestoDeletePopupComponent
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    MovimientoPresupuestoComponent,
+    MovimientoPresupuestoDetailComponent,
+    MovimientoPresupuestoUpdateComponent,
+    MovimientoPresupuestoDeleteDialogComponent,
+    MovimientoPresupuestoDeletePopupComponent
+  ],
+  entryComponents: [
+    MovimientoPresupuestoComponent,
+    MovimientoPresupuestoUpdateComponent,
+    MovimientoPresupuestoDeleteDialogComponent,
+    MovimientoPresupuestoDeletePopupComponent
+  ]
 })
 export class SoldimetMovimientoPresupuestoModule {}

@@ -1,25 +1,25 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-tipo-repuesto-heading">Create or edit a Tipo Repuesto</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!tipoRepuesto.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="tipoRepuesto.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_nombreTipoRepuesto">Nombre Tipo Repuesto</label>
                     <input type="text" class="form-control" name="nombreTipoRepuesto" id="field_nombreTipoRepuesto"
-                        [(ngModel)]="tipoRepuesto.nombreTipoRepuesto" required minlength="3"/>
-                    <div [hidden]="!(editForm.controls.nombreTipoRepuesto?.dirty && editForm.controls.nombreTipoRepuesto?.invalid)">
+                           formControlName="nombreTipoRepuesto"/>
+                    <div *ngIf="editForm.get('nombreTipoRepuesto').invalid && (editForm.get('nombreTipoRepuesto').dirty || editForm.get('nombreTipoRepuesto').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.nombreTipoRepuesto?.errors?.required">
+                               *ngIf="editForm.get('nombreTipoRepuesto').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.nombreTipoRepuesto?.errors?.minlength">
+                               *ngIf="editForm.get('nombreTipoRepuesto').errors.minlength">
                         This field is required to be at least 3 characters.
                         </small>
                     </div>
@@ -27,14 +27,14 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_tipoParteMotor">Tipo Parte Motor</label>
-                    <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" [(ngModel)]="tipoRepuesto.tipoParteMotor"  required>
-                        <option *ngIf="!editForm.value.tipoParteMotor" [ngValue]="null" selected></option>
-                        <option [ngValue]="tipoParteMotorOption.id === tipoRepuesto.tipoParteMotor?.id ? tipoRepuesto.tipoParteMotor : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
+                    <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor" formControlName="tipoParteMotor">
+                        <option *ngIf="!editForm.get('tipoParteMotor').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoParteMotorOption.id === editForm.get('tipoParteMotor').value?.id ? editForm.get('tipoParteMotor').value : tipoParteMotorOption" *ngFor="let tipoParteMotorOption of tipopartemotors; trackBy: trackTipoParteMotorById">{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.tipoParteMotor?.dirty && editForm.controls.tipoParteMotor?.invalid)">
+                <div *ngIf="editForm.get('tipoParteMotor').invalid && (editForm.get('tipoParteMotor').dirty || editForm.get('tipoParteMotor').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.tipoParteMotor?.errors?.required">
+                           *ngIf="editForm.get('tipoParteMotor').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -43,7 +43,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

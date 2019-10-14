@@ -1,7 +1,8 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -10,13 +11,13 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A ListaPrecioRectificacionCRAM.
  */
 @Entity
 @Table(name = "lista_precio_rectificacioncram")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ListaPrecioRectificacionCRAM implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,11 +41,13 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("listaPrecioRectificacionCRAMS")
     private CostoOperacion costoOperacion;
 
     @OneToMany(cascade = { CascadeType.ALL })
     @JoinColumn(name= "lista")
     @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<ListaPrecioDesdeHasta> fechas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -137,19 +140,15 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof ListaPrecioRectificacionCRAM)) {
             return false;
         }
-        ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM = (ListaPrecioRectificacionCRAM) o;
-        if (listaPrecioRectificacionCRAM.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), listaPrecioRectificacionCRAM.getId());
+        return id != null && id.equals(((ListaPrecioRectificacionCRAM) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
@@ -163,7 +162,6 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
     }
 
     public ListaPrecioDesdeHasta getUltimaListaActiva(){
-
         if (this.getFechas().size() == 0){
             return null;
         } else {

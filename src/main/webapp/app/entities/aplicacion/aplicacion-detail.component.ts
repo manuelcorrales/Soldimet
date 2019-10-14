@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IAplicacion } from 'app/shared/model/aplicacion.model';
 
 @Component({
-    selector: 'jhi-aplicacion-detail',
-    templateUrl: './aplicacion-detail.component.html'
+  selector: 'jhi-aplicacion-detail',
+  templateUrl: './aplicacion-detail.component.html'
 })
 export class AplicacionDetailComponent implements OnInit {
-    aplicacion: IAplicacion;
+  aplicacion: IAplicacion;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ aplicacion }) => {
-            this.aplicacion = aplicacion;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ aplicacion }) => {
+      this.aplicacion = aplicacion;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IRubro } from 'app/shared/model/rubro.model';
 
 @Component({
-    selector: 'jhi-rubro-detail',
-    templateUrl: './rubro-detail.component.html'
+  selector: 'jhi-rubro-detail',
+  templateUrl: './rubro-detail.component.html'
 })
 export class RubroDetailComponent implements OnInit {
-    rubro: IRubro;
+  rubro: IRubro;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ rubro }) => {
-            this.rubro = rubro;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ rubro }) => {
+      this.rubro = rubro;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

@@ -3,8 +3,10 @@ package soldimet.service.expertos;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -194,9 +196,9 @@ public class ExpertoPresupuesto {
         // Jefe o Admin pueden ver todos
         // Encargado y usuario pueden ver los asignados
         List<Presupuesto> presupuestos = null;
-        Empleado empleado = this.getCurrentEmployee();
+        Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
 
-        if (this.tieneAccesoATodosLosPresupuestos(empleado)){
+        if (this.tieneAccesoATodosLosPresupuestos(empleado)) {
             presupuestos = presupuestoRepository.findAllByOrderByIdDesc();
         } else {
             presupuestos = presupuestoRepository.findBySucursal(empleado.getSucursal());
@@ -208,11 +210,8 @@ public class ExpertoPresupuesto {
     public List<Aplicacion> buscarAplicacionPorMotor(Long motorId) {
         try {
             Motor motorEncontrado = motorRepository.findById(motorId).get();
-            Set<Aplicacion> aplicacionesSet = motorEncontrado.getAplicacions();
-            List<Aplicacion> aplicacionesList = new ArrayList<Aplicacion>();
-            for (Aplicacion aplicacion : aplicacionesSet) {
-                aplicacionesList.add(aplicacion);
-            }
+            List<Aplicacion> aplicacionesList = aplicacionRepository
+                    .findByMotorOrderByNombreAplicacionAsc(motorEncontrado);
 
             return aplicacionesList;
         } catch (NullPointerException e) {
@@ -250,7 +249,6 @@ public class ExpertoPresupuesto {
                     }
                 }
             }
-
         } catch (NullPointerException e) {
 
             e.printStackTrace();
@@ -259,16 +257,18 @@ public class ExpertoPresupuesto {
         }
     }
 
-    public List<Cliente> buscarClientesPornombre(String nombreCliente) {
+    // public List<Cliente> buscarClientesPornombre(String nombreCliente) {
 
-        List<Cliente> clientes = clienteRepository.findClienteByApellido(nombreCliente);
+    // List<Cliente> clientes =
+    // clienteRepository.findClienteByApellido(nombreCliente);
 
-        List<Persona> personas = personaRepository.findPersonasByNombreIgnoreCaseContaining(nombreCliente);
+    // List<Persona> personas =
+    // personaRepository.findPersonasByNombreIgnoreCaseContaining(nombreCliente);
 
-        clientes.addAll(clienteRepository.findClienteByPersonaIn(personas));
+    // clientes.addAll(clienteRepository.findClienteByPersonaIn(personas));
 
-        return clientes;
-    }
+    // return clientes;
+    // }
 
     public List<TipoRepuesto> buscarRepuestos(Long idTipoParteMotor) {
         TipoParteMotor tipoParte = tipoParteMotorRepository.findById(idTipoParteMotor).get();
@@ -292,7 +292,7 @@ public class ExpertoPresupuesto {
             presupuesto.setFechaCreacion(LocalDate.now());
         }
         EstadoCobranzaOperacion estadoCobranzaOperacion = estadoCobranzaOperacionRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_COBRANZA_OPERACION_CREADO);
+                .findByNombreEstado(globales.NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA);
 
         DTOEmpleado empleado = expertoUsuarios.getEmpleadoActual();
 
@@ -383,11 +383,11 @@ public class ExpertoPresupuesto {
         }
     }
 
-    private void cancelarMovimientos(Presupuesto presupuesto) throws Exception{
+    private void cancelarMovimientos(Presupuesto presupuesto) throws Exception {
         // falta cancelar los movimientos cuando los tenga :)
     }
 
-    private void cancelarPedido(Presupuesto presupuesto){
+    private void cancelarPedido(Presupuesto presupuesto) {
         EstadoPedidoRepuesto estadoPedidoRepuestoCancelado = estadoPedidoRepuestoRepository
                 .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_CANCELADO);
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
@@ -442,8 +442,8 @@ public class ExpertoPresupuesto {
         Boolean puedeTerminar = true;
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
-        if (pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO ||
-        pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_CANCELADO ) {
+        if (pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO
+                || pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_CANCELADO) {
             puedeTerminar = false;
         }
         return puedeTerminar;
@@ -458,11 +458,11 @@ public class ExpertoPresupuesto {
 
     private void puedeCancelarPresupuesto(DTOPresupuesto dto) throws Exception {
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
-        if (!Arrays.asList(globales.PRESUPUESTO_POSIBLE_CANCELAR).contains(presupuesto.getEstadoPresupuesto().getNombreEstado())) {
+        if (!Arrays.asList(globales.PRESUPUESTO_POSIBLE_CANCELAR)
+                .contains(presupuesto.getEstadoPresupuesto().getNombreEstado())) {
             throw new Exception();
         }
     }
-
 
     public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(Long presupuestoId) {
 
@@ -488,30 +488,19 @@ public class ExpertoPresupuesto {
 
     }
 
-    private Empleado getCurrentEmployee() {
-
-        List<Persona> personas = personaRepository.findByUserIsCurrentUser();
-        if (personas.isEmpty()) {
-            return null;
-        }
-
-        Empleado empleado = empleadoRepository.findByPersona(personas.get(0));
-        return empleado;
-    }
-
     private Boolean tieneAccesoATodosLosPresupuestos(Empleado empleado) {
         Set<Authority> authorities = empleado.getPersona().getUser().getAuthorities();
 
         List<String> authoritiesNames = new ArrayList<String>();
-        // Spring permite filtrar todo a nivel de endpoint por eso filtro así internamente
-        // Tambien se puede pero creando una relacion entre el objeto presupuesto y el user (malisimo)
-        for (Authority authority: authorities) {
+        // Spring permite filtrar todo a nivel de endpoint por eso filtro así
+        // nternamente
+        // Tambien se puede pero creando una relacion entre el objeto presupuesto y el
+        // user (malisimo)
+        for (Authority authority : authorities) {
             authoritiesNames.add(authority.getName());
         }
 
-        return
-            authoritiesNames.contains(AuthoritiesConstants.ADMIN) ||
-            authoritiesNames.contains(AuthoritiesConstants.BOSS)
-        ;
+        return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
+                || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
 }

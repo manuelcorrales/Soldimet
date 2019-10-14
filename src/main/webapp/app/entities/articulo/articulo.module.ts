@@ -1,29 +1,24 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
-import {
-    ArticuloComponent,
-    ArticuloDetailComponent,
-    ArticuloUpdateComponent,
-    ArticuloDeletePopupComponent,
-    articuloRoute,
-    articuloPopupRoute,
-    ArticuloDeleteDialogComponent
-} from 'app/entities/articulo';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { ArticuloComponent } from './articulo.component';
+import { ArticuloDetailComponent } from './articulo-detail.component';
+import { ArticuloUpdateComponent } from './articulo-update.component';
+import { ArticuloDeletePopupComponent, ArticuloDeleteDialogComponent } from './articulo-delete-dialog.component';
+import { articuloRoute, articuloPopupRoute } from './articulo.route';
 
 const ENTITY_STATES = [...articuloRoute, ...articuloPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        ArticuloComponent,
-        ArticuloDetailComponent,
-        ArticuloDeletePopupComponent,
-        ArticuloUpdateComponent,
-        ArticuloDeleteDialogComponent
-    ],
-    entryComponents: [ArticuloComponent, ArticuloUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    ArticuloComponent,
+    ArticuloDetailComponent,
+    ArticuloUpdateComponent,
+    ArticuloDeleteDialogComponent,
+    ArticuloDeletePopupComponent
+  ],
+  entryComponents: [ArticuloComponent, ArticuloUpdateComponent, ArticuloDeleteDialogComponent, ArticuloDeletePopupComponent]
 })
 export class SoldimetArticuloModule {}

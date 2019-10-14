@@ -1,17 +1,18 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A FormaDePago.
  */
 @Entity
 @Table(name = "forma_de_pago")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FormaDePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,19 +54,15 @@ public class FormaDePago implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof FormaDePago)) {
             return false;
         }
-        FormaDePago formaDePago = (FormaDePago) o;
-        if (formaDePago.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), formaDePago.getId());
+        return id != null && id.equals(((FormaDePago) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

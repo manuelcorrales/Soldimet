@@ -5,68 +5,65 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IEstadoOperacion } from 'app/shared/model/estado-operacion.model';
-import { EstadoOperacionService } from 'app/entities/estado-operacion/estado-operacion.service';
+import { EstadoOperacionService } from './estado-operacion.service';
 
 @Component({
-    selector: 'jhi-estado-operacion-delete-dialog',
-    templateUrl: './estado-operacion-delete-dialog.component.html'
+  selector: 'jhi-estado-operacion-delete-dialog',
+  templateUrl: './estado-operacion-delete-dialog.component.html'
 })
 export class EstadoOperacionDeleteDialogComponent {
-    estadoOperacion: IEstadoOperacion;
+  estadoOperacion: IEstadoOperacion;
 
-    constructor(
-        private estadoOperacionService: EstadoOperacionService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {}
+  constructor(
+    protected estadoOperacionService: EstadoOperacionService,
+    public activeModal: NgbActiveModal,
+    protected eventManager: JhiEventManager
+  ) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.estadoOperacionService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'estadoOperacionListModification',
-                content: 'Deleted an estadoOperacion'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.estadoOperacionService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'estadoOperacionListModification',
+        content: 'Deleted an estadoOperacion'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-estado-operacion-delete-popup',
-    template: ''
+  selector: 'jhi-estado-operacion-delete-popup',
+  template: ''
 })
 export class EstadoOperacionDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ estadoOperacion }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(EstadoOperacionDeleteDialogComponent as Component, {
-                    size: 'lg',
-                    backdrop: 'static'
-                });
-                this.ngbModalRef.componentInstance.estadoOperacion = estadoOperacion;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ estadoOperacion }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(EstadoOperacionDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.estadoOperacion = estadoOperacion;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/estado-operacion', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/estado-operacion', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

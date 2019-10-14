@@ -1,58 +1,66 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
-import { Principal } from 'app/core';
-import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { EstadoCostoRepuestoService } from './estado-costo-repuesto.service';
 
 @Component({
-    selector: 'jhi-estado-costo-repuesto',
-    templateUrl: './estado-costo-repuesto.component.html'
+  selector: 'jhi-estado-costo-repuesto',
+  templateUrl: './estado-costo-repuesto.component.html'
 })
 export class EstadoCostoRepuestoComponent implements OnInit, OnDestroy {
-    estadoCostoRepuestos: IEstadoCostoRepuesto[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  estadoCostoRepuestos: IEstadoCostoRepuesto[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        private estadoCostoRepuestoService: EstadoCostoRepuestoService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private principal: Principal
-    ) {}
+  constructor(
+    protected estadoCostoRepuestoService: EstadoCostoRepuestoService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.estadoCostoRepuestoService.query().subscribe(
-            (res: HttpResponse<IEstadoCostoRepuesto[]>) => {
-                this.estadoCostoRepuestos = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-    }
+  loadAll() {
+    this.estadoCostoRepuestoService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<IEstadoCostoRepuesto[]>) => res.ok),
+        map((res: HttpResponse<IEstadoCostoRepuesto[]>) => res.body)
+      )
+      .subscribe(
+        (res: IEstadoCostoRepuesto[]) => {
+          this.estadoCostoRepuestos = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInEstadoCostoRepuestos();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInEstadoCostoRepuestos();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: IEstadoCostoRepuesto) {
-        return item.id;
-    }
+  trackId(index: number, item: IEstadoCostoRepuesto) {
+    return item.id;
+  }
 
-    registerChangeInEstadoCostoRepuestos() {
-        this.eventSubscriber = this.eventManager.subscribe('estadoCostoRepuestoListModification', response => this.loadAll());
-    }
+  registerChangeInEstadoCostoRepuestos() {
+    this.eventSubscriber = this.eventManager.subscribe('estadoCostoRepuestoListModification', response => this.loadAll());
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

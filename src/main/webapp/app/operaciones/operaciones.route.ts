@@ -1,16 +1,14 @@
 import { Route } from '@angular/router';
 
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { OperacionesComponent } from 'app/operaciones/operaciones.component';
-import { UserRouteAccessService } from 'app/core';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 
 export const OPERACIONES_ROUTE: Route = {
-    path: 'operaciones',
-    component: OperacionesComponent,
-    data: {
-        authorities: ['ROLE_USER'],
-        pageTitle: 'Operaciones'
-    },
-    canActivate: [UserRouteAccessService]
+  path: 'operaciones',
+  component: OperacionesComponent,
+  data: {
+    authorities: ['ROLE_USER'],
+    pageTitle: 'Operaciones'
+  },
+  canActivate: [UserRouteAccessService]
 };

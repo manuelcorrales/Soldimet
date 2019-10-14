@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Persona.
  */
 @Entity
 @Table(name = "persona")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Persona implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,14 +23,17 @@ public class Persona implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 5)
+    @Column(name = "numero_telefono", nullable = false)
+    private String numeroTelefono;
+
+    @NotNull
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @NotNull
-    @Size(min = 5)
-    @Column(name = "numero_telefono", nullable = false)
-    private String numeroTelefono;
+    @Column(name = "apellido", nullable = false)
+    private String apellido;
 
     @OneToOne(optional = false)
     @NotNull
@@ -38,9 +42,11 @@ public class Persona implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("personas")
     private EstadoPersona estadoPersona;
 
     @ManyToOne
+    @JsonIgnoreProperties("personas")
     private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -50,6 +56,19 @@ public class Persona implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNumeroTelefono() {
+        return numeroTelefono;
+    }
+
+    public Persona numeroTelefono(String numeroTelefono) {
+        this.numeroTelefono = numeroTelefono;
+        return this;
+    }
+
+    public void setNumeroTelefono(String numeroTelefono) {
+        this.numeroTelefono = numeroTelefono;
     }
 
     public String getNombre() {
@@ -65,17 +84,17 @@ public class Persona implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getNumeroTelefono() {
-        return numeroTelefono;
+    public String getApellido() {
+        return apellido;
     }
 
-    public Persona numeroTelefono(String numeroTelefono) {
-        this.numeroTelefono = numeroTelefono;
+    public Persona apellido(String apellido) {
+        this.apellido = apellido;
         return this;
     }
 
-    public void setNumeroTelefono(String numeroTelefono) {
-        this.numeroTelefono = numeroTelefono;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public Direccion getDireccion() {
@@ -123,27 +142,24 @@ public class Persona implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Persona)) {
             return false;
         }
-        Persona persona = (Persona) o;
-        if (persona.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), persona.getId());
+        return id != null && id.equals(((Persona) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
     public String toString() {
         return "Persona{" +
             "id=" + getId() +
-            ", nombre='" + getNombre() + "'" +
             ", numeroTelefono='" + getNumeroTelefono() + "'" +
+            ", nombre='" + getNombre() + "'" +
+            ", apellido='" + getApellido() + "'" +
             "}";
     }
 }

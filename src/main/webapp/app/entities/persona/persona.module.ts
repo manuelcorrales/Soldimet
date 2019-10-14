@@ -1,30 +1,24 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
-import { SoldimetAdminModule } from 'app/admin/admin.module';
-import {
-    PersonaComponent,
-    PersonaDetailComponent,
-    PersonaUpdateComponent,
-    PersonaDeleteDialogComponent,
-    PersonaDeletePopupComponent,
-    personaRoute,
-    personaPopupRoute
-} from 'app/entities/persona';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { PersonaComponent } from './persona.component';
+import { PersonaDetailComponent } from './persona-detail.component';
+import { PersonaUpdateComponent } from './persona-update.component';
+import { PersonaDeletePopupComponent, PersonaDeleteDialogComponent } from './persona-delete-dialog.component';
+import { personaRoute, personaPopupRoute } from './persona.route';
 
 const ENTITY_STATES = [...personaRoute, ...personaPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, SoldimetAdminModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        PersonaComponent,
-        PersonaDeleteDialogComponent,
-        PersonaDeletePopupComponent,
-        PersonaDetailComponent,
-        PersonaUpdateComponent
-    ],
-    entryComponents: [PersonaComponent, PersonaUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    PersonaComponent,
+    PersonaDetailComponent,
+    PersonaUpdateComponent,
+    PersonaDeleteDialogComponent,
+    PersonaDeletePopupComponent
+  ],
+  entryComponents: [PersonaComponent, PersonaUpdateComponent, PersonaDeleteDialogComponent, PersonaDeletePopupComponent]
 })
 export class SoldimetPersonaModule {}

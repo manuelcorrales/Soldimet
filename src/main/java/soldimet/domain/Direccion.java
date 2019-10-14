@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Direccion.
  */
 @Entity
 @Table(name = "direccion")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Direccion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,6 +34,7 @@ public class Direccion implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("direccions")
     private Localidad localidad;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -89,19 +91,15 @@ public class Direccion implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Direccion)) {
             return false;
         }
-        Direccion direccion = (Direccion) o;
-        if (direccion.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), direccion.getId());
+        return id != null && id.equals(((Direccion) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

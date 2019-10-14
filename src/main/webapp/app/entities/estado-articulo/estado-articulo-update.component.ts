@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
-import { EstadoArticuloService } from 'app/entities/estado-articulo/estado-articulo.service';
+import { IEstadoArticulo, EstadoArticulo } from 'app/shared/model/estado-articulo.model';
+import { EstadoArticuloService } from './estado-articulo.service';
 
 @Component({
-    selector: 'jhi-estado-articulo-update',
-    templateUrl: './estado-articulo-update.component.html'
+  selector: 'jhi-estado-articulo-update',
+  templateUrl: './estado-articulo-update.component.html'
 })
 export class EstadoArticuloUpdateComponent implements OnInit {
-    private _estadoArticulo: IEstadoArticulo;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private estadoArticuloService: EstadoArticuloService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreEstado: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ estadoArticulo }) => {
-            this.estadoArticulo = estadoArticulo;
-        });
-    }
+  constructor(protected estadoArticuloService: EstadoArticuloService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ estadoArticulo }) => {
+      this.updateForm(estadoArticulo);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.estadoArticulo.id !== undefined) {
-            this.subscribeToSaveResponse(this.estadoArticuloService.update(this.estadoArticulo));
-        } else {
-            this.subscribeToSaveResponse(this.estadoArticuloService.create(this.estadoArticulo));
-        }
-    }
+  updateForm(estadoArticulo: IEstadoArticulo) {
+    this.editForm.patchValue({
+      id: estadoArticulo.id,
+      nombreEstado: estadoArticulo.nombreEstado
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoArticulo>>) {
-        result.subscribe((res: HttpResponse<IEstadoArticulo>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const estadoArticulo = this.createFromForm();
+    if (estadoArticulo.id !== undefined) {
+      this.subscribeToSaveResponse(this.estadoArticuloService.update(estadoArticulo));
+    } else {
+      this.subscribeToSaveResponse(this.estadoArticuloService.create(estadoArticulo));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get estadoArticulo() {
-        return this._estadoArticulo;
-    }
+  private createFromForm(): IEstadoArticulo {
+    return {
+      ...new EstadoArticulo(),
+      id: this.editForm.get(['id']).value,
+      nombreEstado: this.editForm.get(['nombreEstado']).value
+    };
+  }
 
-    set estadoArticulo(estadoArticulo: IEstadoArticulo) {
-        this._estadoArticulo = estadoArticulo;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IEstadoArticulo>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

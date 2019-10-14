@@ -1,6 +1,7 @@
-package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+package soldimet.domain;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -8,13 +9,13 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * A CategoriaPago.
  */
 @Entity
 @Table(name = "categoria_pago")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CategoriaPago implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,9 +28,9 @@ public class CategoriaPago implements Serializable {
     @Column(name = "nombre_categoria_pago", nullable = false)
     private String nombreCategoriaPago;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
-    @JoinColumn(name= "categoria_pago")
-    @JsonInclude
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name= "categoriaPago")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<SubCategoria> subCategorias = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -83,19 +84,15 @@ public class CategoriaPago implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof CategoriaPago)) {
             return false;
         }
-        CategoriaPago categoriaPago = (CategoriaPago) o;
-        if (categoriaPago.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), categoriaPago.getId());
+        return id != null && id.equals(((CategoriaPago) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

@@ -1,11 +1,10 @@
 import { IPersona } from 'app/shared/model/persona.model';
 
 export interface ICliente {
-    id?: number;
-    apellido?: string;
-    persona?: IPersona;
+  id?: number;
+  persona?: IPersona;
 }
 
 export class Cliente implements ICliente {
-    constructor(public id?: number, public apellido?: string, public persona?: IPersona) {}
+  constructor(public id?: number, public persona?: IPersona) {}
 }

@@ -1,29 +1,24 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
-import {
-    PagoEfectivoComponent,
-    PagoEfectivoDetailComponent,
-    PagoEfectivoUpdateComponent,
-    PagoEfectivoDeleteDialogComponent,
-    PagoEfectivoDeletePopupComponent,
-    pagoEfectivoRoute,
-    pagoEfectivoPopupRoute
-} from 'app/entities/pago-efectivo';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { PagoEfectivoComponent } from './pago-efectivo.component';
+import { PagoEfectivoDetailComponent } from './pago-efectivo-detail.component';
+import { PagoEfectivoUpdateComponent } from './pago-efectivo-update.component';
+import { PagoEfectivoDeletePopupComponent, PagoEfectivoDeleteDialogComponent } from './pago-efectivo-delete-dialog.component';
+import { pagoEfectivoRoute, pagoEfectivoPopupRoute } from './pago-efectivo.route';
 
 const ENTITY_STATES = [...pagoEfectivoRoute, ...pagoEfectivoPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        PagoEfectivoComponent,
-        PagoEfectivoDeleteDialogComponent,
-        PagoEfectivoDeletePopupComponent,
-        PagoEfectivoDetailComponent,
-        PagoEfectivoUpdateComponent
-    ],
-    entryComponents: [PagoEfectivoComponent, PagoEfectivoUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    PagoEfectivoComponent,
+    PagoEfectivoDetailComponent,
+    PagoEfectivoUpdateComponent,
+    PagoEfectivoDeleteDialogComponent,
+    PagoEfectivoDeletePopupComponent
+  ],
+  entryComponents: [PagoEfectivoComponent, PagoEfectivoUpdateComponent, PagoEfectivoDeleteDialogComponent, PagoEfectivoDeletePopupComponent]
 })
 export class SoldimetPagoEfectivoModule {}

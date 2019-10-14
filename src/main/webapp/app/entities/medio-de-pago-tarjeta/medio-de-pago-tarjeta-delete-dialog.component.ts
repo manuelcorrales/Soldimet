@@ -5,68 +5,65 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IMedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
-import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.service';
+import { MedioDePagoTarjetaService } from './medio-de-pago-tarjeta.service';
 
 @Component({
-    selector: 'jhi-medio-de-pago-tarjeta-delete-dialog',
-    templateUrl: './medio-de-pago-tarjeta-delete-dialog.component.html'
+  selector: 'jhi-medio-de-pago-tarjeta-delete-dialog',
+  templateUrl: './medio-de-pago-tarjeta-delete-dialog.component.html'
 })
 export class MedioDePagoTarjetaDeleteDialogComponent {
-    medioDePagoTarjeta: IMedioDePagoTarjeta;
+  medioDePagoTarjeta: IMedioDePagoTarjeta;
 
-    constructor(
-        private medioDePagoTarjetaService: MedioDePagoTarjetaService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {}
+  constructor(
+    protected medioDePagoTarjetaService: MedioDePagoTarjetaService,
+    public activeModal: NgbActiveModal,
+    protected eventManager: JhiEventManager
+  ) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.medioDePagoTarjetaService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'medioDePagoTarjetaListModification',
-                content: 'Deleted an medioDePagoTarjeta'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.medioDePagoTarjetaService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'medioDePagoTarjetaListModification',
+        content: 'Deleted an medioDePagoTarjeta'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-medio-de-pago-tarjeta-delete-popup',
-    template: ''
+  selector: 'jhi-medio-de-pago-tarjeta-delete-popup',
+  template: ''
 })
 export class MedioDePagoTarjetaDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ medioDePagoTarjeta }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(MedioDePagoTarjetaDeleteDialogComponent as Component, {
-                    size: 'lg',
-                    backdrop: 'static'
-                });
-                this.ngbModalRef.componentInstance.medioDePagoTarjeta = medioDePagoTarjeta;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ medioDePagoTarjeta }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(MedioDePagoTarjetaDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.medioDePagoTarjeta = medioDePagoTarjeta;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/medio-de-pago-tarjeta', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/medio-de-pago-tarjeta', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

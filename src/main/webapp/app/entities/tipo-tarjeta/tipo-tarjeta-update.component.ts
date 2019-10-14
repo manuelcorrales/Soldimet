@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
-import { TipoTarjetaService } from 'app/entities/tipo-tarjeta/tipo-tarjeta.service';
+import { ITipoTarjeta, TipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
+import { TipoTarjetaService } from './tipo-tarjeta.service';
 
 @Component({
-    selector: 'jhi-tipo-tarjeta-update',
-    templateUrl: './tipo-tarjeta-update.component.html'
+  selector: 'jhi-tipo-tarjeta-update',
+  templateUrl: './tipo-tarjeta-update.component.html'
 })
 export class TipoTarjetaUpdateComponent implements OnInit {
-    private _tipoTarjeta: ITipoTarjeta;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private tipoTarjetaService: TipoTarjetaService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreTipoTarjeta: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ tipoTarjeta }) => {
-            this.tipoTarjeta = tipoTarjeta;
-        });
-    }
+  constructor(protected tipoTarjetaService: TipoTarjetaService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ tipoTarjeta }) => {
+      this.updateForm(tipoTarjeta);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.tipoTarjeta.id !== undefined) {
-            this.subscribeToSaveResponse(this.tipoTarjetaService.update(this.tipoTarjeta));
-        } else {
-            this.subscribeToSaveResponse(this.tipoTarjetaService.create(this.tipoTarjeta));
-        }
-    }
+  updateForm(tipoTarjeta: ITipoTarjeta) {
+    this.editForm.patchValue({
+      id: tipoTarjeta.id,
+      nombreTipoTarjeta: tipoTarjeta.nombreTipoTarjeta
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ITipoTarjeta>>) {
-        result.subscribe((res: HttpResponse<ITipoTarjeta>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const tipoTarjeta = this.createFromForm();
+    if (tipoTarjeta.id !== undefined) {
+      this.subscribeToSaveResponse(this.tipoTarjetaService.update(tipoTarjeta));
+    } else {
+      this.subscribeToSaveResponse(this.tipoTarjetaService.create(tipoTarjeta));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get tipoTarjeta() {
-        return this._tipoTarjeta;
-    }
+  private createFromForm(): ITipoTarjeta {
+    return {
+      ...new TipoTarjeta(),
+      id: this.editForm.get(['id']).value,
+      nombreTipoTarjeta: this.editForm.get(['nombreTipoTarjeta']).value
+    };
+  }
 
-    set tipoTarjeta(tipoTarjeta: ITipoTarjeta) {
-        this._tipoTarjeta = tipoTarjeta;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ITipoTarjeta>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

@@ -5,61 +5,61 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ITarjeta } from 'app/shared/model/tarjeta.model';
-import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
+import { TarjetaService } from './tarjeta.service';
 
 @Component({
-    selector: 'jhi-tarjeta-delete-dialog',
-    templateUrl: './tarjeta-delete-dialog.component.html'
+  selector: 'jhi-tarjeta-delete-dialog',
+  templateUrl: './tarjeta-delete-dialog.component.html'
 })
 export class TarjetaDeleteDialogComponent {
-    tarjeta: ITarjeta;
+  tarjeta: ITarjeta;
 
-    constructor(private tarjetaService: TarjetaService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+  constructor(protected tarjetaService: TarjetaService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.tarjetaService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'tarjetaListModification',
-                content: 'Deleted an tarjeta'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.tarjetaService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'tarjetaListModification',
+        content: 'Deleted an tarjeta'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-tarjeta-delete-popup',
-    template: ''
+  selector: 'jhi-tarjeta-delete-popup',
+  template: ''
 })
 export class TarjetaDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ tarjeta }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(TarjetaDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
-                this.ngbModalRef.componentInstance.tarjeta = tarjeta;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ tarjeta }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(TarjetaDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.tarjeta = tarjeta;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/tarjeta', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/tarjeta', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

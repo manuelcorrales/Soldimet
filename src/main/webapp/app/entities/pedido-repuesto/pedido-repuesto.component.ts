@@ -2,131 +2,131 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { Principal } from 'app/core';
+import { AccountService } from 'app/core/auth/account.service';
 
-import { ITEMS_PER_PAGE } from 'app/shared';
-import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
+import { PedidoRepuestoService } from './pedido-repuesto.service';
 
 @Component({
-    selector: 'jhi-pedido-repuesto',
-    templateUrl: './pedido-repuesto.component.html'
+  selector: 'jhi-pedido-repuesto',
+  templateUrl: './pedido-repuesto.component.html'
 })
 export class PedidoRepuestoComponent implements OnInit, OnDestroy {
-    currentAccount: any;
-    pedidoRepuestos: IPedidoRepuesto[];
-    error: any;
-    success: any;
-    eventSubscriber: Subscription;
-    routeData: any;
-    links: any;
-    totalItems: any;
-    queryCount: any;
-    itemsPerPage: any;
-    page: any;
-    predicate: any;
-    previousPage: any;
-    reverse: any;
+  currentAccount: any;
+  pedidoRepuestos: IPedidoRepuesto[];
+  error: any;
+  success: any;
+  eventSubscriber: Subscription;
+  routeData: any;
+  links: any;
+  totalItems: any;
+  itemsPerPage: any;
+  page: any;
+  predicate: any;
+  previousPage: any;
+  reverse: any;
 
-    constructor(
-        private pedidoRepuestoService: PedidoRepuestoService,
-        private parseLinks: JhiParseLinks,
-        private jhiAlertService: JhiAlertService,
-        private principal: Principal,
-        private activatedRoute: ActivatedRoute,
-        private router: Router,
-        private eventManager: JhiEventManager
-    ) {
-        this.itemsPerPage = ITEMS_PER_PAGE;
-        this.routeData = this.activatedRoute.data.subscribe(data => {
-            this.page = data.pagingParams.page;
-            this.previousPage = data.pagingParams.page;
-            this.reverse = data.pagingParams.ascending;
-            this.predicate = data.pagingParams.predicate;
-        });
-    }
+  constructor(
+    protected pedidoRepuestoService: PedidoRepuestoService,
+    protected parseLinks: JhiParseLinks,
+    protected jhiAlertService: JhiAlertService,
+    protected accountService: AccountService,
+    protected activatedRoute: ActivatedRoute,
+    protected router: Router,
+    protected eventManager: JhiEventManager
+  ) {
+    this.itemsPerPage = ITEMS_PER_PAGE;
+    this.routeData = this.activatedRoute.data.subscribe(data => {
+      this.page = data.pagingParams.page;
+      this.previousPage = data.pagingParams.page;
+      this.reverse = data.pagingParams.ascending;
+      this.predicate = data.pagingParams.predicate;
+    });
+  }
 
-    loadAll() {
-        this.pedidoRepuestoService
-            .query({
-                page: this.page - 1,
-                size: this.itemsPerPage,
-                sort: this.sort()
-            })
-            .subscribe(
-                (res: HttpResponse<IPedidoRepuesto[]>) => this.paginatePedidoRepuestos(res.body, res.headers),
-                (res: HttpErrorResponse) => this.onError(res.message)
-            );
-    }
+  loadAll() {
+    this.pedidoRepuestoService
+      .query({
+        page: this.page - 1,
+        size: this.itemsPerPage,
+        sort: this.sort()
+      })
+      .subscribe(
+        (res: HttpResponse<IPedidoRepuesto[]>) => this.paginatePedidoRepuestos(res.body, res.headers),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.transition();
-        }
+  loadPage(page: number) {
+    if (page !== this.previousPage) {
+      this.previousPage = page;
+      this.transition();
     }
+  }
 
-    transition() {
-        this.router.navigate(['/pedido-repuesto'], {
-            queryParams: {
-                page: this.page,
-                size: this.itemsPerPage,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        });
-        this.loadAll();
-    }
+  transition() {
+    this.router.navigate(['/pedido-repuesto'], {
+      queryParams: {
+        page: this.page,
+        size: this.itemsPerPage,
+        sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+      }
+    });
+    this.loadAll();
+  }
 
-    clear() {
-        this.page = 0;
-        this.router.navigate([
-            '/pedido-repuesto',
-            {
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
-        this.loadAll();
-    }
+  clear() {
+    this.page = 0;
+    this.router.navigate([
+      '/pedido-repuesto',
+      {
+        page: this.page,
+        sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+      }
+    ]);
+    this.loadAll();
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInPedidoRepuestos();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInPedidoRepuestos();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: IPedidoRepuesto) {
-        return item.id;
-    }
+  trackId(index: number, item: IPedidoRepuesto) {
+    return item.id;
+  }
 
-    registerChangeInPedidoRepuestos() {
-        this.eventSubscriber = this.eventManager.subscribe('pedidoRepuestoListModification', response => this.loadAll());
-    }
+  registerChangeInPedidoRepuestos() {
+    this.eventSubscriber = this.eventManager.subscribe('pedidoRepuestoListModification', response => this.loadAll());
+  }
 
-    sort() {
-        const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
-        if (this.predicate !== 'id') {
-            result.push('id');
-        }
-        return result;
+  sort() {
+    const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
+    if (this.predicate !== 'id') {
+      result.push('id');
     }
+    return result;
+  }
 
-    private paginatePedidoRepuestos(data: IPedidoRepuesto[], headers: HttpHeaders) {
-        this.links = this.parseLinks.parse(headers.get('link'));
-        this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.queryCount = this.totalItems;
-        this.pedidoRepuestos = data;
-    }
+  protected paginatePedidoRepuestos(data: IPedidoRepuesto[], headers: HttpHeaders) {
+    this.links = this.parseLinks.parse(headers.get('link'));
+    this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
+    this.pedidoRepuestos = data;
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

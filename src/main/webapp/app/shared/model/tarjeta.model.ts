@@ -1,8 +1,8 @@
 export interface ITarjeta {
-    id?: number;
-    nombreTarjeta?: string;
+  id?: number;
+  nombreTarjeta?: string;
 }
 
 export class Tarjeta implements ITarjeta {
-    constructor(public id?: number, public nombreTarjeta?: string) {}
+  constructor(public id?: number, public nombreTarjeta?: string) {}
 }

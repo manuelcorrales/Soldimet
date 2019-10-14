@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing Operacion.
+ * Service Implementation for managing {@link Operacion}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class OperacionService {
     /**
      * Save a operacion.
      *
-     * @param operacion the entity to save
-     * @return the persisted entity
+     * @param operacion the entity to save.
+     * @return the persisted entity.
      */
     public Operacion save(Operacion operacion) {
-        log.debug("Request to save Operacion : {}", operacion);        return operacionRepository.save(operacion);
+        log.debug("Request to save Operacion : {}", operacion);
+        return operacionRepository.save(operacion);
     }
 
     /**
      * Get all the operacions.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<Operacion> findAll() {
@@ -51,8 +52,8 @@ public class OperacionService {
     /**
      * Get one operacion by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<Operacion> findOne(Long id) {
@@ -63,7 +64,7 @@ public class OperacionService {
     /**
      * Delete the operacion by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete Operacion : {}", id);

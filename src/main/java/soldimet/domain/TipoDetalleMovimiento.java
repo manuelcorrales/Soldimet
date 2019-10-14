@@ -1,17 +1,18 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A TipoDetalleMovimiento.
  */
 @Entity
 @Table(name = "tipo_detalle_movimiento")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class TipoDetalleMovimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,19 +54,15 @@ public class TipoDetalleMovimiento implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof TipoDetalleMovimiento)) {
             return false;
         }
-        TipoDetalleMovimiento tipoDetalleMovimiento = (TipoDetalleMovimiento) o;
-        if (tipoDetalleMovimiento.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), tipoDetalleMovimiento.getId());
+        return id != null && id.equals(((TipoDetalleMovimiento) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

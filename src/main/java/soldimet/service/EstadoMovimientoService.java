@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing EstadoMovimiento.
+ * Service Implementation for managing {@link EstadoMovimiento}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class EstadoMovimientoService {
     /**
      * Save a estadoMovimiento.
      *
-     * @param estadoMovimiento the entity to save
-     * @return the persisted entity
+     * @param estadoMovimiento the entity to save.
+     * @return the persisted entity.
      */
     public EstadoMovimiento save(EstadoMovimiento estadoMovimiento) {
-        log.debug("Request to save EstadoMovimiento : {}", estadoMovimiento);        return estadoMovimientoRepository.save(estadoMovimiento);
+        log.debug("Request to save EstadoMovimiento : {}", estadoMovimiento);
+        return estadoMovimientoRepository.save(estadoMovimiento);
     }
 
     /**
      * Get all the estadoMovimientos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<EstadoMovimiento> findAll() {
@@ -51,8 +52,8 @@ public class EstadoMovimientoService {
     /**
      * Get one estadoMovimiento by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<EstadoMovimiento> findOne(Long id) {
@@ -63,7 +64,7 @@ public class EstadoMovimientoService {
     /**
      * Delete the estadoMovimiento by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoMovimiento : {}", id);

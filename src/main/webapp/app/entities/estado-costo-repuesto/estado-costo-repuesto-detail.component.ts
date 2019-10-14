@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
 
 @Component({
-    selector: 'jhi-estado-costo-repuesto-detail',
-    templateUrl: './estado-costo-repuesto-detail.component.html'
+  selector: 'jhi-estado-costo-repuesto-detail',
+  templateUrl: './estado-costo-repuesto-detail.component.html'
 })
 export class EstadoCostoRepuestoDetailComponent implements OnInit {
-    estadoCostoRepuesto: IEstadoCostoRepuesto;
+  estadoCostoRepuesto: IEstadoCostoRepuesto;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ estadoCostoRepuesto }) => {
-            this.estadoCostoRepuesto = estadoCostoRepuesto;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ estadoCostoRepuesto }) => {
+      this.estadoCostoRepuesto = estadoCostoRepuesto;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

@@ -1,29 +1,32 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { DetallePresupuestoComponent } from './detalle-presupuesto.component';
+import { DetallePresupuestoDetailComponent } from './detalle-presupuesto-detail.component';
+import { DetallePresupuestoUpdateComponent } from './detalle-presupuesto-update.component';
 import {
-    DetallePresupuestoComponent,
-    DetallePresupuestoDetailComponent,
-    DetallePresupuestoUpdateComponent,
-    DetallePresupuestoDeleteDialogComponent,
-    detallePresupuestoRoute,
-    DetallePresupuestoDeletePopupComponent,
-    detallePresupuestoPopupRoute
-} from 'app/entities/detalle-presupuesto';
+  DetallePresupuestoDeletePopupComponent,
+  DetallePresupuestoDeleteDialogComponent
+} from './detalle-presupuesto-delete-dialog.component';
+import { detallePresupuestoRoute, detallePresupuestoPopupRoute } from './detalle-presupuesto.route';
 
 const ENTITY_STATES = [...detallePresupuestoRoute, ...detallePresupuestoPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        DetallePresupuestoComponent,
-        DetallePresupuestoDeletePopupComponent,
-        DetallePresupuestoDetailComponent,
-        DetallePresupuestoDeleteDialogComponent,
-        DetallePresupuestoUpdateComponent
-    ],
-    entryComponents: [DetallePresupuestoComponent, DetallePresupuestoUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    DetallePresupuestoComponent,
+    DetallePresupuestoDetailComponent,
+    DetallePresupuestoUpdateComponent,
+    DetallePresupuestoDeleteDialogComponent,
+    DetallePresupuestoDeletePopupComponent
+  ],
+  entryComponents: [
+    DetallePresupuestoComponent,
+    DetallePresupuestoUpdateComponent,
+    DetallePresupuestoDeleteDialogComponent,
+    DetallePresupuestoDeletePopupComponent
+  ]
 })
 export class SoldimetDetallePresupuestoModule {}

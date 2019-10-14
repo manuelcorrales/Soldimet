@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ICaja } from 'app/shared/model/caja.model';
 
 @Component({
-    selector: 'jhi-caja-detail',
-    templateUrl: './caja-detail.component.html'
+  selector: 'jhi-caja-detail',
+  templateUrl: './caja-detail.component.html'
 })
 export class CajaDetailComponent implements OnInit {
-    caja: ICaja;
+  caja: ICaja;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ caja }) => {
-            this.caja = caja;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ caja }) => {
+      this.caja = caja;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

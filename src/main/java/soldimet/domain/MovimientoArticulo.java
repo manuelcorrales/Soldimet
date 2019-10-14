@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A MovimientoArticulo.
  */
 @Entity
 @Table(name = "movimiento_articulo")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MovimientoArticulo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,10 +29,11 @@ public class MovimientoArticulo implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("movimientoArticulos")
     private Articulo articulo;
 
-    @OneToOne(optional = false)
-    @NotNull
+    @OneToOne(optional = false)    @NotNull
+
     @JoinColumn(unique = true)
     private Movimiento movimiento;
 
@@ -89,19 +91,15 @@ public class MovimientoArticulo implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof MovimientoArticulo)) {
             return false;
         }
-        MovimientoArticulo movimientoArticulo = (MovimientoArticulo) o;
-        if (movimientoArticulo.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), movimientoArticulo.getId());
+        return id != null && id.equals(((MovimientoArticulo) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

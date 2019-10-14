@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Articulo.
  */
 @Entity
 @Table(name = "articulo")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Articulo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,17 +32,17 @@ public class Articulo implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("articulos")
     private EstadoArticulo estado;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("articulos")
     private Marca marca;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("articulos")
     private TipoRepuesto tipoRepuesto;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -124,19 +125,15 @@ public class Articulo implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Articulo)) {
             return false;
         }
-        Articulo articulo = (Articulo) o;
-        if (articulo.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), articulo.getId());
+        return id != null && id.equals(((Articulo) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

@@ -1,120 +1,164 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { IPersona } from 'app/shared/model/persona.model';
-import { PersonaService } from 'app/entities/persona/persona.service';
+import { IPersona, Persona } from 'app/shared/model/persona.model';
+import { PersonaService } from './persona.service';
 import { IDireccion } from 'app/shared/model/direccion.model';
-import { DireccionService } from 'app/entities/direccion';
+import { DireccionService } from 'app/entities/direccion/direccion.service';
 import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
-import { EstadoPersonaService } from 'app/entities/estado-persona';
-import { IUser, UserService } from 'app/core';
+import { EstadoPersonaService } from 'app/entities/estado-persona/estado-persona.service';
+import { IUser } from 'app/core/user/user.model';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
-    selector: 'jhi-persona-update',
-    templateUrl: './persona-update.component.html'
+  selector: 'jhi-persona-update',
+  templateUrl: './persona-update.component.html'
 })
 export class PersonaUpdateComponent implements OnInit {
-    private _persona: IPersona;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    direccions: IDireccion[];
+  direccions: IDireccion[];
 
-    estadopersonas: IEstadoPersona[];
+  estadopersonas: IEstadoPersona[];
 
-    users: IUser[];
+  users: IUser[];
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private personaService: PersonaService,
-        private direccionService: DireccionService,
-        private estadoPersonaService: EstadoPersonaService,
-        private userService: UserService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    numeroTelefono: [null, [Validators.required, Validators.minLength(5)]],
+    nombre: [null, [Validators.required]],
+    apellido: [null, [Validators.required]],
+    direccion: [null, Validators.required],
+    estadoPersona: [null, Validators.required],
+    user: []
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ persona }) => {
-            this.persona = persona;
-        });
-        this.direccionService.query({ filter: 'persona-is-null' }).subscribe(
-            (res: HttpResponse<IDireccion[]>) => {
-                if (!this.persona.direccion || !this.persona.direccion.id) {
-                    this.direccions = res.body;
-                } else {
-                    this.direccionService.find(this.persona.direccion.id).subscribe(
-                        (subRes: HttpResponse<IDireccion>) => {
-                            this.direccions = [subRes.body].concat(res.body);
-                        },
-                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
-                    );
-                }
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.estadoPersonaService.query().subscribe(
-            (res: HttpResponse<IEstadoPersona[]>) => {
-                this.estadopersonas = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.userService.query().subscribe(
-            (res: HttpResponse<IUser[]>) => {
-                this.users = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected personaService: PersonaService,
+    protected direccionService: DireccionService,
+    protected estadoPersonaService: EstadoPersonaService,
+    protected userService: UserService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ persona }) => {
+      this.updateForm(persona);
+    });
+    this.direccionService
+      .query({ 'personaId.specified': 'false' })
+      .pipe(
+        filter((mayBeOk: HttpResponse<IDireccion[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IDireccion[]>) => response.body)
+      )
+      .subscribe(
+        (res: IDireccion[]) => {
+          if (!this.editForm.get('direccion').value || !this.editForm.get('direccion').value.id) {
+            this.direccions = res;
+          } else {
+            this.direccionService
+              .find(this.editForm.get('direccion').value.id)
+              .pipe(
+                filter((subResMayBeOk: HttpResponse<IDireccion>) => subResMayBeOk.ok),
+                map((subResponse: HttpResponse<IDireccion>) => subResponse.body)
+              )
+              .subscribe(
+                (subRes: IDireccion) => (this.direccions = [subRes].concat(res)),
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+              );
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+    this.estadoPersonaService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IEstadoPersona[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IEstadoPersona[]>) => response.body)
+      )
+      .subscribe((res: IEstadoPersona[]) => (this.estadopersonas = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.userService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IUser[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IUser[]>) => response.body)
+      )
+      .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
+  }
+
+  updateForm(persona: IPersona) {
+    this.editForm.patchValue({
+      id: persona.id,
+      numeroTelefono: persona.numeroTelefono,
+      nombre: persona.nombre,
+      apellido: persona.apellido,
+      direccion: persona.direccion,
+      estadoPersona: persona.estadoPersona,
+      user: persona.user
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const persona = this.createFromForm();
+    if (persona.id !== undefined) {
+      this.subscribeToSaveResponse(this.personaService.update(persona));
+    } else {
+      this.subscribeToSaveResponse(this.personaService.create(persona));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): IPersona {
+    return {
+      ...new Persona(),
+      id: this.editForm.get(['id']).value,
+      numeroTelefono: this.editForm.get(['numeroTelefono']).value,
+      nombre: this.editForm.get(['nombre']).value,
+      apellido: this.editForm.get(['apellido']).value,
+      direccion: this.editForm.get(['direccion']).value,
+      estadoPersona: this.editForm.get(['estadoPersona']).value,
+      user: this.editForm.get(['user']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.persona.id !== undefined) {
-            this.subscribeToSaveResponse(this.personaService.update(this.persona));
-        } else {
-            this.subscribeToSaveResponse(this.personaService.create(this.persona));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IPersona>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IPersona>>) {
-        result.subscribe((res: HttpResponse<IPersona>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
+  trackDireccionById(index: number, item: IDireccion) {
+    return item.id;
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  trackEstadoPersonaById(index: number, item: IEstadoPersona) {
+    return item.id;
+  }
 
-    trackDireccionById(index: number, item: IDireccion) {
-        return item.id;
-    }
-
-    trackEstadoPersonaById(index: number, item: IEstadoPersona) {
-        return item.id;
-    }
-
-    trackUserById(index: number, item: IUser) {
-        return item.id;
-    }
-    get persona() {
-        return this._persona;
-    }
-
-    set persona(persona: IPersona) {
-        this._persona = persona;
-    }
+  trackUserById(index: number, item: IUser) {
+    return item.id;
+  }
 }

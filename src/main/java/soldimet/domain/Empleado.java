@@ -1,17 +1,19 @@
 package soldimet.domain;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Empleado.
  */
 @Entity
 @Table(name = "empleado")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Empleado implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,20 +22,13 @@ public class Empleado implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(name = "usuario", nullable = false)
-    private String usuario;
+    @OneToOne(optional = false)    @NotNull
 
-    @NotNull
-    @Column(name = "contrasenia", nullable = false)
-    private String contrasenia;
-
-    @OneToOne(optional = false)
-    @NotNull
     @JoinColumn(unique = true)
     private Persona persona;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    @JsonIgnoreProperties("empleados")
     private Sucursal sucursal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -43,32 +38,6 @@ public class Empleado implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public Empleado usuario(String usuario) {
-        this.usuario = usuario;
-        return this;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getContrasenia() {
-        return contrasenia;
-    }
-
-    public Empleado contrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-        return this;
-    }
-
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
     }
 
     public Persona getPersona() {
@@ -103,27 +72,21 @@ public class Empleado implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Empleado)) {
             return false;
         }
-        Empleado empleado = (Empleado) o;
-        if (empleado.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), empleado.getId());
+        return id != null && id.equals(((Empleado) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
     public String toString() {
         return "Empleado{" +
             "id=" + getId() +
-            ", usuario='" + getUsuario() + "'" +
-            ", contrasenia='" + getContrasenia() + "'" +
             "}";
     }
 }

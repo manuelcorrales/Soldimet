@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
-import { ILocalidad } from 'app/shared/model/localidad.model';
-import { LocalidadService } from 'app/entities/localidad/localidad.service';
+import { ILocalidad, Localidad } from 'app/shared/model/localidad.model';
+import { LocalidadService } from './localidad.service';
 
 @Component({
-    selector: 'jhi-localidad-update',
-    templateUrl: './localidad-update.component.html'
+  selector: 'jhi-localidad-update',
+  templateUrl: './localidad-update.component.html'
 })
 export class LocalidadUpdateComponent implements OnInit {
-    private _localidad: ILocalidad;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    constructor(private localidadService: LocalidadService, private activatedRoute: ActivatedRoute) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreLocalidad: [null, [Validators.required, Validators.minLength(3)]]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ localidad }) => {
-            this.localidad = localidad;
-        });
-    }
+  constructor(protected localidadService: LocalidadService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
-    previousState() {
-        window.history.back();
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ localidad }) => {
+      this.updateForm(localidad);
+    });
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.localidad.id !== undefined) {
-            this.subscribeToSaveResponse(this.localidadService.update(this.localidad));
-        } else {
-            this.subscribeToSaveResponse(this.localidadService.create(this.localidad));
-        }
-    }
+  updateForm(localidad: ILocalidad) {
+    this.editForm.patchValue({
+      id: localidad.id,
+      nombreLocalidad: localidad.nombreLocalidad
+    });
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ILocalidad>>) {
-        result.subscribe((res: HttpResponse<ILocalidad>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
+  save() {
+    this.isSaving = true;
+    const localidad = this.createFromForm();
+    if (localidad.id !== undefined) {
+      this.subscribeToSaveResponse(this.localidadService.update(localidad));
+    } else {
+      this.subscribeToSaveResponse(this.localidadService.create(localidad));
     }
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-    get localidad() {
-        return this._localidad;
-    }
+  private createFromForm(): ILocalidad {
+    return {
+      ...new Localidad(),
+      id: this.editForm.get(['id']).value,
+      nombreLocalidad: this.editForm.get(['nombreLocalidad']).value
+    };
+  }
 
-    set localidad(localidad: ILocalidad) {
-        this._localidad = localidad;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ILocalidad>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
 }

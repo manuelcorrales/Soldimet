@@ -1,17 +1,20 @@
 package soldimet.domain;
-
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Cliente.
  */
 @Entity
 @Table(name = "cliente")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,13 +24,9 @@ public class Cliente implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 3, max = 30)
-    @Column(name = "apellido", length = 30, nullable = false)
-    private String apellido;
-
-    @OneToOne(optional = false, cascade= CascadeType.ALL)
-    @NotNull
+    @OneToOne(cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch= FetchType.EAGER)
     @JoinColumn(unique = true)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Persona persona;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -37,19 +36,6 @@ public class Cliente implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public Cliente apellido(String apellido) {
-        this.apellido = apellido;
-        return this;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public Persona getPersona() {
@@ -71,26 +57,21 @@ public class Cliente implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Cliente)) {
             return false;
         }
-        Cliente cliente = (Cliente) o;
-        if (cliente.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), cliente.getId());
+        return id != null && id.equals(((Cliente) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
     public String toString() {
         return "Cliente{" +
             "id=" + getId() +
-            ", apellido='" + getApellido() + "'" +
             "}";
     }
 }

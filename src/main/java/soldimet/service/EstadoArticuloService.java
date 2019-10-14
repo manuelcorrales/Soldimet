@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing EstadoArticulo.
+ * Service Implementation for managing {@link EstadoArticulo}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class EstadoArticuloService {
     /**
      * Save a estadoArticulo.
      *
-     * @param estadoArticulo the entity to save
-     * @return the persisted entity
+     * @param estadoArticulo the entity to save.
+     * @return the persisted entity.
      */
     public EstadoArticulo save(EstadoArticulo estadoArticulo) {
-        log.debug("Request to save EstadoArticulo : {}", estadoArticulo);        return estadoArticuloRepository.save(estadoArticulo);
+        log.debug("Request to save EstadoArticulo : {}", estadoArticulo);
+        return estadoArticuloRepository.save(estadoArticulo);
     }
 
     /**
      * Get all the estadoArticulos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<EstadoArticulo> findAll() {
@@ -51,8 +52,8 @@ public class EstadoArticuloService {
     /**
      * Get one estadoArticulo by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<EstadoArticulo> findOne(Long id) {
@@ -63,7 +64,7 @@ public class EstadoArticuloService {
     /**
      * Delete the estadoArticulo by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoArticulo : {}", id);

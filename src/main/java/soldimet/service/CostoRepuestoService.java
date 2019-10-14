@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing CostoRepuesto.
+ * Service Implementation for managing {@link CostoRepuesto}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class CostoRepuestoService {
     /**
      * Save a costoRepuesto.
      *
-     * @param costoRepuesto the entity to save
-     * @return the persisted entity
+     * @param costoRepuesto the entity to save.
+     * @return the persisted entity.
      */
     public CostoRepuesto save(CostoRepuesto costoRepuesto) {
-        log.debug("Request to save CostoRepuesto : {}", costoRepuesto);        return costoRepuestoRepository.save(costoRepuesto);
+        log.debug("Request to save CostoRepuesto : {}", costoRepuesto);
+        return costoRepuestoRepository.save(costoRepuesto);
     }
 
     /**
      * Get all the costoRepuestos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<CostoRepuesto> findAll() {
@@ -51,8 +52,8 @@ public class CostoRepuestoService {
     /**
      * Get one costoRepuesto by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<CostoRepuesto> findOne(Long id) {
@@ -63,7 +64,7 @@ public class CostoRepuestoService {
     /**
      * Delete the costoRepuesto by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete CostoRepuesto : {}", id);

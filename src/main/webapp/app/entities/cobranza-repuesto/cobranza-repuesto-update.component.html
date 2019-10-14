@@ -1,29 +1,29 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-cobranza-repuesto-heading">Create or edit a Cobranza Repuesto</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!cobranzaRepuesto.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="cobranzaRepuesto.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_valor">Valor</label>
                     <input type="number" class="form-control" name="valor" id="field_valor"
-                        [(ngModel)]="cobranzaRepuesto.valor" required min="0" jhiMin="0"/>
-                    <div [hidden]="!(editForm.controls.valor?.dirty && editForm.controls.valor?.invalid)">
+                           formControlName="valor"/>
+                    <div *ngIf="editForm.get('valor').invalid && (editForm.get('valor').dirty || editForm.get('valor').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.valor?.errors?.required">
+                               *ngIf="editForm.get('valor').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.valor?.errors?.min">
+                               *ngIf="editForm.get('valor').errors.min">
                             This field should be at least 0.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.valor?.errors?.number">
+                            [hidden]="!editForm.get('valor')?.errors?.number">
                             This field should be a number.
                         </small>
                     </div>
@@ -31,14 +31,14 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_tipoRepuesto">Tipo Repuesto</label>
-                    <select class="form-control" id="field_tipoRepuesto" name="tipoRepuesto" [(ngModel)]="cobranzaRepuesto.tipoRepuesto"  required>
-                        <option *ngIf="!editForm.value.tipoRepuesto" [ngValue]="null" selected></option>
-                        <option [ngValue]="tipoRepuestoOption.id === cobranzaRepuesto.tipoRepuesto?.id ? cobranzaRepuesto.tipoRepuesto : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tiporepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
+                    <select class="form-control" id="field_tipoRepuesto" name="tipoRepuesto" formControlName="tipoRepuesto">
+                        <option *ngIf="!editForm.get('tipoRepuesto').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoRepuestoOption.id === editForm.get('tipoRepuesto').value?.id ? editForm.get('tipoRepuesto').value : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tiporepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
                     </select>
                 </div>
-                <div [hidden]="!(editForm.controls.tipoRepuesto?.dirty && editForm.controls.tipoRepuesto?.invalid)">
+                <div *ngIf="editForm.get('tipoRepuesto').invalid && (editForm.get('tipoRepuesto').dirty || editForm.get('tipoRepuesto').touched)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.tipoRepuesto?.errors?.required">
+                           *ngIf="editForm.get('tipoRepuesto').errors.required">
                         This field is required.
                     </small>
                 </div>
@@ -47,7 +47,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

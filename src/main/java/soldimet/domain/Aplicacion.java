@@ -1,17 +1,19 @@
 package soldimet.domain;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Aplicacion.
  */
 @Entity
 @Table(name = "aplicacion")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Aplicacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +31,11 @@ public class Aplicacion implements Serializable {
     @Max(value = 100)
     @Column(name = "numero_grupo", nullable = false)
     private Integer numeroGrupo;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties("aplicacions")
+    private Motor motor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -64,6 +71,19 @@ public class Aplicacion implements Serializable {
     public void setNumeroGrupo(Integer numeroGrupo) {
         this.numeroGrupo = numeroGrupo;
     }
+
+    public Motor getMotor() {
+        return motor;
+    }
+
+    public Aplicacion motor(Motor motor) {
+        this.motor = motor;
+        return this;
+    }
+
+    public void setMotor(Motor motor) {
+        this.motor = motor;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -71,19 +91,15 @@ public class Aplicacion implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Aplicacion)) {
             return false;
         }
-        Aplicacion aplicacion = (Aplicacion) o;
-        if (aplicacion.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), aplicacion.getId());
+        return id != null && id.equals(((Aplicacion) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

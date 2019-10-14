@@ -6,45 +6,45 @@ import { MovimientoService } from 'app/entities/movimiento';
 
 @Injectable()
 export class BorrarMovimientoPopupService {
-    ngbModalRef: NgbModalRef;
+  ngbModalRef: NgbModalRef;
 
-    constructor(private modalService: NgbModal, private router: Router, private movimientoService: MovimientoService) {
-        this.ngbModalRef = null;
-    }
+  constructor(private modalService: NgbModal, private router: Router, private movimientoService: MovimientoService) {
+    this.ngbModalRef = null;
+  }
 
-    open(component: Component, id?: number | any): Promise<NgbModalRef> {
-        return new Promise<NgbModalRef>((resolve, reject) => {
-            const isOpen = this.ngbModalRef !== null;
-            if (isOpen) {
-                resolve(this.ngbModalRef);
-            }
-            if (id) {
-                this.movimientoService.find(id).subscribe(cliente => {
-                    this.ngbModalRef = this.clienteModalRef(component, cliente.body);
-                    resolve(this.ngbModalRef);
-                });
-            } else {
-                setTimeout(() => {
-                    this.ngbModalRef = this.clienteModalRef(component, new Movimiento());
-                    resolve(this.ngbModalRef);
-                }, 0);
-            }
+  open(component: Component, id?: number | any): Promise<NgbModalRef> {
+    return new Promise<NgbModalRef>((resolve, reject) => {
+      const isOpen = this.ngbModalRef !== null;
+      if (isOpen) {
+        resolve(this.ngbModalRef);
+      }
+      if (id) {
+        this.movimientoService.find(id).subscribe(movimiento => {
+          this.ngbModalRef = this.movimientoModalRef(component, movimiento.body);
+          resolve(this.ngbModalRef);
         });
-    }
+      } else {
+        setTimeout(() => {
+          this.ngbModalRef = this.movimientoModalRef(component, new Movimiento());
+          resolve(this.ngbModalRef);
+        }, 0);
+      }
+    });
+  }
 
-    clienteModalRef(component: Component, cliente: Movimiento): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
-        modalRef.componentInstance.cliente = cliente;
-        modalRef.result.then(
-            result => {
-                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-                this.ngbModalRef = null;
-            },
-            reason => {
-                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-                this.ngbModalRef = null;
-            }
-        );
-        return modalRef;
-    }
+  movimientoModalRef(component: Component, movimiento: Movimiento): NgbModalRef {
+    const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.movimiento = movimiento;
+    modalRef.result.then(
+      result => {
+        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+        this.ngbModalRef = null;
+      },
+      reason => {
+        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+        this.ngbModalRef = null;
+      }
+    );
+    return modalRef;
+  }
 }

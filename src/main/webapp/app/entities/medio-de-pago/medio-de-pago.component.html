@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-medio-de-pago" [routerLink]="['/medio-de-pago/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Medio De Pago
+            Create a new Medio De Pago
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="medioDePagos">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="medioDePagos?.length === 0">
+        <span>No medioDePagos found</span>
+    </div>
+    <div class="table-responsive" *ngIf="medioDePagos?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -26,21 +29,21 @@
                 <td><a [routerLink]="['/medio-de-pago', medioDePago.id, 'view' ]">{{medioDePago.id}}</a></td>
                 <td>
                     <div *ngIf="medioDePago.formaDePago">
-                        <a [routerLink]="['../forma-de-pago', medioDePago.formaDePago?.id, 'view' ]" >{{medioDePago.formaDePago?.nombreFormaDePago}}</a>
+                        <a [routerLink]="['/forma-de-pago', medioDePago.formaDePago?.id, 'view' ]" >{{medioDePago.formaDePago?.nombreFormaDePago}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="medioDePago.medioDePagoCheque">
-                        <a [routerLink]="['../medio-de-pago-cheque', medioDePago.medioDePagoCheque?.id, 'view' ]" >{{medioDePago.medioDePagoCheque?.id}}</a>
+                        <a [routerLink]="['/medio-de-pago-cheque', medioDePago.medioDePagoCheque?.id, 'view' ]" >{{medioDePago.medioDePagoCheque?.id}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="medioDePago.medioDePagoTarjeta">
-                        <a [routerLink]="['../medio-de-pago-tarjeta', medioDePago.medioDePagoTarjeta?.id, 'view' ]" >{{medioDePago.medioDePagoTarjeta?.id}}</a>
+                        <a [routerLink]="['/medio-de-pago-tarjeta', medioDePago.medioDePagoTarjeta?.id, 'view' ]" >{{medioDePago.medioDePagoTarjeta?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/medio-de-pago', medioDePago.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -54,7 +57,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'medio-de-pago/'+ medioDePago.id + '/delete'} }]"
+                                [routerLink]="['/medio-de-pago', { outlets: { popup: medioDePago.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing Marca.
+ * Service Implementation for managing {@link Marca}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class MarcaService {
     /**
      * Save a marca.
      *
-     * @param marca the entity to save
-     * @return the persisted entity
+     * @param marca the entity to save.
+     * @return the persisted entity.
      */
     public Marca save(Marca marca) {
-        log.debug("Request to save Marca : {}", marca);        return marcaRepository.save(marca);
+        log.debug("Request to save Marca : {}", marca);
+        return marcaRepository.save(marca);
     }
 
     /**
      * Get all the marcas.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<Marca> findAll() {
@@ -51,8 +52,8 @@ public class MarcaService {
     /**
      * Get one marca by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<Marca> findOne(Long id) {
@@ -63,7 +64,7 @@ public class MarcaService {
     /**
      * Delete the marca by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete Marca : {}", id);

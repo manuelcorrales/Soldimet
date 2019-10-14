@@ -4,14 +4,17 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-detalle-presupuesto" [routerLink]="['/detalle-presupuesto/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Detalle Presupuesto
+            Create a new Detalle Presupuesto
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="table-responsive" *ngIf="detallePresupuestos">
-        <table class="table table-striped">
+    <div class="alert alert-warning" *ngIf="detallePresupuestos?.length === 0">
+        <span>No detallePresupuestos found</span>
+    </div>
+    <div class="table-responsive" *ngIf="detallePresupuestos?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
             <th><span>ID</span></th>
@@ -29,26 +32,26 @@
                 <td>{{detallePresupuesto.importe}}</td>
                 <td>
                     <div *ngIf="detallePresupuesto.aplicacion">
-                        <a [routerLink]="['../aplicacion', detallePresupuesto.aplicacion?.id, 'view' ]" >{{detallePresupuesto.aplicacion?.nombreAplicacion}}</a>
+                        <a [routerLink]="['/aplicacion', detallePresupuesto.aplicacion?.id, 'view' ]" >{{detallePresupuesto.aplicacion?.nombreAplicacion}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="detallePresupuesto.cilindrada">
-                        <a [routerLink]="['../cilindrada', detallePresupuesto.cilindrada?.id, 'view' ]" >{{detallePresupuesto.cilindrada?.cantidadDeCilindros}}</a>
+                        <a [routerLink]="['/cilindrada', detallePresupuesto.cilindrada?.id, 'view' ]" >{{detallePresupuesto.cilindrada?.cantidadDeCilindros}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="detallePresupuesto.motor">
-                        <a [routerLink]="['../motor', detallePresupuesto.motor?.id, 'view' ]" >{{detallePresupuesto.motor?.id}}</a>
+                        <a [routerLink]="['/motor', detallePresupuesto.motor?.id, 'view' ]" >{{detallePresupuesto.motor?.id}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="detallePresupuesto.tipoParteMotor">
-                        <a [routerLink]="['../tipo-parte-motor', detallePresupuesto.tipoParteMotor?.id, 'view' ]" >{{detallePresupuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
+                        <a [routerLink]="['/tipo-parte-motor', detallePresupuesto.tipoParteMotor?.id, 'view' ]" >{{detallePresupuesto.tipoParteMotor?.nombreTipoParteMotor}}</a>
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -62,7 +65,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'detalle-presupuesto/'+ detallePresupuesto.id + '/delete'} }]"
+                                [routerLink]="['/detalle-presupuesto', { outlets: { popup: detallePresupuesto.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

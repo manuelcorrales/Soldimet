@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
+
 /**
- * Service Implementation for managing EstadoPedidoRepuesto.
+ * Service Implementation for managing {@link EstadoPedidoRepuesto}.
  */
 @Service
 @Transactional
@@ -29,17 +29,18 @@ public class EstadoPedidoRepuestoService {
     /**
      * Save a estadoPedidoRepuesto.
      *
-     * @param estadoPedidoRepuesto the entity to save
-     * @return the persisted entity
+     * @param estadoPedidoRepuesto the entity to save.
+     * @return the persisted entity.
      */
     public EstadoPedidoRepuesto save(EstadoPedidoRepuesto estadoPedidoRepuesto) {
-        log.debug("Request to save EstadoPedidoRepuesto : {}", estadoPedidoRepuesto);        return estadoPedidoRepuestoRepository.save(estadoPedidoRepuesto);
+        log.debug("Request to save EstadoPedidoRepuesto : {}", estadoPedidoRepuesto);
+        return estadoPedidoRepuestoRepository.save(estadoPedidoRepuesto);
     }
 
     /**
      * Get all the estadoPedidoRepuestos.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<EstadoPedidoRepuesto> findAll() {
@@ -51,8 +52,8 @@ public class EstadoPedidoRepuestoService {
     /**
      * Get one estadoPedidoRepuesto by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Transactional(readOnly = true)
     public Optional<EstadoPedidoRepuesto> findOne(Long id) {
@@ -63,7 +64,7 @@ public class EstadoPedidoRepuestoService {
     /**
      * Delete the estadoPedidoRepuesto by id.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     public void delete(Long id) {
         log.debug("Request to delete EstadoPedidoRepuesto : {}", id);

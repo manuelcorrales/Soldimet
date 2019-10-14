@@ -1,29 +1,32 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SoldimetSharedModule } from 'app/shared';
+import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { ListaPrecioDesdeHastaComponent } from './lista-precio-desde-hasta.component';
+import { ListaPrecioDesdeHastaDetailComponent } from './lista-precio-desde-hasta-detail.component';
+import { ListaPrecioDesdeHastaUpdateComponent } from './lista-precio-desde-hasta-update.component';
 import {
-    ListaPrecioDesdeHastaComponent,
-    ListaPrecioDesdeHastaDetailComponent,
-    ListaPrecioDesdeHastaDeleteDialogComponent,
-    ListaPrecioDesdeHastaDeletePopupComponent,
-    ListaPrecioDesdeHastaUpdateComponent,
-    listaPrecioDesdeHastaRoute,
-    listaPrecioDesdeHastaPopupRoute
-} from 'app/entities/lista-precio-desde-hasta';
+  ListaPrecioDesdeHastaDeletePopupComponent,
+  ListaPrecioDesdeHastaDeleteDialogComponent
+} from './lista-precio-desde-hasta-delete-dialog.component';
+import { listaPrecioDesdeHastaRoute, listaPrecioDesdeHastaPopupRoute } from './lista-precio-desde-hasta.route';
 
 const ENTITY_STATES = [...listaPrecioDesdeHastaRoute, ...listaPrecioDesdeHastaPopupRoute];
 
 @NgModule({
-    imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
-        ListaPrecioDesdeHastaComponent,
-        ListaPrecioDesdeHastaDeleteDialogComponent,
-        ListaPrecioDesdeHastaDeletePopupComponent,
-        ListaPrecioDesdeHastaDetailComponent,
-        ListaPrecioDesdeHastaUpdateComponent
-    ],
-    entryComponents: [ListaPrecioDesdeHastaComponent, ListaPrecioDesdeHastaUpdateComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [
+    ListaPrecioDesdeHastaComponent,
+    ListaPrecioDesdeHastaDetailComponent,
+    ListaPrecioDesdeHastaUpdateComponent,
+    ListaPrecioDesdeHastaDeleteDialogComponent,
+    ListaPrecioDesdeHastaDeletePopupComponent
+  ],
+  entryComponents: [
+    ListaPrecioDesdeHastaComponent,
+    ListaPrecioDesdeHastaUpdateComponent,
+    ListaPrecioDesdeHastaDeleteDialogComponent,
+    ListaPrecioDesdeHastaDeletePopupComponent
+  ]
 })
 export class SoldimetListaPrecioDesdeHastaModule {}

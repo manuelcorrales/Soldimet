@@ -5,68 +5,65 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
+import { PedidoRepuestoService } from './pedido-repuesto.service';
 
 @Component({
-    selector: 'jhi-pedido-repuesto-delete-dialog',
-    templateUrl: './pedido-repuesto-delete-dialog.component.html'
+  selector: 'jhi-pedido-repuesto-delete-dialog',
+  templateUrl: './pedido-repuesto-delete-dialog.component.html'
 })
 export class PedidoRepuestoDeleteDialogComponent {
-    pedidoRepuesto: IPedidoRepuesto;
+  pedidoRepuesto: IPedidoRepuesto;
 
-    constructor(
-        private pedidoRepuestoService: PedidoRepuestoService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {}
+  constructor(
+    protected pedidoRepuestoService: PedidoRepuestoService,
+    public activeModal: NgbActiveModal,
+    protected eventManager: JhiEventManager
+  ) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.pedidoRepuestoService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'pedidoRepuestoListModification',
-                content: 'Deleted an pedidoRepuesto'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.pedidoRepuestoService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'pedidoRepuestoListModification',
+        content: 'Deleted an pedidoRepuesto'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-pedido-repuesto-delete-popup',
-    template: ''
+  selector: 'jhi-pedido-repuesto-delete-popup',
+  template: ''
 })
 export class PedidoRepuestoDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ pedidoRepuesto }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(PedidoRepuestoDeleteDialogComponent as Component, {
-                    size: 'lg',
-                    backdrop: 'static'
-                });
-                this.ngbModalRef.componentInstance.pedidoRepuesto = pedidoRepuesto;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ pedidoRepuesto }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(PedidoRepuestoDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.pedidoRepuesto = pedidoRepuesto;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/pedido-repuesto', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/pedido-repuesto', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

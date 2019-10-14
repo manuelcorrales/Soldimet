@@ -1,58 +1,66 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICliente } from 'app/shared/model/cliente.model';
-import { Principal } from 'app/core';
-import { ClienteService } from 'app/entities/cliente/cliente.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { ClienteService } from './cliente.service';
 
 @Component({
-    selector: 'jhi-cliente',
-    templateUrl: './cliente.component.html'
+  selector: 'jhi-cliente',
+  templateUrl: './cliente.component.html'
 })
 export class ClienteComponent implements OnInit, OnDestroy {
-    clientes: ICliente[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  clientes: ICliente[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        private clienteService: ClienteService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private principal: Principal
-    ) {}
+  constructor(
+    protected clienteService: ClienteService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.clienteService.query().subscribe(
-            (res: HttpResponse<ICliente[]>) => {
-                this.clientes = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-    }
+  loadAll() {
+    this.clienteService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<ICliente[]>) => res.ok),
+        map((res: HttpResponse<ICliente[]>) => res.body)
+      )
+      .subscribe(
+        (res: ICliente[]) => {
+          this.clientes = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInClientes();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInClientes();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: ICliente) {
-        return item.id;
-    }
+  trackId(index: number, item: ICliente) {
+    return item.id;
+  }
 
-    registerChangeInClientes() {
-        this.eventSubscriber = this.eventManager.subscribe('clienteListModification', response => this.loadAll());
-    }
+  registerChangeInClientes() {
+    this.eventSubscriber = this.eventManager.subscribe('clienteListModification', response => this.loadAll());
+  }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

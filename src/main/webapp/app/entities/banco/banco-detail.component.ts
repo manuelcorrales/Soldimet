@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IBanco } from 'app/shared/model/banco.model';
 
 @Component({
-    selector: 'jhi-banco-detail',
-    templateUrl: './banco-detail.component.html'
+  selector: 'jhi-banco-detail',
+  templateUrl: './banco-detail.component.html'
 })
 export class BancoDetailComponent implements OnInit {
-    banco: IBanco;
+  banco: IBanco;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ banco }) => {
-            this.banco = banco;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ banco }) => {
+      this.banco = banco;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

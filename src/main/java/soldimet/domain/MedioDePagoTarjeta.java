@@ -1,18 +1,19 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A MedioDePagoTarjeta.
  */
 @Entity
 @Table(name = "medio_de_pago_tarjeta")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MedioDePagoTarjeta implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,12 +29,12 @@ public class MedioDePagoTarjeta implements Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("medioDePagoTarjetas")
     private Tarjeta tarjeta;
 
     @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("medioDePagoTarjetas")
     private TipoTarjeta tipoTarjeta;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -90,19 +91,15 @@ public class MedioDePagoTarjeta implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof MedioDePagoTarjeta)) {
             return false;
         }
-        MedioDePagoTarjeta medioDePagoTarjeta = (MedioDePagoTarjeta) o;
-        if (medioDePagoTarjeta.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), medioDePagoTarjeta.getId());
+        return id != null && id.equals(((MedioDePagoTarjeta) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

@@ -1,82 +1,102 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-
-import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
-import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
+import { ITipoRepuesto, TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
+import { TipoRepuestoService } from './tipo-repuesto.service';
 import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
-import { TipoParteMotorService } from 'app/entities/tipo-parte-motor';
+import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
 
 @Component({
-    selector: 'jhi-tipo-repuesto-update',
-    templateUrl: './tipo-repuesto-update.component.html'
+  selector: 'jhi-tipo-repuesto-update',
+  templateUrl: './tipo-repuesto-update.component.html'
 })
 export class TipoRepuestoUpdateComponent implements OnInit {
-    private _tipoRepuesto: ITipoRepuesto;
-    isSaving: boolean;
+  isSaving: boolean;
 
-    tipopartemotors: ITipoParteMotor[];
+  tipopartemotors: ITipoParteMotor[];
 
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private tipoRepuestoService: TipoRepuestoService,
-        private tipoParteMotorService: TipoParteMotorService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    nombreTipoRepuesto: [null, [Validators.required, Validators.minLength(3)]],
+    tipoParteMotor: [null, Validators.required]
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ tipoRepuesto }) => {
-            this.tipoRepuesto = tipoRepuesto;
-        });
-        this.tipoParteMotorService.query().subscribe(
-            (res: HttpResponse<ITipoParteMotor[]>) => {
-                this.tipopartemotors = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+  constructor(
+    protected jhiAlertService: JhiAlertService,
+    protected tipoRepuestoService: TipoRepuestoService,
+    protected tipoParteMotorService: TipoParteMotorService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ tipoRepuesto }) => {
+      this.updateForm(tipoRepuesto);
+    });
+    this.tipoParteMotorService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ITipoParteMotor[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ITipoParteMotor[]>) => response.body)
+      )
+      .subscribe((res: ITipoParteMotor[]) => (this.tipopartemotors = res), (res: HttpErrorResponse) => this.onError(res.message));
+  }
+
+  updateForm(tipoRepuesto: ITipoRepuesto) {
+    this.editForm.patchValue({
+      id: tipoRepuesto.id,
+      nombreTipoRepuesto: tipoRepuesto.nombreTipoRepuesto,
+      tipoParteMotor: tipoRepuesto.tipoParteMotor
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  save() {
+    this.isSaving = true;
+    const tipoRepuesto = this.createFromForm();
+    if (tipoRepuesto.id !== undefined) {
+      this.subscribeToSaveResponse(this.tipoRepuestoService.update(tipoRepuesto));
+    } else {
+      this.subscribeToSaveResponse(this.tipoRepuestoService.create(tipoRepuesto));
     }
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  private createFromForm(): ITipoRepuesto {
+    return {
+      ...new TipoRepuesto(),
+      id: this.editForm.get(['id']).value,
+      nombreTipoRepuesto: this.editForm.get(['nombreTipoRepuesto']).value,
+      tipoParteMotor: this.editForm.get(['tipoParteMotor']).value
+    };
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.tipoRepuesto.id !== undefined) {
-            this.subscribeToSaveResponse(this.tipoRepuestoService.update(this.tipoRepuesto));
-        } else {
-            this.subscribeToSaveResponse(this.tipoRepuestoService.create(this.tipoRepuesto));
-        }
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ITipoRepuesto>>) {
+    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ITipoRepuesto>>) {
-        result.subscribe((res: HttpResponse<ITipoRepuesto>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
 
-    private onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
-
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
-
-    trackTipoParteMotorById(index: number, item: ITipoParteMotor) {
-        return item.id;
-    }
-    get tipoRepuesto() {
-        return this._tipoRepuesto;
-    }
-
-    set tipoRepuesto(tipoRepuesto: ITipoRepuesto) {
-        this._tipoRepuesto = tipoRepuesto;
-    }
+  trackTipoParteMotorById(index: number, item: ITipoParteMotor) {
+    return item.id;
+  }
 }

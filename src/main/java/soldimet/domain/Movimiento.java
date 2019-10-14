@@ -1,19 +1,20 @@
 package soldimet.domain;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * A Movimiento.
  */
 @Entity
 @Table(name = "movimiento")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Movimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,31 +37,34 @@ public class Movimiento implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
 
-    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @NotNull
+    @JsonIgnoreProperties("movimientos")
     private EstadoMovimiento estado;
 
-    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @NotNull
+    @JsonIgnoreProperties("movimientos")
     private TipoMovimiento tipoMovimiento;
 
-    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @NotNull
+    @JsonIgnoreProperties("movimientos")
     private Empleado empleado;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("movimientos")
     private Caja caja;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("movimientos")
     private SubCategoria subCategoria;
 
     @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private MedioDePago medioDePago;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
-    // remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -198,33 +202,32 @@ public class Movimiento implements Serializable {
     public void setMedioDePago(MedioDePago medioDePago) {
         this.medioDePago = medioDePago;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Movimiento)) {
             return false;
         }
-        Movimiento movimiento = (Movimiento) o;
-        if (movimiento.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), movimiento.getId());
+        return id != null && id.equals(((Movimiento) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
     public String toString() {
-        return "Movimiento{" + "id=" + getId() + ", fecha='" + getFecha() + "'" + ", importe=" + getImporte()
-                + ", descuento=" + getDescuento() + ", observaciones='" + getObservaciones() + "'" + "}";
+        return "Movimiento{" +
+            "id=" + getId() +
+            ", fecha='" + getFecha() + "'" +
+            ", importe=" + getImporte() +
+            ", descuento=" + getDescuento() +
+            ", observaciones='" + getObservaciones() + "'" +
+            "}";
     }
-
 }

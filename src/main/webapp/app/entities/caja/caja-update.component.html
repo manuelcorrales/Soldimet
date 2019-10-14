@@ -1,26 +1,25 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-caja-heading">Create or edit a Caja</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!caja.id">
+                <div class="form-group" [hidden]="!editForm.get('id').value">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="caja.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_fecha">Fecha</label>
                     <div class="input-group">
-                        <input id="field_fecha" type="text" class="form-control" name="fecha" ngbDatepicker  #fechaDp="ngbDatepicker" [(ngModel)]="caja.fecha"
-                        required/>
+                        <input id="field_fecha" type="text" class="form-control" name="fecha" ngbDatepicker  #fechaDp="ngbDatepicker" formControlName="fecha"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" (click)="fechaDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
                     </div>
-                    <div [hidden]="!(editForm.controls.fecha?.dirty && editForm.controls.fecha?.invalid)">
+                    <div *ngIf="editForm.get('fecha').invalid && (editForm.get('fecha').dirty || editForm.get('fecha').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.fecha?.errors?.required">
+                               *ngIf="editForm.get('fecha').errors.required">
                         This field is required.
                         </small>
                     </div>
@@ -28,16 +27,15 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_horaApertura">Hora Apertura</label>
                     <div class="d-flex">
-                        <input id="field_horaApertura" type="datetime-local" class="form-control" name="horaApertura" [(ngModel)]="horaApertura"
-                        required/>
+                        <input id="field_horaApertura" type="datetime-local" class="form-control" name="horaApertura" formControlName="horaApertura" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
-                    <div [hidden]="!(editForm.controls.horaApertura?.dirty && editForm.controls.horaApertura?.invalid)">
+                    <div *ngIf="editForm.get('horaApertura').invalid && (editForm.get('horaApertura').dirty || editForm.get('horaApertura').touched)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.horaApertura?.errors?.required">
+                               *ngIf="editForm.get('horaApertura').errors.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.horaApertura?.errors?.ZonedDateTimelocal">
+                            [hidden]="!editForm.get('horaApertura').errors?.ZonedDateTimelocal">
                             This field should be a date and time.
                         </small>
                     </div>
@@ -45,31 +43,30 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_horaCierre">Hora Cierre</label>
                     <div class="d-flex">
-                        <input id="field_horaCierre" type="datetime-local" class="form-control" name="horaCierre" [(ngModel)]="horaCierre"
-                        />
+                        <input id="field_horaCierre" type="datetime-local" class="form-control" name="horaCierre" formControlName="horaCierre" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_saldo">Saldo</label>
                     <input type="number" class="form-control" name="saldo" id="field_saldo"
-                        [(ngModel)]="caja.saldo" />
+                           formControlName="saldo"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_observaciones">Observaciones</label>
                     <input type="text" class="form-control" name="observaciones" id="field_observaciones"
-                        [(ngModel)]="caja.observaciones" />
+                           formControlName="observaciones"/>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_saldo_fisico">Saldo Fisico</label>
-                    <input type="number" class="form-control" name="saldo_fisico" id="field_saldo_fisico"
-                        [(ngModel)]="caja.saldo_fisico" />
+                    <label class="form-control-label" for="field_saldoFisico">Saldo Fisico</label>
+                    <input type="number" class="form-control" name="saldoFisico" id="field_saldoFisico"
+                           formControlName="saldoFisico"/>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_sucursal">Sucursal</label>
-                    <select class="form-control" id="field_sucursal" name="sucursal" [(ngModel)]="caja.sucursal" >
+                    <select class="form-control" id="field_sucursal" name="sucursal" formControlName="sucursal">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="sucursalOption.id === caja.sucursal?.id ? caja.sucursal : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
+                        <option [ngValue]="sucursalOption.id === editForm.get('sucursal').value?.id ? editForm.get('sucursal').value : sucursalOption" *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById">{{sucursalOption.nombreSucursal}}</option>
                     </select>
                 </div>
             </div>
@@ -77,7 +74,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>
