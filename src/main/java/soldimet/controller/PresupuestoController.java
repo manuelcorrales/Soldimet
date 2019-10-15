@@ -4,9 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,9 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.jhipster.web.util.HeaderUtil;
 import soldimet.domain.Aplicacion;
 import soldimet.domain.Cliente;
-import soldimet.domain.CobranzaOperacion;
-import soldimet.domain.CostoRepuesto;
 import soldimet.domain.CostoOperacion;
+import soldimet.domain.CostoRepuesto;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.TipoRepuesto;
