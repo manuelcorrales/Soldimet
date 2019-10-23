@@ -65,12 +65,12 @@ export class PedidoPendienteComponent implements OnInit {
           tipoRepuestoID = tipoRepuestoI.id;
         }
       });
-      let query;
-      if (tipoRepuestoID) {
-        query = {
-          'tipoRepuestoId.equals': tipoRepuestoID
-        };
-      }
+      // let query;
+      // if (tipoRepuestoID) {
+      //   query = {
+      //     'tipoRepuestoId.equals': tipoRepuestoID
+      //   };
+      // }
       // this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
       //   this.articulos = res.body;
       // });
