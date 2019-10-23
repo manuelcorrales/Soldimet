@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -35,7 +36,7 @@ public class ListaPrecioDesdeHasta implements Serializable {
 
     @OneToMany(cascade = { CascadeType.ALL })
     @JoinColumn(name = "lista")
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CostoOperacion> costoOperacions = new HashSet<>();
 

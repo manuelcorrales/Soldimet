@@ -126,7 +126,8 @@ public class DetallePedido implements Serializable {
 
     public CostoRepuesto filterCostoRepuesto(CostoRepuesto costoRepuesto) {
         for(CostoRepuesto costoInList: this.getCostoRepuestos()) {
-            if (costoInList.equals(costoRepuesto)){
+            if (costoInList.getId().equals(costoRepuesto.getId())){
+                costoInList.getProveedor().toString();
                 return costoInList;
             }
         }

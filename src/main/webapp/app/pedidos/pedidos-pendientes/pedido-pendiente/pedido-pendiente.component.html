@@ -5,22 +5,19 @@
         </button>
     </div>
     <div class="modal-body">
-        <jhi-alert-error></jhi-alert-error>
         <h5>{{pedido.presupuesto.detallePresupuestos[0]?.motor.marcaMotor}}
                 <span class="text-muted">{{pedido.presupuesto.detallePresupuestos[0]?.aplicacion.nombreAplicacion}}</span>
         </h5>
-
         <div class="row">
             <div class="col">Presupuesto Nº: {{pedido.presupuesto.id}}</div>
             <div class="col">Fecha: {{pedido.presupuesto.fechaCreacion}}</div>
             <div class="col">Cliente: {{pedido.presupuesto.cliente.persona.apellido}},{{pedido.presupuesto.cliente.persona.nombre}}</div>
         </div>
-        <br>
+        <hr style="height: 1px; background-color: #EAEFF5">
         <div *ngFor="let detallePedido of pedido.detallePedidos">
-            <jhi-detalle-pedido #detPed [detallePedido]="detallePedido"
-            [proveedores]="proveedores" [articulos]="articulos" [marcas]="marcas"
-            ></jhi-detalle-pedido>
-            <br>
+            <jhi-detalle-pedido #detPed [detallePedido]="detallePedido" [proveedores]="proveedores">
+            </jhi-detalle-pedido>
+            <hr style="height: 1px; background-color: #EAEFF5">
         </div>
     </div>
     <div class="modal-footer">

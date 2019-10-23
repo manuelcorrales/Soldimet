@@ -2,41 +2,76 @@ import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core
 import { DTOListaPrecioManoDeObra } from 'app/dto/dto-operaciones/dto-lista-costo-operaciones';
 import { OperacionListaPrecioComponent } from 'app/operaciones/operacion-lista/operacion-lista-precio.component';
 import { OperacionesService } from 'app/operaciones/operaciones-services';
-import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+import { JhiAlertService } from 'ng-jhipster';
+import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
+import { ICilindrada } from 'app/shared/model/cilindrada.model';
+import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
+
+interface Grupo {
+  tipoParte?: ITipoParteMotor;
+  cilindrada?: ICilindrada;
+}
 
 @Component({
-    selector: 'jhi-operacion-lista',
-    templateUrl: './operacion-lista.component.html',
-    styles: []
+  selector: 'jhi-operacion-lista',
+  templateUrl: './operacion-lista.component.html',
+  styles: []
 })
 export class OperacionListaComponent implements OnInit {
-    @Input()
-    lista: DTOListaPrecioManoDeObra;
-    @ViewChildren('costosOperaciones')
-    children: QueryList<OperacionListaPrecioComponent>;
+  @Input()
+  lista: DTOListaPrecioManoDeObra;
+  @ViewChildren('costosOperaciones')
+  children: QueryList<OperacionListaPrecioComponent>;
 
-    constructor(
-        private _operacionesService: OperacionesService,
-        private eventManager: JhiEventManager,
-        private jhiAlertService: JhiAlertService
-    ) {}
+  listaGroup: CostoOperacion[][] = [];
+  grupos: Grupo[] = [];
 
-    ngOnInit() {}
+  constructor(private _operacionesService: OperacionesService, private jhiAlertService: JhiAlertService) {}
 
-    getListaOperaciones(): DTOListaPrecioManoDeObra {
-        return this.lista;
-    }
+  ngOnInit() {
+    this.agruparListaPorTipoParteMotorYCilindrada();
+  }
 
-    modificarPorcentageLista(porcentage: number) {
-        this.children.forEach(child => {
-            child.modificarPrecio(porcentage);
-        });
-    }
+  getListaOperaciones(): DTOListaPrecioManoDeObra {
+    return this.lista;
+  }
 
-    guardarLista() {
-        this._operacionesService.saveListaActualizada(this.lista).subscribe(listaNueva => {
-            this.lista = listaNueva;
-            this.jhiAlertService.success('Se actualizó la lista número:' + listaNueva.numeroLista, null, null);
-        });
-    }
+  modificarPorcentageLista(porcentage: number) {
+    this.children.forEach(child => {
+      child.modificarPrecio(porcentage);
+    });
+  }
+
+  guardarLista() {
+    this._operacionesService.saveListaActualizada(this.lista).subscribe(listaNueva => {
+      this.lista = listaNueva;
+      this.jhiAlertService.success('Se actualizó la lista número:' + listaNueva.numeroLista);
+    });
+  }
+
+  agruparListaPorTipoParteMotorYCilindrada() {
+    this.crearGrupos();
+    this.lista.operaciones.forEach((costoOperacion: CostoOperacion) => {
+      const index = this.grupos.findIndex(
+        grupo => grupo.tipoParte.id === costoOperacion.tipoParteMotor.id && grupo.cilindrada.id === costoOperacion.cilindrada.id
+      );
+      if (this.listaGroup[index]) {
+        this.listaGroup[index].push(costoOperacion);
+      } else {
+        this.listaGroup.push([costoOperacion]);
+      }
+    });
+  }
+
+  crearGrupos() {
+    this.lista.operaciones.forEach((costoOperacion: CostoOperacion) => {
+      if (
+        this.grupos.findIndex(
+          grupo => grupo.tipoParte.id === costoOperacion.tipoParteMotor.id && grupo.cilindrada.id === costoOperacion.cilindrada.id
+        )
+      ) {
+        this.grupos.push({ tipoParte: costoOperacion.tipoParteMotor, cilindrada: costoOperacion.cilindrada });
+      }
+    });
+  }
 }

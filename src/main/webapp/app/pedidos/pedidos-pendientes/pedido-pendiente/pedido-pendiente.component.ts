@@ -9,10 +9,10 @@ import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { DtoBusquedaProveedor } from 'app/dto/dto-pedidos/dto-proveedor-search';
-import { ArticuloService } from 'app/entities/articulo';
-import { MarcaService } from 'app/entities/marca';
-import { IMarca } from 'app/shared/model/marca.model';
-import { IArticulo } from 'app/shared/model/articulo.model';
+// import { ArticuloService } from 'app/entities/articulo';
+// import { MarcaService } from 'app/entities/marca';
+// import { IMarca } from 'app/shared/model/marca.model';
+// import { IArticulo } from 'app/shared/model/articulo.model';
 import { TipoRepuestoService } from 'app/entities/tipo-repuesto';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 
@@ -30,8 +30,8 @@ export class PedidoPendienteComponent implements OnInit {
   @ViewChild('toastr', { static: false })
   toastrContainer: ViewContainerRef;
 
-  marcas: IMarca[];
-  articulos: IArticulo[];
+  // marcas: IMarca[];
+  // articulos: IArticulo[];
   tiposRepuestos: ITipoRepuesto[];
   isSaving = false;
 
@@ -39,8 +39,8 @@ export class PedidoPendienteComponent implements OnInit {
     private pedidosServices: PedidosService,
     private activeModal: NgbActiveModal,
     private eventManager: JhiEventManager,
-    private articuloService: ArticuloService,
-    private marcaService: MarcaService,
+    // private articuloService: ArticuloService,
+    // private marcaService: MarcaService,
     private tipoRepuestoService: TipoRepuestoService
   ) {}
 
@@ -49,9 +49,9 @@ export class PedidoPendienteComponent implements OnInit {
     this.pedidosServices.getProveedoresRepuestos().subscribe((listaProveedores: DtoBusquedaProveedor[]) => {
       this.proveedores = listaProveedores;
     });
-    this.marcaService.query().subscribe((res: HttpResponse<IMarca[]>) => {
-      this.marcas = res.body;
-    });
+    // this.marcaService.query().subscribe((res: HttpResponse<IMarca[]>) => {
+    //   this.marcas = res.body;
+    // });
     this.tipoRepuestoService.query().subscribe((tiposRepuestos: HttpResponse<ITipoRepuesto[]>) => {
       this.tiposRepuestos = tiposRepuestos.body;
       this.buscarArticulos();
@@ -71,9 +71,9 @@ export class PedidoPendienteComponent implements OnInit {
           'tipoRepuestoId.equals': tipoRepuestoID
         };
       }
-      this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
-        this.articulos = res.body;
-      });
+      // this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
+      //   this.articulos = res.body;
+      // });
     });
   }
 

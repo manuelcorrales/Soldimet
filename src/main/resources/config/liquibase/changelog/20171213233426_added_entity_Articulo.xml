@@ -30,7 +30,7 @@
             </column>
 
             <column name="marca_id" type="bigint">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="tipo_repuesto_id" type="bigint">

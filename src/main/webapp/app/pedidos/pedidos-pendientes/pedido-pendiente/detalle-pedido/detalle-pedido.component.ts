@@ -2,8 +2,8 @@ import { Component, OnInit, Input, QueryList, ViewChildren } from '@angular/core
 import { DetallePedido } from 'app/shared/model/detalle-pedido.model';
 import { Proveedor } from 'app/shared/model/proveedor.model';
 import { CostoRepuestoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
-import { IArticulo } from 'app/shared/model/articulo.model';
-import { Marca } from 'app/shared/model/marca.model';
+// import { IArticulo } from 'app/shared/model/articulo.model';
+// import { Marca } from 'app/shared/model/marca.model';
 
 @Component({
   selector: 'jhi-detalle-pedido',
@@ -15,10 +15,10 @@ export class DetallePedidoNewComponent implements OnInit {
   detallePedido: DetallePedido;
   @Input()
   proveedores: Proveedor[];
-  @Input()
-  articulos: IArticulo[];
-  @Input()
-  marcas: Marca;
+  // @Input()
+  // articulos: IArticulo[];
+  // @Input()
+  // marcas: Marca;
   @ViewChildren('costoRepuestoComponent')
   costosRepuestoComponent: QueryList<CostoRepuestoComponent>;
 

@@ -5,9 +5,6 @@
             "relationshipName": "direccion",
             "otherEntityName": "direccion",
             "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
             "otherEntityField": "id",
             "ownerSide": true,
             "otherEntityRelationshipName": "persona"
@@ -16,9 +13,6 @@
             "relationshipName": "estadoPersona",
             "otherEntityName": "estadoPersona",
             "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
             "otherEntityField": "nombreEstado",
             "otherEntityRelationshipName": "persona"
         },
@@ -34,12 +28,7 @@
     "fields": [
         {
             "fieldName": "numeroTelefono",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "5"
+            "fieldType": "String"
         },
         {
             "fieldName": "nombre",
@@ -50,10 +39,7 @@
         },
         {
             "fieldName": "apellido",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171214020013",

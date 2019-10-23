@@ -87,7 +87,7 @@ export class PedidoModalPopupService {
   }
 
   pedidoModalRef(component: Component, pedido: PedidoRepuesto): NgbModalRef {
-    const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(component, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.pedido = pedido;
     modalRef.result.then(
       result => {

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
 import { DTOListaPrecioManoDeObra } from 'app/dto/dto-operaciones/dto-lista-costo-operaciones';
 import { OperacionesService } from 'app/operaciones/operaciones-services';
+import { NgbTabChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-operaciones',
@@ -20,5 +21,11 @@ export class OperacionesComponent implements OnInit {
         this.listas = listas;
       }
     });
+  }
+
+  esconderArchivoTab($event: NgbTabChangeEvent) {
+    if ($event.nextId === 'archivo') {
+      $event.preventDefault();
+    }
   }
 }

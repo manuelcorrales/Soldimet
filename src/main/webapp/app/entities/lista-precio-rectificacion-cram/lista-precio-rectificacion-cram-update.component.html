@@ -10,30 +10,6 @@
                         readonly />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_fechaVigenciaDesde">Fecha Vigencia Desde</label>
-                    <div class="input-group">
-                        <input id="field_fechaVigenciaDesde" type="text" class="form-control" name="fechaVigenciaDesde" ngbDatepicker  #fechaVigenciaDesdeDp="ngbDatepicker" formControlName="fechaVigenciaDesde"/>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="fechaVigenciaDesdeDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
-                        </span>
-                    </div>
-                    <div *ngIf="editForm.get('fechaVigenciaDesde').invalid && (editForm.get('fechaVigenciaDesde').dirty || editForm.get('fechaVigenciaDesde').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('fechaVigenciaDesde').errors.required">
-                        This field is required.
-                        </small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_fechaVigenciaHasta">Fecha Vigencia Hasta</label>
-                    <div class="input-group">
-                        <input id="field_fechaVigenciaHasta" type="text" class="form-control" name="fechaVigenciaHasta" ngbDatepicker  #fechaVigenciaHastaDp="ngbDatepicker" formControlName="fechaVigenciaHasta"/>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="fechaVigenciaHastaDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" for="field_numeroGrupo">Numero Grupo</label>
                     <input type="number" class="form-control" name="numeroGrupo" id="field_numeroGrupo"
                            formControlName="numeroGrupo"/>
@@ -57,19 +33,6 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" for="field_costoOperacion">Costo Operacion</label>
-                    <select class="form-control" id="field_costoOperacion" name="costoOperacion" formControlName="costoOperacion">
-                        <option *ngIf="!editForm.get('costoOperacion').value" [ngValue]="null" selected></option>
-                        <option [ngValue]="costoOperacionOption.id === editForm.get('costoOperacion').value?.id ? editForm.get('costoOperacion').value : costoOperacionOption" *ngFor="let costoOperacionOption of costooperacions; trackBy: trackCostoOperacionById">{{costoOperacionOption.id}}</option>
-                    </select>
-                </div>
-                <div *ngIf="editForm.get('costoOperacion').invalid && (editForm.get('costoOperacion').dirty || editForm.get('costoOperacion').touched)">
-                    <small class="form-text text-danger"
-                           *ngIf="editForm.get('costoOperacion').errors.required">
-                        This field is required.
-                    </small>
-                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

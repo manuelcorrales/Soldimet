@@ -79,6 +79,7 @@ public class PedidosController {
 
     }
 
+    @Transactional
     @PostMapping("/updateDetallePedido/{detallePedidoId}")
     public ResponseEntity<CostoRepuesto> updateDetallePedido(@RequestBody CostoRepuesto costoRepuesto,
             @PathVariable("detallePedidoId") Long detallePedidoId) {
@@ -86,7 +87,7 @@ public class PedidosController {
         costoRepuesto = expertoPedidos.updateDetallePedido(costoRepuesto, detallePedidoId);
 
         if (costoRepuesto != null) {
-
+            System.out.print(costoRepuesto);
             return new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
 
         } else {

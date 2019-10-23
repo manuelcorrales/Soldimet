@@ -202,7 +202,7 @@ public class PedidoRepuesto implements Serializable {
 
     public DetallePedido filterDetallePedido(DetallePedido detallePedido) {
         for(DetallePedido detalleInList: this.getDetallePedidos()) {
-            if ( detalleInList.equals(detallePedido)){
+            if ( detalleInList.getId().equals(detallePedido.getId())){
                 return detalleInList;
             }
         }
