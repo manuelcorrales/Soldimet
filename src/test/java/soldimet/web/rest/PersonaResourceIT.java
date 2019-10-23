@@ -199,24 +199,24 @@ public class PersonaResourceIT {
         assertThat(personaList).hasSize(databaseSizeBeforeCreate);
     }
 
+    // teléfono tampoco es más requerido
+    // @Test
+    // @Transactional
+    // public void checkNumeroTelefonoIsRequired() throws Exception {
+    //     int databaseSizeBeforeTest = personaRepository.findAll().size();
+    //     // set the field null
+    //     persona.setNumeroTelefono(null);
 
-    @Test
-    @Transactional
-    public void checkNumeroTelefonoIsRequired() throws Exception {
-        int databaseSizeBeforeTest = personaRepository.findAll().size();
-        // set the field null
-        persona.setNumeroTelefono(null);
+    //     // Create the Persona, which fails.
 
-        // Create the Persona, which fails.
+    //     restPersonaMockMvc.perform(post("/api/personas")
+    //         .contentType(TestUtil.APPLICATION_JSON_UTF8)
+    //         .content(TestUtil.convertObjectToJsonBytes(persona)))
+    //         .andExpect(status().isBadRequest());
 
-        restPersonaMockMvc.perform(post("/api/personas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
-            .andExpect(status().isBadRequest());
-
-        List<Persona> personaList = personaRepository.findAll();
-        assertThat(personaList).hasSize(databaseSizeBeforeTest);
-    }
+    //     List<Persona> personaList = personaRepository.findAll();
+    //     assertThat(personaList).hasSize(databaseSizeBeforeTest);
+    // }
 
     @Test
     @Transactional
@@ -236,23 +236,24 @@ public class PersonaResourceIT {
         assertThat(personaList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Test
-    @Transactional
-    public void checkApellidoIsRequired() throws Exception {
-        int databaseSizeBeforeTest = personaRepository.findAll().size();
-        // set the field null
-        persona.setApellido(null);
+    // No hay problema en dejar a la persona sin apellido
+    // @Test
+    // @Transactional
+    // public void checkApellidoIsRequired() throws Exception {
+    //     int databaseSizeBeforeTest = personaRepository.findAll().size();
+    //     // set the field null
+    //     persona.setApellido(null);
 
-        // Create the Persona, which fails.
+    //     // Create the Persona, which fails.
 
-        restPersonaMockMvc.perform(post("/api/personas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
-            .andExpect(status().isBadRequest());
+    //     restPersonaMockMvc.perform(post("/api/personas")
+    //         .contentType(TestUtil.APPLICATION_JSON_UTF8)
+    //         .content(TestUtil.convertObjectToJsonBytes(persona)))
+    //         .andExpect(status().isBadRequest());
 
-        List<Persona> personaList = personaRepository.findAll();
-        assertThat(personaList).hasSize(databaseSizeBeforeTest);
-    }
+    //     List<Persona> personaList = personaRepository.findAll();
+    //     assertThat(personaList).hasSize(databaseSizeBeforeTest);
+    // }
 
     @Test
     @Transactional
@@ -269,7 +270,7 @@ public class PersonaResourceIT {
             .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE.toString())))
             .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getPersona() throws Exception {
