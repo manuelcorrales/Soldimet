@@ -70,6 +70,12 @@ public class EstadoCostoRepuestoResourceIT {
             .setValidator(validator).build();
     }
 
+    public static EstadoCostoRepuesto createEntityConEstado(String nombreEstado) {
+        EstadoCostoRepuesto estadoCostoRepuesto = new EstadoCostoRepuesto()
+            .nombreEstado(nombreEstado);
+        return estadoCostoRepuesto;
+    }
+
     /**
      * Create an entity for this test.
      *
@@ -167,7 +173,7 @@ public class EstadoCostoRepuestoResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoCostoRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getEstadoCostoRepuesto() throws Exception {

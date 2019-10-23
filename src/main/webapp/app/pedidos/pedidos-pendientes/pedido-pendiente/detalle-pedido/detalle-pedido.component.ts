@@ -15,7 +15,7 @@ export class DetallePedidoNewComponent implements OnInit {
   detallePedido: DetallePedido;
   @Input()
   proveedores: Proveedor[];
-  @Input()
+  // @Input()
   // articulos: IArticulo[];
   // @Input()
   // marcas: Marca;

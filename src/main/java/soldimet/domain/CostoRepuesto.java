@@ -1,12 +1,12 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 
@@ -31,21 +31,17 @@ public class CostoRepuesto implements Serializable {
 
     @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties("costoRepuestos")
     private TipoRepuesto tipoRepuesto;
 
     @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
-    @JsonIgnoreProperties("costoRepuestos")
     private Articulo articulo;
 
     @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     @JsonIgnoreProperties("costoRepuestos")
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Proveedor proveedor;
 
     @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties("costoRepuestos")
     private EstadoCostoRepuesto estado;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

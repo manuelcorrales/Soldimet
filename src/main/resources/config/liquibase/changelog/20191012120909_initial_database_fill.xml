@@ -109,6 +109,14 @@
             <column name="id" autoIncrement="true"/>
             <column name="nombre_estado" value="Pendiente de pedido"/>
         </insert>
+        <insert tableName="estado_detalle_pedido">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Pedido Parcial"/>
+        </insert>
+        <insert tableName="estado_detalle_pedido">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_estado" value="Recibido Parcial"/>
+        </insert>
     </changeSet>
     <changeSet author="manuelc" id="1554155390507-4">
         <insert tableName="estado_pedido_repuesto">
@@ -129,7 +137,7 @@
         </insert>
         <insert tableName="estado_pedido_repuesto">
             <column name="id" autoIncrement="true"/>
-            <column name="nombre_estado" value="En progreso"/>
+            <column name="nombre_estado" value="Recibido Parcial"/>
         </insert>
         <insert tableName="estado_pedido_repuesto">
             <column name="id" autoIncrement="true"/>

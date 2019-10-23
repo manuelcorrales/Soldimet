@@ -74,7 +74,7 @@
                         <td>
                             <button class="btn btn-info" type="submit" [routerLink]="['/', { outlets: { popup: 'pedidos/'+ pedido.id } }]" replaceUrl="true"
                                 *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'" placement="top" ngbTooltip="Operar pedido">
-                                <fa-icon icon="fa-bars"></fa-icon>
+                                <fa-icon icon="cogs"></fa-icon>
                             </button>
                             <p *ngIf="pedido.estado == 'Recibido' || pedido.estado == 'Cancelado'">No hay operaciones</p>
                         </td>

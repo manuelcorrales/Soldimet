@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { OperacionesComponent } from 'app/operaciones/operaciones.component';
 import { OPERACIONES_ROUTE } from 'app/operaciones/operaciones.route';
 import { RouterModule } from '@angular/router';
@@ -9,7 +10,7 @@ import { OperacionListaPrecioComponent } from 'app/operaciones/operacion-lista/o
 import { NgbTabsetModule, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  imports: [CommonModule, NgbTabsetModule, NgbProgressbarModule, RouterModule.forRoot([OPERACIONES_ROUTE], { useHash: true })],
+  imports: [CommonModule, FormsModule, NgbTabsetModule, NgbProgressbarModule, RouterModule.forRoot([OPERACIONES_ROUTE], { useHash: true })],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [OperacionesComponent, OperacionListaComponent, OperacionListaPrecioComponent],

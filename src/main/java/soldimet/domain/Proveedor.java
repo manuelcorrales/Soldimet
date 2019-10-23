@@ -25,8 +25,8 @@ public class Proveedor implements Serializable {
     @Column(name = "nombre_proveedor", nullable = false)
     private String nombreProveedor;
 
-    @OneToOne(optional = false)    @NotNull
-
+    @OneToOne(optional = false)
+    @NotNull
     @JoinColumn(unique = true)
     private Persona persona;
 

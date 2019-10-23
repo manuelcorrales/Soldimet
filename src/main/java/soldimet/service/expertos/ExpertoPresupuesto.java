@@ -439,12 +439,11 @@ public class ExpertoPresupuesto {
     }
 
     private Boolean puedeTerminarPresupuesto(DTOPresupuesto dto) {
-        Boolean puedeTerminar = true;
+        Boolean puedeTerminar = false;
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
-        if (pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO
-                || pedido.getEstadoPedidoRepuesto().getNombreEstado() != globales.NOMBRE_ESTADO_PEDIDO_CANCELADO) {
-            puedeTerminar = false;
+        if (pedido.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO)) {
+            puedeTerminar = true;
         }
         return puedeTerminar;
 

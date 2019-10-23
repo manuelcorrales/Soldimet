@@ -59,6 +59,8 @@ public class Globales {
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO = "Pedido";
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO = "Recibido";
     public final String NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO = "Cancelado";
+    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO_PARCIAL = "Pedido Parcial";
+    public final String NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO_PARCIAL = "Recibido Parcial";
 
 
     //---------------------------------Tipo Articulos------------------------

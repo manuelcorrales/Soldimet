@@ -22,10 +22,7 @@ import soldimet.domain.EstadoPersona;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Persona;
 import soldimet.domain.Proveedor;
-import soldimet.repository.ArticuloRepository;
-import soldimet.repository.CostoRepuestoRepository;
 import soldimet.repository.DetallePedidoRepository;
-import soldimet.repository.EmpleadoRepository;
 import soldimet.repository.EstadoCostoRepuestoRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
@@ -74,10 +71,6 @@ public class ExpertoPedidos {
     @Autowired
     private DetallePedidoRepository detallePedidoRepository;
 
-
-    @Autowired
-    private ArticuloRepository articuloRepository;
-
     @Autowired
     private TipoRepuestoRepository tipoRepuestoRepository;
 
@@ -113,15 +106,12 @@ public class ExpertoPedidos {
 
         List<PedidoRepuesto> pedidos = pedidoRepuestoRepository.findAllByOrderByIdDesc();
 
-
         // Filtro por sucursal
-        if (!this.tieneAccesoATodosLosPedidos(empleado)){
+        if (!this.tieneAccesoATodosLosPedidos(empleado)) {
             List<PedidoRepuesto> pedidosFiltrados = new ArrayList<PedidoRepuesto>();
-            for (PedidoRepuesto pedido: pedidos){
-                if (pedido.getPresupuesto().getSucursal().equals(
-                    empleado.getSucursal())
-                    ){
-                        pedidosFiltrados.add(pedido);
+            for (PedidoRepuesto pedido : pedidos) {
+                if (pedido.getPresupuesto().getSucursal().equals(empleado.getSucursal())) {
+                    pedidosFiltrados.add(pedido);
                 }
             }
             return pedidoConverter.convertirPedidosAPedidosCabeceras(pedidosFiltrados);
@@ -140,10 +130,11 @@ public class ExpertoPedidos {
 
             DetallePedido detallePedido = detallePedidoRepository.getOne(detallePedidoId);
             detallePedido.addCostoRepuesto(costoRepuesto);
-            detallePedido = this.updateEstadoDetalle(detallePedido, null);
+            detallePedido = this.transitionDetalleToPedido(detallePedido, null);
+
             PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository
                     .findPedidoRepuestoByDetallePedidosIn(detallePedido);
-            EstadoPedidoRepuesto estadoPedidoRepuesto = this.needToUpdatePedido(pedidoRepuesto);
+            EstadoPedidoRepuesto estadoPedidoRepuesto = this.transitionPedidoToPedido(pedidoRepuesto);
 
             if (estadoPedidoRepuesto != null) {
                 pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
@@ -162,137 +153,139 @@ public class ExpertoPedidos {
 
     }
 
-    private EstadoPedidoRepuesto needToUpdatePedido(PedidoRepuesto pedidoRepuesto) {
+    private EstadoPedidoRepuesto transitionPedidoToPedido(PedidoRepuesto pedidoRepuesto) {
+        // si el pedido ya esta recibido parcial, no lo vuelvo a pedido o pedido parcial
+        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
+        .equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL)) {
+            return null;
+        }
         EstadoPedidoRepuesto nuevoEstado = null;
+        Set<DetallePedido> detalles = pedidoRepuesto.getDetallePedidos();
 
-        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO)) {
-
-            //si hay al menos 1 detalle Pedido lo dejo parcial
-            for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
-                if (!detallePedido.getEstadoDetallePedido().getNombreEstado()
-                        .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
-                    nuevoEstado = estadoPedidoRepuestoRepository
-                            .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL);
-                }
+        int totalDetalles = detalles.size();
+        int detallesPedidosPedidos = 0;
+        int detallePedidoParcial = 0;
+        for (DetallePedido detallePedido : detalles) {
+            String estadoDetalle = detallePedido.getEstadoDetallePedido().getNombreEstado();
+            if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
+                detallesPedidosPedidos+= 1;
             }
-
+            if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO_PARCIAL)) {
+                detallePedidoParcial+= 1;
+            }
         }
-        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-            .equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL)) {
-            Boolean all_pedidos = true;
-            Boolean any_recibido = false;
-            // si estan todos pedido lo paso de parcial a pedido
-            for (DetallePedido detallePedido: pedidoRepuesto.getDetallePedidos()) {
-                if (!detallePedido.getEstadoDetallePedido().getNombreEstado().equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
-                    all_pedidos = false;
-                    if (detallePedido.getEstadoDetallePedido().getNombreEstado().equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
-                       // si el que no esta pedido, esta recibido, paso a recibido parcial
-                        any_recibido = true;
-                        all_pedidos = true;
-                    }
-                }
-            }
 
-            if (all_pedidos) {
-                //si estan todos pedido y hay al menos 1 recibido, paso a recibido parcial
-                if (any_recibido) {
-                    nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL);
-                } else {
-                    nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO);
-                }
-            }
-
+        // Si hay algun repuesto ya pedido lo marco como parcial
+        if (detallePedidoParcial > 0 || detallesPedidosPedidos > 0) {
+            nuevoEstado = estadoPedidoRepuestoRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL);
         }
-        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO)) {
-            //si hay algun detalle recibido lo paso a recibido parcial
-            for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
-                if (!detallePedido.getEstadoDetallePedido().getNombreEstado()
-                        .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
-                    nuevoEstado = estadoPedidoRepuestoRepository
-                            .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL);
-                }
-            }
 
+        // Si ya pedi todos los repuestos, marco todo como pedido
+        if (detallesPedidosPedidos == totalDetalles) {
+            nuevoEstado = estadoPedidoRepuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO);
         }
-        if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-                        .equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL)
-            ) {
-            // si todos los detalles estan recibidos lo paso a recibido
-            Boolean all_recibidos = true;
-            for (DetallePedido detallePedido : pedidoRepuesto.getDetallePedidos()) {
-                String estadoDetalle = detallePedido.getEstadoDetallePedido().getNombreEstado();
-                if (!estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
-                    all_recibidos = false;;
-                }
+
+
+        return nuevoEstado;
+    }
+
+    private EstadoPedidoRepuesto transitionPedidoToRecibido(PedidoRepuesto pedidoRepuesto) {
+        EstadoPedidoRepuesto nuevoEstado = null;
+        Set<DetallePedido> detallesPedidos = pedidoRepuesto.getDetallePedidos();
+        int totalDetalles = detallesPedidos.size();
+        int detallesRecibidos = 0;
+        int detallesRecibidosParcial = 0;
+
+        for (DetallePedido detallePedido : detallesPedidos) {
+            String estadoDetalle = detallePedido.getEstadoDetallePedido().getNombreEstado();
+            if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
+                detallesRecibidos+= 1;
             }
-            if (all_recibidos) {
-                nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO);
+            if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO_PARCIAL)) {
+                detallesRecibidosParcial+= 1;
             }
+        }
+        // Si hay algun repuesto ya recibido lo marco como parcial
+        if (detallesRecibidosParcial > 0 || detallesRecibidos > 0) {
+            nuevoEstado = estadoPedidoRepuestoRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL);
+        }
+
+        // Si ya recibi todos los repuestos, marco todo como recibido
+        if (detallesRecibidos == totalDetalles) {
+            nuevoEstado = estadoPedidoRepuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO);
         }
 
         return nuevoEstado;
 
     }
 
-    public DetallePedido updateEstadoDetalle(DetallePedido detallePedido, EstadoDetallePedido estado) {
+    public DetallePedido transitionDetalleToPedido(DetallePedido detallePedido, EstadoDetallePedido estadoDetalle) {
 
-        if (estado == null) {
-            estado = this.needsToUpdateDetalle(detallePedido);
+        if (estadoDetalle == null) {
+            Set<CobranzaRepuesto> repuestosPresupuestados = detallePedido.getDetallePresupuesto().getCobranzaRepuestos();
+            int totalRepuestos = repuestosPresupuestados.size();
+            int repuestosPedidos = 0;
+            for (CobranzaRepuesto cobranzaRepuesto : repuestosPresupuestados) {
+                for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
+                    if (costoRepuesto.getTipoRepuesto().getId() == cobranzaRepuesto.getTipoRepuesto().getId()) {
+                        repuestosPedidos += 1;
+                    }
+                }
+            }
+            // Si ya pedi todos los repuestos, marco todo como pedido
+            if (repuestosPedidos == totalRepuestos) {
+                estadoDetalle = estadoDetallePedidoRepuestoRepository
+                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO);
+            }else {
+                // Si hay algun repuesto ya pedido lo marco como parcial
+                if (repuestosPedidos > 0 && totalRepuestos > 1) {
+                    estadoDetalle = estadoDetallePedidoRepuestoRepository
+                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO_PARCIAL);
+                }
+            }
         }
 
-        if (estado != null) {
-            detallePedido.setEstadoDetallePedido(estado);
+        if (estadoDetalle != null) {
+            detallePedido.setEstadoDetallePedido(estadoDetalle);
         }
 
         return detallePedido;
 
     }
 
-    private EstadoDetallePedido needsToUpdateDetalle(DetallePedido detallePedido) {
-        Boolean needsToUpdate = true;
-        EstadoDetallePedido estadoDetalle = null;
-        if (detallePedido.getEstadoDetallePedido().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_DE_PEDIDO)) {
-            // Needs to update to Pedido
-            for (CobranzaRepuesto cobranzaRepuesto : detallePedido.getDetallePresupuesto().getCobranzaRepuestos()) {
-                Boolean isPedido = false;
-                for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
-                    if (costoRepuesto.getTipoRepuesto() == cobranzaRepuesto.getTipoRepuesto()) {
-                        isPedido = true;
-                    }
-                }
-                if (!isPedido) {
-                    needsToUpdate = false;
-                }
-            }
+    public DetallePedido transitionDetalleToRecibido(DetallePedido detallePedido, EstadoDetallePedido estadoDetalle) {
+        Set<CobranzaRepuesto> repuestosPresupuestados = detallePedido.getDetallePresupuesto().getCobranzaRepuestos();
+        int totalRepuestos = repuestosPresupuestados.size() ;
+        int repuestosRecibidos = 0;
 
-            if (needsToUpdate) {
+
+        for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
+            if (costoRepuesto.getEstado().getNombreEstado()
+                .equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO)){
+                repuestosRecibidos += 1;
+            }
+        }
+        // Si ya recibi todos los repuestos, marco todo como recibido
+        if (repuestosRecibidos == totalRepuestos) {
+            estadoDetalle = estadoDetallePedidoRepuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO);
+        }else {
+            // Si hay algun repuesto ya recibido lo marco como parcial
+            if (repuestosRecibidos > 0 && totalRepuestos > 1) {
                 estadoDetalle = estadoDetallePedidoRepuestoRepository
-                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO);
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO_PARCIAL);
             }
         }
 
-        if (detallePedido.getEstadoDetallePedido().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)
-                || (estadoDetalle != null
-                        && estadoDetalle.getNombreEstado().equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO))) {
-            // Needs to update to Recibido
-            for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
-                if (!costoRepuesto.getEstado().getNombreEstado()
-                        .equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO)) {
-                    needsToUpdate = false;
-                }
-            }
-            if (needsToUpdate) {
-                estadoDetalle = estadoDetallePedidoRepuestoRepository
-                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO);
-            }
+        if (estadoDetalle != null) {
+            detallePedido.setEstadoDetallePedido(estadoDetalle);
         }
 
-        return estadoDetalle;
-
+        return detallePedido;
     }
 
     public CostoRepuesto recibirRepuesto(CostoRepuesto costoRepuesto, Long detallePedidoId) {
@@ -316,8 +309,8 @@ public class ExpertoPedidos {
             EstadoCostoRepuesto estadoRecibido = estadoCostoRepuestoRepository
                     .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO);
             costoRepuesto.setEstado(estadoRecibido);
-            detallePedido = this.updateEstadoDetalle(detallePedido, null);
-            EstadoPedidoRepuesto estadoPedidoRepuesto = this.needToUpdatePedido(pedidoRepuesto);
+            detallePedido = this.transitionDetalleToRecibido(detallePedido, null);
+            EstadoPedidoRepuesto estadoPedidoRepuesto = this.transitionPedidoToRecibido(pedidoRepuesto);
 
             if (estadoPedidoRepuesto != null) {
                 pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
@@ -338,16 +331,16 @@ public class ExpertoPedidos {
         Set<Authority> authorities = empleado.getPersona().getUser().getAuthorities();
 
         List<String> authoritiesNames = new ArrayList<String>();
-        // Spring permite filtrar todo a nivel de endpoint por eso filtro así internamente
-        // Tambien se puede pero creando una relacion entre el objeto presupuesto y el user (malisimo)
-        for (Authority authority: authorities) {
+        // Spring permite filtrar todo a nivel de endpoint por eso filtro así
+        // nternamente
+        // Tambien se puede pero creando una relacion entre el objeto presupuesto y el
+        // user (malisimo)
+        for (Authority authority : authorities) {
             authoritiesNames.add(authority.getName());
         }
 
-        return
-            authoritiesNames.contains(AuthoritiesConstants.ADMIN) ||
-            authoritiesNames.contains(AuthoritiesConstants.JEFE)
-        ;
+        return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
+                || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
 
 }

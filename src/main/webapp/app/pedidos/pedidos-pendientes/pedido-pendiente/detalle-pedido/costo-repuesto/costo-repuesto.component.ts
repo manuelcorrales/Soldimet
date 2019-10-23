@@ -17,6 +17,8 @@ import { PersonaService } from 'app/entities/persona';
 import { ProveedorService } from 'app/entities/proveedor';
 import { HttpResponse } from '@angular/common/http';
 import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
+import { EstadoPersona } from 'app/shared/model/estado-persona.model';
+import { EstadoPersonaService } from 'app/entities/estado-persona';
 
 @Component({
   selector: 'jhi-costo-repuesto',
@@ -37,6 +39,9 @@ export class CostoRepuestoComponent implements OnInit {
   detallePedido: DetallePedido;
 
   isSaving = false;
+  isEditing = true;
+  isPedido = false;
+  isRecibido = false;
 
   proveedor: DtoBusquedaProveedor = null;
   // articulo: IArticulo = null;
@@ -61,6 +66,7 @@ export class CostoRepuestoComponent implements OnInit {
   constructor(
     config: NgbTypeaheadConfig,
     private pedidoService: PedidosService,
+    private estadoPersonaService: EstadoPersonaService,
     // private articuloService: ArticuloService,
     private personaService: PersonaService,
     private proveedorService: ProveedorService,
@@ -81,9 +87,18 @@ export class CostoRepuestoComponent implements OnInit {
       this.detallePedido.costoRepuestos.forEach(costo => {
         if (costo.tipoRepuesto.id === this.cobranzaRepuesto.tipoRepuesto.id) {
           this.costoRepuesto = costo;
+          this.isEditing = false;
+          this.checkCostoStatus();
         }
       });
     }
+  }
+  editarCostoRepuesto() {
+    this.isEditing = true;
+  }
+
+  cancelarEditarCostoRepuesto() {
+    this.isEditing = false;
   }
 
   getCostoRepuesto() {
@@ -143,18 +158,18 @@ export class CostoRepuestoComponent implements OnInit {
   // }
 
   actualizarPedidoDetalle() {
-    this.preUpdateCostoRepuesto();
     this.isSaving = true;
+    this.preUpdateCostoRepuesto();
   }
 
   updatePedidoDetalle() {
     this.pedidoService.updatePedidoDetalle(this.costoRepuesto, this.detallePedido.id).subscribe(
       nuevoCosto => {
         this.costoRepuesto = nuevoCosto;
-        // eslint-disable-next-line no-console
-        console.log(nuevoCosto);
         this.eventManager.broadcast({ name: 'pedidoListModification', content: 'OK' });
+        this.isEditing = false;
         this.isSaving = false;
+        this.checkCostoStatus();
       },
       error => {
         this.jhiAlertService.error(error.message);
@@ -182,8 +197,15 @@ export class CostoRepuestoComponent implements OnInit {
     if (typeof this.proveedor === 'string') {
       this.createProvAsync(this.proveedor as string);
     } else {
-      this.costoRepuesto.proveedor = new Proveedor(Number(this.proveedor.idProveedor));
-      this.updatePedidoDetalle();
+      this.proveedorService.find(this.proveedor.idProveedor).subscribe(
+        (proveedor: HttpResponse<IProveedor>) => {
+          this.costoRepuesto.proveedor = proveedor.body;
+          this.updatePedidoDetalle();
+        },
+        error => {
+          this.jhiAlertService.error(error.message);
+        }
+      );
     }
   }
 
@@ -199,17 +221,26 @@ export class CostoRepuestoComponent implements OnInit {
   createProvAsync(nombre: string) {
     let proveedor = new Proveedor();
     proveedor.nombreProveedor = nombre;
-    proveedor.persona = new Persona();
-    proveedor.persona.nombre = nombre;
-    proveedor.persona.apellido = '';
-    this.personaService.create(proveedor.persona).subscribe(
-      (resp: HttpResponse<IPersona>) => {
-        proveedor.persona = resp.body;
-        this.proveedorService.create(proveedor).subscribe(
-          (respProv: HttpResponse<IProveedor>) => {
-            proveedor = respProv.body;
-            this.costoRepuesto.proveedor = proveedor;
-            this.updatePedidoDetalle();
+    // Investigar como buscar por nombre de estado y cambiarlo (y en el modal de crear el cliente tambien)
+    this.estadoPersonaService.find(1).subscribe(
+      (estado: HttpResponse<EstadoPersona>) => {
+        proveedor.persona = new Persona();
+        proveedor.persona.estadoPersona = estado.body;
+        proveedor.persona.nombre = nombre;
+        proveedor.persona.apellido = '';
+        this.personaService.create(proveedor.persona).subscribe(
+          (resp: HttpResponse<IPersona>) => {
+            proveedor.persona = resp.body;
+            this.proveedorService.create(proveedor).subscribe(
+              (respProv: HttpResponse<IProveedor>) => {
+                proveedor = respProv.body;
+                this.costoRepuesto.proveedor = proveedor;
+                this.updatePedidoDetalle();
+              },
+              error => {
+                this.jhiAlertService.error(error.message);
+              }
+            );
           },
           error => {
             this.jhiAlertService.error(error.message);
@@ -228,11 +259,21 @@ export class CostoRepuestoComponent implements OnInit {
       (costo: CostoRepuesto) => {
         this.costoRepuesto = costo;
         this.isSaving = false;
+        this.checkCostoStatus();
         this.eventManager.broadcast({ name: 'pedidoListModification', content: 'OK' });
       },
       error => {
         this.jhiAlertService.error(error.message);
       }
     );
+  }
+
+  private checkCostoStatus() {
+    if (this.costoRepuesto.estado.nombreEstado === 'Pedido') {
+      this.isPedido = true;
+    }
+    if (this.costoRepuesto.estado.nombreEstado === 'Recibido') {
+      this.isRecibido = true;
+    }
   }
 }
