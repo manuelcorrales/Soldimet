@@ -267,7 +267,7 @@
             <column name="nombre_forma_de_pago" value="Cheque"/>
         </insert>
     </changeSet>
-     <!-- Lista_precio_CRAM -->
+    <!-- Lista_precio_CRAM -->
     <changeSet author="manuelc" id="1553905456407-20">
         <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
             encoding="UTF-8"
@@ -278,6 +278,74 @@
             <column name="id" type="NUMERIC"/>
             <column name="numero_grupo" type="NUMERIC"/>
         </ext:loadData>
+    </changeSet>
+    <!-- Lista_precio_Desde_Hasta -->
+    <changeSet author="manuelc" id="155434564563347-14">
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="1"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="2"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="3"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="4"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="5"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="6"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="7"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="8"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="9"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="10"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="11"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="12"/>
+        </insert>
+        <insert tableName="lista_precio_desde_hasta">
+            <column name="id" autoIncrement="true"/>
+            <column name="fecha_desde" value="NOW()"/>
+            <column name="lista" value="13"/>
+        </insert>
     </changeSet>
     <!-- Localidades-Departamentos -->
     <changeSet author="manuelc" id="15155390507-3">
@@ -303,6 +371,22 @@
             <column name="nombre_operacion" type="STRING"/>
             <column name="estado_operacion_id" type="NUMERIC"/>
             <column name="tipo_parte_motor_id" type="NUMERIC"/>
+        </ext:loadData>
+    </changeSet>
+    <!-- Costo - Operaciones -->
+    <changeSet author="manuelc" id="1554546745764-1">
+        <ext:loadData identityInsertEnabled="true" commentLineStartsWith="#"
+            encoding="UTF-8"
+            file="config/liquibase/data/costo_operaciones.csv"
+            quotchar="&#34;"
+            separator=","
+            tableName="costo_operacion">
+            <column name="id" type="NUMERIC"/>
+            <column name="costo_operacion" type="NUMERIC"/>
+            <column name="cilindrada_id" type="NUMERIC"/>
+            <column name="operacion_id" type="NUMERIC"/>
+            <column name="tipo_parte_motor_id" type="NUMERIC"/>
+            <column name="lista" type="NUMERIC"/>
         </ext:loadData>
     </changeSet>
     <!-- Rubros -->

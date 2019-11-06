@@ -1,12 +1,12 @@
 id,marca_motor
 2,Fiat
 3,Ford
-4,GM
+4,G.M.
 5,Honda
 6,Hyundai
 7,Isuzu
-8,KIA
-9,M Benz
+8,IKA
+9,M. Benz
 10,Maxion
 11,Mazda
 12,Mitsubishi
@@ -20,3 +20,27 @@ id,marca_motor
 20,Toyota
 21,Volkswagen
 22,Volvo
+23,Bedford
+24,Caterpillar
+25,Borgward
+26,Cherokee
+27,Chevette
+28,Chevrolet
+29,Chrysler
+30,Cimarron
+31,Citroen
+32,Cummins
+33,Dakota
+34,Deutz
+35,Di Tella
+36,Dodge
+37,Hanomag
+38,Indenor
+39,John Deere
+40,Kubota
+41,Lada-Aleko
+42,Maxion
+43,Opel
+44,rastrojero
+45,Scania
+46,Valiant

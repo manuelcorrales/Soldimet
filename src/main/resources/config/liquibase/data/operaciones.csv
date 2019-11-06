@@ -1,5 +1,5 @@
 id,nombre_operacion,estado_operacion_id,tipo_parte_motor_id
-1,Rectificar cilindros,1,2
+1,Rectificar cilindros,1,1
 2,Encamisar cilindros,1,1
 3,Dar altura a camisas,1,1
 4,Bruñir cilindros,1,1

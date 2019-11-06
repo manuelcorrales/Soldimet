@@ -58,9 +58,10 @@ export class OperacionListaComponent implements OnInit {
       if (this.listaGroup[index]) {
         this.listaGroup[index].push(costoOperacion);
       } else {
-        this.listaGroup.push([costoOperacion]);
+        this.listaGroup[index] = [costoOperacion];
       }
     });
+    this.listaGroup.forEach(lista => lista.sort(this._sortOperaciones));
   }
 
   crearGrupos() {
@@ -68,10 +69,37 @@ export class OperacionListaComponent implements OnInit {
       if (
         this.grupos.findIndex(
           grupo => grupo.tipoParte.id === costoOperacion.tipoParteMotor.id && grupo.cilindrada.id === costoOperacion.cilindrada.id
-        )
+        ) === -1
       ) {
-        this.grupos.push({ tipoParte: costoOperacion.tipoParteMotor, cilindrada: costoOperacion.cilindrada });
+        this.grupos.push({
+          tipoParte: costoOperacion.tipoParteMotor,
+          cilindrada: costoOperacion.cilindrada
+        });
       }
     });
+    this.grupos.sort(this._sortGrupos);
+  }
+
+  _sortGrupos(a: Grupo, b: Grupo) {
+    if (a.tipoParte.nombreTipoParteMotor === 'Block') {
+      return 1;
+    }
+    if (a.cilindrada.cantidadDeCilindros < b.cilindrada.cantidadDeCilindros) {
+      return -1;
+    }
+    if (a.cilindrada.cantidadDeCilindros > b.cilindrada.cantidadDeCilindros) {
+      return 1;
+    }
+    return 0;
+  }
+
+  _sortOperaciones(a: CostoOperacion, b: CostoOperacion) {
+    if (a.operacion.nombreOperacion > b.operacion.nombreOperacion) {
+      return 1;
+    }
+    if (a.operacion.nombreOperacion < b.operacion.nombreOperacion) {
+      return -1;
+    }
+    return 0;
   }
 }
