@@ -18,6 +18,7 @@ logging:
     ROOT: INFO
     soldimet: INFO
     io.github.jhipster: INFO
+    file: ./logs/application.log
 
 management:
   metrics:
