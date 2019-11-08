@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="myClienteLabel">Presupuesto Nº {{presupuesto.id}}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row" *ngIf="presupuesto.cliente?.persona" style="padding-top: 15px;">
+        <div class="col">
+            <span [routerLink]="['/persona', presupuesto.cliente.persona?.id]"><strong>Nombre:</strong> {{presupuesto.cliente.persona?.nombre}},{{presupuesto.cliente.persona?.apellido}}</span>
+        </div>
+        <div class="col">
+            <strong>Número de cliente:</strong> {{presupuesto.cliente?.id}}
+        </div>
+        <div class="col">
+                <strong>Teléfono:</strong> {{presupuesto.cliente?.persona?.numeroTelefono}}
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+        <span class="fa fa-ban"></span>&nbsp;
+        <span>Volver</span>
+    </button>
+</div>

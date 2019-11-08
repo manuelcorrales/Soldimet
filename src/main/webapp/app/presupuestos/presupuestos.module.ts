@@ -16,29 +16,31 @@ import { OperacionesNuevopresupuestoComponent } from 'app/presupuestos/nuevo-pre
 import { RepuestoPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/repuestos-nuevopresupuesto/repuestos-nuevopresupuesto/repuesto_precio/repuesto-precio.component';
 import { OperacionPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/operaciones-nuevopresupuesto/operaciones-nuevopresupuesto/operacion_precio/operacion-precio.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { PresupuestoDetailComponent } from './presupuesto-detail/presupuesto-detail.component';
 
 @NgModule({
-    imports: [NgSelectModule, BrowserModule, FormsModule, SoldimetSharedModule, CommonModule, RouterModule.forChild(PRESUPUESTOS_ROUTES)],
-    declarations: [
-        PresupuestosComponent,
-        NuevoPresupuestoComponent,
-        ClientesNuevopresupuestoComponent,
-        OperacionesNuevopresupuestoComponent,
-        RepuestosNuevopresupuestoComponent,
-        MotorNuevoPresupuestoComponent,
-        OperacionPrecioComponent,
-        RepuestoPrecioComponent
-    ],
-    entryComponents: [
-        PresupuestosComponent,
-        NuevoPresupuestoComponent,
-        ClientesNuevopresupuestoComponent,
-        OperacionesNuevopresupuestoComponent,
-        RepuestosNuevopresupuestoComponent,
-        MotorNuevoPresupuestoComponent
-    ],
-    providers: [PresupuestosService, NgbActiveModal],
-    exports: [RouterModule],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [NgSelectModule, BrowserModule, FormsModule, SoldimetSharedModule, CommonModule, RouterModule.forChild(PRESUPUESTOS_ROUTES)],
+  declarations: [
+    PresupuestosComponent,
+    NuevoPresupuestoComponent,
+    ClientesNuevopresupuestoComponent,
+    OperacionesNuevopresupuestoComponent,
+    RepuestosNuevopresupuestoComponent,
+    MotorNuevoPresupuestoComponent,
+    OperacionPrecioComponent,
+    RepuestoPrecioComponent,
+    PresupuestoDetailComponent
+  ],
+  entryComponents: [
+    PresupuestosComponent,
+    NuevoPresupuestoComponent,
+    ClientesNuevopresupuestoComponent,
+    OperacionesNuevopresupuestoComponent,
+    RepuestosNuevopresupuestoComponent,
+    MotorNuevoPresupuestoComponent
+  ],
+  providers: [PresupuestosService, NgbActiveModal],
+  exports: [RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PresupuestosModule {}
