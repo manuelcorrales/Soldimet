@@ -245,15 +245,13 @@ export class NuevoMovimientoComponent implements OnInit {
   }
 
   guardarMovimiento() {
-    this.movimiento.tipoMovimiento = this.tipoMovimiento;
-    this.movimiento.subCategoria = this.concepto;
-    this.defineMetodoPago();
-
+    this.preGuardarMovimiento();
     this.save();
   }
 
   save() {
     this.isSaving = true;
+
     this.subscribeToSaveResponse(this.cajaService.saveMovimiento(this.movimiento));
   }
 
@@ -344,5 +342,16 @@ export class NuevoMovimientoComponent implements OnInit {
       '.right'
     );
     this.router.navigate(['/cajas']);
+  }
+
+  preGuardarMovimiento() {
+    if (typeof this.concepto === 'string') {
+      const nombreSubCategoria = this.concepto;
+      this.concepto = new SubCategoria();
+      this.concepto.nombreSubCategoria = nombreSubCategoria;
+    }
+    this.movimiento.tipoMovimiento = this.tipoMovimiento;
+    this.movimiento.subCategoria = this.concepto;
+    this.defineMetodoPago();
   }
 }
