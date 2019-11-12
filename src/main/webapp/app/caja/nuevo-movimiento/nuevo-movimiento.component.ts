@@ -244,8 +244,8 @@ export class NuevoMovimientoComponent implements OnInit {
     this.movimiento.medioDePago = this.medioDePago;
   }
 
-  guardarMovimiento() {
-    this.preGuardarMovimiento();
+  async guardarMovimiento() {
+    await this.preGuardarMovimiento();
     this.save();
   }
 
@@ -344,14 +344,21 @@ export class NuevoMovimientoComponent implements OnInit {
     this.router.navigate(['/cajas']);
   }
 
-  preGuardarMovimiento() {
+  async preGuardarMovimiento() {
     if (typeof this.concepto === 'string') {
-      const nombreSubCategoria = this.concepto;
+      const nombreSubCategoria = this.concepto as string;
       this.concepto = new SubCategoria();
       this.concepto.nombreSubCategoria = nombreSubCategoria;
+      // agrego la subcategoria a la lista en categoria
+      this.categoria.subCategorias.push(this.concepto);
+      const response = await this.categoriaService.update(this.categoria).toPromise();
+      this.categoria = response.body;
+      this.concepto = this.categoria.subCategorias.find(sub => sub.nombreSubCategoria === this.concepto.nombreSubCategoria);
     }
     this.movimiento.tipoMovimiento = this.tipoMovimiento;
     this.movimiento.subCategoria = this.concepto;
     this.defineMetodoPago();
   }
+
+  crearSubcategoria() {}
 }

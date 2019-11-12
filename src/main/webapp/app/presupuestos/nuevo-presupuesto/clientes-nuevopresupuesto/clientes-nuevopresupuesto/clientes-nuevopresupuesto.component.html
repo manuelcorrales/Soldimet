@@ -3,15 +3,9 @@
         Cliente
     </div>
     <div class="card-body" style="padding-top: 0px;">
-        <ng-select [loadingText]='textSearching' [items]='clientes' [loading]= 'buscandoClientes'
-         [notFoundText]='textNoResults' [(ngModel)]="clienteElegido" [searchFn]="filtrarClientes">
-         <ng-template ng-label-tmp let-item="item">
-                {{item.persona.nombre}}, {{item.persona.apellido}}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item" let-index="index" >
-                    {{item.persona.nombre}}, {{item.persona.apellido}}
-            </ng-template>
-        </ng-select>
+        <input type="text" placeholder="Buscar cliente" [(ngModel)]="clienteElegido" [resultFormatter]="formatterCli" id="typeahead-focusCli"
+            type="text" class="form-control" [ngbTypeahead]="searchCli" (focus)="focusCli$.next($event.target.value)" (click)="clickCli$.next($event.target.value)"
+            #instanceNTACli="ngbTypeahead" [inputFormatter]="formatterCli" />
         <div class="row" *ngIf="clienteElegido?.persona" style="padding-top: 15px;">
             <div class="col">
                 <span [routerLink]="['/persona', clienteElegido.persona?.id]"><strong>Nombre:</strong> {{clienteElegido.persona?.nombre}},{{clienteElegido.persona?.apellido}}</span>
