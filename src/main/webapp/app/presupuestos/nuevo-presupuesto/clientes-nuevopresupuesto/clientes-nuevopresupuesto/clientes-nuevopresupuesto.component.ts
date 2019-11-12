@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { ClienteService } from 'app/entities/cliente';
 import { PersonaService } from 'app/entities/persona';
 import { Cliente } from 'app/shared/model/cliente.model';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { Subject, Observable, merge } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-clientes-nuevopresupuesto',
@@ -12,29 +15,11 @@ import { Cliente } from 'app/shared/model/cliente.model';
 export class ClientesNuevopresupuestoComponent implements OnInit {
   clientes: Cliente[] = [];
   clienteElegido: Cliente;
-  // configuración autocompleter
-  // Seleccionar el elemento al hacer click sobre la sugerencia
-  elegirConClick = true;
-  // abrir/cerrar el dropwdown al hacer click
-  abrirDropEnclick = true;
-  // cantidad de caracteres ingresados como mínimo al hacer la búsqueda
-  cantidadCaracteresMinimos = 2;
-  // numero en milisegundos de espera antes de realizar la búsqueda
-  milisegundos = 100;
-  // Auto elegir una coincidencia
-  resaltarCoincidencia = false;
-  // enfocar automaticamente cuando carga la página
-  autofocus = true;
-  // mensaje 'sin resultados'
-  textNoResults = 'No se encontraron resultados';
-  // texto durante la busqueda
-  textSearching = 'buscando clientes...';
-  // titulo
-  titleField = 'Cliente';
-  // limpiar lista de busqueda
-  clearSelected = true;
-  // controlando estado del buscador
-  buscandoClientes = false;
+
+  @ViewChild('instanceNTACli', { static: false })
+  instanceCli: NgbTypeahead;
+  focusCli$ = new Subject<string>();
+  clickCli$ = new Subject<string>();
 
   constructor(
     private _presupuestosService: PresupuestosService,
@@ -47,15 +32,42 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
   }
 
   buscarTodoscliente() {
-    this.buscandoClientes = true;
     this._presupuestosService.findAllActiveClientes().subscribe((res: Cliente[]) => {
-      (this.buscandoClientes = false), (this.clientes = [...res]);
+      this.clientes = [...res];
     });
   }
 
-  filtrarClientes(term: string, cliente: Cliente): boolean {
-    const busqueda = term.toLowerCase();
-    return cliente.persona.nombre.toLowerCase().includes(busqueda) || cliente.persona.apellido.toLowerCase().includes(busqueda);
+  formatterCli = (result: Cliente) => result.persona.nombre + ' ' + result.persona.apellido;
+  searchCli = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged()
+    );
+    const clicksWithClosedPopup$ = this.clickCli$.pipe(filter(() => !this.instanceCli.isPopupOpen()));
+    const inputFocus$ = this.focusCli$;
+
+    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term =>
+        (term === ''
+          ? this.clientes
+          : this.clientes.filter(v => {
+              v.persona.nombre.toLowerCase().includes(term.toLowerCase()) || v.persona.apellido.toLowerCase().includes(term.toLowerCase());
+            })
+        )
+          .slice(0, 10)
+          .sort(this._sortCliente)
+      )
+    );
+  };
+
+  _sortCliente(a: Cliente, b: Cliente) {
+    if (a.persona.nombre < b.persona.nombre) {
+      return 1;
+    }
+    if (a.persona.nombre > b.persona.nombre) {
+      return -1;
+    }
+    return 0;
   }
 
   getCliente() {

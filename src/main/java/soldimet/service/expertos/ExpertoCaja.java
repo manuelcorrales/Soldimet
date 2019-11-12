@@ -209,7 +209,6 @@ public class ExpertoCaja {
         Movimiento movimiento = movimientoRepository.save(movimientoAEliminar);
         return movimiento;
 
-	}
-
+    }
 
 }

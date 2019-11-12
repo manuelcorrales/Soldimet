@@ -84,7 +84,7 @@
                             name="{{costoRepuesto.tipoRepuesto.nombreTipoRepuesto}}"
                             (click)="agregarRepuestoADetalle(costoRepuesto)">
                             <label class="form-check-label" for="{{costoRepuesto.id}}">
-                                {{costoRepuesto.articulo.descripcion}}
+                                {{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}
                             </label>
                             <label class="form-check-label" for="{{costoRepuesto.id}}"> ${{costoRepuesto.valor}}</label>
                         </div>
