@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javassist.NotFoundException;
 import soldimet.constant.Globales;
 import soldimet.converter.PresupuestoConverter;
 import soldimet.domain.Aplicacion;
@@ -502,4 +505,8 @@ public class ExpertoPresupuesto {
         return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
                 || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
+
+	public Presupuesto getPresupuesto(Long presupuestoId) throws EntityNotFoundException{
+        return  presupuestoRepository.getOne(presupuestoId);
+	}
 }

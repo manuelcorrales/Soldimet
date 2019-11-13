@@ -35,6 +35,7 @@ export class PresupuestosService {
   private urlCancelarPresupuesto = '/cancelar';
   private urlTerminasPresupuesto = '/terminar';
   private urlEntregarPresupuesto = '/entregar';
+  private urlPresupuestoVista = '/view';
 
   constructor(
     private http: HttpClient,
@@ -46,6 +47,11 @@ export class PresupuestosService {
   savePresupuesto(presupuesto: Presupuesto): Observable<Presupuesto> {
     const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlSavePresupuesto}`;
     return this.http.post<Presupuesto>(urlLlamada, presupuesto);
+  }
+
+  getPresupuesto(id): Observable<Presupuesto> {
+    const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoVista}/${id}`;
+    return this.http.get<Presupuesto>(urlLlamada);
   }
 
   aceptarPresupuesto(dtoPresupuesto: DtoPresupuestoCabeceraComponent): Observable<DtoPresupuestoCabeceraComponent> {

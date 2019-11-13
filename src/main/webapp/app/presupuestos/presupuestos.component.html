@@ -73,7 +73,9 @@
                         </td>
                         <td>{{presupuesto.sucursal}}</td>
                         <td>
-
+                            <button class="btn btn-outline-secondary" placement="top" [routerLink]="['/presupuestos', presupuesto.codigo, 'ver' ]" ngbTooltip="Ver">
+                                <fa-icon icon="eye"></fa-icon>
+                            </button>
                             <button class="btn btn-success" *ngIf="presupuesto.estado == 'Creado'" (click)="aceptarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Aceptar presupuesto">
                                 <fa-icon icon="check"></fa-icon>

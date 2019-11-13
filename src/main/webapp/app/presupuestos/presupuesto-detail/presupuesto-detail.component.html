@@ -1,0 +1,72 @@
+<div class="jh-card" style="margin-top: 0px">
+    <div class="card jh-card border-info mb-3">
+        <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
+            Presupuesto nº {{presupuesto.id}}
+        </div>
+        <div class="card-body" style="padding-top: 0px;">
+            <div class="row">
+                <div class="col">
+                    <p><strong>Motor:</strong> {{presupuesto.detallePresupuestos[0]?.motor?.marcaMotor}}</p>
+                    <p><strong>Aplicación:</strong> {{presupuesto.detallePresupuestos[0]?.aplicacion?.nombreAplicacion}}</p>
+                    <p><strong>Cilindrada: </strong> {{presupuesto.detallePresupuestos[0]?.cilindrada?.cantidadDeCilindros}}</p>
+                    <p><strong>Presupuestado:</strong>
+                        <span *ngFor="let detalle of presupuesto.detallePresupuestos">{{detalle.tipoParteMotor?.nombreTipoParteMotor}} </span></p>
+                </div>
+                <div class="col">
+                    <p><strong>Número de cliente:</strong>  {{presupuesto.cliente.id}}</p>
+                    <p><strong>Nombre:</strong>  {{presupuesto.cliente?.persona?.nombre}} {{presupuesto.cliente?.persona?.apellido}}</p>
+                    <p><strong>Teléfono:</strong>  {{presupuesto.cliente?.persona?.numeroTelefono}}</p>
+                    <p>
+                        <strong>Dirección:</strong>  {{presupuesto.cliente?.persona?.direccion?.calle}} {{presupuesto.cliente?.persona?.direccion?.numero}},
+                        {{presupuesto.cliente?.persona?.direccion?.localidad?.nombreLocalidad}}
+                    </p>
+                </div>
+                <div class="col">
+                    <p><strong>Sucursal:</strong> {{presupuesto.sucursal?.nombreSucursal}}</p>
+                    <p><strong>Fecha:</strong> {{presupuesto.fechaCreacion}}</p>
+                    <p><strong>Estado:</strong> {{presupuesto.estadoPresupuesto?.nombreEstado}}</p>
+                    <p><strong>Importe:</strong> {{presupuesto.importeTotal}}</p>
+                    <p><strong>Observaciones:</strong> {{presupuesto.observaciones}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-1">
+            <div class="card jh-card border-info mb-3">
+                <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
+                    Operaciones
+                </div>
+                <div class="card-body" style="padding-top: 0px;">
+                    <ul>
+                        <span *ngFor="let detalle of presupuesto.detallePresupuestos">
+                            <li *ngFor="let cobroOperacion of detalle.cobranzaOperacions">
+                                {{cobroOperacion?.operacion?.nombreOperacion}}
+                                ${{cobroOperacion?.cobranzaOperacion}}
+                            </li>
+                        </span>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-1">
+            <div class="card jh-card border-info mb-3">
+                <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
+                    Repuestos
+                </div>
+                <div class="card-body" style="padding-top: 0px;">
+                    <div class="card-body" style="padding-top: 0px;">
+                        <ul>
+                            <span *ngFor="let detalle of presupuesto.detallePresupuestos">
+                                <li *ngFor="let cobroRepuesto of detalle.cobranzaRepuestos">
+                                    {{cobroRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}
+                                    ${{cobroRepuesto?.valor}}
+                                </li>
+                            </span>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
