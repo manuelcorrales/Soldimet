@@ -73,7 +73,7 @@ public class PresupuestoController {
     public Presupuesto getPresupuesto(@PathVariable("id") Long presupuestoId) {
         log.debug("request /api/presupuestos/view: presupuesto id {}", presupuestoId);
         Presupuesto presupuesto = expertoPresupuesto.getPresupuesto(presupuestoId);
-        log.debug("response /api/presupuestos/view: presupuesto id {}", presupuestoId);
+        log.debug("response /api/presupuestos/view: {}", presupuesto);
         return presupuesto;
     }
 
@@ -81,7 +81,7 @@ public class PresupuestoController {
     public List<Aplicacion> buscarPresupuestos(@PathVariable("motorId") Long motorId) {
         log.debug("request /api/presupuestos/getAplicacionByMotor: motorId{}", motorId);
         List<Aplicacion> aplicaciones =  expertoPresupuesto.buscarAplicacionPorMotor(motorId);
-        log.debug("response /api/presupuestos/getAplicacionByMotor: motorId{}", aplicaciones);
+        log.debug("response /api/presupuestos/getAplicacionByMotor: {}", aplicaciones);
         return aplicaciones;
     }
 
@@ -97,7 +97,7 @@ public class PresupuestoController {
     public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(@PathVariable("presupuestoId") Long presupuestoId) {
         log.debug("request /api/presupuestos/getCostoRepuestoPresupuesto: presupuestoId {}", presupuestoId);
         List<CostoRepuesto> costos = expertoPresupuesto.buscarCostoRepuestoPresupuesto(presupuestoId);
-        log.debug("response /api/presupuestos/getCostoRepuestoPresupuesto: presupuestoId {}", costos);
+        log.debug("response /api/presupuestos/getCostoRepuestoPresupuesto: {}", costos);
         return costos;
     }
 
