@@ -66,6 +66,11 @@ public class PresupuestoController {
 
     }
 
+    @GetMapping("/view/{id}")
+    public Presupuesto getPresupuesto(@PathVariable("id") Long presupuestoId) {
+        return expertoPresupuesto.getPresupuesto(presupuestoId);
+    }
+
     @GetMapping("/getAplicacionByMotor/{motorId}")
     public List<Aplicacion> buscarPresupuestos(@PathVariable("motorId") Long motorId) {
 
@@ -85,9 +90,10 @@ public class PresupuestoController {
     }
 
     // @GetMapping("/getClientesByNombre/{nombreCliente}")
-    // public List<Cliente> buscarClientesPorNombre(@PathVariable("nombreCliente") String nombreCliente) {
+    // public List<Cliente> buscarClientesPorNombre(@PathVariable("nombreCliente")
+    // String nombreCliente) {
 
-    //     return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
+    // return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
     // }
 
     @GetMapping("/getAllClientes")
@@ -114,7 +120,8 @@ public class PresupuestoController {
         log.debug("REST request to save Presupuesto : {}", presupuesto);
         Presupuesto result = expertoPresupuesto.savePresupuesto(presupuesto);
         return ResponseEntity.created(new URI("/api/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(APP_NAME, false, ENTITY_NAME, result.getId().toString())).body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(APP_NAME, false, ENTITY_NAME, result.getId().toString()))
+                .body(result);
     }
 
     @PostMapping("/aceptar")
@@ -122,9 +129,8 @@ public class PresupuestoController {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.aceptarPresupuesto(dtoPresupuesto);
         if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
-                    .body(result);
+            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
+                    String.valueOf(result.getCodigo()))).body(result);
         } else {
             log.debug("Error :) ", dtoPresupuesto);
             return ResponseEntity.status(500).body(dtoPresupuesto);
@@ -136,9 +142,8 @@ public class PresupuestoController {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
         if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
-                    .body(result);
+            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
+                    String.valueOf(result.getCodigo()))).body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);
         }
@@ -149,9 +154,8 @@ public class PresupuestoController {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.entregarPresupuesto(dtoPresupuesto);
         if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
-                    .body(result);
+            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
+                    String.valueOf(result.getCodigo()))).body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);
         }
@@ -162,9 +166,8 @@ public class PresupuestoController {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.terminarPresupuesto(dtoPresupuesto);
         if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil
-                    .createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
-                    .body(result);
+            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
+                    String.valueOf(result.getCodigo()))).body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);
         }

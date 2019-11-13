@@ -5,24 +5,19 @@ import { NuevoPresupuestoComponent } from 'app/presupuestos/nuevo-presupuesto/nu
 import { JhiResolvePagingParams } from 'ng-jhipster';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { Injectable } from '@angular/core';
-import { IPresupuesto, Presupuesto } from 'app/shared/model/presupuesto.model';
-import { PresupuestoService } from 'app/entities/presupuesto';
+import { Presupuesto } from 'app/shared/model/presupuesto.model';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { HttpResponse } from '@angular/common/http';
 import { PresupuestoDetailComponent } from 'app/presupuestos/presupuesto-detail/presupuesto-detail.component';
+import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 
 @Injectable({ providedIn: 'root' })
-export class PresupuestoResolve implements Resolve<IPresupuesto> {
-  constructor(private service: PresupuestoService) {}
+export class PresupuestoResolve implements Resolve<Presupuesto> {
+  constructor(private service: PresupuestosService) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IPresupuesto> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Presupuesto> {
     const id = route.params['id'];
     if (id) {
-      return this.service.find(id).pipe(
-        filter((response: HttpResponse<Presupuesto>) => response.ok),
-        map((presupuesto: HttpResponse<Presupuesto>) => presupuesto.body)
-      );
+      return this.service.getPresupuesto(id);
     }
   }
 }
@@ -52,19 +47,18 @@ export const PRESUPUESTOS_ROUTES: Routes = [
         data: {
           pageTitle: 'Nuevo Presupuesto'
         }
+      },
+      {
+        path: ':id/ver',
+        component: PresupuestoDetailComponent,
+        resolve: {
+          presupuesto: PresupuestoResolve
+        },
+        data: {
+          authorities: ['ROLE_USER'],
+          pageTitle: 'Presupuesto'
+        }
       }
     ]
-  },
-  {
-    path: ':id/view',
-    component: PresupuestoDetailComponent,
-    resolve: {
-      presupuesto: PresupuestoResolve
-    },
-    data: {
-      authorities: ['ROLE_USER'],
-      pageTitle: 'Presupuesto'
-    },
-    canActivate: [UserRouteAccessService]
   }
 ];

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IPresupuesto } from 'app/shared/model/presupuesto.model';
-import { ActivatedRoute } from '../../../../../../node_modules/@angular/router';
+import { Presupuesto } from 'app/shared/model/presupuesto.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-presupuesto-detail',
@@ -8,7 +8,7 @@ import { ActivatedRoute } from '../../../../../../node_modules/@angular/router';
   styleUrls: ['./presupuesto-detail.component.scss']
 })
 export class PresupuestoDetailComponent implements OnInit {
-  presupuesto: IPresupuesto;
+  presupuesto: Presupuesto;
 
   constructor(protected activatedRoute: ActivatedRoute) {}
 
