@@ -6,6 +6,8 @@
 package soldimet.service.expertos;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import soldimet.constant.Globales;
 import soldimet.domain.EstadoPresupuesto;
@@ -18,6 +20,8 @@ import soldimet.repository.PresupuestoRepository;
  * @author Manu
  */
 public class ExpertoCUEntregarTrabajo {
+
+    private final Logger log = LoggerFactory.getLogger(ExpertoCUEntregarTrabajo.class);
 
     @Autowired
     private EstadoPresupuestoRepository estadoPresupuestoRepository;
@@ -46,6 +50,7 @@ public class ExpertoCUEntregarTrabajo {
             }
             return false;
         } catch (NullPointerException e) {
+            log.error(e.getMessage());
             return false;
         }
 

@@ -31,26 +31,32 @@ public class CajaController {
 
     @GetMapping("/dia")
     public DTOCajaCUConsultarMovimientos getMovimientosDia() {
+        log.debug("request api/caja/día");
 
         DTOCajaCUConsultarMovimientos movimientosDelDia = expertoCaja.buscarMovimientosDia();
 
+        log.debug("response api/caja/día", movimientosDelDia);
         return movimientosDelDia;
     }
 
     @PostMapping("/nuevo_movimiento")
     public Movimiento saveNewMovimiento(@RequestBody Movimiento movimiento) {
-
+        log.debug("request api/caja/nuevo_movimiento");
         Movimiento movimientosDelDia = expertoCaja.guardarNuevoMovimiento(movimiento);
 
+        log.debug("response api/caja/nuevo_movimiento", movimientosDelDia);
         return movimientosDelDia;
     }
 
     @PostMapping("/borrar_movimiento/{movimientoId}")
     public ResponseEntity<Movimiento> borrarMovimiento(@PathVariable("movimientoId") Long movimientoID) {
+        log.debug("request api/caja/borrar_movimiento");
         try {
             Movimiento movimientoEliminado = expertoCaja.borrarMovimiento(movimientoID);
+            log.debug("response api/caja/borrar_movimiento", movimientoEliminado);
             return new ResponseEntity<Movimiento>(movimientoEliminado, HttpStatus.OK);
         } catch (Exception e) {
+            log.error("error api/caja/borrar_movimiento: {}", e);
             return ResponseEntity.status(500).body(null);
         }
 

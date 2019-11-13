@@ -24,6 +24,7 @@ public class ClienteController {
 
     @PostMapping("/activarCliente")
     public Cliente activarCliente(@RequestBody Cliente cliente) {
+        log.debug("/activarCliente: {}", cliente);
 
         return expertoClientes.activarCliente(cliente);
 

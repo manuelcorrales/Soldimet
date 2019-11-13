@@ -1,21 +1,17 @@
 package soldimet.service.expertos;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import org.joda.time.Days;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import soldimet.constant.Globales;
-import soldimet.domain.Caja;
 import soldimet.domain.Cliente;
 import soldimet.domain.EstadoPersona;
-import soldimet.repository.CajaRepository;
 import soldimet.repository.ClienteRepository;
 import soldimet.repository.EstadoPersonaRepository;
 import soldimet.repository.PersonaRepository;
-import soldimet.service.dto.DTOMensajeCerrarCaja;
 
 /**
  * @author Manu
@@ -26,6 +22,7 @@ import soldimet.service.dto.DTOMensajeCerrarCaja;
 @Transactional
 public class ExpertoClientes {
 
+    private final Logger log = LoggerFactory.getLogger(ExpertoClientes.class);
 
     @Autowired
     private ClienteRepository clienteRepository;

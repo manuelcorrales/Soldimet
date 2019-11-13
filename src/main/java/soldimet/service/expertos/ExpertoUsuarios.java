@@ -2,6 +2,8 @@ package soldimet.service.expertos;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,9 @@ import soldimet.service.dto.DTOEmpleado;
 @Service
 @Transactional
 public class ExpertoUsuarios {
+
+    private final Logger log = LoggerFactory.getLogger(ExpertoUsuarios.class);
+
 
     @Autowired
     private PersonaRepository personaRepository;
@@ -47,7 +52,7 @@ public class ExpertoUsuarios {
         } catch (
 
         Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -61,7 +66,7 @@ public class ExpertoUsuarios {
                 return empleadoRepository.findByPersona(persona);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }

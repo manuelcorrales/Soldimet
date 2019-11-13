@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import soldimet.constant.Globales;
@@ -18,6 +21,9 @@ import soldimet.service.dto.DTOMensajeAbrirCaja;
  */
 @Service
 public class ExpertoCUAbrirCaja {
+
+    private final Logger log = LoggerFactory.getLogger(ExpertoCUAbrirCaja.class);
+
 
     @Autowired
     private CajaRepository cajaRepository;
@@ -48,6 +54,7 @@ public class ExpertoCUAbrirCaja {
                 return true;
             }
         } catch (NullPointerException e) {
+            log.error(e.getMessage());
             return false;
         }
 

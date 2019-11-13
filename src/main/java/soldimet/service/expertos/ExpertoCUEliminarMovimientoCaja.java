@@ -6,6 +6,8 @@
 package soldimet.service.expertos;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,9 @@ import soldimet.repository.MovimientoRepository;
 @Service
 @Transactional
 public class ExpertoCUEliminarMovimientoCaja {
+
+    private final Logger log = LoggerFactory.getLogger(ExpertoCUEliminarMovimientoCaja.class);
+
 
     private final String errorEstadoMovimiento = "Este movimiento no esta dado de alta";
     private final String errorPermisoInsuficiente = "Este movimiento fue creado hace mas de 24hrs, necesita permisos para eliminar eliminar";
@@ -56,8 +61,7 @@ public class ExpertoCUEliminarMovimientoCaja {
             return false;
 
         } catch (NullPointerException e) {
-
-            e.printStackTrace();
+            log.error(e.getMessage());
             return false;
         }
 

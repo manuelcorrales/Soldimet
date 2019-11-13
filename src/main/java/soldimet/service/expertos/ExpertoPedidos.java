@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,8 @@ import soldimet.service.dto.DTOProveedor;
 
 @Service
 public class ExpertoPedidos {
+
+    private final Logger log = LoggerFactory.getLogger(ExpertoCaja.class);
 
     @Autowired
     private Globales globales;
@@ -147,7 +151,7 @@ public class ExpertoPedidos {
             return detallePedido.filterCostoRepuesto(costoRepuesto);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
 
@@ -322,7 +326,7 @@ public class ExpertoPedidos {
             return costoRepuesto;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }

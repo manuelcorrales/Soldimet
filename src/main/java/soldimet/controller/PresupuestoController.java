@@ -48,45 +48,57 @@ public class PresupuestoController {
 
     @GetMapping("/getPresupuestos")
     public List<DTOPresupuesto> buscarPresupuestos() {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("request /api/presupuestos/getPresupuestos: {}", authentication);
+
+        List<DTOPresupuesto> presupuestos;
         if (authentication.getAuthorities().contains(AuthoritiesConstants.ADMIN)) {
-            return expertoPresupuesto.buscarPresupuestos();
+            presupuestos = expertoPresupuesto.buscarPresupuestos();
         } else {
             if (authentication.getAuthorities().contains(AuthoritiesConstants.EMPLEADO)) {
-                return expertoPresupuesto.buscarPresupuestos();
+                presupuestos = expertoPresupuesto.buscarPresupuestos();
             } else {
                 if (authentication.getAuthorities().contains(AuthoritiesConstants.ENCARGADO_TALLER)) {
-                    return expertoPresupuesto.buscarPresupuestos();
+                    presupuestos = expertoPresupuesto.buscarPresupuestos();
                 } else {
-                    return expertoPresupuesto.buscarPresupuestos();
+                    presupuestos = expertoPresupuesto.buscarPresupuestos();
                 }
             }
         }
-
+        log.debug("response /api/presupuestos/getPresupuestos: {}", presupuestos);
+        return presupuestos;
     }
 
     @GetMapping("/view/{id}")
     public Presupuesto getPresupuesto(@PathVariable("id") Long presupuestoId) {
-        return expertoPresupuesto.getPresupuesto(presupuestoId);
+        log.debug("request /api/presupuestos/view: presupuesto id {}", presupuestoId);
+        Presupuesto presupuesto = expertoPresupuesto.getPresupuesto(presupuestoId);
+        log.debug("response /api/presupuestos/view: presupuesto id {}", presupuestoId);
+        return presupuesto;
     }
 
     @GetMapping("/getAplicacionByMotor/{motorId}")
     public List<Aplicacion> buscarPresupuestos(@PathVariable("motorId") Long motorId) {
-
-        return expertoPresupuesto.buscarAplicacionPorMotor(motorId);
+        log.debug("request /api/presupuestos/getAplicacionByMotor: motorId{}", motorId);
+        List<Aplicacion> aplicaciones =  expertoPresupuesto.buscarAplicacionPorMotor(motorId);
+        log.debug("response /api/presupuestos/getAplicacionByMotor: motorId{}", aplicaciones);
+        return aplicaciones;
     }
 
     @GetMapping("/getOperacionesPresupuesto")
     public List<CostoOperacion> buscarOperacionesPresupuesto(DTODatosMotorCUHacerPresupuesto dtoDatosMotor) {
-
-        return expertoPresupuesto.buscarOperacionesPresupuesto(dtoDatosMotor);
+        log.debug("request /api/presupuestos/getOperacionesPresupuesto: {}", dtoDatosMotor);
+        List<CostoOperacion> operaciones = expertoPresupuesto.buscarOperacionesPresupuesto(dtoDatosMotor);
+        log.debug("response /api/presupuestos/getOperacionesPresupuesto: {}", operaciones);
+        return operaciones;
     }
 
     @GetMapping("/getCostoRepuestoPresupuesto/{presupuestoId}")
     public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(@PathVariable("presupuestoId") Long presupuestoId) {
-
-        return expertoPresupuesto.buscarCostoRepuestoPresupuesto(presupuestoId);
+        log.debug("request /api/presupuestos/getCostoRepuestoPresupuesto: presupuestoId {}", presupuestoId);
+        List<CostoRepuesto> costos = expertoPresupuesto.buscarCostoRepuestoPresupuesto(presupuestoId);
+        log.debug("response /api/presupuestos/getCostoRepuestoPresupuesto: presupuestoId {}", costos);
+        return costos;
     }
 
     // @GetMapping("/getClientesByNombre/{nombreCliente}")
@@ -98,20 +110,26 @@ public class PresupuestoController {
 
     @GetMapping("/getAllClientes")
     public List<Cliente> buscarTodosLosclientes() {
-
-        return expertoPresupuesto.buscarTodosLosClientes();
+        log.debug("request /api/presupuestos/getAllClientes");
+        List<Cliente> clientes = expertoPresupuesto.buscarTodosLosClientes();
+        log.debug("response /api/presupuestos/getAllClientes: {}", clientes);
+        return clientes;
     }
 
     @GetMapping("/getRepuestos/{idTipoParteMotor}")
     public List<TipoRepuesto> buscarRepuestosPresupuesto(@PathVariable("idTipoParteMotor") Long idTipoParteMotor) {
-
-        return expertoPresupuesto.buscarRepuestos(idTipoParteMotor);
+        log.debug("request /api/presupuestos/getRepuestos: idTipoParteMotor {}", idTipoParteMotor);
+        List<TipoRepuesto> tipos = expertoPresupuesto.buscarRepuestos(idTipoParteMotor);
+        log.debug("response /api/presupuestos/getRepuestos: {}", tipos);
+        return tipos;
     }
 
     @GetMapping("/getEstadoPresupuestoCreado")
     public EstadoPresupuesto buscarEstadoPresupuestoCreado() {
-
-        return expertoPresupuesto.buscarEstadoPresupuestoCreado();
+        log.debug("request /api/presupuestos/getPresupuestos");
+        EstadoPresupuesto estado = expertoPresupuesto.buscarEstadoPresupuestoCreado();
+        log.debug("response /api/presupuestos/getPresupuestos: {}", estado);
+        return estado;
     }
 
     @PostMapping("/save")
@@ -119,6 +137,7 @@ public class PresupuestoController {
             throws URISyntaxException {
         log.debug("REST request to save Presupuesto : {}", presupuesto);
         Presupuesto result = expertoPresupuesto.savePresupuesto(presupuesto);
+        log.debug("REST response to save Presupuesto : {}", result);
         return ResponseEntity.created(new URI("/api/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(APP_NAME, false, ENTITY_NAME, result.getId().toString()))
                 .body(result);
@@ -128,6 +147,7 @@ public class PresupuestoController {
     public ResponseEntity<DTOPresupuesto> aceptarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.aceptarPresupuesto(dtoPresupuesto);
+        log.debug("REST response to accept Presupuesto : {}", result);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
                     String.valueOf(result.getCodigo()))).body(result);
@@ -141,6 +161,7 @@ public class PresupuestoController {
     public ResponseEntity<DTOPresupuesto> cancelarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
+        log.debug("REST response to accept Presupuesto : {}", result);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
                     String.valueOf(result.getCodigo()))).body(result);
@@ -153,6 +174,7 @@ public class PresupuestoController {
     public ResponseEntity<DTOPresupuesto> entregarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.entregarPresupuesto(dtoPresupuesto);
+        log.debug("REST response to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
                     String.valueOf(result.getCodigo()))).body(result);
@@ -165,6 +187,7 @@ public class PresupuestoController {
     public ResponseEntity<DTOPresupuesto> terminarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
         log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.terminarPresupuesto(dtoPresupuesto);
+        log.debug("REST response to accept Presupuesto : {}", result);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
                     String.valueOf(result.getCodigo()))).body(result);

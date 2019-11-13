@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -69,6 +71,9 @@ import soldimet.service.dto.DTOPresupuesto;
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 public class ExpertoPresupuesto {
+
+    private final Logger log = LoggerFactory.getLogger(ExpertoCaja.class);
+
 
     @Autowired
     private Globales globales;
@@ -190,6 +195,7 @@ public class ExpertoPresupuesto {
         try {
             return presupuestoRepository.findById(id).get();
         } catch (NullPointerException e) {
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -211,14 +217,14 @@ public class ExpertoPresupuesto {
     }
 
     public List<Aplicacion> buscarAplicacionPorMotor(Long motorId) {
-        try {
+        try{
             Motor motorEncontrado = motorRepository.findById(motorId).get();
             List<Aplicacion> aplicacionesList = aplicacionRepository
                     .findByMotorOrderByNombreAplicacionAsc(motorEncontrado);
 
             return aplicacionesList;
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -253,8 +259,7 @@ public class ExpertoPresupuesto {
                 }
             }
         } catch (NullPointerException e) {
-
-            e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             return listaDTO;
         }
@@ -328,6 +333,7 @@ public class ExpertoPresupuesto {
             }
             return presupuestoConverter.convertirEntidadAModelo(editado);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return null;
         }
 
@@ -381,7 +387,7 @@ public class ExpertoPresupuesto {
 
             return presupuestoConverter.convertirEntidadAModelo(editado);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -414,6 +420,7 @@ public class ExpertoPresupuesto {
             return null;
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -429,6 +436,7 @@ public class ExpertoPresupuesto {
             return null;
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -483,7 +491,7 @@ public class ExpertoPresupuesto {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             return costosRepuestos;
         }

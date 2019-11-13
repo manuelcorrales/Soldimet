@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import soldimet.service.dto.DTOListaPrecioManoDeObra;
  */
 @Service
 public class ExpertoCUModificarCostosDeManoDeObra {
+    private final Logger log = LoggerFactory.getLogger(ExpertoCUModificarCostosDeManoDeObra.class);
+
 
     private final String errorPermisoInsuficiente = "No tiene permisos suficientes para modificar estos valores";
 
@@ -58,7 +62,7 @@ public class ExpertoCUModificarCostosDeManoDeObra {
             return crearDtoConUltimaLista(listaNueva);
 
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
 
@@ -81,7 +85,7 @@ public class ExpertoCUModificarCostosDeManoDeObra {
             }
             return listaDTO;
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }

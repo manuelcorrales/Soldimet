@@ -36,14 +36,15 @@ public class PedidosController {
 
     @GetMapping("/getPedidosPendientes")
     public ResponseEntity<List<PedidoRepuesto>> getPedidosPendientes() {
-
+        log.debug("request api/pedidos/getPedidosPendientes");
         List<PedidoRepuesto> pedidos = expertoPedidos.getPedidosPendientes();
 
         if (pedidos != null) {
-
-            return new ResponseEntity<List<PedidoRepuesto>>(pedidos, HttpStatus.OK);
-
+            ResponseEntity<List<PedidoRepuesto>> response = new ResponseEntity<List<PedidoRepuesto>>(pedidos, HttpStatus.OK);
+            log.debug("response api/pedidos/getPedidosPendientes: {}", response);
+            return response;
         } else {
+            log.error("ERROR api/pedidos/getPedidosPendientes: No se encontraron pedidos pendientes");
             return ResponseEntity.status(500).body(null);
         }
 
@@ -51,14 +52,17 @@ public class PedidosController {
 
     @GetMapping("/proveedoresRepuestos")
     public ResponseEntity<List<DTOProveedor>> getProveedoresRepuestos() {
+        log.debug("request api/pedidos/proveedoresRepuestos");
 
         List<DTOProveedor> pedidos = expertoPedidos.getProveedoresRepuestos();
 
         if (pedidos != null) {
-
-            return new ResponseEntity<List<DTOProveedor>>(pedidos, HttpStatus.OK);
-
+            ResponseEntity<List<DTOProveedor>> response = new ResponseEntity<List<DTOProveedor>>(pedidos, HttpStatus.OK);
+            log.debug("response api/pedidos/proveedoresRepuestos: {}", response);
+            return response;
         } else {
+            log.error("ERROR api/pedidos/proveedoresRepuestos: No se encontraron proveedores");
+
             return ResponseEntity.status(500).body(null);
         }
 
@@ -66,14 +70,16 @@ public class PedidosController {
 
     @GetMapping("/getPedidosCabecera")
     public ResponseEntity<List<DTOPedidoCabecera>> getPedidosCabecera() {
+        log.debug("request api/pedidos/getPedidosCabecera");
 
         List<DTOPedidoCabecera> pedidos = expertoPedidos.getPedidosCabecera();
 
         if (pedidos != null) {
-
-            return new ResponseEntity<List<DTOPedidoCabecera>>(pedidos, HttpStatus.OK);
-
+            ResponseEntity<List<DTOPedidoCabecera>> response = new ResponseEntity<List<DTOPedidoCabecera>>(pedidos, HttpStatus.OK);
+            log.debug("response api/pedidos/getPedidosCabecera: {}", response);
+            return response;
         } else {
+            log.debug("ERROR api/pedidos/getPedidosCabecera");
             return ResponseEntity.status(500).body(null);
         }
 
@@ -83,14 +89,16 @@ public class PedidosController {
     @PostMapping("/updateDetallePedido/{detallePedidoId}")
     public ResponseEntity<CostoRepuesto> updateDetallePedido(@RequestBody CostoRepuesto costoRepuesto,
             @PathVariable("detallePedidoId") Long detallePedidoId) {
+        log.debug("request api/pedidos/updateDetallePedido: DetallePedido: {}, CostoRepuesto: {}", detallePedidoId, costoRepuesto);
 
         costoRepuesto = expertoPedidos.updateDetallePedido(costoRepuesto, detallePedidoId);
 
         if (costoRepuesto != null) {
-            System.out.print(costoRepuesto);
-            return new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
-
+            ResponseEntity<CostoRepuesto> response = new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
+            log.debug("response api/pedidos/updateDetallePedido: {}", response);
+            return response;
         } else {
+            log.error("ERROR api/pedidos/updateDetallePedido");
             return ResponseEntity.status(500).body(null);
         }
 
@@ -99,14 +107,16 @@ public class PedidosController {
     @PostMapping("/recibirRepuesto/{detallePedidoId}")
     public ResponseEntity<CostoRepuesto> recibirRepuesto(@RequestBody CostoRepuesto costoRepuesto,
             @PathVariable("detallePedidoId") Long detallePedidoId) {
+        log.debug("request api/pedidos/recibirRepuesto: DetallePedido {}, CostoRepuesto: {}", detallePedidoId, costoRepuesto);
 
         costoRepuesto = expertoPedidos.recibirRepuesto(costoRepuesto, detallePedidoId);
 
         if (costoRepuesto != null) {
-
-            return new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
-
+            ResponseEntity<CostoRepuesto> response = new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
+            log.debug("response api/pedidos/recibirRepuesto: {}", response);
+            return response;
         } else {
+            log.debug("ERROR api/pedidos/recibirRepuesto");
             return ResponseEntity.status(500).body(null);
         }
 
