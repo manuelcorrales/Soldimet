@@ -1,4 +1,5 @@
 package soldimet.domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -252,20 +253,27 @@ public class Presupuesto implements Serializable {
         this.sucursal = sucursal;
     }
 
+    @JsonIgnore
     public String getClienteName() {
         return this.cliente.getPersona().getNombre() + ' ' + this.cliente.getPersona().getApellido();
     }
 
+    @JsonIgnore
     public String getMotorName() {
         return this.detallePresupuestos.iterator().next().getMotor().getMarcaMotor();
     }
+
+    @JsonIgnore
     public String getAplicacionName() {
         return this.detallePresupuestos.iterator().next().getAplicacion().getNombreAplicacion();
     }
+
+    @JsonIgnore
     public Integer getCantCilindros() {
         return this.detallePresupuestos.iterator().next().getCilindrada().getCantidadDeCilindros();
     }
 
+    @JsonIgnore
     public Float getTotalOperaciones() {
         Float total = new Float(0);
         for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
@@ -274,6 +282,7 @@ public class Presupuesto implements Serializable {
         return total;
     }
 
+    @JsonIgnore
     public Float getTotalRepuestos() {
         Float total = new Float(0);
         for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
