@@ -87,7 +87,7 @@ public class ExpertoImpresionPresupuesto {
     }
 
     private File printWithdocx4j(HashMap<String, String> dtoImpresion) throws Exception {
-        InputStream templateInputStream = new FileInputStream(new File(globales.reporteHtmlPath));
+        InputStream templateInputStream = getClass().getResourceAsStream(globales.reporteHtmlPath);
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(templateInputStream);
 
         MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
