@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { JhiAlertService } from 'ng-jhipster';
+import { saveAs } from 'file-saver';
+import { HttpResponse } from '../../../../../node_modules/@angular/common/http';
 
 @Component({
   selector: 'jhi-presupuestos',
@@ -17,6 +19,8 @@ export class PresupuestosComponent implements OnInit {
 
   page = 1;
   pageSize = 15;
+
+  imprimiendo = false;
 
   constructor(private _presupuestosService: PresupuestosService, private jhiAlertService: JhiAlertService) {}
 
@@ -62,6 +66,20 @@ export class PresupuestosComponent implements OnInit {
       },
       res => {
         this.jhiAlertService.error('Este presupuesto no esta terminado, no se puede entregar!', { toast: true });
+      }
+    );
+  }
+
+  imprimir(dtoPResupuesto: DtoPresupuestoCabeceraComponent) {
+    this.imprimiendo = true;
+    this._presupuestosService.imprimirPresupuesto(dtoPResupuesto.codigo).subscribe(
+      (file: Blob) => {
+        saveAs(file, `presupuesto nº ${dtoPResupuesto.codigo}.pdf`);
+        this.imprimiendo = false;
+      },
+      error => {
+        this.jhiAlertService.error(`No se pudo imprimir el presupuesto. ${error.message}`, { toast: true });
+        this.imprimiendo = false;
       }
     );
   }

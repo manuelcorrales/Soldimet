@@ -162,6 +162,9 @@ public class Presupuesto implements Serializable {
     }
 
     public String getObservaciones() {
+        if (this.observaciones == null) {
+            return "";
+        }
         return observaciones;
     }
 
@@ -247,6 +250,36 @@ public class Presupuesto implements Serializable {
 
     public void setSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
+    }
+
+    public String getClienteName() {
+        return this.cliente.getPersona().getNombre() + ' ' + this.cliente.getPersona().getApellido();
+    }
+
+    public String getMotorName() {
+        return this.detallePresupuestos.iterator().next().getMotor().getMarcaMotor();
+    }
+    public String getAplicacionName() {
+        return this.detallePresupuestos.iterator().next().getAplicacion().getNombreAplicacion();
+    }
+    public Integer getCantCilindros() {
+        return this.detallePresupuestos.iterator().next().getCilindrada().getCantidadDeCilindros();
+    }
+
+    public Float getTotalOperaciones() {
+        Float total = new Float(0);
+        for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
+            total += detallePresupuesto.getTotalOperaciones();
+        }
+        return total;
+    }
+
+    public Float getTotalRepuestos() {
+        Float total = new Float(0);
+        for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
+            total += detallePresupuesto.getTotalRepuestos();
+        }
+        return total;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

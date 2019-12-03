@@ -1,15 +1,16 @@
 package soldimet.service.expertos;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javassist.NotFoundException;
 import soldimet.constant.Globales;
 import soldimet.converter.PresupuestoConverter;
 import soldimet.domain.Aplicacion;
@@ -46,10 +46,8 @@ import soldimet.domain.Sucursal;
 import soldimet.domain.TipoParteMotor;
 import soldimet.domain.TipoRepuesto;
 import soldimet.repository.AplicacionRepository;
-import soldimet.repository.ArticuloRepository;
 import soldimet.repository.CilindradaRepository;
 import soldimet.repository.ClienteRepository;
-import soldimet.repository.EmpleadoRepository;
 import soldimet.repository.EstadoCobranzaOperacionRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
@@ -80,6 +78,9 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private ExpertoUsuarios expertoUsuarios;
+
+    @Autowired
+    private ExpertoImpresionPresupuesto expertoImpresionPresupuesto;
 
     @Autowired
     private SucursalRepository sucursalRepository;
@@ -131,9 +132,6 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private EstadoDetallePedidoRepository estadoDetallePedidoRepository;
-
-    @Autowired
-    private EmpleadoRepository empleadoRepository;
 
     // Cambio el estado del presupuesto y del pedido de repuestos
     public void aceptarPresupuesto(Long idPresupuesto) {
@@ -516,5 +514,22 @@ public class ExpertoPresupuesto {
 
 	public Presupuesto getPresupuesto(Long presupuestoId) throws EntityNotFoundException{
         return  presupuestoRepository.getOne(presupuestoId);
+    }
+
+	public Pair<File, String> imprimirPresupuesto(Long idPresupuesto) throws Exception {
+
+        Optional<Presupuesto> optPresupuesto = presupuestoRepository.findById(idPresupuesto);
+        if (!optPresupuesto.isPresent()) {
+            throw new Exception("No se encontro este presupuesto");
+        }
+        Presupuesto presupuesto= optPresupuesto.get();
+
+        File reporte =  expertoImpresionPresupuesto.imprimirPresupuesto(
+            presupuesto,
+            presupuesto.getImporteTotal(),
+            presupuesto.getCliente()
+        );
+
+		return new Pair(reporte, presupuesto.getId());
 	}
 }

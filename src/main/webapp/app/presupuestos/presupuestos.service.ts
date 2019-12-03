@@ -36,6 +36,7 @@ export class PresupuestosService {
   private urlTerminasPresupuesto = '/terminar';
   private urlEntregarPresupuesto = '/entregar';
   private urlPresupuestoVista = '/view';
+  private urlImprimirPresupuesto = '/imprimir';
 
   constructor(
     private http: HttpClient,
@@ -78,6 +79,12 @@ export class PresupuestosService {
     return this.http.get<DtoPresupuestoCabeceraComponent[]>(`${this.resourceUrlPresupuestos}${this.urlPresupuestoCabecera}`);
   }
 
+  imprimirPresupuesto(id: number): Observable<Blob> {
+    return this.http.get<Blob>(
+      `${this.resourceUrlPresupuestos}${this.urlImprimirPresupuesto}/${id}`,
+      { responseType: 'blob' as 'json' } // eslint-disable-line object-shorthand
+    );
+  }
   findAplicacionesPorMotor(motor: Motor): Observable<Aplicacion[]> {
     const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoAplicaciones}${motor.id}`;
     return this.http.get<Aplicacion[]>(urlLlamada);

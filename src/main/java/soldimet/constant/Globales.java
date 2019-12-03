@@ -94,4 +94,6 @@ public class Globales {
     //------------------------MENSAJES PEDIDO REPUESTO--------------------
 
     public final String NO_HAY_PROVEEDORES_DADOS_DE_ALTA ="No se encontraron proveedores dados de Alta.";
+
+    public final String reporteHtmlPath = "src/main/java/soldimet/file/presupuesto.docx";
 }

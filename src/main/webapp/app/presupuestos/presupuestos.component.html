@@ -76,19 +76,23 @@
                             <button class="btn btn-outline-secondary" placement="top" [routerLink]="['/presupuestos', presupuesto.codigo, 'ver' ]" ngbTooltip="Ver">
                                 <fa-icon icon="eye"></fa-icon>
                             </button>
-                            <button class="btn btn-success" *ngIf="presupuesto.estado == 'Creado'" (click)="aceptarPresupuesto(presupuesto)" placement="top"
+                            <button class="btn btn-outline-dark" (click)="imprimir(presupuesto)" placement="top" [disabled]="imprimiendo"
+                                ngbTooltip="Imprimir">
+                                <fa-icon icon="print"></fa-icon>
+                            </button>
+                            <button class="btn btn-outline-success" *ngIf="presupuesto.estado == 'Creado'" (click)="aceptarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Aceptar presupuesto">
                                 <fa-icon icon="check"></fa-icon>
                             </button>
-                            <button class="btn btn-info" *ngIf="presupuesto.estado == 'Aceptado'" (click)="terminarPresupuesto(presupuesto)" placement="top"
+                            <button class="btn btn-outline-info" *ngIf="presupuesto.estado == 'Aceptado'" (click)="terminarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Terminar trabajo">
                                 <fa-icon icon="check-double"></fa-icon>
                             </button>
-                            <button class="btn btn-primary" *ngIf="presupuesto.estado == 'Terminado'" (click)="entregarPresupuesto(presupuesto)" placement="top"
+                            <button class="btn btn-outline-primary" *ngIf="presupuesto.estado == 'Terminado'" (click)="entregarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Entregar trabajo">
                                 <fa-icon icon="check-square"></fa-icon>
                             </button>
-                            <button class="btn btn-danger" *ngIf="presupuesto.estado == 'Aceptado' || presupuesto.estado == 'Creado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"
+                            <button class="btn btn-outline-danger" *ngIf="presupuesto.estado == 'Aceptado' || presupuesto.estado == 'Creado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Eliminar">
                                 <fa-icon icon="trash"></fa-icon>
                             </button>

@@ -182,6 +182,22 @@ public class DetallePresupuesto implements Serializable {
     public void setCobranzaRepuestos(Set<CobranzaRepuesto> cobranzaRepuestos) {
         this.cobranzaRepuestos = cobranzaRepuestos;
     }
+
+    public Float getTotalOperaciones() {
+        Float total = new Float(0);
+        for (CobranzaOperacion cobranzaOperacion: this.cobranzaOperacions) {
+            total += cobranzaOperacion.getCobranzaOperacion();
+        }
+        return total;
+    }
+
+    public Float getTotalRepuestos() {
+        Float total = new Float(0);
+        for (CobranzaRepuesto cobranzaRepuesto: this.cobranzaRepuestos) {
+            total += cobranzaRepuesto.getValor();
+        }
+        return total;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

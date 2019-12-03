@@ -1,14 +1,26 @@
 package soldimet.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.poi.util.IOUtils;
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +30,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -195,4 +209,22 @@ public class PresupuestoController {
             return ResponseEntity.status(500).body(dtoPresupuesto);
         }
     }
+
+    @RequestMapping(
+        value = "/imprimir/{idPresupuesto}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_PDF_VALUE
+    )
+    @ResponseBody
+    public ResponseEntity<byte[]> imprimirPresupuesto(@PathVariable("idPresupuesto") Long idPresupuesto) throws Exception {
+        Pair<File, String> response =  expertoPresupuesto.imprimirPresupuesto(idPresupuesto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("file-name", "presupuesto nº " + String.valueOf(response.getValue1()) + ".pdf");
+        return new ResponseEntity<byte[]>(
+            IOUtils.toByteArray(new FileInputStream(response.getValue0())),
+            headers,
+            HttpStatus.OK
+        );
+    }
+
 }

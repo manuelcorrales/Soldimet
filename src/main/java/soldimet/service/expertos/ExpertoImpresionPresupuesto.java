@@ -5,408 +5,240 @@
  */
 package soldimet.service.expertos;
 
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.print.PageFormat;
-import java.awt.print.Paper;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.docx4j.model.datastorage.migration.VariablePrepare;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import fr.opensagres.xdocreport.converter.ConverterRegistry;
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.IConverter;
+import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
+import soldimet.constant.Globales;
 import soldimet.domain.Cliente;
-import soldimet.domain.Persona;
-import soldimet.service.dto.DTOCabeceraImpresionPresupuesto;
-import soldimet.service.dto.DTOCobroOperacionCUHacerPresupuesto;
-import soldimet.service.dto.DTOImpresionCadena;
-import soldimet.service.dto.DTOPresupuestoFinal;
-import soldimet.service.dto.DtoRepuestosElegidos;
+import soldimet.domain.CobranzaOperacion;
+import soldimet.domain.CobranzaRepuesto;
+import soldimet.domain.DetallePresupuesto;
+import soldimet.domain.Operacion;
+import soldimet.domain.Presupuesto;
+import soldimet.domain.TipoRepuesto;
+import soldimet.repository.OperacionRepository;
+import soldimet.repository.TipoRepuestoRepository;
 
 /**
  *
  * @author Manu
  */
-public final class ExpertoImpresionPresupuesto implements Printable{
-
-    public  ExpertoImpresionPresupuesto() {
-        iniciarCU();
-    }
-    //contiene todos los graficos de la impresion
-    Graphics2D g2d;
-
-    //contienen las listas en su ubicacion correspondiente
-    private final ArrayList<String> listaOperaciones = new ArrayList();
-    private final ArrayList<String> listaRepuestos = new ArrayList();
-    //guardo los elementos que no estan y los agrego al final de la impresion
-    private final ArrayList<DTOImpresionCadena> listaImpresionAlFinal = new ArrayList();
-
-
-
-    //tamaño oficio 21.59 x 34
-    //tamaño A4 21 x 29,7
-    private final double tamañoOficioX = 21.59;
-    private final double tamañoOficioY= 34;
-    private final double margenSuperior=7;
-    private final double margenInferior=21;
-    private final double margenIzquierdo= 17;
-    private final double margenDerecho=31;
-
+@Service
+public class ExpertoImpresionPresupuesto {
     /*
-    NPresX:425pp
-    NPresY:85pp
+    EL mapeo de donde se indica el valor de cada cosa o la cadena es directamente en el documento de word
+    acá busco cada una de las variables, las meto en el contexto indicando que referencia en el documento es
+    e imprimo y chau
     */
-    private final int NPresX =425;
-    private final int NPresY = 85;
 
+    private final Logger log = LoggerFactory.getLogger(ExpertoImpresionPresupuesto.class);
 
-    /*
-    CabeceraIZQ x:85pp
-    CabeceraDer X:340pp
-    Cabecera Y:96-97pp
-    diferencia alturacabecera: 11-12p
-    */
-    private final int cabeceraIzqX =85;
-    private final int cabeceraDerX = 340;
-    private final int cabeceraY=96;
-    private final int difCabecera=11;
+    @Autowired
+    private OperacionRepository operacionRepository;
 
-    /*
-    mano obra X:240pp
-    mano obra Y:178pp
-    diferencia altura cuerpo:15-16pp
-    Repuestos X:456pp
-    Repuestos Y:178pp
-    */
-    private final int manoObraX =240;
-    private final int manoObraY =178;
-    private final int diferenciaAlturaCuerpo =15;
-    private final int repuestosX = 456;
-    private final int repuestosY = 178;
+    @Autowired
+    private TipoRepuestoRepository tipoRepuestoRepository;
 
+    @Autowired
+    private Globales globales;
 
-    private final int totalManoObraY=(int) ((tamañoOficioY*72)-72);
-    private final int totalRepuestosY=(int) ((tamañoOficioY*72)-72);
-    private final int totalNETOY= (int) ((tamañoOficioY*72)-38);
+    public File imprimirPresupuesto(Presupuesto presupuesto, Float toal, Cliente cliente)
+            throws Exception {
 
-    private final int agregadosAlFinalY = totalRepuestosY-(5*diferenciaAlturaCuerpo);
-    private final int agregadosAlFinalX =297;
-
-//CADA DATO A IMPRIMIR TIENE UN VALOR, UNA UBICACION Y UN NOMBRE
-
-
-    @Override
-    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-        g2d = (Graphics2D) graphics;
-        g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-        g2d.setFont(new Font("Monospaced", Font.BOLD, 12));
-        Paper hoja = pageFormat.getPaper();
-        pageFormat.setOrientation(PageFormat.PORTRAIT);
-        hoja.setSize(tamañoOficioX*72, tamañoOficioY*72);
-        hoja.setImageableArea(margenIzquierdo, margenSuperior,
-                (tamañoOficioX*72)-margenDerecho, (tamañoOficioY*72)-margenInferior);
-        return (PAGE_EXISTS);
+        HashMap<String, String> dto = this.crearMap(presupuesto);
+        File impresion = this.printWithdocx4j(dto);
+        return impresion;
     }
 
 
+    private File convertToPdf(File archivo) throws Exception {
 
-    private void iniciarCU(){
-        //1 Rectificar Cilindros
-    //2 Encamisar Cilindros
-    //3 Dar Altura a Camisas
-    //4 Bruñir Cilindros
-    //5 Cepillar Case de Clock
-    //6 Prueba Hidráulica Clock
-    //7 Adaptar Retén
-    //8 Ajustar Pernos a Bielas
-    //9 Armar y Encuadrar Bielas
-    //10 Rectificar Cigüeñal
-    //11 Pulir Cigüeñal
-    //12 Balancear Cigüeñal
-    //13 Limpieza y Colocacion de Tapones
-    //14 Probar Cigüeñal Magnaflux
-    //15 Roscar Cigüeñal
-    //16 Rectificar Pista Retén Cigüeñal
-    //17 Alesar o Ajustar Coginete Bancada
-    //18 Alesar, Presentar, Ajustar Cojinetes de Biela
-    //19 Rectificar Arbol de Leva
-    //20 Pulir Arbol de Leva
-    //21 Alesar bujes de Leva
-    //22 Alesar Bujes de Mando
-    //23 Adaptar Bujes de Leva
-    //24 Cepillar Tapa de Cilindros
-    //25 Rectificar asiento de Válvulas
-    //26 Cambiar Guías de Válvulas
-    //27 Ajustar Vástago de Guías
-    //28 Encasquillar Asientos de Válvulas
-    //29 Rectificar Válvulas
-    //30 Entubar Guías
-    //31 Prueba Hidráulica de Tapa de Cilindro
-    //32 Soldar Tapa de Cilindro
-    //33 Lavado de Motor
-    //34 Probrar Bomba de Aceite
-    //35 Rectificar Volante
-    //36 Dar Altura a Pistones
-    //37 Proceso Tecnifier Cigüeñal
+        // 1) Create options ODT 2 PDF to select well converter form the registry
+        Options options = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF);
+        // 2) Get the converter from the registry
+        IConverter converter = ConverterRegistry.getRegistry().getConverter(options);
+        // 3) Convert DOCX 2 PDF
+        InputStream in = new FileInputStream(archivo);
+        File archivoPDF = new File("presupuesto.pdf");
+        FileOutputStream out = new FileOutputStream(archivoPDF);
+        converter.convert(in, out, options);
+        out.close();
 
-        //creo la lista de tareas o mano de obra en su posicion correspondiente
-        listaOperaciones.add("Rectificar Cilindros");//1
-        listaOperaciones.add("Encamisar Cilindros");//2
-        listaOperaciones.add("Dar Altura a Camisas");//3
-        listaOperaciones.add("Bruñir Cilindros");//4
-        listaOperaciones.add("Cepillar Base de Block");//5
-        listaOperaciones.add("Prueba Hidráulica Block");//6
-        listaOperaciones.add("Adaptar Retén");//7
-        listaOperaciones.add("Ajustar Pernos a Bielas");//8
-        listaOperaciones.add("Armar y Encuadrar Bielas");//9
-        listaOperaciones.add("Rectificar Cigüeñal");//10
-        listaOperaciones.add("Pulir Cigüeñal");//11
-        listaOperaciones.add("Balancear Cigüeñal");//12
-        listaOperaciones.add("Limpieza y Colocacion de Tapones");//13
-        listaOperaciones.add("Probar Cigüeñal Magnaflux");//14
-        listaOperaciones.add("Roscar Cigüeñal");//15
-        listaOperaciones.add("Rectificar Pista Retén Cigüeñal");//16
-        listaOperaciones.add("Alesar o Ajustar Coginete Bancada");//17
-        listaOperaciones.add("Alesar, Presentar, Ajustar Cojinetes de Biela");//18
-        listaOperaciones.add("Rectificar Arbol de Leva");//19
-        listaOperaciones.add("Pulir Arbol de Leva");//20
-        listaOperaciones.add("Alesar bujes de Leva");//21
-        listaOperaciones.add("Alesar Bujes de Mando");//22
-        listaOperaciones.add("Adaptar Bujes de Leva");//23
-        listaOperaciones.add("Cepillar Tapa de Cilindros");//24
-        listaOperaciones.add("Rectificar asiento de Válvulas");//25
-        listaOperaciones.add("Cambiar Guías de Válvulas");//26
-        listaOperaciones.add("Ajustar Vástago de Guías");//27
-        listaOperaciones.add("Encasquillar Asientos de Válvulas");//28
-        listaOperaciones.add("Rectificar Válvulas");//29
-        listaOperaciones.add("Entubar Guías");//30
-        listaOperaciones.add("Prueba Hidráulica de Tapa de Cilindro");//31
-        listaOperaciones.add("Soldar Tapa de Cilindro");//32
-        listaOperaciones.add("Lavado de Motor");//33
-        listaOperaciones.add("Probrar Bomba de Aceite");//34
-        listaOperaciones.add("Rectificar Volante");//35
-        listaOperaciones.add("Dar Altura a Pistones");//36
-
-
-        //1 Conjunto Motor
-    //2 Sub Conjunto
-    //3 Camisas
-    //4 Pistones
-    //5 Pernos
-    //6 Aros
-    //7 Aros Compresor
-    //8 Buje de Biela
-    //9 Cojinete de Biela
-    //10 Cojinete de Bancada
-    //11 Cojinete Axial
-    //12 Cojinete de Levas
-    //13 Cojinete Eje Mando
-    //14 Cojinete Compresor
-    //15 Válvulas
-    //16 Guías
-    //17 Casquillo
-    //18 Juego de Juntas
-    //19 Junta Descarbonización
-    //20 Tapones Block
-    //21 Bomba de Aceite
-    //22 Arbol de Leva
-    //23 Block
-    //24 Cigüeñal
-    //25 Tapa de Cilindros
-    //26 Botadores
-    //27 Juego de Tornillos
-    //28 Kit de Distribución
-    //29 Kit de Retenes
-    //30 Kit de Compresor
-    //31 Kit de Embrague
-    //32 Juego de Juntas Camisas
-    //33 Retenes de guía de válvulas
-
-        //creo la lista de repuestos
-        listaRepuestos.add("Conjunto Motor");//1
-        listaRepuestos.add("Sub Conjunto");//2
-        listaRepuestos.add("Camisas");//3
-        listaRepuestos.add("Pistones");//4
-        listaRepuestos.add("Pernos");//5
-        listaRepuestos.add("Aros");//6
-        listaRepuestos.add("Aros Compresor");//7
-        listaRepuestos.add("Buje de Bielas");//8
-        listaRepuestos.add("Cojinetes de Bielas");//9
-        listaRepuestos.add("Cojinetes de Bancada");//10
-        listaRepuestos.add("Cojinetes Axiales");//11
-        listaRepuestos.add("Cojinetes de Levas");//12
-        listaRepuestos.add("Cojinetes Eje Mando");//13
-        listaRepuestos.add("Cojinetes Compresor");//14
-        listaRepuestos.add("Válvulas");//15
-        listaRepuestos.add("Guías");//16
-        listaRepuestos.add("Casquillos");//17
-        listaRepuestos.add("Juego de Juntas");//18
-        listaRepuestos.add("Junta Descarbonización");//19
-        listaRepuestos.add("Tapones Block");//20
-        listaRepuestos.add("Bomba de Aceite");//21
-        listaRepuestos.add("Arbol de Leva");//22
-        listaRepuestos.add("Block");//23
-        listaRepuestos.add("Cigüeñal");//24
-        listaRepuestos.add("Tapa de Cilindro");//25
-        listaRepuestos.add("Botadores");//26
-        listaRepuestos.add("Juego de Tornillos");//27
-        listaRepuestos.add("Kit de Distribución");//28
-        listaRepuestos.add("Kit de Retenes");//29
-        listaRepuestos.add("Kit de Compresor");//30
-        listaRepuestos.add("Kit de Embrague");//31
-        listaRepuestos.add("Juego de Juntas Camisas");//32
-        listaRepuestos.add("Retenes de guía de válvulas");//33
+        return archivoPDF;
 
     }
 
-    //Creo la hoja a imprimir
+    private File printWithdocx4j(HashMap<String, String> dtoImpresion) throws Exception {
+        InputStream templateInputStream = new FileInputStream(new File(globales.reporteHtmlPath));
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(templateInputStream);
 
-    private void crearHojaImpresionPresupuesto(ArrayList<DTOImpresionCadena> listaDatos, DTOCabeceraImpresionPresupuesto cabecera) {
+        MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
+        VariablePrepare.prepare(wordMLPackage);
 
-        //Preparo los datos de la cabecera y los totales y las observaciones
-        //dibujo cada una de las cadenas en una posicion
-        g2d.drawString(cabecera.getCliente(), cabeceraIzqX, cabeceraY);//cliente
-        g2d.drawString(cabecera.getDomicilio(), cabeceraIzqX, cabeceraY + (difCabecera * 1));//domicilio
-        g2d.drawString(cabecera.getLocalidad(), cabeceraIzqX, cabeceraY + (difCabecera * 2));//localidad
-        g2d.drawString(cabecera.getTelefono(), cabeceraIzqX, cabeceraY + (difCabecera * 3));//teléfono
+        documentPart.variableReplace(dtoImpresion);
 
-        g2d.drawString(cabecera.getFecha(), cabeceraDerX, cabeceraY);//fecha
-        g2d.drawString(cabecera.getMotor(), cabeceraDerX, cabeceraY + (difCabecera * 1));//motor
-        g2d.drawString(cabecera.getFormaDePago(), cabeceraDerX, cabeceraY + (difCabecera * 2));//Forma de Pago
 
-        g2d.drawString(cabecera.getNumeroPresupuesto(), NPresX, NPresY);//Numero presupuesto
+        File archivo = new File("presupuesto.docx");
+        FileOutputStream out = new FileOutputStream(archivo);
+        wordMLPackage.save(out);
+        out.close();
 
-        g2d.drawString(cabecera.getTotalManoObra(), manoObraX, totalManoObraY);//Total mano de obra
-        g2d.drawString(cabecera.getTotalRepuestos(), repuestosX, totalRepuestosY);//Total repuestos
-        g2d.drawString(cabecera.getTotalNeto(), repuestosX, totalNETOY);//Total Neto
-        g2d.drawString(cabecera.getObservaciones(), 72, 100);//observaciones
+        File archivoPDF = this.convertToPdf(archivo);
 
-        //preparo el cuerpo del presupuesto
-        for (DTOImpresionCadena dto : listaDatos) {
-
-            //busco la ubicacion en la lista
-            int ubicacionEnLista = listaDatos.indexOf(dto) + 1;
-
-            int ubicacionX;
-            int ubicacionY;
-
-            Boolean enListaOperaciones = false;
-            Boolean enListaRepuesto = false;
-
-            //reviso en que lista se encuentra para ubicarlo en una columna
-            for (String operacion : listaOperaciones) {
-                if (dto.getNombreCadena().contentEquals(operacion)) {
-                    enListaOperaciones = true;
-                }
-            }
-
-            for (String repuesto : listaRepuestos) {
-                if (dto.getNombreCadena().contentEquals(repuesto)) {
-                    enListaRepuesto = true;
-                }
-            }
-
-            if (enListaOperaciones || enListaRepuesto) {
-                if (enListaOperaciones) {
-                    ubicacionX = manoObraX;
-                    ubicacionY = manoObraY + (diferenciaAlturaCuerpo * ubicacionEnLista);
-                } else {
-                    ubicacionX = repuestosX;
-                    ubicacionY = repuestosY + (diferenciaAlturaCuerpo * ubicacionEnLista);
-                }
-                //AGREGAR LOS DATOS DEL DTO EN LA HOJA A IMPRIMIR
-                g2d.drawString(dto.getValorCadena(), ubicacionX, ubicacionY);
-            } else {
-                listaImpresionAlFinal.add(dto);
-            }
-
-        }
-
-        //AGREGA LOS DTO RESTANTES EN LAS ÚLTIMAS CASILLAS LIBRES
-        if (listaImpresionAlFinal.size() > 5) {
-            //DAR AVISO DE QUE NO SE PUEDEN AGREGAR TODOS LOS ELEMENTOS
-        }
-        for (int i = 0; i < listaImpresionAlFinal.size(); i++) {
-            //dibujo el nombre del item que quedo colgado
-            g2d.drawString(listaImpresionAlFinal.get(i).getNombreCadena(),
-                    agregadosAlFinalX, agregadosAlFinalY + ((i + 1) * diferenciaAlturaCuerpo));
-            //dibujo el valor del item que quedo colgado
-            g2d.drawString(listaImpresionAlFinal.get(i).getValorCadena(),
-                    agregadosAlFinalX, agregadosAlFinalY + ((i + 1) * diferenciaAlturaCuerpo));
-        }
+        return archivoPDF;
     }
 
-    public void imprimirPresupuesto(ArrayList<DTOPresupuestoFinal> presupuestoDTO, Float importeTotal, Cliente client) throws PrinterException {
+    private HashMap<String, String> crearMap(Presupuesto presupuesto) {
+        HashMap<String, String> variables = new HashMap<>();
+        variables.put("cliente", presupuesto.getClienteName());
+        variables.put("fecha", presupuesto.getFechaCreacion().toString());
+        variables.put("motor", presupuesto.getMotorName());
+        variables.put("aplicacion", presupuesto.getAplicacionName());
+        variables.put("numero", presupuesto.getId().toString());
+        variables.put("totRep", presupuesto.getTotalRepuestos().toString());
+        variables.put("total", presupuesto.getImporteTotal().toString());
+        Float totalOperaciones = presupuesto.getImporteTotal() - presupuesto.getTotalRepuestos();
+        variables.put("totOpe", totalOperaciones.toString());
+        variables.put("observaciones", presupuesto.getObservaciones());
 
-
-        //Organizo la cabecera
-        DTOCabeceraImpresionPresupuesto dtoCabecera = new DTOCabeceraImpresionPresupuesto();
-
-        Persona persona = client.getPersona();
-        dtoCabecera.setCliente(persona.getUser().getLastName() + ", " + persona.getUser().getFirstName());
-        dtoCabecera.setDomicilio(persona.getDireccion().getCalle());
-        dtoCabecera.setLocalidad(persona.getDireccion().getLocalidad().getNombreLocalidad());
-        dtoCabecera.setTelefono(persona.getNumeroTelefono());
-        dtoCabecera.setFecha(null);
-
-        //organizo el cuerpo del presupuesto
-        /*
-         Un presupuesto puede tener a lo sumo 1 block y 1 tapa
-         eso son 2 DTOPresupuesto final
-         Los repuestos deberian ser distintos para cada uno
-         */
-        ArrayList<DTOImpresionCadena> listaDatos = new ArrayList();
-
-        for (DTOPresupuestoFinal dto : presupuestoDTO) {
-
-            //busco todas las operaciones
-            ArrayList<DTOCobroOperacionCUHacerPresupuesto> dtoOperaciones = dto.getM_DTOCobroOperacionCUHacerPresupuesto();
-            for (DTOCobroOperacionCUHacerPresupuesto dtoOp : dtoOperaciones) {
-                DTOImpresionCadena dtoNuevo = new DTOImpresionCadena();
-                dtoNuevo.setNombreCadena(dtoOp.getNombreOperacion());
-                String valor;
-                String cantidad = String.valueOf(dtoOp.getCantidad());
-                String valorUnitario = String.valueOf(dtoOp.getcobroOperacion());
-                //formateo si la cantidad es mayor a 1
-                if (dtoOp.getCantidad()> 1) {
-                    valor = valorUnitario + "  (" + cantidad + ")";
-                } else {
-                    valor = valorUnitario;
-                }
-
-                dtoNuevo.setValorCadena(String.valueOf(valor));
-                dtoNuevo.setValorCadena(dtoOp.getcobroOperacion());
-                listaDatos.add(dtoNuevo);
+        List<Operacion> operacionesPresupuesto = new ArrayList<Operacion> ();
+        for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
+            for (CobranzaOperacion cobranza: detalle.getCobranzaOperacions()) {
+                operacionesPresupuesto.add(cobranza.getOperacion());
             }
+        };
+        List<Operacion> allOperaciones = operacionRepository.findAll();
+        for (Operacion operacion: allOperaciones) {
+            // Escribo todas las operaciones en el word
+            String opNombre = "o" + operacion.getId().toString();
+            variables.put(opNombre, operacion.getNombreOperacion());
+            String opNoElegida = "x" + operacion.getId().toString();
+            variables.put(opNoElegida, "");
 
-            //busco todos los repuestos
-            ArrayList<DtoRepuestosElegidos> dtoRepuestos = dto.getM_DtoRepuestosElegidos();
-            for (DtoRepuestosElegidos dtoRep : dtoRepuestos) {
-                DTOImpresionCadena dtoNuevo = new DTOImpresionCadena();
-                dtoNuevo.setNombreCadena(dtoRep.getnombreRepuesto());
-                String cantidad = String.valueOf(dtoRep.getcantidadRepuesto());
-                String valorUnitario = String.valueOf(dtoRep.getprecioRepuesto());
-                String valor;
-
-                //formateo si la cantidad es mayor a 1
-                if (dtoRep.getcantidadRepuesto() > 1) {
-                    valor = valorUnitario + "  (" + cantidad + ")";
-                } else {
-                    valor = valorUnitario;
+            for (Operacion operacionPresupuesto: operacionesPresupuesto) {
+                if (operacion.getId().equals(operacionPresupuesto.getId())){
+                    // SI esta presupuestada, pongo una X
+                    String opElegida = "x" + operacion.getId().toString();
+                    variables.put(opElegida, "X");
                 }
-                dtoNuevo.setValorCadena(String.valueOf(valor));
-
-                listaDatos.add(dtoNuevo);
             }
-
         }
 
-        //dibujo la hoja a imprimir
-        crearHojaImpresionPresupuesto(listaDatos, dtoCabecera);
+        List<CobranzaRepuesto> cobranzaRepuestos = new ArrayList<CobranzaRepuesto> ();
+        for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
+            for (CobranzaRepuesto cobranza: detalle.getCobranzaRepuestos()) {
+                cobranzaRepuestos.add(cobranza);
+            }
+        };
+        List<TipoRepuesto> allTipoRepuestos = tipoRepuestoRepository.findAll();
+        for (TipoRepuesto tipoRepuesto: allTipoRepuestos) {
+            // Escribo todos los repuestos en el word
+            String reNombre = "r" + tipoRepuesto.getId().toString();
+            variables.put(reNombre, tipoRepuesto.getNombreTipoRepuesto());
+            String repNoElegido = "v" + tipoRepuesto.getId().toString();
+            variables.put(repNoElegido, "");
+            for (CobranzaRepuesto cobranzaRepuesto: cobranzaRepuestos) {
+                if (tipoRepuesto.getId().equals(cobranzaRepuesto.getTipoRepuesto().getId())){
+                    // SI esta presupuestado, pongo el valor que se cobro
+                    String repElegido = "v" + tipoRepuesto.getId().toString();
+                    variables.put(repElegido, cobranzaRepuesto.getValor().toString());
+                }
+            }
+        }
 
-        //indico la cantidad de hojas del presupuesto
-        int index = 0;
-        //creo un nuevo formato de hoja
-        PageFormat pageFormat = new PageFormat();
-        //imprimo
-        print(g2d, pageFormat, index);
+        return variables;
     }
- }
+
+    // private File printWithXDocReport(DTOImpresion dtoImpresion) throws Exception {
+    //     InputStream in = new FileInputStream(new File(globales.reporteHtmlPath));
+    //     IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Velocity);
+    //     IContext context = report.createContext();
+
+    //     context.put("dto", dtoImpresion);
+
+    //     File archivo = new File("presupuesto.pdf");
+    //     FileOutputStream out = new FileOutputStream(archivo);
+
+    //     Options options = Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.XWPF).from(DocumentKind.DOCX);
+    //     report.convert(context, options, out);
+    //     out.close();
+
+    //     return archivo;
+    // }
+
+    // private DTOImpresion crearDto(Presupuesto presupuesto) {
+        //     DTOImpresion dto = new DTOImpresion();
+        //     dto.setCliente(presupuesto.getCliente().getPersona().getNombre() + " " + presupuesto.getCliente().getPersona().getApellido());
+        //     dto.setFecha(presupuesto.getFechaCreacion().toString());
+        //     dto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
+        //     dto.setAplicacion(presupuesto.getDetallePresupuestos().iterator().next().getAplicacion().getNombreAplicacion());
+        //     dto.setNumero(String.valueOf(presupuesto.getId()));
+
+        //     List<Operacion> operaciones = new ArrayList<Operacion> ();
+        //     for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
+            //         for (CobranzaOperacion cobranza: detalle.getCobranzaOperacions()) {
+                //             operaciones.add(cobranza.getOperacion());
+                //         }
+                //     };
+                //     for (Triplet<Long,String, String> opIdtoMethod:MAP_OPERACIONES) {
+                    //         for (Operacion operacion: operaciones) {
+                        //             if (operacion.getId().equals(opIdtoMethod.getValue0())){
+                            //                 Method dtoMethodOP;
+                            //                 try {
+                                //                     dtoMethodOP = DTOImpresion.class.getMethod(opIdtoMethod.getValue1());
+                                //                     dtoMethodOP.invoke(dto, operacion.getNombreOperacion());
+                                //                     Method dtoMethodSEL = DTOImpresion.class.getMethod(opIdtoMethod.getValue2());
+                                //                     dtoMethodSEL.invoke(dto, "X");
+                                //                 } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                                    //                     // e.printStackTrace();
+                                    //                     // log.warn(e.getMessage());
+                                    //                 }
+
+                                    //             }
+                                    //         }
+                                    //     }
+
+                                    //     List<CobranzaRepuesto> repuestos = new ArrayList<CobranzaRepuesto> ();
+                                    //     for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
+                                        //         for (CobranzaRepuesto cobranza: detalle.getCobranzaRepuestos()) {
+                                            //             repuestos.add(cobranza);
+                                            //         }
+                                            //     };
+                                            //     for (Triplet<Long,String, String> repIdtoMethod:MAP_REPUESTOS) {
+                                                //         for (CobranzaRepuesto repuesto: repuestos) {
+                                                    //             if (repuesto.getTipoRepuesto().getId().equals(repIdtoMethod.getValue0())){
+                                                        //                 try {
+                                                            //                     Method dtoMethodOP = DTOImpresion.class.getMethod(repIdtoMethod.getValue1());
+                                                            //                     dtoMethodOP.invoke(dto, repuesto.getTipoRepuesto().getNombreTipoRepuesto());
+                                                            //                     Method dtoMethodSEL = DTOImpresion.class.getMethod(repIdtoMethod.getValue2());
+                                                            //                     dtoMethodSEL.invoke(dto, repuesto.getValor());
+                                                            //                 } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                                                                //                     // e.printStackTrace();
+                                                                //                     // log.warn(e.getMessage());
+                                                                //                 }
+                                                                //             }
+                                                                //         }
+                                                                //     }
+
+                                                                //     return dto;
+                                                                // }
+
+                                                            }
