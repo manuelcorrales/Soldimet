@@ -3922,6 +3922,11 @@ fbjs@^0.6.1:
     ua-parser-js "^0.7.9"
     whatwg-fetch "^0.9.0"
 
+feature-toggle-service@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/feature-toggle-service/-/feature-toggle-service-4.1.1.tgz#8e9c27bf4b9aa3ce925188e433bf516917bd2fbf"
+  integrity sha512-uQGvmtvP8x4N2W5r8ZOKleW4Qp8cAqXTkYwzLUfauaYZFLnKTueBPg3Mn4M7pwpjOA/qYbAvr7XIZyA6nQubWA==
+
 fecha@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-2.3.3.tgz#948e74157df1a32fd1b12c3a3c3cdcb6ec9d96cd"
@@ -7226,6 +7231,14 @@ ngx-cookie@4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/ngx-cookie/-/ngx-cookie-4.0.2.tgz#dc0044826cc3482b723fa70ecc6cd12af057d862"
   dependencies:
+    tslib "^1.9.0"
+
+ngx-feature-toggle@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/ngx-feature-toggle/-/ngx-feature-toggle-7.2.0.tgz#375705eee5d0ac43fc4cef3bdf30b9ee60a9b32e"
+  integrity sha512-skHXL04puEgJgzl2BMDFGrS6uPofSel9rV1jnPcdeVq6pddO+R/k9CrhIFnVetffJHn0q6k0fhYhJug2MdBNfA==
+  dependencies:
+    feature-toggle-service "^4.1.1"
     tslib "^1.9.0"
 
 ngx-infinite-scroll@8.0.0:

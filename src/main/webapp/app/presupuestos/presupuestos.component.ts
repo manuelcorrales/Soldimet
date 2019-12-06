@@ -22,6 +22,10 @@ export class PresupuestosComponent implements OnInit {
 
   imprimiendo = false;
 
+  public featureToggleData: any = {
+    enableImprimir: false
+  };
+
   constructor(private _presupuestosService: PresupuestosService, private jhiAlertService: JhiAlertService) {}
 
   ngOnInit() {
