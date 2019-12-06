@@ -2,6 +2,10 @@
 <ff4j xmlns="http://www.ff4j.org/schema/ff4j"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.ff4j.org/schema/ff4j http://ff4j.org/schema/ff4j-1.4.0.xsd">
+    <features>
+        <feature uid="enableImprimir" enable="false" description="Permitir llamar a imprimir un presupuesto">
+        </feature>
+    </features>
     <properties>
         <property name="maxLoginAttempts" type="int" value="12"/>
     </properties>

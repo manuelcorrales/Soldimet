@@ -18,7 +18,7 @@ public class FF4JWebConfiguration extends SpringBootServletInitializer {
 
     @Bean
     public ServletRegistrationBean servletRegistrationBean(ConsoleServlet ff4jConsoleServlet) {
-        return new ServletRegistrationBean(ff4jConsoleServlet, "/ff4j-console");
+        return new ServletRegistrationBean(ff4jConsoleServlet, "/admin/flags");
     }
 
     @Bean
@@ -31,7 +31,7 @@ public class FF4JWebConfiguration extends SpringBootServletInitializer {
 
     @Bean
     public ServletRegistrationBean ff4jDispatcherServletRegistrationBean(FF4jDispatcherServlet ff4jDispatcherServlet) {
-        return new ServletRegistrationBean(ff4jDispatcherServlet, "/ff4j-web-console/*");
+        return new ServletRegistrationBean(ff4jDispatcherServlet, "/admin/flags/*");
     }
 
     @Bean
