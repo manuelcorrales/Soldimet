@@ -18,8 +18,18 @@ import { OperacionPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/cli
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PresupuestoDetailComponent } from './presupuesto-detail/presupuesto-detail.component';
 
+import { FeatureToggleModule } from 'ngx-feature-toggle';
+
 @NgModule({
-  imports: [NgSelectModule, BrowserModule, FormsModule, SoldimetSharedModule, CommonModule, RouterModule.forChild(PRESUPUESTOS_ROUTES)],
+  imports: [
+    NgSelectModule,
+    FeatureToggleModule,
+    BrowserModule,
+    FormsModule,
+    SoldimetSharedModule,
+    CommonModule,
+    RouterModule.forChild(PRESUPUESTOS_ROUTES)
+  ],
   declarations: [
     PresupuestosComponent,
     NuevoPresupuestoComponent,

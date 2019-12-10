@@ -4,6 +4,8 @@ import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { JhiAlertService } from 'ng-jhipster';
 import { saveAs } from 'file-saver';
 import { HttpResponse } from '../../../../../node_modules/@angular/common/http';
+import { FlagsServiceService } from 'app/shared/flags/flags-service.service';
+import { DtoFF } from 'app/shared/flags/dto-ff';
 
 @Component({
   selector: 'jhi-presupuestos',
@@ -22,13 +24,34 @@ export class PresupuestosComponent implements OnInit {
 
   imprimiendo = false;
 
-  constructor(private _presupuestosService: PresupuestosService, private jhiAlertService: JhiAlertService) {}
+  public featureToggleData: any = {
+    enableImprimir: false
+  };
+
+  constructor(
+    private _presupuestosService: PresupuestosService,
+    private jhiAlertService: JhiAlertService,
+    private ffStoreService: FlagsServiceService
+  ) {}
 
   ngOnInit() {
     this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
       this.totalPresupuestos.push(...presupuestos);
       this.presupuestos = this.totalPresupuestos;
     });
+    this.featureToggleData.keys;
+    this.ffStoreService.getFFStore().subscribe(
+      (responseList: DtoFF[]) => {
+        responseList.forEach((ff: DtoFF) => {
+          if (ff.description === 'enableImprimir') {
+            this.featureToggleData.enableImprimir = ff.enable;
+          }
+        });
+      },
+      error => {
+        this.jhiAlertService.error(error.message);
+      }
+    );
   }
 
   aceptarPresupuesto(dtoPResupuesto: DtoPresupuestoCabeceraComponent) {

@@ -16,6 +16,8 @@ import { JhiHealthCheckComponent } from './health/health.component';
 import { JhiConfigurationComponent } from './configuration/configuration.component';
 import { JhiDocsComponent } from './docs/docs.component';
 
+import { JhiFlagsComponent } from './flags/flags.component';
+
 @NgModule({
   imports: [
     SoldimetSharedModule,
@@ -32,6 +34,7 @@ import { JhiDocsComponent } from './docs/docs.component';
     JhiConfigurationComponent,
     JhiHealthCheckComponent,
     JhiHealthModalComponent,
+    JhiFlagsComponent,
     JhiDocsComponent,
     JhiMetricsMonitoringComponent
   ],
