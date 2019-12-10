@@ -438,6 +438,11 @@
             <artifactId>thymeleaf</artifactId>
             <version>3.0.11.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.ff4j</groupId>
+            <artifactId>ff4j-store-springjdbc</artifactId>
+            <version>1.8.2</version>
+        </dependency>
     </dependencies>
 
     <build>
