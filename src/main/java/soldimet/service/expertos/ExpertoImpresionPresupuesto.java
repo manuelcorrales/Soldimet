@@ -19,7 +19,9 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
@@ -87,7 +89,8 @@ public class ExpertoImpresionPresupuesto {
     }
 
     private File printWithdocx4j(HashMap<String, String> dtoImpresion) throws Exception {
-        InputStream templateInputStream = getClass().getResourceAsStream(globales.reporteHtmlPath);
+        ClassPathResource resource = new ClassPathResource(globales.reporteHtmlPath);
+        InputStream templateInputStream = resource.getInputStream();
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(templateInputStream);
 
         MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
