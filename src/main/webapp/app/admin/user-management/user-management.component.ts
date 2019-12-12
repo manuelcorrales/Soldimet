@@ -11,6 +11,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.model';
 import { UserMgmtDeleteDialogComponent } from './user-management-delete-dialog.component';
+import { ModalUtilComponent } from 'app/shared/util/modal-util';
 
 @Component({
   selector: 'jhi-user-mgmt',
@@ -144,5 +145,18 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
 
   private onError(error) {
     this.alertService.error(error.error, error.message, null);
+  }
+
+  resetPassword(user: User) {
+    this.userService.resetPassword(user).subscribe(
+      (resetLink: { response: String }) => {
+        const modalRef = this.modalService.open(ModalUtilComponent);
+        modalRef.componentInstance.tittle = 'New Key!';
+        modalRef.componentInstance.body = 'Key: ' + resetLink.response;
+      },
+      error => {
+        this.alertService.error(error.message);
+      }
+    );
   }
 }

@@ -11,6 +11,7 @@ import { DtoEmpleado } from 'app/dto/dto-empleado/dto-empleado.component';
 export class UserService {
   public resourceUrl = SERVER_API_URL + 'api/users';
   private empleadoResourceUrl = SERVER_API_URL + '/api/empleado';
+  private resetPasswordUrl = SERVER_API_URL + 'api/account/reset-password/init-link';
 
   constructor(private http: HttpClient) {}
 
@@ -41,5 +42,9 @@ export class UserService {
 
   getCurrentEmpleado(): Observable<DtoEmpleado> {
     return this.http.get<DtoEmpleado>(this.empleadoResourceUrl + '/getEmpleadoActual');
+  }
+
+  resetPassword(user: IUser): Observable<{ response: String }> {
+    return this.http.post<{ response: String }>(this.resetPasswordUrl, user.email);
   }
 }

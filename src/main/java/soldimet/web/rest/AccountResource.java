@@ -7,6 +7,7 @@ import soldimet.security.SecurityUtils;
 import soldimet.service.MailService;
 import soldimet.service.UserService;
 import soldimet.service.dto.PasswordChangeDTO;
+import soldimet.service.dto.SimpleStringDto;
 import soldimet.service.dto.UserDTO;
 import soldimet.web.rest.errors.*;
 import soldimet.web.rest.vm.KeyAndPasswordVM;
@@ -15,8 +16,11 @@ import soldimet.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import io.github.jhipster.config.JHipsterProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -34,6 +38,9 @@ public class AccountResource {
             super(message);
         }
     }
+
+    @Autowired
+    private JHipsterProperties jhipsterProperties;
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 
@@ -155,6 +162,12 @@ public class AccountResource {
            userService.requestPasswordReset(mail)
                .orElseThrow(EmailNotFoundException::new)
        );
+    }
+
+    @PostMapping(path = "/account/reset-password/init-link")
+    public SimpleStringDto requestPasswordResetLink(@RequestBody String mail) {
+        User user = userService.requestPasswordReset(mail).orElseThrow(EmailNotFoundException::new);
+       return new SimpleStringDto(jhipsterProperties.getMail().getBaseUrl()+ "/account/reset/finish?key=" + user.getResetKey());
     }
 
     /**
