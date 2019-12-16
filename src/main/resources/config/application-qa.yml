@@ -26,6 +26,8 @@ management:
         enabled: false
 
 spring:
+  application:
+    name: Soldimet-qa
   devtools:
     restart:
       enabled: false
@@ -118,7 +120,7 @@ jhipster:
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: http://167.71.172.236:8080 # Modify according to your server's URL
+    base-url: http://www.qa.rectificacionsoldimet.com:8080 # Modify according to your server's URL
   metrics:
     logs: # Reports metrics in the logs
       enabled: true
@@ -126,8 +128,8 @@ jhipster:
   logging:
     use-json-format: true # By default, logs are not in Json format
     logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
-      enabled: false
-      host: localhost
+      enabled: true
+      host: 10.132.48.74
       port: 5000
       queue-size: 512
   audit-events:

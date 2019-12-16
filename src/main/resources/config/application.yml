@@ -128,7 +128,7 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: Soldimet@localhost
+    from: Soldimet@rectificacionsoldimet.com
   swagger:
     default-include-pattern: /api/.*
     title: Soldimet API
