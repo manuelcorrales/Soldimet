@@ -29,11 +29,11 @@ public class CajaController {
     @Autowired
     private ExpertoCaja expertoCaja;
 
-    @GetMapping("/dia")
-    public DTOCajaCUConsultarMovimientos getMovimientosDia() {
+    @GetMapping("/dia/{sucursalId}")
+    public DTOCajaCUConsultarMovimientos getMovimientosDia(@PathVariable("sucursalId") Long sucursalId) {
         log.debug("request api/caja/día");
 
-        DTOCajaCUConsultarMovimientos movimientosDelDia = expertoCaja.buscarMovimientosDia();
+        DTOCajaCUConsultarMovimientos movimientosDelDia = expertoCaja.buscarMovimientosDia(sucursalId);
 
         log.debug("response api/caja/día", movimientosDelDia);
         return movimientosDelDia;

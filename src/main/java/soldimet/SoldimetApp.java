@@ -19,6 +19,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
@@ -30,6 +33,12 @@ public class SoldimetApp implements InitializingBean {
 
     public SoldimetApp(Environment env) {
         this.env = env;
+    }
+
+    @PostConstruct
+    void started() {
+        // set JVM timezone as UTC
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     /**

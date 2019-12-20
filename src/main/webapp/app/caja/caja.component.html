@@ -1,10 +1,10 @@
 <div class="jh-card">
     <div class="container">
         <div class="row">
-            <div class="card border-success col-md-3 text-center">
-                Total Día: ${{cajaDia?.totalMensual | number:'1.2-2'}}
+            <div class="card border-success col-md-2 text-center">
+                Total Día: <p>${{cajaDia?.totalMensual | number:'1.2-2'}}</p>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <div class="input-group custom-search-form">
                     <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)" placeholder="Buscar movimientos...">
                     <span class="input-group-btn">
@@ -21,6 +21,14 @@
                         Nuevo Movimiento
                     </span>
                 </button>
+            </div>
+            <div class="col-md-2 justify-content-center" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
+                <span><strong>Sucursal:</strong> </span>
+                <select class="custom-select" [(ngModel)]="sucursal" name="sucursal" (change)="filtrarPorSucursal()">
+                    <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
+                        {{sucursal?.nombreSucursal}}
+                    </option>
+                </select>
             </div>
         </div>
     </div>

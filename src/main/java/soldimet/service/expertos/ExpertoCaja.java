@@ -2,10 +2,11 @@ package soldimet.service.expertos;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
-import org.joda.time.MonthDay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import soldimet.constant.Globales;
 import soldimet.converter.CajaConverter;
+import soldimet.domain.Authority;
 import soldimet.domain.Caja;
 import soldimet.domain.Empleado;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.Movimiento;
-import soldimet.domain.Persona;
 import soldimet.domain.Sucursal;
 import soldimet.repository.CajaRepository;
-import soldimet.repository.EmpleadoRepository;
 import soldimet.repository.EstadoMovimientoRepository;
 import soldimet.repository.MedioDePagoRepository;
 import soldimet.repository.MovimientoRepository;
-import soldimet.repository.PersonaRepository;
+import soldimet.repository.SucursalRepository;
+import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
+
 
 /**
  * @author Manu
@@ -61,20 +63,22 @@ public class ExpertoCaja {
     @Autowired
     private MedioDePagoRepository medioDePagoRepository;
 
+    @Autowired
+    private SucursalRepository sucursalRepository;
+
     public ExpertoCaja() {
 
     }
 
-    public DTOCajaCUConsultarMovimientos buscarMovimientosDia() {
+    public DTOCajaCUConsultarMovimientos buscarMovimientosDia(Long sucursalId) {
 
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
         Sucursal sucursal = empleado.getSucursal();
-
-        Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(this.currentMonth(), sucursal);
-
-        if (cajaDia == null) {
-            cajaDia = this.AbrirCaja(sucursal);
+        if (sucursalId!= null && this.tieneAccesoATodosLosMovimientos(empleado)) {
+            // Filtrar los movimientos por la sucursal indicada por el usuario
+             sucursal = sucursalRepository.findById(sucursalId).get();
         }
+        Caja cajaDia = this.findCajaDelDia(sucursal);
 
         EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
         List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(cajaDia, estadoAlta);
@@ -85,10 +89,9 @@ public class ExpertoCaja {
         return dto;
     }
 
-    private Float calcularTotalMesActual() {
+    private Float calcularTotalMesActual(Sucursal sucursal) {
 
-        LocalDate fechaMesActual = LocalDate.now().withDayOfMonth(1).withMonth(MonthDay.now().MONTH_OF_YEAR);
-        List<Caja> listaCajaMes = cajaRepository.findByFechaGreaterThanEqual(fechaMesActual);
+        List<Caja> listaCajaMes = this.findCajasDelMes(sucursal);
 
         Float montoTotalMes = new Float(0);
         for (Caja caja : listaCajaMes) {
@@ -103,7 +106,7 @@ public class ExpertoCaja {
             EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
             // update movimiento params
-            movimientoDto.setFecha(LocalDate.now());
+            movimientoDto.setFecha(this.currentDay());
             movimientoDto.setEstado(estadoAlta);
             movimientoDto.setEmpleado(expertoUsuarios.getEmpleadoLogeado());
 
@@ -113,13 +116,7 @@ public class ExpertoCaja {
                 movimientoDto.setImporte(totalMovimiento);
             }
 
-            Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(
-                this.currentMonth(),
-                movimientoDto.getEmpleado().getSucursal()
-            );
-            if (cajaDia == null) {
-                cajaDia = this.AbrirCaja(movimientoDto.getEmpleado().getSucursal());
-            }
+            Caja cajaDia = this.findCajaDelDia(movimientoDto.getEmpleado().getSucursal());
             movimientoDto.setCaja(cajaDia);
 
 
@@ -143,31 +140,39 @@ public class ExpertoCaja {
 
     private Caja AbrirCaja(Sucursal sucursal) {
 
-        Caja ultimaCaja = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(
-            this.currentMonth(),
-            sucursal
-        );
-        //creo una fecha actual y le doy formato (puede ser yyyy/MM/dd HH:mm:ss)
         Caja cajaDiaHoy = new Caja();
 
-        Float saldo = new Float(0);
-        if (ultimaCaja != null) {
-            saldo = ultimaCaja.getSaldo();
-        }
-
-        cajaDiaHoy.setSaldo(saldo);
-        cajaDiaHoy.setFecha(LocalDate.now());
+        cajaDiaHoy.setSaldo(new Float(0));
+        cajaDiaHoy.setFecha(this.currentDay());
         cajaDiaHoy.setSucursal(sucursal);
         cajaDiaHoy.setHoraApertura(Instant.now());
 
         //GUARDO LA CAJA
         return cajaRepository.save(cajaDiaHoy);
+    }
 
-
+    private LocalDate currentDay() {
+        return LocalDate.now();
     }
 
     private LocalDate currentMonth() {
         return LocalDate.now().withDayOfMonth(1);
+    }
+
+    private Caja findCajaDelDia(Sucursal sucursal) {
+        Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(
+            this.currentDay(),
+            sucursal
+        );
+        if (cajaDia == null) {
+            cajaDia = this.AbrirCaja(sucursal);
+        }
+        return cajaDia;
+    }
+
+    private List<Caja> findCajasDelMes(Sucursal sucursal) {
+        LocalDate fechaMesActual = this.currentMonth();
+        return  cajaRepository.findByFechaGreaterThanEqual(fechaMesActual);
     }
 
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {
@@ -211,4 +216,19 @@ public class ExpertoCaja {
 
     }
 
+    private Boolean tieneAccesoATodosLosMovimientos(Empleado empleado) {
+        Set<Authority> authorities = empleado.getPersona().getUser().getAuthorities();
+
+        List<String> authoritiesNames = new ArrayList<String>();
+        // Spring permite filtrar todo a nivel de endpoint por eso filtro así
+        // nternamente
+        // Tambien se puede pero creando una relacion entre el objeto presupuesto y el
+        // user (malisimo)
+        for (Authority authority : authorities) {
+            authoritiesNames.add(authority.getName());
+        }
+
+        return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
+                || authoritiesNames.contains(AuthoritiesConstants.JEFE);
+    }
 }

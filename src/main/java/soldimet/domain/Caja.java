@@ -157,7 +157,7 @@ public class Caja implements Serializable {
         if (!(o instanceof Caja)) {
             return false;
         }
-        return id != null && id.equals(((Caja) o).id);
+        return id != null && id.equals(((Caja) o).id) && this.fecha.equals(((Caja) o).getFecha());
     }
 
     @Override

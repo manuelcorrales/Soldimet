@@ -16,8 +16,8 @@ export class CajaModuleServiceService {
 
   constructor(private http: HttpClient) {}
 
-  getMovimientosDia(): Observable<DtoCajaDiaComponent> {
-    const urlLlamada = `${this.resourceUrlCaja}${this.urlMovimientosDia}`;
+  getMovimientosDia(sucursalId: number): Observable<DtoCajaDiaComponent> {
+    const urlLlamada = `${this.resourceUrlCaja}${this.urlMovimientosDia}/${sucursalId}`;
     return this.http.get<DtoCajaDiaComponent>(urlLlamada);
   }
 
