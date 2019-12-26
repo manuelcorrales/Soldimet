@@ -30,6 +30,7 @@
     "ngx-cookie": "4.0.2",
     "ngx-feature-toggle": "^7.2.0",
     "ngx-infinite-scroll": "8.0.0",
+    "ngx-ui-loader": "^8.0.0",
     "ngx-webstorage": "4.0.1",
     "rxjs": "6.5.2",
     "swagger-ui": "2.2.10",

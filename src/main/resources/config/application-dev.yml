@@ -104,7 +104,7 @@ jhipster:
     base-url: http://127.0.0.1:8080
   metrics:
     logs: # Reports metrics in the logs
-      enabled: true
+      enabled: false
       report-frequency: 60 # in seconds
   logging:
     use-json-format: true # By default, logs are not in Json format

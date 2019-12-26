@@ -7247,6 +7247,13 @@ ngx-infinite-scroll@8.0.0:
   dependencies:
     opencollective-postinstall "^2.0.2"
 
+ngx-ui-loader@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-ui-loader/-/ngx-ui-loader-8.0.0.tgz#5137c4c680ec4ffdc25864041272f8218318d3ee"
+  integrity sha512-yD4Vc3NjMs9N3vCFTdGMoAfcDML5ns0cXYVvR9/0WAQt6/AhN86wZcrNA0/2kj23ozy8o8SVftWEaMS9tEP8Kw==
+  dependencies:
+    tslib "^1.9.0"
+
 ngx-webstorage@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/ngx-webstorage/-/ngx-webstorage-4.0.1.tgz#6fbca852f2a4505e6e482474197884b3f38c6873"

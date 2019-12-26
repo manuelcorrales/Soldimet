@@ -1,6 +1,7 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgxUiLoaderModule, NgxUiLoaderRouterModule, NgxUiLoaderHttpModule } from 'ngx-ui-loader';
 
 import './vendor';
 import { AuthInterceptor } from './blocks/interceptor/auth.interceptor';
@@ -29,6 +30,10 @@ import { PresupuestosModule } from './presupuestos/presupuestos.module';
 @NgModule({
   imports: [
     BrowserModule,
+    HttpClientModule,
+    NgxUiLoaderModule,
+    NgxUiLoaderHttpModule,
+    NgxUiLoaderRouterModule,
     SoldimetSharedModule,
     SoldimetCoreModule,
     SoldimetHomeModule,
