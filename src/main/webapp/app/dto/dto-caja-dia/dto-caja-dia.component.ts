@@ -11,6 +11,7 @@ export class DtoCajaDiaComponent {
 }
 
 export class DtoMovimientoCabecera {
+  fecha: string;
   constructor(
     public movimientoId: Number,
     public descripcion: string,

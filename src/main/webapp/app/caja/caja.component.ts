@@ -28,6 +28,23 @@ export class CajaComponent implements OnInit {
   movimientos: DtoMovimientoCabecera[] = [];
   sucursal: ISucursal;
   sucursales: ISucursal[] = [];
+  mes = 0;
+  anio = 0;
+  meses = [
+    ['Enero', 1],
+    ['Febrero', 2],
+    ['Marzo', 3],
+    ['Abril', 4],
+    ['Mayo', 5],
+    ['Junio', 6],
+    ['julio', 7],
+    ['Agosto', 8],
+    ['Septiembre', 9],
+    ['Octubre', 10],
+    ['Noviembre', 11],
+    ['Diciembre', 11]
+  ];
+  filtrado = false;
 
   constructor(
     private cajaService: CajaModuleServiceService,
@@ -45,13 +62,6 @@ export class CajaComponent implements OnInit {
   async _buscarMovimientosDelDia() {
     const currrentEmployeeRespo = await this.userService.getCurrentEmpleado().toPromise();
     this.empleado = currrentEmployeeRespo;
-    this.cajaService.getMovimientosDia(this.empleado.sucursalId).subscribe((cajaDia: DtoCajaDiaComponent) => {
-      const movimientos = cajaDia.movimientos;
-      cajaDia.movimientos = movimientos.sort(this._sortMovimientos);
-      this.cajaDia = cajaDia;
-      this.movimientos = cajaDia.movimientos;
-      this.totalMovimientos = cajaDia.movimientos;
-    });
     this.buscarMovimientosRequest(this.empleado.sucursalId);
     this.sucursalService.query().subscribe((response: HttpResponse<ISucursal[]>) => {
       this.sucursales = response.body;
@@ -60,17 +70,36 @@ export class CajaComponent implements OnInit {
   }
 
   buscarMovimientosRequest(sucursalId) {
-    this.cajaService.getMovimientosDia(sucursalId).subscribe((cajaDia: DtoCajaDiaComponent) => {
-      const movimientos = cajaDia.movimientos;
-      cajaDia.movimientos = movimientos.sort(this._sortMovimientos);
-      this.cajaDia = cajaDia;
-      this.movimientos = cajaDia.movimientos;
-      this.totalMovimientos = cajaDia.movimientos;
+    this.cajaService.getMovimientosDia(sucursalId, this.mes, this.anio).subscribe((cajasDias: DtoCajaDiaComponent[]) => {
+      this._cleanCaja();
+      if (cajasDias.length === 1) {
+        const cajaDia = cajasDias[0];
+        const movimientos = cajaDia.movimientos;
+        cajaDia.movimientos = movimientos.sort(this._sortMovimientos);
+        this.cajaDia = cajaDia;
+        this.movimientos = cajaDia.movimientos;
+        this.totalMovimientos = cajaDia.movimientos;
+      } else {
+        cajasDias.forEach(caja => caja.movimientos.forEach(mov => (mov.fecha = caja.fechaCaja)));
+        this.cajaDia = cajasDias[0];
+        cajasDias.forEach(caja => this.movimientos.push(...caja.movimientos));
+        this.movimientos = this.movimientos.sort(this._sortMovimientos);
+        this.totalMovimientos = this.movimientos;
+      }
     });
   }
 
   filtrarPorSucursal() {
+    this.filtrado = true;
     this.buscarMovimientosRequest(this.sucursal.id);
+  }
+
+  limpiarFiltros() {
+    this.filtrado = false;
+    this.sucursal = this.sucursales.find(sucursal => sucursal.id === this.empleado.sucursalId);
+    this.mes = 0;
+    this.anio = 0;
+    this.buscarMovimientosRequest(this.empleado.sucursalId);
   }
 
   _sortMovimientos(a: DtoMovimientoCabecera, b: DtoMovimientoCabecera) {
@@ -89,5 +118,11 @@ export class CajaComponent implements OnInit {
       return movimiento.descripcion.toLowerCase().includes(term) || movimiento.categoria.toLowerCase().includes(term);
     });
     this.movimientos = movimientos.sort(this._sortMovimientos);
+  }
+
+  _cleanCaja() {
+    this.totalMovimientos = [];
+    this.movimientos = [];
+    this.cajaDia = null;
   }
 }

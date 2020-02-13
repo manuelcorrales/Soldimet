@@ -22,13 +22,39 @@
                     </span>
                 </button>
             </div>
-            <div class="col-md-2 justify-content-center" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
-                <span><strong>Sucursal:</strong> </span>
-                <select class="custom-select" [(ngModel)]="sucursal" name="sucursal" (change)="filtrarPorSucursal()">
+        </div>
+    </div>
+    <br/>
+    <div class="container-fluid card border-info mb-3">
+        <div class="row" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
+            <div class="col-md-3">
+                <span><strong>Mes:</strong></span>
+                <select class="custom-select" [(ngModel)]="mes" name="mes">
+                    <option *ngFor="let mes of meses" [ngValue]="mes[1]">
+                        {{mes[0]}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <span><strong>Año:</strong></span>
+                <select class="custom-select" [(ngModel)]="anio" name="anio">
+                    <option *ngFor="let anio of [2019, 2020, 2021, 2022]" [ngValue]="anio">
+                        {{anio}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <span><strong>Sucursal:</strong></span>
+                <select class="custom-select" [(ngModel)]="sucursal" name="sucursal">
                     <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
                         {{sucursal?.nombreSucursal}}
                     </option>
                 </select>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-outline-success" (click)="filtrarPorSucursal()">Filtrar</button>
+
+                <button *ngIf="filtrado" type="button" class="btn btn-outline-danger" (click)="limpiarFiltros()">Limpiar filtros</button>
             </div>
         </div>
     </div>

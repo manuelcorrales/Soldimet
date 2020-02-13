@@ -22,9 +22,13 @@ public interface CajaRepository extends JpaRepository<Caja, Long>, JpaSpecificat
 
     public Caja findByFechaAndSucursal(LocalDate date, Sucursal sucursal);
 
-    // public Caja findByFechaGreaterThanEqualAndSucursal(LocalDate date, Sucursal sucursal);
-
     public Caja findTopByOrderByIdDesc();
 
     public Caja findFirstByFechaGreaterThanEqualAndSucursal(LocalDate fecha, Sucursal sucursal);
+
+    public List<Caja> findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(
+        LocalDate fechaInicio,
+        LocalDate fechaFin,
+        Sucursal sucursal
+    );
 }

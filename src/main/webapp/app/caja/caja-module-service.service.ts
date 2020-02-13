@@ -10,15 +10,15 @@ import { Movimiento } from 'app/shared/model/movimiento.model';
 })
 export class CajaModuleServiceService {
   private resourceUrlCaja = SERVER_API_URL + 'api/caja';
-  private urlMovimientosDia = '/dia';
+  private urlMovimientosDia = '/movimientos';
   private urlSaveMovimiento = '/nuevo_movimiento';
   private urlBorrarMovimiento = '/borrar_movimiento';
 
   constructor(private http: HttpClient) {}
 
-  getMovimientosDia(sucursalId: number): Observable<DtoCajaDiaComponent> {
-    const urlLlamada = `${this.resourceUrlCaja}${this.urlMovimientosDia}/${sucursalId}`;
-    return this.http.get<DtoCajaDiaComponent>(urlLlamada);
+  getMovimientosDia(sucursalId: number, mes: number, anio: number): Observable<DtoCajaDiaComponent[]> {
+    const urlLlamada = `${this.resourceUrlCaja}${this.urlMovimientosDia}/?sucursal=${sucursalId}&mes=${mes}&anio=${anio}`;
+    return this.http.get<DtoCajaDiaComponent[]>(urlLlamada);
   }
 
   saveMovimiento(movimiento: Movimiento): Observable<Movimiento> {

@@ -2,6 +2,7 @@ package soldimet.service.expertos;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,6 +30,7 @@ import soldimet.repository.MovimientoRepository;
 import soldimet.repository.SucursalRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
+import soldimet.service.dto.DTOGetMovimientos;
 
 
 /**
@@ -70,23 +72,50 @@ public class ExpertoCaja {
 
     }
 
-    public DTOCajaCUConsultarMovimientos buscarMovimientosDia(Long sucursalId) {
+    public List<DTOCajaCUConsultarMovimientos> getMovimientosSucursal(Long sucursalId, Integer mes, Integer anio) {
 
+        List<DTOCajaCUConsultarMovimientos> dtoCajas = new ArrayList<DTOCajaCUConsultarMovimientos>();
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
         Sucursal sucursal = empleado.getSucursal();
-        if (sucursalId!= null && this.tieneAccesoATodosLosMovimientos(empleado)) {
-            // Filtrar los movimientos por la sucursal indicada por el usuario
-             sucursal = sucursalRepository.findById(sucursalId).get();
+        List<Caja> listaCajas = new ArrayList<Caja>();
+        if (sucursalId != null && this.tieneAccesoATodosLosMovimientos(empleado)) {
+            sucursal = sucursalRepository.findById(sucursalId).get();
+            if (mes > 0) {
+                LocalDate fechaInicio = this.formatearFecha(mes, anio);
+                LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1);
+                listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(
+                    fechaInicio,
+                    fechaFin,
+                    sucursal
+                );
+            } else {
+                Caja cajaDia = this.findCajaDelDia(sucursal);
+                listaCajas.add(cajaDia);
+            }
+        } else {
+            Caja cajaDia = this.findCajaDelDia(sucursal);
+            listaCajas.add(cajaDia);
         }
-        Caja cajaDia = this.findCajaDelDia(sucursal);
-
         EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
-        List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(cajaDia, estadoAlta);
+        for(Caja caja: listaCajas) {
+            List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(caja, estadoAlta);
+            DTOCajaCUConsultarMovimientos dto = cajaConverter.cajaACajaMovimiento(caja, movimientos);
+            dto.setTotalMensual(caja.getSaldo());
+            dtoCajas.add(dto);
+        }
 
-        DTOCajaCUConsultarMovimientos dto = cajaConverter.cajaACajaMovimiento(cajaDia, movimientos);
-        dto.setTotalMensual(cajaDia.getSaldo());
+        return dtoCajas;
+    }
 
-        return dto;
+    private LocalDate formatearFecha(Integer mes, Integer anio) {
+        // Creo la fecha para coincidir solo con el mes
+        String strMes = "";
+        if ( mes < 10) {
+            strMes += "0";
+        }
+        strMes += mes;
+        String fechaMes = anio + "-" + strMes + "-01";
+        return LocalDate.parse(fechaMes).withDayOfMonth(1);
     }
 
     private Float calcularTotalMesActual(Sucursal sucursal) {

@@ -1,5 +1,7 @@
 package soldimet.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import soldimet.domain.Movimiento;
@@ -24,20 +27,27 @@ public class CajaController {
 
     private final Logger log = LoggerFactory.getLogger(CajaController.class);
 
-    private static final String ENTITY_NAME = "caja";
-
     @Autowired
     private ExpertoCaja expertoCaja;
 
-    @GetMapping("/dia/{sucursalId}")
-    public DTOCajaCUConsultarMovimientos getMovimientosDia(@PathVariable("sucursalId") Long sucursalId) {
-        log.debug("request api/caja/día");
+    // Uso un post por que no encontre forma de pasar las fechas para filtrar (si, una poronga)
+    @GetMapping("/movimientos/")
+    public List<DTOCajaCUConsultarMovimientos> findMovimientosSucursal(
+        @RequestParam("sucursal") Long sucursal,
+        @RequestParam("mes") Integer mes,
+        @RequestParam("anio") Integer anio) {
+        log.debug("request api/caja/día. sucursal: {}, mes: {}, año: {}", sucursal, mes, anio);
 
-        DTOCajaCUConsultarMovimientos movimientosDelDia = expertoCaja.buscarMovimientosDia(sucursalId);
+        List<DTOCajaCUConsultarMovimientos> movimientosDelDia = expertoCaja.getMovimientosSucursal(
+            sucursal,
+            mes,
+            anio
+        );
 
         log.debug("response api/caja/día", movimientosDelDia);
         return movimientosDelDia;
     }
+
 
     @PostMapping("/nuevo_movimiento")
     public Movimiento saveNewMovimiento(@RequestBody Movimiento movimiento) {
