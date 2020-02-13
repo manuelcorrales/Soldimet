@@ -10,6 +10,7 @@ import soldimet.constant.Globales;
 import soldimet.domain.Caja;
 import soldimet.domain.CategoriaPago;
 import soldimet.domain.CostoRepuesto;
+import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.MedioDePagoCheque;
 import soldimet.domain.MedioDePagoTarjeta;
@@ -21,6 +22,8 @@ import soldimet.repository.CategoriaPagoRepository;
 import soldimet.repository.MovimientoArticuloRepository;
 import soldimet.repository.MovimientoPedidoRepository;
 import soldimet.repository.MovimientoPresupuestoRepository;
+import soldimet.repository.MovimientoRepository;
+import soldimet.service.dto.DTOCaja;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMovimientoCUConsultarMovimientos;
 
@@ -42,15 +45,29 @@ public class CajaConverter {
     @Autowired
     private CategoriaPagoRepository categoriaPagoRepository;
 
+    @Autowired
+    private MovimientoRepository movimientoRepository;
 
-    public DTOCajaCUConsultarMovimientos cajaACajaMovimiento(Caja caja, List<Movimiento> movimientos) {
-        DTOCajaCUConsultarMovimientos dto = new DTOCajaCUConsultarMovimientos();
+    public DTOCajaCUConsultarMovimientos cajaADTO(List<Caja> listaCajas, EstadoMovimiento estado) {
+        DTOCajaCUConsultarMovimientos dtoCaja = new DTOCajaCUConsultarMovimientos();
+        dtoCaja.setTotalMensual(new Float(0));
+        for(Caja caja: listaCajas) {
+            List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(caja, estado);
+            DTOCaja dto = this.cajaACajaMovimiento(caja, movimientos);
+            dtoCaja.addTotal(dto.getTotalCaja());
+            dtoCaja.addCaja(dto);
+        }
+        return dtoCaja;
+    }
+
+
+    public DTOCaja cajaACajaMovimiento(Caja caja, List<Movimiento> movimientos) {
+        DTOCaja dto = new DTOCaja();
         dto.setCajaId(caja.getId());
         dto.setEstadoCaja("Sin estado");
         dto.setFechaCaja(caja.getFecha().toString());
         dto.setTotalCaja(caja.getSaldo());
         dto.setMovimientos(this.listMovimientoToListDtoMovCabecera(movimientos));
-
         return dto;
     }
 

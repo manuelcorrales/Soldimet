@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
-import { DtoCajaDiaComponent, DtoMovimientoCabecera } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
+import { DtoMovimientoCabecera, DtoCaja } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
 import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
 import { Subscription } from '../../../../../node_modules/rxjs';
 import { JhiEventManager, JhiAlertService } from '../../../../../node_modules/ng-jhipster';
@@ -23,7 +23,8 @@ export class CajaComponent implements OnInit {
   page = 1;
   pageSize = 25;
 
-  cajaDia: DtoCajaDiaComponent;
+  totalDia: Number = 0;
+  caja: DtoCaja;
   totalMovimientos: DtoMovimientoCabecera[] = [];
   movimientos: DtoMovimientoCabecera[] = [];
   sucursal: ISucursal;
@@ -70,21 +71,16 @@ export class CajaComponent implements OnInit {
   }
 
   buscarMovimientosRequest(sucursalId) {
-    this.cajaService.getMovimientosDia(sucursalId, this.mes, this.anio).subscribe((cajasDias: DtoCajaDiaComponent[]) => {
+    this.cajaService.getMovimientosDia(sucursalId, this.mes, this.anio).subscribe((resCaja: DtoCaja) => {
       this._cleanCaja();
-      if (cajasDias.length === 1) {
-        const cajaDia = cajasDias[0];
-        const movimientos = cajaDia.movimientos;
-        cajaDia.movimientos = movimientos.sort(this._sortMovimientos);
-        this.cajaDia = cajaDia;
-        this.movimientos = cajaDia.movimientos;
-        this.totalMovimientos = cajaDia.movimientos;
-      } else {
-        cajasDias.forEach(caja => caja.movimientos.forEach(mov => (mov.fecha = caja.fechaCaja)));
-        this.cajaDia = cajasDias[0];
-        cajasDias.forEach(caja => this.movimientos.push(...caja.movimientos));
+      this.caja = resCaja;
+      if (resCaja.cajas) {
+        resCaja.cajas.forEach(caja => caja.movimientos.forEach(mov => (mov.fecha = caja.fechaCaja)));
+        resCaja.cajas.forEach(caja => this.movimientos.push(...caja.movimientos));
+        this.caja = resCaja;
         this.movimientos = this.movimientos.sort(this._sortMovimientos);
         this.totalMovimientos = this.movimientos;
+        this.totalDia = this.caja.cajas[0] ? this.caja.cajas[0].totalCaja : 0;
       }
     });
   }
@@ -123,6 +119,7 @@ export class CajaComponent implements OnInit {
   _cleanCaja() {
     this.totalMovimientos = [];
     this.movimientos = [];
-    this.cajaDia = null;
+    this.caja = null;
+    this.totalDia = 0;
   }
 }

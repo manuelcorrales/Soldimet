@@ -32,19 +32,19 @@ public class CajaController {
 
     // Uso un post por que no encontre forma de pasar las fechas para filtrar (si, una poronga)
     @GetMapping("/movimientos/")
-    public List<DTOCajaCUConsultarMovimientos> findMovimientosSucursal(
+    public DTOCajaCUConsultarMovimientos findMovimientosSucursal(
         @RequestParam("sucursal") Long sucursal,
         @RequestParam("mes") Integer mes,
         @RequestParam("anio") Integer anio) {
         log.debug("request api/caja/día. sucursal: {}, mes: {}, año: {}", sucursal, mes, anio);
 
-        List<DTOCajaCUConsultarMovimientos> movimientosDelDia = expertoCaja.getMovimientosSucursal(
+        DTOCajaCUConsultarMovimientos movimientosDelDia = expertoCaja.getMovimientosSucursal(
             sucursal,
             mes,
             anio
         );
 
-        log.debug("response api/caja/día", movimientosDelDia);
+        log.debug("response api/caja/día: {}", movimientosDelDia);
         return movimientosDelDia;
     }
 

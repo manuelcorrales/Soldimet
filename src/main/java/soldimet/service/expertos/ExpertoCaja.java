@@ -72,39 +72,26 @@ public class ExpertoCaja {
 
     }
 
-    public List<DTOCajaCUConsultarMovimientos> getMovimientosSucursal(Long sucursalId, Integer mes, Integer anio) {
+    public DTOCajaCUConsultarMovimientos getMovimientosSucursal(Long sucursalId, Integer mes, Integer anio) {
 
-        List<DTOCajaCUConsultarMovimientos> dtoCajas = new ArrayList<DTOCajaCUConsultarMovimientos>();
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
         Sucursal sucursal = empleado.getSucursal();
         List<Caja> listaCajas = new ArrayList<Caja>();
-        if (sucursalId != null && this.tieneAccesoATodosLosMovimientos(empleado)) {
+        if (sucursalId != null && this.tieneAccesoATodosLosMovimientos(empleado) && mes > 0) {
             sucursal = sucursalRepository.findById(sucursalId).get();
-            if (mes > 0) {
-                LocalDate fechaInicio = this.formatearFecha(mes, anio);
-                LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1);
-                listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(
-                    fechaInicio,
-                    fechaFin,
-                    sucursal
-                );
-            } else {
-                Caja cajaDia = this.findCajaDelDia(sucursal);
-                listaCajas.add(cajaDia);
-            }
+            LocalDate fechaInicio = this.formatearFecha(mes, anio);
+            LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1);
+            listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(
+                fechaInicio,
+                fechaFin,
+                sucursal
+            );
         } else {
             Caja cajaDia = this.findCajaDelDia(sucursal);
             listaCajas.add(cajaDia);
         }
         EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
-        for(Caja caja: listaCajas) {
-            List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(caja, estadoAlta);
-            DTOCajaCUConsultarMovimientos dto = cajaConverter.cajaACajaMovimiento(caja, movimientos);
-            dto.setTotalMensual(caja.getSaldo());
-            dtoCajas.add(dto);
-        }
-
-        return dtoCajas;
+        return cajaConverter.cajaADTO(listaCajas, estadoAlta);
     }
 
     private LocalDate formatearFecha(Integer mes, Integer anio) {

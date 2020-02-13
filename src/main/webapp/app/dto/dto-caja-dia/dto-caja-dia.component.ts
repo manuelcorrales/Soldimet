@@ -4,7 +4,6 @@ export class DtoCajaDiaComponent {
     public cajaId: Number,
     public estadoCaja: string,
     public totalCaja: Number,
-    public totalMensual: Number,
     public estado: string,
     public movimientos: DtoMovimientoCabecera[]
   ) {}
@@ -21,4 +20,8 @@ export class DtoMovimientoCabecera {
     public formaDePagoTip: string,
     public formaDePago: string
   ) {}
+}
+
+export class DtoCaja {
+  constructor(public totalMensual: number, public cajas: DtoCajaDiaComponent[]) {}
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SERVER_API_URL } from 'app/app.constants';
 import { HttpClient } from '@angular/common/http';
-import { DtoCajaDiaComponent } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
+import { DtoCaja } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
 import { Observable } from 'rxjs';
 import { Movimiento } from 'app/shared/model/movimiento.model';
 
@@ -16,9 +16,9 @@ export class CajaModuleServiceService {
 
   constructor(private http: HttpClient) {}
 
-  getMovimientosDia(sucursalId: number, mes: number, anio: number): Observable<DtoCajaDiaComponent[]> {
+  getMovimientosDia(sucursalId: number, mes: number, anio: number): Observable<DtoCaja> {
     const urlLlamada = `${this.resourceUrlCaja}${this.urlMovimientosDia}/?sucursal=${sucursalId}&mes=${mes}&anio=${anio}`;
-    return this.http.get<DtoCajaDiaComponent[]>(urlLlamada);
+    return this.http.get<DtoCaja>(urlLlamada);
   }
 
   saveMovimiento(movimiento: Movimiento): Observable<Movimiento> {

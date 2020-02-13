@@ -1,8 +1,11 @@
 <div class="jh-card">
     <div class="container">
         <div class="row">
+            <div class="card border-warning col-md-2 text-center">
+                Total Mes: <p>${{caja?.totalMensual | number:'1.2-2'}}</p>
+            </div>
             <div class="card border-success col-md-2 text-center">
-                Total Día: <p>${{cajaDia?.totalMensual | number:'1.2-2'}}</p>
+                Total Día: <p>${{totalDia | number:'1.2-2'}}</p>
             </div>
             <div class="col-md-6">
                 <div class="input-group custom-search-form">
@@ -64,6 +67,7 @@
             <table class="table table-hover table-bordered table-sm">
                 <thead>
                     <tr>
+                        <th scope="col" class="text-center">Fecha</th>
                         <th scope="col" class="text-center">Número</th>
                         <th scope="col" class="text-center">Descripción</th>
                         <th scope="col" class="text-center">Concepto</th>
@@ -72,12 +76,13 @@
                         <th scope="col" class="text-center">Operaciones</th>
                     </tr>
                 </thead>
-                <tbody *ngIf="cajaDia">
+                <tbody *ngIf="caja">
                     <tr [ngClass]="{
                         'table-success': movimiento.tipoMovimiento=='Ingreso',
                         'table-danger': movimiento.tipoMovimiento=='Egreso'
                     }"
                     *ngFor="let movimiento of movimientos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                        <td class="text-center text-dark">{{movimiento.fecha}}</td>
                         <th class="text-center text-dark">
                             {{movimiento.movimientoId}}
                         </th>
