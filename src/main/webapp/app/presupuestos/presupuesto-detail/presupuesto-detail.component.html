@@ -17,8 +17,10 @@
                     <p><strong>Nombre:</strong>  {{presupuesto?.cliente?.persona?.nombre}} {{presupuesto?.cliente?.persona?.apellido}}</p>
                     <p><strong>Teléfono:</strong>  {{presupuesto?.cliente?.persona?.numeroTelefono}}</p>
                     <p>
-                        <strong>Dirección:</strong>  {{presupuesto?.cliente?.persona?.direccion?.calle}} {{presupuesto?.cliente?.persona?.direccion?.numero}},
-                        {{presupuesto?.cliente?.persona?.direccion?.localidad?.nombreLocalidad}}
+                        <span *ngIf="presupuesto?.cliente?.persona?.direccion">
+                            <strong>Dirección:</strong>  {{presupuesto?.cliente?.persona?.direccion?.calle}} {{presupuesto?.cliente?.persona?.direccion?.numero}},
+                            {{presupuesto?.cliente?.persona?.direccion?.localidad?.nombreLocalidad}}
+                        </span>
                     </p>
                 </div>
                 <div class="col">

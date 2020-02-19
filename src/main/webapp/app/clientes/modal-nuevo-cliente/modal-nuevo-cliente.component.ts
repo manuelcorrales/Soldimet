@@ -61,10 +61,15 @@ export class ModalNuevoClienteComponent implements OnInit {
 
   save() {
     this.isSaving = true;
-    if (this.direccion.id !== undefined) {
-      this.subscribeToSaveDireccionResponse(this.direccionService.update(this.direccion));
+    if (this.direccion.calle !== undefined || this.direccion.localidad !== undefined || this.direccion.numero !== undefined) {
+      if (this.direccion.id !== undefined) {
+        this.subscribeToSaveDireccionResponse(this.direccionService.update(this.direccion));
+      } else {
+        this.subscribeToSaveDireccionResponse(this.direccionService.create(this.direccion));
+      }
     } else {
-      this.subscribeToSaveDireccionResponse(this.direccionService.create(this.direccion));
+      // Guardo el cliente sin la direccion
+      this.onSaveDireccionSuccess(null);
     }
   }
 

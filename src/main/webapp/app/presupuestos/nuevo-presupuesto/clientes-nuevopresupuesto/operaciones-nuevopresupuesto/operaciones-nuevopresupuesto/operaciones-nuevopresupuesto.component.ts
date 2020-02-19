@@ -56,10 +56,10 @@ export class OperacionesNuevopresupuestoComponent implements OnInit {
   }
 
   _sortCostoRepuesto(a: CostoOperacion, b: CostoOperacion) {
-    if (a.tipoParteMotor.nombreTipoParteMotor > b.tipoParteMotor.nombreTipoParteMotor) {
+    if (a.operacion.nombreOperacion > b.operacion.nombreOperacion) {
       return 1;
     }
-    if (a.tipoParteMotor.nombreTipoParteMotor < b.tipoParteMotor.nombreTipoParteMotor) {
+    if (a.operacion.nombreOperacion < b.operacion.nombreOperacion) {
       return -1;
     }
     return 0;

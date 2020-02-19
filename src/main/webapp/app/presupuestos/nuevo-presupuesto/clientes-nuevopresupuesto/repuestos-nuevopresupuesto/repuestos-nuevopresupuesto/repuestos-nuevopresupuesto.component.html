@@ -1,4 +1,8 @@
 <div class="card-body" style="padding-top: 0px;">
+    <div class="border-bottom text-center">
+        <strong>{{detalle.tipoParteMotor.nombreTipoParteMotor}}</strong>
+    </div>
+    <br>
     <div *ngFor="let repuesto of repuestos" class="container">
         <jhi-repuesto-precio #repuestoComponents (eventoCambioValor)="cambioTotalRepuestos()"
         [repuesto]="repuesto" class="row align-items-center top-buffer">

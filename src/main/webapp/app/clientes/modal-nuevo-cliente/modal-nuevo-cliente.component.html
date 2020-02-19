@@ -57,48 +57,29 @@
             </div>
         </div>
         <!-- Dirección-->
+        <div>
+            <br>
+            En caso de agregar la dirección, todos los campos son requeridos.
+            <br>
+        </div>
         <div class="form-group">
             <!-- Calle -->
             <label class="form-control-label" for="field_calle">Calle</label>
-            <input type="text" class="form-control" name="calle" id="field_calle" [(ngModel)]="direccion.calle" required minlength="3"
+            <input type="text" class="form-control" name="calle" id="field_calle" [(ngModel)]="direccion.calle"
             />
-            <div [hidden]="!(editForm.controls.calle?.dirty && editForm.controls.calle?.invalid)">
-                <small class="form-text text-danger" [hidden]="!editForm.controls.calle?.errors?.required">
-                    Campo requerido.
-                </small>
-                <small class="form-text text-danger" [hidden]="!editForm.controls.calle?.errors?.minlength">
-                    Este campo debe contener al menos 3 Caracteres.
-                </small>
-            </div>
             <!-- Número -->
             <label class="form-control-label" for="field_numero">Numero</label>
-            <input type="number" class="form-control" name="numero" id="field_numero" [(ngModel)]="direccion.numero" required min="0"
+            <input type="number" class="form-control" name="numero" id="field_numero" [(ngModel)]="direccion.numero"
             />
-            <div [hidden]="!(editForm.controls.numero?.dirty && editForm.controls.numero?.invalid)">
-                <small class="form-text text-danger" [hidden]="!editForm.controls.numero?.errors?.required">
-                    Campo requerido.
-                </small>
-                <small class="form-text text-danger" [hidden]="!editForm.controls.numero?.errors?.min">
-                    Este campo debe contener al menos 3 Caracteres.
-                </small>
-                <small class="form-text text-danger" [hidden]="!editForm.controls.numero?.errors?.number">
-                    Este campo debe ser numérico
-                </small>
-            </div>
         </div>
         <div class="form-group">
             <!-- Departamento-->
             <div class="form-group">
                 <label class="form-control-label" for="field_localidad">Localidad</label>
-                <select class="form-control" id="field_localidad" name="localidad" [(ngModel)]="direccion.localidad" required>
+                <select class="form-control" id="field_localidad" name="localidad" [(ngModel)]="direccion.localidad">
                     <option *ngIf="!editForm.value.localidad" [ngValue]="null" selected></option>
                     <option [ngValue]="localidadOption.id === direccion.localidad?.id ? direccion.localidad : localidadOption" *ngFor="let localidadOption of localidades; trackBy: trackLocalidadById">{{localidadOption.nombreLocalidad}}</option>
                 </select>
-            </div>
-            <div [hidden]="!(editForm.controls.localidad?.dirty && editForm.controls.localidad?.invalid)">
-                <small class="form-text text-danger" [hidden]="!editForm.controls.localidad?.errors?.required">
-                    Campo requerido.
-                </small>
             </div>
         </div>
     </div>

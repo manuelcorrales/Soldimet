@@ -1,5 +1,5 @@
 <jhi-alert></jhi-alert>
-<form role="form" class="jh-create-entity" (ngSubmit)="guardarPresupuesto()">
+<form role="form" class="jh-create-entity" #presupuestoForm="ngForm" (ngSubmit)="guardarPresupuesto()">
     <div class="col-auto align-center container jh-card">
         <div class="row">
             <div class="col-md-6"></div>
@@ -51,7 +51,7 @@
             </label>
         </div>
         <div class="text-right">
-            <button [disabled]="isSaving" type="submit" class="btn btn-primary" >
+            <button [disabled]="isSaving || !presupuestoForm.valid" type="submit" class="btn btn-primary" >
                 Crear
             </button>
             <button type="button" class="btn btn-danger" [routerLink]="['/presupuestos']">

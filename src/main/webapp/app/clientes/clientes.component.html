@@ -43,7 +43,9 @@
                         </th>
                         <td class="text-center">{{cliente.persona?.apellido}}</td>
                         <td class="text-center">{{cliente.persona?.numeroTelefono}}</td>
-                        <td class="text-center">{{cliente?.persona?.direccion?.calle}}, {{cliente?.persona?.direccion?.numero}}</td>
+                        <td class="text-center">
+                            <span *ngIf="cliente?.persona?.direccion">{{cliente?.persona?.direccion?.calle}}, {{cliente?.persona?.direccion?.numero}}</span>
+                        </td>
                         <td class="text-center">{{cliente?.persona?.direccion?.localidad?.nombreLocalidad}}</td>
                         <td>
                             <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">

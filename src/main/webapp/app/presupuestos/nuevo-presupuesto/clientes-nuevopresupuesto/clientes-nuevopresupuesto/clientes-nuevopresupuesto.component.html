@@ -17,7 +17,9 @@
                     <strong>Teléfono:</strong> {{clienteElegido?.persona?.numeroTelefono}}
             </div>
             <div class="col">
+                    <span *ngIf="clienteElegido?.persona?.direccion">
                     <strong>Dirección:</strong> {{clienteElegido?.persona?.direccion?.calle}} {{clienteElegido?.persona?.direccion?.numero}}, {{clienteElegido?.persona?.direccion?.localidad?.nombreLocalidad}}
+                    </span>
             </div>
         </div>
     </div>

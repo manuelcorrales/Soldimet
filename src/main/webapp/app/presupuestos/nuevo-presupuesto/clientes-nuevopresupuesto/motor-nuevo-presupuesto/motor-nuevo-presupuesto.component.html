@@ -7,7 +7,7 @@
             <!-- Seleccion Motores-->
             <div class="form-group col">
                 <p class="form-control-label"><strong>Motor:</strong> </p>
-                <select class="custom-select" [(ngModel)]="motor" name="motor" (change)="buscarAplicaciones()" [disabled]="detalleCreado">
+                <select class="custom-select" [(ngModel)]="motor" required name="motor" (change)="buscarAplicaciones()" [disabled]="detalleCreado">
                     <span disabled *ngIf="detalleCreado"></span>
                     <option selected disabled>Elija un motor</option>
                     <option *ngFor="let motor of motores" [ngValue]="motor">
@@ -18,7 +18,7 @@
             <!-- Seleccion Aplicacion-->
             <div class="form-group col">
                 <p class="form-control-label"><strong>Aplicación:</strong> </p>
-                <select class="custom-select" [(ngModel)]="aplicacion" name="aplicacion" [disabled]="detalleCreado">
+                <select class="custom-select" [(ngModel)]="aplicacion" required name="aplicacion" [disabled]="detalleCreado">
                     <span disabled *ngIf="detalleCreado"></span>
                     <option selected disabled>Elija una aplicación</option>
                     <option *ngFor="let aplicacion of aplicaciones" [ngValue]="aplicacion">
@@ -31,7 +31,7 @@
                 <p class="form-control-label"><strong>Cilindrada: </strong></p>
                 <div class="d-inline">
                     <div class="form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
-                        <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida" [(ngModel)]="cilindradaElegida"
+                        <input class="form-check-input" required type="radio" [value]="cilindrada" name="cilindradaElegida" [(ngModel)]="cilindradaElegida"
                             [disabled]="detalleCreado">
                         <label class="form-check-label"> {{cilindrada?.cantidadDeCilindros}} cilindros</label>
                     </div>
@@ -42,7 +42,7 @@
                 <p class="form-control-label"><strong>Presupuestar:</strong></p>
                 <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
                     <label class="form-check-label" style="padding-left: 1px">
-                        <input type="checkbox" class="form-check-input" (change)="crearDetalle(tipoParte, $event.target.checked)"> {{tipoParte?.nombreTipoParteMotor}}
+                        <input type="checkbox" class="form-check-input" required (change)="crearDetalle(tipoParte, $event.target.checked)"> {{tipoParte?.nombreTipoParteMotor}}
                     </label>
                 </div>
             </div>
