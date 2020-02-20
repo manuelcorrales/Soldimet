@@ -48,13 +48,12 @@ public class CajaConverter {
     @Autowired
     private MovimientoRepository movimientoRepository;
 
-    public DTOCajaCUConsultarMovimientos cajaADTO(List<Caja> listaCajas, EstadoMovimiento estado) {
+    public DTOCajaCUConsultarMovimientos cajaADTO(List<Caja> listaCajas, EstadoMovimiento estado, Float totalMes) {
         DTOCajaCUConsultarMovimientos dtoCaja = new DTOCajaCUConsultarMovimientos();
-        dtoCaja.setTotalMensual(new Float(0));
+        dtoCaja.setTotalMensual(totalMes);
         for(Caja caja: listaCajas) {
             List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(caja, estado);
             DTOCaja dto = this.cajaACajaMovimiento(caja, movimientos);
-            dtoCaja.addTotal(dto.getTotalCaja());
             dtoCaja.addCaja(dto);
         }
         return dtoCaja;

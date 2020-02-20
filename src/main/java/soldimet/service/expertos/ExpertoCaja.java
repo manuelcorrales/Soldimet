@@ -2,7 +2,7 @@ package soldimet.service.expertos;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,7 +30,6 @@ import soldimet.repository.MovimientoRepository;
 import soldimet.repository.SucursalRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
-import soldimet.service.dto.DTOGetMovimientos;
 
 
 /**
@@ -91,7 +90,8 @@ public class ExpertoCaja {
             listaCajas.add(cajaDia);
         }
         EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
-        return cajaConverter.cajaADTO(listaCajas, estadoAlta);
+        Float totalMes = this.calcularTotalMesActual(sucursal);
+        return cajaConverter.cajaADTO(listaCajas, estadoAlta, totalMes);
     }
 
     private LocalDate formatearFecha(Integer mes, Integer anio) {
@@ -171,8 +171,13 @@ public class ExpertoCaja {
         return LocalDate.now();
     }
 
-    private LocalDate currentMonth() {
-        return LocalDate.now().withDayOfMonth(1);
+    private LocalDate currentMonthFirstDay() {
+        return YearMonth.now().atDay(1);
+    }
+
+    private LocalDate currentMonthLastDay() {
+        return YearMonth.now().atEndOfMonth();
+
     }
 
     private Caja findCajaDelDia(Sucursal sucursal) {
@@ -187,8 +192,9 @@ public class ExpertoCaja {
     }
 
     private List<Caja> findCajasDelMes(Sucursal sucursal) {
-        LocalDate fechaMesActual = this.currentMonth();
-        return  cajaRepository.findByFechaGreaterThanEqual(fechaMesActual);
+        LocalDate fechaInicioMes = this.currentMonthFirstDay();
+        LocalDate fechaFinMes = this.currentMonthLastDay();
+        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(fechaInicioMes, fechaFinMes, sucursal);
     }
 
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {

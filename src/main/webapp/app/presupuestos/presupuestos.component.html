@@ -5,8 +5,8 @@
                 <div class="input-group custom-search-form">
                     <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)"  placeholder="Buscar presupuesto...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" (onClick)="search(searchBar.value)">
-                            <span an class="glyphicon glyphicon-search"></span>
+                        <button class="btn btn-light" type="button" (click)="search(searchBar.value)">
+                            <span><fa-icon icon="search"></fa-icon></span>
                         </button>
                     </span>
                 </div>

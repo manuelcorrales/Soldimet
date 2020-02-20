@@ -1,18 +1,18 @@
 <div class="jh-card">
     <div class="container">
         <div class="row">
-            <div class="card border-warning col-md-2 text-center">
+            <div class="card border-warning col-md-2 text-center mr-1">
                 Total Mes: <p>${{caja?.totalMensual | number:'1.2-2'}}</p>
             </div>
-            <div class="card border-success col-md-2 text-center">
+            <div class="card border-success col-md-2 text-center mr-1">
                 Total Día: <p>${{totalDia | number:'1.2-2'}}</p>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <div class="input-group custom-search-form">
                     <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)" placeholder="Buscar movimientos...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" (onClick)="search(searchBar.value)">
-                            <span class="glyphicon glyphicon-search"></span>
+                        <button class="btn btn-light" type="button" (click)="search(searchBar.value)">
+                            <span><fa-icon icon="search"></fa-icon></span>
                         </button>
                     </span>
                 </div>
