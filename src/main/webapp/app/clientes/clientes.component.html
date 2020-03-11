@@ -23,7 +23,7 @@
     </div>
     <br/>
     <div class="container-fluid card">
-        <div class="row" *ngIf="clientes">
+        <div class="row table-responsive pt-3" *ngIf="clientes">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -64,18 +64,18 @@
                                 <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Alta'" class="text-center">
                                     <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/editar'} }]" replaceUrl="true"
                                         class="btn btn-primary btn-sm">
-                                        <span class="fa fa-pencil"></span>
+                                        <fa-icon icon="pen"></fa-icon>
                                         <span class="d-none d-md-inline">Editar</span>
                                     </button>
                                     <button type="submit" [routerLink]="['/', { outlets: { popup: 'clientes/'+ cliente.id + '/eliminar'} }]" replaceUrl="true"
                                         class="btn btn-danger btn-sm">
-                                        <span class="fa fa-remove"></span>
+                                        <fa-icon icon="trash"></fa-icon>
                                         <span class="d-none d-md-inline">Eliminar</span>
                                     </button>
                                 </div>
                                 <div *ngIf="cliente?.persona?.estadoPersona?.nombreEstado== 'Baja'" class="text-right">
                                     <button type="submit" replaceUrl="true" class="btn btn-success btn-sm">
-                                        <span class="fa fa-pencil"></span>
+                                        <fa-icon icon="pen"></fa-icon>
                                         <span class="d-none d-md-inline" (click)="activarCliente(cliente)">Activar</span>
                                     </button>
                                 </div>
