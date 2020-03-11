@@ -63,7 +63,7 @@
     </div>
     <br/>
     <div class="container-fluid card">
-        <div class="row">
+        <div class="row table-responsive pt-3">
             <table class="table table-hover table-bordered table-sm">
                 <thead>
                     <tr>
@@ -91,11 +91,11 @@
                         <td class="text-center text-dark">
                             <span *ngIf="movimiento?.formaDePagoTip" container="body" placement="top" ngbTooltip="{{movimiento.formaDePagoTip}}"></span>
                             {{movimiento.formaDePago}}
-                            <span *ngIf="movimiento.formaDePago == 'Tarjeta'"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                            <span *ngIf="movimiento.formaDePago == 'Tarjeta'"><fa-icon icon="credit-card"></fa-icon>
                             </span>
-                            <span *ngIf="movimiento.formaDePago == 'Efectivo'"><i class="fa fa-money" aria-hidden="true"></i>
+                            <span *ngIf="movimiento.formaDePago == 'Efectivo'"><fa-icon icon="money-bill-wave"></fa-icon>
                             </span>
-                            <span *ngIf="movimiento.formaDePago == 'Cheque'" ><i class="fa fa-list-alt" aria-hidden="true"></i>
+                            <span *ngIf="movimiento.formaDePago == 'Cheque'" ><fa-icon icon="pager"></fa-icon>
                             </span>
                         </td>
                         <td class="text-center text-dark">${{movimiento.monto | number:'1.2-2'}}</td>
@@ -105,12 +105,12 @@
                                     <!--
                                         FALTA AGREGAR EL EDITAR MOVIMIENTO
                                         <button type="submit" replaceUrl="true" class="btn btn-primary btn-sm">
-                                        <span class="fa fa-pencil"></span>
+                                        <fa-icon icon="pencil"></fa-icon>
                                         <span class="d-none d-md-inline" [routerLink]="['editar_movimiento']">Editar</span>
                                     </button> -->
                                     <button type="submit" replaceUrl="true" class="btn btn-danger btn-sm">
-                                        <span class="fa fa-remove"></span>
-                                        <span class="d-none d-md-inline" [routerLink]="['/', { outlets: { popup: 'cajas/'+ movimiento.movimientoId + '/eliminar_movimiento'} }]" replaceUrl="true">Eliminar</span>
+                                        <fa-icon icon="trash"></fa-icon>
+                                        <span class="d-none d-md-inline" [routerLink]="['/', { outlets: { popup: 'cajas/'+ movimiento.movimientoId + '/eliminar_movimiento'} }]" replaceUrl="true"></span>
                                     </button>
                                 </div>
                             </div>
