@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { TarjetaComponent } from './tarjeta.component';
-import { TarjetaDetailComponent } from './tarjeta-detail.component';
-import { TarjetaUpdateComponent } from './tarjeta-update.component';
-import { TarjetaDeletePopupComponent, TarjetaDeleteDialogComponent } from './tarjeta-delete-dialog.component';
-import { tarjetaRoute, tarjetaPopupRoute } from './tarjeta.route';
+import { TarjetaComponent } from 'app/entities/tarjeta/tarjeta.component';
+import { TarjetaDetailComponent } from 'app/entities/tarjeta/tarjeta-detail.component';
+import { TarjetaUpdateComponent } from 'app/entities/tarjeta/tarjeta-update.component';
+import { TarjetaDeletePopupComponent, TarjetaDeleteDialogComponent } from 'app/entities/tarjeta/tarjeta-delete-dialog.component';
+import { tarjetaRoute, tarjetaPopupRoute } from 'app/entities/tarjeta/tarjeta.route';
 
 const ENTITY_STATES = [...tarjetaRoute, ...tarjetaPopupRoute];
 

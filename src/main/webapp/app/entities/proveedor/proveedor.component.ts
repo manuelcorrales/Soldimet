@@ -10,7 +10,7 @@ import { IProveedor } from 'app/shared/model/proveedor.model';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { ProveedorService } from './proveedor.service';
+import { ProveedorService } from 'app/entities/proveedor/proveedor.service';
 
 @Component({
   selector: 'jhi-proveedor',

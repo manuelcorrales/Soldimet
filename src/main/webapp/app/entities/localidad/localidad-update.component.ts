@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ILocalidad, Localidad } from 'app/shared/model/localidad.model';
-import { LocalidadService } from './localidad.service';
+import { LocalidadService } from 'app/entities/localidad/localidad.service';
 
 @Component({
   selector: 'jhi-localidad-update',

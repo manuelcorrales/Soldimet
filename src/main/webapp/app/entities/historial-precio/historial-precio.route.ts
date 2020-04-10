@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { HistorialPrecio } from 'app/shared/model/historial-precio.model';
-import { HistorialPrecioService } from './historial-precio.service';
-import { HistorialPrecioComponent } from './historial-precio.component';
-import { HistorialPrecioDetailComponent } from './historial-precio-detail.component';
-import { HistorialPrecioUpdateComponent } from './historial-precio-update.component';
-import { HistorialPrecioDeletePopupComponent } from './historial-precio-delete-dialog.component';
+import { HistorialPrecioService } from 'app/entities/historial-precio/historial-precio.service';
+import { HistorialPrecioComponent } from 'app/entities/historial-precio/historial-precio.component';
+import { HistorialPrecioDetailComponent } from 'app/entities/historial-precio/historial-precio-detail.component';
+import { HistorialPrecioUpdateComponent } from 'app/entities/historial-precio/historial-precio-update.component';
+import { HistorialPrecioDeletePopupComponent } from 'app/entities/historial-precio/historial-precio-delete-dialog.component';
 import { IHistorialPrecio } from 'app/shared/model/historial-precio.model';
 
 @Injectable({ providedIn: 'root' })

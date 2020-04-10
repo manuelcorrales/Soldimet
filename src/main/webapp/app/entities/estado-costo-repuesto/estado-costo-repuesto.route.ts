@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { EstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
-import { EstadoCostoRepuestoService } from './estado-costo-repuesto.service';
-import { EstadoCostoRepuestoComponent } from './estado-costo-repuesto.component';
-import { EstadoCostoRepuestoDetailComponent } from './estado-costo-repuesto-detail.component';
-import { EstadoCostoRepuestoUpdateComponent } from './estado-costo-repuesto-update.component';
-import { EstadoCostoRepuestoDeletePopupComponent } from './estado-costo-repuesto-delete-dialog.component';
+import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.service';
+import { EstadoCostoRepuestoComponent } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.component';
+import { EstadoCostoRepuestoDetailComponent } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto-detail.component';
+import { EstadoCostoRepuestoUpdateComponent } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto-update.component';
+import { EstadoCostoRepuestoDeletePopupComponent } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto-delete-dialog.component';
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
 
 @Injectable({ providedIn: 'root' })

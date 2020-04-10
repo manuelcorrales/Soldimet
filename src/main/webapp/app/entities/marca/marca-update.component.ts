@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IMarca, Marca } from 'app/shared/model/marca.model';
-import { MarcaService } from './marca.service';
+import { MarcaService } from 'app/entities/marca/marca.service';
 
 @Component({
   selector: 'jhi-marca-update',

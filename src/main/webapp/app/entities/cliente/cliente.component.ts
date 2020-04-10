@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICliente } from 'app/shared/model/cliente.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { ClienteService } from './cliente.service';
+import { ClienteService } from 'app/entities/cliente/cliente.service';
 
 @Component({
   selector: 'jhi-cliente',

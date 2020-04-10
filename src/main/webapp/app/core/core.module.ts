@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import { NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateMomentAdapter } from 'app/shared/util/datepicker-adapter';
 
-import { fontAwesomeIcons } from './icons/font-awesome-icons';
+import { fontAwesomeIcons } from 'app/core/icons/font-awesome-icons';
 
 @NgModule({
   imports: [

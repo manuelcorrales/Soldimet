@@ -10,7 +10,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 import { ICaja, Caja } from 'app/shared/model/caja.model';
-import { CajaService } from './caja.service';
+import { CajaService } from 'app/entities/caja/caja.service';
 import { ISucursal } from 'app/shared/model/sucursal.model';
 import { SucursalService } from 'app/entities/sucursal/sucursal.service';
 

@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IBanco } from 'app/shared/model/banco.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { BancoService } from './banco.service';
+import { BancoService } from 'app/entities/banco/banco.service';
 
 @Component({
   selector: 'jhi-banco',

@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { MedioDePagoTarjetaService } from './medio-de-pago-tarjeta.service';
+import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.service';
 
 @Component({
   selector: 'jhi-medio-de-pago-tarjeta',

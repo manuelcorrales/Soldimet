@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Localidad } from 'app/shared/model/localidad.model';
-import { LocalidadService } from './localidad.service';
-import { LocalidadComponent } from './localidad.component';
-import { LocalidadDetailComponent } from './localidad-detail.component';
-import { LocalidadUpdateComponent } from './localidad-update.component';
-import { LocalidadDeletePopupComponent } from './localidad-delete-dialog.component';
+import { LocalidadService } from 'app/entities/localidad/localidad.service';
+import { LocalidadComponent } from 'app/entities/localidad/localidad.component';
+import { LocalidadDetailComponent } from 'app/entities/localidad/localidad-detail.component';
+import { LocalidadUpdateComponent } from 'app/entities/localidad/localidad-update.component';
+import { LocalidadDeletePopupComponent } from 'app/entities/localidad/localidad-delete-dialog.component';
 import { ILocalidad } from 'app/shared/model/localidad.model';
 
 @Injectable({ providedIn: 'root' })

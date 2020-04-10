@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoOperacion } from 'app/shared/model/estado-operacion.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { EstadoOperacionService } from './estado-operacion.service';
+import { EstadoOperacionService } from 'app/entities/estado-operacion/estado-operacion.service';
 
 @Component({
   selector: 'jhi-estado-operacion',

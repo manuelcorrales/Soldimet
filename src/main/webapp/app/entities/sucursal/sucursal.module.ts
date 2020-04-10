@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { SucursalComponent } from './sucursal.component';
-import { SucursalDetailComponent } from './sucursal-detail.component';
-import { SucursalUpdateComponent } from './sucursal-update.component';
-import { SucursalDeletePopupComponent, SucursalDeleteDialogComponent } from './sucursal-delete-dialog.component';
-import { sucursalRoute, sucursalPopupRoute } from './sucursal.route';
+import { SucursalComponent } from 'app/entities/sucursal/sucursal.component';
+import { SucursalDetailComponent } from 'app/entities/sucursal/sucursal-detail.component';
+import { SucursalUpdateComponent } from 'app/entities/sucursal/sucursal-update.component';
+import { SucursalDeletePopupComponent, SucursalDeleteDialogComponent } from 'app/entities/sucursal/sucursal-delete-dialog.component';
+import { sucursalRoute, sucursalPopupRoute } from 'app/entities/sucursal/sucursal.route';
 
 const ENTITY_STATES = [...sucursalRoute, ...sucursalPopupRoute];
 

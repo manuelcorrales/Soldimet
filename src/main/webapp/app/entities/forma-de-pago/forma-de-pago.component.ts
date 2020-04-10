@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { FormaDePagoService } from './forma-de-pago.service';
+import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
 
 @Component({
   selector: 'jhi-forma-de-pago',

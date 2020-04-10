@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { LocalidadComponent } from './localidad.component';
-import { LocalidadDetailComponent } from './localidad-detail.component';
-import { LocalidadUpdateComponent } from './localidad-update.component';
-import { LocalidadDeletePopupComponent, LocalidadDeleteDialogComponent } from './localidad-delete-dialog.component';
-import { localidadRoute, localidadPopupRoute } from './localidad.route';
+import { LocalidadComponent } from 'app/entities/localidad/localidad.component';
+import { LocalidadDetailComponent } from 'app/entities/localidad/localidad-detail.component';
+import { LocalidadUpdateComponent } from 'app/entities/localidad/localidad-update.component';
+import { LocalidadDeletePopupComponent, LocalidadDeleteDialogComponent } from 'app/entities/localidad/localidad-delete-dialog.component';
+import { localidadRoute, localidadPopupRoute } from 'app/entities/localidad/localidad.route';
 
 const ENTITY_STATES = [...localidadRoute, ...localidadPopupRoute];
 

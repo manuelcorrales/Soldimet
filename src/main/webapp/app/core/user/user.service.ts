@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { IUser } from './user.model';
+import { IUser } from 'app/core/user/user.model';
 import { DtoEmpleado } from 'app/dto/dto-empleado/dto-empleado.component';
 
 @Injectable({ providedIn: 'root' })

@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { PedidoRepuestoService } from './pedido-repuesto.service';
+import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
 
 @Component({
   selector: 'jhi-pedido-repuesto-delete-dialog',

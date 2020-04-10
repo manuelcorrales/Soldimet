@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IEstadoMovimiento, EstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
-import { EstadoMovimientoService } from './estado-movimiento.service';
+import { EstadoMovimientoService } from 'app/entities/estado-movimiento/estado-movimiento.service';
 
 @Component({
   selector: 'jhi-estado-movimiento-update',

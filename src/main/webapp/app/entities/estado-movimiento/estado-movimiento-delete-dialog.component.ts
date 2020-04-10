@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IEstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
-import { EstadoMovimientoService } from './estado-movimiento.service';
+import { EstadoMovimientoService } from 'app/entities/estado-movimiento/estado-movimiento.service';
 
 @Component({
   selector: 'jhi-estado-movimiento-delete-dialog',

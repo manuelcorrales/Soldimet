@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { TipoMovimientoService } from './tipo-movimiento.service';
+import { TipoMovimientoService } from 'app/entities/tipo-movimiento/tipo-movimiento.service';
 
 @Component({
   selector: 'jhi-tipo-movimiento',

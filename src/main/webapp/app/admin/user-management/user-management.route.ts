@@ -5,9 +5,9 @@ import { JhiResolvePagingParams } from 'ng-jhipster';
 import { AccountService } from 'app/core/auth/account.service';
 import { User } from 'app/core/user/user.model';
 import { UserService } from 'app/core/user/user.service';
-import { UserMgmtComponent } from './user-management.component';
-import { UserMgmtDetailComponent } from './user-management-detail.component';
-import { UserMgmtUpdateComponent } from './user-management-update.component';
+import { UserMgmtComponent } from 'app/admin/user-management/user-management.component';
+import { UserMgmtDetailComponent } from 'app/admin/user-management/user-management-detail.component';
+import { UserMgmtUpdateComponent } from 'app/admin/user-management/user-management-update.component';
 
 @Injectable({ providedIn: 'root' })
 export class UserResolve implements CanActivate {

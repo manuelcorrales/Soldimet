@@ -7,6 +7,14 @@
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" (click)="collapseNavbar()" [routerLink]="['reportes']" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
+                    <span>
+                        <fa-icon icon="signal"></fa-icon>
+                        <span>Reportes</span>
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" (click)="collapseNavbar()" [routerLink]="['presupuestos']" *jhiHasAnyAuthority="'ROLE_USER'">
                     <span>
                         <fa-icon icon="folder-open"></fa-icon>

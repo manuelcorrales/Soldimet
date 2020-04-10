@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IEstadoCostoRepuesto, EstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
-import { EstadoCostoRepuestoService } from './estado-costo-repuesto.service';
+import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.service';
 
 @Component({
   selector: 'jhi-estado-costo-repuesto-update',

@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { EstadoPersonaService } from './estado-persona.service';
+import { EstadoPersonaService } from 'app/entities/estado-persona/estado-persona.service';
 
 @Component({
   selector: 'jhi-estado-persona',

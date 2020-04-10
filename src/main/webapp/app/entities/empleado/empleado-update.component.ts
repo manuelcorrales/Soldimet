@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IEmpleado, Empleado } from 'app/shared/model/empleado.model';
-import { EmpleadoService } from './empleado.service';
+import { EmpleadoService } from 'app/entities/empleado/empleado.service';
 import { IPersona } from 'app/shared/model/persona.model';
 import { PersonaService } from 'app/entities/persona/persona.service';
 import { ISucursal } from 'app/shared/model/sucursal.model';

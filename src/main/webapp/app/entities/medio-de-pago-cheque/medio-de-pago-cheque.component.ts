@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { MedioDePagoChequeService } from './medio-de-pago-cheque.service';
+import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.service';
 
 @Component({
   selector: 'jhi-medio-de-pago-cheque',

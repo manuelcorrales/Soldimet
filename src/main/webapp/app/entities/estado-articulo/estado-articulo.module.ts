@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EstadoArticuloComponent } from './estado-articulo.component';
-import { EstadoArticuloDetailComponent } from './estado-articulo-detail.component';
-import { EstadoArticuloUpdateComponent } from './estado-articulo-update.component';
-import { EstadoArticuloDeletePopupComponent, EstadoArticuloDeleteDialogComponent } from './estado-articulo-delete-dialog.component';
-import { estadoArticuloRoute, estadoArticuloPopupRoute } from './estado-articulo.route';
+import { EstadoArticuloComponent } from 'app/entities/estado-articulo/estado-articulo.component';
+import { EstadoArticuloDetailComponent } from 'app/entities/estado-articulo/estado-articulo-detail.component';
+import { EstadoArticuloUpdateComponent } from 'app/entities/estado-articulo/estado-articulo-update.component';
+import {
+  EstadoArticuloDeletePopupComponent,
+  EstadoArticuloDeleteDialogComponent
+} from 'app/entities/estado-articulo/estado-articulo-delete-dialog.component';
+import { estadoArticuloRoute, estadoArticuloPopupRoute } from 'app/entities/estado-articulo/estado-articulo.route';
 
 const ENTITY_STATES = [...estadoArticuloRoute, ...estadoArticuloPopupRoute];
 

@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITipoParteMotor, TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
-import { TipoParteMotorService } from './tipo-parte-motor.service';
+import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
 
 @Component({
   selector: 'jhi-tipo-parte-motor-update',

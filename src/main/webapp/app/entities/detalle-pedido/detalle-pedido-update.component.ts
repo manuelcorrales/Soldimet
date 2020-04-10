@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IDetallePedido, DetallePedido } from 'app/shared/model/detalle-pedido.model';
-import { DetallePedidoService } from './detalle-pedido.service';
+import { DetallePedidoService } from 'app/entities/detalle-pedido/detalle-pedido.service';
 import { IDetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { DetallePresupuestoService } from 'app/entities/detalle-presupuesto/detalle-presupuesto.service';
 

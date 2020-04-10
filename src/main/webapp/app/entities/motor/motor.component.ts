@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IMotor } from 'app/shared/model/motor.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { MotorService } from './motor.service';
+import { MotorService } from 'app/entities/motor/motor.service';
 
 @Component({
   selector: 'jhi-motor',

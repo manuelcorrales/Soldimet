@@ -1,0 +1,23 @@
+<div class="card {{bgColor}}">
+    <a href="{{link}}">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h6 class="card-title text-uppercase mb-2 text-white">
+                        {{categoria}}
+                    </h6>
+                    <span class="h2 mb-0 text-white">
+                        {{valor}}
+                    </span>
+                </div>
+                <div class="col-auto">
+                    <span class="h2 mb-0 text-white">
+                        <ng-container *ngIf="icon">
+                            <fa-icon icon="{{icon}}"></fa-icon>
+                        </ng-container>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>

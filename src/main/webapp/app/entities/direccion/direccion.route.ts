@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Direccion } from 'app/shared/model/direccion.model';
-import { DireccionService } from './direccion.service';
-import { DireccionComponent } from './direccion.component';
-import { DireccionDetailComponent } from './direccion-detail.component';
-import { DireccionUpdateComponent } from './direccion-update.component';
-import { DireccionDeletePopupComponent } from './direccion-delete-dialog.component';
+import { DireccionService } from 'app/entities/direccion/direccion.service';
+import { DireccionComponent } from 'app/entities/direccion/direccion.component';
+import { DireccionDetailComponent } from 'app/entities/direccion/direccion-detail.component';
+import { DireccionUpdateComponent } from 'app/entities/direccion/direccion-update.component';
+import { DireccionDeletePopupComponent } from 'app/entities/direccion/direccion-delete-dialog.component';
 import { IDireccion } from 'app/shared/model/direccion.model';
 
 @Injectable({ providedIn: 'root' })

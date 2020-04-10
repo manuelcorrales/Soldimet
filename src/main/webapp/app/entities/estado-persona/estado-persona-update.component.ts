@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IEstadoPersona, EstadoPersona } from 'app/shared/model/estado-persona.model';
-import { EstadoPersonaService } from './estado-persona.service';
+import { EstadoPersonaService } from 'app/entities/estado-persona/estado-persona.service';
 
 @Component({
   selector: 'jhi-estado-persona-update',

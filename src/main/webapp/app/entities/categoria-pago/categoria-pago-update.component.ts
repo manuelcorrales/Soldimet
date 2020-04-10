@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ICategoriaPago, CategoriaPago } from 'app/shared/model/categoria-pago.model';
-import { CategoriaPagoService } from './categoria-pago.service';
+import { CategoriaPagoService } from 'app/entities/categoria-pago/categoria-pago.service';
 
 @Component({
   selector: 'jhi-categoria-pago-update',

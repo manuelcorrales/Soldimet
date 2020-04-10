@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { TipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
-import { TipoTarjetaService } from './tipo-tarjeta.service';
-import { TipoTarjetaComponent } from './tipo-tarjeta.component';
-import { TipoTarjetaDetailComponent } from './tipo-tarjeta-detail.component';
-import { TipoTarjetaUpdateComponent } from './tipo-tarjeta-update.component';
-import { TipoTarjetaDeletePopupComponent } from './tipo-tarjeta-delete-dialog.component';
+import { TipoTarjetaService } from 'app/entities/tipo-tarjeta/tipo-tarjeta.service';
+import { TipoTarjetaComponent } from 'app/entities/tipo-tarjeta/tipo-tarjeta.component';
+import { TipoTarjetaDetailComponent } from 'app/entities/tipo-tarjeta/tipo-tarjeta-detail.component';
+import { TipoTarjetaUpdateComponent } from 'app/entities/tipo-tarjeta/tipo-tarjeta-update.component';
+import { TipoTarjetaDeletePopupComponent } from 'app/entities/tipo-tarjeta/tipo-tarjeta-delete-dialog.component';
 import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
 
 @Injectable({ providedIn: 'root' })

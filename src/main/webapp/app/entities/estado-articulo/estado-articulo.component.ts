@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { EstadoArticuloService } from './estado-articulo.service';
+import { EstadoArticuloService } from 'app/entities/estado-articulo/estado-articulo.service';
 
 @Component({
   selector: 'jhi-estado-articulo',

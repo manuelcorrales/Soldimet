@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IPagoEfectivo } from 'app/shared/model/pago-efectivo.model';
-import { PagoEfectivoService } from './pago-efectivo.service';
+import { PagoEfectivoService } from 'app/entities/pago-efectivo/pago-efectivo.service';
 
 @Component({
   selector: 'jhi-pago-efectivo-delete-dialog',

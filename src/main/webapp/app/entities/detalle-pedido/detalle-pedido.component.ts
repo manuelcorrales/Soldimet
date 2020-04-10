@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IDetallePedido } from 'app/shared/model/detalle-pedido.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { DetallePedidoService } from './detalle-pedido.service';
+import { DetallePedidoService } from 'app/entities/detalle-pedido/detalle-pedido.service';
 
 @Component({
   selector: 'jhi-detalle-pedido',

@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ISubCategoria } from 'app/shared/model/sub-categoria.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { SubCategoriaService } from './sub-categoria.service';
+import { SubCategoriaService } from 'app/entities/sub-categoria/sub-categoria.service';
 
 @Component({
   selector: 'jhi-sub-categoria',

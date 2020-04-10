@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IBanco, Banco } from 'app/shared/model/banco.model';
-import { BancoService } from './banco.service';
+import { BancoService } from 'app/entities/banco/banco.service';
 
 @Component({
   selector: 'jhi-banco-update',

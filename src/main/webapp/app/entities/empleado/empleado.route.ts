@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Empleado } from 'app/shared/model/empleado.model';
-import { EmpleadoService } from './empleado.service';
-import { EmpleadoComponent } from './empleado.component';
-import { EmpleadoDetailComponent } from './empleado-detail.component';
-import { EmpleadoUpdateComponent } from './empleado-update.component';
-import { EmpleadoDeletePopupComponent } from './empleado-delete-dialog.component';
+import { EmpleadoService } from 'app/entities/empleado/empleado.service';
+import { EmpleadoComponent } from 'app/entities/empleado/empleado.component';
+import { EmpleadoDetailComponent } from 'app/entities/empleado/empleado-detail.component';
+import { EmpleadoUpdateComponent } from 'app/entities/empleado/empleado-update.component';
+import { EmpleadoDeletePopupComponent } from 'app/entities/empleado/empleado-delete-dialog.component';
 import { IEmpleado } from 'app/shared/model/empleado.model';
 
 @Injectable({ providedIn: 'root' })

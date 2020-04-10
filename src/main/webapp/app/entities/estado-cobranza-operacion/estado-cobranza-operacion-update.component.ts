@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IEstadoCobranzaOperacion, EstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
-import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.service';
+import { EstadoCobranzaOperacionService } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.service';
 
 @Component({
   selector: 'jhi-estado-cobranza-operacion-update',

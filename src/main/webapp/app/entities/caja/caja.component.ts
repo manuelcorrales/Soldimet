@@ -10,7 +10,7 @@ import { ICaja } from 'app/shared/model/caja.model';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { CajaService } from './caja.service';
+import { CajaService } from 'app/entities/caja/caja.service';
 
 @Component({
   selector: 'jhi-caja',

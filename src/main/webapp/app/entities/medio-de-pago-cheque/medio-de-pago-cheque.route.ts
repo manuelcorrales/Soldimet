@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
-import { MedioDePagoChequeService } from './medio-de-pago-cheque.service';
-import { MedioDePagoChequeComponent } from './medio-de-pago-cheque.component';
-import { MedioDePagoChequeDetailComponent } from './medio-de-pago-cheque-detail.component';
-import { MedioDePagoChequeUpdateComponent } from './medio-de-pago-cheque-update.component';
-import { MedioDePagoChequeDeletePopupComponent } from './medio-de-pago-cheque-delete-dialog.component';
+import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.service';
+import { MedioDePagoChequeComponent } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.component';
+import { MedioDePagoChequeDetailComponent } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque-detail.component';
+import { MedioDePagoChequeUpdateComponent } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque-update.component';
+import { MedioDePagoChequeDeletePopupComponent } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque-delete-dialog.component';
 import { IMedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
 
 @Injectable({ providedIn: 'root' })

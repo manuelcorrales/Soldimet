@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FormaDePago } from 'app/shared/model/forma-de-pago.model';
-import { FormaDePagoService } from './forma-de-pago.service';
-import { FormaDePagoComponent } from './forma-de-pago.component';
-import { FormaDePagoDetailComponent } from './forma-de-pago-detail.component';
-import { FormaDePagoUpdateComponent } from './forma-de-pago-update.component';
-import { FormaDePagoDeletePopupComponent } from './forma-de-pago-delete-dialog.component';
+import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
+import { FormaDePagoComponent } from 'app/entities/forma-de-pago/forma-de-pago.component';
+import { FormaDePagoDetailComponent } from 'app/entities/forma-de-pago/forma-de-pago-detail.component';
+import { FormaDePagoUpdateComponent } from 'app/entities/forma-de-pago/forma-de-pago-update.component';
+import { FormaDePagoDeletePopupComponent } from 'app/entities/forma-de-pago/forma-de-pago-delete-dialog.component';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 
 @Injectable({ providedIn: 'root' })

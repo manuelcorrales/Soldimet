@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IPrecioRepuesto, PrecioRepuesto } from 'app/shared/model/precio-repuesto.model';
-import { PrecioRepuestoService } from './precio-repuesto.service';
+import { PrecioRepuestoService } from 'app/entities/precio-repuesto/precio-repuesto.service';
 
 @Component({
   selector: 'jhi-precio-repuesto-update',

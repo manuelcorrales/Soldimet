@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITipoTarjeta, TipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
-import { TipoTarjetaService } from './tipo-tarjeta.service';
+import { TipoTarjetaService } from 'app/entities/tipo-tarjeta/tipo-tarjeta.service';
 
 @Component({
   selector: 'jhi-tipo-tarjeta-update',

@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { DocumentationType } from 'app/shared/model/documentation-type.model';
-import { DocumentationTypeService } from './documentation-type.service';
-import { DocumentationTypeComponent } from './documentation-type.component';
-import { DocumentationTypeDetailComponent } from './documentation-type-detail.component';
-import { DocumentationTypeUpdateComponent } from './documentation-type-update.component';
-import { DocumentationTypeDeletePopupComponent } from './documentation-type-delete-dialog.component';
+import { DocumentationTypeService } from 'app/entities/documentation-type/documentation-type.service';
+import { DocumentationTypeComponent } from 'app/entities/documentation-type/documentation-type.component';
+import { DocumentationTypeDetailComponent } from 'app/entities/documentation-type/documentation-type-detail.component';
+import { DocumentationTypeUpdateComponent } from 'app/entities/documentation-type/documentation-type-update.component';
+import { DocumentationTypeDeletePopupComponent } from 'app/entities/documentation-type/documentation-type-delete-dialog.component';
 import { IDocumentationType } from 'app/shared/model/documentation-type.model';
 
 @Injectable({ providedIn: 'root' })

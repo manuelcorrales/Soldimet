@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IListaPrecioDesdeHasta, ListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
-import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service';
+import { ListaPrecioDesdeHastaService } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta.service';
 
 @Component({
   selector: 'jhi-lista-precio-desde-hasta-update',

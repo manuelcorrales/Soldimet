@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { MovimientoComponent } from './movimiento.component';
-import { MovimientoDetailComponent } from './movimiento-detail.component';
-import { MovimientoUpdateComponent } from './movimiento-update.component';
-import { MovimientoDeletePopupComponent, MovimientoDeleteDialogComponent } from './movimiento-delete-dialog.component';
-import { movimientoRoute, movimientoPopupRoute } from './movimiento.route';
+import { MovimientoComponent } from 'app/entities/movimiento/movimiento.component';
+import { MovimientoDetailComponent } from 'app/entities/movimiento/movimiento-detail.component';
+import { MovimientoUpdateComponent } from 'app/entities/movimiento/movimiento-update.component';
+import {
+  MovimientoDeletePopupComponent,
+  MovimientoDeleteDialogComponent
+} from 'app/entities/movimiento/movimiento-delete-dialog.component';
+import { movimientoRoute, movimientoPopupRoute } from 'app/entities/movimiento/movimiento.route';
 
 const ENTITY_STATES = [...movimientoRoute, ...movimientoPopupRoute];
 

@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IPersona } from 'app/shared/model/persona.model';
-import { PersonaService } from './persona.service';
+import { PersonaService } from 'app/entities/persona/persona.service';
 
 @Component({
   selector: 'jhi-persona-delete-dialog',

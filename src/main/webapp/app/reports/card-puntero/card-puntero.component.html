@@ -1,0 +1,16 @@
+<div class="card h-100">
+    <div class="card-header text-white" style="background-color: #3498DB !important;">{{metric}}</div>
+    <div class="h-100">
+        <div class="mt-4"></div>
+        <ngx-charts-gauge
+            scheme="horizon"
+            [view]="view"
+            [results]="data"
+            [legend]="legend"
+            [legendTitle]="legendTitle"
+            [legendPosition]="legendPosition"
+            [bigSegments]="bigSegments"
+        >
+        </ngx-charts-gauge>
+    </div>
+</div>

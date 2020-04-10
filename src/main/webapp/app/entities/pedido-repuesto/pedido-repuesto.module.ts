@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { PedidoRepuestoComponent } from './pedido-repuesto.component';
-import { PedidoRepuestoDetailComponent } from './pedido-repuesto-detail.component';
-import { PedidoRepuestoUpdateComponent } from './pedido-repuesto-update.component';
-import { PedidoRepuestoDeletePopupComponent, PedidoRepuestoDeleteDialogComponent } from './pedido-repuesto-delete-dialog.component';
-import { pedidoRepuestoRoute, pedidoRepuestoPopupRoute } from './pedido-repuesto.route';
+import { PedidoRepuestoComponent } from 'app/entities/pedido-repuesto/pedido-repuesto.component';
+import { PedidoRepuestoDetailComponent } from 'app/entities/pedido-repuesto/pedido-repuesto-detail.component';
+import { PedidoRepuestoUpdateComponent } from 'app/entities/pedido-repuesto/pedido-repuesto-update.component';
+import {
+  PedidoRepuestoDeletePopupComponent,
+  PedidoRepuestoDeleteDialogComponent
+} from 'app/entities/pedido-repuesto/pedido-repuesto-delete-dialog.component';
+import { pedidoRepuestoRoute, pedidoRepuestoPopupRoute } from 'app/entities/pedido-repuesto/pedido-repuesto.route';
 
 const ENTITY_STATES = [...pedidoRepuestoRoute, ...pedidoRepuestoPopupRoute];
 

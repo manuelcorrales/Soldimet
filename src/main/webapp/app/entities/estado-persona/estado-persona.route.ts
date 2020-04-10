@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { EstadoPersona } from 'app/shared/model/estado-persona.model';
-import { EstadoPersonaService } from './estado-persona.service';
-import { EstadoPersonaComponent } from './estado-persona.component';
-import { EstadoPersonaDetailComponent } from './estado-persona-detail.component';
-import { EstadoPersonaUpdateComponent } from './estado-persona-update.component';
-import { EstadoPersonaDeletePopupComponent } from './estado-persona-delete-dialog.component';
+import { EstadoPersonaService } from 'app/entities/estado-persona/estado-persona.service';
+import { EstadoPersonaComponent } from 'app/entities/estado-persona/estado-persona.component';
+import { EstadoPersonaDetailComponent } from 'app/entities/estado-persona/estado-persona-detail.component';
+import { EstadoPersonaUpdateComponent } from 'app/entities/estado-persona/estado-persona-update.component';
+import { EstadoPersonaDeletePopupComponent } from 'app/entities/estado-persona/estado-persona-delete-dialog.component';
 import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
 
 @Injectable({ providedIn: 'root' })

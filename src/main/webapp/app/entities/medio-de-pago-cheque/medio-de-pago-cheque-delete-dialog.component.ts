@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IMedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
-import { MedioDePagoChequeService } from './medio-de-pago-cheque.service';
+import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.service';
 
 @Component({
   selector: 'jhi-medio-de-pago-cheque-delete-dialog',

@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginModalService } from 'app/core/login/login-modal.service';
-import { PasswordResetFinishService } from './password-reset-finish.service';
+import { PasswordResetFinishService } from 'app/account/password-reset/finish/password-reset-finish.service';
 
 @Component({
   selector: 'jhi-password-reset-finish',

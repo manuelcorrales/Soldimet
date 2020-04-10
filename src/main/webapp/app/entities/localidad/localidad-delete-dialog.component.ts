@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ILocalidad } from 'app/shared/model/localidad.model';
-import { LocalidadService } from './localidad.service';
+import { LocalidadService } from 'app/entities/localidad/localidad.service';
 
 @Component({
   selector: 'jhi-localidad-delete-dialog',

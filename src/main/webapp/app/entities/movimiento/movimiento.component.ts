@@ -10,7 +10,7 @@ import { IMovimiento } from 'app/shared/model/movimiento.model';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { MovimientoService } from './movimiento.service';
+import { MovimientoService } from 'app/entities/movimiento/movimiento.service';
 
 @Component({
   selector: 'jhi-movimiento',

@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IRubro } from 'app/shared/model/rubro.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { RubroService } from './rubro.service';
+import { RubroService } from 'app/entities/rubro/rubro.service';
 
 @Component({
   selector: 'jhi-rubro',

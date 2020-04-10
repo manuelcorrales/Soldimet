@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { ClienteComponent } from './cliente.component';
-import { ClienteDetailComponent } from './cliente-detail.component';
-import { ClienteUpdateComponent } from './cliente-update.component';
-import { ClienteDeletePopupComponent, ClienteDeleteDialogComponent } from './cliente-delete-dialog.component';
-import { clienteRoute, clientePopupRoute } from './cliente.route';
+import { ClienteComponent } from 'app/entities/cliente/cliente.component';
+import { ClienteDetailComponent } from 'app/entities/cliente/cliente-detail.component';
+import { ClienteUpdateComponent } from 'app/entities/cliente/cliente-update.component';
+import { ClienteDeletePopupComponent, ClienteDeleteDialogComponent } from 'app/entities/cliente/cliente-delete-dialog.component';
+import { clienteRoute, clientePopupRoute } from 'app/entities/cliente/cliente.route';
 
 const ENTITY_STATES = [...clienteRoute, ...clientePopupRoute];
 

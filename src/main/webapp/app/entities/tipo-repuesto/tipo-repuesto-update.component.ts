@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { ITipoRepuesto, TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
-import { TipoRepuestoService } from './tipo-repuesto.service';
+import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
 import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
 

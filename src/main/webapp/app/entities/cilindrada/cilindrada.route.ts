@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Cilindrada } from 'app/shared/model/cilindrada.model';
-import { CilindradaService } from './cilindrada.service';
-import { CilindradaComponent } from './cilindrada.component';
-import { CilindradaDetailComponent } from './cilindrada-detail.component';
-import { CilindradaUpdateComponent } from './cilindrada-update.component';
-import { CilindradaDeletePopupComponent } from './cilindrada-delete-dialog.component';
+import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
+import { CilindradaComponent } from 'app/entities/cilindrada/cilindrada.component';
+import { CilindradaDetailComponent } from 'app/entities/cilindrada/cilindrada-detail.component';
+import { CilindradaUpdateComponent } from 'app/entities/cilindrada/cilindrada-update.component';
+import { CilindradaDeletePopupComponent } from 'app/entities/cilindrada/cilindrada-delete-dialog.component';
 import { ICilindrada } from 'app/shared/model/cilindrada.model';
 
 @Injectable({ providedIn: 'root' })

@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ILocalidad } from 'app/shared/model/localidad.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { LocalidadService } from './localidad.service';
+import { LocalidadService } from 'app/entities/localidad/localidad.service';
 
 @Component({
   selector: 'jhi-localidad',

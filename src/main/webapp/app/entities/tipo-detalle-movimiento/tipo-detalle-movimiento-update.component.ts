@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITipoDetalleMovimiento, TipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
-import { TipoDetalleMovimientoService } from './tipo-detalle-movimiento.service';
+import { TipoDetalleMovimientoService } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento.service';
 
 @Component({
   selector: 'jhi-tipo-detalle-movimiento-update',

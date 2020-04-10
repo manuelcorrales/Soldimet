@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-header text-white" style="background-color: #3498DB !important;">
+        {{title}}
+    </div>
+    <span>
+        <ngx-charts-pie-chart
+            scheme="vivid"
+            [view]="view"
+            [results]="data"
+            [legend]="legend"
+            [legendPosition]="legendPosition"
+            [labels]="showLabels"
+            [doughnut]="isDoughnut"
+        >
+        </ngx-charts-pie-chart>
+    </span>
+</div>

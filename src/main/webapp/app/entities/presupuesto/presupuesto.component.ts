@@ -10,7 +10,7 @@ import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { PresupuestoService } from './presupuesto.service';
+import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
 
 @Component({
   selector: 'jhi-presupuesto',

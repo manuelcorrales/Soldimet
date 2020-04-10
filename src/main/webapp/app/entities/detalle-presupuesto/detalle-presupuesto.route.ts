@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
-import { DetallePresupuestoService } from './detalle-presupuesto.service';
-import { DetallePresupuestoComponent } from './detalle-presupuesto.component';
-import { DetallePresupuestoDetailComponent } from './detalle-presupuesto-detail.component';
-import { DetallePresupuestoUpdateComponent } from './detalle-presupuesto-update.component';
-import { DetallePresupuestoDeletePopupComponent } from './detalle-presupuesto-delete-dialog.component';
+import { DetallePresupuestoService } from 'app/entities/detalle-presupuesto/detalle-presupuesto.service';
+import { DetallePresupuestoComponent } from 'app/entities/detalle-presupuesto/detalle-presupuesto.component';
+import { DetallePresupuestoDetailComponent } from 'app/entities/detalle-presupuesto/detalle-presupuesto-detail.component';
+import { DetallePresupuestoUpdateComponent } from 'app/entities/detalle-presupuesto/detalle-presupuesto-update.component';
+import { DetallePresupuestoDeletePopupComponent } from 'app/entities/detalle-presupuesto/detalle-presupuesto-delete-dialog.component';
 import { IDetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 
 @Injectable({ providedIn: 'root' })

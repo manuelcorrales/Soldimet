@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoCobranzaOperacion } from 'app/shared/model/estado-cobranza-operacion.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { EstadoCobranzaOperacionService } from './estado-cobranza-operacion.service';
+import { EstadoCobranzaOperacionService } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.service';
 
 @Component({
   selector: 'jhi-estado-cobranza-operacion',

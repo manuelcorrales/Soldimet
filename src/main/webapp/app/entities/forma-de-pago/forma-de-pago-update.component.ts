@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IFormaDePago, FormaDePago } from 'app/shared/model/forma-de-pago.model';
-import { FormaDePagoService } from './forma-de-pago.service';
+import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
 
 @Component({
   selector: 'jhi-forma-de-pago-update',

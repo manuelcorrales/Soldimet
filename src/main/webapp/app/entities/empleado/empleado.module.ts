@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EmpleadoComponent } from './empleado.component';
-import { EmpleadoDetailComponent } from './empleado-detail.component';
-import { EmpleadoUpdateComponent } from './empleado-update.component';
-import { EmpleadoDeletePopupComponent, EmpleadoDeleteDialogComponent } from './empleado-delete-dialog.component';
-import { empleadoRoute, empleadoPopupRoute } from './empleado.route';
+import { EmpleadoComponent } from 'app/entities/empleado/empleado.component';
+import { EmpleadoDetailComponent } from 'app/entities/empleado/empleado-detail.component';
+import { EmpleadoUpdateComponent } from 'app/entities/empleado/empleado-update.component';
+import { EmpleadoDeletePopupComponent, EmpleadoDeleteDialogComponent } from 'app/entities/empleado/empleado-delete-dialog.component';
+import { empleadoRoute, empleadoPopupRoute } from 'app/entities/empleado/empleado.route';
 
 const ENTITY_STATES = [...empleadoRoute, ...empleadoPopupRoute];
 

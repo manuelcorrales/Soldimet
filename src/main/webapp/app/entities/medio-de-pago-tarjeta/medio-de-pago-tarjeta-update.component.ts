@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IMedioDePagoTarjeta, MedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
-import { MedioDePagoTarjetaService } from './medio-de-pago-tarjeta.service';
+import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.service';
 import { ITarjeta } from 'app/shared/model/tarjeta.model';
 import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
 import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';

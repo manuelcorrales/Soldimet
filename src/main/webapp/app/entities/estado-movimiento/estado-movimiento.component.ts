@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IEstadoMovimiento } from 'app/shared/model/estado-movimiento.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { EstadoMovimientoService } from './estado-movimiento.service';
+import { EstadoMovimientoService } from 'app/entities/estado-movimiento/estado-movimiento.service';
 
 @Component({
   selector: 'jhi-estado-movimiento',

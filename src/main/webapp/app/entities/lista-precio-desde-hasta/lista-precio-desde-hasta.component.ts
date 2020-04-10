@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IListaPrecioDesdeHasta } from 'app/shared/model/lista-precio-desde-hasta.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { ListaPrecioDesdeHastaService } from './lista-precio-desde-hasta.service';
+import { ListaPrecioDesdeHastaService } from 'app/entities/lista-precio-desde-hasta/lista-precio-desde-hasta.service';
 
 @Component({
   selector: 'jhi-lista-precio-desde-hasta',

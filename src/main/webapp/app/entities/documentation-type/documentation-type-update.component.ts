@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IDocumentationType, DocumentationType } from 'app/shared/model/documentation-type.model';
-import { DocumentationTypeService } from './documentation-type.service';
+import { DocumentationTypeService } from 'app/entities/documentation-type/documentation-type.service';
 
 @Component({
   selector: 'jhi-documentation-type-update',

@@ -25,4 +25,6 @@ public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long>,
     public List<Presupuesto> findByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 
     public List<Presupuesto> findBySucursal(Sucursal sucursal);
+
+    public Long countByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 }

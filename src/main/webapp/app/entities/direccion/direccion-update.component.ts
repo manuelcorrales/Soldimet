@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IDireccion, Direccion } from 'app/shared/model/direccion.model';
-import { DireccionService } from './direccion.service';
+import { DireccionService } from 'app/entities/direccion/direccion.service';
 import { ILocalidad } from 'app/shared/model/localidad.model';
 import { LocalidadService } from 'app/entities/localidad/localidad.service';
 

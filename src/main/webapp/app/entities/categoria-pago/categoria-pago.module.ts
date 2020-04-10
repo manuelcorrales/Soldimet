@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { CategoriaPagoComponent } from './categoria-pago.component';
-import { CategoriaPagoDetailComponent } from './categoria-pago-detail.component';
-import { CategoriaPagoUpdateComponent } from './categoria-pago-update.component';
-import { CategoriaPagoDeletePopupComponent, CategoriaPagoDeleteDialogComponent } from './categoria-pago-delete-dialog.component';
-import { categoriaPagoRoute, categoriaPagoPopupRoute } from './categoria-pago.route';
+import { CategoriaPagoComponent } from 'app/entities/categoria-pago/categoria-pago.component';
+import { CategoriaPagoDetailComponent } from 'app/entities/categoria-pago/categoria-pago-detail.component';
+import { CategoriaPagoUpdateComponent } from 'app/entities/categoria-pago/categoria-pago-update.component';
+import {
+  CategoriaPagoDeletePopupComponent,
+  CategoriaPagoDeleteDialogComponent
+} from 'app/entities/categoria-pago/categoria-pago-delete-dialog.component';
+import { categoriaPagoRoute, categoriaPagoPopupRoute } from 'app/entities/categoria-pago/categoria-pago.route';
 
 const ENTITY_STATES = [...categoriaPagoRoute, ...categoriaPagoPopupRoute];
 

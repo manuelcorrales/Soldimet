@@ -22,7 +22,9 @@ public interface PedidoRepuestoRepository extends JpaRepository<PedidoRepuesto, 
 
     public List<PedidoRepuesto> findAllByOrderByIdDesc();
 
-    public List<PedidoRepuesto> findByEstadoPedidoRepuesto( EstadoPedidoRepuesto estadoPedidoRepuesto);
+    public List<PedidoRepuesto> findByEstadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto);
 
     public PedidoRepuesto findPedidoRepuestoByDetallePedidosIn(DetallePedido detallePedido);
+
+    public Long countByEstadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto);
 }

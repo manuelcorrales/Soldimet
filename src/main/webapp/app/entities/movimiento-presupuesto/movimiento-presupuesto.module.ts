@@ -2,14 +2,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { MovimientoPresupuestoComponent } from './movimiento-presupuesto.component';
-import { MovimientoPresupuestoDetailComponent } from './movimiento-presupuesto-detail.component';
-import { MovimientoPresupuestoUpdateComponent } from './movimiento-presupuesto-update.component';
+import { MovimientoPresupuestoComponent } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto.component';
+import { MovimientoPresupuestoDetailComponent } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto-detail.component';
+import { MovimientoPresupuestoUpdateComponent } from 'app/entities/movimiento-presupuesto/movimiento-presupuesto-update.component';
 import {
   MovimientoPresupuestoDeletePopupComponent,
   MovimientoPresupuestoDeleteDialogComponent
-} from './movimiento-presupuesto-delete-dialog.component';
-import { movimientoPresupuestoRoute, movimientoPresupuestoPopupRoute } from './movimiento-presupuesto.route';
+} from 'app/entities/movimiento-presupuesto/movimiento-presupuesto-delete-dialog.component';
+import {
+  movimientoPresupuestoRoute,
+  movimientoPresupuestoPopupRoute
+} from 'app/entities/movimiento-presupuesto/movimiento-presupuesto.route';
 
 const ENTITY_STATES = [...movimientoPresupuestoRoute, ...movimientoPresupuestoPopupRoute];
 

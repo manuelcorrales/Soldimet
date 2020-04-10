@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IOperacion } from 'app/shared/model/operacion.model';
-import { OperacionService } from './operacion.service';
+import { OperacionService } from 'app/entities/operacion/operacion.service';
 
 @Component({
   selector: 'jhi-operacion-delete-dialog',

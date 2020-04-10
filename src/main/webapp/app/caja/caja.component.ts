@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
 import { DtoMovimientoCabecera, DtoCaja } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
 import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
-import { Subscription } from '../../../../../node_modules/rxjs';
-import { JhiEventManager, JhiAlertService } from '../../../../../node_modules/ng-jhipster';
 import { ISucursal } from 'app/shared/model/sucursal.model';
 import { SucursalService } from 'app/entities/sucursal';
 import { UserService } from 'app/core/user/user.service';
 import { DtoEmpleado } from 'app/dto/dto-empleado/dto-empleado.component';
 import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 @Component({
   selector: 'jhi-caja',

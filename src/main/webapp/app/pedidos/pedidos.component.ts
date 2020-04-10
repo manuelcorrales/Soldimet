@@ -5,8 +5,8 @@ import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { PedidoRepuestoService } from 'app/entities/pedido-repuesto';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { JhiEventManager } from '../../../../../node_modules/ng-jhipster';
-import { Subscription } from '../../../../../node_modules/rxjs';
+import { JhiEventManager } from 'ng-jhipster';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jhi-pedidos',

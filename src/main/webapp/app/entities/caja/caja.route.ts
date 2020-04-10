@@ -6,11 +6,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Caja } from 'app/shared/model/caja.model';
-import { CajaService } from './caja.service';
-import { CajaComponent } from './caja.component';
-import { CajaDetailComponent } from './caja-detail.component';
-import { CajaUpdateComponent } from './caja-update.component';
-import { CajaDeletePopupComponent } from './caja-delete-dialog.component';
+import { CajaService } from 'app/entities/caja/caja.service';
+import { CajaComponent } from 'app/entities/caja/caja.component';
+import { CajaDetailComponent } from 'app/entities/caja/caja-detail.component';
+import { CajaUpdateComponent } from 'app/entities/caja/caja-update.component';
+import { CajaDeletePopupComponent } from 'app/entities/caja/caja-delete-dialog.component';
 import { ICaja } from 'app/shared/model/caja.model';
 
 @Injectable({ providedIn: 'root' })

@@ -7,8 +7,8 @@ import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { SoldimetSharedModule } from 'app/shared/shared.module';
 import { NuevoMovimientoComponent } from 'app/caja/nuevo-movimiento/nuevo-movimiento.component';
-import { BorrarMovimientoDialogComponent, BorrarMovimientoPopupComponent } from './borrar-movimiento/borrar-movimiento.component';
-import { BorrarMovimientoPopupService } from './borrar-movimiento/borrar-movimiento-popup.service';
+import { BorrarMovimientoDialogComponent, BorrarMovimientoPopupComponent } from 'app/caja/borrar-movimiento/borrar-movimiento.component';
+import { BorrarMovimientoPopupService } from 'app/caja/borrar-movimiento/borrar-movimiento-popup.service';
 import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
 
 const CAJAS_ROUTES_ALL = [...CAJAS_ROUTE, ...CAJA_POPUP_ROUTES];

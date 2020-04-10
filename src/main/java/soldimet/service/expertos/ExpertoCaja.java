@@ -80,7 +80,7 @@ public class ExpertoCaja {
             sucursal = sucursalRepository.findById(sucursalId).get();
             LocalDate fechaInicio = this.formatearFecha(mes, anio);
             LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1);
-            listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(
+            listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursalOrderByFechaAsc(
                 fechaInicio,
                 fechaFin,
                 sucursal
@@ -180,7 +180,7 @@ public class ExpertoCaja {
 
     }
 
-    private Caja findCajaDelDia(Sucursal sucursal) {
+    public Caja findCajaDelDia(Sucursal sucursal) {
         Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(
             this.currentDay(),
             sucursal
@@ -191,15 +191,14 @@ public class ExpertoCaja {
         return cajaDia;
     }
 
-    private List<Caja> findCajasDelMes(Sucursal sucursal) {
+    public List<Caja> findCajasDelMes(Sucursal sucursal) {
         LocalDate fechaInicioMes = this.currentMonthFirstDay();
         LocalDate fechaFinMes = this.currentMonthLastDay();
-        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(fechaInicioMes, fechaFinMes, sucursal);
+        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursalOrderByFechaAsc(fechaInicioMes, fechaFinMes, sucursal);
     }
 
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {
         Float saldo = caja.getSaldo();
-        String tipoMoviento =  movimiento.getTipoMovimiento().getNombreTipoMovimiento();
         String estadoMovimiento = movimiento.getEstado().getNombreEstado();
 
         /*

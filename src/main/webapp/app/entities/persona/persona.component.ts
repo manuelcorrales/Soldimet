@@ -10,7 +10,7 @@ import { IPersona } from 'app/shared/model/persona.model';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { PersonaService } from './persona.service';
+import { PersonaService } from 'app/entities/persona/persona.service';
 
 @Component({
   selector: 'jhi-persona',

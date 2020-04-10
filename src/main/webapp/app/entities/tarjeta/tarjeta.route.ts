@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Tarjeta } from 'app/shared/model/tarjeta.model';
-import { TarjetaService } from './tarjeta.service';
-import { TarjetaComponent } from './tarjeta.component';
-import { TarjetaDetailComponent } from './tarjeta-detail.component';
-import { TarjetaUpdateComponent } from './tarjeta-update.component';
-import { TarjetaDeletePopupComponent } from './tarjeta-delete-dialog.component';
+import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
+import { TarjetaComponent } from 'app/entities/tarjeta/tarjeta.component';
+import { TarjetaDetailComponent } from 'app/entities/tarjeta/tarjeta-detail.component';
+import { TarjetaUpdateComponent } from 'app/entities/tarjeta/tarjeta-update.component';
+import { TarjetaDeletePopupComponent } from 'app/entities/tarjeta/tarjeta-delete-dialog.component';
 import { ITarjeta } from 'app/shared/model/tarjeta.model';
 
 @Injectable({ providedIn: 'root' })

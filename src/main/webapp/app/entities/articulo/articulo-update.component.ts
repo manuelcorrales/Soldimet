@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IArticulo, Articulo } from 'app/shared/model/articulo.model';
-import { ArticuloService } from './articulo.service';
+import { ArticuloService } from 'app/entities/articulo/articulo.service';
 import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
 import { EstadoArticuloService } from 'app/entities/estado-articulo/estado-articulo.service';
 import { IMarca } from 'app/shared/model/marca.model';

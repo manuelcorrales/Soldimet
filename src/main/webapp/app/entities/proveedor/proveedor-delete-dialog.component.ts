@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IProveedor } from 'app/shared/model/proveedor.model';
-import { ProveedorService } from './proveedor.service';
+import { ProveedorService } from 'app/entities/proveedor/proveedor.service';
 
 @Component({
   selector: 'jhi-proveedor-delete-dialog',

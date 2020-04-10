@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IMotor, Motor } from 'app/shared/model/motor.model';
-import { MotorService } from './motor.service';
+import { MotorService } from 'app/entities/motor/motor.service';
 
 @Component({
   selector: 'jhi-motor-update',

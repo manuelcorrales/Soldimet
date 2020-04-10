@@ -1,0 +1,35 @@
+<div class="card h-100">
+    <div class="card-header text-white" style="background-color: #3498DB !important;">
+        {{metric}}
+        <div class="card-action">
+        </div>
+    </div>
+    <div style="width: 100%; height: 100%;">
+        <div class="mt-4"></div>
+        <ngx-charts-line-chart
+            [legend]="legend"
+            [legendTitle]="legendTitle"
+            [legendPosition]="legendPosition"
+            [results]="data"
+            [xAxis]="xAxis"
+            [yAxis]="yAxis"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            scheme="vivid"
+        ></ngx-charts-line-chart>
+    </div>
+    <!--div class="row m-0 row-group text-center border-top border-light-3">
+        <div class="col-12 col-lg-4">
+            <div class="p-3">
+                <h5 class="mb-0">{{value2}}</h5>
+                <small class="mb-0">{{metric2}}</small>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="p-3">
+                <h5 class="mb-0">{{value3}}</h5>
+                <small class="mb-0">{{metric3}}</small>
+            </div>
+        </div>
+    </div -->
+</div>

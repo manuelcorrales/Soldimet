@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { BancoComponent } from './banco.component';
-import { BancoDetailComponent } from './banco-detail.component';
-import { BancoUpdateComponent } from './banco-update.component';
-import { BancoDeletePopupComponent, BancoDeleteDialogComponent } from './banco-delete-dialog.component';
-import { bancoRoute, bancoPopupRoute } from './banco.route';
+import { BancoComponent } from 'app/entities/banco/banco.component';
+import { BancoDetailComponent } from 'app/entities/banco/banco-detail.component';
+import { BancoUpdateComponent } from 'app/entities/banco/banco-update.component';
+import { BancoDeletePopupComponent, BancoDeleteDialogComponent } from 'app/entities/banco/banco-delete-dialog.component';
+import { bancoRoute, bancoPopupRoute } from 'app/entities/banco/banco.route';
 
 const ENTITY_STATES = [...bancoRoute, ...bancoPopupRoute];
 

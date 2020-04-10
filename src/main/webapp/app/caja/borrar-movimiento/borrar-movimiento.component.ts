@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '../../../../../../node_modules/@angular/router';
-import { NgbActiveModal } from '../../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from '../../../../../../node_modules/ng-jhipster';
+import { ActivatedRoute } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { JhiEventManager } from 'ng-jhipster';
 import { Movimiento } from 'app/shared/model/movimiento.model';
 import { BorrarMovimientoPopupService } from 'app/caja/borrar-movimiento/borrar-movimiento-popup.service';
 import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';

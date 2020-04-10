@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICostoOperacion } from 'app/shared/model/costo-operacion.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { CostoOperacionService } from './costo-operacion.service';
+import { CostoOperacionService } from 'app/entities/costo-operacion/costo-operacion.service';
 
 @Component({
   selector: 'jhi-costo-operacion',

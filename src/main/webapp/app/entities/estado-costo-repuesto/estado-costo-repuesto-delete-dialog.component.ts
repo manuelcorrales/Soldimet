@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
-import { EstadoCostoRepuestoService } from './estado-costo-repuesto.service';
+import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.service';
 
 @Component({
   selector: 'jhi-estado-costo-repuesto-delete-dialog',

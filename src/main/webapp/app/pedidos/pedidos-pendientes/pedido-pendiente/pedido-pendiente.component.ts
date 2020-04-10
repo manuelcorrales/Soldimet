@@ -54,28 +54,28 @@ export class PedidoPendienteComponent implements OnInit {
     // });
     this.tipoRepuestoService.query().subscribe((tiposRepuestos: HttpResponse<ITipoRepuesto[]>) => {
       this.tiposRepuestos = tiposRepuestos.body;
-      this.buscarArticulos();
+      // this.buscarArticulos();
     });
   }
-  buscarArticulos() {
-    this.pedido.presupuesto.detallePresupuestos.forEach(detalle => {
-      let tipoRepuestoID = null;
-      this.tiposRepuestos.forEach((tipoRepuestoI: ITipoRepuesto) => {
-        if (detalle.tipoParteMotor.id === tipoRepuestoI.tipoParteMotor.id) {
-          tipoRepuestoID = tipoRepuestoI.id;
-        }
-      });
-      // let query;
-      // if (tipoRepuestoID) {
-      //   query = {
-      //     'tipoRepuestoId.equals': tipoRepuestoID
-      //   };
-      // }
-      // this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
-      //   this.articulos = res.body;
-      // });
-    });
-  }
+  // buscarArticulos() {
+  //   this.pedido.presupuesto.detallePresupuestos.forEach(detalle => {
+  //     // let tipoRepuestoID = null;
+  //     // this.tiposRepuestos.forEach((tipoRepuestoI: ITipoRepuesto) => {
+  //     //   if (detalle.tipoParteMotor.id === tipoRepuestoI.tipoParteMotor.id) {
+  //     //     tipoRepuestoID = tipoRepuestoI.id;
+  //     //   }
+  //     // });
+  //     // let query;
+  //     // if (tipoRepuestoID) {
+  //     //   query = {
+  //     //     'tipoRepuestoId.equals': tipoRepuestoID
+  //     //   };
+  //     // }
+  //     // this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
+  //     //   this.articulos = res.body;
+  //     // });
+  //   });
+  // }
 
   guardarPedidoPendiente() {
     this.isSaving = true;

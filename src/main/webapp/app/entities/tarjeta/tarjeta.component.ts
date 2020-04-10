@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ITarjeta } from 'app/shared/model/tarjeta.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { TarjetaService } from './tarjeta.service';
+import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
 
 @Component({
   selector: 'jhi-tarjeta',

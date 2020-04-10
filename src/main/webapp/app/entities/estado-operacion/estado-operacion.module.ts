@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EstadoOperacionComponent } from './estado-operacion.component';
-import { EstadoOperacionDetailComponent } from './estado-operacion-detail.component';
-import { EstadoOperacionUpdateComponent } from './estado-operacion-update.component';
-import { EstadoOperacionDeletePopupComponent, EstadoOperacionDeleteDialogComponent } from './estado-operacion-delete-dialog.component';
-import { estadoOperacionRoute, estadoOperacionPopupRoute } from './estado-operacion.route';
+import { EstadoOperacionComponent } from 'app/entities/estado-operacion/estado-operacion.component';
+import { EstadoOperacionDetailComponent } from 'app/entities/estado-operacion/estado-operacion-detail.component';
+import { EstadoOperacionUpdateComponent } from 'app/entities/estado-operacion/estado-operacion-update.component';
+import {
+  EstadoOperacionDeletePopupComponent,
+  EstadoOperacionDeleteDialogComponent
+} from 'app/entities/estado-operacion/estado-operacion-delete-dialog.component';
+import { estadoOperacionRoute, estadoOperacionPopupRoute } from 'app/entities/estado-operacion/estado-operacion.route';
 
 const ENTITY_STATES = [...estadoOperacionRoute, ...estadoOperacionPopupRoute];
 

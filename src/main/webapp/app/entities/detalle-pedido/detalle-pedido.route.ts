@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { DetallePedido } from 'app/shared/model/detalle-pedido.model';
-import { DetallePedidoService } from './detalle-pedido.service';
-import { DetallePedidoComponent } from './detalle-pedido.component';
-import { DetallePedidoDetailComponent } from './detalle-pedido-detail.component';
-import { DetallePedidoUpdateComponent } from './detalle-pedido-update.component';
-import { DetallePedidoDeletePopupComponent } from './detalle-pedido-delete-dialog.component';
+import { DetallePedidoService } from 'app/entities/detalle-pedido/detalle-pedido.service';
+import { DetallePedidoComponent } from 'app/entities/detalle-pedido/detalle-pedido.component';
+import { DetallePedidoDetailComponent } from 'app/entities/detalle-pedido/detalle-pedido-detail.component';
+import { DetallePedidoUpdateComponent } from 'app/entities/detalle-pedido/detalle-pedido-update.component';
+import { DetallePedidoDeletePopupComponent } from 'app/entities/detalle-pedido/detalle-pedido-delete-dialog.component';
 import { IDetallePedido } from 'app/shared/model/detalle-pedido.model';
 
 @Injectable({ providedIn: 'root' })

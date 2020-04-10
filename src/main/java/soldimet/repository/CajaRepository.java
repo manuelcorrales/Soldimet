@@ -26,7 +26,7 @@ public interface CajaRepository extends JpaRepository<Caja, Long>, JpaSpecificat
 
     public Caja findFirstByFechaGreaterThanEqualAndSucursal(LocalDate fecha, Sucursal sucursal);
 
-    public List<Caja> findByFechaGreaterThanEqualAndFechaLessThanAndSucursal(
+    public List<Caja> findByFechaGreaterThanEqualAndFechaLessThanAndSucursalOrderByFechaAsc(
         LocalDate fechaInicio,
         LocalDate fechaFin,
         Sucursal sucursal

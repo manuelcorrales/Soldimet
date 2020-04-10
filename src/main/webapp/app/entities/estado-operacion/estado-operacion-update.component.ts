@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IEstadoOperacion, EstadoOperacion } from 'app/shared/model/estado-operacion.model';
-import { EstadoOperacionService } from './estado-operacion.service';
+import { EstadoOperacionService } from 'app/entities/estado-operacion/estado-operacion.service';
 
 @Component({
   selector: 'jhi-estado-operacion-update',

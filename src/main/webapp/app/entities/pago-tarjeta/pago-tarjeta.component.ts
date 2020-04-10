@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IPagoTarjeta } from 'app/shared/model/pago-tarjeta.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { PagoTarjetaService } from './pago-tarjeta.service';
+import { PagoTarjetaService } from 'app/entities/pago-tarjeta/pago-tarjeta.service';
 
 @Component({
   selector: 'jhi-pago-tarjeta',

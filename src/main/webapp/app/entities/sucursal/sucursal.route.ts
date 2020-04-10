@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Sucursal } from 'app/shared/model/sucursal.model';
-import { SucursalService } from './sucursal.service';
-import { SucursalComponent } from './sucursal.component';
-import { SucursalDetailComponent } from './sucursal-detail.component';
-import { SucursalUpdateComponent } from './sucursal-update.component';
-import { SucursalDeletePopupComponent } from './sucursal-delete-dialog.component';
+import { SucursalService } from 'app/entities/sucursal/sucursal.service';
+import { SucursalComponent } from 'app/entities/sucursal/sucursal.component';
+import { SucursalDetailComponent } from 'app/entities/sucursal/sucursal-detail.component';
+import { SucursalUpdateComponent } from 'app/entities/sucursal/sucursal-update.component';
+import { SucursalDeletePopupComponent } from 'app/entities/sucursal/sucursal-delete-dialog.component';
 import { ISucursal } from 'app/shared/model/sucursal.model';
 
 @Injectable({ providedIn: 'root' })

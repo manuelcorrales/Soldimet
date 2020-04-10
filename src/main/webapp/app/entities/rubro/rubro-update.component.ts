@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IRubro, Rubro } from 'app/shared/model/rubro.model';
-import { RubroService } from './rubro.service';
+import { RubroService } from 'app/entities/rubro/rubro.service';
 
 @Component({
   selector: 'jhi-rubro-update',

@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
-import { CostoOperacionService } from './costo-operacion.service';
-import { CostoOperacionComponent } from './costo-operacion.component';
-import { CostoOperacionDetailComponent } from './costo-operacion-detail.component';
-import { CostoOperacionUpdateComponent } from './costo-operacion-update.component';
-import { CostoOperacionDeletePopupComponent } from './costo-operacion-delete-dialog.component';
+import { CostoOperacionService } from 'app/entities/costo-operacion/costo-operacion.service';
+import { CostoOperacionComponent } from 'app/entities/costo-operacion/costo-operacion.component';
+import { CostoOperacionDetailComponent } from 'app/entities/costo-operacion/costo-operacion-detail.component';
+import { CostoOperacionUpdateComponent } from 'app/entities/costo-operacion/costo-operacion-update.component';
+import { CostoOperacionDeletePopupComponent } from 'app/entities/costo-operacion/costo-operacion-delete-dialog.component';
 import { ICostoOperacion } from 'app/shared/model/costo-operacion.model';
 
 @Injectable({ providedIn: 'root' })

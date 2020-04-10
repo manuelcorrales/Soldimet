@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ISucursal } from 'app/shared/model/sucursal.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { SucursalService } from './sucursal.service';
+import { SucursalService } from 'app/entities/sucursal/sucursal.service';
 
 @Component({
   selector: 'jhi-sucursal',

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IMovimientoArticulo, MovimientoArticulo } from 'app/shared/model/movimiento-articulo.model';
-import { MovimientoArticuloService } from './movimiento-articulo.service';
+import { MovimientoArticuloService } from 'app/entities/movimiento-articulo/movimiento-articulo.service';
 import { IArticulo } from 'app/shared/model/articulo.model';
 import { ArticuloService } from 'app/entities/articulo/articulo.service';
 import { IMovimiento } from 'app/shared/model/movimiento.model';

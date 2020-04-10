@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IEstadoPersona } from 'app/shared/model/estado-persona.model';
-import { EstadoPersonaService } from './estado-persona.service';
+import { EstadoPersonaService } from 'app/entities/estado-persona/estado-persona.service';
 
 @Component({
   selector: 'jhi-estado-persona-delete-dialog',

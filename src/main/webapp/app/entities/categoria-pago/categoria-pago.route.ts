@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CategoriaPago } from 'app/shared/model/categoria-pago.model';
-import { CategoriaPagoService } from './categoria-pago.service';
-import { CategoriaPagoComponent } from './categoria-pago.component';
-import { CategoriaPagoDetailComponent } from './categoria-pago-detail.component';
-import { CategoriaPagoUpdateComponent } from './categoria-pago-update.component';
-import { CategoriaPagoDeletePopupComponent } from './categoria-pago-delete-dialog.component';
+import { CategoriaPagoService } from 'app/entities/categoria-pago/categoria-pago.service';
+import { CategoriaPagoComponent } from 'app/entities/categoria-pago/categoria-pago.component';
+import { CategoriaPagoDetailComponent } from 'app/entities/categoria-pago/categoria-pago-detail.component';
+import { CategoriaPagoUpdateComponent } from 'app/entities/categoria-pago/categoria-pago-update.component';
+import { CategoriaPagoDeletePopupComponent } from 'app/entities/categoria-pago/categoria-pago-delete-dialog.component';
 import { ICategoriaPago } from 'app/shared/model/categoria-pago.model';
 
 @Injectable({ providedIn: 'root' })

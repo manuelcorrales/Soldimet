@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ISucursal, Sucursal } from 'app/shared/model/sucursal.model';
-import { SucursalService } from './sucursal.service';
+import { SucursalService } from 'app/entities/sucursal/sucursal.service';
 
 @Component({
   selector: 'jhi-sucursal-update',

@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { PresupuestoComponent } from './presupuesto.component';
-import { PresupuestoDetailComponent } from './presupuesto-detail.component';
-import { PresupuestoUpdateComponent } from './presupuesto-update.component';
-import { PresupuestoDeletePopupComponent, PresupuestoDeleteDialogComponent } from './presupuesto-delete-dialog.component';
-import { presupuestoRoute, presupuestoPopupRoute } from './presupuesto.route';
+import { PresupuestoComponent } from 'app/entities/presupuesto/presupuesto.component';
+import { PresupuestoDetailComponent } from 'app/entities/presupuesto/presupuesto-detail.component';
+import { PresupuestoUpdateComponent } from 'app/entities/presupuesto/presupuesto-update.component';
+import {
+  PresupuestoDeletePopupComponent,
+  PresupuestoDeleteDialogComponent
+} from 'app/entities/presupuesto/presupuesto-delete-dialog.component';
+import { presupuestoRoute, presupuestoPopupRoute } from 'app/entities/presupuesto/presupuesto.route';
 
 const ENTITY_STATES = [...presupuestoRoute, ...presupuestoPopupRoute];
 

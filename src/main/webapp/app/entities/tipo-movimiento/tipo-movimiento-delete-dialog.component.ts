@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ITipoMovimiento } from 'app/shared/model/tipo-movimiento.model';
-import { TipoMovimientoService } from './tipo-movimiento.service';
+import { TipoMovimientoService } from 'app/entities/tipo-movimiento/tipo-movimiento.service';
 
 @Component({
   selector: 'jhi-tipo-movimiento-delete-dialog',

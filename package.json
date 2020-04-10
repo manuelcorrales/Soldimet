@@ -8,6 +8,7 @@
     "node_modules"
   ],
   "dependencies": {
+    "@angular/animations": "^8.2.12",
     "@angular/common": "8.2.4",
     "@angular/compiler": "8.2.4",
     "@angular/core": "8.2.4",
@@ -22,6 +23,7 @@
     "@ng-select/ng-select": "3.0.7",
     "@ngx-translate/core": "11.0.1",
     "@ngx-translate/http-loader": "4.0.0",
+    "@swimlane/ngx-charts": "^12.0.1",
     "bootstrap": "^4.4.1",
     "bootswatch": "^4.4.1",
     "core-js": "3.2.1",

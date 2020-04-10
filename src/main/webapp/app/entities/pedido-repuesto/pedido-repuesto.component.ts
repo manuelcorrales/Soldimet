@@ -10,7 +10,7 @@ import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { PedidoRepuestoService } from './pedido-repuesto.service';
+import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
 
 @Component({
   selector: 'jhi-pedido-repuesto',

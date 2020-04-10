@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
-import { TipoRepuestoService } from './tipo-repuesto.service';
+import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
 
 @Component({
   selector: 'jhi-tipo-repuesto-delete-dialog',

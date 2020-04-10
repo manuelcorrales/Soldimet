@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { ICostoOperacion, CostoOperacion } from 'app/shared/model/costo-operacion.model';
-import { CostoOperacionService } from './costo-operacion.service';
+import { CostoOperacionService } from 'app/entities/costo-operacion/costo-operacion.service';
 import { ICilindrada } from 'app/shared/model/cilindrada.model';
 import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
 import { IOperacion } from 'app/shared/model/operacion.model';

@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Rubro } from 'app/shared/model/rubro.model';
-import { RubroService } from './rubro.service';
-import { RubroComponent } from './rubro.component';
-import { RubroDetailComponent } from './rubro-detail.component';
-import { RubroUpdateComponent } from './rubro-update.component';
-import { RubroDeletePopupComponent } from './rubro-delete-dialog.component';
+import { RubroService } from 'app/entities/rubro/rubro.service';
+import { RubroComponent } from 'app/entities/rubro/rubro.component';
+import { RubroDetailComponent } from 'app/entities/rubro/rubro-detail.component';
+import { RubroUpdateComponent } from 'app/entities/rubro/rubro-update.component';
+import { RubroDeletePopupComponent } from 'app/entities/rubro/rubro-delete-dialog.component';
 import { IRubro } from 'app/shared/model/rubro.model';
 
 @Injectable({ providedIn: 'root' })

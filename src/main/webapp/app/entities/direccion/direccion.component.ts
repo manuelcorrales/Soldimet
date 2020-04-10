@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IDireccion } from 'app/shared/model/direccion.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { DireccionService } from './direccion.service';
+import { DireccionService } from 'app/entities/direccion/direccion.service';
 
 @Component({
   selector: 'jhi-direccion',

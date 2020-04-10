@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IDetallePedido } from 'app/shared/model/detalle-pedido.model';
-import { DetallePedidoService } from './detalle-pedido.service';
+import { DetallePedidoService } from 'app/entities/detalle-pedido/detalle-pedido.service';
 
 @Component({
   selector: 'jhi-detalle-pedido-delete-dialog',

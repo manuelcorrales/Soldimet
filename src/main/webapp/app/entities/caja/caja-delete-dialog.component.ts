@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ICaja } from 'app/shared/model/caja.model';
-import { CajaService } from './caja.service';
+import { CajaService } from 'app/entities/caja/caja.service';
 
 @Component({
   selector: 'jhi-caja-delete-dialog',

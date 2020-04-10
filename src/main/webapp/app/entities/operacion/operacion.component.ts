@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IOperacion } from 'app/shared/model/operacion.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { OperacionService } from './operacion.service';
+import { OperacionService } from 'app/entities/operacion/operacion.service';
 
 @Component({
   selector: 'jhi-operacion',

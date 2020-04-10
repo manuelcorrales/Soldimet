@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITarjeta, Tarjeta } from 'app/shared/model/tarjeta.model';
-import { TarjetaService } from './tarjeta.service';
+import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
 
 @Component({
   selector: 'jhi-tarjeta-update',

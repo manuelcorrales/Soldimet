@@ -6,11 +6,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { PedidoRepuestoService } from './pedido-repuesto.service';
-import { PedidoRepuestoComponent } from './pedido-repuesto.component';
-import { PedidoRepuestoDetailComponent } from './pedido-repuesto-detail.component';
-import { PedidoRepuestoUpdateComponent } from './pedido-repuesto-update.component';
-import { PedidoRepuestoDeletePopupComponent } from './pedido-repuesto-delete-dialog.component';
+import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
+import { PedidoRepuestoComponent } from 'app/entities/pedido-repuesto/pedido-repuesto.component';
+import { PedidoRepuestoDetailComponent } from 'app/entities/pedido-repuesto/pedido-repuesto-detail.component';
+import { PedidoRepuestoUpdateComponent } from 'app/entities/pedido-repuesto/pedido-repuesto-update.component';
+import { PedidoRepuestoDeletePopupComponent } from 'app/entities/pedido-repuesto/pedido-repuesto-delete-dialog.component';
 import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 
 @Injectable({ providedIn: 'root' })

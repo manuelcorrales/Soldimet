@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
-import { CostoRepuestoService } from './costo-repuesto.service';
-import { CostoRepuestoComponent } from './costo-repuesto.component';
-import { CostoRepuestoDetailComponent } from './costo-repuesto-detail.component';
-import { CostoRepuestoUpdateComponent } from './costo-repuesto-update.component';
-import { CostoRepuestoDeletePopupComponent } from './costo-repuesto-delete-dialog.component';
+import { CostoRepuestoService } from 'app/entities/costo-repuesto/costo-repuesto.service';
+import { CostoRepuestoComponent } from 'app/entities/costo-repuesto/costo-repuesto.component';
+import { CostoRepuestoDetailComponent } from 'app/entities/costo-repuesto/costo-repuesto-detail.component';
+import { CostoRepuestoUpdateComponent } from 'app/entities/costo-repuesto/costo-repuesto-update.component';
+import { CostoRepuestoDeletePopupComponent } from 'app/entities/costo-repuesto/costo-repuesto-delete-dialog.component';
 import { ICostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 
 @Injectable({ providedIn: 'root' })

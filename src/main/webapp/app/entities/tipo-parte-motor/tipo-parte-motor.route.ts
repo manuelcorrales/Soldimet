@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { TipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
-import { TipoParteMotorService } from './tipo-parte-motor.service';
-import { TipoParteMotorComponent } from './tipo-parte-motor.component';
-import { TipoParteMotorDetailComponent } from './tipo-parte-motor-detail.component';
-import { TipoParteMotorUpdateComponent } from './tipo-parte-motor-update.component';
-import { TipoParteMotorDeletePopupComponent } from './tipo-parte-motor-delete-dialog.component';
+import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
+import { TipoParteMotorComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor.component';
+import { TipoParteMotorDetailComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor-detail.component';
+import { TipoParteMotorUpdateComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor-update.component';
+import { TipoParteMotorDeletePopupComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor-delete-dialog.component';
 import { ITipoParteMotor } from 'app/shared/model/tipo-parte-motor.model';
 
 @Injectable({ providedIn: 'root' })

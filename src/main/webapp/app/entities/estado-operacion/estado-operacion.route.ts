@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { EstadoOperacion } from 'app/shared/model/estado-operacion.model';
-import { EstadoOperacionService } from './estado-operacion.service';
-import { EstadoOperacionComponent } from './estado-operacion.component';
-import { EstadoOperacionDetailComponent } from './estado-operacion-detail.component';
-import { EstadoOperacionUpdateComponent } from './estado-operacion-update.component';
-import { EstadoOperacionDeletePopupComponent } from './estado-operacion-delete-dialog.component';
+import { EstadoOperacionService } from 'app/entities/estado-operacion/estado-operacion.service';
+import { EstadoOperacionComponent } from 'app/entities/estado-operacion/estado-operacion.component';
+import { EstadoOperacionDetailComponent } from 'app/entities/estado-operacion/estado-operacion-detail.component';
+import { EstadoOperacionUpdateComponent } from 'app/entities/estado-operacion/estado-operacion-update.component';
+import { EstadoOperacionDeletePopupComponent } from 'app/entities/estado-operacion/estado-operacion-delete-dialog.component';
 import { IEstadoOperacion } from 'app/shared/model/estado-operacion.model';
 
 @Injectable({ providedIn: 'root' })

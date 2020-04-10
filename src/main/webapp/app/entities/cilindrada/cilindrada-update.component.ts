@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ICilindrada, Cilindrada } from 'app/shared/model/cilindrada.model';
-import { CilindradaService } from './cilindrada.service';
+import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
 
 @Component({
   selector: 'jhi-cilindrada-update',

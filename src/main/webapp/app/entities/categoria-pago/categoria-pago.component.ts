@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICategoriaPago } from 'app/shared/model/categoria-pago.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { CategoriaPagoService } from './categoria-pago.service';
+import { CategoriaPagoService } from 'app/entities/categoria-pago/categoria-pago.service';
 
 @Component({
   selector: 'jhi-categoria-pago',

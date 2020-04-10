@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { MovimientoPedido } from 'app/shared/model/movimiento-pedido.model';
-import { MovimientoPedidoService } from './movimiento-pedido.service';
-import { MovimientoPedidoComponent } from './movimiento-pedido.component';
-import { MovimientoPedidoDetailComponent } from './movimiento-pedido-detail.component';
-import { MovimientoPedidoUpdateComponent } from './movimiento-pedido-update.component';
-import { MovimientoPedidoDeletePopupComponent } from './movimiento-pedido-delete-dialog.component';
+import { MovimientoPedidoService } from 'app/entities/movimiento-pedido/movimiento-pedido.service';
+import { MovimientoPedidoComponent } from 'app/entities/movimiento-pedido/movimiento-pedido.component';
+import { MovimientoPedidoDetailComponent } from 'app/entities/movimiento-pedido/movimiento-pedido-detail.component';
+import { MovimientoPedidoUpdateComponent } from 'app/entities/movimiento-pedido/movimiento-pedido-update.component';
+import { MovimientoPedidoDeletePopupComponent } from 'app/entities/movimiento-pedido/movimiento-pedido-delete-dialog.component';
 import { IMovimientoPedido } from 'app/shared/model/movimiento-pedido.model';
 
 @Injectable({ providedIn: 'root' })

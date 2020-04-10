@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ISucursal } from 'app/shared/model/sucursal.model';
-import { SucursalService } from './sucursal.service';
+import { SucursalService } from 'app/entities/sucursal/sucursal.service';
 
 @Component({
   selector: 'jhi-sucursal-delete-dialog',

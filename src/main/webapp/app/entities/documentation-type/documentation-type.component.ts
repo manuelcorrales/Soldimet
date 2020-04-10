@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IDocumentationType } from 'app/shared/model/documentation-type.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { DocumentationTypeService } from './documentation-type.service';
+import { DocumentationTypeService } from 'app/entities/documentation-type/documentation-type.service';
 
 @Component({
   selector: 'jhi-documentation-type',

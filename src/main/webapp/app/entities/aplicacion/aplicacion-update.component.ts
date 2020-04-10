@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IAplicacion, Aplicacion } from 'app/shared/model/aplicacion.model';
-import { AplicacionService } from './aplicacion.service';
+import { AplicacionService } from 'app/entities/aplicacion/aplicacion.service';
 import { IMotor } from 'app/shared/model/motor.model';
 import { MotorService } from 'app/entities/motor/motor.service';
 
