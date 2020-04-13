@@ -3,9 +3,10 @@
         Cliente
     </div>
     <div class="card-body" style="padding-top: 0px;">
-        <input type="text" placeholder="Buscar cliente" [(ngModel)]="clienteElegido" [resultFormatter]="formatterCli" id="typeahead-focusCli"
-            type="text" class="form-control" [ngbTypeahead]="searchCli" (focus)="focusCli$.next($event.target.value)" (click)="clickCli$.next($event.target.value)"
-            #instanceNTACli="ngbTypeahead" [inputFormatter]="formatterCli" />
+        <input type="text" placeholder="Buscar cliente" [(ngModel)]="clienteElegido" [resultFormatter]="formatterCliente"
+            id="typeahead-focusCliente" type="text" class="form-control" [ngbTypeahead]="searchCliente" (focus)="focusCliente$.next($event.target.value)"
+            (click)="clickCliente$.next($event.target.value)" #instanceNTACliente="ngbTypeahead" [inputFormatter]="formatterCliente"
+            name="cliente_search"/>
         <div class="row" *ngIf="clienteElegido?.persona" style="padding-top: 15px;">
             <div class="col">
                 <span [routerLink]="['/persona', clienteElegido.persona?.id]"><strong>Nombre:</strong> {{clienteElegido.persona?.nombre}},{{clienteElegido.persona?.apellido}}</span>

@@ -16,10 +16,10 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
   clientes: Cliente[] = [];
   clienteElegido: Cliente;
 
-  @ViewChild('instanceNTACli', { static: false })
-  instanceCli: NgbTypeahead;
-  focusCli$ = new Subject<string>();
-  clickCli$ = new Subject<string>();
+  @ViewChild('instanceNTACliente', { static: false })
+  instanceCliente: NgbTypeahead;
+  focusCliente$ = new Subject<string>();
+  clickCliente$ = new Subject<string>();
 
   constructor(
     private _presupuestosService: PresupuestosService,
@@ -37,22 +37,24 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
     });
   }
 
-  formatterCli = (result: Cliente) => result.persona.nombre + ' ' + result.persona.apellido;
-  searchCli = (text$: Observable<string>) => {
+  formatterCliente = (result: Cliente) => result.persona.nombre + ' ' + result.persona.apellido;
+  searchCliente = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(
       debounceTime(200),
       distinctUntilChanged()
     );
-    const clicksWithClosedPopup$ = this.clickCli$.pipe(filter(() => !this.instanceCli.isPopupOpen()));
-    const inputFocus$ = this.focusCli$;
+    const clicksWithClosedPopup$ = this.clickCliente$.pipe(filter(() => !this.instanceCliente.isPopupOpen()));
+    const inputFocus$ = this.focusCliente$;
 
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term =>
         (term === ''
           ? this.clientes
-          : this.clientes.filter(v => {
-              v.persona.nombre.toLowerCase().includes(term.toLowerCase()) || v.persona.apellido.toLowerCase().includes(term.toLowerCase());
-            })
+          : // es-lint-ignore-next-line prefer-includes
+            this.clientes.filter(
+              v =>
+                v.persona.nombre.toLowerCase().includes(term.toLowerCase()) || v.persona.apellido.toLowerCase().includes(term.toLowerCase())
+            )
         )
           .slice(0, 10)
           .sort(this._sortCliente)
