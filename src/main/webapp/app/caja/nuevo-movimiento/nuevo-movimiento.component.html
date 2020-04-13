@@ -86,9 +86,13 @@
                         <p>Cliente </p>
                         <label>{{presupuesto.cliente}} </label>
                     </div>
-                    <div *ngIf="presupuesto" class="col">
+                    <div *ngIf="presupuesto?.motor" class="col">
                         <p>Motor </p>
                         <label>{{presupuesto.motor}} </label>
+                    </div>
+                    <div *ngIf="presupuesto?.isSoldadura" class="col">
+                        <p>Detalle </p>
+                        <label>Soldadura</label>
                     </div>
                     <div *ngIf="presupuesto" class="col">
                         <p>Importe </p>
@@ -99,7 +103,7 @@
                         <label>{{presupuesto.fecha}} </label>
                     </div>
                 </div>
-                <div *ngIf="costoRepuestos" class="container-fluid">
+                <div *ngIf="costoRepuestos && costoRepuestos.length > 0 && !presupuesto?.isSoldadura" class="container-fluid">
                     <label>Repuestos</label>
                     <div class="row">
                         <div class="col-md-3" *ngFor="let costoRepuesto of costoRepuestos">

@@ -92,6 +92,7 @@
             <column name="fecha_entregado" type="date"/>
             <column name="importe_total" type="numeric"/>
             <column name="observaciones" type="string"/>
+            <column name="soldadura" type="boolean"/>
             <column name="cliente_id" type="numeric"/>
             <column name="estado_presupuesto_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->

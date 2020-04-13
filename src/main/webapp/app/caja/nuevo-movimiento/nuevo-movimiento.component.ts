@@ -205,7 +205,9 @@ export class NuevoMovimientoComponent implements OnInit {
     );
   };
 
-  formatterPresup = result => `${result.cliente} - ${result.motor}`;
+  formatterPresup = result => {
+    return result.isSoldadura ? `${result.cliente} - Soldadura` : `${result.cliente} - ${result.motor}`;
+  };
   searchPresup = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(
       debounceTime(200),

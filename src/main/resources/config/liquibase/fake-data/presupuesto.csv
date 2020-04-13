@@ -1,11 +1,11 @@
-id;descripcion_descuento;descuento;fecha_creacion;fecha_aceptado;fecha_entregado;importe_total;observaciones;cliente_id;estado_presupuesto_id
-1;microchip;84812;2019-09-19;2019-09-18;2019-09-18;87644;withdrawal circuit;1;1
-2;generating frictionless solution-oriented;37969;2019-09-18;2019-09-18;2019-09-19;26806;Money Market Account users Guinea;2;2
-3;SQL lavender;97454;2019-09-18;2019-09-18;2019-09-18;11423;Missouri Agent Squares;3;3
-4;supply-chains;2246;2019-09-18;2019-09-18;2019-09-18;54163;withdrawal Down-sized Metal;4;4
-5;methodologies Granite Corporate;69122;2019-09-18;2019-09-18;2019-09-19;82258;Bouvet Island (Bouvetoya) generating Bedfordshire;5;5
-6;India;65142;2019-09-18;2019-09-18;2019-09-18;20642;Games;6;6
-7;tertiary;26649;2019-09-18;2019-09-18;2019-09-18;25073;payment Bedfordshire;7;7
-8;Internal niches;38313;2019-09-18;2019-09-18;2019-09-18;4696;Chips microchip;8;8
-9;Generic;77098;2019-09-18;2019-09-18;2019-09-18;83707;action-items;9;9
-10;monitor methodology West Virginia;47605;2019-09-18;2019-09-18;2019-09-18;93682;sensor;10;10
+id;descripcion_descuento;descuento;fecha_creacion;fecha_aceptado;fecha_entregado;importe_total;observaciones;soldadura;cliente_id;estado_presupuesto_id
+1;mobile Fish;77969;2020-04-13;2020-04-13;2020-04-13;44583;Small;false;1;1
+2;seamless Metal deposit;5641;2020-04-12;2020-04-12;2020-04-12;93855;Electronics;true;2;2
+3;Money Market Account;61165;2020-04-13;2020-04-13;2020-04-13;2306;Namibia;false;3;3
+4;Gorgeous Frozen Pants;23277;2020-04-13;2020-04-13;2020-04-12;61838;syndicate;true;4;4
+5;Canyon HDD;68030;2020-04-13;2020-04-13;2020-04-13;1326;Usability South Dakota envisioneer;false;5;5
+6;Public-key;24102;2020-04-13;2020-04-12;2020-04-13;60999;backing up Salad;false;6;6
+7;TunaX;75536;2020-04-13;2020-04-13;2020-04-13;20794;Georgia Industrial;true;7;7
+8;Views e-enable Communications;72727;2020-04-12;2020-04-13;2020-04-13;57044;Aruba;true;8;8
+9;navigating;74732;2020-04-13;2020-04-13;2020-04-12;58675;Specialist Home Loan Account;false;9;9
+10;scalable;16526;2020-04-13;2020-04-13;2020-04-12;42340;reinvent 24 hour Jewelery;false;10;10

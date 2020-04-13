@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IPresupuesto, Presupuesto } from 'app/shared/model/presupuesto.model';
-import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
+import { PresupuestoService } from './presupuesto.service';
 import { ICliente } from 'app/shared/model/cliente.model';
 import { ClienteService } from 'app/entities/cliente/cliente.service';
 import { IEstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
@@ -45,6 +45,7 @@ export class PresupuestoUpdateComponent implements OnInit {
     fechaEntregado: [],
     importeTotal: [null, [Validators.required, Validators.min(0)]],
     observaciones: [],
+    soldadura: [],
     cliente: [null, Validators.required],
     estadoPresupuesto: [null, Validators.required],
     documentType: [],
@@ -107,6 +108,7 @@ export class PresupuestoUpdateComponent implements OnInit {
       fechaEntregado: presupuesto.fechaEntregado,
       importeTotal: presupuesto.importeTotal,
       observaciones: presupuesto.observaciones,
+      soldadura: presupuesto.soldadura,
       cliente: presupuesto.cliente,
       estadoPresupuesto: presupuesto.estadoPresupuesto,
       documentType: presupuesto.documentType,
@@ -139,6 +141,7 @@ export class PresupuestoUpdateComponent implements OnInit {
       fechaEntregado: this.editForm.get(['fechaEntregado']).value,
       importeTotal: this.editForm.get(['importeTotal']).value,
       observaciones: this.editForm.get(['observaciones']).value,
+      soldadura: this.editForm.get(['soldadura']).value,
       cliente: this.editForm.get(['cliente']).value,
       estadoPresupuesto: this.editForm.get(['estadoPresupuesto']).value,
       documentType: this.editForm.get(['documentType']).value,

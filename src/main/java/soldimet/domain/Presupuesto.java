@@ -75,6 +75,9 @@ public class Presupuesto implements Serializable {
     @JsonIgnoreProperties("presupuestos")
     private Sucursal sucursal;
 
+    @Column(name = "soldadura")
+    private Boolean soldadura;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -176,6 +179,19 @@ public class Presupuesto implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public Boolean isSoldadura() {
+        return soldadura;
+    }
+
+    public Presupuesto soldadura(Boolean soldadura) {
+        this.soldadura = soldadura;
+        return this;
+    }
+
+    public void setSoldadura(Boolean soldadura) {
+        this.soldadura = soldadura;
     }
 
     public Cliente getCliente() {
@@ -319,6 +335,7 @@ public class Presupuesto implements Serializable {
             ", fechaEntregado='" + getFechaEntregado() + "'" +
             ", importeTotal=" + getImporteTotal() +
             ", observaciones='" + getObservaciones() + "'" +
+            ", soldadura='" + isSoldadura() + "'" +
             "}";
     }
 }

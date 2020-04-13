@@ -21,6 +21,7 @@ public class DTOPresupuesto {
     private String motor;
     private double importe;
     private String sucursal;
+    private Boolean isSoldadura;
 
     public DTOPresupuesto() {
     }
@@ -79,5 +80,19 @@ public class DTOPresupuesto {
 
     public void setSucursal(String sucursal) {
         this.sucursal = sucursal;
+    }
+
+    /**
+     * @return the isSoldadura
+     */
+    public Boolean getIsSoldadura() {
+        return isSoldadura;
+    }
+
+    /**
+     * @param isSoldadura the isSoldadura to set
+     */
+    public void setIsSoldadura(Boolean isSoldadura) {
+        this.isSoldadura = isSoldadura;
     }
 }

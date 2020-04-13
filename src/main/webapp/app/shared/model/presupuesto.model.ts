@@ -14,6 +14,7 @@ export interface IPresupuesto {
   fechaEntregado?: Moment;
   importeTotal?: number;
   observaciones?: string;
+  soldadura?: boolean;
   cliente?: ICliente;
   estadoPresupuesto?: IEstadoPresupuesto;
   detallePresupuestos?: IDetallePresupuesto[];
@@ -31,10 +32,13 @@ export class Presupuesto implements IPresupuesto {
     public fechaEntregado?: Moment,
     public importeTotal?: number,
     public observaciones?: string,
+    public soldadura?: boolean,
     public cliente?: ICliente,
     public estadoPresupuesto?: IEstadoPresupuesto,
     public detallePresupuestos?: IDetallePresupuesto[],
     public documentType?: IDocumentationType,
     public sucursal?: ISucursal
-  ) {}
+  ) {
+    this.soldadura = this.soldadura || false;
+  }
 }

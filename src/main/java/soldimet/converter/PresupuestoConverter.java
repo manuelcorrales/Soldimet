@@ -18,7 +18,12 @@ public class PresupuestoConverter {
         dtoPresupuesto.setEstado(presupuesto.getEstadoPresupuesto().getNombreEstado());
         dtoPresupuesto.setFecha(presupuesto.getFechaCreacion());
         dtoPresupuesto.setImporte(presupuesto.getImporteTotal());
-        dtoPresupuesto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
+        if (presupuesto.isSoldadura()) {
+            dtoPresupuesto.setIsSoldadura(presupuesto.isSoldadura());
+            dtoPresupuesto.setMotor("");
+        } else {
+            dtoPresupuesto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
+        }
         dtoPresupuesto.setSucursal(presupuesto.getSucursal().getNombreSucursal());
         return dtoPresupuesto;
     }

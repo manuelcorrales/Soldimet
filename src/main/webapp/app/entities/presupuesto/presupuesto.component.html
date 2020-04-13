@@ -25,6 +25,7 @@
             <th jhiSortBy="fechaEntregado"><span>Fecha Entregado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="importeTotal"><span>Importe Total</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="soldadura"><span>Soldadura</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="cliente.apellido"><span>Cliente</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estadoPresupuesto.nombreEstado"><span>Estado Presupuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="documentType.documentName"><span>Document Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -42,6 +43,7 @@
                 <td>{{presupuesto.fechaEntregado | date:'mediumDate'}}</td>
                 <td>{{presupuesto.importeTotal}}</td>
                 <td>{{presupuesto.observaciones}}</td>
+                <td>{{presupuesto.soldadura}}</td>
                 <td>
                     <div *ngIf="presupuesto.cliente">
                         <a [routerLink]="['/cliente', presupuesto.cliente?.id, 'view' ]" >{{presupuesto.cliente?.apellido}}</a>

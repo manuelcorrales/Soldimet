@@ -69,6 +69,9 @@ public class PresupuestoResourceIT {
     private static final String DEFAULT_OBSERVACIONES = "AAAAAAAAAA";
     private static final String UPDATED_OBSERVACIONES = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_SOLDADURA = false;
+    private static final Boolean UPDATED_SOLDADURA = true;
+
     @Autowired
     private PresupuestoRepository presupuestoRepository;
 
@@ -123,7 +126,8 @@ public class PresupuestoResourceIT {
             .fechaAceptado(DEFAULT_FECHA_ACEPTADO)
             .fechaEntregado(DEFAULT_FECHA_ENTREGADO)
             .importeTotal(DEFAULT_IMPORTE_TOTAL)
-            .observaciones(DEFAULT_OBSERVACIONES);
+            .observaciones(DEFAULT_OBSERVACIONES)
+            .soldadura(DEFAULT_SOLDADURA);
         // Add required entity
         Cliente cliente;
         if (TestUtil.findAll(em, Cliente.class).isEmpty()) {
@@ -160,7 +164,8 @@ public class PresupuestoResourceIT {
             .fechaAceptado(UPDATED_FECHA_ACEPTADO)
             .fechaEntregado(UPDATED_FECHA_ENTREGADO)
             .importeTotal(UPDATED_IMPORTE_TOTAL)
-            .observaciones(UPDATED_OBSERVACIONES);
+            .observaciones(UPDATED_OBSERVACIONES)
+            .soldadura(UPDATED_SOLDADURA);
         // Add required entity
         Cliente cliente;
         if (TestUtil.findAll(em, Cliente.class).isEmpty()) {
@@ -211,6 +216,7 @@ public class PresupuestoResourceIT {
         assertThat(testPresupuesto.getFechaEntregado()).isEqualTo(DEFAULT_FECHA_ENTREGADO);
         assertThat(testPresupuesto.getImporteTotal()).isEqualTo(DEFAULT_IMPORTE_TOTAL);
         assertThat(testPresupuesto.getObservaciones()).isEqualTo(DEFAULT_OBSERVACIONES);
+        assertThat(testPresupuesto.isSoldadura()).isEqualTo(DEFAULT_SOLDADURA);
     }
 
     @Test
@@ -286,7 +292,8 @@ public class PresupuestoResourceIT {
             .andExpect(jsonPath("$.[*].fechaAceptado").value(hasItem(DEFAULT_FECHA_ACEPTADO.toString())))
             .andExpect(jsonPath("$.[*].fechaEntregado").value(hasItem(DEFAULT_FECHA_ENTREGADO.toString())))
             .andExpect(jsonPath("$.[*].importeTotal").value(hasItem(DEFAULT_IMPORTE_TOTAL.doubleValue())))
-            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES.toString())));
+            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES.toString())))
+            .andExpect(jsonPath("$.[*].soldadura").value(hasItem(DEFAULT_SOLDADURA.booleanValue())));
     }
     
     @Test
@@ -306,7 +313,8 @@ public class PresupuestoResourceIT {
             .andExpect(jsonPath("$.fechaAceptado").value(DEFAULT_FECHA_ACEPTADO.toString()))
             .andExpect(jsonPath("$.fechaEntregado").value(DEFAULT_FECHA_ENTREGADO.toString()))
             .andExpect(jsonPath("$.importeTotal").value(DEFAULT_IMPORTE_TOTAL.doubleValue()))
-            .andExpect(jsonPath("$.observaciones").value(DEFAULT_OBSERVACIONES.toString()));
+            .andExpect(jsonPath("$.observaciones").value(DEFAULT_OBSERVACIONES.toString()))
+            .andExpect(jsonPath("$.soldadura").value(DEFAULT_SOLDADURA.booleanValue()));
     }
 
     @Test
@@ -849,6 +857,45 @@ public class PresupuestoResourceIT {
 
     @Test
     @Transactional
+    public void getAllPresupuestosBySoldaduraIsEqualToSomething() throws Exception {
+        // Initialize the database
+        presupuestoRepository.saveAndFlush(presupuesto);
+
+        // Get all the presupuestoList where soldadura equals to DEFAULT_SOLDADURA
+        defaultPresupuestoShouldBeFound("soldadura.equals=" + DEFAULT_SOLDADURA);
+
+        // Get all the presupuestoList where soldadura equals to UPDATED_SOLDADURA
+        defaultPresupuestoShouldNotBeFound("soldadura.equals=" + UPDATED_SOLDADURA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPresupuestosBySoldaduraIsInShouldWork() throws Exception {
+        // Initialize the database
+        presupuestoRepository.saveAndFlush(presupuesto);
+
+        // Get all the presupuestoList where soldadura in DEFAULT_SOLDADURA or UPDATED_SOLDADURA
+        defaultPresupuestoShouldBeFound("soldadura.in=" + DEFAULT_SOLDADURA + "," + UPDATED_SOLDADURA);
+
+        // Get all the presupuestoList where soldadura equals to UPDATED_SOLDADURA
+        defaultPresupuestoShouldNotBeFound("soldadura.in=" + UPDATED_SOLDADURA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPresupuestosBySoldaduraIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        presupuestoRepository.saveAndFlush(presupuesto);
+
+        // Get all the presupuestoList where soldadura is not null
+        defaultPresupuestoShouldBeFound("soldadura.specified=true");
+
+        // Get all the presupuestoList where soldadura is null
+        defaultPresupuestoShouldNotBeFound("soldadura.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllPresupuestosByClienteIsEqualToSomething() throws Exception {
         // Get already existing entity
         Cliente cliente = presupuesto.getCliente();
@@ -952,7 +999,8 @@ public class PresupuestoResourceIT {
             .andExpect(jsonPath("$.[*].fechaAceptado").value(hasItem(DEFAULT_FECHA_ACEPTADO.toString())))
             .andExpect(jsonPath("$.[*].fechaEntregado").value(hasItem(DEFAULT_FECHA_ENTREGADO.toString())))
             .andExpect(jsonPath("$.[*].importeTotal").value(hasItem(DEFAULT_IMPORTE_TOTAL.doubleValue())))
-            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
+            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)))
+            .andExpect(jsonPath("$.[*].soldadura").value(hasItem(DEFAULT_SOLDADURA.booleanValue())));
 
         // Check, that the count call also returns 1
         restPresupuestoMockMvc.perform(get("/api/presupuestos/count?sort=id,desc&" + filter))
@@ -1006,7 +1054,8 @@ public class PresupuestoResourceIT {
             .fechaAceptado(UPDATED_FECHA_ACEPTADO)
             .fechaEntregado(UPDATED_FECHA_ENTREGADO)
             .importeTotal(UPDATED_IMPORTE_TOTAL)
-            .observaciones(UPDATED_OBSERVACIONES);
+            .observaciones(UPDATED_OBSERVACIONES)
+            .soldadura(UPDATED_SOLDADURA);
 
         restPresupuestoMockMvc.perform(put("/api/presupuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -1024,6 +1073,7 @@ public class PresupuestoResourceIT {
         assertThat(testPresupuesto.getFechaEntregado()).isEqualTo(UPDATED_FECHA_ENTREGADO);
         assertThat(testPresupuesto.getImporteTotal()).isEqualTo(UPDATED_IMPORTE_TOTAL);
         assertThat(testPresupuesto.getObservaciones()).isEqualTo(UPDATED_OBSERVACIONES);
+        assertThat(testPresupuesto.isSoldadura()).isEqualTo(UPDATED_SOLDADURA);
     }
 
     @Test

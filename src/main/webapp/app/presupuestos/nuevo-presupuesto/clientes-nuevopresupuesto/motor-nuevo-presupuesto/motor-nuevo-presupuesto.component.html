@@ -4,11 +4,26 @@
     </div>
     <div class="card-body" style="padding-top: 0px;">
         <div class="row">
+            <!--Seleccion Soldadura-->
+            <div class="col">
+                <p class="form-control-label"><strong>Presupuestar: </strong></p>
+                <div class="d-inline">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" required type="radio" [disabled]="detalleCreado" name="quePresupuestar" (click)="soloSoldadura(true)">
+                        <label class="form-check-label">Soldadura</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" required type="radio" [disabled]="detalleCreado" name="quePresupuestar" (click)="soloSoldadura(false)">
+                        <label class="form-check-label">Motor</label>
+                    </div>
+                </div>
+            </div>
+
             <!-- Seleccion Motores-->
             <div class="form-group col">
                 <p class="form-control-label"><strong>Motor:</strong> </p>
-                <select class="custom-select" [(ngModel)]="motor" required name="motor" (change)="buscarAplicaciones()" [disabled]="detalleCreado">
-                    <span disabled *ngIf="detalleCreado"></span>
+                <select class="custom-select" [(ngModel)]="motor" name="motor" (change)="buscarAplicaciones()" [disabled]="detalleCreado || isSoldadura">
+                    <span disabled *ngIf="detalleCreado || isSoldadura"></span>
                     <option selected disabled>Elija un motor</option>
                     <option *ngFor="let motor of motores" [ngValue]="motor">
                         {{motor?.marcaMotor}}
@@ -18,7 +33,7 @@
             <!-- Seleccion Aplicacion-->
             <div class="form-group col">
                 <p class="form-control-label"><strong>Aplicación:</strong> </p>
-                <select class="custom-select" [(ngModel)]="aplicacion" required name="aplicacion" [disabled]="detalleCreado">
+                <select class="custom-select" [(ngModel)]="aplicacion" name="aplicacion" [disabled]="detalleCreado || isSoldadura">
                     <span disabled *ngIf="detalleCreado"></span>
                     <option selected disabled>Elija una aplicación</option>
                     <option *ngFor="let aplicacion of aplicaciones" [ngValue]="aplicacion">
@@ -31,18 +46,18 @@
                 <p class="form-control-label"><strong>Cilindrada: </strong></p>
                 <div class="d-inline">
                     <div class="form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
-                        <input class="form-check-input" required type="radio" [value]="cilindrada" name="cilindradaElegida" [(ngModel)]="cilindradaElegida"
-                            [disabled]="detalleCreado">
+                        <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida" [(ngModel)]="cilindradaElegida"
+                            [disabled]="detalleCreado || isSoldadura">
                         <label class="form-check-label"> {{cilindrada?.cantidadDeCilindros}} cilindros</label>
                     </div>
                 </div>
             </div>
             <!--Seleccion Tipo partes-->
             <div class="col">
-                <p class="form-control-label"><strong>Presupuestar:</strong></p>
+                <p class="form-control-label"><strong>Tipo:</strong></p>
                 <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
                     <label class="form-check-label" style="padding-left: 1px">
-                        <input type="checkbox" class="form-check-input" required (change)="crearDetalle(tipoParte, $event.target.checked)"> {{tipoParte?.nombreTipoParteMotor}}
+                        <input type="checkbox" class="form-check-input" [disabled]="isSoldadura" (change)="crearDetalle(tipoParte, $event.target.checked)"> {{tipoParte?.nombreTipoParteMotor}}
                     </label>
                 </div>
             </div>

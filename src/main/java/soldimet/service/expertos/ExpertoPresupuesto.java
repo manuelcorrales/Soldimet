@@ -365,7 +365,6 @@ public class ExpertoPresupuesto {
                 nuevoDetallePedido.setEstadoDetallePedido(estadoPendiente);
                 nuevoPedido.getDetallePedidos().add(nuevoDetallePedido);
             }
-
         }
         pedidoRepuestoRepository.save(nuevoPedido);
         return presupuesto;
@@ -451,7 +450,7 @@ public class ExpertoPresupuesto {
         Boolean puedeTerminar = false;
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
-        if (pedido.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO)) {
+        if (pedido == null || pedido.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO)) {
             puedeTerminar = true;
         }
         return puedeTerminar;

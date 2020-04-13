@@ -28,7 +28,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Número</th>
-                        <th scope="col">Motor</th>
+                        <th scope="col">Detalle</th>
                         <th scope="col">cliente</th>
                         <th scope="col">Importe</th>
                         <th scope="col">Fecha</th>
@@ -41,7 +41,8 @@
                     <tr *ngFor="let presupuesto of presupuestos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
                     >
                         <th>{{presupuesto.codigo}}</th>
-                        <td>{{presupuesto.motor}}</td>
+                        <span *ngIf="presupuesto.isSoldadura"><td>Soldadura</td></span>
+                        <span *ngIf="!presupuesto.isSoldadura"><td>{{presupuesto.motor}}</td></span>
                         <td>{{presupuesto.cliente}} </td>
                         <td>${{presupuesto.importe | number:'1.2-2'}}</td>
                         <td>{{presupuesto.fecha}}</td>
@@ -77,10 +78,12 @@
                             <button class="btn btn-outline-secondary" placement="top" [routerLink]="['/presupuestos', presupuesto.codigo, 'ver' ]" ngbTooltip="Ver">
                                 <fa-icon icon="eye"></fa-icon>
                             </button>
+                            <span *ngIf="!presupuesto?.isSoldadura">
                             <button *featureToggle="'enableImprimir'" class="btn btn-outline-dark" (click)="imprimir(presupuesto)" placement="top" [disabled]="imprimiendo"
                                 ngbTooltip="Imprimir">
                                 <fa-icon icon="print"></fa-icon>
                             </button>
+                            </span>
                             <button class="btn btn-outline-success" *ngIf="presupuesto.estado == 'Creado'" (click)="aceptarPresupuesto(presupuesto)" placement="top"
                                 ngbTooltip="Aceptar presupuesto">
                                 <fa-icon icon="check"></fa-icon>

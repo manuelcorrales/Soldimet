@@ -8,7 +8,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "apellido"
+            "otherEntityField": "apellido",
+            "otherEntityRelationshipName": "presupuesto"
         },
         {
             "relationshipName": "estadoPresupuesto",
@@ -17,7 +18,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreEstado"
+            "otherEntityField": "nombreEstado",
+            "otherEntityRelationshipName": "presupuesto"
         },
         {
             "relationshipName": "detallePresupuesto",
@@ -29,13 +31,15 @@
             "relationshipName": "documentType",
             "otherEntityName": "documentationType",
             "relationshipType": "many-to-one",
-            "otherEntityField": "documentName"
+            "otherEntityField": "documentName",
+            "otherEntityRelationshipName": "presupuesto"
         },
         {
             "relationshipName": "sucursal",
             "otherEntityName": "sucursal",
             "relationshipType": "many-to-one",
-            "otherEntityField": "nombreSucursal"
+            "otherEntityField": "nombreSucursal",
+            "otherEntityRelationshipName": "presupuesto"
         }
     ],
     "fields": [
@@ -79,6 +83,11 @@
         {
             "fieldName": "observaciones",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "soldadura",
+            "fieldType": "Boolean",
+            "fieldValidateRules": []
         }
     ],
     "changelogDate": "20171214020915",
@@ -86,6 +95,7 @@
     "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "presupuesto",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination"
 }

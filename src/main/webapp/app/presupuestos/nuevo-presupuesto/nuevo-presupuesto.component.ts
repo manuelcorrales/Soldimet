@@ -69,6 +69,7 @@ export class NuevoPresupuestoComponent implements OnInit {
         this.registerChangeInPresupuestos();
       } else {
         this.presupuesto = new Presupuesto();
+        this.presupuesto.soldadura = false;
         this.presupuesto.importeTotal = 0;
       }
     });
@@ -85,9 +86,12 @@ export class NuevoPresupuestoComponent implements OnInit {
   }
 
   guardarPresupuesto() {
-    this.completarDetalles();
+    if (!this.presupuesto.soldadura) {
+      // Si es soldadura no va a tener detalles
+      this.completarDetalles();
+      this.presupuesto.detallePresupuestos = this.detallesPresupuestos;
+    }
     this.presupuesto.cliente = this.clientesComponent.getCliente();
-    this.presupuesto.detallePresupuestos = this.detallesPresupuestos;
     this.presupuesto.fechaCreacion = moment(this.fecha);
     this.presupuestosService.buscarEstadoCreado().subscribe(estado => {
       this.presupuesto.estadoPresupuesto = estado;
@@ -126,6 +130,11 @@ export class NuevoPresupuestoComponent implements OnInit {
 
   private onError(error: any) {
     this.jhiAlertService.error(error.message, null, null);
+  }
+
+  @Input()
+  recibirIsSoldadura(isSoldadura: boolean) {
+    this.presupuesto.soldadura = isSoldadura;
   }
 
   @Input()
