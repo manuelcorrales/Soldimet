@@ -30,7 +30,3 @@ id,nombre_operacion,estado_operacion_id,tipo_parte_motor_id
 29,Soldar tapa,1,2
 30,Armar tapa,1,2
 31,Lavado químico,1,2
-//32,Adaptar Reten, 1,1
-//33,Pulir Cigüeñal, 1,1
-//34,Balancear Cigüeñal, 1,1
-//35,Limpieza y colocacion de tapones, 1,1
