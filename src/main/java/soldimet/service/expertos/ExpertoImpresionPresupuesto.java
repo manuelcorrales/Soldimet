@@ -46,10 +46,10 @@ import soldimet.repository.TipoRepuestoRepository;
 @Service
 public class ExpertoImpresionPresupuesto {
     /*
-    EL mapeo de donde se indica el valor de cada cosa o la cadena es directamente en el documento de word
-    acá busco cada una de las variables, las meto en el contexto indicando que referencia en el documento es
-    e imprimo y chau
-    */
+     * EL mapeo de donde se indica el valor de cada cosa o la cadena es directamente
+     * en el documento de word acá busco cada una de las variables, las meto en el
+     * contexto indicando que referencia en el documento es e imprimo y chau
+     */
 
     private final Logger log = LoggerFactory.getLogger(ExpertoImpresionPresupuesto.class);
 
@@ -62,14 +62,12 @@ public class ExpertoImpresionPresupuesto {
     @Autowired
     private Globales globales;
 
-    public File imprimirPresupuesto(Presupuesto presupuesto, Float toal, Cliente cliente)
-            throws Exception {
+    public File imprimirPresupuesto(Presupuesto presupuesto, Float toal, Cliente cliente) throws Exception {
 
         HashMap<String, String> dto = this.crearMap(presupuesto);
         File impresion = this.printWithdocx4j(dto);
         return impresion;
     }
-
 
     private File convertToPdf(File archivo) throws Exception {
 
@@ -98,7 +96,6 @@ public class ExpertoImpresionPresupuesto {
 
         documentPart.variableReplace(dtoImpresion);
 
-
         File archivo = new File("presupuesto.docx");
         FileOutputStream out = new FileOutputStream(archivo);
         wordMLPackage.save(out);
@@ -122,20 +119,44 @@ public class ExpertoImpresionPresupuesto {
         variables.put("totOp", "$" + totalOperaciones.toString());
         variables.put("observaciones", presupuesto.getObservaciones());
 
-        // List<Operacion> operacionesPresupuesto = new ArrayList<Operacion> ();
-        for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
-            for (CobranzaOperacion cobranza: detalle.getCobranzaOperacions()) {
-                String opElegida = "x" + cobranza.getOperacion().getId().toString();
-                variables.put(opElegida, "X");
+        List<Operacion> operacionesPresupuesto = new ArrayList<Operacion>();
+        for (DetallePresupuesto detalle : presupuesto.getDetallePresupuestos()) {
+            for (CobranzaOperacion cobranza : detalle.getCobranzaOperacions()) {
+                operacionesPresupuesto.add(cobranza.getOperacion());
             }
-        };
+        }
 
-        for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
-            for (CobranzaRepuesto cobranza: detalle.getCobranzaRepuestos()) {
-                String repElegido = "v" + cobranza.getTipoRepuesto().getId().toString();
-            variables.put(repElegido, "$" + cobranza.getValor().toString());
+        for (Operacion operacion : operacionRepository.findAll()) {
+            String opNoElegida = "x" + operacion.getId().toString();
+            variables.put(opNoElegida, "");
+
+            for (Operacion operacionPresupuesto : operacionesPresupuesto) {
+                if (operacion.getId().equals(operacionPresupuesto.getId())) {
+                    // SI esta presupuestada, pongo una X
+                    String opElegida = "x" + operacion.getId().toString();
+                    variables.put(opElegida, "X");
+                }
             }
-        };
+        }
+
+        List<CobranzaRepuesto> cobranzaRepuestos = new ArrayList<CobranzaRepuesto>();
+        for (DetallePresupuesto detalle : presupuesto.getDetallePresupuestos()) {
+            for (CobranzaRepuesto cobranza : detalle.getCobranzaRepuestos()) {
+                cobranzaRepuestos.add(cobranza);
+            }
+        }
+
+        for (TipoRepuesto tipoRepuesto : tipoRepuestoRepository.findAll()) {
+            String repNoElegido = "v" + tipoRepuesto.getId().toString();
+            variables.put(repNoElegido, "");
+            for (CobranzaRepuesto cobranzaRepuesto : cobranzaRepuestos) {
+                if (tipoRepuesto.getId().equals(cobranzaRepuesto.getTipoRepuesto().getId())) {
+                    // SI esta presupuestado, pongo el valor que se cobro
+                    String repElegido = "v" + tipoRepuesto.getId().toString();
+                    variables.put(repElegido, "$" + cobranzaRepuesto.getValor().toString());
+                }
+            }
+        }
 
         variables.put("v38", "");
         variables.put("v39", "");
@@ -147,78 +168,85 @@ public class ExpertoImpresionPresupuesto {
         return variables;
     }
 
-    // private File printWithXDocReport(DTOImpresion dtoImpresion) throws Exception {
-    //     InputStream in = new FileInputStream(new File(globales.reporteHtmlPath));
-    //     IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Velocity);
-    //     IContext context = report.createContext();
+    // private File printWithXDocReport(DTOImpresion dtoImpresion) throws Exception
+    // {
+    // InputStream in = new FileInputStream(new File(globales.reporteHtmlPath));
+    // IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,
+    // TemplateEngineKind.Velocity);
+    // IContext context = report.createContext();
 
-    //     context.put("dto", dtoImpresion);
+    // context.put("dto", dtoImpresion);
 
-    //     File archivo = new File("presupuesto.pdf");
-    //     FileOutputStream out = new FileOutputStream(archivo);
+    // File archivo = new File("presupuesto.pdf");
+    // FileOutputStream out = new FileOutputStream(archivo);
 
-    //     Options options = Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.XWPF).from(DocumentKind.DOCX);
-    //     report.convert(context, options, out);
-    //     out.close();
+    // Options options =
+    // Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.XWPF).from(DocumentKind.DOCX);
+    // report.convert(context, options, out);
+    // out.close();
 
-    //     return archivo;
+    // return archivo;
     // }
 
     // private DTOImpresion crearDto(Presupuesto presupuesto) {
-        //     DTOImpresion dto = new DTOImpresion();
-        //     dto.setCliente(presupuesto.getCliente().getPersona().getNombre() + " " + presupuesto.getCliente().getPersona().getApellido());
-        //     dto.setFecha(presupuesto.getFechaCreacion().toString());
-        //     dto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
-        //     dto.setAplicacion(presupuesto.getDetallePresupuestos().iterator().next().getAplicacion().getNombreAplicacion());
-        //     dto.setNumero(String.valueOf(presupuesto.getId()));
+    // DTOImpresion dto = new DTOImpresion();
+    // dto.setCliente(presupuesto.getCliente().getPersona().getNombre() + " " +
+    // presupuesto.getCliente().getPersona().getApellido());
+    // dto.setFecha(presupuesto.getFechaCreacion().toString());
+    // dto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
+    // dto.setAplicacion(presupuesto.getDetallePresupuestos().iterator().next().getAplicacion().getNombreAplicacion());
+    // dto.setNumero(String.valueOf(presupuesto.getId()));
 
-        //     List<Operacion> operaciones = new ArrayList<Operacion> ();
-        //     for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
-            //         for (CobranzaOperacion cobranza: detalle.getCobranzaOperacions()) {
-                //             operaciones.add(cobranza.getOperacion());
-                //         }
-                //     };
-                //     for (Triplet<Long,String, String> opIdtoMethod:MAP_OPERACIONES) {
-                    //         for (Operacion operacion: operaciones) {
-                        //             if (operacion.getId().equals(opIdtoMethod.getValue0())){
-                            //                 Method dtoMethodOP;
-                            //                 try {
-                                //                     dtoMethodOP = DTOImpresion.class.getMethod(opIdtoMethod.getValue1());
-                                //                     dtoMethodOP.invoke(dto, operacion.getNombreOperacion());
-                                //                     Method dtoMethodSEL = DTOImpresion.class.getMethod(opIdtoMethod.getValue2());
-                                //                     dtoMethodSEL.invoke(dto, "X");
-                                //                 } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                                    //                     // e.printStackTrace();
-                                    //                     // log.warn(e.getMessage());
-                                    //                 }
+    // List<Operacion> operaciones = new ArrayList<Operacion> ();
+    // for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
+    // for (CobranzaOperacion cobranza: detalle.getCobranzaOperacions()) {
+    // operaciones.add(cobranza.getOperacion());
+    // }
+    // };
+    // for (Triplet<Long,String, String> opIdtoMethod:MAP_OPERACIONES) {
+    // for (Operacion operacion: operaciones) {
+    // if (operacion.getId().equals(opIdtoMethod.getValue0())){
+    // Method dtoMethodOP;
+    // try {
+    // dtoMethodOP = DTOImpresion.class.getMethod(opIdtoMethod.getValue1());
+    // dtoMethodOP.invoke(dto, operacion.getNombreOperacion());
+    // Method dtoMethodSEL = DTOImpresion.class.getMethod(opIdtoMethod.getValue2());
+    // dtoMethodSEL.invoke(dto, "X");
+    // } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+    // IllegalArgumentException | InvocationTargetException e) {
+    // // e.printStackTrace();
+    // // log.warn(e.getMessage());
+    // }
 
-                                    //             }
-                                    //         }
-                                    //     }
+    // }
+    // }
+    // }
 
-                                    //     List<CobranzaRepuesto> repuestos = new ArrayList<CobranzaRepuesto> ();
-                                    //     for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
-                                        //         for (CobranzaRepuesto cobranza: detalle.getCobranzaRepuestos()) {
-                                            //             repuestos.add(cobranza);
-                                            //         }
-                                            //     };
-                                            //     for (Triplet<Long,String, String> repIdtoMethod:MAP_REPUESTOS) {
-                                                //         for (CobranzaRepuesto repuesto: repuestos) {
-                                                    //             if (repuesto.getTipoRepuesto().getId().equals(repIdtoMethod.getValue0())){
-                                                        //                 try {
-                                                            //                     Method dtoMethodOP = DTOImpresion.class.getMethod(repIdtoMethod.getValue1());
-                                                            //                     dtoMethodOP.invoke(dto, repuesto.getTipoRepuesto().getNombreTipoRepuesto());
-                                                            //                     Method dtoMethodSEL = DTOImpresion.class.getMethod(repIdtoMethod.getValue2());
-                                                            //                     dtoMethodSEL.invoke(dto, repuesto.getValor());
-                                                            //                 } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                                                                //                     // e.printStackTrace();
-                                                                //                     // log.warn(e.getMessage());
-                                                                //                 }
-                                                                //             }
-                                                                //         }
-                                                                //     }
+    // List<CobranzaRepuesto> repuestos = new ArrayList<CobranzaRepuesto> ();
+    // for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
+    // for (CobranzaRepuesto cobranza: detalle.getCobranzaRepuestos()) {
+    // repuestos.add(cobranza);
+    // }
+    // };
+    // for (Triplet<Long,String, String> repIdtoMethod:MAP_REPUESTOS) {
+    // for (CobranzaRepuesto repuesto: repuestos) {
+    // if (repuesto.getTipoRepuesto().getId().equals(repIdtoMethod.getValue0())){
+    // try {
+    // Method dtoMethodOP = DTOImpresion.class.getMethod(repIdtoMethod.getValue1());
+    // dtoMethodOP.invoke(dto, repuesto.getTipoRepuesto().getNombreTipoRepuesto());
+    // Method dtoMethodSEL =
+    // DTOImpresion.class.getMethod(repIdtoMethod.getValue2());
+    // dtoMethodSEL.invoke(dto, repuesto.getValor());
+    // } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+    // IllegalArgumentException | InvocationTargetException e) {
+    // // e.printStackTrace();
+    // // log.warn(e.getMessage());
+    // }
+    // }
+    // }
+    // }
 
-                                                                //     return dto;
-                                                                // }
+    // return dto;
+    // }
 
-                                                            }
+}
