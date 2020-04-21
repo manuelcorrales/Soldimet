@@ -116,56 +116,33 @@ public class ExpertoImpresionPresupuesto {
         variables.put("motor", presupuesto.getMotorName());
         variables.put("aplicacion", presupuesto.getAplicacionName());
         variables.put("numero", presupuesto.getId().toString());
-        variables.put("totRep", presupuesto.getTotalRepuestos().toString());
-        variables.put("total", presupuesto.getImporteTotal().toString());
+        variables.put("totRep", "$" + presupuesto.getTotalRepuestos().toString());
+        variables.put("total", "$" + presupuesto.getImporteTotal().toString());
         Float totalOperaciones = presupuesto.getImporteTotal() - presupuesto.getTotalRepuestos();
-        variables.put("totOpe", totalOperaciones.toString());
+        variables.put("totOp", "$" + totalOperaciones.toString());
         variables.put("observaciones", presupuesto.getObservaciones());
 
-        List<Operacion> operacionesPresupuesto = new ArrayList<Operacion> ();
+        // List<Operacion> operacionesPresupuesto = new ArrayList<Operacion> ();
         for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
             for (CobranzaOperacion cobranza: detalle.getCobranzaOperacions()) {
-                operacionesPresupuesto.add(cobranza.getOperacion());
+                String opElegida = "x" + cobranza.getOperacion().getId().toString();
+                variables.put(opElegida, "X");
             }
         };
-        List<Operacion> allOperaciones = operacionRepository.findAll();
-        for (Operacion operacion: allOperaciones) {
-            // Escribo todas las operaciones en el word
-            String opNombre = "o" + operacion.getId().toString();
-            variables.put(opNombre, operacion.getNombreOperacion());
-            String opNoElegida = "x" + operacion.getId().toString();
-            variables.put(opNoElegida, "");
 
-            for (Operacion operacionPresupuesto: operacionesPresupuesto) {
-                if (operacion.getId().equals(operacionPresupuesto.getId())){
-                    // SI esta presupuestada, pongo una X
-                    String opElegida = "x" + operacion.getId().toString();
-                    variables.put(opElegida, "X");
-                }
-            }
-        }
-
-        List<CobranzaRepuesto> cobranzaRepuestos = new ArrayList<CobranzaRepuesto> ();
         for (DetallePresupuesto detalle: presupuesto.getDetallePresupuestos()) {
             for (CobranzaRepuesto cobranza: detalle.getCobranzaRepuestos()) {
-                cobranzaRepuestos.add(cobranza);
+                String repElegido = "v" + cobranza.getTipoRepuesto().getId().toString();
+            variables.put(repElegido, "$" + cobranza.getValor().toString());
             }
         };
-        List<TipoRepuesto> allTipoRepuestos = tipoRepuestoRepository.findAll();
-        for (TipoRepuesto tipoRepuesto: allTipoRepuestos) {
-            // Escribo todos los repuestos en el word
-            String reNombre = "r" + tipoRepuesto.getId().toString();
-            variables.put(reNombre, tipoRepuesto.getNombreTipoRepuesto());
-            String repNoElegido = "v" + tipoRepuesto.getId().toString();
-            variables.put(repNoElegido, "");
-            for (CobranzaRepuesto cobranzaRepuesto: cobranzaRepuestos) {
-                if (tipoRepuesto.getId().equals(cobranzaRepuesto.getTipoRepuesto().getId())){
-                    // SI esta presupuestado, pongo el valor que se cobro
-                    String repElegido = "v" + tipoRepuesto.getId().toString();
-                    variables.put(repElegido, cobranzaRepuesto.getValor().toString());
-                }
-            }
-        }
+
+        variables.put("v38", "");
+        variables.put("v39", "");
+        variables.put("x32", "");
+        variables.put("x33", "");
+        variables.put("x34", "");
+        variables.put("x35", "");
 
         return variables;
     }
