@@ -14,10 +14,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import soldimet.domain.Cilindrada;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.ListaPrecioDesdeHasta;
 import soldimet.domain.ListaPrecioRectificacionCRAM;
+import soldimet.domain.Operacion;
+import soldimet.domain.TipoParteMotor;
+import soldimet.repository.CilindradaRepository;
+import soldimet.repository.ListaPrecioDesdeHastaRepository;
 import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
+import soldimet.repository.TipoParteMotorRepository;
 import soldimet.service.dto.DTOListaPrecioManoDeObra;
 
 /**
@@ -33,6 +39,15 @@ public class ExpertoCUModificarCostosDeManoDeObra {
 
     @Autowired
     private ListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
+
+    @Autowired
+    private TipoParteMotorRepository tipoParteMotorRepository;
+
+    @Autowired
+    private CilindradaRepository cilindradaRepository;
+
+    @Autowired
+    private ListaPrecioDesdeHastaRepository listaPrecioDesdeHastaRepository;
 
     public DTOListaPrecioManoDeObra modificarCostos(DTOListaPrecioManoDeObra dtoLista) {
         // busco en la lista identificada por numero la lista que no tiene fechs hasta y
@@ -111,6 +126,35 @@ public class ExpertoCUModificarCostosDeManoDeObra {
         }
         return dto;
 
+    }
+
+    public Boolean agregarAListas(Operacion operacion) {
+        try {
+            TipoParteMotor tipoParte = tipoParteMotorRepository.getOne(operacion.getTipoParteMotor().getId());
+            List<Cilindrada> cilindradas = cilindradaRepository.findAll();
+
+            List<ListaPrecioRectificacionCRAM> listas = listaPrecioRectificacionCRAMRepository.findAll();
+
+            for( ListaPrecioRectificacionCRAM listaNumero: listas) {
+                ListaPrecioDesdeHasta listaActiva = listaNumero.getUltimaListaActiva();
+                for( Cilindrada cilindrada: cilindradas) {
+                    if (cilindrada.getCantidadDeCilindros() < 8) {
+                        CostoOperacion nuevoCostoOperacion = new CostoOperacion();
+                        nuevoCostoOperacion.setCilindrada(cilindrada);
+                        nuevoCostoOperacion.setCostoOperacion(new Float(0));
+                        nuevoCostoOperacion.setOperacion(operacion);
+                        nuevoCostoOperacion.setTipoParteMotor(tipoParte);
+                        listaActiva.addCostoOperacion(nuevoCostoOperacion);
+                    }
+                }
+                listaPrecioRectificacionCRAMRepository.save(listaNumero);
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

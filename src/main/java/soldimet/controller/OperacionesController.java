@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import soldimet.domain.Operacion;
 import soldimet.service.dto.DTOListaPrecioManoDeObra;
 import soldimet.service.expertos.ExpertoCUModificarCostosDeManoDeObra;
 
@@ -45,6 +46,15 @@ public class OperacionesController {
         DTOListaPrecioManoDeObra dto = expertoOperaciones.modificarCostos(dtoLista);
         log.debug("response api/operaciones/updateLista: {}", dto);
         return dto;
+    }
+
+    @PostMapping("/agregar_en_listas")
+    public Boolean agregarOperacionAListas(@RequestBody Operacion operacion) {
+        log.debug("request api/operaciones/agregar_en_listas");
+
+        Boolean guardado = expertoOperaciones.agregarAListas(operacion);
+        log.debug("response api/operaciones/agregar_en_listas: {}", operacion, guardado);
+        return guardado;
     }
 
 }

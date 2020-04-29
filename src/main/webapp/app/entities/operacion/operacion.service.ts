@@ -12,6 +12,7 @@ type EntityArrayResponseType = HttpResponse<IOperacion[]>;
 @Injectable({ providedIn: 'root' })
 export class OperacionService {
   public resourceUrl = SERVER_API_URL + 'api/operacions';
+  public listasUrl = SERVER_API_URL + '/api/operaciones' + '/agregar_en_listas';
 
   constructor(protected http: HttpClient) {}
 
@@ -34,5 +35,9 @@ export class OperacionService {
 
   delete(id: number): Observable<HttpResponse<any>> {
     return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  agregarALista(operacion: IOperacion): Observable<HttpResponse<any>> {
+    return this.http.post<any>(this.listasUrl, operacion, { observe: 'response' });
   }
 }

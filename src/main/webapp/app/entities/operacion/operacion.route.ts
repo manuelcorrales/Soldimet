@@ -11,6 +11,7 @@ import { OperacionDetailComponent } from 'app/entities/operacion/operacion-detai
 import { OperacionUpdateComponent } from 'app/entities/operacion/operacion-update.component';
 import { OperacionDeletePopupComponent } from 'app/entities/operacion/operacion-delete-dialog.component';
 import { IOperacion } from 'app/shared/model/operacion.model';
+import { OperacionAddListasComponent } from './operacion-add-listas.component';
 
 @Injectable({ providedIn: 'root' })
 export class OperacionResolve implements Resolve<IOperacion> {
@@ -53,6 +54,18 @@ export const operacionRoute: Routes = [
   {
     path: 'new',
     component: OperacionUpdateComponent,
+    resolve: {
+      operacion: OperacionResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Operacions'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'listas',
+    component: OperacionAddListasComponent,
     resolve: {
       operacion: OperacionResolve
     },
