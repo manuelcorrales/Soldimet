@@ -1,0 +1,204 @@
+id,nombre_aplicacion,numero_grupo,motor_id
+446,Atos,1,6
+447,Accord 1.8 (85 x 81.5),2,5
+448,Accors 2.0 (85 x 88),2,5
+449,Accord 2.2i 16v (85 x 95),2,5
+450,Accord V6,2,5
+451,Accord 1.6 (74mm),2,5
+452,Civic 1.5 (75 x 84.5),2,5
+453,Civic 1.6 (75 x 90),2,5
+454,Prelude 2.6 Si 16V Nafta (87.1 x 93.5),2,5
+455,Accent - Excel/S 1.7 (75.5 x82),2,6
+456,Sonata 2.4 (86.6 x 100),2,6
+457,Sonata 3.0 (86 x 100),2,6
+458,Electra 1.8,2,6
+459,D4BF H-100 2500cc 4 cilindros (91.10 mm),3,6
+460,Galloper Diesel Turbo 4 cilindros (91.10mm),3,6
+461,H-250 TURBO H-350 4 cilindros (104mm),3,6
+462,4 cilindros (TODOS 77 a 79mm),2,47
+463,4 cilindros (TODOS 84 a 87mm),2,47
+464,145T 1.8 Diesel (82.60 x 90) (Idem Fiat Siena T),2,47
+465,Quatro-Coupe 2.3 (82.55 x 86.36),2,48
+466,Quattro-Quantium Wagon-V8 Quattro (81.03 x 3.36),2,48
+467,318IS 1.8 - 325i X (84.07 x 81),2,49
+468,"535i - 735i (3260"")",3,49
+469,750iL - 850i - 5.0 (87.04 x 74.98),4,49
+470,"M3-M5 (3680"" x 84)",3,49
+471,523i - 24V - 6 cilindros en línea 2.5,3,49
+472,Kombi 1.3 75x75,1,7
+473,Kombi 2.0 87x82,2,7
+474,Rodeo 2.5 Nafta 92.7x95,3,7
+475,Trooper 6VD1 3.2 Nafta 93.0x76.9,3,7
+476,Mark 1.5 Turbo 85.85x85.85,3,7
+477,Mark - Stylus 1.6 89.41x89.91,2,7
+478,Impulse 2.0 Turbo 76.96x79,2,7
+479,Impulse 2.3 87.88x81.50,2,7
+480,4FA1 Diesel Autoelevador 4 cilindros 76mm,2,7
+481,4EE1 Diesel 4 cilindros 79mm,2,7
+482,4EE1 Diesel Turbo 4 Cilindros 79mm,2,7
+483,C 201 Diesel 4 cilindros 83mm,2,7
+484,4FB1 Diesel 4 cilindros 84mm,2,7
+485,4FB1 Diesel Turbo 4 cilindros 84mm,2,7
+486,4FC1 Diesel 4 cilindros 84mm,2,7
+487,3AB1 Diesel 3 cilindros 86mm,2,7
+488,C 190 240 Diesel 4 cilindros 86mm,2,7
+489,4FD1 Diesel 4 cilindros 88mm,2,7
+490,C223 Diesel 4 cilindros 88mm,2,7
+491,C223T Diesel Turbo 4 cilindros 88mm,2,7
+492,4FG1 2300cc Diesel 4 cilindros 89.3mm,2,7
+493,4JA1 Diesel 4 cilindros 93mm,3,7
+494,4J81 Diesel 4 cilindros 93mm,3,7
+495,4JB1T Diesel Turbo 4 cilindros 93mm,3,7
+496,4JG2 Diesel Turbo 4 cilindros 95.4mm,3,7
+497,4BA1 Diesel 4 cilindros 98mm,3,7
+498,D500 Diesel 6 cilindros 98mm,3,7
+499,DA 220 Diesel 4 cilindros 100mm,3,7
+500,DA 120 Diesel 6 cilindros 100mm,3,7
+501,6BB1 Diesel 6 cilindros 102mm,3,7
+502,4BB1 Diesel Iny Dir 4 cilindros 102mm,3,7
+503,4BC1 Diesel Iny Dir 4 cilindros 102mm,3,7
+504,4BC2 Diesel 4 cilindros 102mm,3,7
+505,4BD1 Diesel 4 cilindros 102mm,3,7
+506,4BE1 Diesel 4 cilindros 105mm,3,7
+507,6BF1 Diesel 6 cilindros 105mm,3,7
+508,4HF1 Chev 4300cc Diesel 4 cilindros 112mm,3,7
+509,4ZA1 1600cc Nafta 4 cilindros 82mm,2,7
+510,G161Z 4 cilindros Nafta 82mm,2,7
+511,G180Z 4 cilindros Nafta 84mm,2,7
+512,4ZD1 Chev Luv Nafta 4 cilindros 89.3mm,2,7
+513,121 1.3 R x 7 89.91x77.47,2,11
+514,323 1.6,2,11
+515,Protege 1.8 83.06x85.10,2,11
+516,626 GT 2.2 86.10x93.98,2,11
+517,626 S 3.0 88.9x99,3,11
+518,B 2200 88.9x88.9,3,11
+519,R2 RF Diesel 4 cilindros 86mm,2,11
+520,S2 E2200 Diesel 4 cilindros 88.9mm,2,11
+521,XA E-2500 Diesel 4 cilindros 88.9mm,2,11
+522,XA New Diesel 4 cilindros 88.9mm,2,11
+523,XA T-2500 4 cilindros 88.9mm,2,11
+524,YA 3800cc Diesel 6 cilindros 88.9mm,2,11
+525,XB E-2700 Diesel 4 cilindros 92mm,3,11
+526,ZB 4100cc Diesel 6 cilindros 92mm,3,11
+527,WL B-2500 Diesel 4 cilindros 12V 93mm,3,11
+528,HA E-3500 Diesel 4 cilindros 95mm,3,11
+529,HA T-3000 4 cilindros 95mm,3,11
+530,HA New T-3000 4 cilindros 95mm,3,11
+531,SL T-3500 4 cilindros 100mm,3,11
+532,TF T-4000 4 cilindros 105.5mm,3,11
+533,NA E-1600 Nafta 4 cilindros 78mm,1,11
+534,VA Autoelevador Yale Nafta 4 cilindros 82mm,1,11
+535,FE F2 F8 Autoelevador Yale Nafta 4 cilindros 86mm,1,11
+536,L100 2 cilindros 70mm,1,12
+537,Lancer Mirage 1.3 71x82,1,12
+538,Lancer Colt 1.5 75.5x82,1,12
+539,"Galant 3.0 3590""""",2,12
+540,Sigma 6 cilindros 91mm,2,12
+541,Montero 3.0 Nafta 91.1x76,2,12
+542,4D65 1800cc Diesel 4 cilindros 80.6mm,2,12
+543,4D55 2300cc Diesel 4 cilindros 91.1mm,3,12
+544,4D56 2500cc Diesel 4 cilindros 91.1mm,3,12
+545,4D56 New Diesel 4 cilindros 91.1mm,3,12
+546,4D56 Diesel Turbo 4 cilindros 91.1mm,3,12
+547,4DR5 4 cilindros 92mm,3,12
+548,6DR5 6 cilindros 92mm,3,12
+549,S4E Clark Diesel 4 cilindros 94mm,3,12
+550,Clark Diesel 6 cilindros 94mm,3,12
+551,4M40 Diesel Turbo 95mm,3,12
+552,4030 Canter Diesel 4 cilindros 100mm,3,12
+553,4D31 Canter Iny Dir 4 cilindros 100mm,3,12
+554,4D3214D34 Diesel 4 cilindros 104mm,3,12
+555,6014 Diesel 6 cilindros 110mm,3,12
+556,6015 Diesel 6 cilindros 113mm,3,12
+557,4G33 1400cc Nafta 4 cilindros 73mm,2,12
+558,4G32 Nafta 4 cilindros 76mm,2,12
+559,4G54B Clark Nafta 4 cilindros 91.1mm,2,12
+560,SD17 80x83.6,3,14
+561,SD22 2164cc 83x100,3,14
+562,SD23 2289cc 89x92,3,14
+563,SD25 2500cc 89x100,2,14
+564,LD28 6 cilindros 84.6x83,3,14
+565,SD33 3246cc 6 cilindros 83x100,2,14
+566,Pathfinder 3.0 Nafta 87.1x83,2,14
+567,CD17 Diesel 4 cilindros 80mm,2,14
+568,CD15 CD16 Diesel 3 cilindros 83mm,2,14
+569,SD33 Patrol Diesel 6 cilindros 80mm,2,14
+570,SD22 Diesel 4 cilindros 83mm,2,14
+571,LD28 Diesel 6 cilindros 84.5mm,2,14
+572,LD20 Diesel 4 cilindros 85mm,2,14
+573,LD20 Diesel Turbo 4 cilindros 85mm,2,14
+574,LS20 New Diesel 4 cilindros 85mm,2,14
+575,RD28 Diesel 6 cilindros 85mm,2,14
+576,RD28 Diesel Turbo 6 cilindros 85mm,2,14
+577,SD23 SD25 Diesel 4 cilindros 89mm,2,14
+578,TD23 Diesel 4 cilindros 89mm,2,14
+579,TD25 Diesel 4 cilindros 92.9mm,3,14
+580,BD25 Diesel 4 cilindros 92.9mm,3,14
+581,TD27 Diesel 4 cilindros 96mm,3,14
+582,TD27 Diesel Turbo 4 cilindros 96mm,3,14
+583,TD42 Diesel 6 cilindros 96mm,3,14
+584,BD30 Diesel Iny Dir 4 cilindros 96mm,3,14
+585,ED30 Diesel 4 cilindros 98mm,3,14
+586,ED33 Diesel 4 cilindros 100mm,3,14
+587,FD33 Diesel 4 cilindros 100mm,3,14
+588,ED6 Diesel 4 cilindros 100mm,3,14
+589,FD6 Diesel Turbo 4 cilindros 100mm,3,14
+590,FD35T Diesel 4 cilindros 102.5mm,3,14
+591,FE6 Diesel 4 cilindros 108mm,3,14
+592,FE6 Diesel Turbo 4 cilindros 108mm,3,14
+593,NE6 ND6 Diesel 6 cilindros 110mm,3,14
+594,D 11 Nafta 4 cilindros 73mm,2,14
+595,A 15 Autoelevador Nafta 4 cilindros 76mm,2,14
+596,J 15 Autoelevador Nafta 4 cilindros 78mm,2,14
+597,L 20 Nafta 6 cilindros 78mm,2,14
+598,J 18 Autoelevador Nafta 4 cilindros 80.5mm,2,14
+599,L 18 Pick Up 1800cc Nafta 4 cilindros 85mm,2,14
+600,H 20 Nafta 4 cilindros 87.20mm,2,14
+601,Z 24 2400cc Nafta 4 cilindros 89mm,2,14
+602,2.0 Motor aluminio 4 cilindros opuestos (92 x 70),1,18
+603,Truck Van 2 cilindros 76mm,1,18
+604,Legacy 2.2 96.9x75,3,18
+605,1.8 87.9x75,1,18
+606,1.6 97.9x65.8,2,18
+607,800cc 4 cilindros 62mm,1,19
+608,1300cc 2 cilindros 74.1mm,1,19
+609,3 cilindros,1,19
+610,413 GTI GL 16V Motor aluminio 74mm,1,19
+611,Corolla Celica 81mm,1,20
+612,Cressida 84mm,1,20
+613,2.2L 90x86,2,20
+614,2T 1600 85x70,1,20
+615,2T 1800 85x78,1,20
+616,LUX 2000 88.50x80,2,20
+617,C 190,2,20
+618,2L Hilux Diesel 2.4T 92mm,3,20
+619,3L Runner Diesel 2.8 96mm,3,20
+620,1B Land Cruiser 95mm,3,20
+621,2B Dyna Coaster 3000cc 98mm,4,20
+622,3B Dyna Coaster 3000cc Turbo 102mm,4,20
+623,1C Diesel 4 Cilindros 83mm,2,20
+624,2C Diesel 4 Cilindros 86mm,2,20
+625,H Diesel 6 Cilindros 88mm,2,20
+626,2J Diesel 4 Cilindros 88mm,2,20
+627,L Diesel 4 Cilindros 90mm,3,20
+628,New Diesel 4 Cilindros 90mm,3,20
+629,2H Diesel 6 Cilindros 91mm,3,20
+630,2L Diesel 4 Cilindros 92mm,3,20
+631,2L New Diesel 4 Cilindros 92mm,3,20
+632,2L Diesel Turbo 4 Cilindros 92mm,3,20
+633,1HZ Diesel 6 Cilindros 94mm,3,20
+634,B Diesel 4 Cilindros 95mm,3,20
+635,1 B Diesel 4 Cilindros 95mm,3,20
+636,11 B Diesel Iny Dir 4 Cilindros 95mm,3,20
+637,3 L Diesel 4 Cilindros 96mm,3,20
+638,1Z Autoelevador Diesel Iny Dir 4 Cilindros 96mm,3,20
+639,2B Diesel 4 Cilindros 98mm,3,20
+640,3B Diesel 4 Cilindros 102mm,3,20
+641,13B Diesel Iny Dir 4 Cilindros 102mm,3,20
+642,14B Diesel 4 Cilindros 102mm,3,20
+643,3P 4P Autoelevador Nafta 4 Cilindros 76.60mm,2,20
+644,5K Autoelevador Nafta 1 Cilindro 80.5mm,2,20
+645,12R 1587a Nafta 4 Cilindros 80.5mm,2,20
+646,5R Autoelevador Nafta 4 Cilindros 88mm,2,20
+647,18R Hilux 2000cc Nafta 4 Cilindros 88.5mm,2,20
+648,4Y 2200cc Nafta 4 Cilindros 91mm,2,20

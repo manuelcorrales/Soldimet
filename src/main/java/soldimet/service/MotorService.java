@@ -4,6 +4,7 @@ import soldimet.domain.Motor;
 import soldimet.repository.MotorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,8 @@ public class MotorService {
     @Transactional(readOnly = true)
     public List<Motor> findAll() {
         log.debug("Request to get all Motors");
-        return motorRepository.findAll();
+        List<Motor> motores = motorRepository.findAll(Sort.by(Sort.Direction.ASC, "marcaMotor"));
+        return motores;
     }
 
 

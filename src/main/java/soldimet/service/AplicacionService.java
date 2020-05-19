@@ -4,7 +4,7 @@ import soldimet.domain.Aplicacion;
 import soldimet.repository.AplicacionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +45,7 @@ public class AplicacionService {
     @Transactional(readOnly = true)
     public List<Aplicacion> findAll() {
         log.debug("Request to get all Aplicacions");
-        return aplicacionRepository.findAll();
+        return aplicacionRepository.findAll(Sort.by(Sort.Direction.ASC, "nombreAplicacion"));
     }
 
 

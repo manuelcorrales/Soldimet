@@ -108,4 +108,6 @@
     <include file="config/liquibase/changelog/20191212120909_agregado_ff4j.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020130210000_agregar_operaciones_soldadura.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200413173250_changelog.xml" relativeToChangelogFile="false"/>
+
+    <include file="config/liquibase/changelog/20200519_aplicaciones_motores.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
