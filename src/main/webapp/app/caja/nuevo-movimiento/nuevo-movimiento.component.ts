@@ -9,21 +9,15 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { IFormaDePago, FormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { CategoriaPago, ICategoriaPago } from 'app/shared/model/categoria-pago.model';
 import { CategoriaPagoService } from 'app/entities/categoria-pago';
-import { Tarjeta, ITarjeta } from 'app/shared/model/tarjeta.model';
-import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
 import { MedioDePago } from 'app/shared/model/medio-de-pago.model';
-import { TarjetaService } from 'app/entities/tarjeta';
-import { TipoTarjetaService } from 'app/entities/tipo-tarjeta';
 import { Banco, IBanco } from 'app/shared/model/banco.model';
 import { BancoService } from 'app/entities/banco';
-import { Articulo } from 'app/shared/model/articulo.model';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { Observable, Subject, merge, Subscription } from 'rxjs';
 import { NgbTypeaheadConfig, NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
-import { MedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
 import { MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
 import { MovimientoPresupuesto, IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
@@ -55,10 +49,7 @@ export class NuevoMovimientoComponent implements OnInit {
   categorias: CategoriaPago[];
   conceptos: SubCategoria[];
   formasDePago: FormaDePago[];
-  tipoTarjetas: ITipoTarjeta[];
-  tarjetas: Tarjeta[];
   bancos: Banco[];
-  articulos: Articulo[];
   pedidos: DtoPedidoCabecera[];
   presupuestos: DtoPresupuestoCabeceraComponent[];
   costoRepuestos: CostoRepuesto[];
@@ -74,7 +65,6 @@ export class NuevoMovimientoComponent implements OnInit {
 
   formaDePago: FormaDePago = null;
   medioDePago: MedioDePago;
-  medioPagoTarjeta: MedioDePagoTarjeta;
   medioPagoCheque: MedioDePagoCheque;
 
   isPresupuesto = false;
@@ -91,8 +81,6 @@ export class NuevoMovimientoComponent implements OnInit {
     private formaDePagoService: FormaDePagoService,
     private categoriaService: CategoriaPagoService,
     private cajaService: CajaModuleServiceService,
-    private tarjetaService: TarjetaService,
-    private tipoTarjetaService: TipoTarjetaService,
     private bancoService: BancoService,
     private _presupuestosService: PresupuestosService,
     private eventManager: JhiEventManager,
@@ -144,20 +132,6 @@ export class NuevoMovimientoComponent implements OnInit {
   }
 
   buscarMedioDePagoData() {
-    if (this.formaDePago.nombreFormaDePago === this.formaTipoTarjeta) {
-      this.tarjetaService.query().subscribe(
-        (res: HttpResponse<ITarjeta[]>) => {
-          this.tarjetas = res.body;
-        },
-        (res: HttpErrorResponse) => this.jhiAlertService.error(res.message)
-      );
-      this.tipoTarjetaService.query().subscribe(
-        (res: HttpResponse<ITipoTarjeta[]>) => {
-          this.tipoTarjetas = res.body;
-        },
-        (res: HttpErrorResponse) => this.jhiAlertService.error(res.message)
-      );
-    }
     if (this.formaDePago.nombreFormaDePago === this.formaTipoChecke) {
       this.bancoService.query().subscribe(
         (res: HttpResponse<IBanco[]>) => {
@@ -230,15 +204,10 @@ export class NuevoMovimientoComponent implements OnInit {
   };
 
   private defineMetodoPago() {
-    if (this.formaDePago.nombreFormaDePago === this.formaTipoTarjeta) {
-      this.medioDePago.medioDePagoTarjeta = this.medioPagoTarjeta;
-      this.medioDePago.medioDePagoCheque = null;
-    } else if (this.formaDePago.nombreFormaDePago === this.formaTipoChecke) {
+    if (this.formaDePago.nombreFormaDePago === this.formaTipoChecke) {
       this.medioDePago.medioDePagoCheque = this.medioPagoCheque;
-      this.medioDePago.medioDePagoTarjeta = null;
-    } else if (this.formaDePago.nombreFormaDePago === this.formaTipoEfectivo) {
-      // Efectivo no define más nada, solo la forma de pago
-      this.medioDePago.medioDePagoTarjeta = null;
+    } else {
+      // Tarjeta y efectivo no define más nada, solo la forma de pago
       this.medioDePago.medioDePagoCheque = null;
     }
 
@@ -284,7 +253,6 @@ export class NuevoMovimientoComponent implements OnInit {
         this.movimientoPresupuesto = new MovimientoPresupuesto();
         this.medioDePago = new MedioDePago();
         this.medioPagoCheque = new MedioDePagoCheque();
-        this.medioPagoTarjeta = new MedioDePagoTarjeta();
       }
     });
   }
@@ -298,7 +266,6 @@ export class NuevoMovimientoComponent implements OnInit {
       this.movimiento = movimiento.body;
     });
   }
-  createConcepto() {}
 
   saveDetalles(movimiento: Movimiento) {
     this.movimientoPresupuesto.movimiento = movimiento;

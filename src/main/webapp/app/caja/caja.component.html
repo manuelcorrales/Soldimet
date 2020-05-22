@@ -108,9 +108,9 @@
                                         <fa-icon icon="pencil"></fa-icon>
                                         <span class="d-none d-md-inline" [routerLink]="['editar_movimiento']">Editar</span>
                                     </button> -->
-                                    <button type="submit" replaceUrl="true" class="btn btn-danger btn-sm">
+                                    <button type="submit" replaceUrl="true" class="btn btn-danger btn-sm"
+                                        [routerLink]="['/', { outlets: { popup: 'cajas/'+ movimiento.movimientoId + '/eliminar_movimiento'} }]">
                                         <fa-icon icon="trash"></fa-icon>
-                                        <span class="d-none d-md-inline" [routerLink]="['/', { outlets: { popup: 'cajas/'+ movimiento.movimientoId + '/eliminar_movimiento'} }]" replaceUrl="true"></span>
                                     </button>
                                 </div>
                             </div>

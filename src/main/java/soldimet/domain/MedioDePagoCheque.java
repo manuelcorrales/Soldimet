@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * A MedioDePagoCheque.
@@ -23,18 +22,9 @@ public class MedioDePagoCheque implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "fecha_recibo", columnDefinition = "DATE")
-    private LocalDate fechaRecibo;
-
-    @Column(name = "fecha_cobro", columnDefinition = "DATE")
-    private LocalDate fechaCobro;
-
     @NotNull
     @Column(name = "numero_cheque", nullable = false)
     private String numeroCheque;
-
-    @Column(name = "numero_cuenta")
-    private String numeroCuenta;
 
     @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
@@ -50,32 +40,6 @@ public class MedioDePagoCheque implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getFechaRecibo() {
-        return fechaRecibo;
-    }
-
-    public MedioDePagoCheque fechaRecibo(LocalDate fechaRecibo) {
-        this.fechaRecibo = fechaRecibo;
-        return this;
-    }
-
-    public void setFechaRecibo(LocalDate fechaRecibo) {
-        this.fechaRecibo = fechaRecibo;
-    }
-
-    public LocalDate getFechaCobro() {
-        return fechaCobro;
-    }
-
-    public MedioDePagoCheque fechaCobro(LocalDate fechaCobro) {
-        this.fechaCobro = fechaCobro;
-        return this;
-    }
-
-    public void setFechaCobro(LocalDate fechaCobro) {
-        this.fechaCobro = fechaCobro;
-    }
-
     public String getNumeroCheque() {
         return numeroCheque;
     }
@@ -87,19 +51,6 @@ public class MedioDePagoCheque implements Serializable {
 
     public void setNumeroCheque(String numeroCheque) {
         this.numeroCheque = numeroCheque;
-    }
-
-    public String getNumeroCuenta() {
-        return numeroCuenta;
-    }
-
-    public MedioDePagoCheque numeroCuenta(String numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
-        return this;
-    }
-
-    public void setNumeroCuenta(String numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
     }
 
     public Banco getBanco() {
@@ -136,10 +87,7 @@ public class MedioDePagoCheque implements Serializable {
     public String toString() {
         return "MedioDePagoCheque{" +
             "id=" + getId() +
-            ", fechaRecibo='" + getFechaRecibo() + "'" +
-            ", fechaCobro='" + getFechaCobro() + "'" +
             ", numeroCheque='" + getNumeroCheque() + "'" +
-            ", numeroCuenta='" + getNumeroCuenta() + "'" +
             "}";
     }
 }

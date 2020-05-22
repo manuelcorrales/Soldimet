@@ -10,25 +10,7 @@
                         readonly />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_fechaRecibo">Fecha Recibo</label>
-                    <div class="input-group">
-                        <input id="field_fechaRecibo" type="text" class="form-control" name="fechaRecibo" ngbDatepicker  #fechaReciboDp="ngbDatepicker" formControlName="fechaRecibo"/>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="fechaReciboDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_fechaCobro">Fecha Cobro</label>
-                    <div class="input-group">
-                        <input id="field_fechaCobro" type="text" class="form-control" name="fechaCobro" ngbDatepicker  #fechaCobroDp="ngbDatepicker" formControlName="fechaCobro"/>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="fechaCobroDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_numeroCheque">Numero Cheque</label>
+                    <label class="form-control-label" for="field_numeroCheque">Últimos 4</label>
                     <input type="text" class="form-control" name="numeroCheque" id="field_numeroCheque"
                            formControlName="numeroCheque"/>
                     <div *ngIf="editForm.get('numeroCheque').invalid && (editForm.get('numeroCheque').dirty || editForm.get('numeroCheque').touched)">
@@ -37,11 +19,6 @@
                         This field is required.
                         </small>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_numeroCuenta">Numero Cuenta</label>
-                    <input type="text" class="form-control" name="numeroCuenta" id="field_numeroCuenta"
-                           formControlName="numeroCuenta"/>
                 </div>
 
                 <div class="form-group">

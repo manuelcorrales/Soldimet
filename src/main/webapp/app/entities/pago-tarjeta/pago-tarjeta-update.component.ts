@@ -11,10 +11,6 @@ import { IPagoTarjeta, PagoTarjeta } from 'app/shared/model/pago-tarjeta.model';
 import { PagoTarjetaService } from 'app/entities/pago-tarjeta/pago-tarjeta.service';
 import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
-import { ITarjeta } from 'app/shared/model/tarjeta.model';
-import { TarjetaService } from 'app/entities/tarjeta/tarjeta.service';
-import { ITipoTarjeta } from 'app/shared/model/tipo-tarjeta.model';
-import { TipoTarjetaService } from 'app/entities/tipo-tarjeta/tipo-tarjeta.service';
 
 @Component({
   selector: 'jhi-pago-tarjeta-update',
@@ -25,24 +21,15 @@ export class PagoTarjetaUpdateComponent implements OnInit {
 
   formadepagos: IFormaDePago[];
 
-  tarjetas: ITarjeta[];
-
-  tipotarjetas: ITipoTarjeta[];
-
   editForm = this.fb.group({
     id: [],
-    numeroTarjeta: [null, [Validators.required, Validators.minLength(3)]],
-    formaDePago: [null, Validators.required],
-    tarjeta: [null, Validators.required],
-    tipoTarjeta: [null, Validators.required]
+    formaDePago: [null, Validators.required]
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected pagoTarjetaService: PagoTarjetaService,
     protected formaDePagoService: FormaDePagoService,
-    protected tarjetaService: TarjetaService,
-    protected tipoTarjetaService: TipoTarjetaService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -77,29 +64,12 @@ export class PagoTarjetaUpdateComponent implements OnInit {
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );
-    this.tarjetaService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<ITarjeta[]>) => mayBeOk.ok),
-        map((response: HttpResponse<ITarjeta[]>) => response.body)
-      )
-      .subscribe((res: ITarjeta[]) => (this.tarjetas = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.tipoTarjetaService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<ITipoTarjeta[]>) => mayBeOk.ok),
-        map((response: HttpResponse<ITipoTarjeta[]>) => response.body)
-      )
-      .subscribe((res: ITipoTarjeta[]) => (this.tipotarjetas = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(pagoTarjeta: IPagoTarjeta) {
     this.editForm.patchValue({
       id: pagoTarjeta.id,
-      numeroTarjeta: pagoTarjeta.numeroTarjeta,
-      formaDePago: pagoTarjeta.formaDePago,
-      tarjeta: pagoTarjeta.tarjeta,
-      tipoTarjeta: pagoTarjeta.tipoTarjeta
+      formaDePago: pagoTarjeta.formaDePago
     });
   }
 
@@ -121,10 +91,7 @@ export class PagoTarjetaUpdateComponent implements OnInit {
     return {
       ...new PagoTarjeta(),
       id: this.editForm.get(['id']).value,
-      numeroTarjeta: this.editForm.get(['numeroTarjeta']).value,
-      formaDePago: this.editForm.get(['formaDePago']).value,
-      tarjeta: this.editForm.get(['tarjeta']).value,
-      tipoTarjeta: this.editForm.get(['tipoTarjeta']).value
+      formaDePago: this.editForm.get(['formaDePago']).value
     };
   }
 
@@ -145,14 +112,6 @@ export class PagoTarjetaUpdateComponent implements OnInit {
   }
 
   trackFormaDePagoById(index: number, item: IFormaDePago) {
-    return item.id;
-  }
-
-  trackTarjetaById(index: number, item: ITarjeta) {
-    return item.id;
-  }
-
-  trackTipoTarjetaById(index: number, item: ITipoTarjeta) {
     return item.id;
   }
 }

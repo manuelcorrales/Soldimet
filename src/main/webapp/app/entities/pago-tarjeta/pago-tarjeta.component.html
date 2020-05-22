@@ -18,30 +18,16 @@
             <thead>
             <tr>
             <th><span>ID</span></th>
-            <th><span>Numero Tarjeta</span></th>
             <th><span>Forma De Pago</span></th>
-            <th><span>Tarjeta</span></th>
-            <th><span>Tipo Tarjeta</span></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let pagoTarjeta of pagoTarjetas ;trackBy: trackId">
                 <td><a [routerLink]="['/pago-tarjeta', pagoTarjeta.id, 'view' ]">{{pagoTarjeta.id}}</a></td>
-                <td>{{pagoTarjeta.numeroTarjeta}}</td>
                 <td>
                     <div *ngIf="pagoTarjeta.formaDePago">
                         <a [routerLink]="['/forma-de-pago', pagoTarjeta.formaDePago?.id, 'view' ]" >{{pagoTarjeta.formaDePago?.nombreFormaDePago}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="pagoTarjeta.tarjeta">
-                        <a [routerLink]="['/tarjeta', pagoTarjeta.tarjeta?.id, 'view' ]" >{{pagoTarjeta.tarjeta?.nombreTarjeta}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="pagoTarjeta.tipoTarjeta">
-                        <a [routerLink]="['/tipo-tarjeta', pagoTarjeta.tipoTarjeta?.id, 'view' ]" >{{pagoTarjeta.tipoTarjeta?.nombreTipoTarjeta}}</a>
                     </div>
                 </td>
                 <td class="text-right">

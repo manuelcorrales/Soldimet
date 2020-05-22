@@ -38,19 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class PagoChequeResourceIT {
 
-    private static final LocalDate DEFAULT_FECHA_COBRO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_COBRO = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_COBRO = LocalDate.ofEpochDay(-1L);
-
-    private static final LocalDate DEFAULT_FECHA_RECIBO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_RECIBO = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_RECIBO = LocalDate.ofEpochDay(-1L);
-
     private static final String DEFAULT_NUMERO_CHEQUE = "AAAAAAAAAA";
     private static final String UPDATED_NUMERO_CHEQUE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NUMERO_CUENTA = "AAAAAAAAAA";
-    private static final String UPDATED_NUMERO_CUENTA = "BBBBBBBBBB";
 
     @Autowired
     private PagoChequeRepository pagoChequeRepository;
@@ -97,10 +86,7 @@ public class PagoChequeResourceIT {
      */
     public static PagoCheque createEntity(EntityManager em) {
         PagoCheque pagoCheque = new PagoCheque()
-            .fechaCobro(DEFAULT_FECHA_COBRO)
-            .fechaRecibo(DEFAULT_FECHA_RECIBO)
-            .numeroCheque(DEFAULT_NUMERO_CHEQUE)
-            .numeroCuenta(DEFAULT_NUMERO_CUENTA);
+            .numeroCheque(DEFAULT_NUMERO_CHEQUE);
         // Add required entity
         Banco banco;
         if (TestUtil.findAll(em, Banco.class).isEmpty()) {
@@ -131,10 +117,7 @@ public class PagoChequeResourceIT {
      */
     public static PagoCheque createUpdatedEntity(EntityManager em) {
         PagoCheque pagoCheque = new PagoCheque()
-            .fechaCobro(UPDATED_FECHA_COBRO)
-            .fechaRecibo(UPDATED_FECHA_RECIBO)
-            .numeroCheque(UPDATED_NUMERO_CHEQUE)
-            .numeroCuenta(UPDATED_NUMERO_CUENTA);
+            .numeroCheque(UPDATED_NUMERO_CHEQUE);
         // Add required entity
         Banco banco;
         if (TestUtil.findAll(em, Banco.class).isEmpty()) {
@@ -178,10 +161,7 @@ public class PagoChequeResourceIT {
         List<PagoCheque> pagoChequeList = pagoChequeRepository.findAll();
         assertThat(pagoChequeList).hasSize(databaseSizeBeforeCreate + 1);
         PagoCheque testPagoCheque = pagoChequeList.get(pagoChequeList.size() - 1);
-        assertThat(testPagoCheque.getFechaCobro()).isEqualTo(DEFAULT_FECHA_COBRO);
-        assertThat(testPagoCheque.getFechaRecibo()).isEqualTo(DEFAULT_FECHA_RECIBO);
         assertThat(testPagoCheque.getNumeroCheque()).isEqualTo(DEFAULT_NUMERO_CHEQUE);
-        assertThat(testPagoCheque.getNumeroCuenta()).isEqualTo(DEFAULT_NUMERO_CUENTA);
     }
 
     @Test
@@ -201,43 +181,6 @@ public class PagoChequeResourceIT {
         // Validate the PagoCheque in the database
         List<PagoCheque> pagoChequeList = pagoChequeRepository.findAll();
         assertThat(pagoChequeList).hasSize(databaseSizeBeforeCreate);
-    }
-
-
-    @Test
-    @Transactional
-    public void checkFechaCobroIsRequired() throws Exception {
-        int databaseSizeBeforeTest = pagoChequeRepository.findAll().size();
-        // set the field null
-        pagoCheque.setFechaCobro(null);
-
-        // Create the PagoCheque, which fails.
-
-        restPagoChequeMockMvc.perform(post("/api/pago-cheques")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pagoCheque)))
-            .andExpect(status().isBadRequest());
-
-        List<PagoCheque> pagoChequeList = pagoChequeRepository.findAll();
-        assertThat(pagoChequeList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkFechaReciboIsRequired() throws Exception {
-        int databaseSizeBeforeTest = pagoChequeRepository.findAll().size();
-        // set the field null
-        pagoCheque.setFechaRecibo(null);
-
-        // Create the PagoCheque, which fails.
-
-        restPagoChequeMockMvc.perform(post("/api/pago-cheques")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pagoCheque)))
-            .andExpect(status().isBadRequest());
-
-        List<PagoCheque> pagoChequeList = pagoChequeRepository.findAll();
-        assertThat(pagoChequeList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -269,12 +212,9 @@ public class PagoChequeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pagoCheque.getId().intValue())))
-            .andExpect(jsonPath("$.[*].fechaCobro").value(hasItem(DEFAULT_FECHA_COBRO.toString())))
-            .andExpect(jsonPath("$.[*].fechaRecibo").value(hasItem(DEFAULT_FECHA_RECIBO.toString())))
-            .andExpect(jsonPath("$.[*].numeroCheque").value(hasItem(DEFAULT_NUMERO_CHEQUE.toString())))
-            .andExpect(jsonPath("$.[*].numeroCuenta").value(hasItem(DEFAULT_NUMERO_CUENTA.toString())));
+            .andExpect(jsonPath("$.[*].numeroCheque").value(hasItem(DEFAULT_NUMERO_CHEQUE.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getPagoCheque() throws Exception {
@@ -286,10 +226,7 @@ public class PagoChequeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(pagoCheque.getId().intValue()))
-            .andExpect(jsonPath("$.fechaCobro").value(DEFAULT_FECHA_COBRO.toString()))
-            .andExpect(jsonPath("$.fechaRecibo").value(DEFAULT_FECHA_RECIBO.toString()))
-            .andExpect(jsonPath("$.numeroCheque").value(DEFAULT_NUMERO_CHEQUE.toString()))
-            .andExpect(jsonPath("$.numeroCuenta").value(DEFAULT_NUMERO_CUENTA.toString()));
+            .andExpect(jsonPath("$.numeroCheque").value(DEFAULT_NUMERO_CHEQUE.toString()));
     }
 
     @Test
@@ -313,10 +250,7 @@ public class PagoChequeResourceIT {
         // Disconnect from session so that the updates on updatedPagoCheque are not directly saved in db
         em.detach(updatedPagoCheque);
         updatedPagoCheque
-            .fechaCobro(UPDATED_FECHA_COBRO)
-            .fechaRecibo(UPDATED_FECHA_RECIBO)
-            .numeroCheque(UPDATED_NUMERO_CHEQUE)
-            .numeroCuenta(UPDATED_NUMERO_CUENTA);
+            .numeroCheque(UPDATED_NUMERO_CHEQUE);
 
         restPagoChequeMockMvc.perform(put("/api/pago-cheques")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -327,10 +261,7 @@ public class PagoChequeResourceIT {
         List<PagoCheque> pagoChequeList = pagoChequeRepository.findAll();
         assertThat(pagoChequeList).hasSize(databaseSizeBeforeUpdate);
         PagoCheque testPagoCheque = pagoChequeList.get(pagoChequeList.size() - 1);
-        assertThat(testPagoCheque.getFechaCobro()).isEqualTo(UPDATED_FECHA_COBRO);
-        assertThat(testPagoCheque.getFechaRecibo()).isEqualTo(UPDATED_FECHA_RECIBO);
         assertThat(testPagoCheque.getNumeroCheque()).isEqualTo(UPDATED_NUMERO_CHEQUE);
-        assertThat(testPagoCheque.getNumeroCuenta()).isEqualTo(UPDATED_NUMERO_CUENTA);
     }
 
     @Test

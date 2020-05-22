@@ -34,9 +34,9 @@ public class LoggingConfiguration {
         JHipsterProperties.Logging loggingProperties = jHipsterProperties.getLogging();
         JHipsterProperties.Logging.Logstash logstashProperties = loggingProperties.getLogstash();
 
-        // if (loggingProperties.isUseJsonFormat()) {
-        //     addJsonConsoleAppender(context, customFields);
-        // }
+        if (loggingProperties.isUseJsonFormat()) {
+            addJsonConsoleAppender(context, customFields);
+        }
         if (logstashProperties.isEnabled()) {
             addLogstashTcpSocketAppender(context, customFields, logstashProperties);
         }

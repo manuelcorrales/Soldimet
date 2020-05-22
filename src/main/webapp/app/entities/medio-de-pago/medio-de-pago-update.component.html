@@ -30,13 +30,6 @@
                         <option [ngValue]="medioDePagoChequeOption.id === editForm.get('medioDePagoCheque').value?.id ? editForm.get('medioDePagoCheque').value : medioDePagoChequeOption" *ngFor="let medioDePagoChequeOption of mediodepagocheques; trackBy: trackMedioDePagoChequeById">{{medioDePagoChequeOption.id}}</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_medioDePagoTarjeta">Medio De Pago Tarjeta</label>
-                    <select class="form-control" id="field_medioDePagoTarjeta" name="medioDePagoTarjeta" formControlName="medioDePagoTarjeta">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="medioDePagoTarjetaOption.id === editForm.get('medioDePagoTarjeta').value?.id ? editForm.get('medioDePagoTarjeta').value : medioDePagoTarjetaOption" *ngFor="let medioDePagoTarjetaOption of mediodepagotarjetas; trackBy: trackMedioDePagoTarjetaById">{{medioDePagoTarjetaOption.id}}</option>
-                    </select>
-                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

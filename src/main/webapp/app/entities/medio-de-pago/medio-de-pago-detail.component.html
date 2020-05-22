@@ -17,12 +17,6 @@
                         <a [routerLink]="['/medio-de-pago-cheque', medioDePago.medioDePagoCheque?.id, 'view']">{{medioDePago.medioDePagoCheque?.id}}</a>
                     </div>
                 </dd>
-                <dt><span>Medio De Pago Tarjeta</span></dt>
-                <dd>
-                    <div *ngIf="medioDePago.medioDePagoTarjeta">
-                        <a [routerLink]="['/medio-de-pago-tarjeta', medioDePago.medioDePagoTarjeta?.id, 'view']">{{medioDePago.medioDePagoTarjeta?.id}}</a>
-                    </div>
-                </dd>
             </dl>
 
             <button type="submit"

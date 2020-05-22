@@ -1,5 +1,4 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -22,25 +21,10 @@ public class PagoTarjeta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(optional = false)
     @NotNull
-    @Size(min = 3)
-    @Column(name = "numero_tarjeta", nullable = false)
-    private String numeroTarjeta;
-
-    @OneToOne(optional = false)    @NotNull
-
     @JoinColumn(unique = true)
     private FormaDePago formaDePago;
-
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties("pagoTarjetas")
-    private Tarjeta tarjeta;
-
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties("pagoTarjetas")
-    private TipoTarjeta tipoTarjeta;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -49,19 +33,6 @@ public class PagoTarjeta implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNumeroTarjeta() {
-        return numeroTarjeta;
-    }
-
-    public PagoTarjeta numeroTarjeta(String numeroTarjeta) {
-        this.numeroTarjeta = numeroTarjeta;
-        return this;
-    }
-
-    public void setNumeroTarjeta(String numeroTarjeta) {
-        this.numeroTarjeta = numeroTarjeta;
     }
 
     public FormaDePago getFormaDePago() {
@@ -77,31 +48,6 @@ public class PagoTarjeta implements Serializable {
         this.formaDePago = formaDePago;
     }
 
-    public Tarjeta getTarjeta() {
-        return tarjeta;
-    }
-
-    public PagoTarjeta tarjeta(Tarjeta tarjeta) {
-        this.tarjeta = tarjeta;
-        return this;
-    }
-
-    public void setTarjeta(Tarjeta tarjeta) {
-        this.tarjeta = tarjeta;
-    }
-
-    public TipoTarjeta getTipoTarjeta() {
-        return tipoTarjeta;
-    }
-
-    public PagoTarjeta tipoTarjeta(TipoTarjeta tipoTarjeta) {
-        this.tipoTarjeta = tipoTarjeta;
-        return this;
-    }
-
-    public void setTipoTarjeta(TipoTarjeta tipoTarjeta) {
-        this.tipoTarjeta = tipoTarjeta;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -124,7 +70,6 @@ public class PagoTarjeta implements Serializable {
     public String toString() {
         return "PagoTarjeta{" +
             "id=" + getId() +
-            ", numeroTarjeta='" + getNumeroTarjeta() + "'" +
             "}";
     }
 }

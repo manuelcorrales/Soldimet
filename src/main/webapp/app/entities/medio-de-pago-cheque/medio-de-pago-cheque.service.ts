@@ -51,33 +51,19 @@ export class MedioDePagoChequeService {
   }
 
   protected convertDateFromClient(medioDePagoCheque: IMedioDePagoCheque): IMedioDePagoCheque {
-    const copy: IMedioDePagoCheque = Object.assign({}, medioDePagoCheque, {
-      fechaRecibo:
-        medioDePagoCheque.fechaRecibo != null && medioDePagoCheque.fechaRecibo.isValid()
-          ? medioDePagoCheque.fechaRecibo.format(DATE_FORMAT)
-          : null,
-      fechaCobro:
-        medioDePagoCheque.fechaCobro != null && medioDePagoCheque.fechaCobro.isValid()
-          ? medioDePagoCheque.fechaCobro.format(DATE_FORMAT)
-          : null
-    });
+    const copy: IMedioDePagoCheque = Object.assign({}, medioDePagoCheque, {});
     return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.fechaRecibo = res.body.fechaRecibo != null ? moment(res.body.fechaRecibo) : null;
-      res.body.fechaCobro = res.body.fechaCobro != null ? moment(res.body.fechaCobro) : null;
     }
     return res;
   }
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
-      res.body.forEach((medioDePagoCheque: IMedioDePagoCheque) => {
-        medioDePagoCheque.fechaRecibo = medioDePagoCheque.fechaRecibo != null ? moment(medioDePagoCheque.fechaRecibo) : null;
-        medioDePagoCheque.fechaCobro = medioDePagoCheque.fechaCobro != null ? moment(medioDePagoCheque.fechaCobro) : null;
-      });
+      res.body.forEach((medioDePagoCheque: IMedioDePagoCheque) => {});
     }
     return res;
   }

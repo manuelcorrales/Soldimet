@@ -24,20 +24,6 @@
     ],
     "fields": [
         {
-            "fieldName": "fechaCobro",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "fechaRecibo",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "numeroCheque",
             "fieldType": "String",
             "fieldValidateRules": [
@@ -45,10 +31,6 @@
                 "minlength"
             ],
             "fieldValidateRulesMinlength": "3"
-        },
-        {
-            "fieldName": "numeroCuenta",
-            "fieldType": "String"
         }
     ],
     "changelogDate": "20171214014657",

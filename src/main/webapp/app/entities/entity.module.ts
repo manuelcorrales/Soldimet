@@ -171,10 +171,6 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('app/entities/rubro/rubro.module').then(m => m.SoldimetRubroModule)
       },
       {
-        path: 'tarjeta',
-        loadChildren: () => import('app/entities/tarjeta/tarjeta.module').then(m => m.SoldimetTarjetaModule)
-      },
-      {
         path: 'tipo-detalle-movimiento',
         loadChildren: () =>
           import('app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento.module').then(m => m.SoldimetTipoDetalleMovimientoModule)
@@ -190,10 +186,6 @@ import { RouterModule } from '@angular/router';
       {
         path: 'tipo-repuesto',
         loadChildren: () => import('app/entities/tipo-repuesto/tipo-repuesto.module').then(m => m.SoldimetTipoRepuestoModule)
-      },
-      {
-        path: 'tipo-tarjeta',
-        loadChildren: () => import('app/entities/tipo-tarjeta/tipo-tarjeta.module').then(m => m.SoldimetTipoTarjetaModule)
       },
       {
         path: 'detalle-movimiento',
@@ -241,11 +233,6 @@ import { RouterModule } from '@angular/router';
       {
         path: 'medio-de-pago',
         loadChildren: () => import('app/entities/medio-de-pago/medio-de-pago.module').then(m => m.SoldimetMedioDePagoModule)
-      },
-      {
-        path: 'medio-de-pago-tarjeta',
-        loadChildren: () =>
-          import('app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.module').then(m => m.SoldimetMedioDePagoTarjetaModule)
       },
       {
         path: 'medio-de-pago-cheque',

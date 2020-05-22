@@ -394,18 +394,6 @@
     <testcase classname="Service Tests EstadoCostoRepuesto Service Service methods should delete a EstadoCostoRepuesto" name="Service Tests EstadoCostoRepuesto Service Service methods should delete a EstadoCostoRepuesto" time="0.008">
     </testcase>
   </testsuite>
-  <testsuite name="Service Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:07:54" time="0.631" tests="5">
-    <testcase classname="Service Tests MedioDePagoTarjeta Service Service methods should find an element" name="Service Tests MedioDePagoTarjeta Service Service methods should find an element" time="0.019">
-    </testcase>
-    <testcase classname="Service Tests MedioDePagoTarjeta Service Service methods should create a MedioDePagoTarjeta" name="Service Tests MedioDePagoTarjeta Service Service methods should create a MedioDePagoTarjeta" time="0.011">
-    </testcase>
-    <testcase classname="Service Tests MedioDePagoTarjeta Service Service methods should update a MedioDePagoTarjeta" name="Service Tests MedioDePagoTarjeta Service Service methods should update a MedioDePagoTarjeta" time="0.008">
-    </testcase>
-    <testcase classname="Service Tests MedioDePagoTarjeta Service Service methods should return a list of MedioDePagoTarjeta" name="Service Tests MedioDePagoTarjeta Service Service methods should return a list of MedioDePagoTarjeta" time="0.018">
-    </testcase>
-    <testcase classname="Service Tests MedioDePagoTarjeta Service Service methods should delete a MedioDePagoTarjeta" name="Service Tests MedioDePagoTarjeta Service Service methods should delete a MedioDePagoTarjeta" time="0.01">
-    </testcase>
-  </testsuite>
   <testsuite name="Service Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:07:55" time="0.595" tests="5">
     <testcase classname="Service Tests EstadoPresupuesto Service Service methods should find an element" name="Service Tests EstadoPresupuesto Service Service methods should find an element" time="0.02">
     </testcase>
@@ -644,18 +632,6 @@
     <testcase classname="Service Tests FormaDePago Service Service methods should return a list of FormaDePago" name="Service Tests FormaDePago Service Service methods should return a list of FormaDePago" time="0.011">
     </testcase>
     <testcase classname="Service Tests FormaDePago Service Service methods should delete a FormaDePago" name="Service Tests FormaDePago Service Service methods should delete a FormaDePago" time="0.011">
-    </testcase>
-  </testsuite>
-  <testsuite name="Service Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:01" time="0.722" tests="5">
-    <testcase classname="Service Tests TipoTarjeta Service Service methods should find an element" name="Service Tests TipoTarjeta Service Service methods should find an element" time="0.022">
-    </testcase>
-    <testcase classname="Service Tests TipoTarjeta Service Service methods should create a TipoTarjeta" name="Service Tests TipoTarjeta Service Service methods should create a TipoTarjeta" time="0.015">
-    </testcase>
-    <testcase classname="Service Tests TipoTarjeta Service Service methods should update a TipoTarjeta" name="Service Tests TipoTarjeta Service Service methods should update a TipoTarjeta" time="0.019">
-    </testcase>
-    <testcase classname="Service Tests TipoTarjeta Service Service methods should return a list of TipoTarjeta" name="Service Tests TipoTarjeta Service Service methods should return a list of TipoTarjeta" time="0.022">
-    </testcase>
-    <testcase classname="Service Tests TipoTarjeta Service Service methods should delete a TipoTarjeta" name="Service Tests TipoTarjeta Service Service methods should delete a TipoTarjeta" time="0.039">
     </testcase>
   </testsuite>
   <testsuite name="Service Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:01" time="1" tests="5">
@@ -996,12 +972,6 @@
     <testcase classname="Component Tests EstadoDetallePedido Management Update Component save Should call create service on save for new entity" name="Component Tests EstadoDetallePedido Management Update Component save Should call create service on save for new entity" time="0.032">
     </testcase>
   </testsuite>
-  <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:13" time="0.765" tests="2">
-    <testcase classname="Component Tests MedioDePagoTarjeta Management Update Component save Should call update service on save for existing entity" name="Component Tests MedioDePagoTarjeta Management Update Component save Should call update service on save for existing entity" time="0.043">
-    </testcase>
-    <testcase classname="Component Tests MedioDePagoTarjeta Management Update Component save Should call create service on save for new entity" name="Component Tests MedioDePagoTarjeta Management Update Component save Should call create service on save for new entity" time="0.038">
-    </testcase>
-  </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:13" time="0.693" tests="3">
     <testcase classname="Component Tests SettingsComponent should send the current identity upon save" name="Component Tests SettingsComponent should send the current identity upon save" time="0.039">
     </testcase>
@@ -1196,12 +1166,6 @@
     <testcase classname="Component Tests PagoTarjeta Management Update Component save Should call create service on save for new entity" name="Component Tests PagoTarjeta Management Update Component save Should call create service on save for new entity" time="0.04">
     </testcase>
   </testsuite>
-  <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:25" time="0.71" tests="2">
-    <testcase classname="Component Tests TipoTarjeta Management Update Component save Should call update service on save for existing entity" name="Component Tests TipoTarjeta Management Update Component save Should call update service on save for existing entity" time="0.044">
-    </testcase>
-    <testcase classname="Component Tests TipoTarjeta Management Update Component save Should call create service on save for new entity" name="Component Tests TipoTarjeta Management Update Component save Should call create service on save for new entity" time="0.04">
-    </testcase>
-  </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:26" time="0.772" tests="2">
     <testcase classname="Component Tests Presupuesto Management Update Component save Should call update service on save for existing entity" name="Component Tests Presupuesto Management Update Component save Should call update service on save for existing entity" time="0.036">
     </testcase>
@@ -1371,8 +1335,6 @@
     </testcase>
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:37" time="1.036" tests="1">
-    <testcase classname="Component Tests MedioDePagoTarjeta Management Delete Component confirmDelete Should call delete service on confirmDelete" name="Component Tests MedioDePagoTarjeta Management Delete Component confirmDelete Should call delete service on confirmDelete" time="0.052">
-    </testcase>
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:37" time="1.091" tests="1">
     <testcase classname="Component Tests MovimientoArticulo Management Delete Component confirmDelete Should call delete service on confirmDelete" name="Component Tests MovimientoArticulo Management Delete Component confirmDelete Should call delete service on confirmDelete" time="0.099">
@@ -1496,10 +1458,6 @@
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:53" time="1.034" tests="1">
     <testcase classname="Component Tests PagoTarjeta Management Delete Component confirmDelete Should call delete service on confirmDelete" name="Component Tests PagoTarjeta Management Delete Component confirmDelete Should call delete service on confirmDelete" time="0.054">
-    </testcase>
-  </testsuite>
-  <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:53" time="1.239" tests="1">
-    <testcase classname="Component Tests TipoTarjeta Management Delete Component confirmDelete Should call delete service on confirmDelete" name="Component Tests TipoTarjeta Management Delete Component confirmDelete Should call delete service on confirmDelete" time="0.065">
     </testcase>
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:08:54" time="1.633" tests="1">
@@ -1626,10 +1584,6 @@
     <testcase classname="Component Tests EstadoCostoRepuesto Management Component Should call load all on init" name="Component Tests EstadoCostoRepuesto Management Component Should call load all on init" time="0.034">
     </testcase>
   </testsuite>
-  <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:07" time="0.644" tests="1">
-    <testcase classname="Component Tests MedioDePagoTarjeta Management Component Should call load all on init" name="Component Tests MedioDePagoTarjeta Management Component Should call load all on init" time="0.032">
-    </testcase>
-  </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:08" time="0.692" tests="1">
     <testcase classname="Component Tests DetallePresupuesto Management Component Should call load all on init" name="Component Tests DetallePresupuesto Management Component Should call load all on init" time="0.036">
     </testcase>
@@ -1742,10 +1696,6 @@
     <testcase classname="Component Tests FormaDePago Management Component Should call load all on init" name="Component Tests FormaDePago Management Component Should call load all on init" time="0.051">
     </testcase>
   </testsuite>
-  <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:20" time="1.174" tests="1">
-    <testcase classname="Component Tests TipoTarjeta Management Component Should call load all on init" name="Component Tests TipoTarjeta Management Component Should call load all on init" time="0.048">
-    </testcase>
-  </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:20" time="1.915" tests="1">
     <testcase classname="Component Tests PagoTarjeta Management Component Should call load all on init" name="Component Tests PagoTarjeta Management Component Should call load all on init" time="0.066">
     </testcase>
@@ -1840,10 +1790,6 @@
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:30" time="0.626" tests="1">
     <testcase classname="Component Tests EstadoDetallePedido Management Detail Component OnInit Should call load all on init" name="Component Tests EstadoDetallePedido Management Detail Component OnInit Should call load all on init" time="0.034">
-    </testcase>
-  </testsuite>
-  <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:30" time="0.68" tests="1">
-    <testcase classname="Component Tests MedioDePagoTarjeta Management Detail Component OnInit Should call load all on init" name="Component Tests MedioDePagoTarjeta Management Detail Component OnInit Should call load all on init" time="0.041">
     </testcase>
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:31" time="0.704" tests="1">
@@ -1956,10 +1902,6 @@
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:41" time="0.817" tests="1">
     <testcase classname="Component Tests PagoTarjeta Management Detail Component OnInit Should call load all on init" name="Component Tests PagoTarjeta Management Detail Component OnInit Should call load all on init" time="0.074">
-    </testcase>
-  </testsuite>
-  <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:42" time="1.575" tests="1">
-    <testcase classname="Component Tests TipoTarjeta Management Detail Component OnInit Should call load all on init" name="Component Tests TipoTarjeta Management Detail Component OnInit Should call load all on init" time="0.225">
     </testcase>
   </testsuite>
   <testsuite name="Component Tests" errors="0" failures="0" skipped="0" timestamp="2019-12-18T22:09:42" time="1.403" tests="1">

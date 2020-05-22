@@ -20,15 +20,10 @@ export class MedioDePagoChequeUpdateComponent implements OnInit {
   isSaving: boolean;
 
   bancos: IBanco[];
-  fechaReciboDp: any;
-  fechaCobroDp: any;
 
   editForm = this.fb.group({
     id: [],
-    fechaRecibo: [],
-    fechaCobro: [],
     numeroCheque: [null, [Validators.required]],
-    numeroCuenta: [],
     banco: [null, Validators.required]
   });
 
@@ -57,10 +52,7 @@ export class MedioDePagoChequeUpdateComponent implements OnInit {
   updateForm(medioDePagoCheque: IMedioDePagoCheque) {
     this.editForm.patchValue({
       id: medioDePagoCheque.id,
-      fechaRecibo: medioDePagoCheque.fechaRecibo,
-      fechaCobro: medioDePagoCheque.fechaCobro,
       numeroCheque: medioDePagoCheque.numeroCheque,
-      numeroCuenta: medioDePagoCheque.numeroCuenta,
       banco: medioDePagoCheque.banco
     });
   }
@@ -83,10 +75,7 @@ export class MedioDePagoChequeUpdateComponent implements OnInit {
     return {
       ...new MedioDePagoCheque(),
       id: this.editForm.get(['id']).value,
-      fechaRecibo: this.editForm.get(['fechaRecibo']).value,
-      fechaCobro: this.editForm.get(['fechaCobro']).value,
       numeroCheque: this.editForm.get(['numeroCheque']).value,
-      numeroCuenta: this.editForm.get(['numeroCuenta']).value,
       banco: this.editForm.get(['banco']).value
     };
   }

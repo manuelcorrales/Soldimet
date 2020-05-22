@@ -1,26 +1,7 @@
 {
     "fluentMethods": true,
     "clientRootFolder": "",
-    "relationships": [
-        {
-            "relationshipName": "tarjeta",
-            "otherEntityName": "tarjeta",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTarjeta"
-        },
-        {
-            "relationshipName": "tipoTarjeta",
-            "otherEntityName": "tipoTarjeta",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoTarjeta"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
             "fieldName": "ultimos4",

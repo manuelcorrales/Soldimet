@@ -53,12 +53,10 @@
     <include file="config/liquibase/changelog/20171214020915_added_entity_Presupuesto.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214021518_added_entity_Proveedor.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214021724_added_entity_Rubro.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20171214021929_added_entity_Tarjeta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214022205_added_entity_TipoDetalleMovimiento.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214022411_added_entity_TipoMovimiento.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214022819_added_entity_TipoParteMotor.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171214023016_added_entity_TipoRepuesto.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20171214023545_added_entity_TipoTarjeta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171220194500_added_entity_DetalleMovimiento.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171221010950_added_entity_CobranzaOperacion.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180615000159_added_entity_CobranzaRepuesto.xml" relativeToChangelogFile="false"/>
@@ -70,7 +68,6 @@
     <include file="config/liquibase/changelog/20181113233630_added_entity_DocumentationType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181114003224_added_entity_Sucursal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190222233823_added_entity_MedioDePago.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190401202429_added_entity_MedioDePagoTarjeta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190401202736_added_entity_MedioDePagoCheque.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20171213233426_added_entity_constraints_Articulo.xml" relativeToChangelogFile="false"/>
@@ -100,7 +97,6 @@
     <include file="config/liquibase/changelog/20180616212814_added_entity_constraints_MovimientoPresupuesto.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180617234431_added_entity_constraints_MovimientoPedido.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190222233823_added_entity_constraints_MedioDePago.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190401202429_added_entity_constraints_MedioDePagoTarjeta.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190401202736_added_entity_constraints_MedioDePagoCheque.xml" relativeToChangelogFile="false"/>
     <!--include file="config/liquibase/changelog/20191012120909_changelog.xml" relativeToChangelogFile="false"/-->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
@@ -110,4 +106,5 @@
     <include file="config/liquibase/changelog/20200413173250_changelog.xml" relativeToChangelogFile="false"/>
 
     <include file="config/liquibase/changelog/20200519_aplicaciones_motores.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200522211156_borrar_tarjeta.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

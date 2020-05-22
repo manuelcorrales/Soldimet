@@ -13,8 +13,6 @@ import { IFormaDePago } from 'app/shared/model/forma-de-pago.model';
 import { FormaDePagoService } from 'app/entities/forma-de-pago/forma-de-pago.service';
 import { IMedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
 import { MedioDePagoChequeService } from 'app/entities/medio-de-pago-cheque/medio-de-pago-cheque.service';
-import { IMedioDePagoTarjeta } from 'app/shared/model/medio-de-pago-tarjeta.model';
-import { MedioDePagoTarjetaService } from 'app/entities/medio-de-pago-tarjeta/medio-de-pago-tarjeta.service';
 
 @Component({
   selector: 'jhi-medio-de-pago-update',
@@ -27,13 +25,10 @@ export class MedioDePagoUpdateComponent implements OnInit {
 
   mediodepagocheques: IMedioDePagoCheque[];
 
-  mediodepagotarjetas: IMedioDePagoTarjeta[];
-
   editForm = this.fb.group({
     id: [],
     formaDePago: [null, Validators.required],
-    medioDePagoCheque: [],
-    medioDePagoTarjeta: []
+    medioDePagoCheque: []
   });
 
   constructor(
@@ -41,7 +36,6 @@ export class MedioDePagoUpdateComponent implements OnInit {
     protected medioDePagoService: MedioDePagoService,
     protected formaDePagoService: FormaDePagoService,
     protected medioDePagoChequeService: MedioDePagoChequeService,
-    protected medioDePagoTarjetaService: MedioDePagoTarjetaService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -83,39 +77,13 @@ export class MedioDePagoUpdateComponent implements OnInit {
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );
-    this.medioDePagoTarjetaService
-      .query({ filter: 'mediodepago-is-null' })
-      .pipe(
-        filter((mayBeOk: HttpResponse<IMedioDePagoTarjeta[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IMedioDePagoTarjeta[]>) => response.body)
-      )
-      .subscribe(
-        (res: IMedioDePagoTarjeta[]) => {
-          if (!this.editForm.get('medioDePagoTarjeta').value || !this.editForm.get('medioDePagoTarjeta').value.id) {
-            this.mediodepagotarjetas = res;
-          } else {
-            this.medioDePagoTarjetaService
-              .find(this.editForm.get('medioDePagoTarjeta').value.id)
-              .pipe(
-                filter((subResMayBeOk: HttpResponse<IMedioDePagoTarjeta>) => subResMayBeOk.ok),
-                map((subResponse: HttpResponse<IMedioDePagoTarjeta>) => subResponse.body)
-              )
-              .subscribe(
-                (subRes: IMedioDePagoTarjeta) => (this.mediodepagotarjetas = [subRes].concat(res)),
-                (subRes: HttpErrorResponse) => this.onError(subRes.message)
-              );
-          }
-        },
-        (res: HttpErrorResponse) => this.onError(res.message)
-      );
   }
 
   updateForm(medioDePago: IMedioDePago) {
     this.editForm.patchValue({
       id: medioDePago.id,
       formaDePago: medioDePago.formaDePago,
-      medioDePagoCheque: medioDePago.medioDePagoCheque,
-      medioDePagoTarjeta: medioDePago.medioDePagoTarjeta
+      medioDePagoCheque: medioDePago.medioDePagoCheque
     });
   }
 
@@ -138,8 +106,7 @@ export class MedioDePagoUpdateComponent implements OnInit {
       ...new MedioDePago(),
       id: this.editForm.get(['id']).value,
       formaDePago: this.editForm.get(['formaDePago']).value,
-      medioDePagoCheque: this.editForm.get(['medioDePagoCheque']).value,
-      medioDePagoTarjeta: this.editForm.get(['medioDePagoTarjeta']).value
+      medioDePagoCheque: this.editForm.get(['medioDePagoCheque']).value
     };
   }
 
@@ -164,10 +131,6 @@ export class MedioDePagoUpdateComponent implements OnInit {
   }
 
   trackMedioDePagoChequeById(index: number, item: IMedioDePagoCheque) {
-    return item.id;
-  }
-
-  trackMedioDePagoTarjetaById(index: number, item: IMedioDePagoTarjeta) {
     return item.id;
   }
 }

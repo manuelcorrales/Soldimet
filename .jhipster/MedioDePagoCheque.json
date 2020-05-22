@@ -14,23 +14,11 @@
     ],
     "fields": [
         {
-            "fieldName": "fechaRecibo",
-            "fieldType": "LocalDate"
-        },
-        {
-            "fieldName": "fechaCobro",
-            "fieldType": "LocalDate"
-        },
-        {
             "fieldName": "numeroCheque",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
-        },
-        {
-            "fieldName": "numeroCuenta",
-            "fieldType": "String"
         }
     ],
     "changelogDate": "20190401202736",

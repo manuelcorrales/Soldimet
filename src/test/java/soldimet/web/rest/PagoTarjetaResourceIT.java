@@ -3,8 +3,6 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 import soldimet.domain.PagoTarjeta;
 import soldimet.domain.FormaDePago;
-import soldimet.domain.Tarjeta;
-import soldimet.domain.TipoTarjeta;
 import soldimet.repository.PagoTarjetaRepository;
 import soldimet.service.PagoTarjetaService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -37,8 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class PagoTarjetaResourceIT {
 
-    private static final String DEFAULT_NUMERO_TARJETA = "AAAAAAAAAA";
-    private static final String UPDATED_NUMERO_TARJETA = "BBBBBBBBBB";
 
     @Autowired
     private PagoTarjetaRepository pagoTarjetaRepository;
@@ -84,8 +80,7 @@ public class PagoTarjetaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static PagoTarjeta createEntity(EntityManager em) {
-        PagoTarjeta pagoTarjeta = new PagoTarjeta()
-            .numeroTarjeta(DEFAULT_NUMERO_TARJETA);
+        PagoTarjeta pagoTarjeta = new PagoTarjeta();
         // Add required entity
         FormaDePago formaDePago;
         if (TestUtil.findAll(em, FormaDePago.class).isEmpty()) {
@@ -96,26 +91,6 @@ public class PagoTarjetaResourceIT {
             formaDePago = TestUtil.findAll(em, FormaDePago.class).get(0);
         }
         pagoTarjeta.setFormaDePago(formaDePago);
-        // Add required entity
-        Tarjeta tarjeta;
-        if (TestUtil.findAll(em, Tarjeta.class).isEmpty()) {
-            tarjeta = TarjetaResourceIT.createEntity(em);
-            em.persist(tarjeta);
-            em.flush();
-        } else {
-            tarjeta = TestUtil.findAll(em, Tarjeta.class).get(0);
-        }
-        pagoTarjeta.setTarjeta(tarjeta);
-        // Add required entity
-        TipoTarjeta tipoTarjeta;
-        if (TestUtil.findAll(em, TipoTarjeta.class).isEmpty()) {
-            tipoTarjeta = TipoTarjetaResourceIT.createEntity(em);
-            em.persist(tipoTarjeta);
-            em.flush();
-        } else {
-            tipoTarjeta = TestUtil.findAll(em, TipoTarjeta.class).get(0);
-        }
-        pagoTarjeta.setTipoTarjeta(tipoTarjeta);
         return pagoTarjeta;
     }
     /**
@@ -125,8 +100,7 @@ public class PagoTarjetaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static PagoTarjeta createUpdatedEntity(EntityManager em) {
-        PagoTarjeta pagoTarjeta = new PagoTarjeta()
-            .numeroTarjeta(UPDATED_NUMERO_TARJETA);
+        PagoTarjeta pagoTarjeta = new PagoTarjeta();
         // Add required entity
         FormaDePago formaDePago;
         if (TestUtil.findAll(em, FormaDePago.class).isEmpty()) {
@@ -137,26 +111,6 @@ public class PagoTarjetaResourceIT {
             formaDePago = TestUtil.findAll(em, FormaDePago.class).get(0);
         }
         pagoTarjeta.setFormaDePago(formaDePago);
-        // Add required entity
-        Tarjeta tarjeta;
-        if (TestUtil.findAll(em, Tarjeta.class).isEmpty()) {
-            tarjeta = TarjetaResourceIT.createUpdatedEntity(em);
-            em.persist(tarjeta);
-            em.flush();
-        } else {
-            tarjeta = TestUtil.findAll(em, Tarjeta.class).get(0);
-        }
-        pagoTarjeta.setTarjeta(tarjeta);
-        // Add required entity
-        TipoTarjeta tipoTarjeta;
-        if (TestUtil.findAll(em, TipoTarjeta.class).isEmpty()) {
-            tipoTarjeta = TipoTarjetaResourceIT.createUpdatedEntity(em);
-            em.persist(tipoTarjeta);
-            em.flush();
-        } else {
-            tipoTarjeta = TestUtil.findAll(em, TipoTarjeta.class).get(0);
-        }
-        pagoTarjeta.setTipoTarjeta(tipoTarjeta);
         return pagoTarjeta;
     }
 
@@ -179,8 +133,6 @@ public class PagoTarjetaResourceIT {
         // Validate the PagoTarjeta in the database
         List<PagoTarjeta> pagoTarjetaList = pagoTarjetaRepository.findAll();
         assertThat(pagoTarjetaList).hasSize(databaseSizeBeforeCreate + 1);
-        PagoTarjeta testPagoTarjeta = pagoTarjetaList.get(pagoTarjetaList.size() - 1);
-        assertThat(testPagoTarjeta.getNumeroTarjeta()).isEqualTo(DEFAULT_NUMERO_TARJETA);
     }
 
     @Test
@@ -202,25 +154,6 @@ public class PagoTarjetaResourceIT {
         assertThat(pagoTarjetaList).hasSize(databaseSizeBeforeCreate);
     }
 
-
-    @Test
-    @Transactional
-    public void checkNumeroTarjetaIsRequired() throws Exception {
-        int databaseSizeBeforeTest = pagoTarjetaRepository.findAll().size();
-        // set the field null
-        pagoTarjeta.setNumeroTarjeta(null);
-
-        // Create the PagoTarjeta, which fails.
-
-        restPagoTarjetaMockMvc.perform(post("/api/pago-tarjetas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pagoTarjeta)))
-            .andExpect(status().isBadRequest());
-
-        List<PagoTarjeta> pagoTarjetaList = pagoTarjetaRepository.findAll();
-        assertThat(pagoTarjetaList).hasSize(databaseSizeBeforeTest);
-    }
-
     @Test
     @Transactional
     public void getAllPagoTarjetas() throws Exception {
@@ -231,10 +164,9 @@ public class PagoTarjetaResourceIT {
         restPagoTarjetaMockMvc.perform(get("/api/pago-tarjetas?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(pagoTarjeta.getId().intValue())))
-            .andExpect(jsonPath("$.[*].numeroTarjeta").value(hasItem(DEFAULT_NUMERO_TARJETA.toString())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(pagoTarjeta.getId().intValue())));
     }
-    
+
     @Test
     @Transactional
     public void getPagoTarjeta() throws Exception {
@@ -245,8 +177,7 @@ public class PagoTarjetaResourceIT {
         restPagoTarjetaMockMvc.perform(get("/api/pago-tarjetas/{id}", pagoTarjeta.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(pagoTarjeta.getId().intValue()))
-            .andExpect(jsonPath("$.numeroTarjeta").value(DEFAULT_NUMERO_TARJETA.toString()));
+            .andExpect(jsonPath("$.id").value(pagoTarjeta.getId().intValue()));
     }
 
     @Test
@@ -255,33 +186,6 @@ public class PagoTarjetaResourceIT {
         // Get the pagoTarjeta
         restPagoTarjetaMockMvc.perform(get("/api/pago-tarjetas/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Transactional
-    public void updatePagoTarjeta() throws Exception {
-        // Initialize the database
-        pagoTarjetaService.save(pagoTarjeta);
-
-        int databaseSizeBeforeUpdate = pagoTarjetaRepository.findAll().size();
-
-        // Update the pagoTarjeta
-        PagoTarjeta updatedPagoTarjeta = pagoTarjetaRepository.findById(pagoTarjeta.getId()).get();
-        // Disconnect from session so that the updates on updatedPagoTarjeta are not directly saved in db
-        em.detach(updatedPagoTarjeta);
-        updatedPagoTarjeta
-            .numeroTarjeta(UPDATED_NUMERO_TARJETA);
-
-        restPagoTarjetaMockMvc.perform(put("/api/pago-tarjetas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPagoTarjeta)))
-            .andExpect(status().isOk());
-
-        // Validate the PagoTarjeta in the database
-        List<PagoTarjeta> pagoTarjetaList = pagoTarjetaRepository.findAll();
-        assertThat(pagoTarjetaList).hasSize(databaseSizeBeforeUpdate);
-        PagoTarjeta testPagoTarjeta = pagoTarjetaList.get(pagoTarjetaList.size() - 1);
-        assertThat(testPagoTarjeta.getNumeroTarjeta()).isEqualTo(UPDATED_NUMERO_TARJETA);
     }
 
     @Test

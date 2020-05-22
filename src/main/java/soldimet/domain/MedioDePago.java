@@ -34,10 +34,6 @@ public class MedioDePago implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private MedioDePagoCheque medioDePagoCheque;
 
-    @OneToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(unique = true, nullable = true)
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private MedioDePagoTarjeta medioDePagoTarjeta;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -74,18 +70,7 @@ public class MedioDePago implements Serializable {
         this.medioDePagoCheque = medioDePagoCheque;
     }
 
-    public MedioDePagoTarjeta getMedioDePagoTarjeta() {
-        return medioDePagoTarjeta;
-    }
 
-    public MedioDePago medioDePagoTarjeta(MedioDePagoTarjeta medioDePagoTarjeta) {
-        this.medioDePagoTarjeta = medioDePagoTarjeta;
-        return this;
-    }
-
-    public void setMedioDePagoTarjeta(MedioDePagoTarjeta medioDePagoTarjeta) {
-        this.medioDePagoTarjeta = medioDePagoTarjeta;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

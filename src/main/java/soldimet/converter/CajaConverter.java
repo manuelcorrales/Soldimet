@@ -13,7 +13,6 @@ import soldimet.domain.CostoRepuesto;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.MedioDePagoCheque;
-import soldimet.domain.MedioDePagoTarjeta;
 import soldimet.domain.Movimiento;
 import soldimet.domain.MovimientoArticulo;
 import soldimet.domain.MovimientoPedido;
@@ -141,16 +140,9 @@ public class CajaConverter {
         String tip = null;
         String formaDePago = medioDePago.getFormaDePago().getNombreFormaDePago();
 
-        if (formaDePago.equals(globales.NOMBRE_FORMA_DE_PAGO_EFECTIVO)) {
-            // No agrego más nada a la forma de pago
-        }
-        if (formaDePago.equals(globales.NOMBRE_FORMA_DE_PAGO_TARJETA)) {
-             MedioDePagoTarjeta medioDePagoTarjeta = medioDePago.getMedioDePagoTarjeta();
-            tip = medioDePagoTarjeta.getTarjeta().getNombreTarjeta() + " " + medioDePagoTarjeta.getTipoTarjeta() + "(" + medioDePagoTarjeta.getUltimos4()+")";
-        }
         if (formaDePago.equals(globales.NOMBRE_FORMA_DE_PAGO_CHEQUE)) {
             MedioDePagoCheque medioDePagoCheque = medioDePago.getMedioDePagoCheque();
-            tip = medioDePagoCheque.getBanco().getNombreBanco() + " (" + medioDePagoCheque.getNumeroCheque() + ") " + medioDePagoCheque.getFechaCobro().toString();
+            tip = medioDePagoCheque.getBanco().getNombreBanco() + " (" + medioDePagoCheque.getNumeroCheque() + ") ";
         }
 
         return tip;

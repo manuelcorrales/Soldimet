@@ -136,38 +136,12 @@
                 <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoEfectivo" class="row">
                 </div>
                 <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoTarjeta" class="row col">
-                    <div class="form-group col">
-                        <label>Tarjeta</label>
-                        <select class="form-control" [(ngModel)]="medioPagoTarjeta.tarjeta" name="tarjetaElegida">
-                            <option selected disabled>Indique nombre</option>
-                            <option *ngFor="let tarjeta of tarjetas" [ngValue]="tarjeta">
-                                {{tarjeta.nombreTarjeta}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group col">
-                        <label>Tipo tarjeta</label>
-                        <select class="form-control" [(ngModel)]="medioPagoTarjeta.tipoTarjeta" name="tipoTarjeta">
-                            <option selected disabled>Indique tipo tarjeta</option>
-                            <option *ngFor="let tipoTarjeta of tipoTarjetas" [ngValue]="tipoTarjeta">
-                                {{tipoTarjeta.nombreTipoTarjeta}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label>Últimas 4</label>
-                        <input type="number" class="form-control" aria-label="Últimos 4 dígitos" name="ultimos_cuatro" min='0' max='9999' [(ngModel)]="medioPagoTarjeta.ultimos4">
-                    </div>
                 </div>
                 <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoChecke" class="col">
                     <div class="row col">
                         <div class="form-group col">
-                            <label>Número cheque</label>
+                            <label>Últimos 4</label>
                             <input type="number" class="form-control" aria-label="numero_cheque" name="numero_cheque" [(ngModel)]="medioPagoCheque.numeroCheque">
-                        </div>
-                        <div class="form-group col">
-                            <label>Número cuenta</label>
-                            <input type="number" class="form-control" aria-label="numero_cuenta" name="numero_cuenta" [(ngModel)]="medioPagoCheque.numeroCuenta">
                         </div>
                         <div class="form-group col">
                             <label>Banco</label>
@@ -177,28 +151,6 @@
                                     {{banco.nombreBanco}}
                                 </option>
                             </select>
-                        </div>
-                    </div>
-                    <div class="row col-md-8">
-                        <div class="form-group col">
-                                <label>Fecha recibo</label>
-                            <div class="input-group">
-                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_recibo" [(ngModel)]="medioPagoCheque.fechaRecibo" ngbDatepicker
-                                    #d1="ngbDatepicker">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col">
-                                <label>Fecha cobro</label>
-                            <div class="input-group">
-                                <input class="form-control" placeholder="dd-mm-yyyy" name="fecha_cobro" [(ngModel)]="medioPagoCheque.fechaCobro" ngbDatepicker
-                                    #d2="ngbDatepicker">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -36,19 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SoldimetApp.class)
 public class MedioDePagoChequeResourceIT {
 
-    private static final LocalDate DEFAULT_FECHA_RECIBO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_RECIBO = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_RECIBO = LocalDate.ofEpochDay(-1L);
-
-    private static final LocalDate DEFAULT_FECHA_COBRO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_COBRO = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_COBRO = LocalDate.ofEpochDay(-1L);
-
     private static final String DEFAULT_NUMERO_CHEQUE = "AAAAAAAAAA";
     private static final String UPDATED_NUMERO_CHEQUE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NUMERO_CUENTA = "AAAAAAAAAA";
-    private static final String UPDATED_NUMERO_CUENTA = "BBBBBBBBBB";
 
     @Autowired
     private MedioDePagoChequeRepository medioDePagoChequeRepository;
@@ -92,10 +81,7 @@ public class MedioDePagoChequeResourceIT {
      */
     public static MedioDePagoCheque createEntity(EntityManager em) {
         MedioDePagoCheque medioDePagoCheque = new MedioDePagoCheque()
-            .fechaRecibo(DEFAULT_FECHA_RECIBO)
-            .fechaCobro(DEFAULT_FECHA_COBRO)
-            .numeroCheque(DEFAULT_NUMERO_CHEQUE)
-            .numeroCuenta(DEFAULT_NUMERO_CUENTA);
+            .numeroCheque(DEFAULT_NUMERO_CHEQUE);
         // Add required entity
         Banco banco;
         if (TestUtil.findAll(em, Banco.class).isEmpty()) {
@@ -116,10 +102,7 @@ public class MedioDePagoChequeResourceIT {
      */
     public static MedioDePagoCheque createUpdatedEntity(EntityManager em) {
         MedioDePagoCheque medioDePagoCheque = new MedioDePagoCheque()
-            .fechaRecibo(UPDATED_FECHA_RECIBO)
-            .fechaCobro(UPDATED_FECHA_COBRO)
-            .numeroCheque(UPDATED_NUMERO_CHEQUE)
-            .numeroCuenta(UPDATED_NUMERO_CUENTA);
+            .numeroCheque(UPDATED_NUMERO_CHEQUE);
         // Add required entity
         Banco banco;
         if (TestUtil.findAll(em, Banco.class).isEmpty()) {
@@ -153,10 +136,7 @@ public class MedioDePagoChequeResourceIT {
         List<MedioDePagoCheque> medioDePagoChequeList = medioDePagoChequeRepository.findAll();
         assertThat(medioDePagoChequeList).hasSize(databaseSizeBeforeCreate + 1);
         MedioDePagoCheque testMedioDePagoCheque = medioDePagoChequeList.get(medioDePagoChequeList.size() - 1);
-        assertThat(testMedioDePagoCheque.getFechaRecibo()).isEqualTo(DEFAULT_FECHA_RECIBO);
-        assertThat(testMedioDePagoCheque.getFechaCobro()).isEqualTo(DEFAULT_FECHA_COBRO);
         assertThat(testMedioDePagoCheque.getNumeroCheque()).isEqualTo(DEFAULT_NUMERO_CHEQUE);
-        assertThat(testMedioDePagoCheque.getNumeroCuenta()).isEqualTo(DEFAULT_NUMERO_CUENTA);
     }
 
     @Test
@@ -208,12 +188,9 @@ public class MedioDePagoChequeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(medioDePagoCheque.getId().intValue())))
-            .andExpect(jsonPath("$.[*].fechaRecibo").value(hasItem(DEFAULT_FECHA_RECIBO.toString())))
-            .andExpect(jsonPath("$.[*].fechaCobro").value(hasItem(DEFAULT_FECHA_COBRO.toString())))
-            .andExpect(jsonPath("$.[*].numeroCheque").value(hasItem(DEFAULT_NUMERO_CHEQUE.toString())))
-            .andExpect(jsonPath("$.[*].numeroCuenta").value(hasItem(DEFAULT_NUMERO_CUENTA.toString())));
+            .andExpect(jsonPath("$.[*].numeroCheque").value(hasItem(DEFAULT_NUMERO_CHEQUE.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getMedioDePagoCheque() throws Exception {
@@ -225,10 +202,7 @@ public class MedioDePagoChequeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(medioDePagoCheque.getId().intValue()))
-            .andExpect(jsonPath("$.fechaRecibo").value(DEFAULT_FECHA_RECIBO.toString()))
-            .andExpect(jsonPath("$.fechaCobro").value(DEFAULT_FECHA_COBRO.toString()))
-            .andExpect(jsonPath("$.numeroCheque").value(DEFAULT_NUMERO_CHEQUE.toString()))
-            .andExpect(jsonPath("$.numeroCuenta").value(DEFAULT_NUMERO_CUENTA.toString()));
+            .andExpect(jsonPath("$.numeroCheque").value(DEFAULT_NUMERO_CHEQUE.toString()));
     }
 
     @Test
@@ -252,10 +226,7 @@ public class MedioDePagoChequeResourceIT {
         // Disconnect from session so that the updates on updatedMedioDePagoCheque are not directly saved in db
         em.detach(updatedMedioDePagoCheque);
         updatedMedioDePagoCheque
-            .fechaRecibo(UPDATED_FECHA_RECIBO)
-            .fechaCobro(UPDATED_FECHA_COBRO)
-            .numeroCheque(UPDATED_NUMERO_CHEQUE)
-            .numeroCuenta(UPDATED_NUMERO_CUENTA);
+            .numeroCheque(UPDATED_NUMERO_CHEQUE);
 
         restMedioDePagoChequeMockMvc.perform(put("/api/medio-de-pago-cheques")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -266,10 +237,7 @@ public class MedioDePagoChequeResourceIT {
         List<MedioDePagoCheque> medioDePagoChequeList = medioDePagoChequeRepository.findAll();
         assertThat(medioDePagoChequeList).hasSize(databaseSizeBeforeUpdate);
         MedioDePagoCheque testMedioDePagoCheque = medioDePagoChequeList.get(medioDePagoChequeList.size() - 1);
-        assertThat(testMedioDePagoCheque.getFechaRecibo()).isEqualTo(UPDATED_FECHA_RECIBO);
-        assertThat(testMedioDePagoCheque.getFechaCobro()).isEqualTo(UPDATED_FECHA_COBRO);
         assertThat(testMedioDePagoCheque.getNumeroCheque()).isEqualTo(UPDATED_NUMERO_CHEQUE);
-        assertThat(testMedioDePagoCheque.getNumeroCuenta()).isEqualTo(UPDATED_NUMERO_CUENTA);
     }
 
     @Test

@@ -51,27 +51,19 @@ export class PagoChequeService {
   }
 
   protected convertDateFromClient(pagoCheque: IPagoCheque): IPagoCheque {
-    const copy: IPagoCheque = Object.assign({}, pagoCheque, {
-      fechaCobro: pagoCheque.fechaCobro != null && pagoCheque.fechaCobro.isValid() ? pagoCheque.fechaCobro.format(DATE_FORMAT) : null,
-      fechaRecibo: pagoCheque.fechaRecibo != null && pagoCheque.fechaRecibo.isValid() ? pagoCheque.fechaRecibo.format(DATE_FORMAT) : null
-    });
+    const copy: IPagoCheque = Object.assign({}, pagoCheque, {});
     return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.fechaCobro = res.body.fechaCobro != null ? moment(res.body.fechaCobro) : null;
-      res.body.fechaRecibo = res.body.fechaRecibo != null ? moment(res.body.fechaRecibo) : null;
     }
     return res;
   }
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
-      res.body.forEach((pagoCheque: IPagoCheque) => {
-        pagoCheque.fechaCobro = pagoCheque.fechaCobro != null ? moment(pagoCheque.fechaCobro) : null;
-        pagoCheque.fechaRecibo = pagoCheque.fechaRecibo != null ? moment(pagoCheque.fechaRecibo) : null;
-      });
+      res.body.forEach((pagoCheque: IPagoCheque) => {});
     }
     return res;
   }

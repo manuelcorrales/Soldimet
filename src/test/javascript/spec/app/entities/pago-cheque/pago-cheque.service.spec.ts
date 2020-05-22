@@ -24,7 +24,7 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new PagoCheque(0, currentDate, currentDate, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new PagoCheque(0, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -74,10 +74,7 @@ describe('Service Tests', () => {
       it('should update a PagoCheque', () => {
         const returnedFromService = Object.assign(
           {
-            fechaCobro: currentDate.format(DATE_FORMAT),
-            fechaRecibo: currentDate.format(DATE_FORMAT),
-            numeroCheque: 'BBBBBB',
-            numeroCuenta: 'BBBBBB'
+            numeroCheque: 'BBBBBB'
           },
           elemDefault
         );
@@ -101,10 +98,7 @@ describe('Service Tests', () => {
       it('should return a list of PagoCheque', () => {
         const returnedFromService = Object.assign(
           {
-            fechaCobro: currentDate.format(DATE_FORMAT),
-            fechaRecibo: currentDate.format(DATE_FORMAT),
-            numeroCheque: 'BBBBBB',
-            numeroCuenta: 'BBBBBB'
+            numeroCheque: 'BBBBBB'
           },
           elemDefault
         );

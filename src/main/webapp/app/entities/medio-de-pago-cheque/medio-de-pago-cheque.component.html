@@ -18,10 +18,7 @@
             <thead>
             <tr>
             <th><span>ID</span></th>
-            <th><span>Fecha Recibo</span></th>
-            <th><span>Fecha Cobro</span></th>
-            <th><span>Numero Cheque</span></th>
-            <th><span>Numero Cuenta</span></th>
+            <th><span>Últimos 4</span></th>
             <th><span>Banco</span></th>
             <th></th>
             </tr>
@@ -29,10 +26,7 @@
             <tbody>
             <tr *ngFor="let medioDePagoCheque of medioDePagoCheques ;trackBy: trackId">
                 <td><a [routerLink]="['/medio-de-pago-cheque', medioDePagoCheque.id, 'view' ]">{{medioDePagoCheque.id}}</a></td>
-                <td>{{medioDePagoCheque.fechaRecibo | date:'mediumDate'}}</td>
-                <td>{{medioDePagoCheque.fechaCobro | date:'mediumDate'}}</td>
                 <td>{{medioDePagoCheque.numeroCheque}}</td>
-                <td>{{medioDePagoCheque.numeroCuenta}}</td>
                 <td>
                     <div *ngIf="medioDePagoCheque.banco">
                         <a [routerLink]="['/banco', medioDePagoCheque.banco?.id, 'view' ]" >{{medioDePagoCheque.banco?.nombreBanco}}</a>

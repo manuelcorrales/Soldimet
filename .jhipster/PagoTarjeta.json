@@ -11,37 +11,9 @@
             "otherEntityField": "nombreFormaDePago",
             "ownerSide": true,
             "otherEntityRelationshipName": "pagoTarjeta"
-        },
-        {
-            "relationshipName": "tarjeta",
-            "otherEntityName": "tarjeta",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTarjeta"
-        },
-        {
-            "relationshipName": "tipoTarjeta",
-            "otherEntityName": "tipoTarjeta",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoTarjeta"
         }
     ],
-    "fields": [
-        {
-            "fieldName": "numeroTarjeta",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "3"
-        }
-    ],
+    "fields": [],
     "changelogDate": "20171214015025",
     "dto": "no",
     "service": "serviceClass",

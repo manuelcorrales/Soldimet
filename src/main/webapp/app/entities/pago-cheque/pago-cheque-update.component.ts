@@ -29,12 +29,8 @@ export class PagoChequeUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    fechaCobro: [null, [Validators.required]],
-    fechaRecibo: [null, [Validators.required]],
     numeroCheque: [null, [Validators.required, Validators.minLength(3)]],
-    numeroCuenta: [],
-    banco: [null, Validators.required],
-    formaDePago: [null, Validators.required]
+    banco: [null, Validators.required]
   });
 
   constructor(
@@ -88,12 +84,8 @@ export class PagoChequeUpdateComponent implements OnInit {
   updateForm(pagoCheque: IPagoCheque) {
     this.editForm.patchValue({
       id: pagoCheque.id,
-      fechaCobro: pagoCheque.fechaCobro,
-      fechaRecibo: pagoCheque.fechaRecibo,
       numeroCheque: pagoCheque.numeroCheque,
-      numeroCuenta: pagoCheque.numeroCuenta,
-      banco: pagoCheque.banco,
-      formaDePago: pagoCheque.formaDePago
+      banco: pagoCheque.banco
     });
   }
 
@@ -115,12 +107,8 @@ export class PagoChequeUpdateComponent implements OnInit {
     return {
       ...new PagoCheque(),
       id: this.editForm.get(['id']).value,
-      fechaCobro: this.editForm.get(['fechaCobro']).value,
-      fechaRecibo: this.editForm.get(['fechaRecibo']).value,
       numeroCheque: this.editForm.get(['numeroCheque']).value,
-      numeroCuenta: this.editForm.get(['numeroCuenta']).value,
-      banco: this.editForm.get(['banco']).value,
-      formaDePago: this.editForm.get(['formaDePago']).value
+      banco: this.editForm.get(['banco']).value
     };
   }
 

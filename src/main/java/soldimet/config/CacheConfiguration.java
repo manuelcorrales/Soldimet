@@ -90,12 +90,10 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.Presupuesto.class.getName() + ".detallePresupuestos");
             createCache(cm, soldimet.domain.Proveedor.class.getName());
             createCache(cm, soldimet.domain.Rubro.class.getName());
-            createCache(cm, soldimet.domain.Tarjeta.class.getName());
             createCache(cm, soldimet.domain.TipoDetalleMovimiento.class.getName());
             createCache(cm, soldimet.domain.TipoMovimiento.class.getName());
             createCache(cm, soldimet.domain.TipoParteMotor.class.getName());
             createCache(cm, soldimet.domain.TipoRepuesto.class.getName());
-            createCache(cm, soldimet.domain.TipoTarjeta.class.getName());
             createCache(cm, soldimet.domain.DetalleMovimiento.class.getName());
             createCache(cm, soldimet.domain.CobranzaOperacion.class.getName());
             createCache(cm, soldimet.domain.CobranzaRepuesto.class.getName());
@@ -108,7 +106,6 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.DocumentationType.class.getName());
             createCache(cm, soldimet.domain.Sucursal.class.getName());
             createCache(cm, soldimet.domain.MedioDePago.class.getName());
-            createCache(cm, soldimet.domain.MedioDePagoTarjeta.class.getName());
             createCache(cm, soldimet.domain.MedioDePagoCheque.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
