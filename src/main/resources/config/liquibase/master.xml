@@ -107,4 +107,7 @@
 
     <include file="config/liquibase/changelog/20200519_aplicaciones_motores.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200522211156_borrar_tarjeta.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200522222818_agregar_marca_a_cobranza_repuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200522225232_agregar_cilindrada_aplicacion_a_cobranza_repuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200522231705_agregar_fecha_cobranza_repuesto.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -6,6 +6,16 @@
     </label>
 </div>
 <div class="form-group col">
+    <input type="text" placeholder="Marca" [(ngModel)]="marca" [resultFormatter]="formatterMarca" id="typeahead-focusMarca" id="marcaID"
+        type="text" class="form-control" [ngbTypeahead]="searchMarca" (focus)="focusMarca$.next($event.target.value)" (click)="clickMarca$.next($event.target.value)"
+        #instanceNTAMarca="ngbTypeahead" [inputFormatter]="formatterMarca" [disabled]="!seleccionado"/>
+</div>
+<div class="form-group col">
+    <input type="text" class="form-control" placeholder="Detalle"
+    [(ngModel)]="descripcion" [disabled]="!seleccionado">
+</div>
+<div class="form-group col">
     <input type="number" class="form-control" aria-label="Ingrese un nuevo valor"
     [(ngModel)]="precio" [disabled]="!seleccionado" (change)='cambioValor()'>
+    <small class="form-check-label text-muted" *ngIf="cobranzaUltimoRepuesto">{{cobranzaUltimoRepuesto?.fecha | date:'MM/yy' }}</small>
 </div>

@@ -26,12 +26,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import soldimet.domain.Aplicacion;
 import soldimet.domain.Cliente;
+import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.EstadoPresupuesto;
@@ -102,6 +104,29 @@ public class PresupuestoController {
         return operaciones;
     }
 
+    @GetMapping("/buscarExistente")
+    public Presupuesto buscarPresupuestoExistente(
+        @RequestParam("aplicacion") Long aplicacion,
+        @RequestParam("cilindrada") Long cilindrada
+    ) {
+        log.debug("request /api/presupuestos/buscarExistente: {}", aplicacion, cilindrada);
+        Presupuesto presupuesto = expertoPresupuesto.buscarPresupuestoExistente(aplicacion, cilindrada);
+        log.debug("response /api/presupuestos/buscarExistente: {}", presupuesto);
+        return presupuesto;
+    }
+
+    @GetMapping("/buscarCobranzaRepuestos")
+    public List<CobranzaRepuesto> buscarListaCobranzaRepuestos(
+        @RequestParam("aplicacion") Long aplicacion,
+        @RequestParam("cilindrada") Long cilindrada,
+        @RequestParam("tipoParteMotor") Long tipoParteMotor
+    ) {
+        log.debug("request /api/presupuestos/buscarCobranzaRepuestos: {}", aplicacion, cilindrada, tipoParteMotor);
+        List<CobranzaRepuesto> cobranzas = expertoPresupuesto.buscarCobranzaRepuestos(aplicacion, cilindrada, tipoParteMotor);
+        log.debug("response /api/presupuestos/buscarCobranzaRepuestos: {}", cobranzas);
+        return cobranzas;
+    }
+
     @GetMapping("/getCostoRepuestoPresupuesto/{presupuestoId}")
     public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(@PathVariable("presupuestoId") Long presupuestoId) {
         log.debug("request /api/presupuestos/getCostoRepuestoPresupuesto: presupuestoId {}", presupuestoId);
@@ -109,13 +134,6 @@ public class PresupuestoController {
         log.debug("response /api/presupuestos/getCostoRepuestoPresupuesto: {}", costos);
         return costos;
     }
-
-    // @GetMapping("/getClientesByNombre/{nombreCliente}")
-    // public List<Cliente> buscarClientesPorNombre(@PathVariable("nombreCliente")
-    // String nombreCliente) {
-
-    // return expertoPresupuesto.buscarClientesPornombre(nombreCliente);
-    // }
 
     @GetMapping("/getAllClientes")
     public List<Cliente> buscarTodosLosclientes() {

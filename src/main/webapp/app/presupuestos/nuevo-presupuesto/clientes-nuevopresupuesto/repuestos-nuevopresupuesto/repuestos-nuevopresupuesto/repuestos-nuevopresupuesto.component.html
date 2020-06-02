@@ -3,9 +3,10 @@
         <strong>{{detalle.tipoParteMotor.nombreTipoParteMotor}}</strong>
     </div>
     <br>
-    <div *ngFor="let repuesto of repuestos" class="container">
+    <div *ngFor="let elemento of listado" class="container">
         <jhi-repuesto-precio #repuestoComponents (eventoCambioValor)="cambioTotalRepuestos()"
-        [repuesto]="repuesto" class="row align-items-center top-buffer">
-    </jhi-repuesto-precio>
+            [repuesto]="elemento.repuesto" [cobranzaUltimoRepuesto]="elemento.cobranzaUltimoRepuesto" [listaCobranzas]="elemento.cobranzas"
+            class="row align-items-center top-buffer">
+        </jhi-repuesto-precio>
     </div>
 </div>

@@ -8,7 +8,38 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreTipoRepuesto"
+            "otherEntityField": "nombreTipoRepuesto",
+            "otherEntityRelationshipName": "cobranzaRepuesto"
+        },
+        {
+            "relationshipName": "marca",
+            "otherEntityName": "marca",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreMarca",
+            "otherEntityRelationshipName": "cobranzaRepuesto"
+        },
+        {
+            "relationshipName": "cilindrada",
+            "otherEntityName": "cilindrada",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "cantidadDeCilindros",
+            "otherEntityRelationshipName": "cobranzaRepuesto"
+        },
+        {
+            "relationshipName": "aplicacion",
+            "otherEntityName": "aplicacion",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreAplicacion",
+            "otherEntityRelationshipName": "cobranzaRepuesto"
         }
     ],
     "fields": [
@@ -20,12 +51,25 @@
                 "min"
             ],
             "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "detalle",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fecha",
+            "fieldType": "LocalDate"
         }
     ],
     "changelogDate": "20180615000159",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "cobranza_repuesto",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
     "pagination": "no"
 }

@@ -57,7 +57,7 @@ public class DetallePresupuesto implements Serializable {
     @JsonIgnoreProperties("detallePresupuestos")
     private TipoParteMotor tipoParteMotor;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
+    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
     @JoinColumn(name= "detallePresupuesto")
     @JsonInclude
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

@@ -9,10 +9,36 @@
                 <dd>
                     <span>{{cobranzaRepuesto.valor}}</span>
                 </dd>
+                <dt><span>Detalle</span></dt>
+                <dd>
+                    <span>{{cobranzaRepuesto.detalle}}</span>
+                </dd>
+                <dt><span>Fecha</span></dt>
+                <dd>
+                    <span>{{cobranzaRepuesto.fecha}}</span>
+                </dd>
                 <dt><span>Tipo Repuesto</span></dt>
                 <dd>
                     <div *ngIf="cobranzaRepuesto.tipoRepuesto">
                         <a [routerLink]="['/tipo-repuesto', cobranzaRepuesto.tipoRepuesto?.id, 'view']">{{cobranzaRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
+                    </div>
+                </dd>
+                <dt><span>Marca</span></dt>
+                <dd>
+                    <div *ngIf="cobranzaRepuesto.marca">
+                        <a [routerLink]="['/marca', cobranzaRepuesto.marca?.id, 'view']">{{cobranzaRepuesto.marca?.nombreMarca}}</a>
+                    </div>
+                </dd>
+                <dt><span>Cilindrada</span></dt>
+                <dd>
+                    <div *ngIf="cobranzaRepuesto.cilindrada">
+                        <a [routerLink]="['/cilindrada', cobranzaRepuesto.cilindrada?.id, 'view']">{{cobranzaRepuesto.cilindrada?.cantidadDeCilindros}}</a>
+                    </div>
+                </dd>
+                <dt><span>Aplicacion</span></dt>
+                <dd>
+                    <div *ngIf="cobranzaRepuesto.aplicacion">
+                        <a [routerLink]="['/aplicacion', cobranzaRepuesto.aplicacion?.id, 'view']">{{cobranzaRepuesto.aplicacion?.nombreAplicacion}}</a>
                     </div>
                 </dd>
             </dl>

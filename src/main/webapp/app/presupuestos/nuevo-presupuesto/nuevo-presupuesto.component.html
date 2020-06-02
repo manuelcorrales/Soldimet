@@ -9,6 +9,25 @@
         </div>
         <jhi-clientes-nuevopresupuesto #cliente></jhi-clientes-nuevopresupuesto>
         <jhi-motor-nuevo-presupuesto (eventoDetallePresupuesto)="recibirDetalle($event)" (eventoIsSoldadura)="recibirIsSoldadura($event)"></jhi-motor-nuevo-presupuesto>
+        <div *ngIf="mostrarResultadoBusquedaPresupuestoViejo" class="container">
+            <div *ngIf="presupuestoViejo" class="card border-success mb-3">
+                <div class="card-body text-success text-center">
+                    <h5 class="card-title">
+                        Se encontró un presupuesto anterior de este motor!
+                        <small *ngFor="let detalleViejo of presupuestoViejo?.detallePresupuestos"> ({{detalleViejo?.tipoParteMotor?.nombreTipoParteMotor}})</small>.
+                    </h5>
+                    <p class="card-text">
+                        Se va a utilizar como base para la creación de este presupuesto
+
+                    </p>
+                </div>
+            </div>
+            <div *ngIf="!presupuestoViejo" class="card border-info mb-3">
+                <div class="card-body text-info text-center">
+                    <h5 class="card-title">No existe un presupuesto anterior sobre este motor.</h5>
+                </div>
+            </div>
+        </div>
         <div class="row row-eq-height">
             <div class="col-md-4">
                 <div class="card jh-card border-info mb-3">

@@ -6,11 +6,18 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import * as moment from 'moment';
 import { JhiAlertService } from 'ng-jhipster';
 import { ICobranzaRepuesto, CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
-import { CobranzaRepuestoService } from 'app/entities/cobranza-repuesto/cobranza-repuesto.service';
+import { CobranzaRepuestoService } from './cobranza-repuesto.service';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
+import { IMarca } from 'app/shared/model/marca.model';
+import { MarcaService } from 'app/entities/marca/marca.service';
+import { ICilindrada } from 'app/shared/model/cilindrada.model';
+import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
+import { IAplicacion } from 'app/shared/model/aplicacion.model';
+import { AplicacionService } from 'app/entities/aplicacion/aplicacion.service';
 
 @Component({
   selector: 'jhi-cobranza-repuesto-update',
@@ -21,16 +28,31 @@ export class CobranzaRepuestoUpdateComponent implements OnInit {
 
   tiporepuestos: ITipoRepuesto[];
 
+  marcas: IMarca[];
+
+  cilindradas: ICilindrada[];
+
+  aplicacions: IAplicacion[];
+  fechaDp: any;
+
   editForm = this.fb.group({
     id: [],
     valor: [null, [Validators.required, Validators.min(0)]],
-    tipoRepuesto: [null, Validators.required]
+    detalle: [null, [Validators.required]],
+    fecha: [],
+    tipoRepuesto: [null, Validators.required],
+    marca: [null, Validators.required],
+    cilindrada: [null, Validators.required],
+    aplicacion: [null, Validators.required]
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected cobranzaRepuestoService: CobranzaRepuestoService,
     protected tipoRepuestoService: TipoRepuestoService,
+    protected marcaService: MarcaService,
+    protected cilindradaService: CilindradaService,
+    protected aplicacionService: AplicacionService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -47,13 +69,39 @@ export class CobranzaRepuestoUpdateComponent implements OnInit {
         map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
       )
       .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.marcaService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IMarca[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IMarca[]>) => response.body)
+      )
+      .subscribe((res: IMarca[]) => (this.marcas = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.cilindradaService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ICilindrada[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ICilindrada[]>) => response.body)
+      )
+      .subscribe((res: ICilindrada[]) => (this.cilindradas = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.aplicacionService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IAplicacion[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IAplicacion[]>) => response.body)
+      )
+      .subscribe((res: IAplicacion[]) => (this.aplicacions = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(cobranzaRepuesto: ICobranzaRepuesto) {
     this.editForm.patchValue({
       id: cobranzaRepuesto.id,
       valor: cobranzaRepuesto.valor,
-      tipoRepuesto: cobranzaRepuesto.tipoRepuesto
+      detalle: cobranzaRepuesto.detalle,
+      fecha: cobranzaRepuesto.fecha,
+      tipoRepuesto: cobranzaRepuesto.tipoRepuesto,
+      marca: cobranzaRepuesto.marca,
+      cilindrada: cobranzaRepuesto.cilindrada,
+      aplicacion: cobranzaRepuesto.aplicacion
     });
   }
 
@@ -76,7 +124,12 @@ export class CobranzaRepuestoUpdateComponent implements OnInit {
       ...new CobranzaRepuesto(),
       id: this.editForm.get(['id']).value,
       valor: this.editForm.get(['valor']).value,
-      tipoRepuesto: this.editForm.get(['tipoRepuesto']).value
+      detalle: this.editForm.get(['detalle']).value,
+      fecha: this.editForm.get(['fecha']).value,
+      tipoRepuesto: this.editForm.get(['tipoRepuesto']).value,
+      marca: this.editForm.get(['marca']).value,
+      cilindrada: this.editForm.get(['cilindrada']).value,
+      aplicacion: this.editForm.get(['aplicacion']).value
     };
   }
 
@@ -97,6 +150,18 @@ export class CobranzaRepuestoUpdateComponent implements OnInit {
   }
 
   trackTipoRepuestoById(index: number, item: ITipoRepuesto) {
+    return item.id;
+  }
+
+  trackMarcaById(index: number, item: IMarca) {
+    return item.id;
+  }
+
+  trackCilindradaById(index: number, item: ICilindrada) {
+    return item.id;
+  }
+
+  trackAplicacionById(index: number, item: IAplicacion) {
     return item.id;
   }
 }

@@ -48,6 +48,8 @@ import soldimet.domain.TipoRepuesto;
 import soldimet.repository.AplicacionRepository;
 import soldimet.repository.CilindradaRepository;
 import soldimet.repository.ClienteRepository;
+import soldimet.repository.CobranzaRepuestoRepository;
+import soldimet.repository.DetallePresupuestoRepository;
 import soldimet.repository.EstadoCobranzaOperacionRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
@@ -132,6 +134,12 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private EstadoDetallePedidoRepository estadoDetallePedidoRepository;
+
+    @Autowired
+    private DetallePresupuestoRepository detallePresupuestoRepository;
+
+    @Autowired
+    private CobranzaRepuestoRepository cobranzaRepuestoRepository;
 
     // Cambio el estado del presupuesto y del pedido de repuestos
     public void aceptarPresupuesto(Long idPresupuesto) {
@@ -263,19 +271,6 @@ public class ExpertoPresupuesto {
         }
     }
 
-    // public List<Cliente> buscarClientesPornombre(String nombreCliente) {
-
-    // List<Cliente> clientes =
-    // clienteRepository.findClienteByApellido(nombreCliente);
-
-    // List<Persona> personas =
-    // personaRepository.findPersonasByNombreIgnoreCaseContaining(nombreCliente);
-
-    // clientes.addAll(clienteRepository.findClienteByPersonaIn(personas));
-
-    // return clientes;
-    // }
-
     public List<TipoRepuesto> buscarRepuestos(Long idTipoParteMotor) {
         TipoParteMotor tipoParte = tipoParteMotorRepository.findById(idTipoParteMotor).get();
         List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotor(tipoParte);
@@ -312,13 +307,14 @@ public class ExpertoPresupuesto {
                 cobranzaOperacion.setEstadoCobranzaOperacion(estadoCobranzaOperacion);
             }
             for (CobranzaRepuesto cobranzaRepuesto : detalle.getCobranzaRepuestos()) {
+                // Fuerzo a guardar cuando el objeto no es nuevo
+                cobranzaRepuesto = cobranzaRepuestoRepository.save(cobranzaRepuesto);
                 totalDetalle += cobranzaRepuesto.getValor();
             }
             detalle.setImporte(totalDetalle);
         }
 
-        Presupuesto presupuestoNuevo = presupuestoRepository.save(presupuesto);
-        return presupuestoNuevo;
+        return presupuestoRepository.save(presupuesto);
     }
 
     public DTOPresupuesto aceptarPresupuesto(DTOPresupuesto dtoPresupuesto) {
@@ -530,5 +526,26 @@ public class ExpertoPresupuesto {
         );
 
 		return new Pair(reporte, presupuesto.getId());
+	}
+
+	public Presupuesto buscarPresupuestoExistente(Long aplicacionId, Long cilindradaId) {
+        Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
+        Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
+
+        Optional<DetallePresupuesto> detallePresupuestoOptional = detallePresupuestoRepository.findFirstByAplicacionAndCilindradaOrderByIdDesc(aplicacion, cilindrada);
+        if (detallePresupuestoOptional.isPresent()) {
+            return presupuestoRepository.findByDetallePresupuestosIn(detallePresupuestoOptional.get());
+        }
+		return null;
+	}
+
+	public List<CobranzaRepuesto> buscarCobranzaRepuestos(Long aplicacionId, Long cilindradaId, Long tipoParteMotorId) {
+        Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
+        Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
+        TipoParteMotor tipoParteMotor = tipoParteMotorRepository.getOne(tipoParteMotorId);
+        List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotor(tipoParteMotor);
+
+        return cobranzaRepuestoRepository.findDistinctByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada, tipoRepuestos);
+
 	}
 }

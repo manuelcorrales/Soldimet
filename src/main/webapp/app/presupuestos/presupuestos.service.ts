@@ -18,6 +18,7 @@ import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { Observable } from 'rxjs';
+import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 
 @Injectable()
 export class PresupuestosService {
@@ -37,6 +38,8 @@ export class PresupuestosService {
   private urlEntregarPresupuesto = '/entregar';
   private urlPresupuestoVista = '/view';
   private urlImprimirPresupuesto = '/imprimir';
+  private urlBuscarPresupuestoExistente = '/buscarExistente';
+  private urlListaCobranzaRepuestos = '/buscarCobranzaRepuestos';
 
   constructor(
     private http: HttpClient,
@@ -52,6 +55,11 @@ export class PresupuestosService {
 
   getPresupuesto(id): Observable<Presupuesto> {
     const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlPresupuestoVista}/${id}`;
+    return this.http.get<Presupuesto>(urlLlamada);
+  }
+
+  buscarPresupuestoViejo(aplicacionId, cilindradaId): Observable<Presupuesto> {
+    const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlBuscarPresupuestoExistente}/?aplicacion=${aplicacionId}&cilindrada=${cilindradaId}`;
     return this.http.get<Presupuesto>(urlLlamada);
   }
 
@@ -140,6 +148,11 @@ export class PresupuestosService {
   buscarRepuestos(detalle: DetallePresupuesto): Observable<TipoRepuesto[]> {
     const url = `${this.resourceUrlPresupuestos}${this.urlPresupuestoRepuestos}/${detalle.tipoParteMotor.id}`;
     return this.http.get<TipoRepuesto[]>(url);
+  }
+
+  buscarListaCobranzaRepuestos(aplicacionId, cilindradaId, tipoParteMotorId): Observable<CobranzaRepuesto[]> {
+    const url = `${this.resourceUrlPresupuestos}${this.urlListaCobranzaRepuestos}/?aplicacion=${aplicacionId}&cilindrada=${cilindradaId}&tipoParteMotor=${tipoParteMotorId}`;
+    return this.http.get<CobranzaRepuesto[]>(url);
   }
 
   convertJsonAPresupuestoCabecera(json: any): DtoPresupuestoCabeceraComponent[] {

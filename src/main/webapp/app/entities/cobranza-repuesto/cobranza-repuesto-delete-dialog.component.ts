@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ICobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
-import { CobranzaRepuestoService } from 'app/entities/cobranza-repuesto/cobranza-repuesto.service';
+import { CobranzaRepuestoService } from './cobranza-repuesto.service';
 
 @Component({
   selector: 'jhi-cobranza-repuesto-delete-dialog',

@@ -5,11 +5,11 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
-import { CobranzaRepuestoService } from 'app/entities/cobranza-repuesto/cobranza-repuesto.service';
-import { CobranzaRepuestoComponent } from 'app/entities/cobranza-repuesto/cobranza-repuesto.component';
-import { CobranzaRepuestoDetailComponent } from 'app/entities/cobranza-repuesto/cobranza-repuesto-detail.component';
-import { CobranzaRepuestoUpdateComponent } from 'app/entities/cobranza-repuesto/cobranza-repuesto-update.component';
-import { CobranzaRepuestoDeletePopupComponent } from 'app/entities/cobranza-repuesto/cobranza-repuesto-delete-dialog.component';
+import { CobranzaRepuestoService } from './cobranza-repuesto.service';
+import { CobranzaRepuestoComponent } from './cobranza-repuesto.component';
+import { CobranzaRepuestoDetailComponent } from './cobranza-repuesto-detail.component';
+import { CobranzaRepuestoUpdateComponent } from './cobranza-repuesto-update.component';
+import { CobranzaRepuestoDeletePopupComponent } from './cobranza-repuesto-delete-dialog.component';
 import { ICobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 
 @Injectable({ providedIn: 'root' })

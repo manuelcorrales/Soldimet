@@ -39,6 +39,9 @@ export class NuevoPresupuestoComponent implements OnInit {
   totalRepuestos = 0;
   isSaving: boolean;
 
+  presupuestoViejo: Presupuesto = null;
+  mostrarResultadoBusquedaPresupuestoViejo = false;
+
   constructor(
     private presupuestosService: PresupuestosService,
     private eventManager: JhiEventManager,
@@ -147,9 +150,32 @@ export class NuevoPresupuestoComponent implements OnInit {
       }
     });
     if (detalleNuevo) {
-      this.detallesPresupuestos.push(detalle);
+      // Es el primer detalle agregado, busco un presupuesto con estos datos
+      this.presupuestosService.buscarPresupuestoViejo(detalle.aplicacion.id, detalle.cilindrada.id).subscribe(
+        (presupuesto: Presupuesto) => {
+          this.presupuestoViejo = presupuesto;
+          this.mostrarResultadoBusquedaPresupuestoViejo = true;
+          this.agregarCobranzasPresupuestoEncontrado(detalle);
+          this.detallesPresupuestos.push(detalle);
+        },
+        error => this.jhiAlertService.error(error.message)
+      );
     } else {
+      this.mostrarResultadoBusquedaPresupuestoViejo = true;
+      this.agregarCobranzasPresupuestoEncontrado(detalle);
       this.detallesPresupuestos = this.detallesPresupuestos.filter(obj => obj !== detalle);
+    }
+  }
+
+  agregarCobranzasPresupuestoEncontrado(detalle: DetallePresupuesto) {
+    // Si hay un presupuesto hecho con los mismos detalles modifico las selecciones
+    if (this.presupuestoViejo) {
+      this.presupuestoViejo.detallePresupuestos.forEach((detalleViejo: DetallePresupuesto) => {
+        if (detalleViejo.tipoParteMotor.id === detalle.tipoParteMotor.id) {
+          detalle.cobranzaOperacions = detalleViejo.cobranzaOperacions;
+          detalle.cobranzaRepuestos = detalleViejo.cobranzaRepuestos;
+        }
+      });
     }
   }
 

@@ -13,6 +13,7 @@ import { CobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 })
 export class OperacionesNuevopresupuestoComponent implements OnInit {
   @Input() detalle: DetallePresupuesto;
+  operacionesViejoPresupuesto: CobranzaOperacion[] = [];
   operaciones: CostoOperacion[] = [];
   total = 0;
   @ViewChildren('operaciones') children: QueryList<OperacionPrecioComponent>;
@@ -21,6 +22,9 @@ export class OperacionesNuevopresupuestoComponent implements OnInit {
   constructor(private presupuestosService: PresupuestosService) {}
 
   ngOnInit() {
+    // Guardo las operaciones del viejo presupuesto (no las uso ahora, pero las guardo)
+    this.operacionesViejoPresupuesto = this.detalle.cobranzaOperacions || [];
+    this.detalle.cobranzaOperacions = [];
     this.update();
   }
 
@@ -32,6 +36,18 @@ export class OperacionesNuevopresupuestoComponent implements OnInit {
       }
     });
     this.detalle.cobranzaOperacions = cobranzaOperaciones;
+  }
+
+  isOperacionElegida(costoOperacion: CostoOperacion) {
+    let isElegida = false;
+    if (this.operacionesViejoPresupuesto) {
+      this.operacionesViejoPresupuesto.forEach((cobranza: CobranzaOperacion) => {
+        if (cobranza.operacion.id === costoOperacion.operacion.id) {
+          isElegida = true;
+        }
+      });
+    }
+    return isElegida;
   }
 
   update() {

@@ -4,6 +4,7 @@ import { RepuestoPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clie
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
+import { Marca } from 'app/shared/model/marca.model';
 
 @Component({
   selector: 'jhi-repuestos-nuevopresupuesto',
@@ -12,14 +13,49 @@ import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 })
 export class RepuestosNuevopresupuestoComponent implements OnInit {
   @Input() detalle: DetallePresupuesto;
+  repuestosViejoPresupuesto: CobranzaRepuesto[];
+  listaCobranzaRepuestos: CobranzaRepuesto[];
+  listado = [];
   repuestos: TipoRepuesto[] = [];
+  marcas: Marca[];
   total = 0;
   @ViewChildren('repuestoComponents') children: QueryList<RepuestoPrecioComponent>;
   @Output() eventoTotalRepuestos = new EventEmitter<number>();
   constructor(private _presupuestoService: PresupuestosService) {}
 
   ngOnInit() {
+    this.repuestosViejoPresupuesto = this.detalle.cobranzaRepuestos || [];
     this.update();
+  }
+
+  enlistarRepuesto() {
+    // Crea una lista con cobranzasRepuestos hechas y cobranzaUltimoPresupuesto agrupados por TipoRepuestos
+    const lista = [];
+
+    this.repuestos.forEach((tipoRepuesto: TipoRepuesto) => {
+      let cobranzaRepuestoPresupuestoViejo = null;
+      const listaCobranzas = [];
+      this.repuestosViejoPresupuesto.forEach((cobranzaRepuesto: CobranzaRepuesto) => {
+        if (cobranzaRepuesto.tipoRepuesto.id === tipoRepuesto.id) {
+          cobranzaRepuestoPresupuestoViejo = cobranzaRepuesto;
+        }
+      });
+
+      if (this.listaCobranzaRepuestos) {
+        this.listaCobranzaRepuestos.forEach((cobranzaRepuesto: CobranzaRepuesto) => {
+          if (cobranzaRepuesto.tipoRepuesto.id === tipoRepuesto.id) {
+            listaCobranzas.push(cobranzaRepuesto);
+          }
+        });
+      }
+
+      lista.push({
+        repuesto: tipoRepuesto,
+        cobranzaUltimoRepuesto: cobranzaRepuestoPresupuestoViejo,
+        cobranzas: listaCobranzas
+      });
+    });
+    return lista;
   }
 
   update() {
@@ -27,21 +63,22 @@ export class RepuestosNuevopresupuestoComponent implements OnInit {
       this.repuestos = repuestos;
       this.repuestos.sort(this._sortTipoRepuesto);
     });
-  }
-
-  elegirRepuesto(repuesto: TipoRepuesto, elegido: boolean) {
-    if (!this.detalle.cobranzaRepuestos.some(x => x === repuesto) && elegido) {
-      this.detalle.cobranzaRepuestos.push(repuesto);
-    } else {
-      this.detalle.cobranzaRepuestos = this.detalle.cobranzaRepuestos.filter(obj => obj !== repuesto);
-    }
+    this._presupuestoService
+      .buscarListaCobranzaRepuestos(this.detalle.aplicacion.id, this.detalle.cilindrada.id, this.detalle.tipoParteMotor.id)
+      .subscribe((cobranzas: CobranzaRepuesto[]) => {
+        this.listaCobranzaRepuestos = cobranzas || [];
+        this.listado = this.enlistarRepuesto();
+      });
   }
 
   completarDetalle() {
     const cobranzaRepuesto: CobranzaRepuesto[] = [];
     this.children.forEach(componente => {
       if (componente.seleccionado) {
-        cobranzaRepuesto.push(componente.getArticuloAcobrar());
+        const repuesto = componente.getArticuloAcobrar();
+        repuesto.aplicacion = this.detalle.aplicacion;
+        repuesto.cilindrada = this.detalle.cilindrada;
+        cobranzaRepuesto.push(repuesto);
       }
     });
     this.detalle.cobranzaRepuestos = cobranzaRepuesto;

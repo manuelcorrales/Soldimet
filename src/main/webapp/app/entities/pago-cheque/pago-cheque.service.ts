@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import * as moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { map } from 'rxjs/operators';
@@ -56,8 +55,6 @@ export class PagoChequeService {
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
-    if (res.body) {
-    }
     return res;
   }
 
