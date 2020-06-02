@@ -1,8 +1,6 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { take, map } from 'rxjs/operators';
-import * as moment from 'moment';
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { PagoChequeService } from 'app/entities/pago-cheque/pago-cheque.service';
 import { IPagoCheque, PagoCheque } from 'app/shared/model/pago-cheque.model';
 
@@ -13,7 +11,6 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let elemDefault: IPagoCheque;
     let expectedResult;
-    let currentDate: moment.Moment;
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule]
@@ -22,20 +19,13 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(PagoChequeService);
       httpMock = injector.get(HttpTestingController);
-      currentDate = moment();
 
       elemDefault = new PagoCheque(0, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
-        const returnedFromService = Object.assign(
-          {
-            fechaCobro: currentDate.format(DATE_FORMAT),
-            fechaRecibo: currentDate.format(DATE_FORMAT)
-          },
-          elemDefault
-        );
+        const returnedFromService = Object.assign(elemDefault);
         service
           .find(123)
           .pipe(take(1))
@@ -49,19 +39,11 @@ describe('Service Tests', () => {
       it('should create a PagoCheque', () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
-            fechaCobro: currentDate.format(DATE_FORMAT),
-            fechaRecibo: currentDate.format(DATE_FORMAT)
+            id: 0
           },
           elemDefault
         );
-        const expected = Object.assign(
-          {
-            fechaCobro: currentDate,
-            fechaRecibo: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign(returnedFromService);
         service
           .create(new PagoCheque(null))
           .pipe(take(1))
@@ -79,13 +61,7 @@ describe('Service Tests', () => {
           elemDefault
         );
 
-        const expected = Object.assign(
-          {
-            fechaCobro: currentDate,
-            fechaRecibo: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign(returnedFromService);
         service
           .update(expected)
           .pipe(take(1))
@@ -102,13 +78,7 @@ describe('Service Tests', () => {
           },
           elemDefault
         );
-        const expected = Object.assign(
-          {
-            fechaCobro: currentDate,
-            fechaRecibo: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign(returnedFromService);
         service
           .query(expected)
           .pipe(
