@@ -8,7 +8,7 @@ import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
   styles: []
 })
 export class OperacionPrecioComponent implements OnInit {
-  @Input() costoOperacion: CostoOperacion = null;
+  @Input() costoOperacion: CostoOperacion;
   @Input() seleccionado = false;
   @Output() eventoCambioValor = new EventEmitter<number>();
 
@@ -17,7 +17,7 @@ export class OperacionPrecioComponent implements OnInit {
   ngOnInit() {
     // Si levanto el componente y ya esta seleccionado, ejecuto el evento
     if (this.seleccionado) {
-      this.cambioValor();
+      setTimeout(() => this.cambioValor(), 1000);
     }
   }
 

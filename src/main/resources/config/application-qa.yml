@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: DEBUG
+    ROOT: INFO
     soldimet: DEBUG
-    io.github.jhipster: DEBUG
+    io.github.jhipster: INFO
 
 management:
   metrics:

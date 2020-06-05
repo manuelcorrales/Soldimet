@@ -186,9 +186,9 @@ public class PresupuestoController {
 
     @PostMapping("/cancelar")
     public ResponseEntity<DTOPresupuesto> cancelarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
-        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        log.debug("REST request to cancel Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
-        log.debug("REST response to accept Presupuesto : {}", result);
+        log.debug("REST response to cancel Presupuesto : {}", result);
         if (result != null) {
             return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
                     String.valueOf(result.getCodigo()))).body(result);

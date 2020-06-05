@@ -56,6 +56,7 @@ import soldimet.repository.EstadoPedidoRepuestoRepository;
 import soldimet.repository.EstadoPersonaRepository;
 import soldimet.repository.EstadoPresupuestoRepository;
 import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
+import soldimet.repository.MarcaRepository;
 import soldimet.repository.MotorRepository;
 import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.repository.PersonaRepository;
@@ -140,6 +141,9 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private CobranzaRepuestoRepository cobranzaRepuestoRepository;
+
+    @Autowired
+    private MarcaRepository marcaRepository;
 
     // Cambio el estado del presupuesto y del pedido de repuestos
     public void aceptarPresupuesto(Long idPresupuesto) {
@@ -307,6 +311,10 @@ public class ExpertoPresupuesto {
                 cobranzaOperacion.setEstadoCobranzaOperacion(estadoCobranzaOperacion);
             }
             for (CobranzaRepuesto cobranzaRepuesto : detalle.getCobranzaRepuestos()) {
+                // Actualizo las marcas para meterlas en el contexto (en caso que se cree uno nuevo o actualice)
+                cobranzaRepuesto.setMarca(
+                    marcaRepository.save(cobranzaRepuesto.getMarca())
+                );
                 // Fuerzo a guardar cuando el objeto no es nuevo
                 cobranzaRepuesto = cobranzaRepuestoRepository.save(cobranzaRepuesto);
                 totalDetalle += cobranzaRepuesto.getValor();

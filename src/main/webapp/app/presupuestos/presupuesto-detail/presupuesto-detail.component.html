@@ -65,6 +65,8 @@
                             <span *ngFor="let detalle of presupuesto?.detallePresupuestos">
                                 <li *ngFor="let cobroRepuesto of detalle.cobranzaRepuestos">
                                     {{cobroRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}
+                                    {{cobroRepuesto?.marca?.nombreMarca}}
+                                    ({{cobroRepuesto?.detalle}})
                                     ${{cobroRepuesto?.valor}}
                                 </li>
                             </span>

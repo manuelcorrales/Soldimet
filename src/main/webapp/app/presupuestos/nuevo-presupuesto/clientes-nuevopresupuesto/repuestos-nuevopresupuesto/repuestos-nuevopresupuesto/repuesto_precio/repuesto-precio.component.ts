@@ -42,6 +42,7 @@ export class RepuestoPrecioComponent implements OnInit {
       this.seleccionado = true;
       this.precio = this.cobranzaUltimoRepuesto.valor;
       this.descripcion = this.cobranzaUltimoRepuesto.detalle;
+      setTimeout(() => this.cambioValor(), 1000);
     }
   }
 
