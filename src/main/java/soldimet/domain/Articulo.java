@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * A Articulo.
@@ -22,13 +23,15 @@ public class Articulo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(name = "descripcion", nullable = false)
-    private String descripcion;
-
-    @Size(min = 2, max = 20)
-    @Column(name = "codigo_articulo_proveedor", length = 20)
+    @Column(name = "codigo_articulo_proveedor")
     private String codigoArticuloProveedor;
+
+    @NotNull
+    @Column(name = "valor", nullable = false)
+    private Float valor;
+
+    @Column(name = "fecha_costo", columnDefinition = "DATE")
+    private LocalDate fechaCosto;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -53,19 +56,6 @@ public class Articulo implements Serializable {
         this.id = id;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public Articulo descripcion(String descripcion) {
-        this.descripcion = descripcion;
-        return this;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public String getCodigoArticuloProveedor() {
         return codigoArticuloProveedor;
     }
@@ -77,6 +67,32 @@ public class Articulo implements Serializable {
 
     public void setCodigoArticuloProveedor(String codigoArticuloProveedor) {
         this.codigoArticuloProveedor = codigoArticuloProveedor;
+    }
+
+    public Float getValor() {
+        return valor;
+    }
+
+    public Articulo valor(Float valor) {
+        this.valor = valor;
+        return this;
+    }
+
+    public void setValor(Float valor) {
+        this.valor = valor;
+    }
+
+    public LocalDate getFechaCosto() {
+        return fechaCosto;
+    }
+
+    public Articulo fechaCosto(LocalDate fechaCosto) {
+        this.fechaCosto = fechaCosto;
+        return this;
+    }
+
+    public void setFechaCosto(LocalDate fechaCosto) {
+        this.fechaCosto = fechaCosto;
     }
 
     public EstadoArticulo getEstado() {
@@ -139,8 +155,9 @@ public class Articulo implements Serializable {
     public String toString() {
         return "Articulo{" +
             "id=" + getId() +
-            ", descripcion='" + getDescripcion() + "'" +
             ", codigoArticuloProveedor='" + getCodigoArticuloProveedor() + "'" +
+            ", valor=" + getValor() +
+            ", fechaCosto='" + getFechaCosto() + "'" +
             "}";
     }
 }

@@ -15,12 +15,6 @@
                         <a [routerLink]="['/tipo-repuesto', costoRepuesto.tipoRepuesto?.id, 'view']">{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </dd>
-                <dt><span>Articulo</span></dt>
-                <dd>
-                    <div *ngIf="costoRepuesto.articulo">
-                        <a [routerLink]="['/articulo', costoRepuesto.articulo?.id, 'view']">{{costoRepuesto.articulo?.descripcion}}</a>
-                    </div>
-                </dd>
                 <dt><span>Proveedor</span></dt>
                 <dd>
                     <div *ngIf="costoRepuesto.proveedor">

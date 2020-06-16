@@ -12,33 +12,10 @@
             "otherEntityRelationshipName": "cobranzaRepuesto"
         },
         {
-            "relationshipName": "marca",
-            "otherEntityName": "marca",
+            "relationshipName": "articulo",
+            "otherEntityName": "articulo",
             "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreMarca",
-            "otherEntityRelationshipName": "cobranzaRepuesto"
-        },
-        {
-            "relationshipName": "cilindrada",
-            "otherEntityName": "cilindrada",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "cantidadDeCilindros",
-            "otherEntityRelationshipName": "cobranzaRepuesto"
-        },
-        {
-            "relationshipName": "aplicacion",
-            "otherEntityName": "aplicacion",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreAplicacion",
+            "otherEntityField": "codigoArticuloProveedor",
             "otherEntityRelationshipName": "cobranzaRepuesto"
         }
     ],
@@ -51,17 +28,6 @@
                 "min"
             ],
             "fieldValidateRulesMin": 0
-        },
-        {
-            "fieldName": "detalle",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "fecha",
-            "fieldType": "LocalDate"
         }
     ],
     "changelogDate": "20180615000159",

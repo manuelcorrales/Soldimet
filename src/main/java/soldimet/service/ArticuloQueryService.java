@@ -85,11 +85,14 @@ public class ArticuloQueryService extends QueryService<Articulo> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Articulo_.id));
             }
-            if (criteria.getDescripcion() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDescripcion(), Articulo_.descripcion));
-            }
             if (criteria.getCodigoArticuloProveedor() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getCodigoArticuloProveedor(), Articulo_.codigoArticuloProveedor));
+            }
+            if (criteria.getValor() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getValor(), Articulo_.valor));
+            }
+            if (criteria.getFechaCosto() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getFechaCosto(), Articulo_.fechaCosto));
             }
             if (criteria.getEstadoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getEstadoId(),

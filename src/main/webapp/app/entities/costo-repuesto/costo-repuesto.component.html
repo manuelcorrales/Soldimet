@@ -20,7 +20,6 @@
             <th><span>ID</span></th>
             <th><span>Valor</span></th>
             <th><span>Tipo Repuesto</span></th>
-            <th><span>Articulo</span></th>
             <th><span>Proveedor</span></th>
             <th><span>Estado</span></th>
             <th></th>
@@ -33,11 +32,6 @@
                 <td>
                     <div *ngIf="costoRepuesto.tipoRepuesto">
                         <a [routerLink]="['/tipo-repuesto', costoRepuesto.tipoRepuesto?.id, 'view' ]" >{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="costoRepuesto.articulo">
-                        <a [routerLink]="['/articulo', costoRepuesto.articulo?.id, 'view' ]" >{{costoRepuesto.articulo?.descripcion}}</a>
                     </div>
                 </td>
                 <td>

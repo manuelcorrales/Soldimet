@@ -1,11 +1,11 @@
-id;descripcion;codigo_articulo_proveedor;estado_id;marca_id;tipo_repuesto_id
-1;Yuan Renminbi Centers;Factors;1;1;1
-2;South Dakota envisioneer Music;Nakfa;2;2;2
-3;Bahamian Dollar Investment Account;Games Regional Digit;3;3;3
-4;copy convergence;Mayotte;4;4;4
-5;Industrial;connect Markets Chie;5;5;5
-6;capacitor archive;sky blue Tasty Plast;6;6;6
-7;compress South Georgia and the South Sandwich Islands;compelling mission-c;7;7;7
-8;bifurcated scalable;Small;8;8;8
-9;deliverables reinvent 24 hour;overriding;9;9;9
-10;monitor 1080p Checking Account;world-class Frozen I;10;10;10
+id;codigo_articulo_proveedor;valor;fecha_costo;estado_id;tipo_repuesto_id
+1;mobile Fish;77969;2020-06-16;1;1
+2;Table Computer;5808;2020-06-16;2;2
+3;seamless Metal deposit;5641;2020-06-15;3;3
+4;parsing red Chips;18340;2020-06-16;4;4
+5;Home Loan Account;706;2020-06-16;5;5
+6;intangible;61185;2020-06-16;6;6
+7;Gorgeous Frozen Pants;23277;2020-06-16;7;7
+8;bluetooth;19967;2020-06-16;8;8
+9;Planner Canyon;85994;2020-06-16;9;9
+10;Table Small Frozen Sausages Planner;80839;2020-06-16;10;10

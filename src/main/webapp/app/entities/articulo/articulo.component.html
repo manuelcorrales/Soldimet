@@ -18,8 +18,9 @@
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="descripcion"><span>Descripcion</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="codigoArticuloProveedor"><span>Codigo Articulo Proveedor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="valor"><span>Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fechaCosto"><span>Fecha Costo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estado.nombreEstado"><span>Estado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="marca.nombreMarca"><span>Marca</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="tipoRepuesto.nombreTipoRepuesto"><span>Tipo Repuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -29,8 +30,9 @@
             <tbody>
             <tr *ngFor="let articulo of articulos ;trackBy: trackId">
                 <td><a [routerLink]="['/articulo', articulo.id, 'view' ]">{{articulo.id}}</a></td>
-                <td>{{articulo.descripcion}}</td>
                 <td>{{articulo.codigoArticuloProveedor}}</td>
+                <td>{{articulo.valor}}</td>
+                <td>{{articulo.fechaCosto | date:'mediumDate'}}</td>
                 <td>
                     <div *ngIf="articulo.estado">
                         <a [routerLink]="['/estado-articulo', articulo.estado?.id, 'view' ]" >{{articulo.estado?.nombreEstado}}</a>

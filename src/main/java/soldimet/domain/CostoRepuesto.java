@@ -1,12 +1,10 @@
 package soldimet.domain;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 
@@ -34,10 +32,6 @@ public class CostoRepuesto implements Serializable {
     private TipoRepuesto tipoRepuesto;
 
     @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
-    private Articulo articulo;
-
-    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
-    @JsonIgnoreProperties("costoRepuestos")
     private Proveedor proveedor;
 
     @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
@@ -77,19 +71,6 @@ public class CostoRepuesto implements Serializable {
 
     public void setTipoRepuesto(TipoRepuesto tipoRepuesto) {
         this.tipoRepuesto = tipoRepuesto;
-    }
-
-    public Articulo getArticulo() {
-        return articulo;
-    }
-
-    public CostoRepuesto articulo(Articulo articulo) {
-        this.articulo = articulo;
-        return this;
-    }
-
-    public void setArticulo(Articulo articulo) {
-        this.articulo = articulo;
     }
 
     public Proveedor getProveedor() {

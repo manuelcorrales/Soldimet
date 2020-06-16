@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IArticulo } from 'app/shared/model/articulo.model';
-import { ArticuloService } from 'app/entities/articulo/articulo.service';
+import { ArticuloService } from './articulo.service';
 
 @Component({
   selector: 'jhi-articulo-delete-dialog',

@@ -1,11 +1,11 @@
-id;valor;detalle;fecha;tipo_repuesto_id;marca_id;cilindrada_id;aplicacion_id
-1;37454;Directives application Home Loan Account;2020-05-22;1;1;1;1
-2;44583;Small;2020-05-22;2;2;2;2
-3;86617;Savings Account alarm;2020-05-22;3;3;3;3
-4;5641;transmitter Implementation Electronics;2020-05-21;4;4;4;4
-5;18340;methodology Albania;2020-05-22;5;5;5;5
-6;2306;Namibia;2020-05-22;6;6;6;6
-7;13949;zero administration;2020-05-22;7;7;7;7
-8;23277;Licensed Savings Account;2020-05-22;8;8;8;8
-9;51423;Mississippi Refined Rubber Chicken Table;2020-05-22;9;9;9;9
-10;1326;Usability South Dakota envisioneer;2020-05-22;10;10;10;10
+id;valor;tipo_repuesto_id
+1;37454;1
+2;79654;2
+3;95071;3
+4;18343;4
+5;73199;5
+6;77969;6
+7;59865;7
+8;59685;8
+9;15601;9
+10;44583;10

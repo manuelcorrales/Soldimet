@@ -8,13 +8,15 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreEstado"
+            "otherEntityField": "nombreEstado",
+            "otherEntityRelationshipName": "articulo"
         },
         {
             "relationshipName": "marca",
             "otherEntityName": "marca",
             "relationshipType": "many-to-one",
-            "otherEntityField": "nombreMarca"
+            "otherEntityField": "nombreMarca",
+            "otherEntityRelationshipName": "articulo"
         },
         {
             "relationshipName": "tipoRepuesto",
@@ -23,26 +25,33 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreTipoRepuesto"
+            "otherEntityField": "nombreTipoRepuesto",
+            "otherEntityRelationshipName": "articulo"
         }
     ],
     "fields": [
         {
-            "fieldName": "descripcion",
-            "fieldType": "String",
+            "fieldName": "codigoArticuloProveedor",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "valor",
+            "fieldType": "Float",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
-            "fieldName": "codigoArticuloProveedor",
-            "fieldType": "String"
+            "fieldName": "fechaCosto",
+            "fieldType": "LocalDate"
         }
     ],
     "changelogDate": "20171213233426",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "articulo",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination"
 }

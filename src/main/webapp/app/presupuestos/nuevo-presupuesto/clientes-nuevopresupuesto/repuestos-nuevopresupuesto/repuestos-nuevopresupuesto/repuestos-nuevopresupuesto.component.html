@@ -4,9 +4,12 @@
     </div>
     <br>
     <div *ngFor="let elemento of listado" class="container">
-        <jhi-repuesto-precio #repuestoComponents (eventoCambioValor)="cambioTotalRepuestos()"
-            [repuesto]="elemento.repuesto" [cobranzaUltimoRepuesto]="elemento.cobranzaUltimoRepuesto" [listaCobranzas]="elemento.cobranzas"
-            class="row align-items-center top-buffer">
+        <jhi-repuesto-precio #repuestoComponents (eventoCambioValor)="cambioTotalRepuestos()" class="row align-items-center top-buffer"
+            [repuesto]="elemento.repuesto"
+            [cobranzaUltimoRepuesto]="elemento.cobranzaUltimoRepuesto"
+            [listaCobranzas]="elemento.cobranzas"
+            [articulos]="elemento.articulosList"
+            >
         </jhi-repuesto-precio>
     </div>
 </div>

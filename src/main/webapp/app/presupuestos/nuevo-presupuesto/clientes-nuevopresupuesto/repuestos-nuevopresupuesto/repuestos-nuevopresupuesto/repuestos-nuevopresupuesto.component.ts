@@ -4,7 +4,10 @@ import { RepuestoPrecioComponent } from 'app/presupuestos/nuevo-presupuesto/clie
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
-import { Marca } from 'app/shared/model/marca.model';
+import { CostoRepuestoProveedor } from 'app/shared/model/costo-repuesto-proveedor.model';
+import { Articulo, IArticulo } from 'app/shared/model/articulo.model';
+import { ArticuloService } from 'app/entities/articulo';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-repuestos-nuevopresupuesto',
@@ -14,14 +17,14 @@ import { Marca } from 'app/shared/model/marca.model';
 export class RepuestosNuevopresupuestoComponent implements OnInit {
   @Input() detalle: DetallePresupuesto;
   repuestosViejoPresupuesto: CobranzaRepuesto[];
-  listaCobranzaRepuestos: CobranzaRepuesto[];
+  listaCobranzaRepuestos: CostoRepuestoProveedor[];
   listado = [];
   repuestos: TipoRepuesto[] = [];
-  marcas: Marca[];
+  articulos: Articulo[] = [];
   total = 0;
   @ViewChildren('repuestoComponents') children: QueryList<RepuestoPrecioComponent>;
   @Output() eventoTotalRepuestos = new EventEmitter<number>();
-  constructor(private _presupuestoService: PresupuestosService) {}
+  constructor(private _presupuestoService: PresupuestosService, private _articuloService: ArticuloService) {}
 
   ngOnInit() {
     this.repuestosViejoPresupuesto = this.detalle.cobranzaRepuestos || [];
@@ -49,36 +52,39 @@ export class RepuestosNuevopresupuestoComponent implements OnInit {
         });
       }
 
+      const listaArticulos = this.articulos.filter(articulo => articulo.tipoRepuesto.id === tipoRepuesto.id);
+
       lista.push({
         repuesto: tipoRepuesto,
         cobranzaUltimoRepuesto: cobranzaRepuestoPresupuestoViejo,
-        cobranzas: listaCobranzas
+        cobranzas: listaCobranzas,
+        articulosList: listaArticulos
       });
     });
     return lista;
   }
 
   update() {
-    this._presupuestoService.buscarRepuestos(this.detalle).subscribe((repuestos: TipoRepuesto[]) => {
-      this.repuestos = repuestos;
-      this.repuestos.sort(this._sortTipoRepuesto);
-    });
-    this._presupuestoService
-      .buscarListaCobranzaRepuestos(this.detalle.aplicacion.id, this.detalle.cilindrada.id, this.detalle.tipoParteMotor.id)
-      .subscribe((cobranzas: CobranzaRepuesto[]) => {
-        this.listaCobranzaRepuestos = cobranzas || [];
-        this.listado = this.enlistarRepuesto();
+    this._articuloService.query().subscribe((articulos: HttpResponse<IArticulo[]>) => {
+      this.articulos = articulos.body;
+      this._presupuestoService.buscarRepuestos(this.detalle).subscribe((repuestos: TipoRepuesto[]) => {
+        this.repuestos = repuestos;
+        this.repuestos.sort(this._sortTipoRepuesto);
+        this._presupuestoService
+          .buscarListaCobranzaRepuestos(this.detalle.aplicacion.id, this.detalle.cilindrada.id, this.detalle.tipoParteMotor.id)
+          .subscribe((cobranzas: CostoRepuestoProveedor[]) => {
+            this.listaCobranzaRepuestos = cobranzas || [];
+            this.listado = this.enlistarRepuesto();
+          });
       });
+    });
   }
 
   completarDetalle() {
     const cobranzaRepuesto: CobranzaRepuesto[] = [];
     this.children.forEach(componente => {
       if (componente.seleccionado) {
-        const repuesto = componente.getArticuloAcobrar();
-        repuesto.aplicacion = this.detalle.aplicacion;
-        repuesto.cilindrada = this.detalle.cilindrada;
-        cobranzaRepuesto.push(repuesto);
+        cobranzaRepuesto.push(componente.getArticuloAcobrar());
       }
     });
     this.detalle.cobranzaRepuestos = cobranzaRepuesto;

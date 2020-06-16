@@ -8,19 +8,15 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreTipoRepuesto"
-        },
-        {
-            "relationshipName": "articulo",
-            "otherEntityName": "articulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "descripcion"
+            "otherEntityField": "nombreTipoRepuesto",
+            "otherEntityRelationshipName": "costoRepuesto"
         },
         {
             "relationshipName": "proveedor",
             "otherEntityName": "proveedor",
             "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "otherEntityRelationshipName": "costoRepuesto"
         },
         {
             "relationshipName": "estado",
@@ -29,7 +25,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreEstado"
+            "otherEntityField": "nombreEstado",
+            "otherEntityRelationshipName": "costoRepuesto"
         }
     ],
     "fields": [
@@ -48,6 +45,7 @@
     "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "costo_repuesto",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
     "pagination": "no"
 }

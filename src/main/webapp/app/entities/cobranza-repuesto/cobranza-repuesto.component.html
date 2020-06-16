@@ -19,12 +19,8 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Valor</span></th>
-            <th><span>Detalle</span></th>
-            <th><span>Fecha</span></th>
             <th><span>Tipo Repuesto</span></th>
-            <th><span>Marca</span></th>
-            <th><span>Cilindrada</span></th>
-            <th><span>Aplicacion</span></th>
+            <th><span>Articulo</span></th>
             <th></th>
             </tr>
             </thead>
@@ -32,26 +28,14 @@
             <tr *ngFor="let cobranzaRepuesto of cobranzaRepuestos ;trackBy: trackId">
                 <td><a [routerLink]="['/cobranza-repuesto', cobranzaRepuesto.id, 'view' ]">{{cobranzaRepuesto.id}}</a></td>
                 <td>{{cobranzaRepuesto.valor}}</td>
-                <td>{{cobranzaRepuesto.detalle}}</td>
-                <td>{{cobranzaRepuesto.fecha | date:'mediumDate'}}</td>
                 <td>
                     <div *ngIf="cobranzaRepuesto.tipoRepuesto">
                         <a [routerLink]="['/tipo-repuesto', cobranzaRepuesto.tipoRepuesto?.id, 'view' ]" >{{cobranzaRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </td>
                 <td>
-                    <div *ngIf="cobranzaRepuesto.marca">
-                        <a [routerLink]="['/marca', cobranzaRepuesto.marca?.id, 'view' ]" >{{cobranzaRepuesto.marca?.nombreMarca}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="cobranzaRepuesto.cilindrada">
-                        <a [routerLink]="['/cilindrada', cobranzaRepuesto.cilindrada?.id, 'view' ]" >{{cobranzaRepuesto.cilindrada?.cantidadDeCilindros}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="cobranzaRepuesto.aplicacion">
-                        <a [routerLink]="['/aplicacion', cobranzaRepuesto.aplicacion?.id, 'view' ]" >{{cobranzaRepuesto.aplicacion?.nombreAplicacion}}</a>
+                    <div *ngIf="cobranzaRepuesto.articulo">
+                        <a [routerLink]="['/articulo', cobranzaRepuesto.articulo?.id, 'view' ]" >{{cobranzaRepuesto.articulo?.codigoArticuloProveedor}}</a>
                     </div>
                 </td>
                 <td class="text-right">

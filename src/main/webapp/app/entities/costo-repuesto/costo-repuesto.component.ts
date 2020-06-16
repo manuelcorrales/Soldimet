@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ICostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { CostoRepuestoService } from 'app/entities/costo-repuesto/costo-repuesto.service';
+import { CostoRepuestoService } from './costo-repuesto.service';
 
 @Component({
   selector: 'jhi-costo-repuesto',

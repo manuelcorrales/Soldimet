@@ -10,7 +10,7 @@ import { IArticulo } from 'app/shared/model/articulo.model';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { ArticuloService } from 'app/entities/articulo/articulo.service';
+import { ArticuloService } from './articulo.service';
 
 @Component({
   selector: 'jhi-articulo',

@@ -36,6 +36,7 @@ import soldimet.domain.Cliente;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.CostoRepuesto;
+import soldimet.domain.CostoRepuestoProveedor;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.TipoRepuesto;
@@ -115,16 +116,16 @@ public class PresupuestoController {
         return presupuesto;
     }
 
-    @GetMapping("/buscarCobranzaRepuestos")
-    public List<CobranzaRepuesto> buscarListaCobranzaRepuestos(
+    @GetMapping("/buscarCostoRepuestoProveedores")
+    public List<CostoRepuestoProveedor> buscarListaCostoRepuestoProveedors(
         @RequestParam("aplicacion") Long aplicacion,
         @RequestParam("cilindrada") Long cilindrada,
         @RequestParam("tipoParteMotor") Long tipoParteMotor
     ) {
-        log.debug("request /api/presupuestos/buscarCobranzaRepuestos: {}", aplicacion, cilindrada, tipoParteMotor);
-        List<CobranzaRepuesto> cobranzas = expertoPresupuesto.buscarCobranzaRepuestos(aplicacion, cilindrada, tipoParteMotor);
-        log.debug("response /api/presupuestos/buscarCobranzaRepuestos: {}", cobranzas);
-        return cobranzas;
+        log.debug("request /api/presupuestos/buscarCostoRepuestoProveedores: {}", aplicacion, cilindrada, tipoParteMotor);
+        List<CostoRepuestoProveedor> costos = expertoPresupuesto.buscarCostoRepuestoProveedor(aplicacion, cilindrada, tipoParteMotor);
+        log.debug("response /api/presupuestos/buscarCostoRepuestoProveedores: {}", costos);
+        return costos;
     }
 
     @GetMapping("/getCostoRepuestoPresupuesto/{presupuestoId}")

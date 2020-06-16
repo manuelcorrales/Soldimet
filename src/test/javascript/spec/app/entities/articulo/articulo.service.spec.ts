@@ -1,6 +1,8 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { take, map } from 'rxjs/operators';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { ArticuloService } from 'app/entities/articulo/articulo.service';
 import { IArticulo, Articulo } from 'app/shared/model/articulo.model';
 
@@ -11,6 +13,7 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let elemDefault: IArticulo;
     let expectedResult;
+    let currentDate: moment.Moment;
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule]
@@ -19,13 +22,19 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(ArticuloService);
       httpMock = injector.get(HttpTestingController);
+      currentDate = moment();
 
-      elemDefault = new Articulo(0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Articulo(0, 'AAAAAAA', 0, currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            fechaCosto: currentDate.format(DATE_FORMAT)
+          },
+          elemDefault
+        );
         service
           .find(123)
           .pipe(take(1))
@@ -39,11 +48,17 @@ describe('Service Tests', () => {
       it('should create a Articulo', () => {
         const returnedFromService = Object.assign(
           {
-            id: 0
+            id: 0,
+            fechaCosto: currentDate.format(DATE_FORMAT)
           },
           elemDefault
         );
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            fechaCosto: currentDate
+          },
+          returnedFromService
+        );
         service
           .create(new Articulo(null))
           .pipe(take(1))
@@ -56,13 +71,19 @@ describe('Service Tests', () => {
       it('should update a Articulo', () => {
         const returnedFromService = Object.assign(
           {
-            descripcion: 'BBBBBB',
-            codigoArticuloProveedor: 'BBBBBB'
+            codigoArticuloProveedor: 'BBBBBB',
+            valor: 1,
+            fechaCosto: currentDate.format(DATE_FORMAT)
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            fechaCosto: currentDate
+          },
+          returnedFromService
+        );
         service
           .update(expected)
           .pipe(take(1))
@@ -75,12 +96,18 @@ describe('Service Tests', () => {
       it('should return a list of Articulo', () => {
         const returnedFromService = Object.assign(
           {
-            descripcion: 'BBBBBB',
-            codigoArticuloProveedor: 'BBBBBB'
+            codigoArticuloProveedor: 'BBBBBB',
+            valor: 1,
+            fechaCosto: currentDate.format(DATE_FORMAT)
           },
           elemDefault
         );
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            fechaCosto: currentDate
+          },
+          returnedFromService
+        );
         service
           .query(expected)
           .pipe(

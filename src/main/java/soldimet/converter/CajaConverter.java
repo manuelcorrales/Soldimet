@@ -102,7 +102,7 @@ public class CajaConverter {
 
         MovimientoArticulo movimientoArticulo = movimientoArticuloRepository.findByMovimiento(movimiento);
         if (movimientoArticulo != null) {
-            descripcion = movimientoArticulo.getCantidad() + " " + movimientoArticulo.getArticulo().getDescripcion();
+            descripcion = movimientoArticulo.getCantidad() + " " + movimientoArticulo.getArticulo().getCodigoArticuloProveedor();
         }
 
         MovimientoPedido movimientoPedido = movimientoPedidoRepository.findByMovimiento(movimiento);

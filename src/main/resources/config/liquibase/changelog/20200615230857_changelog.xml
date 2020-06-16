@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+    <changeSet author="manuelc (generated)" id="1592262545193-119">
+        <dropColumn columnName="aplicacion_id" tableName="cobranza_repuesto" />
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1592262545193-120">
+        <dropColumn columnName="articulo_id" tableName="costo_repuesto" />
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1592262545193-121">
+        <dropColumn columnName="cilindrada_id" tableName="cobranza_repuesto" />
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1592262545193-122">
+        <dropColumn columnName="descripcion" tableName="articulo" />
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1592262545193-123">
+        <dropColumn columnName="detalle" tableName="cobranza_repuesto" />
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1592262545193-124">
+        <dropColumn columnName="fecha" tableName="cobranza_repuesto" />
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1592262545193-125">
+        <dropColumn columnName="marca_id" tableName="cobranza_repuesto" />
+    </changeSet>
+</databaseChangeLog>

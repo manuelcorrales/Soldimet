@@ -3,7 +3,6 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.TipoRepuesto;
-import soldimet.domain.Articulo;
 import soldimet.domain.EstadoCostoRepuesto;
 import soldimet.repository.CostoRepuestoRepository;
 import soldimet.service.CostoRepuestoService;
@@ -98,16 +97,6 @@ public class CostoRepuestoResourceIT {
         }
         costoRepuesto.setTipoRepuesto(tipoRepuesto);
         // Add required entity
-        Articulo articulo;
-        if (TestUtil.findAll(em, Articulo.class).isEmpty()) {
-            articulo = ArticuloResourceIT.createEntity(em);
-            em.persist(articulo);
-            em.flush();
-        } else {
-            articulo = TestUtil.findAll(em, Articulo.class).get(0);
-        }
-        costoRepuesto.setArticulo(articulo);
-        // Add required entity
         EstadoCostoRepuesto estadoCostoRepuesto;
         if (TestUtil.findAll(em, EstadoCostoRepuesto.class).isEmpty()) {
             estadoCostoRepuesto = EstadoCostoRepuestoResourceIT.createEntity(em);
@@ -138,16 +127,6 @@ public class CostoRepuestoResourceIT {
             tipoRepuesto = TestUtil.findAll(em, TipoRepuesto.class).get(0);
         }
         costoRepuesto.setTipoRepuesto(tipoRepuesto);
-        // Add required entity
-        Articulo articulo;
-        if (TestUtil.findAll(em, Articulo.class).isEmpty()) {
-            articulo = ArticuloResourceIT.createUpdatedEntity(em);
-            em.persist(articulo);
-            em.flush();
-        } else {
-            articulo = TestUtil.findAll(em, Articulo.class).get(0);
-        }
-        costoRepuesto.setArticulo(articulo);
         // Add required entity
         EstadoCostoRepuesto estadoCostoRepuesto;
         if (TestUtil.findAll(em, EstadoCostoRepuesto.class).isEmpty()) {

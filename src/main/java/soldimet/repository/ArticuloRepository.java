@@ -1,13 +1,7 @@
 package soldimet.repository;
-
 import soldimet.domain.Articulo;
-import soldimet.domain.TipoRepuesto;
-
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -17,5 +11,4 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {
 
-    List<Articulo> findArticuloByTipoRepuesto(TipoRepuesto tipo);
 }

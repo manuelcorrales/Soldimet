@@ -28,6 +28,7 @@ import soldimet.domain.CobranzaOperacion;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.CostoRepuesto;
+import soldimet.domain.CostoRepuestoProveedor;
 import soldimet.domain.DetallePedido;
 import soldimet.domain.DetallePresupuesto;
 import soldimet.domain.Empleado;
@@ -49,6 +50,7 @@ import soldimet.repository.AplicacionRepository;
 import soldimet.repository.CilindradaRepository;
 import soldimet.repository.ClienteRepository;
 import soldimet.repository.CobranzaRepuestoRepository;
+import soldimet.repository.CostoRepuestoProveedorRepository;
 import soldimet.repository.DetallePresupuestoRepository;
 import soldimet.repository.EstadoCobranzaOperacionRepository;
 import soldimet.repository.EstadoDetallePedidoRepository;
@@ -140,10 +142,10 @@ public class ExpertoPresupuesto {
     private DetallePresupuestoRepository detallePresupuestoRepository;
 
     @Autowired
-    private CobranzaRepuestoRepository cobranzaRepuestoRepository;
+    private CostoRepuestoProveedorRepository costoRepuestoProveedorRepository;
 
     @Autowired
-    private MarcaRepository marcaRepository;
+    private CobranzaRepuestoRepository cobranzaRepuestoRepository;
 
     // Cambio el estado del presupuesto y del pedido de repuestos
     public void aceptarPresupuesto(Long idPresupuesto) {
@@ -311,18 +313,39 @@ public class ExpertoPresupuesto {
                 cobranzaOperacion.setEstadoCobranzaOperacion(estadoCobranzaOperacion);
             }
             for (CobranzaRepuesto cobranzaRepuesto : detalle.getCobranzaRepuestos()) {
-                // Actualizo las marcas para meterlas en el contexto (en caso que se cree uno nuevo o actualice)
-                cobranzaRepuesto.setMarca(
-                    marcaRepository.save(cobranzaRepuesto.getMarca())
-                );
                 // Fuerzo a guardar cuando el objeto no es nuevo
                 cobranzaRepuesto = cobranzaRepuestoRepository.save(cobranzaRepuesto);
+                this.actualizarListaDeCostoRepuestoProvedor(
+                    cobranzaRepuesto,
+                    detalle.getAplicacion(),
+                    detalle.getCilindrada()
+                );
                 totalDetalle += cobranzaRepuesto.getValor();
             }
             detalle.setImporte(totalDetalle);
         }
 
         return presupuestoRepository.save(presupuesto);
+    }
+
+    private void actualizarListaDeCostoRepuestoProvedor(CobranzaRepuesto cobranzaRepuesto, Aplicacion aplicacion,
+            Cilindrada cilindrada) {
+        // Reviso si ya existe la union del artículo con todos los detalles del motor
+        // sino creo una nueva para que despues sea más facil encontrarla
+        if (cobranzaRepuesto.getArticulo() != null) {
+            List<CostoRepuestoProveedor> costosRepuestos = costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoAndArticulo(
+                aplicacion, cilindrada, cobranzaRepuesto.getTipoRepuesto(), cobranzaRepuesto.getArticulo()
+            );
+            if (costosRepuestos.isEmpty()) {
+                CostoRepuestoProveedor nRepuestoProveedor = new CostoRepuestoProveedor();
+                nRepuestoProveedor.setAplicacion(aplicacion);
+                nRepuestoProveedor.setArticulo(cobranzaRepuesto.getArticulo());
+                nRepuestoProveedor.setCilindrada(cilindrada);
+                nRepuestoProveedor.setTipoRepuesto(cobranzaRepuesto.getTipoRepuesto());
+                costoRepuestoProveedorRepository.save(nRepuestoProveedor);
+            }
+        }
+
     }
 
     public DTOPresupuesto aceptarPresupuesto(DTOPresupuesto dtoPresupuesto) {
@@ -547,13 +570,13 @@ public class ExpertoPresupuesto {
 		return null;
 	}
 
-	public List<CobranzaRepuesto> buscarCobranzaRepuestos(Long aplicacionId, Long cilindradaId, Long tipoParteMotorId) {
+	public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId, Long tipoParteMotorId) {
         Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
         Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
         TipoParteMotor tipoParteMotor = tipoParteMotorRepository.getOne(tipoParteMotorId);
         List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotor(tipoParteMotor);
 
-        return cobranzaRepuestoRepository.findDistinctByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada, tipoRepuestos);
+        return costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada, tipoRepuestos);
 
 	}
 }

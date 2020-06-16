@@ -238,6 +238,11 @@ import { RouterModule } from '@angular/router';
         path: 'medio-de-pago-cheque',
         loadChildren: () =>
           import('app/entities/medio-de-pago-cheque/medio-de-pago-cheque.module').then(m => m.SoldimetMedioDePagoChequeModule)
+      },
+      {
+        path: 'costo-repuesto-proveedor',
+        loadChildren: () =>
+          import('./costo-repuesto-proveedor/costo-repuesto-proveedor.module').then(m => m.SoldimetCostoRepuestoProveedorModule)
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

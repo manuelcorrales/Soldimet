@@ -107,6 +107,7 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.Sucursal.class.getName());
             createCache(cm, soldimet.domain.MedioDePago.class.getName());
             createCache(cm, soldimet.domain.MedioDePagoCheque.class.getName());
+            createCache(cm, soldimet.domain.CostoRepuestoProveedor.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

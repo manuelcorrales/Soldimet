@@ -18,7 +18,7 @@ import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { Observable } from 'rxjs';
-import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
+import { CostoRepuestoProveedor } from 'app/shared/model/costo-repuesto-proveedor.model';
 
 @Injectable()
 export class PresupuestosService {
@@ -39,7 +39,7 @@ export class PresupuestosService {
   private urlPresupuestoVista = '/view';
   private urlImprimirPresupuesto = '/imprimir';
   private urlBuscarPresupuestoExistente = '/buscarExistente';
-  private urlListaCobranzaRepuestos = '/buscarCobranzaRepuestos';
+  private urlListaCostoRepuestoProveedores = '/buscarCostoRepuestoProveedores';
 
   constructor(
     private http: HttpClient,
@@ -150,9 +150,9 @@ export class PresupuestosService {
     return this.http.get<TipoRepuesto[]>(url);
   }
 
-  buscarListaCobranzaRepuestos(aplicacionId, cilindradaId, tipoParteMotorId): Observable<CobranzaRepuesto[]> {
-    const url = `${this.resourceUrlPresupuestos}${this.urlListaCobranzaRepuestos}/?aplicacion=${aplicacionId}&cilindrada=${cilindradaId}&tipoParteMotor=${tipoParteMotorId}`;
-    return this.http.get<CobranzaRepuesto[]>(url);
+  buscarListaCobranzaRepuestos(aplicacionId, cilindradaId, tipoParteMotorId): Observable<CostoRepuestoProveedor[]> {
+    const url = `${this.resourceUrlPresupuestos}${this.urlListaCostoRepuestoProveedores}/?aplicacion=${aplicacionId}&cilindrada=${cilindradaId}&tipoParteMotor=${tipoParteMotorId}`;
+    return this.http.get<CostoRepuestoProveedor[]>(url);
   }
 
   convertJsonAPresupuestoCabecera(json: any): DtoPresupuestoCabeceraComponent[] {

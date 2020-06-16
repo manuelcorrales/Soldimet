@@ -8,11 +8,9 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { ICostoRepuesto, CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
-import { CostoRepuestoService } from 'app/entities/costo-repuesto/costo-repuesto.service';
+import { CostoRepuestoService } from './costo-repuesto.service';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
-import { IArticulo } from 'app/shared/model/articulo.model';
-import { ArticuloService } from 'app/entities/articulo/articulo.service';
 import { IProveedor } from 'app/shared/model/proveedor.model';
 import { ProveedorService } from 'app/entities/proveedor/proveedor.service';
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
@@ -27,8 +25,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
 
   tiporepuestos: ITipoRepuesto[];
 
-  articulos: IArticulo[];
-
   proveedors: IProveedor[];
 
   estadocostorepuestos: IEstadoCostoRepuesto[];
@@ -37,7 +33,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
     id: [],
     valor: [null, [Validators.required, Validators.min(0)]],
     tipoRepuesto: [null, Validators.required],
-    articulo: [null, Validators.required],
     proveedor: [],
     estado: [null, Validators.required]
   });
@@ -46,7 +41,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
     protected jhiAlertService: JhiAlertService,
     protected costoRepuestoService: CostoRepuestoService,
     protected tipoRepuestoService: TipoRepuestoService,
-    protected articuloService: ArticuloService,
     protected proveedorService: ProveedorService,
     protected estadoCostoRepuestoService: EstadoCostoRepuestoService,
     protected activatedRoute: ActivatedRoute,
@@ -65,13 +59,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
         map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
       )
       .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.articuloService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IArticulo[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IArticulo[]>) => response.body)
-      )
-      .subscribe((res: IArticulo[]) => (this.articulos = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.proveedorService
       .query()
       .pipe(
@@ -93,7 +80,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
       id: costoRepuesto.id,
       valor: costoRepuesto.valor,
       tipoRepuesto: costoRepuesto.tipoRepuesto,
-      articulo: costoRepuesto.articulo,
       proveedor: costoRepuesto.proveedor,
       estado: costoRepuesto.estado
     });
@@ -119,7 +105,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
       id: this.editForm.get(['id']).value,
       valor: this.editForm.get(['valor']).value,
       tipoRepuesto: this.editForm.get(['tipoRepuesto']).value,
-      articulo: this.editForm.get(['articulo']).value,
       proveedor: this.editForm.get(['proveedor']).value,
       estado: this.editForm.get(['estado']).value
     };
@@ -142,10 +127,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
   }
 
   trackTipoRepuestoById(index: number, item: ITipoRepuesto) {
-    return item.id;
-  }
-
-  trackArticuloById(index: number, item: IArticulo) {
     return item.id;
   }
 

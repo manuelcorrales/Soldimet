@@ -1,5 +1,4 @@
 package soldimet.repository;
-
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.EstadoCostoRepuesto;
 
@@ -14,6 +13,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CostoRepuestoRepository extends JpaRepository<CostoRepuesto, Long> {
 
-    Long countByEstado(EstadoCostoRepuesto estadoo);
-
+    Long countByEstado(EstadoCostoRepuesto estado);
 }

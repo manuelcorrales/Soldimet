@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IArticulo, Articulo } from 'app/shared/model/articulo.model';
-import { ArticuloService } from 'app/entities/articulo/articulo.service';
+import { ArticuloService } from './articulo.service';
 import { IEstadoArticulo } from 'app/shared/model/estado-articulo.model';
 import { EstadoArticuloService } from 'app/entities/estado-articulo/estado-articulo.service';
 import { IMarca } from 'app/shared/model/marca.model';
@@ -28,13 +28,15 @@ export class ArticuloUpdateComponent implements OnInit {
   marcas: IMarca[];
 
   tiporepuestos: ITipoRepuesto[];
+  fechaCostoDp: any;
 
   editForm = this.fb.group({
     id: [],
-    descripcion: [null, [Validators.required]],
-    codigoArticuloProveedor: [null, [Validators.minLength(2), Validators.maxLength(20)]],
+    codigoArticuloProveedor: [],
+    valor: [null, [Validators.required]],
+    fechaCosto: [],
     estado: [null, Validators.required],
-    marca: [null, Validators.required],
+    marca: [],
     tipoRepuesto: [null, Validators.required]
   });
 
@@ -79,8 +81,9 @@ export class ArticuloUpdateComponent implements OnInit {
   updateForm(articulo: IArticulo) {
     this.editForm.patchValue({
       id: articulo.id,
-      descripcion: articulo.descripcion,
       codigoArticuloProveedor: articulo.codigoArticuloProveedor,
+      valor: articulo.valor,
+      fechaCosto: articulo.fechaCosto,
       estado: articulo.estado,
       marca: articulo.marca,
       tipoRepuesto: articulo.tipoRepuesto
@@ -105,8 +108,9 @@ export class ArticuloUpdateComponent implements OnInit {
     return {
       ...new Articulo(),
       id: this.editForm.get(['id']).value,
-      descripcion: this.editForm.get(['descripcion']).value,
       codigoArticuloProveedor: this.editForm.get(['codigoArticuloProveedor']).value,
+      valor: this.editForm.get(['valor']).value,
+      fechaCosto: this.editForm.get(['fechaCosto']).value,
       estado: this.editForm.get(['estado']).value,
       marca: this.editForm.get(['marca']).value,
       tipoRepuesto: this.editForm.get(['tipoRepuesto']).value

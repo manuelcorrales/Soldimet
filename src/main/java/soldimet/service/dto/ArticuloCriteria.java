@@ -10,6 +10,7 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 
 /**
  * Criteria class for the {@link soldimet.domain.Articulo} entity. This class is used
@@ -26,9 +27,11 @@ public class ArticuloCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private StringFilter descripcion;
-
     private StringFilter codigoArticuloProveedor;
+
+    private FloatFilter valor;
+
+    private LocalDateFilter fechaCosto;
 
     private LongFilter estadoId;
 
@@ -41,8 +44,9 @@ public class ArticuloCriteria implements Serializable, Criteria {
 
     public ArticuloCriteria(ArticuloCriteria other){
         this.id = other.id == null ? null : other.id.copy();
-        this.descripcion = other.descripcion == null ? null : other.descripcion.copy();
         this.codigoArticuloProveedor = other.codigoArticuloProveedor == null ? null : other.codigoArticuloProveedor.copy();
+        this.valor = other.valor == null ? null : other.valor.copy();
+        this.fechaCosto = other.fechaCosto == null ? null : other.fechaCosto.copy();
         this.estadoId = other.estadoId == null ? null : other.estadoId.copy();
         this.marcaId = other.marcaId == null ? null : other.marcaId.copy();
         this.tipoRepuestoId = other.tipoRepuestoId == null ? null : other.tipoRepuestoId.copy();
@@ -61,20 +65,28 @@ public class ArticuloCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public StringFilter getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(StringFilter descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public StringFilter getCodigoArticuloProveedor() {
         return codigoArticuloProveedor;
     }
 
     public void setCodigoArticuloProveedor(StringFilter codigoArticuloProveedor) {
         this.codigoArticuloProveedor = codigoArticuloProveedor;
+    }
+
+    public FloatFilter getValor() {
+        return valor;
+    }
+
+    public void setValor(FloatFilter valor) {
+        this.valor = valor;
+    }
+
+    public LocalDateFilter getFechaCosto() {
+        return fechaCosto;
+    }
+
+    public void setFechaCosto(LocalDateFilter fechaCosto) {
+        this.fechaCosto = fechaCosto;
     }
 
     public LongFilter getEstadoId() {
@@ -113,8 +125,9 @@ public class ArticuloCriteria implements Serializable, Criteria {
         final ArticuloCriteria that = (ArticuloCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(descripcion, that.descripcion) &&
             Objects.equals(codigoArticuloProveedor, that.codigoArticuloProveedor) &&
+            Objects.equals(valor, that.valor) &&
+            Objects.equals(fechaCosto, that.fechaCosto) &&
             Objects.equals(estadoId, that.estadoId) &&
             Objects.equals(marcaId, that.marcaId) &&
             Objects.equals(tipoRepuestoId, that.tipoRepuestoId);
@@ -124,8 +137,9 @@ public class ArticuloCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
         id,
-        descripcion,
         codigoArticuloProveedor,
+        valor,
+        fechaCosto,
         estadoId,
         marcaId,
         tipoRepuestoId
@@ -136,8 +150,9 @@ public class ArticuloCriteria implements Serializable, Criteria {
     public String toString() {
         return "ArticuloCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (descripcion != null ? "descripcion=" + descripcion + ", " : "") +
                 (codigoArticuloProveedor != null ? "codigoArticuloProveedor=" + codigoArticuloProveedor + ", " : "") +
+                (valor != null ? "valor=" + valor + ", " : "") +
+                (fechaCosto != null ? "fechaCosto=" + fechaCosto + ", " : "") +
                 (estadoId != null ? "estadoId=" + estadoId + ", " : "") +
                 (marcaId != null ? "marcaId=" + marcaId + ", " : "") +
                 (tipoRepuestoId != null ? "tipoRepuestoId=" + tipoRepuestoId + ", " : "") +

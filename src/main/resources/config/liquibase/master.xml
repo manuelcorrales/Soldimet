@@ -69,6 +69,7 @@
     <include file="config/liquibase/changelog/20181114003224_added_entity_Sucursal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190222233823_added_entity_MedioDePago.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190401202736_added_entity_MedioDePagoCheque.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200615225001_added_entity_CostoRepuestoProveedor.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20171213233426_added_entity_constraints_Articulo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171213233926_added_entity_constraints_Caja.xml" relativeToChangelogFile="false"/>
@@ -99,6 +100,7 @@
     <include file="config/liquibase/changelog/20190222233823_added_entity_constraints_MedioDePago.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190401202736_added_entity_constraints_MedioDePagoCheque.xml" relativeToChangelogFile="false"/>
     <!--include file="config/liquibase/changelog/20191012120909_changelog.xml" relativeToChangelogFile="false"/-->
+    <include file="config/liquibase/changelog/20200615225001_added_entity_constraints_CostoRepuestoProveedor.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <include file="config/liquibase/changelog/20191012120909_initial_database_fill.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20191212120909_agregado_ff4j.xml" relativeToChangelogFile="false"/>
@@ -110,4 +112,7 @@
     <include file="config/liquibase/changelog/20200522222818_agregar_marca_a_cobranza_repuesto.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200522225232_agregar_cilindrada_aplicacion_a_cobranza_repuesto.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200522231705_agregar_fecha_cobranza_repuesto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200615230857_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200616155155_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200616203621_changelog.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

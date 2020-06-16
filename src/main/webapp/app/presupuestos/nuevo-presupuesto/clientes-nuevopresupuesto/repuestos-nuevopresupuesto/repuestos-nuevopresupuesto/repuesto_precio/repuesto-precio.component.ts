@@ -1,10 +1,11 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
-import { Marca } from 'app/shared/model/marca.model';
-import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { Subject, Observable, merge } from 'rxjs';
-import { filter, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { CostoRepuestoProveedor } from 'app/shared/model/costo-repuesto-proveedor.model';
+import { Articulo } from 'app/shared/model/articulo.model';
+import { Observable, merge, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, filter } from 'rxjs/operators';
+import { NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-repuesto-precio',
@@ -14,83 +15,75 @@ import { filter, debounceTime, distinctUntilChanged, map } from 'rxjs/operators'
 export class RepuestoPrecioComponent implements OnInit {
   @Input() repuesto: TipoRepuesto;
   @Input() cobranzaUltimoRepuesto: CobranzaRepuesto;
-  @Input() listaCobranzas: CobranzaRepuesto[];
+  @Input() listaCobranzas: CostoRepuestoProveedor[];
+  @Input() articulos: Articulo[];
 
-  marcas: Marca[];
+  articulo: Articulo;
 
   seleccionado = false;
   precio = 0;
   precioAnterior = 0;
-  marca: Marca = new Marca();
-  descripcion: string;
   @Output() eventoCambioValor = new EventEmitter<number>();
 
-  @ViewChild('instanceNTAMarca', { static: false })
-  instanceMarca: NgbTypeahead;
-  focusMarca$ = new Subject<string>();
-  clickMarca$ = new Subject<string>();
+  @ViewChild('instanceNTAArticulo', { static: false })
+  instanceArticulo: NgbTypeahead;
+  focusArticulo$ = new Subject<string>();
+  clickArticulo$ = new Subject<string>();
 
   constructor() {}
 
-  ngOnInit() {
-    // Precargar con las marcas el desplegable
-    this.marcas = this.listaCobranzas.map(cobranza => cobranza.marca);
-
-    // Preseleccionar si existe un presupuesto anterior
-    if (this.cobranzaUltimoRepuesto) {
-      this.marca = this.cobranzaUltimoRepuesto.marca;
-      this.seleccionado = true;
-      this.precio = this.cobranzaUltimoRepuesto.valor;
-      this.descripcion = this.cobranzaUltimoRepuesto.detalle;
-      setTimeout(() => this.cambioValor(), 1000);
-    }
-  }
-
-  formatterMarca = result => result.nombreMarca;
-
-  searchMarca = (text$: Observable<string>) => {
+  formatterArticulo = (articulo: Articulo) => articulo.codigoArticuloProveedor;
+  searchArticulo = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(
       debounceTime(200),
       distinctUntilChanged()
     );
-    const clicksWithClosedPopup$ = this.clickMarca$.pipe(filter(() => !this.instanceMarca.isPopupOpen()));
-    const inputFocus$ = this.focusMarca$;
+    const clicksWithClosedPopup$ = this.clickArticulo$.pipe(filter(() => !this.instanceArticulo.isPopupOpen()));
+    const inputFocus$ = this.focusArticulo$;
 
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term =>
-        (term === '' ? this.marcas : this.marcas.filter(v => v.nombreMarca.toLowerCase().includes(term.toLowerCase()))).slice(0, 10)
+        (term === ''
+          ? this.listaCobranzas.filter(cobranza => cobranza.articulo != null).map(cobranza => cobranza.articulo)
+          : // es-lint-ignore-next-line prefer-includes
+            this.articulos.filter(v => v.codigoArticuloProveedor.toLowerCase().includes(term.toLowerCase()))
+        ).slice(0, 10)
       )
     );
   };
+
+  ngOnInit() {
+    // La lista del autocompletar viene de la lista de ya enlazados con este tipo repuesto y de todos los articulos
+    // De esta forma parecen selectores con los articulos que ya eligio
+    // y ademas puedo filtrar y seleccionar un articulo nuevo a este tipo repuesto (al momento de guardar el presupuesto)
+    if (this.listaCobranzas.length > 0) {
+      this.articulo = this.listaCobranzas[0].articulo;
+      this.actualizarPrecio(this.articulo.valor);
+    }
+
+    // Preseleccionar si existe un presupuesto anterior
+    if (this.cobranzaUltimoRepuesto) {
+      this.seleccionado = true;
+      this.articulo = this.cobranzaUltimoRepuesto.articulo;
+      this.actualizarPrecio(this.cobranzaUltimoRepuesto.valor);
+    }
+  }
+
+  actualizarPrecio(precio) {
+    this.precio = precio;
+    setTimeout(() => this.cambioValor(), 1000);
+  }
 
   marcado() {
     return this.seleccionado;
   }
 
   getArticuloAcobrar(): CobranzaRepuesto {
-    // Si se usa la cobranza de la lista, devuelvo ese objeto, sino creo uno nuevo
-    // Esto es para usar siempre la cobranza de la lista o crear solo distintos a la lista
-    if (
-      this.cobranzaUltimoRepuesto &&
-      this.marca.id === this.cobranzaUltimoRepuesto.marca.id &&
-      this.precio === this.cobranzaUltimoRepuesto.valor &&
-      this.descripcion === this.cobranzaUltimoRepuesto.detalle
-    ) {
-      return this.cobranzaUltimoRepuesto;
-    } else {
-      const nuevaCobranzaRepuesto = new CobranzaRepuesto();
-      nuevaCobranzaRepuesto.valor = this.precio;
-      nuevaCobranzaRepuesto.tipoRepuesto = this.repuesto;
-      // Creo una marca nueva
-      if (typeof this.marca === 'string') {
-        const marca = new Marca();
-        marca.nombreMarca = this.marca as string;
-        this.marca = marca;
-      }
-      nuevaCobranzaRepuesto.marca = this.marca;
-      nuevaCobranzaRepuesto.detalle = this.descripcion;
-      return nuevaCobranzaRepuesto;
-    }
+    const nuevaCobranzaRepuesto = new CobranzaRepuesto();
+    nuevaCobranzaRepuesto.valor = this.precio;
+    nuevaCobranzaRepuesto.tipoRepuesto = this.repuesto;
+    nuevaCobranzaRepuesto.articulo = this.articulo;
+    return nuevaCobranzaRepuesto;
   }
 
   cambioValor() {
@@ -103,5 +96,9 @@ export class RepuestoPrecioComponent implements OnInit {
     } else {
       return 0;
     }
+  }
+
+  pisarPrecioConArticulo(event: NgbTypeaheadSelectItemEvent) {
+    this.precio = event.item.valor;
   }
 }

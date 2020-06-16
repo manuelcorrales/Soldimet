@@ -1,0 +1,52 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "tipoRepuesto",
+            "otherEntityName": "tipoRepuesto",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreTipoRepuesto",
+            "otherEntityRelationshipName": "costoRepuestoProveedor"
+        },
+        {
+            "relationshipName": "aplicacion",
+            "otherEntityName": "aplicacion",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreAplicacion",
+            "otherEntityRelationshipName": "costoRepuestoProveedor"
+        },
+        {
+            "relationshipName": "cilindrada",
+            "otherEntityName": "cilindrada",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "cantidadDeCilindros",
+            "otherEntityRelationshipName": "costoRepuestoProveedor"
+        },
+        {
+            "relationshipName": "articulo",
+            "otherEntityName": "articulo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "codigoArticuloProveedor",
+            "otherEntityRelationshipName": "costoRepuestoProveedor"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20200615225001",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "costo_repuesto_proveedor",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

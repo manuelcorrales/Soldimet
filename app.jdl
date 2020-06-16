@@ -1,0 +1,313 @@
+application {
+  config {
+    databaseType sql
+    devDatabaseType mysql
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation false
+    jhiPrefix jhi
+    languages [es-Ar]
+    messageBroker false
+    nativeLanguage en
+    packageName soldimet
+    packageFolder soldimet
+    prodDatabaseType mysql
+    searchEngine false
+    serviceDiscoveryType false
+    skipClient false
+    skipServer false
+    testFrameworks []
+    websocket false
+    promptValues [object Object]
+    jhipsterVersion 6.3.0
+    baseName Soldimet
+    serverPort 8080
+    authenticationType jwt
+    clusteredHttpSession false
+    buildTool maven
+    enableSocialSignIn false
+    jwtSecretKey ODc3YWI4ZTkwOWVjNjlkNDhhMjZmNmJkYTNmNzQwYjA1MjRlNDk0OTkwNWViMTYxMTYwOGE5ZTBlOTYzYjAzOTc2OTYxZDYzMTM4ODVjMDAxYmEyOGRhNTliNjY5MzM3ZWY4NmFlMjZiNWNkMjA1ZTlmYjI2NGI5MDBjNzJmZjE=
+    clientFramework angularX
+    useSass true
+    clientPackageManager yarn
+    applicationType monolith
+    cacheProvider ehcache
+    embeddableLaunchScript false
+    clientTheme litera
+    entitySuffix 
+    dtoSuffix DTO
+    otherModules 
+    blueprints 
+    gcpProjectId soldimetqa
+    gcpCloudSqlInstanceName soldimetqa:us-central1:soldimet
+    gcpCloudSqlUserName soldimet
+    gcpCloudSqlDatabaseName Soldimet
+    gaeServiceName default
+    gaeLocation us-central
+    gaeInstanceClass B2
+    gaeScalingType manual
+    gaeCloudSQLInstanceNeeded Y
+    gaeInstances 1
+    skipUserManagement false
+    clientThemeVariant primary
+  }
+
+  entities Aplicacion, Articulo, Banco, Caja, CategoriaPago, Cilindrada, Cliente, CobranzaOperacion, CobranzaRepuesto, CostoOperacion, CostoRepuesto, DetalleMovimiento, DetallePedido, DetallePresupuesto, Direccion, DocumentationType, Empleado, EstadoArticulo, EstadoCobranzaOperacion, EstadoCostoRepuesto, EstadoDetallePedido, EstadoMovimiento, EstadoOperacion, EstadoPedidoRepuesto, EstadoPersona, EstadoPresupuesto, FormaDePago, HistorialPrecio, ListaPrecioDesdeHasta, ListaPrecioRectificacionCRAM, Localidad, Marca, MedioDePago, MedioDePagoCheque, MedioDePagoTarjeta, Motor, Movimiento, MovimientoArticulo, MovimientoPedido, MovimientoPresupuesto, Operacion, PagoCheque, PagoEfectivo, PagoTarjeta, PedidoRepuesto, Persona, PrecioRepuesto, Presupuesto, Proveedor, Rubro, SubCategoria, Sucursal, TipoDetalleMovimiento, TipoMovimiento, TipoParteMotor, TipoRepuesto
+}
+
+entity Aplicacion {
+  nombreAplicacion String required,
+  numeroGrupo Integer required min(1) max(100)
+}
+entity Articulo {
+  descripcion String required,
+  codigoArticuloProveedor String
+}
+entity Banco {
+  nombreBanco String required
+}
+entity Caja {
+  fecha LocalDate required,
+  horaApertura Instant required,
+  horaCierre Instant,
+  saldo Float,
+  observaciones String,
+  saldoFisico Float
+}
+entity CategoriaPago {
+  nombreCategoriaPago String required
+}
+entity Cilindrada {
+  cantidadDeCilindros Integer required min(1) max(20)
+}
+entity Cliente
+entity CobranzaOperacion {
+  cobranzaOperacion Float required min(0)
+}
+entity CobranzaRepuesto {
+  valor Float required min(0),
+  detalle String required,
+  fecha LocalDate
+}
+entity CostoOperacion {
+  costoOperacion Float required min(0)
+}
+entity CostoRepuesto {
+  valor Float required min(0)
+}
+entity DetalleMovimiento {
+  valorUnitario Float,
+  cantidad Integer required min(0),
+  descripcion String
+}
+entity DetallePedido
+entity DetallePresupuesto {
+  importe Float required min(0)
+}
+entity Direccion {
+  calle String required minlength(3),
+  numero Integer required min(0)
+}
+entity DocumentationType {
+  documentName String required
+}
+entity Empleado
+entity EstadoArticulo {
+  nombreEstado String required minlength(3)
+}
+entity EstadoCobranzaOperacion {
+  nombreEstado String required minlength(3)
+}
+entity EstadoCostoRepuesto {
+  nombreEstado String required
+}
+entity EstadoDetallePedido {
+  nombreEstado String required minlength(3)
+}
+entity EstadoMovimiento {
+  nombreEstado String required minlength(3)
+}
+entity EstadoOperacion {
+  nombreEstado String required minlength(3)
+}
+entity EstadoPedidoRepuesto {
+  nombreEstado String required minlength(3)
+}
+entity EstadoPersona {
+  nombreEstado String required minlength(3)
+}
+entity EstadoPresupuesto {
+  nombreEstado String required minlength(3)
+}
+entity FormaDePago {
+  nombreFormaDePago String required minlength(3)
+}
+entity HistorialPrecio {
+  fechaHistorial LocalDate required
+}
+entity ListaPrecioDesdeHasta {
+  fechaDesde LocalDate required,
+  fechaHasta LocalDate
+}
+entity ListaPrecioRectificacionCRAM (lista_precio_rectificacioncram) {
+  numeroGrupo Integer required min(1) max(25)
+}
+entity Localidad {
+  nombreLocalidad String required minlength(3)
+}
+entity Marca {
+  nombreMarca String required minlength(2)
+}
+entity MedioDePago
+entity MedioDePagoCheque {
+  numeroCheque String required
+}
+entity MedioDePagoTarjeta {
+  ultimos4 String required minlength(4)
+}
+entity Motor {
+  marcaMotor String required minlength(2) maxlength(25)
+}
+entity Movimiento {
+  fecha LocalDate required,
+  importe Float required,
+  descuento Float,
+  observaciones String
+}
+entity MovimientoArticulo {
+  cantidad Integer required min(1)
+}
+entity MovimientoPedido
+entity MovimientoPresupuesto
+entity Operacion {
+  nombreOperacion String required
+}
+entity PagoCheque {
+  numeroCheque String required minlength(3)
+}
+entity PagoEfectivo
+entity PagoTarjeta
+entity PedidoRepuesto {
+  fechaCreacion LocalDate required,
+  fechaPedido LocalDate,
+  fechaRecibo LocalDate
+}
+entity Persona {
+  numeroTelefono String,
+  nombre String required,
+  apellido String
+}
+entity PrecioRepuesto {
+  fecha LocalDate required,
+  precioPrivado Float min(0),
+  precioPublico Float required min(0)
+}
+entity Presupuesto {
+  descripcionDescuento String minlength(5),
+  descuento Float min(0),
+  fechaCreacion LocalDate,
+  fechaAceptado LocalDate,
+  fechaEntregado LocalDate,
+  importeTotal Float required min(0),
+  observaciones String,
+  soldadura Boolean
+}
+entity Proveedor {
+  nombreProveedor String required
+}
+entity Rubro {
+  nombreRubro String required minlength(3)
+}
+entity SubCategoria {
+  nombreSubCategoria String required
+}
+entity Sucursal {
+  nombreSucursal String required
+}
+entity TipoDetalleMovimiento {
+  nombreTipoDetalle String required minlength(3)
+}
+entity TipoMovimiento {
+  nombreTipoMovimiento String required minlength(3)
+}
+entity TipoParteMotor {
+  nombreTipoParteMotor String required minlength(3)
+}
+entity TipoRepuesto {
+  nombreTipoRepuesto String required minlength(3)
+}
+relationship OneToOne {
+  Cliente{persona(nombre) required} to Persona,
+  DetallePedido{detallePresupuesto required} to DetallePresupuesto,
+  Empleado{persona(nombre) required} to Persona,
+  HistorialPrecio{precioRepuesto required} to PrecioRepuesto,
+  MedioDePago{medioDePagoCheque} to MedioDePagoCheque,
+  Movimiento{medioDePago} to MedioDePago,
+  MovimientoArticulo{movimiento required} to Movimiento,
+  MovimientoPedido{movimiento required} to Movimiento,
+  MovimientoPresupuesto{movimiento required} to Movimiento,
+  PagoCheque{formaDePago(nombreFormaDePago) required} to FormaDePago,
+  PagoEfectivo{formaDePago(nombreFormaDePago) required} to FormaDePago,
+  PagoTarjeta{formaDePago(nombreFormaDePago) required} to FormaDePago,
+  Persona{direccion} to Direccion,
+  Proveedor{persona(nombre) required} to Persona
+}
+relationship OneToMany {
+  Motor{aplicacion} to Aplicacion{motor(nombre_motor) required}
+}
+relationship ManyToOne {
+  Articulo{estado(nombreEstado) required} to EstadoArticulo,
+  Articulo{marca(nombreMarca)} to Marca,
+  Articulo{tipoRepuesto(nombreTipoRepuesto) required} to TipoRepuesto,
+  Caja{sucursal(nombreSucursal)} to Sucursal,
+  CobranzaOperacion{estadoCobranzaOperacion(nombreEstado) required} to EstadoCobranzaOperacion,
+  CobranzaOperacion{operacion(nombreOperacion) required} to Operacion,
+  CobranzaRepuesto{tipoRepuesto(nombreTipoRepuesto) required} to TipoRepuesto,
+  CobranzaRepuesto{marca(nombreMarca) required} to Marca,
+  CobranzaRepuesto{cilindrada(cantidadDeCilindros) required} to Cilindrada,
+  CobranzaRepuesto{aplicacion(nombreAplicacion) required} to Aplicacion,
+  CostoOperacion{cilindrada(cantidadDeCilindros) required} to Cilindrada,
+  CostoOperacion{operacion(nombreOperacion) required} to Operacion,
+  CostoOperacion{tipoParteMotor(nombreTipoParteMotor) required} to TipoParteMotor,
+  CostoRepuesto{tipoRepuesto(nombreTipoRepuesto) required} to TipoRepuesto,
+  CostoRepuesto{articulo(descripcion)} to Articulo,
+  CostoRepuesto{proveedor} to Proveedor,
+  CostoRepuesto{estado(nombreEstado) required} to EstadoCostoRepuesto,
+  DetalleMovimiento{tipoDetalleMovimiento(nombreTipoDetalle) required} to TipoDetalleMovimiento,
+  DetalleMovimiento{articulo(descripcion)} to Articulo,
+  DetalleMovimiento{pedidoRepuesto} to PedidoRepuesto,
+  DetalleMovimiento{presupuesto} to Presupuesto,
+  DetallePresupuesto{aplicacion(nombreAplicacion) required} to Aplicacion,
+  DetallePresupuesto{cilindrada(cantidadDeCilindros) required} to Cilindrada,
+  DetallePresupuesto{motor required} to Motor,
+  DetallePresupuesto{tipoParteMotor(nombreTipoParteMotor) required} to TipoParteMotor,
+  Direccion{localidad(nombreLocalidad) required} to Localidad,
+  Empleado{sucursal(nombreSucursal)} to Sucursal,
+  MedioDePago{formaDePago(nombreFormaDePago) required} to FormaDePago,
+  MedioDePagoCheque{banco(nombreBanco) required} to Banco,
+  Movimiento{estado(nombreEstado) required} to EstadoMovimiento,
+  Movimiento{tipoMovimiento(nombreTipoMovimiento) required} to TipoMovimiento,
+  Movimiento{empleado(usuario) required} to Empleado,
+  Movimiento{caja} to Caja,
+  Movimiento{subCategoria(nombreSubCategoria)} to SubCategoria,
+  MovimientoArticulo{articulo(descripcion) required} to Articulo,
+  MovimientoPedido{pedidoRepuesto required} to PedidoRepuesto,
+  MovimientoPresupuesto{presupuesto required} to Presupuesto,
+  Operacion{tipoParteMotor(nombreTipoParteMotor) required} to TipoParteMotor,
+  Operacion{estadoOperacion(nombreEstado) required} to EstadoOperacion,
+  PagoCheque{banco(nombreBanco) required} to Banco,
+  PedidoRepuesto{estadoPedidoRepuesto(nombreEstado) required} to EstadoPedidoRepuesto,
+  PedidoRepuesto{presupuesto required} to Presupuesto,
+  PedidoRepuesto{documentType(documentName)} to DocumentationType,
+  Persona{estadoPersona(nombreEstado)} to EstadoPersona,
+  Persona{user(login)} to User,
+  Presupuesto{cliente(apellido) required} to Cliente,
+  Presupuesto{estadoPresupuesto(nombreEstado) required} to EstadoPresupuesto,
+  Presupuesto{documentType(documentName)} to DocumentationType,
+  Presupuesto{sucursal(nombreSucursal)} to Sucursal,
+  TipoRepuesto{tipoParteMotor(nombreTipoParteMotor) required} to TipoParteMotor
+}
+
+service Aplicacion, Articulo, Banco, Caja, CategoriaPago, Cilindrada, Cliente, CobranzaOperacion, CobranzaRepuesto, CostoOperacion, CostoRepuesto, DetalleMovimiento, DetallePedido, DetallePresupuesto, Direccion, Empleado, EstadoArticulo, EstadoCobranzaOperacion, EstadoDetallePedido, EstadoMovimiento, EstadoOperacion, EstadoPedidoRepuesto, EstadoPersona, EstadoPresupuesto, FormaDePago, HistorialPrecio, ListaPrecioDesdeHasta, ListaPrecioRectificacionCRAM, Localidad, Marca, Motor, Movimiento, MovimientoArticulo, MovimientoPedido, MovimientoPresupuesto, Operacion, PagoCheque, PagoEfectivo, PagoTarjeta, PedidoRepuesto, Persona, PrecioRepuesto, Presupuesto, Proveedor, Rubro, SubCategoria, TipoDetalleMovimiento, TipoMovimiento, TipoParteMotor, TipoRepuesto with serviceClass
+paginate Articulo, Caja, Movimiento, PedidoRepuesto, Persona, Presupuesto, Proveedor with pagination
+filter Articulo, Caja, PedidoRepuesto, Persona, Presupuesto
