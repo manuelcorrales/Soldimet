@@ -33,7 +33,7 @@
                     <label class="form-control-label" for="field_articulo">Articulo</label>
                     <select class="form-control" id="field_articulo" name="articulo" formControlName="articulo">
                         <option *ngIf="!editForm.get('articulo').value" [ngValue]="null" selected></option>
-                        <option [ngValue]="articuloOption.id === editForm.get('articulo').value?.id ? editForm.get('articulo').value : articuloOption" *ngFor="let articuloOption of articulos; trackBy: trackArticuloById">{{articuloOption.descripcion}}</option>
+                        <option [ngValue]="articuloOption.id === editForm.get('articulo').value?.id ? editForm.get('articulo').value : articuloOption" *ngFor="let articuloOption of articulos; trackBy: trackArticuloById">{{articuloOption.codigoArticuloProveedor}}</option>
                     </select>
                 </div>
                 <div *ngIf="editForm.get('articulo').invalid && (editForm.get('articulo').dirty || editForm.get('articulo').touched)">

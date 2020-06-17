@@ -16,7 +16,7 @@
 logging:
   level:
     ROOT: INFO
-    soldimet: DEBUG
+    soldimet: INFO
     io.github.jhipster: INFO
 
 management:
@@ -36,8 +36,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: soldimet
-    password:
+    username: SoldimetQA
+    password: SoldimetQA
     hikari:
       poolName: Hikari
       auto-commit: false

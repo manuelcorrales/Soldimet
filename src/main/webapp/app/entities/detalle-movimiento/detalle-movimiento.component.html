@@ -33,7 +33,7 @@
                 <td><a [routerLink]="['/detalle-movimiento', detalleMovimiento.id, 'view' ]">{{detalleMovimiento.id}}</a></td>
                 <td>{{detalleMovimiento.valorUnitario}}</td>
                 <td>{{detalleMovimiento.cantidad}}</td>
-                <td>{{detalleMovimiento.descripcion}}</td>
+                <td>{{detalleMovimiento.codigoArticuloProveedor}}</td>
                 <td>
                     <div *ngIf="detalleMovimiento.tipoDetalleMovimiento">
                         <a [routerLink]="['/tipo-detalle-movimiento', detalleMovimiento.tipoDetalleMovimiento?.id, 'view' ]" >{{detalleMovimiento.tipoDetalleMovimiento?.nombreTipoDetalle}}</a>
