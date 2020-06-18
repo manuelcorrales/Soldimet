@@ -33,16 +33,16 @@ public class Articulo implements Serializable {
     @Column(name = "fecha_costo", columnDefinition = "DATE")
     private LocalDate fechaCosto;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
     @JsonIgnoreProperties("articulos")
     private EstadoArticulo estado;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonIgnoreProperties("articulos")
     private Marca marca;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @NotNull
     @JsonIgnoreProperties("articulos")
     private TipoRepuesto tipoRepuesto;

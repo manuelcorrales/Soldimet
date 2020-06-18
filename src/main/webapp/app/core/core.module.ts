@@ -22,7 +22,7 @@ import { fontAwesomeIcons } from 'app/core/icons/font-awesome-icons';
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-' }),
     NgJhipsterModule.forRoot({
       // set below to true to make alerts look like toast
-      alertAsToast: false,
+      alertAsToast: true,
       alertTimeout: 5000
     })
   ],
@@ -30,7 +30,7 @@ import { fontAwesomeIcons } from 'app/core/icons/font-awesome-icons';
     Title,
     {
       provide: LOCALE_ID,
-      useValue: 'en'
+      useValue: 'en' // CAMBIAR ACÁ EL IDIOMA LOCALE
     },
     { provide: NgbDateAdapter, useClass: NgbDateMomentAdapter },
     DatePipe

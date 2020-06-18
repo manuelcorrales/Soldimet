@@ -1,0 +1,26 @@
+<div class="card border-info">
+    <div class="card-body row">
+        <div class="col">
+            <label class="form-control-label">Tipo Repuesto</label>
+            <select class="form-control" name="tipoRepuesto" [(ngModel)]="articulo.tipoRepuesto">
+                <option selected disabled>Elija un repuesto</option>
+                <option [ngValue]="tipoRepuesto" *ngFor="let tipoRepuesto of tiposRepuestos" for="tipoRepuesto">
+                    {{tipoRepuesto.nombreTipoRepuesto}}
+                </option>
+            </select>
+        </div>
+        <div class="col">
+            <label class="form-control-label">Codigo Proveedor</label>
+            <input type="text" class="form-control" name="codigoArticuloProveedor"
+                    [(ngModel)]="articulo.codigoArticuloProveedor"/>
+        </div>
+        <div class="col">
+            <label class="form-control-label">Valor</label>
+            <input type="number" class="form-control" name="valor" [(ngModel)]="articulo.valor"/>
+        </div>
+        <div class="my-auto col">
+            <button class="btn btn-outline-success" id="crear_articulo"
+                (click)="crearArticulo()">Agregar artículo</button>
+        </div>
+    </div>
+</div>

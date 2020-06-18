@@ -136,6 +136,7 @@ Custom alerts for notification
 
 @media screen and (min-width: 480px) {
   .alerts .jhi-toast {
+    z-index: 3;
     width: 50%;
   }
 }

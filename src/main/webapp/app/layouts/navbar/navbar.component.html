@@ -47,13 +47,27 @@
                       <span>Pedidos</span>
                 </a>
             </li>
-            <li class="nav-item" routerLinkActive="active" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']" [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link" routerLink="operaciones" (click)="collapseNavbar()">
+            <li *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
                     <span>
-                        <fa-icon icon="tools"></fa-icon>
-                        <span>Operaciones</span>
+                        <fa-icon icon="list-alt"></fa-icon>
+                        <span>Lista de Precios</span>
                     </span>
                 </a>
+                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
+                    <li>
+                        <a class="dropdown-item" routerLink="operaciones" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="tools" fixedWidth="true"></fa-icon>
+                            <span>Operaciones</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="repuestos" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="hammer" fixedWidth="true"></fa-icon>
+                            <span>Repuestos de proveedores</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
             <li *ngSwitchCase="true" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">

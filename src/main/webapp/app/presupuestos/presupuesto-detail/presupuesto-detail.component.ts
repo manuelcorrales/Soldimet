@@ -15,8 +15,6 @@ export class PresupuestoDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ presupuesto }) => {
       this.presupuesto = presupuesto;
-      // eslint-disable-next-line no-console
-      console.log(this.presupuesto);
     });
   }
 }

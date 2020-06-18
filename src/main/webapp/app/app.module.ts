@@ -28,6 +28,7 @@ import { OperacionesModule } from 'app/operaciones/operaciones.module';
 import { PedidosModule } from 'app/pedidos/pedidos.module';
 import { PresupuestosModule } from 'app/presupuestos/presupuestos.module';
 import { ReportsModule } from 'app/reports/reports.module';
+import { RepuestosModule } from 'app/repuestos/repuestos.module';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { ReportsModule } from 'app/reports/reports.module';
     PedidosModule,
     PresupuestosModule,
     ReportsModule,
+    RepuestosModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     SoldimetEntityModule,
     SoldimetAppRoutingModule

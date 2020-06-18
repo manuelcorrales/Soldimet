@@ -65,7 +65,7 @@ export class PresupuestosComponent implements OnInit {
         this._filtrarYAgregarPresupuesto(dto);
       },
       res => {
-        this.jhiAlertService.error('No se puede cancelar este presupuesto!', { toast: true });
+        this.jhiAlertService.error('No se puede cancelar este presupuesto!');
       }
     );
   }
@@ -76,7 +76,7 @@ export class PresupuestosComponent implements OnInit {
         this._filtrarYAgregarPresupuesto(dto);
       },
       res => {
-        this.jhiAlertService.error('No se puede terminar este presupuesto por que existe un pedido no terminado!', { toast: true });
+        this.jhiAlertService.error('No se puede terminar este presupuesto por que existe un pedido no terminado!');
       }
     );
   }
@@ -87,7 +87,7 @@ export class PresupuestosComponent implements OnInit {
         this._filtrarYAgregarPresupuesto(dto);
       },
       res => {
-        this.jhiAlertService.error('Este presupuesto no esta terminado, no se puede entregar!', { toast: true });
+        this.jhiAlertService.error('Este presupuesto no esta terminado, no se puede entregar!');
       }
     );
   }
@@ -100,7 +100,7 @@ export class PresupuestosComponent implements OnInit {
         this.imprimiendo = false;
       },
       error => {
-        this.jhiAlertService.error(`No se pudo imprimir el presupuesto. ${error.message}`, { toast: true });
+        this.jhiAlertService.error(`No se pudo imprimir el presupuesto. ${error.message}`);
         this.imprimiendo = false;
       }
     );
