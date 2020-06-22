@@ -29,7 +29,7 @@
     </div>
     <br/>
     <div class="container-fluid card border-info mb-3">
-        <div class="row" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
+        <div class="card-body row" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
             <div class="col-md-3">
                 <span><strong>Mes:</strong></span>
                 <select class="custom-select" [(ngModel)]="mes" name="mes">
@@ -54,7 +54,7 @@
                     </option>
                 </select>
             </div>
-            <div class="col-auto">
+            <div class="col-auto my-auto">
                 <button type="button" class="btn btn-outline-success" (click)="filtrarPorSucursal()">Filtrar</button>
 
                 <button *ngIf="filtrado" type="button" class="btn btn-outline-danger" (click)="limpiarFiltros()">Limpiar filtros</button>
@@ -62,7 +62,7 @@
         </div>
     </div>
     <br/>
-    <div class="container-fluid card">
+    <div class="container-fluid card shadow">
         <div class="row table-responsive pt-3">
             <table class="table table-hover table-bordered table-sm">
                 <thead>

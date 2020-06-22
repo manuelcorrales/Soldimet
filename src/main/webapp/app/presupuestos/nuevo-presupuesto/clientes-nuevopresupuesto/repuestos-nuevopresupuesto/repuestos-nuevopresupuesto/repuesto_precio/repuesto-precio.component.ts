@@ -32,7 +32,7 @@ export class RepuestoPrecioComponent implements OnInit {
 
   constructor() {}
 
-  formatterArticulo = (articulo: Articulo) => articulo.codigoArticuloProveedor;
+  formatterArticulo = (articulo: Articulo) => `${articulo.marca.nombreMarca} (${articulo.codigoArticuloProveedor})`;
   searchArticulo = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(
       debounceTime(200),

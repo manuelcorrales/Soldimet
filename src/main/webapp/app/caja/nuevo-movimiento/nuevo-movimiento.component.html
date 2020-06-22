@@ -1,13 +1,13 @@
 <form #movimientoForm="ngForm" class="jh-create-entity" (ngSubmit)="guardarMovimiento()">
     <div class="col-auto align-center container jh-card">
-        <div class="row">
+        <div class="row shadow">
             <div class="col-md-6"></div>
             <div class="col-md-2 text-left">Fecha: {{fecha | date:'mediumDate'}}</div>
             <div class="col-md-2 text-left">Sucursal: {{this.empleado?.sucursal}}</div>
             <div class="col-md-2 text-left">Empleado: {{this.empleado?.nombre}}</div>
         </div>
         <!-- Datos del movimiento-->
-        <div class="card jh-card border-info">
+        <div class="card jh-card border-info shadow">
             <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Datos del movimiento
             </div>
@@ -69,7 +69,7 @@
             </div>
         </div>
         <!-- Detalle Movimiento-->
-        <div class="card jh-card border-info">
+        <div class="card jh-card border-info shadow">
             <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Detalle Movimiento
             </div>
@@ -121,7 +121,7 @@
             </div>
         </div>
         <!-- Medio de pago-->
-        <div class="card jh-card border-info">
+        <div class="card jh-card border-info shadow">
             <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Medio de pago
             </div>
@@ -158,7 +158,7 @@
         </div>
 
         <!--Obervaciones-->
-        <div class="card jh-card border-info">
+        <div class="card jh-card border-info shadow">
             <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
                 Observaciones
             </div>
