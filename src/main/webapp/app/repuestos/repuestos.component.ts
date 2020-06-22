@@ -4,6 +4,7 @@ import { Articulo } from 'app/shared/model/articulo.model';
 import { Marca } from 'app/shared/model/marca.model';
 import { ArticuloService } from 'app/entities/articulo';
 import { JhiAlertService } from 'ng-jhipster';
+import { MarcaService } from 'app/entities/marca';
 
 @Component({
   selector: 'jhi-repuestos',
@@ -22,22 +23,21 @@ export class RepuestosComponent implements OnInit {
   constructor(
     private repuestosService: RepuestosService,
     private articuloService: ArticuloService,
+    private marcaService: MarcaService,
     private alertService: JhiAlertService
   ) {}
 
   ngOnInit() {
-    this.repuestosService.getArticulos().subscribe(articulos => {
-      articulos.forEach(articulo => {
-        if (!this.marcas.find(marca => articulo.marca.id === marca.id)) {
-          this.marcas.push(articulo.marca);
-        }
+    this.marcaService.query().subscribe(marcas => {
+      this.marcas = marcas.body;
+      this.repuestosService.getArticulos().subscribe(articulos => {
+        this.marcas.forEach(marca => {
+          const articuloMarca = { marca, articulos: articulos.filter(articulo => articulo.marca.id === marca.id) };
+          this.articulosPorMarca.push(articuloMarca);
+          this.ordernarLista(marca);
+        });
+        // this.copiaArticulosPorMarca = JSON.parse(JSON.stringify(this.articulosPorMarca));
       });
-      this.marcas.forEach(marca => {
-        const articuloMarca = { marca, articulos: articulos.filter(articulo => articulo.marca.id === marca.id) };
-        this.articulosPorMarca.push(articuloMarca);
-        this.ordernarLista(marca);
-      });
-      // this.copiaArticulosPorMarca = JSON.parse(JSON.stringify(this.articulosPorMarca));
     });
   }
 
