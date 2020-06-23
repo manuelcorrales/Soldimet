@@ -1,5 +1,6 @@
 package soldimet.controller;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 
@@ -88,18 +89,17 @@ public class PedidosController {
     @Transactional
     @PostMapping("/updateDetallePedido/{detallePedidoId}")
     public ResponseEntity<CostoRepuesto> updateDetallePedido(@RequestBody CostoRepuesto costoRepuesto,
-            @PathVariable("detallePedidoId") Long detallePedidoId) {
+            @PathVariable("detallePedidoId") Long detallePedidoId) throws URISyntaxException {
         log.debug("request api/pedidos/updateDetallePedido: DetallePedido: {}, CostoRepuesto: {}", detallePedidoId, costoRepuesto);
 
-        costoRepuesto = expertoPedidos.updateDetallePedido(costoRepuesto, detallePedidoId);
-
-        if (costoRepuesto != null) {
+        try {
+            costoRepuesto = expertoPedidos.updateDetallePedido(costoRepuesto, detallePedidoId);
             ResponseEntity<CostoRepuesto> response = new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
             log.debug("response api/pedidos/updateDetallePedido: {}", response);
             return response;
-        } else {
-            log.error("ERROR api/pedidos/updateDetallePedido");
-            return ResponseEntity.status(500).body(null);
+
+        } catch (Exception e) {
+            throw new URISyntaxException(e.getMessage(), ENTITY_NAME);
         }
 
     }

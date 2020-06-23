@@ -1,5 +1,6 @@
 package soldimet.controller;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -32,7 +33,7 @@ public class RepuestosController {
     }
 
     @PostMapping("/updateLista")
-    public List<Articulo> actualizarListaArticulos(@RequestBody List<Articulo> articulos) {
+    public List<Articulo> actualizarListaArticulos(@RequestBody List<Articulo> articulos) throws URISyntaxException {
         log.debug("/updateListaRepuestosPoveedor, REQUEST: {}", articulos);
         articulos = expertoRepuestos.actualizarListaRepuestosProveedor(articulos);
         log.debug("/updateListaRepuestosPoveedor, RESPONSE: {}", articulos);
@@ -40,7 +41,7 @@ public class RepuestosController {
     }
 
     @PostMapping("/crearRepuestoProveedor")
-    public Articulo crearRepuestoProveedor(@RequestBody Articulo articulo) {
+    public Articulo crearRepuestoProveedor(@RequestBody Articulo articulo) throws URISyntaxException {
         log.debug("/crearRepuestoProveedor, REQUEST: {}", articulo);
         articulo = expertoRepuestos.crearRepuestoProveedor(articulo);
         log.debug("/crearRepuestoProveedor, RESPONSE: {}", articulo);
@@ -48,7 +49,7 @@ public class RepuestosController {
     }
 
     @PostMapping("/updateRepuestoProveedor")
-    public Articulo actualizarRepuestoProveedor(@RequestBody Articulo articulo) {
+    public Articulo actualizarRepuestoProveedor(@RequestBody Articulo articulo) throws URISyntaxException {
         log.debug("/actualizarRepuestoProveedor, REQUEST: {}", articulo);
         articulo = expertoRepuestos.actualizarRepuestoProveedor(articulo);
         log.debug("/actualizarRepuestoProveedor, RESPONSE: {}", articulo);

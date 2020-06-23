@@ -46,7 +46,11 @@ export class RepuestoPrecioComponent implements OnInit {
         (term === ''
           ? this.listaCobranzas.filter(cobranza => cobranza.articulo != null).map(cobranza => cobranza.articulo)
           : // es-lint-ignore-next-line prefer-includes
-            this.articulos.filter(v => v.codigoArticuloProveedor.toLowerCase().includes(term.toLowerCase()))
+            this.articulos.filter(
+              v =>
+                v.codigoArticuloProveedor.toLowerCase().includes(term.toLowerCase()) ||
+                v.marca.nombreMarca.toLowerCase().includes(term.toLowerCase())
+            )
         ).slice(0, 10)
       )
     );

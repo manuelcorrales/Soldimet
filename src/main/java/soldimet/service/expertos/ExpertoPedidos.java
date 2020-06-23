@@ -1,5 +1,6 @@
 package soldimet.service.expertos;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -124,37 +125,30 @@ public class ExpertoPedidos {
         return pedidoConverter.convertirPedidosAPedidosCabeceras(pedidos);
     }
 
-    public CostoRepuesto updateDetallePedido(CostoRepuesto costoRepuesto, Long detallePedidoId) {
-        try {
-            EstadoCostoRepuesto estadoPedido = estadoCostoRepuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
-            costoRepuesto.setEstado(estadoPedido);
-            costoRepuesto.setProveedor(proveedorRepository.getOne(costoRepuesto.getProveedor().getId()));
-            costoRepuesto.setTipoRepuesto(tipoRepuestoRepository.getOne(costoRepuesto.getTipoRepuesto().getId()));
+    public CostoRepuesto updateDetallePedido(CostoRepuesto costoRepuesto, Long detallePedidoId) throws Exception {
+        EstadoCostoRepuesto estadoPedido = estadoCostoRepuestoRepository
+                .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
+        costoRepuesto.setEstado(estadoPedido);
+        costoRepuesto.setProveedor(proveedorRepository.getOne(costoRepuesto.getProveedor().getId()));
+        costoRepuesto.setTipoRepuesto(tipoRepuestoRepository.getOne(costoRepuesto.getTipoRepuesto().getId()));
 
-            DetallePedido detallePedido = detallePedidoRepository.getOne(detallePedidoId);
-            detallePedido.addCostoRepuesto(costoRepuesto);
-            detallePedido = this.transitionDetalleToPedido(detallePedido, null);
+        DetallePedido detallePedido = detallePedidoRepository.getOne(detallePedidoId);
+        detallePedido.addCostoRepuesto(costoRepuesto);
+        detallePedido = this.transitionDetalleToPedido(detallePedido, null);
 
-            PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository
-                    .findPedidoRepuestoByDetallePedidosIn(detallePedido);
-            EstadoPedidoRepuesto estadoPedidoRepuesto = this.transitionPedidoToPedido(pedidoRepuesto);
+        PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository
+                .findPedidoRepuestoByDetallePedidosIn(detallePedido);
+        EstadoPedidoRepuesto estadoPedidoRepuesto = this.transitionPedidoToPedido(pedidoRepuesto);
 
-            if (estadoPedidoRepuesto != null) {
-                pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
-                pedidoRepuesto = pedidoRepuestoRepository.save(pedidoRepuesto);
-                detallePedido = pedidoRepuesto.filterDetallePedido(detallePedido);
-            } else {
-                detallePedido = detallePedidoRepository.save(detallePedido);
-            }
-
-            return detallePedido.filterCostoRepuesto(costoRepuesto);
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+        if (estadoPedidoRepuesto != null) {
+            pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
+            pedidoRepuesto = pedidoRepuestoRepository.save(pedidoRepuesto);
+            detallePedido = pedidoRepuesto.filterDetallePedido(detallePedido);
+        } else {
+            detallePedido = detallePedidoRepository.save(detallePedido);
         }
 
+        return detallePedido.filterCostoRepuesto(costoRepuesto);
     }
 
     private EstadoPedidoRepuesto transitionPedidoToPedido(PedidoRepuesto pedidoRepuesto) {

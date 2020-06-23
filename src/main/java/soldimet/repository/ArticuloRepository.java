@@ -18,4 +18,6 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSp
 
     List<Articulo> findDistinctByEstadoAndTipoRepuestoIn(EstadoArticulo estado, List<TipoRepuesto> tipos);
 
+	boolean existsByCodigoArticuloProveedor(String codigoArticuloProveedor);
+
 }

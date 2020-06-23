@@ -41,7 +41,7 @@ export class ArticuloNuevoComponent implements OnInit {
       },
 
       error => {
-        this.alertService.error(error.message);
+        this.alertService.error(error.error.title);
       }
     );
   }
