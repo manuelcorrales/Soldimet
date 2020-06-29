@@ -24,6 +24,8 @@ management:
     export:
       prometheus:
         enabled: false
+    tags:
+      application: QA-${spring.application.name}
 
 spring:
   application:
@@ -126,10 +128,10 @@ jhipster:
       enabled: false
       report-frequency: 60 # in seconds
   logging:
-    use-json-format: false # By default, logs are not in Json format
+    use-json-format: true # By default, logs are not in Json format
     logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
-      enabled: false
-      host: 10.132.48.74
+      enabled: true
+      host: localhost
       port: 5000
       queue-size: 512
   audit-events:
