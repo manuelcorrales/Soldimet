@@ -6,8 +6,6 @@ import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 import { DetallePresupuesto } from 'app/shared/model/detalle-presupuesto.model';
 import { CostoRepuestoProveedor } from 'app/shared/model/costo-repuesto-proveedor.model';
 import { Articulo, IArticulo } from 'app/shared/model/articulo.model';
-import { ArticuloService } from 'app/entities/articulo';
-import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-repuestos-nuevopresupuesto',
@@ -24,7 +22,7 @@ export class RepuestosNuevopresupuestoComponent implements OnInit {
   total = 0;
   @ViewChildren('repuestoComponents') children: QueryList<RepuestoPrecioComponent>;
   @Output() eventoTotalRepuestos = new EventEmitter<number>();
-  constructor(private _presupuestoService: PresupuestosService, private _articuloService: ArticuloService) {}
+  constructor(private _presupuestoService: PresupuestosService) {}
 
   ngOnInit() {
     this.repuestosViejoPresupuesto = this.detalle.cobranzaRepuestos || [];
@@ -65,8 +63,8 @@ export class RepuestosNuevopresupuestoComponent implements OnInit {
   }
 
   update() {
-    this._articuloService.query().subscribe((articulos: HttpResponse<IArticulo[]>) => {
-      this.articulos = articulos.body;
+    this._presupuestoService.getAllArticulos().subscribe((articulos: IArticulo[]) => {
+      this.articulos = articulos;
       this._presupuestoService.buscarRepuestos(this.detalle).subscribe((repuestos: TipoRepuesto[]) => {
         this.repuestos = repuestos;
         this.repuestos.sort(this._sortTipoRepuesto);

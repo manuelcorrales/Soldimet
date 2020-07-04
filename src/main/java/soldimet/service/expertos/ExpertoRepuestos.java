@@ -63,6 +63,7 @@ public class ExpertoRepuestos {
     }
 
     private Articulo guardarArticulo(Articulo articulo) throws URISyntaxException {
+
         EstadoArticulo estadoAlta = estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);
         TipoRepuesto tiposRepuesto = tipoRepuestoRepository.getOne(articulo.getTipoRepuesto().getId());
         Marca marca = marcaRepository.getOne(articulo.getMarca().getId());

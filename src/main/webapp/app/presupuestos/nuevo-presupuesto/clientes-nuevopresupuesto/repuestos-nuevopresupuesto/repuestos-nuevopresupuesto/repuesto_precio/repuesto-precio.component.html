@@ -10,7 +10,7 @@
     <input type="text" placeholder="Código de artículo" [(ngModel)]="articulo"
         [resultFormatter]="formatterArticulo" id="typeahead-focusArticulo" [disabled]="!seleccionado"
         type="text" class="form-control" [ngbTypeahead]="searchArticulo"
-        (focus)="focusArticulo$.next($event.target.value)" (click)="clickArticulo$.next($event.target.value)"
+        (focus)="focusArticulo$.next($event.target.value)" (click)="clearOnClick($event.target); clickArticulo$.next($event.target.value)"
         #instanceNTAArticulo="ngbTypeahead" [inputFormatter]="formatterArticulo" name="articulo_search"
         [editable]='false' typeahead-no-results="noResults" (selectItem)="pisarPrecioConArticulo($event)"
     />

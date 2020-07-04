@@ -21,7 +21,7 @@ import soldimet.service.expertos.ExpertoRepuestos;
 @RequestMapping("/api/repuestos")
 public class RepuestosController {
 
-    private final Logger log = LoggerFactory.getLogger(ClienteController.class);
+    private final Logger log = LoggerFactory.getLogger(RepuestosController.class);
 
     @Autowired
     private ExpertoRepuestos expertoRepuestos;

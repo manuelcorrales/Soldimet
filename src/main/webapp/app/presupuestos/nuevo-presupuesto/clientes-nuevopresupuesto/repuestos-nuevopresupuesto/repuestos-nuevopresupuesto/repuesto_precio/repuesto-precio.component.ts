@@ -30,16 +30,25 @@ export class RepuestoPrecioComponent implements OnInit {
   focusArticulo$ = new Subject<string>();
   clickArticulo$ = new Subject<string>();
 
+  waitTime = 200;
+
   constructor() {}
 
   formatterArticulo = (articulo: Articulo) => `${articulo.marca.nombreMarca} (${articulo.codigoArticuloProveedor})`;
   searchArticulo = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(
-      debounceTime(200),
+      debounceTime(this.waitTime),
       distinctUntilChanged()
     );
-    const clicksWithClosedPopup$ = this.clickArticulo$.pipe(filter(() => !this.instanceArticulo.isPopupOpen()));
-    const inputFocus$ = this.focusArticulo$;
+    const clicksWithClosedPopup$ = this.clickArticulo$.pipe(
+      debounceTime(this.waitTime),
+      distinctUntilChanged(),
+      filter(() => !this.instanceArticulo.isPopupOpen())
+    );
+    const inputFocus$ = this.focusArticulo$.pipe(
+      debounceTime(this.waitTime),
+      distinctUntilChanged()
+    );
 
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term =>
@@ -55,6 +64,11 @@ export class RepuestoPrecioComponent implements OnInit {
       )
     );
   };
+  clearOnClick(inputField) {
+    inputField.value = '';
+    this.articulo = null;
+    this.actualizarPrecio(0);
+  }
 
   ngOnInit() {
     // La lista del autocompletar viene de la lista de ya enlazados con este tipo repuesto y de todos los articulos

@@ -19,6 +19,7 @@ import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { Observable } from 'rxjs';
 import { CostoRepuestoProveedor } from 'app/shared/model/costo-repuesto-proveedor.model';
+import { Articulo } from 'app/shared/model/articulo.model';
 
 @Injectable()
 export class PresupuestosService {
@@ -40,6 +41,7 @@ export class PresupuestosService {
   private urlImprimirPresupuesto = '/imprimir';
   private urlBuscarPresupuestoExistente = '/buscarExistente';
   private urlListaCostoRepuestoProveedores = '/buscarCostoRepuestoProveedores';
+  private urlTodosRepuestos = '/buscarTodosRepuestos';
 
   constructor(
     private http: HttpClient,
@@ -47,6 +49,11 @@ export class PresupuestosService {
     private tipoParteService: TipoParteMotorService,
     private cilindradaService: CilindradaService
   ) {}
+
+  getAllArticulos(): Observable<Articulo[]> {
+    const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlTodosRepuestos}`;
+    return this.http.get<Articulo[]>(urlLlamada);
+  }
 
   savePresupuesto(presupuesto: Presupuesto): Observable<Presupuesto> {
     const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlSavePresupuesto}`;

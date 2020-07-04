@@ -115,4 +115,5 @@
     <include file="config/liquibase/changelog/20200615230857_changelog.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200616155155_changelog.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200616203621_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200704120721_cambio_repuestos.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

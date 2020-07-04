@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import soldimet.domain.Aplicacion;
+import soldimet.domain.Articulo;
 import soldimet.domain.Cliente;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
@@ -40,6 +41,7 @@ import soldimet.domain.CostoRepuestoProveedor;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.TipoRepuesto;
+import soldimet.repository.ArticuloRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
 import soldimet.service.dto.DTOPresupuesto;
@@ -57,6 +59,9 @@ public class PresupuestoController {
 
     @Autowired
     private ExpertoPresupuesto expertoPresupuesto;
+
+    @Autowired
+    private ArticuloRepository repo;
 
     @GetMapping("/getPresupuestos")
     public List<DTOPresupuesto> buscarPresupuestos() {
@@ -239,6 +244,12 @@ public class PresupuestoController {
             headers,
             HttpStatus.OK
         );
+    }
+
+    @GetMapping("/buscarTodosRepuestos")
+    public List<Articulo> findAll() {
+        log.debug("/todos Request to get all Articulos");
+        return repo.findAll();
     }
 
 }
