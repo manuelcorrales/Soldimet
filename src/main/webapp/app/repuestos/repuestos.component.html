@@ -5,22 +5,18 @@
             <div *ngFor="let elemento of articulosPorMarca">
                 <ngb-tab title=" {{elemento.marca.nombreMarca}} ">
                     <ng-template ngbTabContent>
-                        <!--br>
-                            <div class="card border-info">
+                        <br>
+                            <div class="container card border-info align-items-center">
                                 <div class="card-body row">
                                     <div class="form-inline">
                                         <label for="{{elemento.marca.id}}" class="form-label mb-2 mr-sm-2">Modificar precios lista: %</label>
-                                        <input class="form-control mb-2 mr-sm-2" type="number" value="0" step="0.01" id="{{elemento.marca.id}}" #modificador_lista>
-                                        <button *ngIf="!isCambiandoPorcentage" class="btn btn-primary mb-2 mr-sm-2" id="recalcular_{{elemento.marca.id}}"(click)="modificarPorcentageLista(elemento.marca, modificador_lista.value)">Calcular</button>
-                                        <button *ngIf="isCambiandoPorcentage" class="btn btn-danger mb-2 mr-sm-2" id="volver_{{elemento.marca.id}}"(click)="volverProcentage(elemento.marca)">Volver</button>
-                                    </div>
-                                    <div class="align-right">
-                                        <button class="btn btn-outline-success" id="guardar_lista_{{elemento.marca.id}}"(click)="guardarLista(elemento.marca)">Guardar cambios</button>
+                                        <input class="form-control mb-2 mr-sm-2" type="number" value="0" step="0.01" id="input_{{elemento.marca.id}}" #modificador_lista>
+                                        <button class="btn btn-primary mb-2 mr-sm-2" id="recalcular_{{elemento.marca.id}}"(click)="modificarPorcentageLista(elemento.marca, modificador_lista.value)">Guardar</button>
                                     </div>
                                     <br>
                                 </div>
                             </div>
-                        <br-->
+                        <br>
                         <br>
                         <jhi-articulo-nuevo [marca]="elemento.marca" (eventoNuevoArticulo)="agregarArticuloALista($event)"></jhi-articulo-nuevo>
                         <br>

@@ -5,6 +5,8 @@ import { Marca } from 'app/shared/model/marca.model';
 import { ArticuloService } from 'app/entities/articulo';
 import { JhiAlertService } from 'ng-jhipster';
 import { MarcaService } from 'app/entities/marca';
+import { UpdateRepuestosListComponent } from './update-repuestos-list/update-repuestos-list.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-repuestos',
@@ -18,13 +20,12 @@ export class RepuestosComponent implements OnInit {
   marcas: Marca[] = [];
   articulosPorMarca: { marca: Marca; articulos: Articulo[] }[] = [];
 
-  isCambiandoPorcentage = false;
-  // copiaArticulosPorMarca: { marca: Marca; articulos: Articulo[] }[] = [];  // Copia para poder editar todos los valores juntos
   constructor(
     private repuestosService: RepuestosService,
     private articuloService: ArticuloService,
     private marcaService: MarcaService,
-    private alertService: JhiAlertService
+    private alertService: JhiAlertService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -36,26 +37,28 @@ export class RepuestosComponent implements OnInit {
           this.articulosPorMarca.push(articuloMarca);
           this.ordernarLista(marca);
         });
-        // this.copiaArticulosPorMarca = JSON.parse(JSON.stringify(this.articulosPorMarca));
       });
     });
   }
 
-  volverProcentage(marca: Marca) {
-    this.isCambiandoPorcentage = true;
-    // this.articulosPorMarca = JSON.parse(JSON.stringify(this.copiaArticulosPorMarca));
+  modificarPorcentageLista(marca: Marca, porcentage: number) {
+    const modal = this.modalService.open(UpdateRepuestosListComponent, { size: 'lg' });
+    modal.componentInstance.marca = marca;
+    modal.componentInstance.porcentage = porcentage;
+    modal.result.then(
+      res => {
+        this.guardarLista(marca, porcentage);
+      },
+      dismiss => {
+        porcentage = 0;
+      }
+    );
   }
 
-  modificarPorcentageLista(marca: Marca, porcentage: number) {
-    this.isCambiandoPorcentage = true;
-    // this.articulosPorMarca = JSON.parse(JSON.stringify(this.copiaArticulosPorMarca));
+  guardarLista(marca: Marca, porcentage: number) {
     this.articulosPorMarca
       .filter(grupo => grupo.marca.id === marca.id)[0]
       .articulos.forEach(articulo => (articulo.valor = articulo.valor * (1 + porcentage / 100)));
-  }
-
-  guardarLista(marca: Marca) {
-    this.isCambiandoPorcentage = false;
     const grupo = this.articulosPorMarca.filter(grupoEnLista => grupoEnLista.marca.id === marca.id)[0];
     this.repuestosService.saveListaActualizada(grupo.articulos).subscribe((articulosRes: Articulo[]) => {
       grupo.articulos = articulosRes;
