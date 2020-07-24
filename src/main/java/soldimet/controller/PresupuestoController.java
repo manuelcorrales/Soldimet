@@ -40,6 +40,7 @@ import soldimet.domain.CostoRepuesto;
 import soldimet.domain.CostoRepuestoProveedor;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
+import soldimet.domain.TipoParteMotor;
 import soldimet.domain.TipoRepuesto;
 import soldimet.repository.ArticuloRepository;
 import soldimet.security.AuthoritiesConstants;
@@ -247,9 +248,15 @@ public class PresupuestoController {
     }
 
     @GetMapping("/buscarTodosRepuestos")
-    public List<Articulo> findAll() {
-        log.debug("/todos Request to get all Articulos");
+    public List<Articulo> findAllRepuestos() {
+        log.debug("Request to get all Articulos");
         return repo.findAll();
+    }
+
+    @GetMapping("/buscarTiposPartesPresupuestos")
+    public List<TipoParteMotor> findAllTipoParte() {
+        log.debug("Request to buscarTiposPartesPresupuestos");
+        return expertoPresupuesto.buscarTiposPartesPresupuesto();
     }
 
 }

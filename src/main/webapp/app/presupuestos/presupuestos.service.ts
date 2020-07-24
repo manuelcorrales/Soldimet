@@ -3,7 +3,6 @@ import { SERVER_API_URL } from 'app/app.constants';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { DTODatosMotorComponent } from 'app/dto/dto-presupuesto-cabecera/DTODatosMotor';
 import { MotorService } from 'app/entities/motor/motor.service';
-import { TipoParteMotorService } from 'app/entities/tipo-parte-motor/tipo-parte-motor.service';
 import { CilindradaService } from 'app/entities/cilindrada/cilindrada.service';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Presupuesto } from 'app/shared/model/presupuesto.model';
@@ -42,13 +41,9 @@ export class PresupuestosService {
   private urlBuscarPresupuestoExistente = '/buscarExistente';
   private urlListaCostoRepuestoProveedores = '/buscarCostoRepuestoProveedores';
   private urlTodosRepuestos = '/buscarTodosRepuestos';
+  private urlTiposPartesPresupuestos = '/buscarTiposPartesPresupuestos';
 
-  constructor(
-    private http: HttpClient,
-    private motorService: MotorService,
-    private tipoParteService: TipoParteMotorService,
-    private cilindradaService: CilindradaService
-  ) {}
+  constructor(private http: HttpClient, private motorService: MotorService, private cilindradaService: CilindradaService) {}
 
   getAllArticulos(): Observable<Articulo[]> {
     const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlTodosRepuestos}`;
@@ -144,12 +139,8 @@ export class PresupuestosService {
     return arreglo;
   }
 
-  buscarTiposPartes(): TipoParteMotor[] {
-    const arreglo: TipoParteMotor[] = [];
-    this.tipoParteService.query().subscribe((res: HttpResponse<TipoParteMotor[]>) => {
-      arreglo.push(...this.convertJsonATipoParteMotor(res));
-    });
-    return arreglo;
+  buscarTiposPartes(): Observable<TipoParteMotor[]> {
+    return this.http.get<TipoParteMotor[]>(`${this.resourceUrlPresupuestos}${this.urlTiposPartesPresupuestos}`);
   }
 
   buscarRepuestos(detalle: DetallePresupuesto): Observable<TipoRepuesto[]> {
@@ -238,27 +229,5 @@ export class PresupuestosService {
 
   convertJsonAEstadoPresupuesto(json: any): EstadoPresupuesto {
     return Object.assign(new EstadoPresupuesto(), json);
-  }
-
-  private convertPresupuestoAJson(presupuesto: Presupuesto): Presupuesto {
-    const copy: Presupuesto = Object.assign({}, presupuesto);
-    // if (presupuesto.fechaCreacion) {
-    //     copy.fechaCreacion = this.dateUtils.convertLocalDateToServer(presupuesto.fechaCreacion);
-    // }
-    // if (presupuesto.fechaAceptado) {
-    //     copy.fechaAceptado = this.dateUtils.convertLocalDateToServer(presupuesto.fechaAceptado);
-    // }
-    // if (presupuesto.fechaEntregado) {
-    //     copy.fechaEntregado = this.dateUtils.convertLocalDateToServer(presupuesto.fechaEntregado);
-    // }
-    return copy;
-  }
-
-  private convertJsonAPresupuesto(json: any): Presupuesto {
-    const entity: Presupuesto = Object.assign(new Presupuesto(), json);
-    // entity.fechaCreacion = this.dateUtils.convertLocalDateFromServer(json.fechaCreacion);
-    // entity.fechaAceptado = this.dateUtils.convertLocalDateFromServer(json.fechaAceptado);
-    // entity.fechaEntregado = this.dateUtils.convertLocalDateFromServer(json.fechaEntregado);
-    return entity;
   }
 }

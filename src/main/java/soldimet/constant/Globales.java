@@ -96,4 +96,8 @@ public class Globales {
     public final String NO_HAY_PROVEEDORES_DADOS_DE_ALTA ="No se encontraron proveedores dados de Alta.";
 
     public final String reporteHtmlPath = "presupuesto.docx";
+
+    public final Long tipoParteMotorBlockID = new Long(1);
+    public final Long tipoParteMotorTapaID = new Long(2);
+    public final Long tipoParteMotorYTapaID = new Long(3);
 }

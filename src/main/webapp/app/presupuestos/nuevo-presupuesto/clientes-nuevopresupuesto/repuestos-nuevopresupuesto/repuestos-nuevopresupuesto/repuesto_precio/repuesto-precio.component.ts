@@ -30,7 +30,7 @@ export class RepuestoPrecioComponent implements OnInit {
   focusArticulo$ = new Subject<string>();
   clickArticulo$ = new Subject<string>();
 
-  waitTime = 200;
+  waitTime = 300;
 
   constructor() {}
 
@@ -117,6 +117,6 @@ export class RepuestoPrecioComponent implements OnInit {
   }
 
   pisarPrecioConArticulo(event: NgbTypeaheadSelectItemEvent) {
-    this.precio = event.item.valor;
+    this.actualizarPrecio(event.item.valor);
   }
 }

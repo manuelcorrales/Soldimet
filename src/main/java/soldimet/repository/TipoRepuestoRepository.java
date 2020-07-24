@@ -14,5 +14,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface TipoRepuestoRepository extends JpaRepository<TipoRepuesto, Long> {
 
-    List<TipoRepuesto> findByTipoParteMotor(TipoParteMotor tipoParteMotor);
+    List<TipoRepuesto> findByTipoParteMotorIn(List<TipoParteMotor> tiposParteMotor);
 }

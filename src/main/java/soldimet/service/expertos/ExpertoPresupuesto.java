@@ -279,7 +279,11 @@ public class ExpertoPresupuesto {
 
     public List<TipoRepuesto> buscarRepuestos(Long idTipoParteMotor) {
         TipoParteMotor tipoParte = tipoParteMotorRepository.findById(idTipoParteMotor).get();
-        List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotor(tipoParte);
+        TipoParteMotor tipoParte2 = tipoParteMotorRepository.findById(globales.tipoParteMotorYTapaID).get();
+        List<TipoParteMotor> tipos = new ArrayList();
+        tipos.add(tipoParte);
+        tipos.add(tipoParte2);
+        List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotorIn(tipos);
         return tipoRepuestos;
     }
 
@@ -574,9 +578,20 @@ public class ExpertoPresupuesto {
         Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
         Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
         TipoParteMotor tipoParteMotor = tipoParteMotorRepository.getOne(tipoParteMotorId);
-        List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotor(tipoParteMotor);
+        TipoParteMotor tipoParte2 = tipoParteMotorRepository.findById(globales.tipoParteMotorYTapaID).get();
+        List<TipoParteMotor> tipos = new ArrayList();
+        tipos.add(tipoParteMotor);
+        tipos.add(tipoParte2);
+        List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotorIn(tipos);
 
         return costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada, tipoRepuestos);
 
-	}
+    }
+
+    public List<TipoParteMotor> buscarTiposPartesPresupuesto() {
+        List<Long> lista = new ArrayList<Long>();
+        lista.add(globales.tipoParteMotorBlockID);
+        lista.add(globales.tipoParteMotorTapaID);
+        return tipoParteMotorRepository.findByIdIn(lista);
+    }
 }

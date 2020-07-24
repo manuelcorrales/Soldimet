@@ -17,8 +17,15 @@ export class RepuestosComponent implements OnInit {
   @ViewChild('toastr', { static: false })
   toastrContainer: ViewContainerRef;
 
+  pageSize = 30;
+
   marcas: Marca[] = [];
-  articulosPorMarca: { marca: Marca; articulos: Articulo[] }[] = [];
+  articulosPorMarca: {
+    marca: Marca;
+    articulos: Articulo[];
+    pageSize: number;
+    page: number;
+  }[] = [];
 
   constructor(
     private repuestosService: RepuestosService,
@@ -33,7 +40,12 @@ export class RepuestosComponent implements OnInit {
       this.marcas = marcas.body;
       this.repuestosService.getArticulos().subscribe(articulos => {
         this.marcas.forEach(marca => {
-          const articuloMarca = { marca, articulos: articulos.filter(articulo => articulo.marca.id === marca.id) };
+          const articuloMarca = {
+            marca,
+            articulos: articulos.filter(articulo => articulo.marca.id === marca.id),
+            pageSize: this.pageSize,
+            page: 1
+          };
           this.articulosPorMarca.push(articuloMarca);
           this.ordernarLista(marca);
         });

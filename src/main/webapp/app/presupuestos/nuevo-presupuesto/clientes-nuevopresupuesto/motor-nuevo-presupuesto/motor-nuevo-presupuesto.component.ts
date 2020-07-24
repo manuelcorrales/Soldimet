@@ -31,7 +31,7 @@ export class MotorNuevoPresupuestoComponent implements OnInit {
   ngOnInit() {
     this.motores = this._presupuestosService.buscarMotores();
     this.cilindradas = this._presupuestosService.buscarCilindradas();
-    this.tiposPartesMotores = this._presupuestosService.buscarTiposPartes();
+    this._presupuestosService.buscarTiposPartes().subscribe(tipos => (this.tiposPartesMotores = tipos));
   }
 
   buscarAplicaciones() {

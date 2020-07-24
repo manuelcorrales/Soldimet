@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+    <changeSet author="manuelc" id="1692339791520-1">
+        <insert tableName="tipo_parte_motor">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_parte_motor" value="Block y Tapa"/>
+        </insert>
+    </changeSet>
+    <changeSet author="manuelc" id="1692339791520-2">
+        <update tableName="tipo_repuesto">
+            <column name="tipo_parte_motor_id" value="3" />
+            <where>ID = '8'</where>
+        </update>
+    </changeSet>
+    <changeSet author="manuelc" id="1692339791520-3">
+        <update tableName="articulo">
+            <column name="tipo_repuesto_id" value="8" />
+            <where>tipo_repuesto_id = '31'</where>
+        </update>
+    </changeSet>
+    <changeSet author="manuelc" id="1692339791520-4">
+        <update tableName="costo_repuesto">
+            <column name="tipo_repuesto_id" value="8" />
+            <where>tipo_repuesto_id = '31'</where>
+        </update>
+    </changeSet>
+    <changeSet author="manuelc" id="1692339791520-5">
+        <update tableName="costo_repuesto_proveedor">
+            <column name="tipo_repuesto_id" value="8" />
+            <where>tipo_repuesto_id = '31'</where>
+        </update>
+    </changeSet>
+    <changeSet author="manuelc" id="1692339791520-6">
+        <insert tableName="tipo_repuesto">
+            <column name="id" autoIncrement="true"/>
+            <column name="nombre_tipo_repuesto" value="Junta tapa de cilindros"/>
+            <column name="tipo_parte_motor_id" value="3"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -4,6 +4,7 @@ import soldimet.domain.TipoParteMotor;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 /**
  * Spring Data  repository for the TipoParteMotor entity.
@@ -11,5 +12,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface TipoParteMotorRepository extends JpaRepository<TipoParteMotor, Long> {
+
+    public List<TipoParteMotor> findByIdIn(List<Long> ids);
 
 }
