@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
@@ -164,6 +163,9 @@ public class ExpertoImpresionPresupuesto {
         variables.put("x33", "");
         variables.put("x34", "");
         variables.put("x35", "");
+        variables.put("v24", "");
+        variables.put("v32", "");
+        variables.put("v36", "");
 
         return variables;
     }

@@ -73,6 +73,7 @@ export class NuevoPresupuestoComponent implements OnInit {
       } else {
         this.presupuesto = new Presupuesto();
         this.presupuesto.soldadura = false;
+        this.presupuesto.modelo = false;
         this.presupuesto.importeTotal = 0;
       }
     });

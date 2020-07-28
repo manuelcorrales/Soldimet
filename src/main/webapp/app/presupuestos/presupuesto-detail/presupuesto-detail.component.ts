@@ -9,12 +9,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PresupuestoDetailComponent implements OnInit {
   presupuesto: Presupuesto;
+  esModelo;
 
   constructor(protected activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ presupuesto }) => {
       this.presupuesto = presupuesto;
+      this.esModelo = presupuesto.modelo ? 'Si' : 'No';
     });
   }
 }

@@ -13,18 +13,17 @@
             <div *ngIf="presupuestoViejo" class="card border-success mb-3">
                 <div class="card-body text-success text-center">
                     <h5 class="card-title">
-                        Se encontró un presupuesto anterior de este motor!
+                        Se encontró un modelo de presupuesto para este motor!
                         <small *ngFor="let detalleViejo of presupuestoViejo?.detallePresupuestos"> ({{detalleViejo?.tipoParteMotor?.nombreTipoParteMotor}})</small>.
                     </h5>
                     <p class="card-text">
                         Se va a utilizar como base para la creación de este presupuesto
-
                     </p>
                 </div>
             </div>
             <div *ngIf="!presupuestoViejo" class="card border-info mb-3">
                 <div class="card-body text-info text-center">
-                    <h5 class="card-title">No existe un presupuesto anterior sobre este motor.</h5>
+                    <h5 class="card-title">No existe un modelo para este motor.</h5>
                 </div>
             </div>
         </div>
@@ -64,19 +63,27 @@
         </div>
     </div>
     <div class="card-footer">
-        <div class="text-center">
-            <label>Total Presupuesto:
-                <input type="number" class="form-control" name="importeTotal" step="0.01" [(ngModel)]="presupuesto.importeTotal">
-            </label>
+        <div class="row">
+            <div class="col">
+            </div>
+            <div class="col form-check form-check-inline">
+                <label id="total_presupuesto">Total Presupuesto:</label>
+                <input for="total_presupuesto" type="number" class="form-control" name="importeTotal" step="0.01" [(ngModel)]="presupuesto.importeTotal">
+            </div>
+            <div class="col form-check form-check-inline">
+                <label id="presupuesto_modelo"class="form-check-label">Usar como modelo: </label>
+                <input for="presupuesto_modelo" class="form-check-input" type="checkbox" name="modelo"
+                    [(ngModel)]="presupuesto.modelo" [disabled]="presupuesto.soldadura"
+                >
+            </div>
+            <div class="col text-right">
+                <button [disabled]="isSaving || !presupuestoForm.valid" type="submit" class="btn btn-primary" >
+                    Crear
+                </button>
+                <button type="button" class="btn btn-danger" [routerLink]="['/presupuestos']">
+                    Cancelar
+                </button>
+            </div>
         </div>
-        <div class="text-right">
-            <button [disabled]="isSaving || !presupuestoForm.valid" type="submit" class="btn btn-primary" >
-                Crear
-            </button>
-            <button type="button" class="btn btn-danger" [routerLink]="['/presupuestos']">
-                Cancelar
-            </button>
-        </div>
-
     </div>
 </form>

@@ -43,12 +43,6 @@
                             <button type="button" class="btn btn-secondary" (click)="fechaCreacionDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
                     </div>
-                    <div *ngIf="editForm.get('fechaCreacion').invalid && (editForm.get('fechaCreacion').dirty || editForm.get('fechaCreacion').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('fechaCreacion').errors.required">
-                        This field is required.
-                        </small>
-                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_fechaAceptado">Fecha Aceptado</label>
@@ -96,6 +90,11 @@
                     <label class="form-control-label" for="field_soldadura">Soldadura</label>
                     <input type="checkbox" class="form-control" name="soldadura" id="field_soldadura"
                            formControlName="soldadura"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_modelo">Modelo</label>
+                    <input type="checkbox" class="form-control" name="modelo" id="field_modelo"
+                           formControlName="modelo"/>
                 </div>
 
                 <div class="form-group">

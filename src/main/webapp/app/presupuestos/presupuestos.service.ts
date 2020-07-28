@@ -38,7 +38,7 @@ export class PresupuestosService {
   private urlEntregarPresupuesto = '/entregar';
   private urlPresupuestoVista = '/view';
   private urlImprimirPresupuesto = '/imprimir';
-  private urlBuscarPresupuestoExistente = '/buscarExistente';
+  private urlBuscarPresupuestoModelo = '/buscarModelo';
   private urlListaCostoRepuestoProveedores = '/buscarCostoRepuestoProveedores';
   private urlTodosRepuestos = '/buscarTodosRepuestos';
   private urlTiposPartesPresupuestos = '/buscarTiposPartesPresupuestos';
@@ -61,7 +61,7 @@ export class PresupuestosService {
   }
 
   buscarPresupuestoViejo(aplicacionId, cilindradaId): Observable<Presupuesto> {
-    const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlBuscarPresupuestoExistente}/?aplicacion=${aplicacionId}&cilindrada=${cilindradaId}`;
+    const urlLlamada = `${this.resourceUrlPresupuestos}${this.urlBuscarPresupuestoModelo}/?aplicacion=${aplicacionId}&cilindrada=${cilindradaId}`;
     return this.http.get<Presupuesto>(urlLlamada);
   }
 

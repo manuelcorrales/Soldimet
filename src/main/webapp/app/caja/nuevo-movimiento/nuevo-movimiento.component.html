@@ -1,11 +1,21 @@
 <form #movimientoForm="ngForm" class="jh-create-entity" (ngSubmit)="guardarMovimiento()">
-    <div class="col-auto align-center container jh-card">
-        <div class="row shadow">
-            <div class="col-md-6"></div>
-            <div class="col-md-2 text-left">Fecha: {{fecha | date:'mediumDate'}}</div>
-            <div class="col-md-2 text-left">Sucursal: {{this.empleado?.sucursal}}</div>
-            <div class="col-md-2 text-left">Empleado: {{this.empleado?.nombre}}</div>
+    <div class="row shadow">
+        <div class="col-md-6"></div>
+        <div class="col-md-2 text-left">Fecha: {{fecha | date:'mediumDate'}}</div>
+        <div class="col-md-2 text-left">Sucursal: {{this.empleado?.sucursal}}</div>
+        <div class="col-md-2 text-left">Empleado: {{this.empleado?.nombre}}</div>
+    </div>
+    <div class="card-header">
+        <div class="text-right">
+            <button [disabled]="isSaving" type="submit" class="btn btn-primary" [disabled]="!movimientoForm.valid">
+                Crear
+            </button>
+            <button type="button" class="btn btn-danger" [routerLink]="['/cajas']">
+                Cancelar
+            </button>
         </div>
+    </div>
+    <div class="col-auto align-center container">
         <!-- Datos del movimiento-->
         <div class="card jh-card border-info shadow">
             <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
@@ -20,12 +30,6 @@
                             {{tipo.nombreTipoMovimiento}}
                         </label>
                     </div>
-                    <!--div *ngIf="tipo_mov.invalid && (tipo_mov.dirty || tipo_mov.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="tipo_mov.errors.required">
-                            Campo obligatorio.
-                        </small>
-                    </!--div> -->
                 </div>
                 <div class="form-group col-md-3">
                     <label>Categoría</label>
@@ -35,12 +39,6 @@
                             {{categoria.nombreCategoriaPago}}
                         </option>
                     </select>
-                    <!--div *ngIf="movimientoForm.get('categoria').invalid && (movimientoForm.get('categoria').dirty || movimientoForm.get('categoria').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="movimientoForm.get('categoria').errors.required">
-                        Campo obligatorio.
-                        </small>
-                    </div-->
                 </div>
                 <div class="form-group col-md-3">
                     <label>Concepto</label>
@@ -48,23 +46,11 @@
                         id="typeahead-focusconcepto" type="text" class="form-control" [ngbTypeahead]="searchconcepto" (focus)="focusconcepto$.next($event.target.value)"
                         (click)="clickconcepto$.next($event.target.value)" #instanceNTAconcepto="ngbTypeahead" [inputFormatter]="formatterconcepto"
                         name="concepto_search" />
-                    <!--div *ngIf="movimientoForm.get('instanceNTAconcepto').invalid && (movimientoForm.get('instanceNTAconcepto').dirty || movimientoForm.get('instanceNTAconcepto').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="movimientoForm.get('instanceNTAconcepto').errors.required">
-                        Campo obligatorio.
-                        </small>
-                    </div-->
                 </div>
                 <div class="form-group col-md-3">
                     <label>Importe</label>
                     <input required type="number" class="form-control" aria-label="Importe" [value]="movimiento.importe" [(ngModel)]="movimiento.importe"
                         name="importe">
-                    <!--div *ngIf="movimientoForm.get('importe').invalid && (movimientoForm.get('importe').dirty || movimientoForm.get('importe').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="movimientoForm.get('importe').errors.required">
-                        Campo obligatorio.
-                        </small>
-                    </div-->
                 </div>
             </div>
         </div>
@@ -156,7 +142,6 @@
                 </div>
             </div>
         </div>
-
         <!--Obervaciones-->
         <div class="card jh-card border-info shadow">
             <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
@@ -164,16 +149,5 @@
             </div>
             <textarea class="form-control" name="observaciones" rows="5" [(ngModel)]="movimiento.observaciones" #observaciones='ngModel'></textarea>
         </div>
-    </div>
-    <div class="card-footer">
-        <div class="text-right">
-            <button [disabled]="isSaving" type="submit" class="btn btn-primary" [disabled]="!movimientoForm.valid">
-                Crear
-            </button>
-            <button type="button" class="btn btn-danger" [routerLink]="['/cajas']">
-                Cancelar
-            </button>
-        </div>
-
     </div>
 </form>

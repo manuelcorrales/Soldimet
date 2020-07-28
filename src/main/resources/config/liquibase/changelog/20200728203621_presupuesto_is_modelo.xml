@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+    <changeSet author="manuelc" id="1692339791524-1">
+        <update tableName="articulo">
+            <column name="marca_id" value="23" />
+            <column name="tipo_repuesto_id" value="15" />
+            <where>marca_id = '15'</where>
+        </update>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1692339791524-2">
+        <addColumn tableName="presupuesto">
+            <column name="modelo" type="float"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

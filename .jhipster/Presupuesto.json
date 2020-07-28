@@ -88,6 +88,10 @@
             "fieldName": "soldadura",
             "fieldType": "Boolean",
             "fieldValidateRules": []
+        },
+        {
+            "fieldName": "modelo",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20171214020915",

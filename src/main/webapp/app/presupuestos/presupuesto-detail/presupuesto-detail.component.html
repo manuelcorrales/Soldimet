@@ -9,6 +9,7 @@
                     <p><strong>Motor:</strong> {{presupuesto?.detallePresupuestos[0]?.motor?.marcaMotor}}</p>
                     <p><strong>Aplicación:</strong> {{presupuesto?.detallePresupuestos[0]?.aplicacion?.nombreAplicacion}}</p>
                     <p><strong>Cilindrada: </strong> {{presupuesto?.detallePresupuestos[0]?.cilindrada?.cantidadDeCilindros}}</p>
+                    <p><strong>Es Modelo: </strong> {{esModelo}}</p>
                     <p><strong>Presupuestado:</strong>
                         <span *ngFor="let detalle of presupuesto?.detallePresupuestos">{{detalle.tipoParteMotor?.nombreTipoParteMotor}} </span></p>
                 </div>

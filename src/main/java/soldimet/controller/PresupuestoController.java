@@ -111,8 +111,8 @@ public class PresupuestoController {
         return operaciones;
     }
 
-    @GetMapping("/buscarExistente")
-    public Presupuesto buscarPresupuestoExistente(
+    @GetMapping("/buscarModelo")
+    public Presupuesto buscarPresupuestoModelo(
         @RequestParam("aplicacion") Long aplicacion,
         @RequestParam("cilindrada") Long cilindrada
     ) {

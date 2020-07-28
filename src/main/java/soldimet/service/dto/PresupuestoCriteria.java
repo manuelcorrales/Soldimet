@@ -43,6 +43,8 @@ public class PresupuestoCriteria implements Serializable, Criteria {
 
     private BooleanFilter soldadura;
 
+    private BooleanFilter modelo;
+
     private LongFilter clienteId;
 
     private LongFilter estadoPresupuestoId;
@@ -66,6 +68,7 @@ public class PresupuestoCriteria implements Serializable, Criteria {
         this.importeTotal = other.importeTotal == null ? null : other.importeTotal.copy();
         this.observaciones = other.observaciones == null ? null : other.observaciones.copy();
         this.soldadura = other.soldadura == null ? null : other.soldadura.copy();
+        this.modelo = other.modelo == null ? null : other.modelo.copy();
         this.clienteId = other.clienteId == null ? null : other.clienteId.copy();
         this.estadoPresupuestoId = other.estadoPresupuestoId == null ? null : other.estadoPresupuestoId.copy();
         this.detallePresupuestoId = other.detallePresupuestoId == null ? null : other.detallePresupuestoId.copy();
@@ -150,6 +153,14 @@ public class PresupuestoCriteria implements Serializable, Criteria {
         this.soldadura = soldadura;
     }
 
+    public BooleanFilter getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(BooleanFilter modelo) {
+        this.modelo = modelo;
+    }
+
     public LongFilter getClienteId() {
         return clienteId;
     }
@@ -210,6 +221,7 @@ public class PresupuestoCriteria implements Serializable, Criteria {
             Objects.equals(importeTotal, that.importeTotal) &&
             Objects.equals(observaciones, that.observaciones) &&
             Objects.equals(soldadura, that.soldadura) &&
+            Objects.equals(modelo, that.modelo) &&
             Objects.equals(clienteId, that.clienteId) &&
             Objects.equals(estadoPresupuestoId, that.estadoPresupuestoId) &&
             Objects.equals(detallePresupuestoId, that.detallePresupuestoId) &&
@@ -229,6 +241,7 @@ public class PresupuestoCriteria implements Serializable, Criteria {
         importeTotal,
         observaciones,
         soldadura,
+        modelo,
         clienteId,
         estadoPresupuestoId,
         detallePresupuestoId,
@@ -249,6 +262,7 @@ public class PresupuestoCriteria implements Serializable, Criteria {
                 (importeTotal != null ? "importeTotal=" + importeTotal + ", " : "") +
                 (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
                 (soldadura != null ? "soldadura=" + soldadura + ", " : "") +
+                (modelo != null ? "modelo=" + modelo + ", " : "") +
                 (clienteId != null ? "clienteId=" + clienteId + ", " : "") +
                 (estadoPresupuestoId != null ? "estadoPresupuestoId=" + estadoPresupuestoId + ", " : "") +
                 (detallePresupuestoId != null ? "detallePresupuestoId=" + detallePresupuestoId + ", " : "") +

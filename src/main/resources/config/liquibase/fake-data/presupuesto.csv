@@ -1,11 +1,11 @@
-id;descripcion_descuento;descuento;fecha_creacion;fecha_aceptado;fecha_entregado;importe_total;observaciones;soldadura;cliente_id;estado_presupuesto_id
-1;mobile Fish;77969;2020-04-13;2020-04-13;2020-04-13;44583;Small;false;1;1
-2;seamless Metal deposit;5641;2020-04-12;2020-04-12;2020-04-12;93855;Electronics;true;2;2
-3;Money Market Account;61165;2020-04-13;2020-04-13;2020-04-13;2306;Namibia;false;3;3
-4;Gorgeous Frozen Pants;23277;2020-04-13;2020-04-13;2020-04-12;61838;syndicate;true;4;4
-5;Canyon HDD;68030;2020-04-13;2020-04-13;2020-04-13;1326;Usability South Dakota envisioneer;false;5;5
-6;Public-key;24102;2020-04-13;2020-04-12;2020-04-13;60999;backing up Salad;false;6;6
-7;TunaX;75536;2020-04-13;2020-04-13;2020-04-13;20794;Georgia Industrial;true;7;7
-8;Views e-enable Communications;72727;2020-04-12;2020-04-13;2020-04-13;57044;Aruba;true;8;8
-9;navigating;74732;2020-04-13;2020-04-13;2020-04-12;58675;Specialist Home Loan Account;false;9;9
-10;scalable;16526;2020-04-13;2020-04-13;2020-04-12;42340;reinvent 24 hour Jewelery;false;10;10
+id;descripcion_descuento;descuento;fecha_creacion;fecha_aceptado;fecha_entregado;importe_total;observaciones;soldadura;modelo;cliente_id;estado_presupuesto_id
+1;mobile Fish;77969;2020-07-28;2020-07-28;2020-07-28;44583;Small;false;true;1;1
+2;Savings Account alarm;2058;2020-07-28;2020-07-27;2020-07-28;83244;red Chips Soap;false;true;2;2
+3;Grocery Home;52477;2020-07-28;2020-07-28;2020-07-28;4666;Coordinator;false;false;3;3
+4;bluetooth;19967;2020-07-28;2020-07-28;2020-07-27;59241;Refined Rubber Chicken Table;false;false;4;4
+5;Usability South Dakota envisioneer;1596;2020-07-28;2020-07-28;2020-07-28;24102;Bahamian Dollar Investment Account;true;false;5;5
+6;Regional;25877;2020-07-28;2020-07-28;2020-07-28;31171;Costa Rica Mayotte;false;false;6;6
+7;synthesizing Views e-enable;92665;2020-07-28;2020-07-28;2020-07-28;32654;Georgia;true;false;7;7
+8;software scale interactive;82873;2020-07-28;2020-07-28;2020-07-27;28093;Faroe Islands Plastic;true;false;8;8
+9;Industrial;42340;2020-07-28;2020-07-28;2020-07-28;29348;Jewelery;false;true;9;9
+10;application quantify Unbranded Plastic Tuna;11586;2020-07-28;2020-07-28;2020-07-28;62329;archive Fantastic Plastic Chicken;false;true;10;10

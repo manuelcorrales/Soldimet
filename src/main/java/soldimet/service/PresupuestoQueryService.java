@@ -109,6 +109,9 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
             if (criteria.getSoldadura() != null) {
                 specification = specification.and(buildSpecification(criteria.getSoldadura(), Presupuesto_.soldadura));
             }
+            if (criteria.getModelo() != null) {
+                specification = specification.and(buildSpecification(criteria.getModelo(), Presupuesto_.modelo));
+            }
             if (criteria.getClienteId() != null) {
                 specification = specification.and(buildSpecification(criteria.getClienteId(),
                     root -> root.join(Presupuesto_.cliente, JoinType.LEFT).get(Cliente_.id)));

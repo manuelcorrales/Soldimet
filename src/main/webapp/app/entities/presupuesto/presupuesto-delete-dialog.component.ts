@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
-import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
+import { PresupuestoService } from './presupuesto.service';
 
 @Component({
   selector: 'jhi-presupuesto-delete-dialog',

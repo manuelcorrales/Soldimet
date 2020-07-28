@@ -15,6 +15,7 @@ export interface IPresupuesto {
   importeTotal?: number;
   observaciones?: string;
   soldadura?: boolean;
+  modelo?: boolean;
   cliente?: ICliente;
   estadoPresupuesto?: IEstadoPresupuesto;
   detallePresupuestos?: IDetallePresupuesto[];
@@ -33,6 +34,7 @@ export class Presupuesto implements IPresupuesto {
     public importeTotal?: number,
     public observaciones?: string,
     public soldadura?: boolean,
+    public modelo?: boolean,
     public cliente?: ICliente,
     public estadoPresupuesto?: IEstadoPresupuesto,
     public detallePresupuestos?: IDetallePresupuesto[],
@@ -40,5 +42,6 @@ export class Presupuesto implements IPresupuesto {
     public sucursal?: ISucursal
   ) {
     this.soldadura = this.soldadura || false;
+    this.modelo = this.modelo || false;
   }
 }

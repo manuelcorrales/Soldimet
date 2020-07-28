@@ -329,6 +329,7 @@ public class ExpertoPresupuesto {
             detalle.setImporte(totalDetalle);
         }
 
+
         return presupuestoRepository.save(presupuesto);
     }
 
@@ -567,11 +568,7 @@ public class ExpertoPresupuesto {
         Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
         Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
 
-        Optional<DetallePresupuesto> detallePresupuestoOptional = detallePresupuestoRepository.findFirstByAplicacionAndCilindradaOrderByIdDesc(aplicacion, cilindrada);
-        if (detallePresupuestoOptional.isPresent()) {
-            return presupuestoRepository.findByDetallePresupuestosIn(detallePresupuestoOptional.get());
-        }
-		return null;
+        return presupuestoRepository.findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(aplicacion, cilindrada, true);
 	}
 
 	public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId, Long tipoParteMotorId) {

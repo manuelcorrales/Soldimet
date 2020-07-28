@@ -63,7 +63,7 @@ export class NuevoMovimientoComponent implements OnInit {
   clickconcepto$ = new Subject<string>();
   concepto: SubCategoria;
 
-  formaDePago: FormaDePago = null;
+  formaDePago: FormaDePago;
   medioDePago: MedioDePago;
   medioPagoCheque: MedioDePagoCheque;
 
@@ -112,6 +112,7 @@ export class NuevoMovimientoComponent implements OnInit {
     this.formaDePagoService.query().subscribe(
       (res: HttpResponse<IFormaDePago[]>) => {
         this.formasDePago = res.body;
+        this.formaDePago = this.formasDePago.find(forma => forma.nombreFormaDePago === 'Efectivo');
       },
       (res: HttpErrorResponse) => this.jhiAlertService.error(res.message)
     );

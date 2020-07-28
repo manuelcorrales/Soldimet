@@ -3,6 +3,8 @@ package soldimet.repository;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
+import soldimet.domain.Aplicacion;
+import soldimet.domain.Cilindrada;
 import soldimet.domain.DetallePresupuesto;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
@@ -31,5 +33,11 @@ public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long>,
     public Long countByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 
     public Presupuesto findByDetallePresupuestosIn(DetallePresupuesto detallePresupuesto);
+
+    public Presupuesto findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(
+        Aplicacion aplicacion,
+        Cilindrada cilindrada,
+        Boolean modelo
+    );
 
 }
