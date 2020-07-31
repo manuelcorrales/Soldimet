@@ -67,14 +67,20 @@
             <div class="col">
             </div>
             <div class="col form-check form-check-inline">
-                <label id="total_presupuesto">Total Presupuesto:</label>
-                <input for="total_presupuesto" type="number" class="form-control" name="importeTotal" step="0.01" [(ngModel)]="presupuesto.importeTotal">
+                <label id="total_presupuesto">
+                    Total Presupuesto:
+                    <input for="total_presupuesto" type="number" class="form-control" name="importeTotal"
+                        step="0.01" [(ngModel)]="presupuesto.importeTotal"
+                    >
+                </label>
             </div>
             <div class="col form-check form-check-inline">
-                <label id="presupuesto_modelo"class="form-check-label">Usar como modelo: </label>
-                <input for="presupuesto_modelo" class="form-check-input" type="checkbox" name="modelo"
-                    [(ngModel)]="presupuesto.modelo" [disabled]="presupuesto.soldadura"
-                >
+                <label id="presupuesto_modelo"class="form-check-label">
+                    Usar como modelo:
+                    <input for="presupuesto_modelo" class="form-check-input" type="checkbox" name="modelo"
+                        [(ngModel)]="presupuesto.modelo" [disabled]="presupuesto.soldadura"
+                    >
+                </label>
             </div>
             <div class="col text-right">
                 <button [disabled]="isSaving || !presupuestoForm.valid" type="submit" class="btn btn-primary" >

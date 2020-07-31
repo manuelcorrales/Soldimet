@@ -9,12 +9,18 @@
                 <p class="form-control-label"><strong>Presupuestar: </strong></p>
                 <div class="d-inline">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" required type="radio" [disabled]="detalleCreado" name="quePresupuestar" (click)="soloSoldadura(true)">
-                        <label class="form-check-label">Soldadura</label>
+                        <label class="form-check-label">
+                            <input class="form-check-input" required type="radio" [disabled]="detalleCreado"
+                                name="quePresupuestar" (click)="soloSoldadura(true)"
+                            >Soldadura
+                        </label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" required type="radio" [disabled]="detalleCreado" name="quePresupuestar" (click)="soloSoldadura(false)">
-                        <label class="form-check-label">Motor</label>
+                        <label class="form-check-label">
+                            <input class="form-check-input" required type="radio" [disabled]="detalleCreado"
+                                name="quePresupuestar" (click)="soloSoldadura(false)"
+                            >Motor
+                        </label>
                     </div>
                 </div>
             </div>
@@ -46,9 +52,12 @@
                 <p class="form-control-label"><strong>Cilindrada: </strong></p>
                 <div class="d-inline">
                     <div class="form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
-                        <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida" [(ngModel)]="cilindradaElegida"
-                            [disabled]="detalleCreado || isSoldadura">
-                        <label class="form-check-label"> {{cilindrada?.cantidadDeCilindros}} cilindros</label>
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida"
+                                [(ngModel)]="cilindradaElegida" [disabled]="detalleCreado || isSoldadura"
+                            >
+                            {{cilindrada?.cantidadDeCilindros}} cilindros
+                        </label>
                     </div>
                 </div>
             </div>

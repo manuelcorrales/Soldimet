@@ -1,8 +1,8 @@
 <div class="form-check col-md-3">
-    <input class="form-check-input" type="checkbox" [defaultValue]="seleccionado"
-    [(ngModel)]="seleccionado" (change)='cambioValor()'>
     <label class="form-check-label">
-        {{repuesto.nombreTipoRepuesto}}
+        <input class="form-check-input" type="checkbox" [defaultValue]="seleccionado"
+            [(ngModel)]="seleccionado" (change)='cambioValor()'
+        >{{repuesto.nombreTipoRepuesto}}
     </label>
 </div>
 <!-- Muestro siempre el autocompletar y la marca del artículo que se eligió con el precio-->
