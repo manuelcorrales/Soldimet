@@ -18,6 +18,12 @@ public class DTOMetricaContable {
 
     }
 
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return this.categoria +": "+ this.valor.toString();
+    }
+
     /**
      * @return the categoria
      */

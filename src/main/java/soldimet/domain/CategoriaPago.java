@@ -29,7 +29,7 @@ public class CategoriaPago implements Serializable {
     private String nombreCategoriaPago;
 
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name= "categoriaPago")
+    @JoinColumn(name= "categoria_pago")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<SubCategoria> subCategorias = new HashSet<>();
 

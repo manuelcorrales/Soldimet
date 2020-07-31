@@ -16,4 +16,6 @@ public interface CategoriaPagoRepository extends JpaRepository<CategoriaPago, Lo
 
     public CategoriaPago findBySubCategoriasContaining(SubCategoria subCategorias);
 
+	public CategoriaPago findByNombreCategoriaPago(String cATEGORIA_PROVEEDORES);
+
 }

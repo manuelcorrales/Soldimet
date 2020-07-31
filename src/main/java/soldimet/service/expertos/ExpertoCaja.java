@@ -22,14 +22,19 @@ import soldimet.domain.Empleado;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.Movimiento;
+import soldimet.domain.SubCategoria;
 import soldimet.domain.Sucursal;
+import soldimet.domain.TipoMovimiento;
 import soldimet.repository.CajaRepository;
+import soldimet.repository.CategoriaPagoRepository;
 import soldimet.repository.EstadoMovimientoRepository;
 import soldimet.repository.MedioDePagoRepository;
 import soldimet.repository.MovimientoRepository;
+import soldimet.repository.SubCategoriaRepository;
 import soldimet.repository.SucursalRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
+import soldimet.web.rest.SucursalResource;
 
 
 /**
@@ -67,6 +72,12 @@ public class ExpertoCaja {
     @Autowired
     private SucursalRepository sucursalRepository;
 
+    @Autowired
+    private CategoriaPagoRepository categoriaRepository;
+
+    @Autowired
+    private SubCategoriaRepository subCategoriaRepository;
+
     public ExpertoCaja() {
 
     }
@@ -80,7 +91,7 @@ public class ExpertoCaja {
             sucursal = sucursalRepository.findById(sucursalId).get();
             LocalDate fechaInicio = this.formatearFecha(mes, anio);
             LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1);
-            listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursalOrderByFechaAsc(
+            listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(
                 fechaInicio,
                 fechaFin,
                 sucursal
@@ -194,7 +205,7 @@ public class ExpertoCaja {
     public List<Caja> findCajasDelMes(Sucursal sucursal) {
         LocalDate fechaInicioMes = this.currentMonthFirstDay();
         LocalDate fechaFinMes = this.currentMonthLastDay();
-        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanAndSucursalOrderByFechaAsc(fechaInicioMes, fechaFinMes, sucursal);
+        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(fechaInicioMes, fechaFinMes, sucursal);
     }
 
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {
@@ -252,4 +263,57 @@ public class ExpertoCaja {
         return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
                 || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
+
+    public Float getGastoMensualProveedores() {
+
+        Float pagoAcumulado= new Float(0);
+        List<Sucursal> sucursales = sucursalRepository.findAll();
+        EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+        Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_PROVEEDORES).getSubCategorias();
+
+        for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
+            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias
+        )){
+            pagoAcumulado += movimiento.getImporte();
+        }
+        return pagoAcumulado;
+
+    }
+
+    public Float getGastoMensualFerreteria() {
+
+        Float gastoFerreteriaAcumulado= new Float(0);
+        List<Sucursal> sucursales = sucursalRepository.findAll();
+        EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+        List<SubCategoria> subCategorias = subCategoriaRepository.findByNombreSubCategoria("Fletes");
+
+        for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
+            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias
+        )){
+            gastoFerreteriaAcumulado += movimiento.getImporte();
+        }
+        return gastoFerreteriaAcumulado;
+
+    }
+
+    public List<Movimiento> getMovimientosMensuales(TipoMovimiento tipoMovimiento, Sucursal sucursal) {
+
+        List<Sucursal> sucursales;
+        sucursales = new ArrayList<>();
+        sucursales.add(sucursal);
+        EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+
+        return movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndTipoMovimiento(
+            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, tipoMovimiento);
+    }
+
+    public List<Movimiento> getMovimientosMensuales() {
+
+        List<Sucursal> sucursales = sucursalRepository.findAll();
+        EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+
+        return movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstado(
+            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado);
+    }
+
 }

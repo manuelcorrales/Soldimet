@@ -26,6 +26,11 @@ public class DTOPresupuesto {
     public DTOPresupuesto() {
     }
 
+    @Override
+    public String toString() {
+        return "Presup: " + this.codigo;
+    }
+
     public String getCliente() {
         return cliente;
     }

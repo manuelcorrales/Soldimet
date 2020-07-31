@@ -5,6 +5,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 /**
@@ -24,6 +26,12 @@ public class SubCategoria implements Serializable {
     @NotNull
     @Column(name = "nombre_sub_categoria", nullable = false)
     private String nombreSubCategoria;
+
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @NotNull
+    @JoinColumn(name="categoria_pago", nullable=false)
+    @JsonIgnore
+    private CategoriaPago categoria;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -47,6 +55,14 @@ public class SubCategoria implements Serializable {
         this.nombreSubCategoria = nombreSubCategoria;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public CategoriaPago getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaPago categoria) {
+        this.categoria = categoria;
+    }
 
     @Override
     public boolean equals(Object o) {

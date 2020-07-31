@@ -32,15 +32,15 @@ export class ReportesComponent implements OnInit {
   private generateCardMetrid() {
     this.countMetric = [
       {
-        categoria: 'Presupuestos en Proceso',
-        icon: 'tools',
+        categoria: 'PRESUPUESTOS ACEPTADOS',
+        icon: 'briefcase',
         link: '#',
-        bgColor: 'bg-primary',
+        bgColor: 'bg-secondary',
         textColor: 'text-white',
         valor: 0
       },
       {
-        categoria: 'Presupuestos por Entregar',
+        categoria: 'POR ENTREGAR',
         icon: 'door-open',
         link: '#',
         bgColor: 'bg-success',
@@ -48,18 +48,34 @@ export class ReportesComponent implements OnInit {
         valor: 0
       },
       {
-        categoria: 'Presupuestos sin repuestos',
-        icon: 'phone',
+        categoria: 'INGRESO MENSUAL',
+        icon: 'cash-register',
         link: '#',
-        bgColor: 'bg-warning',
+        bgColor: 'bg-info',
         textColor: 'text-white',
         valor: 0
       },
       {
-        categoria: 'Repuestos para Recibir',
-        icon: 'truck',
+        categoria: 'GASTO MENSUAL',
+        icon: 'money-bill-wave',
         link: '#',
         bgColor: 'bg-secondary',
+        textColor: 'text-white',
+        valor: 0
+      },
+      {
+        categoria: 'PAGO PROVEEDORES',
+        icon: 'shopping-cart',
+        link: '#',
+        bgColor: 'bg-primary',
+        textColor: 'text-white',
+        valor: 0
+      },
+      {
+        categoria: 'GASTO FERRETERIA',
+        icon: 'wrench',
+        link: '#',
+        bgColor: 'bg-danger',
         textColor: 'text-white',
         valor: 0
       }
@@ -90,14 +106,18 @@ export class ReportesComponent implements OnInit {
     this.reportService.getMetricasContables().subscribe(
       (metricas: DtoCountMetric[]) => {
         metricas.forEach(metrica => {
-          if (metrica.categoria === 'Presupuestos en Proceso') {
+          if (metrica.categoria === 'PRESUPUESTOS ACEPTADOS') {
             this.countMetric[0].valor = metrica.valor;
-          } else if (metrica.categoria === 'Presupuestos por Entregar') {
+          } else if (metrica.categoria === 'POR ENTREGAR') {
             this.countMetric[1].valor = metrica.valor;
-          } else if (metrica.categoria === 'Presupuestos sin repuestos') {
+          } else if (metrica.categoria === 'INGRESO MENSUAL') {
             this.countMetric[2].valor = metrica.valor;
-          } else if (metrica.categoria === 'Repuestos para Recibir') {
-            this.countMetric[3].valor = metrica.valor;
+          } else if (metrica.categoria === 'GASTO MENSUAL') {
+            this.countMetric[3].valor = metrica.valor * -1;
+          } else if (metrica.categoria === 'PAGO PROVEEDORES') {
+            this.countMetric[4].valor = metrica.valor * -1;
+          } else if (metrica.categoria === 'GASTO FERRETERIA') {
+            this.countMetric[5].valor = metrica.valor * -1;
           }
         });
       },

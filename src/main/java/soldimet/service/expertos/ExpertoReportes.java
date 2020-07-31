@@ -16,10 +16,9 @@ import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Movimiento;
-import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Sucursal;
+import soldimet.domain.TipoMovimiento;
 import soldimet.repository.CostoRepuestoRepository;
-import soldimet.repository.DetallePedidoRepository;
 import soldimet.repository.EstadoCostoRepuestoRepository;
 import soldimet.repository.EstadoMovimientoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
@@ -28,6 +27,7 @@ import soldimet.repository.MovimientoRepository;
 import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.repository.PresupuestoRepository;
 import soldimet.repository.SucursalRepository;
+import soldimet.repository.TipoMovimientoRepository;
 import soldimet.service.dto.DTOCajaDiario;
 import soldimet.service.dto.DTOMetricaContable;
 import soldimet.service.dto.DTOSerie;
@@ -65,9 +65,6 @@ public class ExpertoReportes {
     private PresupuestoRepository presupuestoRepository;
 
     @Autowired
-    private DetallePedidoRepository detallePedidoRepository;
-
-    @Autowired
     private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
 
     @Autowired
@@ -79,6 +76,9 @@ public class ExpertoReportes {
     @Autowired
     private PedidoRepuestoRepository pedidoRepuestoRepository;
 
+    @Autowired
+    private TipoMovimientoRepository tipoMovimientoRepository;
+
     public ExpertoReportes() {
 
     }
@@ -89,12 +89,12 @@ public class ExpertoReportes {
 
         try {
 
-            for (Sucursal sucursal: sucursalRepository.findAll()) {
+            for (Sucursal sucursal : sucursalRepository.findAll()) {
                 DTOCajaDiario report = new DTOCajaDiario();
                 report.setName(sucursal.getNombreSucursal());
                 // Ordeno las cajas por fecha para ir acumulando resultados día a día
                 Float cajaAcumulado = new Float(0);
-                for (Caja caja: expertoCaja.findCajasDelMes(sucursal)) {
+                for (Caja caja : expertoCaja.findCajasDelMes(sucursal)) {
                     cajaAcumulado += caja.getSaldo();
                     DTOSerie serieCaja = new DTOSerie(caja.getFecha().toString(), cajaAcumulado);
                     report.addSerie(serieCaja);
@@ -116,9 +116,10 @@ public class ExpertoReportes {
 
         try {
 
-            EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+            EstadoMovimiento estadoAlta = estadoMovimientoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
-            for (Sucursal sucursal: sucursalRepository.findAll()) {
+            for (Sucursal sucursal : sucursalRepository.findAll()) {
                 DTOCajaDiario report = new DTOCajaDiario();
                 report.setName(sucursal.getNombreSucursal());
                 Caja cajaDia = expertoCaja.findCajaDelDia(sucursal);
@@ -126,11 +127,13 @@ public class ExpertoReportes {
                 List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(cajaDia, estadoAlta);
                 Float totalIngresos = new Float(0);
                 Float totalEgresos = new Float(0);
-                for (Movimiento movimiento: movimientos) {
-                    if (movimiento.getTipoMovimiento().getNombreTipoMovimiento().equals(globales.nombre_Tipo_Movimiento_Ingreso)) {
+                for (Movimiento movimiento : movimientos) {
+                    if (movimiento.getTipoMovimiento().getNombreTipoMovimiento()
+                            .equals(globales.nombre_Tipo_Movimiento_Ingreso)) {
                         totalIngresos += movimiento.getImporte();
                     } else {
-                        // Los movimientos tienen signo y yo lo quiero mostrar todo positivo en el gráfico
+                        // Los movimientos tienen signo y yo lo quiero mostrar todo positivo en el
+                        // gráfico
                         totalEgresos -= movimiento.getImporte();
                     }
                 }
@@ -158,11 +161,12 @@ public class ExpertoReportes {
 
         // Presupuestos en progreso
         try {
-            EstadoPresupuesto estadoPresupuestoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
+            EstadoPresupuesto estadoPresupuestoAceptado = estadoPresupuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
             Long cantidadPresupuestos = presupuestoRepository.countByEstadoPresupuesto(estadoPresupuestoAceptado);
             DTOMetricaContable metricaCantidadPresupuestosEnProceso = new DTOMetricaContable();
             metricaCantidadPresupuestosEnProceso.setValor(new Float(cantidadPresupuestos));
-            metricaCantidadPresupuestosEnProceso.setCategoria("Presupuestos en Proceso");
+            metricaCantidadPresupuestosEnProceso.setCategoria("PRESUPUESTOS ACEPTADOS");
             metricas.add(metricaCantidadPresupuestosEnProceso);
 
         } catch (Exception e) {
@@ -171,11 +175,12 @@ public class ExpertoReportes {
 
         // Presupuestos por entregar
         try {
-            EstadoPresupuesto estadoPresupuestoTerminados = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+            EstadoPresupuesto estadoPresupuestoTerminados = estadoPresupuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
             Long cantidadPresupuestos = presupuestoRepository.countByEstadoPresupuesto(estadoPresupuestoTerminados);
             DTOMetricaContable metricaCantidadPresupuestosPorEntregar = new DTOMetricaContable();
             metricaCantidadPresupuestosPorEntregar.setValor(new Float(cantidadPresupuestos));
-            metricaCantidadPresupuestosPorEntregar.setCategoria("Presupuestos por Entregar");
+            metricaCantidadPresupuestosPorEntregar.setCategoria("POR ENTREGAR");
             metricas.add(metricaCantidadPresupuestosPorEntregar);
 
         } catch (Exception e) {
@@ -184,10 +189,13 @@ public class ExpertoReportes {
 
         // Cantidad de Presupuestos pendientes de pedido
         try {
-            EstadoPedidoRepuesto estadoPedidoPendiente = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
-            EstadoPedidoRepuesto estadoPedidoPedidoParcial = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL);
+            EstadoPedidoRepuesto estadoPedidoPendiente = estadoPedidoRepuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
+            EstadoPedidoRepuesto estadoPedidoPedidoParcial = estadoPedidoRepuestoRepository
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL);
             Long cantidadPendientes = pedidoRepuestoRepository.countByEstadoPedidoRepuesto(estadoPedidoPendiente);
-            Long cantidadPedidosParcial = pedidoRepuestoRepository.countByEstadoPedidoRepuesto(estadoPedidoPedidoParcial);
+            Long cantidadPedidosParcial = pedidoRepuestoRepository
+                    .countByEstadoPedidoRepuesto(estadoPedidoPedidoParcial);
 
             DTOMetricaContable metricaCantidadRepuestosPorPedir = new DTOMetricaContable();
             metricaCantidadRepuestosPorPedir.setValor(new Float(cantidadPendientes + cantidadPedidosParcial));
@@ -198,14 +206,68 @@ public class ExpertoReportes {
             e.printStackTrace();
         }
 
-        // Cantidad de repuestos por recibir
+        // Ingreso total mensual de todos los talleres
         try {
-            EstadoCostoRepuesto estadoCostoRepuestoPedido = estadoCostoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
-            Long cantidadPorRecibir = costoRepuestoRepository.countByEstado(estadoCostoRepuestoPedido);
-            DTOMetricaContable metricaCantidadRepuestosParaRecibir = new DTOMetricaContable();
-            metricaCantidadRepuestosParaRecibir.setValor(new Float(cantidadPorRecibir));
-            metricaCantidadRepuestosParaRecibir.setCategoria("Repuestos para Recibir");
-            metricas.add(metricaCantidadRepuestosParaRecibir);
+            TipoMovimiento tipoIgreso = tipoMovimientoRepository.findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Ingreso);
+            List<Movimiento> ingresos = expertoCaja.getMovimientosMensuales();
+
+            Float ingresoAcumulado = new Float(0);
+
+            for(Movimiento movimiento: ingresos) {
+                if (movimiento.getTipoMovimiento().getId().equals(tipoIgreso.getId())) {
+                    ingresoAcumulado += movimiento.getImporte();
+                }
+            }
+            DTOMetricaContable metricaGananciaTotalMensual = new DTOMetricaContable();
+            metricaGananciaTotalMensual.setValor(ingresoAcumulado);
+            metricaGananciaTotalMensual.setCategoria("INGRESO MENSUAL");
+            metricas.add(metricaGananciaTotalMensual);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Egreso total mensual de todos los talleres
+        try {
+            TipoMovimiento tipoEgreso = tipoMovimientoRepository.findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Egreso);
+            List<Movimiento> egresos = expertoCaja.getMovimientosMensuales();
+
+            Float egresoAcumulado = new Float(0);
+
+            for(Movimiento movimiento: egresos) {
+                if (movimiento.getTipoMovimiento().getId() == tipoEgreso.getId()) {
+                    egresoAcumulado += movimiento.getImporte();
+                }
+            }
+
+            DTOMetricaContable metricaGananciaTotalMensual = new DTOMetricaContable();
+            metricaGananciaTotalMensual.setValor(egresoAcumulado);
+            metricaGananciaTotalMensual.setCategoria("GASTO MENSUAL");
+            metricas.add(metricaGananciaTotalMensual);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Total de pago a proveedores
+        try {
+
+            DTOMetricaContable metricaPagoAProveedores = new DTOMetricaContable();
+            metricaPagoAProveedores.setValor(expertoCaja.getGastoMensualProveedores());
+            metricaPagoAProveedores.setCategoria("PAGO PROVEEDORES");
+            metricas.add(metricaPagoAProveedores);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Total de gasto de ferretería
+        try {
+
+            DTOMetricaContable metricaGastosFerreteria = new DTOMetricaContable();
+            metricaGastosFerreteria.setValor(expertoCaja.getGastoMensualFerreteria());
+            metricaGastosFerreteria.setCategoria("GASTO FERRETERIA");
+            metricas.add(metricaGastosFerreteria);
 
         } catch (Exception e) {
             e.printStackTrace();

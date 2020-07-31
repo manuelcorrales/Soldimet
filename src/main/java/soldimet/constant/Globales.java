@@ -100,4 +100,8 @@ public class Globales {
     public final Long tipoParteMotorBlockID = new Long(1);
     public final Long tipoParteMotorTapaID = new Long(2);
     public final Long tipoParteMotorYTapaID = new Long(3);
+
+    //----------------------Categorias---------------------------
+
+    public final String CATEGORIA_PROVEEDORES = "Proveedores";
 }
