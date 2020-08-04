@@ -153,6 +153,9 @@ public class ExpertoCaja {
             medioDePagoMovimiento = medioDePagoRepository.save(medioDePagoMovimiento);
             movimientoDto.setMedioDePago(medioDePagoMovimiento);
 
+            // Guardo la subcategoria
+            movimientoDto.setSubCategoria( subCategoriaRepository.save(movimientoDto.getSubCategoria()) );
+
             this.actualizarSaldoCaja(cajaDia, movimientoDto);
 
             Movimiento newMovimiento = movimientoRepository.save(movimientoDto);
