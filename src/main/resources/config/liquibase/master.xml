@@ -120,4 +120,5 @@
     <include file="config/liquibase/changelog/20200723203220_cargo_repuestos_illinois.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200727203220_cargo_primer_lista_repuestos.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200728203621_presupuesto_is_modelo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200808122420_arreglo_repuestos_y_tipo.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
