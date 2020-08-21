@@ -1,8 +1,6 @@
 package soldimet.service.expertos;
 
-import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import soldimet.repository.ArticuloRepository;
 import soldimet.repository.EstadoArticuloRepository;
 import soldimet.repository.MarcaRepository;
 import soldimet.repository.TipoRepuestoRepository;
-import soldimet.web.rest.errors.BadRequestAlertException;
+import soldimet.service.ErrorToURIException;
 
 @Service
 @Transactional
@@ -45,24 +43,24 @@ public class ExpertoRepuestos {
         return articuloRepository.findDistinctByEstadoAndTipoRepuestoIn(estadoAlta, tiposRepuestos);
 	}
 
-	public List<Articulo> actualizarListaRepuestosProveedor(List<Articulo> articulos)  throws URISyntaxException {
+	public List<Articulo> actualizarListaRepuestosProveedor(List<Articulo> articulos) {
         return articuloRepository.saveAll(articulos);
 	}
 
-	public Articulo crearRepuestoProveedor(Articulo articulo) throws URISyntaxException {
+	public Articulo crearRepuestoProveedor(Articulo articulo) {
         if (articuloRepository.existsByCodigoArticuloProveedor(articulo.getCodigoArticuloProveedor())){
-            throw new BadRequestAlertException("Ya existe este código en otro artículo!", Articulo.class.getName(), "codigoArticuloProveedorexists");
+            throw new ErrorToURIException("Ya existe este código en otro artículo!", Articulo.class.getName(), "codigoArticuloProveedorexists");
         }
 
         return this.guardarArticulo(articulo);
 	}
 
-	public Articulo actualizarRepuestoProveedor(Articulo articulo) throws URISyntaxException {
+	public Articulo actualizarRepuestoProveedor(Articulo articulo) {
         return this.guardarArticulo(articulo);
 
     }
 
-    private Articulo guardarArticulo(Articulo articulo) throws URISyntaxException {
+    private Articulo guardarArticulo(Articulo articulo) {
 
         EstadoArticulo estadoAlta = estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);
         TipoRepuesto tiposRepuesto = tipoRepuestoRepository.getOne(articulo.getTipoRepuesto().getId());

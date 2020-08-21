@@ -1,5 +1,7 @@
 package soldimet.constant;
 
+import java.net.URI;
+
 import org.springframework.stereotype.Component;
 
 @Component

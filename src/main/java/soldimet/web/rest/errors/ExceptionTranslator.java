@@ -129,4 +129,13 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
             .build();
         return create(ex, problem, request);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleErrorToURIException(soldimet.service.ErrorToURIException ex, NativeWebRequest request) {
+        Problem problem = Problem.builder()
+            .withStatus(Status.CONFLICT)
+            .with(MESSAGE_KEY, ex.getMessage())
+            .build();
+        return create(ex, problem, request, HeaderUtil.createFailureAlert(applicationName,  false, ex.getEntityName(), ex.getErrorKey(), ex.getMessage()));
+    }
 }

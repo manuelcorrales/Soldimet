@@ -128,7 +128,10 @@ export class PresupuestosComponent implements OnInit {
       return (
         presupuesto.motor.toLowerCase().includes(term) ||
         presupuesto.cliente.toLowerCase().includes(term) ||
-        presupuesto.codigo.toString().includes(term)
+        presupuesto.codigo
+          .toString()
+          .toLowerCase()
+          .includes(term)
       );
     });
     this.presupuestos = presupuestos.sort(this._sortPresupuesto);
