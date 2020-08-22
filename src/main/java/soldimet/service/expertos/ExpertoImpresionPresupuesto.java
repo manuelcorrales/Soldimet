@@ -152,20 +152,11 @@ public class ExpertoImpresionPresupuesto {
                 if (tipoRepuesto.getId().equals(cobranzaRepuesto.getTipoRepuesto().getId())) {
                     // SI esta presupuestado, pongo el valor que se cobro
                     String repElegido = "v" + tipoRepuesto.getId().toString();
-                    variables.put(repElegido, "$" + cobranzaRepuesto.getValor().toString());
+                    // variables.put(repElegido, "$" + cobranzaRepuesto.getValor().toString());
+                    variables.put(repElegido, "X");
                 }
             }
         }
-
-        variables.put("v38", "");
-        variables.put("v39", "");
-        variables.put("x32", "");
-        variables.put("x33", "");
-        variables.put("x34", "");
-        variables.put("x35", "");
-        variables.put("v24", "");
-        variables.put("v32", "");
-        variables.put("v36", "");
 
         return variables;
     }
