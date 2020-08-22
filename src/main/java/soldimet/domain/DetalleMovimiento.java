@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import soldimet.utils.MathUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -60,7 +62,8 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public Float getValorUnitario() {
-        return valorUnitario;
+        return MathUtils.roundFloat(this.valorUnitario);
+
     }
 
     public DetalleMovimiento valorUnitario(Float valorUnitario) {

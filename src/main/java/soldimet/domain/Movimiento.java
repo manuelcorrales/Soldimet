@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import soldimet.utils.MathUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -87,7 +89,7 @@ public class Movimiento implements Serializable {
     }
 
     public Float getImporte() {
-        return importe;
+        return MathUtils.roundFloat(this.importe);
     }
 
     public Movimiento importe(Float importe) {
@@ -100,7 +102,7 @@ public class Movimiento implements Serializable {
     }
 
     public Float getDescuento() {
-        return descuento;
+        return MathUtils.roundFloat(this.descuento);
     }
 
     public Movimiento descuento(Float descuento) {

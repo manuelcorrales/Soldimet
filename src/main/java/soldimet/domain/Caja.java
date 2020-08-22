@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import soldimet.utils.MathUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -97,7 +99,7 @@ public class Caja implements Serializable {
     }
 
     public Float getSaldo() {
-        return saldo;
+        return MathUtils.roundFloat(this.saldo);
     }
 
     public Caja saldo(Float saldo) {
@@ -123,7 +125,7 @@ public class Caja implements Serializable {
     }
 
     public Float getSaldoFisico() {
-        return saldoFisico;
+        return MathUtils.roundFloat(this.saldoFisico);
     }
 
     public Caja saldoFisico(Float saldoFisico) {

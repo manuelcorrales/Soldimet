@@ -2,6 +2,8 @@ package soldimet.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import soldimet.utils.MathUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -58,7 +60,7 @@ public class PrecioRepuesto implements Serializable {
     }
 
     public Float getPrecioPrivado() {
-        return precioPrivado;
+        return MathUtils.roundFloat(this.precioPrivado);
     }
 
     public PrecioRepuesto precioPrivado(Float precioPrivado) {
@@ -71,7 +73,7 @@ public class PrecioRepuesto implements Serializable {
     }
 
     public Float getPrecioPublico() {
-        return precioPublico;
+        return MathUtils.roundFloat(this.precioPublico);
     }
 
     public PrecioRepuesto precioPublico(Float precioPublico) {

@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import soldimet.utils.MathUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -47,7 +49,7 @@ public class CobranzaOperacion implements Serializable {
     }
 
     public Float getCobranzaOperacion() {
-        return cobranzaOperacion;
+        return MathUtils.roundFloat(this.cobranzaOperacion);
     }
 
     public CobranzaOperacion cobranzaOperacion(Float cobranzaOperacion) {

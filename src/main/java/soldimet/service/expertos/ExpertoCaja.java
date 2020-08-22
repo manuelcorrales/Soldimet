@@ -34,6 +34,7 @@ import soldimet.repository.SubCategoriaRepository;
 import soldimet.repository.SucursalRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
+import soldimet.utils.MathUtils;
 import soldimet.web.rest.SucursalResource;
 
 
@@ -279,7 +280,7 @@ public class ExpertoCaja {
         )){
             pagoAcumulado += movimiento.getImporte();
         }
-        return pagoAcumulado;
+        return MathUtils.roundFloat(pagoAcumulado);
 
     }
 
@@ -295,7 +296,7 @@ public class ExpertoCaja {
         )){
             gastoFerreteriaAcumulado += movimiento.getImporte();
         }
-        return gastoFerreteriaAcumulado;
+        return MathUtils.roundFloat(gastoFerreteriaAcumulado);
 
     }
 

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import soldimet.utils.MathUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -104,7 +106,7 @@ public class Presupuesto implements Serializable {
     }
 
     public Float getDescuento() {
-        return descuento;
+        return MathUtils.roundFloat(this.descuento);
     }
 
     public Presupuesto descuento(Float descuento) {
@@ -156,7 +158,7 @@ public class Presupuesto implements Serializable {
     }
 
     public Float getImporteTotal() {
-        return importeTotal;
+        return MathUtils.roundFloat(this.importeTotal);
     }
 
     public Presupuesto importeTotal(Float importeTotal) {
@@ -311,7 +313,7 @@ public class Presupuesto implements Serializable {
         for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
             total += detallePresupuesto.getTotalOperaciones();
         }
-        return total;
+        return MathUtils.roundFloat(total);
     }
 
     @JsonIgnore
@@ -320,7 +322,7 @@ public class Presupuesto implements Serializable {
         for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
             total += detallePresupuesto.getTotalRepuestos();
         }
-        return total;
+        return MathUtils.roundFloat(total);
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
