@@ -106,4 +106,5 @@ public class Globales {
     //----------------------Categorias---------------------------
 
     public final String CATEGORIA_PROVEEDORES = "Proveedores";
+    public final String CATEGORIA_REPUESTOS = "Repuestos";
 }

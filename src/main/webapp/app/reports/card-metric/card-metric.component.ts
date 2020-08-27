@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CardMetric } from './card-metric';
 
 @Component({
   selector: 'jhi-card-metric',
@@ -6,12 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./card-metric.component.scss']
 })
 export class CardMetricComponent implements OnInit {
-  @Input() categoria: string;
-  @Input() valor: string;
-  @Input() icon: string;
-  @Input() link: string;
-  @Input() bgColor: string;
-  @Input() textColor: string;
+  @Input() metric: CardMetric;
 
   constructor() {}
 

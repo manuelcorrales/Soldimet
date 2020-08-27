@@ -173,19 +173,19 @@ public class ExpertoReportes {
             e.printStackTrace();
         }
 
-        // Presupuestos por entregar
-        try {
-            EstadoPresupuesto estadoPresupuestoTerminados = estadoPresupuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
-            Long cantidadPresupuestos = presupuestoRepository.countByEstadoPresupuesto(estadoPresupuestoTerminados);
-            DTOMetricaContable metricaCantidadPresupuestosPorEntregar = new DTOMetricaContable();
-            metricaCantidadPresupuestosPorEntregar.setValor(new Float(cantidadPresupuestos));
-            metricaCantidadPresupuestosPorEntregar.setCategoria("POR ENTREGAR");
-            metricas.add(metricaCantidadPresupuestosPorEntregar);
+        // // Presupuestos por entregar
+        // try {
+        //     EstadoPresupuesto estadoPresupuestoTerminados = estadoPresupuestoRepository
+        //             .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+        //     Long cantidadPresupuestos = presupuestoRepository.countByEstadoPresupuesto(estadoPresupuestoTerminados);
+        //     DTOMetricaContable metricaCantidadPresupuestosPorEntregar = new DTOMetricaContable();
+        //     metricaCantidadPresupuestosPorEntregar.setValor(new Float(cantidadPresupuestos));
+        //     metricaCantidadPresupuestosPorEntregar.setCategoria("POR ENTREGAR");
+        //     metricas.add(metricaCantidadPresupuestosPorEntregar);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
 
         // Cantidad de Presupuestos pendientes de pedido
         try {
@@ -267,6 +267,18 @@ public class ExpertoReportes {
             DTOMetricaContable metricaGastosFerreteria = new DTOMetricaContable();
             metricaGastosFerreteria.setValor(expertoCaja.getGastoMensualFerreteria());
             metricaGastosFerreteria.setCategoria("GASTO FERRETERIA");
+            metricas.add(metricaGastosFerreteria);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Total de gasto de repuestos
+        try {
+
+            DTOMetricaContable metricaGastosFerreteria = new DTOMetricaContable();
+            metricaGastosFerreteria.setValor(expertoCaja.getGastoMensualRepuestos());
+            metricaGastosFerreteria.setCategoria("GASTO REPUESTOS");
             metricas.add(metricaGastosFerreteria);
 
         } catch (Exception e) {

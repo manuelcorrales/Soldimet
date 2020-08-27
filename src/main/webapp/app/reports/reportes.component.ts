@@ -3,6 +3,7 @@ import { ReportesService } from './reportes.service';
 import { DtoNameSeries } from 'app/dto/dto-reportes/dto-serie';
 import { JhiAlertService } from 'ng-jhipster';
 import { DtoCountMetric } from 'app/dto/dto-reportes/dto-count-metric';
+import { CardMetric } from './card-metric/card-metric';
 
 @Component({
   selector: 'jhi-reportes',
@@ -12,14 +13,7 @@ import { DtoCountMetric } from 'app/dto/dto-reportes/dto-count-metric';
 export class ReportesComponent implements OnInit {
   lineMetric: { metric: String; values: DtoNameSeries[] } = { metric: '', values: [] };
   barMetric: { metric: String; values: DtoNameSeries[] } = { metric: '', values: [] };
-  countMetric: {
-    icon: string;
-    link: string;
-    bgColor: string;
-    textColor: string;
-    valor: number;
-    categoria: string;
-  }[] = [];
+  countMetric: CardMetric[] = [];
 
   constructor(private reportService: ReportesService, private alertService: JhiAlertService) {}
 
@@ -33,6 +27,7 @@ export class ReportesComponent implements OnInit {
     this.countMetric = [
       {
         categoria: 'PRESUPUESTOS ACEPTADOS',
+        titulo: 'ACEPTADOS',
         icon: 'briefcase',
         link: '#',
         bgColor: 'bg-secondary',
@@ -40,31 +35,35 @@ export class ReportesComponent implements OnInit {
         valor: 0
       },
       {
-        categoria: 'POR ENTREGAR',
-        icon: 'door-open',
+        categoria: 'INGRESO MENSUAL',
+        titulo: 'INGRESO MENSUAL',
+        icon: 'cash-register',
         link: '#',
         bgColor: 'bg-success',
         textColor: 'text-white',
         valor: 0
       },
       {
-        categoria: 'INGRESO MENSUAL',
-        icon: 'cash-register',
+        categoria: 'GASTO MENSUAL',
+        titulo: 'GASTO MENSUAL',
+        icon: 'money-bill-wave',
+        link: '#',
+        bgColor: 'bg-warning',
+        textColor: 'text-white',
+        valor: 0
+      },
+      {
+        categoria: 'GASTO REPUESTOS',
+        titulo: 'REPUESTOS',
+        icon: 'door-open',
         link: '#',
         bgColor: 'bg-info',
         textColor: 'text-white',
         valor: 0
       },
       {
-        categoria: 'GASTO MENSUAL',
-        icon: 'money-bill-wave',
-        link: '#',
-        bgColor: 'bg-secondary',
-        textColor: 'text-white',
-        valor: 0
-      },
-      {
         categoria: 'PAGO PROVEEDORES',
+        titulo: 'PROVEEDOR',
         icon: 'shopping-cart',
         link: '#',
         bgColor: 'bg-primary',
@@ -73,6 +72,7 @@ export class ReportesComponent implements OnInit {
       },
       {
         categoria: 'GASTO FERRETERIA',
+        titulo: 'FERRETERÍA',
         icon: 'wrench',
         link: '#',
         bgColor: 'bg-danger',
@@ -106,19 +106,24 @@ export class ReportesComponent implements OnInit {
     this.reportService.getMetricasContables().subscribe(
       (metricas: DtoCountMetric[]) => {
         metricas.forEach(metrica => {
-          if (metrica.categoria === 'PRESUPUESTOS ACEPTADOS') {
-            this.countMetric[0].valor = metrica.valor;
-          } else if (metrica.categoria === 'POR ENTREGAR') {
-            this.countMetric[1].valor = metrica.valor;
-          } else if (metrica.categoria === 'INGRESO MENSUAL') {
-            this.countMetric[2].valor = metrica.valor;
-          } else if (metrica.categoria === 'GASTO MENSUAL') {
-            this.countMetric[3].valor = metrica.valor * -1;
-          } else if (metrica.categoria === 'PAGO PROVEEDORES') {
-            this.countMetric[4].valor = metrica.valor * -1;
-          } else if (metrica.categoria === 'GASTO FERRETERIA') {
-            this.countMetric[5].valor = metrica.valor * -1;
-          }
+          this.countMetric.forEach(contadorMetrica => {
+            if (contadorMetrica.categoria === metrica.categoria) {
+              contadorMetrica.valor = metrica.valor;
+            }
+          });
+          // if (metrica.categoria === 'PRESUPUESTOS ACEPTADOS') {
+          //   this.countMetric[0].valor = metrica.valor;
+          // } else if (metrica.categoria === 'GASTO REPUESTOS') {
+          //   this.countMetric[1].valor = metrica.valor;
+          // } else if (metrica.categoria === 'INGRESO MENSUAL') {
+          //   this.countMetric[2].valor = metrica.valor;
+          // } else if (metrica.categoria === 'GASTO MENSUAL') {
+          //   this.countMetric[3].valor = metrica.valor * -1;
+          // } else if (metrica.categoria === 'PAGO PROVEEDORES') {
+          //   this.countMetric[4].valor = metrica.valor * -1;
+          // } else if (metrica.categoria === 'GASTO FERRETERIA') {
+          //   this.countMetric[5].valor = metrica.valor * -1;
+          // }
         });
       },
       (error: Error) => this.alertService.error(error.message)

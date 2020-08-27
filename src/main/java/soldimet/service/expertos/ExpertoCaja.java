@@ -289,7 +289,7 @@ public class ExpertoCaja {
         Float gastoFerreteriaAcumulado= new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
-        List<SubCategoria> subCategorias = subCategoriaRepository.findByNombreSubCategoria("Fletes");
+        List<SubCategoria> subCategorias = subCategoriaRepository.findByNombreSubCategoria("Ferretería");
 
         for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
             sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias
@@ -297,6 +297,22 @@ public class ExpertoCaja {
             gastoFerreteriaAcumulado += movimiento.getImporte();
         }
         return MathUtils.roundFloat(gastoFerreteriaAcumulado);
+
+    }
+
+    public Float getGastoMensualRepuestos() {
+
+        Float pagoAcumulado= new Float(0);
+        List<Sucursal> sucursales = sucursalRepository.findAll();
+        EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+        Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_REPUESTOS).getSubCategorias();
+
+        for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
+            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias
+        )){
+            pagoAcumulado += movimiento.getImporte();
+        }
+        return MathUtils.roundFloat(pagoAcumulado);
 
     }
 
@@ -317,7 +333,8 @@ public class ExpertoCaja {
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
         return movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstado(
-            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado);
+            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado
+        );
     }
 
 }
