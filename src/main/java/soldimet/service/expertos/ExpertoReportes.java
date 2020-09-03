@@ -1,25 +1,42 @@
 package soldimet.service.expertos;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import soldimet.constant.Globales;
 import soldimet.domain.Caja;
-import soldimet.domain.EstadoCostoRepuesto;
+import soldimet.domain.CobranzaRepuesto;
+import soldimet.domain.DetallePresupuesto;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPresupuesto;
+import soldimet.domain.Marca;
 import soldimet.domain.Movimiento;
+import soldimet.domain.Presupuesto;
 import soldimet.domain.Sucursal;
 import soldimet.domain.TipoMovimiento;
-import soldimet.repository.CostoRepuestoRepository;
-import soldimet.repository.EstadoCostoRepuestoRepository;
 import soldimet.repository.EstadoMovimientoRepository;
 import soldimet.repository.EstadoPedidoRepuestoRepository;
 import soldimet.repository.EstadoPresupuestoRepository;
@@ -28,9 +45,11 @@ import soldimet.repository.PedidoRepuestoRepository;
 import soldimet.repository.PresupuestoRepository;
 import soldimet.repository.SucursalRepository;
 import soldimet.repository.TipoMovimientoRepository;
+import soldimet.service.ErrorToURIException;
 import soldimet.service.dto.DTOCajaDiario;
 import soldimet.service.dto.DTOMetricaContable;
 import soldimet.service.dto.DTOSerie;
+import soldimet.service.dto.ImpresionRepuesto;
 
 /**
  * @author Manu
@@ -63,12 +82,6 @@ public class ExpertoReportes {
 
     @Autowired
     private PresupuestoRepository presupuestoRepository;
-
-    @Autowired
-    private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
-
-    @Autowired
-    private CostoRepuestoRepository costoRepuestoRepository;
 
     @Autowired
     private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
@@ -175,16 +188,19 @@ public class ExpertoReportes {
 
         // // Presupuestos por entregar
         // try {
-        //     EstadoPresupuesto estadoPresupuestoTerminados = estadoPresupuestoRepository
-        //             .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
-        //     Long cantidadPresupuestos = presupuestoRepository.countByEstadoPresupuesto(estadoPresupuestoTerminados);
-        //     DTOMetricaContable metricaCantidadPresupuestosPorEntregar = new DTOMetricaContable();
-        //     metricaCantidadPresupuestosPorEntregar.setValor(new Float(cantidadPresupuestos));
-        //     metricaCantidadPresupuestosPorEntregar.setCategoria("POR ENTREGAR");
-        //     metricas.add(metricaCantidadPresupuestosPorEntregar);
+        // EstadoPresupuesto estadoPresupuestoTerminados = estadoPresupuestoRepository
+        // .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+        // Long cantidadPresupuestos =
+        // presupuestoRepository.countByEstadoPresupuesto(estadoPresupuestoTerminados);
+        // DTOMetricaContable metricaCantidadPresupuestosPorEntregar = new
+        // DTOMetricaContable();
+        // metricaCantidadPresupuestosPorEntregar.setValor(new
+        // Float(cantidadPresupuestos));
+        // metricaCantidadPresupuestosPorEntregar.setCategoria("POR ENTREGAR");
+        // metricas.add(metricaCantidadPresupuestosPorEntregar);
 
         // } catch (Exception e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
 
         // Cantidad de Presupuestos pendientes de pedido
@@ -208,13 +224,14 @@ public class ExpertoReportes {
 
         // Ingreso total mensual de todos los talleres
         try {
-            TipoMovimiento tipoIgreso = tipoMovimientoRepository.findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Ingreso);
+            TipoMovimiento tipoIngreso = tipoMovimientoRepository
+                    .findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Ingreso);
             List<Movimiento> ingresos = expertoCaja.getMovimientosMensuales();
 
             Float ingresoAcumulado = new Float(0);
 
-            for(Movimiento movimiento: ingresos) {
-                if (movimiento.getTipoMovimiento().getId().equals(tipoIgreso.getId())) {
+            for (Movimiento movimiento : ingresos) {
+                if (movimiento.getTipoMovimiento().getId().equals(tipoIngreso.getId())) {
                     ingresoAcumulado += movimiento.getImporte();
                 }
             }
@@ -229,13 +246,14 @@ public class ExpertoReportes {
 
         // Egreso total mensual de todos los talleres
         try {
-            TipoMovimiento tipoEgreso = tipoMovimientoRepository.findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Egreso);
+            TipoMovimiento tipoEgreso = tipoMovimientoRepository
+                    .findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Egreso);
             List<Movimiento> egresos = expertoCaja.getMovimientosMensuales();
 
             Float egresoAcumulado = new Float(0);
 
-            for(Movimiento movimiento: egresos) {
-                if (movimiento.getTipoMovimiento().getId() == tipoEgreso.getId()) {
+            for (Movimiento movimiento : egresos) {
+                if (movimiento.getTipoMovimiento().getId().equals(tipoEgreso.getId())) {
                     egresoAcumulado += movimiento.getImporte();
                 }
             }
@@ -287,5 +305,95 @@ public class ExpertoReportes {
 
         return metricas;
 
+    }
+
+    public Pair<File, String> imprimirRepuestos(LocalDate fechaInicio, LocalDate fechaFin, Long sucursalId) {
+        String[] COLUMNS = { "Marca", "Repuesto", "Código", "Cantidad" };
+        try {
+            Workbook workbook = new XSSFWorkbook();
+            File archivoXLSX = new File("Listado Articulos.xlsx");
+            FileOutputStream out = new FileOutputStream(archivoXLSX);
+
+            Sheet sheet = workbook.createSheet("Repuestos");
+
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.BLUE.getIndex());
+
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+
+            // Row for Header
+            Row headerRow = sheet.createRow(0);
+
+            // Header
+            for (int col = 0; col < COLUMNS.length; col++) {
+                Cell cell = headerRow.createCell(col);
+                cell.setCellValue(COLUMNS[col]);
+                cell.setCellStyle(headerCellStyle);
+            }
+
+            List<String> estados = new ArrayList<>();
+            estados.add(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
+            estados.add(globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO);
+            estados.add(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+            List<EstadoPresupuesto> estadoAprobadoEnAdelante = estadoPresupuestoRepository
+                    .findByNombreEstadoIn(estados);
+            Set<Marca> marcas = new HashSet<>();
+            Sucursal sucursal = sucursalRepository.findById(sucursalId).get();
+            List<Presupuesto> presupuestos = presupuestoRepository
+                    .findBySucursalAndFechaCreacionGreaterThanEqualAndFechaCreacionLessThanEqualAndEstadoPresupuestoIn(
+                            sucursal, fechaInicio, fechaFin, estadoAprobadoEnAdelante);
+            for (Presupuesto presupuesto : presupuestos) {
+                for (DetallePresupuesto detalle : presupuesto.getDetallePresupuestos()) {
+                    for (CobranzaRepuesto cobranza : detalle.getCobranzaRepuestos()) {
+                        if (cobranza.getArticulo() != null){
+                            marcas.add(cobranza.getArticulo().getMarca());
+                        }
+                    }
+                }
+            }
+            ArrayList<Marca> marcasList = new ArrayList<>(marcas);
+            Collections.sort(marcasList, (o1, o2) -> o1.getNombreMarca().compareTo(o2.getNombreMarca()));
+            List<ImpresionRepuesto> listaImpresion = new ArrayList<>();
+            for (Marca marca : marcasList) {
+                for (Presupuesto presupuesto : presupuestos) {
+                    for (DetallePresupuesto detalle : presupuesto.getDetallePresupuestos()) {
+                        for (CobranzaRepuesto cobranza : detalle.getCobranzaRepuestos()) {
+                            if (cobranza.getArticulo()!= null && marca.getId().equals(cobranza.getArticulo().getMarca().getId())) {
+                                ImpresionRepuesto dtoRow = new ImpresionRepuesto();
+                                dtoRow.setArticulo(cobranza.getArticulo());
+                                if (listaImpresion.contains(dtoRow)) {
+                                    listaImpresion.get(listaImpresion.indexOf(dtoRow)).addArticulo(cobranza.getArticulo());
+                                } else {
+                                    listaImpresion.add(dtoRow);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            int rowIdx = 1;
+            for (Marca marca : marcasList) {
+                for(ImpresionRepuesto dto: listaImpresion) {
+                    if (marca.getNombreMarca().equals(dto.getMarca())) {
+                        Row row = sheet.createRow(rowIdx++);
+                        row.createCell(0).setCellValue(dto.getMarca());
+                        row.createCell(1).setCellValue(dto.getArticulo());
+                        row.createCell(2).setCellValue(dto.getCodigo());
+                        row.createCell(3).setCellValue(dto.getCantidad());
+                    }
+                }
+            }
+
+            workbook.write(out);
+            workbook.close();
+            out.close();
+            return new Pair<>(archivoXLSX, "Listado repuestos");
+        } catch (Exception e) {
+            this.log.error("No se pudo generar el archivo", e);
+            throw new ErrorToURIException("No se pudo generar el archivo!", ExpertoReportes.class.getName(), "ErrorImpresion");
+        }
     }
 }

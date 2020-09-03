@@ -33,7 +33,8 @@ public class CajaController {
     public DTOCajaCUConsultarMovimientos findMovimientosSucursal(
         @RequestParam("sucursal") Long sucursal,
         @RequestParam("mes") Integer mes,
-        @RequestParam("anio") Integer anio) {
+        @RequestParam("anio") Integer anio
+    ) {
         log.debug("request api/caja/día. sucursal: {}, mes: {}, año: {}", sucursal, mes, anio);
 
         DTOCajaCUConsultarMovimientos movimientosDelDia = expertoCaja.getMovimientosSucursal(

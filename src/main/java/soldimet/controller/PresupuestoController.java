@@ -34,7 +34,6 @@ import io.github.jhipster.web.util.HeaderUtil;
 import soldimet.domain.Aplicacion;
 import soldimet.domain.Articulo;
 import soldimet.domain.Cliente;
-import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.CostoRepuestoProveedor;

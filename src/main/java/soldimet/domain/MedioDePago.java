@@ -29,7 +29,7 @@ public class MedioDePago implements Serializable {
     @JsonIgnoreProperties("medioDePagos")
     private FormaDePago formaDePago;
 
-    @OneToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.EAGER)
     @JoinColumn(unique = true, nullable = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private MedioDePagoCheque medioDePagoCheque;

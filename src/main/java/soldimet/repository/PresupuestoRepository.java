@@ -1,5 +1,6 @@
 package soldimet.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -29,6 +30,10 @@ public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long>,
     public List<Presupuesto> findByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 
     public List<Presupuesto> findBySucursal(Sucursal sucursal);
+
+    public List<Presupuesto> findBySucursalAndFechaCreacionGreaterThanEqualAndFechaCreacionLessThanEqualAndEstadoPresupuestoIn(
+        Sucursal sucursal, LocalDate fechaInicio, LocalDate fechaFin, List<EstadoPresupuesto> estados
+    );
 
     public Long countByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 

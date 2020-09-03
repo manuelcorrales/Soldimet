@@ -289,7 +289,7 @@ public class ExpertoCaja {
         Float gastoFerreteriaAcumulado= new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
-        List<SubCategoria> subCategorias = subCategoriaRepository.findByNombreSubCategoria("Ferretería");
+        Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_Ferreteria).getSubCategorias();
 
         for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
             sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias

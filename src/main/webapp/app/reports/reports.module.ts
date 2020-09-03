@@ -12,6 +12,16 @@ import { RouterModule } from '@angular/router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CardBarsComponent } from './card-bars/card-bars.component';
 import { CardPunteroComponent } from './card-puntero/card-puntero.component';
+import { DescargaReportesComponent } from './descarga-reportes/descarga-reportes.component';
+import { NgBootstrapFormValidationModule, ErrorMessage, CUSTOM_ERROR_MESSAGES } from 'ng-bootstrap-form-validation';
+import { ReactiveFormsModule } from '@angular/forms';
+
+export const CUSTOM_ERRORS: ErrorMessage[] = [
+  {
+    error: 'required',
+    format: (label: string, error: any) => 'Requerido.'
+  }
+];
 
 @NgModule({
   declarations: [
@@ -21,10 +31,18 @@ import { CardPunteroComponent } from './card-puntero/card-puntero.component';
     LinearComponent,
     CircleMetricComponent,
     CardBarsComponent,
-    CardPunteroComponent
+    CardPunteroComponent,
+    DescargaReportesComponent
   ],
-  imports: [NgxChartsModule, SoldimetSharedModule, CommonModule, RouterModule.forRoot(REPORTES_ROUTES)],
+  imports: [
+    NgxChartsModule,
+    SoldimetSharedModule,
+    CommonModule,
+    RouterModule.forRoot(REPORTES_ROUTES),
+    ReactiveFormsModule,
+    NgBootstrapFormValidationModule
+  ],
   entryComponents: [ReportesComponent, CardMetricComponent, CircleComponent, LinearComponent, CircleMetricComponent, CardBarsComponent],
-  providers: [ReportesService]
+  providers: [ReportesService, { provide: CUSTOM_ERROR_MESSAGES, useValue: CUSTOM_ERRORS, multi: true }]
 })
 export class ReportsModule {}

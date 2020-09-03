@@ -1,15 +1,6 @@
 package soldimet.service;
 
-import org.zalando.problem.AbstractThrowableProblem;
-import org.zalando.problem.Status;
-
-import soldimet.web.rest.errors.ErrorConstants;
-
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
-public class ErrorToURIException  extends RuntimeException {
+public class ErrorToURIException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

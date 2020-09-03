@@ -146,5 +146,6 @@ Desktop.ini
 ######################
 .eslintcache
 
-./presupuesto.pdf
-./presupuesto.docx
+*.pdf
+*.docx
+*.xlsx

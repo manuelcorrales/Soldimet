@@ -20,6 +20,8 @@ import { NavbarComponent } from 'app/layouts/navbar/navbar.component';
 import { FooterComponent } from 'app/layouts/footer/footer.component';
 import { PageRibbonComponent } from 'app/layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from 'app/layouts/error/error.component';
+import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
+import { FormsModule } from '@angular/forms';
 
 // Import created modules here
 import { CajaModule } from 'app/caja/caja.module';
@@ -33,6 +35,8 @@ import { RepuestosModule } from 'app/repuestos/repuestos.module';
 @NgModule({
   imports: [
     BrowserModule,
+    FormsModule,
+    NgBootstrapFormValidationModule.forRoot(),
     HttpClientModule,
     NgxUiLoaderModule,
     NgxUiLoaderHttpModule,

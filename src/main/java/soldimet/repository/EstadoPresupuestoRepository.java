@@ -1,6 +1,9 @@
 package soldimet.repository;
 
 import soldimet.domain.EstadoPresupuesto;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +16,6 @@ import org.springframework.stereotype.Repository;
 public interface EstadoPresupuestoRepository extends JpaRepository<EstadoPresupuesto, Long> {
 
     EstadoPresupuesto findByNombreEstado(String nombreEstado);
+
+    List<EstadoPresupuesto> findByNombreEstadoIn(List<String> estados);
 }

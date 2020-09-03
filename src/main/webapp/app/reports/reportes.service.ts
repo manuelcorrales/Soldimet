@@ -12,6 +12,7 @@ export class ReportesService {
   private urlCajaDiariaMensual = '/cajaDiariaMensual';
   private urlCajaDiaria = '/cajaDiaria';
   private urlMetricasContables = '/metricasContables';
+  private urlImprimirRepuestos = '/imprimirRepuestos';
 
   constructor(private http: HttpClient) {}
 
@@ -28,5 +29,12 @@ export class ReportesService {
   getMetricasContables(): Observable<DtoCountMetric[]> {
     const urlLlamada = `${this.resourceUrlReportes}${this.urlMetricasContables}/`;
     return this.http.get<DtoCountMetric[]>(urlLlamada);
+  }
+
+  imprimirReporteRepuestos(desde, hasta, sucursal): Observable<Blob> {
+    return this.http.get<Blob>(
+      `${this.resourceUrlReportes}${this.urlImprimirRepuestos}/?fecha_inicio=${desde}&fecha_fin=${hasta}&sucursal=${sucursal}`,
+      { responseType: 'blob' as 'json' } // eslint-disable-line object-shorthand
+    );
   }
 }
