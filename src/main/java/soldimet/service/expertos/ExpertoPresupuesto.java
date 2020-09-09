@@ -14,6 +14,8 @@ import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -212,17 +214,17 @@ public class ExpertoPresupuesto {
         }
     }
 
-    public List<DTOPresupuesto> buscarPresupuestos() {
+    public Page<DTOPresupuesto> buscarPresupuestos(String filtro, Pageable pageable) {
         // Busco todos los presupuestos a mostrar dependiendo los permisos del usuario
         // Jefe o Admin pueden ver todos
         // Encargado y usuario pueden ver los asignados
-        List<Presupuesto> presupuestos = null;
+        Page<Presupuesto> presupuestos = null;
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
 
         if (this.tieneAccesoATodosLosPresupuestos(empleado)) {
-            presupuestos = presupuestoRepository.findAllByOrderByIdDesc();
+            presupuestos = presupuestoRepository.filterAndPagePresupuestos(filtro, pageable);
         } else {
-            presupuestos = presupuestoRepository.findBySucursal(empleado.getSucursal());
+            presupuestos = presupuestoRepository.findBySucursalfilterAndPageOrderByIdDesc(filtro, empleado.getSucursal().getId(), pageable);
         }
 
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);

@@ -5,7 +5,7 @@ import { JhiAlertErrorComponent } from './alert/alert-error.component';
 import { JhiLoginModalComponent } from './login/login.component';
 import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
 import { ModalUtilComponent } from './util/modal-util';
-
+import { BaseFilterPageableComponent } from './base-filter-pageable/base-filter-pageable.component';
 
 @NgModule({
   imports: [SoldimetSharedLibsModule],
@@ -15,7 +15,8 @@ import { ModalUtilComponent } from './util/modal-util';
     JhiLoginModalComponent,
     HasAnyAuthorityDirective,
     ModalUtilComponent,
-    ModalUtilComponent
+    ModalUtilComponent,
+    BaseFilterPageableComponent
   ],
   entryComponents: [JhiLoginModalComponent, ModalUtilComponent],
   exports: [

@@ -1,25 +1,20 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef, OnInit } from '@angular/core';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { JhiAlertService } from 'ng-jhipster';
 import { saveAs } from 'file-saver';
 import { FlagsServiceService } from 'app/shared/flags/flags-service.service';
 import { DtoFF } from 'app/shared/flags/dto-ff';
+import { BaseFilterPageableComponent } from 'app/shared/base-filter-pageable/base-filter-pageable.component';
 
 @Component({
   selector: 'jhi-presupuestos',
   templateUrl: './presupuestos.component.html',
   styles: []
 })
-export class PresupuestosComponent implements OnInit {
+export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresupuestoCabeceraComponent> implements OnInit {
   @ViewChild('toastr', { static: false })
   toastrContainer: ViewContainerRef;
-
-  totalPresupuestos: DtoPresupuestoCabeceraComponent[] = [];
-  presupuestos: DtoPresupuestoCabeceraComponent[] = [];
-
-  page = 1;
-  pageSize = 15;
 
   imprimiendo = false;
 
@@ -28,17 +23,16 @@ export class PresupuestosComponent implements OnInit {
   };
 
   constructor(
-    private _presupuestosService: PresupuestosService,
+    protected _presupuestosService: PresupuestosService,
     private jhiAlertService: JhiAlertService,
     private ffStoreService: FlagsServiceService
-  ) {}
+  ) {
+    super();
+    this.searchableService = _presupuestosService;
+  }
 
   ngOnInit() {
-    this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
-      this.totalPresupuestos.push(...presupuestos);
-      this.presupuestos = this.totalPresupuestos;
-    });
-    this.featureToggleData.keys;
+    super.ngOnInit();
     this.ffStoreService.getFFStore().subscribe(
       (responseList: DtoFF[]) => {
         responseList.forEach((ff: DtoFF) => {
@@ -107,9 +101,9 @@ export class PresupuestosComponent implements OnInit {
   }
 
   _filtrarYAgregarPresupuesto(dto) {
-    const presupuestos = this.presupuestos.filter(obj => obj.codigo !== dto.codigo);
+    const presupuestos = this.content.filter(obj => obj.codigo !== dto.codigo);
     presupuestos.push(dto);
-    this.presupuestos = presupuestos.sort(this._sortPresupuesto);
+    this.content = presupuestos.sort(this._sortPresupuesto);
   }
 
   _sortPresupuesto(a: DtoPresupuestoCabeceraComponent, b: DtoPresupuestoCabeceraComponent) {
@@ -120,20 +114,5 @@ export class PresupuestosComponent implements OnInit {
       return -1;
     }
     return 0;
-  }
-
-  search(text: string) {
-    const presupuestos = this.totalPresupuestos.filter(presupuesto => {
-      const term = text.toLowerCase();
-      return (
-        presupuesto.motor.toLowerCase().includes(term) ||
-        presupuesto.cliente.toLowerCase().includes(term) ||
-        presupuesto.codigo
-          .toString()
-          .toLowerCase()
-          .includes(term)
-      );
-    });
-    this.presupuestos = presupuestos.sort(this._sortPresupuesto);
   }
 }

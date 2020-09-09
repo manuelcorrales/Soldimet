@@ -3,6 +3,7 @@ package soldimet.converter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import soldimet.domain.Presupuesto;
 import soldimet.service.dto.DTOPresupuesto;
@@ -29,11 +30,7 @@ public class PresupuestoConverter {
     }
 
 
-    public List<DTOPresupuesto> convertirEntidadesAModelos(List<Presupuesto> presupuestoList){
-        List<DTOPresupuesto> dtoPresupuestos = new ArrayList<DTOPresupuesto>();
-        for(Presupuesto presupuesto:presupuestoList){
-            dtoPresupuestos.add(this.convertirEntidadAModelo(presupuesto));
-        }
-        return dtoPresupuestos;
+    public Page<DTOPresupuesto> convertirEntidadesAModelos(Page<Presupuesto> presupuestoList){
+        return presupuestoList.map(presupuesto -> convertirEntidadAModelo(presupuesto));
     }
 }

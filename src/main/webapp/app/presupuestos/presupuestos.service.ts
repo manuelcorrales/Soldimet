@@ -19,6 +19,7 @@ import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { Observable } from 'rxjs';
 import { CostoRepuestoProveedor } from 'app/shared/model/costo-repuesto-proveedor.model';
 import { Articulo } from 'app/shared/model/articulo.model';
+import { Page } from 'app/dto/page/page';
 
 @Injectable()
 export class PresupuestosService {
@@ -85,8 +86,15 @@ export class PresupuestosService {
     return this.http.post<DtoPresupuestoCabeceraComponent>(url, dtoPresupuesto);
   }
 
-  findPresupuestoCabecera(): Observable<DtoPresupuestoCabeceraComponent[]> {
-    return this.http.get<DtoPresupuestoCabeceraComponent[]>(`${this.resourceUrlPresupuestos}${this.urlPresupuestoCabecera}`);
+  findByFilteredPage(text, page = 0, size = 15): Observable<Page<DtoPresupuestoCabeceraComponent>> {
+    let url = `${this.resourceUrlPresupuestos}${this.urlPresupuestoCabecera}`;
+    if (page != null) {
+      url = `${this.resourceUrlPresupuestos}${this.urlPresupuestoCabecera}/?page=${page}&size=${size}`;
+    }
+    if (text != null) {
+      url += `&filtro=${text}`;
+    }
+    return this.http.get<Page<DtoPresupuestoCabeceraComponent>>(url);
   }
 
   imprimirPresupuesto(id: number): Observable<Blob> {

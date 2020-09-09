@@ -2,17 +2,17 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ClienteService } from 'app/entities/cliente/cliente.service';
 import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 import { Cliente, ICliente } from 'app/shared/model/cliente.model';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ClientesService } from 'app/clientes/clientes.service';
 import { Subscription } from 'rxjs';
 import { Principal } from 'app/core/auth/principal.service';
+import { BaseFilterPageableComponent } from 'app/shared/base-filter-pageable/base-filter-pageable.component';
 
 @Component({
   selector: 'jhi-clientes',
   templateUrl: './clientes.component.html',
   styles: []
 })
-export class ClientesComponent implements OnInit, OnDestroy {
+export class ClientesComponent extends BaseFilterPageableComponent<ICliente> implements OnInit, OnDestroy {
   clientes: ICliente[] = [];
   totalClientes: ICliente[] = [];
   currentAccount: any;
@@ -22,24 +22,19 @@ export class ClientesComponent implements OnInit, OnDestroy {
   pageSize = 15;
 
   constructor(
-    private clienteService: ClienteService,
-    private jhiAlertService: JhiAlertService,
+    protected clienteService: ClienteService,
+    protected jhiAlertService: JhiAlertService,
     private eventManager: JhiEventManager,
     private principal: Principal,
     private clientesService: ClientesService
-  ) {}
-
-  loadAll() {
-    this.clienteService.query().subscribe(
-      (res: HttpResponse<ICliente[]>) => {
-        this.totalClientes = res.body;
-        this.clientes = res.body;
-      },
-      (res: HttpErrorResponse) => this.onError(res.message)
-    );
+  ) {
+    super();
+    this.searchableService = clientesService;
+    this.alertService = jhiAlertService;
   }
+
   ngOnInit() {
-    this.loadAll();
+    super.ngOnInit();
     this.principal.identity().then(account => {
       this.currentAccount = account;
     });
@@ -47,50 +42,29 @@ export class ClientesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    super.ngOnDestroy();
     this.eventManager.destroy(this.eventSubscriber);
   }
 
   trackId(index: number, item: Cliente) {
     return item.id;
   }
-  registerChangeInClientes() {
-    this.eventSubscriber = this.eventManager.subscribe('clienteListModification', response => this.loadAll());
-  }
 
-  private onError(error) {
-    this.jhiAlertService.error(error.message, null, null);
+  registerChangeInClientes() {
+    this.eventSubscriber = this.eventManager.subscribe('clienteListModification', response => this.requestContent());
   }
 
   activarCliente(cliente: Cliente) {
-    this.clientesService.activarCliente(cliente).subscribe((clienteResp: Cliente) => {
-      this.clientes.forEach((clienteEnTabla: Cliente) => {
-        if (clienteEnTabla.id === clienteResp.id) {
-          clienteEnTabla = clienteResp;
-        }
-      });
-      this.loadAll();
-    });
-  }
-
-  _sortCliente(a: ICliente, b: ICliente) {
-    if (a.id < b.id) {
-      return 1;
-    }
-    if (a.id > b.id) {
-      return -1;
-    }
-    return 0;
-  }
-
-  search(text: string) {
-    const clientes = this.totalClientes.filter(cliente => {
-      const term = text.toLowerCase();
-      return (
-        cliente.persona.nombre.toLowerCase().includes(term) ||
-        cliente.persona.apellido.toLowerCase().includes(term) ||
-        cliente.persona.direccion.calle.toString().includes(term)
-      );
-    });
-    this.clientes = clientes.sort(this._sortCliente);
+    this.clientesService.activarCliente(cliente).subscribe(
+      (clienteResp: Cliente) => {
+        this.clientes.forEach((clienteEnTabla: Cliente) => {
+          if (clienteEnTabla.id === clienteResp.id) {
+            clienteEnTabla = clienteResp;
+          }
+        });
+        this.requestContent();
+      },
+      error => this.onError(error.message)
+    );
   }
 }

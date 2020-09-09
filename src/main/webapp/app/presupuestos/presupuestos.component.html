@@ -3,9 +3,11 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)"  placeholder="Buscar presupuesto...">
+                    <input type="text" class="form-control" #searchBar [(ngModel)]="searchText" (ngModelChange)='searchChanged.next($event)'
+                        placeholder="Buscar presupuesto..."placement="bottom" ngbTooltip="Filtrar por cliente, motor o número de presupuesto"
+                    >
                     <span class="input-group-btn">
-                        <button class="btn btn-light" type="button" (click)="search(searchBar.value)">
+                        <button class="btn btn-light" type="button" (click)="searchChanged.next($event)">
                             <span><fa-icon icon="search"></fa-icon></span>
                         </button>
                     </span>
@@ -37,8 +39,8 @@
                         <th scope="col">Operaciones</th>
                     </tr>
                 </thead>
-                <tbody *ngIf="presupuestos">
-                    <tr *ngFor="let presupuesto of presupuestos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                <tbody *ngIf="content">
+                    <tr *ngFor="let presupuesto of content"
                     >
                         <th>{{presupuesto.codigo}}</th>
                         <span *ngIf="presupuesto.isSoldadura"><td>Soldadura</td></span>
@@ -107,10 +109,11 @@
             </table>
             <ngb-pagination
                 class="d-flex justify-content-center"
-                [collectionSize]="presupuestos.length"
+                [collectionSize]="totalItems"
                 #numPages
                 [pageSize]="pageSize"
                 [(page)]="page"
+                (pageChange)="requestContent()"
                 >
             </ngb-pagination>
         </div>

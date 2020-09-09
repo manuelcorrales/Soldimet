@@ -63,10 +63,13 @@
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>Presupuesto</label>
-                        <input type="text" placeholder="Buscar Presupuesto" [(ngModel)]="presupuesto" [resultFormatter]="formatterPresup"
-                            id="typeahead-focusPresup" type="text" class="form-control" [ngbTypeahead]="searchPresup" (focus)="focusPresup$.next($event.target.value)"
-                            (click)="clickPresup$.next($event.target.value)" #instanceNTAPresup="ngbTypeahead" [inputFormatter]="formatterPresup"
-                            name="presup_search" (selectItem)="buscarCostoRepuestos($event)" />
+                        <input type="text" placeholder="Buscar Presupuesto" id="typeahead-focusPresup" type="text" class="form-control" name="presup_search"
+                            [resultFormatter]="formatterPresup" [inputFormatter]="formatterPresup" [ngbTypeahead]="searchPresup"
+                            (selectItem)="seleccionarPresupuesto($event)" [showHint]='true' [editable]='false'
+                            [class.is-invalid]="searchFailed"
+                        />
+                        <small *ngIf="searchingPresupuesto" class="form-text text-muted">buscando...</small>
+                        <div class="invalid-feedback" *ngIf="searchFailed">No se encontraron resultados.</div>
                     </div>
                     <div *ngIf="presupuesto" class="col">
                         <p>Cliente </p>
@@ -89,7 +92,7 @@
                         <label>{{presupuesto.fecha}} </label>
                     </div>
                 </div>
-                <div *ngIf="costoRepuestos && costoRepuestos.length > 0 && !presupuesto?.isSoldadura" class="container-fluid">
+                <!--div *ngIf="costoRepuestos && costoRepuestos.length > 0 && !presupuesto?.isSoldadura" class="container-fluid">
                     <label>Repuestos</label>
                     <div class="row">
                         <div class="col-md-3" *ngFor="let costoRepuesto of costoRepuestos">
@@ -103,7 +106,7 @@
                             <label class="form-check-label" for="{{costoRepuesto.id}}"> ${{costoRepuesto.valor}}</label>
                         </div>
                     </div>
-                </div>
+                </div-->
             </div>
         </div>
         <!-- Medio de pago-->

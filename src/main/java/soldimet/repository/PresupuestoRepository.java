@@ -2,6 +2,9 @@ package soldimet.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import soldimet.domain.Aplicacion;
@@ -15,7 +18,6 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
 
-
 /**
  * Spring Data JPA repository for the Presupuesto entity.
  */
@@ -25,24 +27,38 @@ public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long>,
 
     public List<Presupuesto> findAll(Specification specification);
 
-    public List<Presupuesto> findAllByOrderByIdDesc();
+    public Page<Presupuesto> findAllByOrderByIdDesc(Pageable pageable);
+
+    @Query(value = "SELECT pre.* FROM Presupuesto pre INNER JOIN Cliente cli ON pre.cliente_id = cli.id INNER JOIN Persona per ON cli.persona_id = per.id "
+            + "INNER JOIN Detalle_Presupuesto det ON det.presupuesto = pre.id INNER JOIN Motor mot ON mot.id = det.motor_id "
+            + "WHERE per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1% ORDER BY pre.id DESC",
+        countQuery = "SELECT count(pre.id) FROM Presupuesto pre INNER JOIN Cliente cli ON pre.cliente_id = cli.id INNER JOIN Persona per ON cli.persona_id = per.id "
+                + "INNER JOIN Detalle_Presupuesto det ON det.presupuesto = pre.id INNER JOIN Motor mot ON mot.id = det.motor_id "
+                + "WHERE per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1% ORDER BY pre.id DESC",
+        nativeQuery = true
+    )
+    public Page<Presupuesto> filterAndPagePresupuestos(String filtro, Pageable pageable);
 
     public List<Presupuesto> findByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 
-    public List<Presupuesto> findBySucursal(Sucursal sucursal);
+    @Query(value = "SELECT pre.* FROM Presupuesto pre INNER JOIN Cliente cli ON pre.cliente_id = cli.id INNER JOIN Persona per ON cli.persona_id = per.id "
+            + "INNER JOIN Detalle_Presupuesto det ON det.presupuesto = pre.id INNER JOIN Motor mot ON mot.id = det.motor_id "
+            + "WHERE pre.sucursal_id = ?2 AND (per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1%) ORDER BY pre.id DESC",
+            countQuery = "SELECT count(pre.id) FROM Presupuesto pre INNER JOIN Cliente cli ON pre.cliente_id = cli.id INNER JOIN Persona per ON cli.persona_id = per.id "
+                + "INNER JOIN Detalle_Presupuesto det ON det.presupuesto = pre.id INNER JOIN Motor mot ON mot.id = det.motor_id "
+                + "WHERE pre.sucursal_id = ?2 AND (per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1%) ORDER BY pre.id DESC",
+        nativeQuery = true
+    )
+    public Page<Presupuesto> findBySucursalfilterAndPageOrderByIdDesc(String filtro, Long sucursal, Pageable pageable);
 
     public List<Presupuesto> findBySucursalAndFechaCreacionGreaterThanEqualAndFechaCreacionLessThanEqualAndEstadoPresupuestoIn(
-        Sucursal sucursal, LocalDate fechaInicio, LocalDate fechaFin, List<EstadoPresupuesto> estados
-    );
+            Sucursal sucursal, LocalDate fechaInicio, LocalDate fechaFin, List<EstadoPresupuesto> estados);
 
     public Long countByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 
     public Presupuesto findByDetallePresupuestosIn(DetallePresupuesto detallePresupuesto);
 
     public Presupuesto findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(
-        Aplicacion aplicacion,
-        Cilindrada cilindrada,
-        Boolean modelo
-    );
+            Aplicacion aplicacion, Cilindrada cilindrada, Boolean modelo);
 
 }

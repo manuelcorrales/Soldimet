@@ -12,11 +12,11 @@ import { CategoriaPagoService } from 'app/entities/categoria-pago';
 import { MedioDePago } from 'app/shared/model/medio-de-pago.model';
 import { Banco, IBanco } from 'app/shared/model/banco.model';
 import { BancoService } from 'app/entities/banco';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, tap, switchMap, catchError } from 'rxjs/operators';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
-import { Observable, Subject, merge, Subscription } from 'rxjs';
+import { Observable, Subject, merge, Subscription, of } from 'rxjs';
 import { NgbTypeaheadConfig, NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
 import { MedioDePagoCheque } from 'app/shared/model/medio-de-pago-cheque.model';
 import { MovimientoPresupuesto, IMovimientoPresupuesto } from 'app/shared/model/movimiento-presupuesto.model';
@@ -29,6 +29,7 @@ import { PresupuestoService } from 'app/entities/presupuesto';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 import { DtoEmpleado } from 'app/dto/dto-empleado/dto-empleado.component';
 import { UserService } from 'app/core/user/user.service';
+import { Page } from 'app/dto/page/page';
 
 @Component({
   selector: 'jhi-nuevo-movimiento',
@@ -51,7 +52,6 @@ export class NuevoMovimientoComponent implements OnInit {
   formasDePago: FormaDePago[];
   bancos: Banco[];
   pedidos: DtoPedidoCabecera[];
-  presupuestos: DtoPresupuestoCabeceraComponent[];
   costoRepuestos: CostoRepuesto[];
   isSaving = false;
 
@@ -70,10 +70,12 @@ export class NuevoMovimientoComponent implements OnInit {
   isPresupuesto = false;
   @ViewChild('instanceNTAPresup', { static: false })
   instancePresup: NgbTypeahead;
+  presupuesto: DtoPresupuestoCabeceraComponent;
   focusPresup$ = new Subject<string>();
   clickPresup$ = new Subject<string>();
-  presupuesto: DtoPresupuestoCabeceraComponent;
   movimientoPresupuesto: MovimientoPresupuesto;
+  searchingPresupuesto = false;
+  searchFailed = false;
 
   constructor(
     config: NgbTypeaheadConfig,
@@ -116,9 +118,6 @@ export class NuevoMovimientoComponent implements OnInit {
       },
       (res: HttpErrorResponse) => this.jhiAlertService.error(res.message)
     );
-    this._presupuestosService.findPresupuestoCabecera().subscribe((presupuestos: DtoPresupuestoCabeceraComponent[]) => {
-      this.presupuestos = presupuestos;
-    });
     this.userService.getCurrentEmpleado().subscribe(
       (res: DtoEmpleado) => {
         this.empleado = res;
@@ -143,9 +142,9 @@ export class NuevoMovimientoComponent implements OnInit {
     }
   }
 
-  buscarCostoRepuestos(event: NgbTypeaheadSelectItemEvent) {
-    const presupuestoId = event.item.codigo;
-    this._presupuestosService.findCostoRepuestoPresupuesto(presupuestoId).subscribe(
+  seleccionarPresupuesto(event: NgbTypeaheadSelectItemEvent) {
+    this.presupuesto = event.item;
+    this._presupuestosService.findCostoRepuestoPresupuesto(this.presupuesto.codigo).subscribe(
       (costoRepuestos: CostoRepuesto[]) => {
         this.costoRepuestos = costoRepuestos;
       },
@@ -180,29 +179,33 @@ export class NuevoMovimientoComponent implements OnInit {
     );
   };
 
-  formatterPresup = result => {
-    return result.isSoldadura ? `${result.cliente} - Soldadura` : `${result.cliente} - ${result.motor}`;
+  formatterPresup = (result: DtoPresupuestoCabeceraComponent) => {
+    return result.isSoldadura ? `${result.cliente} - Soldadura` : `${result.codigo} - ${result.cliente} - ${result.motor}`;
   };
-  searchPresup = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged()
-    );
-    const clicksWithClosedPopup$ = this.clickPresup$.pipe(filter(() => !this.instancePresup.isPopupOpen()));
-    const inputFocus$ = this.focusPresup$;
 
-    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term =>
-        (term === ''
-          ? this.presupuestos
-          : // es-lint-ignore-next-line prefer-includes
-            this.presupuestos.filter(
-              v => v.motor.toLowerCase().includes(term.toLowerCase()) || v.cliente.toLowerCase().includes(term.toLowerCase())
-            )
-        ).slice(0, 10)
-      )
+  searchPresup = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      tap(() => (this.searchingPresupuesto = true)),
+      switchMap(term => {
+        if (term === '') {
+          this.presupuesto = null;
+          return of([]);
+        }
+        return this._presupuestosService.findByFilteredPage(term).pipe(
+          tap(() => (this.searchFailed = false)),
+          map((response: Page<DtoPresupuestoCabeceraComponent>) => {
+            return response.content;
+          }),
+          catchError(() => {
+            this.searchFailed = true;
+            return of([]);
+          })
+        );
+      }),
+      tap(() => (this.searchingPresupuesto = false))
     );
-  };
 
   private defineMetodoPago() {
     if (this.formaDePago.nombreFormaDePago === this.formaTipoChecke) {

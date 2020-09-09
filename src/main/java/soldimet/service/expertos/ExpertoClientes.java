@@ -3,6 +3,8 @@ package soldimet.service.expertos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +13,6 @@ import soldimet.domain.Cliente;
 import soldimet.domain.EstadoPersona;
 import soldimet.repository.ClienteRepository;
 import soldimet.repository.EstadoPersonaRepository;
-import soldimet.repository.PersonaRepository;
 
 /**
  * @author Manu
@@ -26,9 +27,6 @@ public class ExpertoClientes {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
-    @Autowired
-    private PersonaRepository personaRepository;
 
     @Autowired
     private EstadoPersonaRepository estadoPersonaRepository;;
@@ -48,6 +46,24 @@ public class ExpertoClientes {
 
         return clienteRepository.save(cliente);
 
+    }
+
+    public Page<Cliente> buscarClientes(String filtro, Pageable paging) {
+        // filtro = "%"+ filtro +"%";
+
+        return clienteRepository
+                .findClienteByPersonaNombreContainsOrPersonaApellidoContainsOrPersonaDireccionCalleContainsOrderByIdDesc(
+                        filtro, filtro, filtro, paging);
+    }
+
+    public Cliente eliminarCliente(Long clienteId) {
+        EstadoPersona estadoPersona = estadoPersonaRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_BAJA);
+
+        Cliente cliente = clienteRepository.findById(clienteId).get();
+
+        cliente.getPersona().setEstadoPersona(estadoPersona);
+
+        return clienteRepository.save(cliente);
     }
 
 }

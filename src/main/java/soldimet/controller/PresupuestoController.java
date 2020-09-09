@@ -13,6 +13,9 @@ import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -64,24 +67,17 @@ public class PresupuestoController {
     private ArticuloRepository repo;
 
     @GetMapping("/getPresupuestos")
-    public List<DTOPresupuesto> buscarPresupuestos() {
+    public Page<DTOPresupuesto> buscarPresupuestos(
+        @RequestParam(defaultValue = "") String filtro,
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "200") Integer size
+    ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Pageable paging = PageRequest.of(page, size);
         log.debug("request /api/presupuestos/getPresupuestos: {}", authentication);
 
-        List<DTOPresupuesto> presupuestos;
-        if (authentication.getAuthorities().contains(AuthoritiesConstants.ADMIN)) {
-            presupuestos = expertoPresupuesto.buscarPresupuestos();
-        } else {
-            if (authentication.getAuthorities().contains(AuthoritiesConstants.EMPLEADO)) {
-                presupuestos = expertoPresupuesto.buscarPresupuestos();
-            } else {
-                if (authentication.getAuthorities().contains(AuthoritiesConstants.ENCARGADO_TALLER)) {
-                    presupuestos = expertoPresupuesto.buscarPresupuestos();
-                } else {
-                    presupuestos = expertoPresupuesto.buscarPresupuestos();
-                }
-            }
-        }
+        Page<DTOPresupuesto> presupuestos = expertoPresupuesto.buscarPresupuestos(filtro, paging);
+
         log.debug("response /api/presupuestos/getPresupuestos: {}", presupuestos);
         return presupuestos;
     }
