@@ -6,6 +6,7 @@ import { Marca } from 'app/shared/model/marca.model';
 import { UpdateRepuestosListComponent } from '../update-repuestos-list/update-repuestos-list.component';
 import { Articulo } from 'app/shared/model/articulo.model';
 import { RepuestosService } from '../repuestos-services';
+import { TipoRepuesto } from '../../shared/model/tipo-repuesto.model';
 
 @Component({
   selector: 'jhi-lista-articulos',
@@ -19,6 +20,8 @@ export class ListaArticulosComponent implements OnInit {
   @Input() totalArticulosPorMarca: Articulo[] = [];
   @Input() marca: Marca;
   articulosPorMarca: Articulo[] = [];
+  tipoRepuestos: TipoRepuesto[] = [];
+  repuestoElegido: TipoRepuesto;
 
   busqueda = '';
   pageSize = 30;
@@ -33,12 +36,20 @@ export class ListaArticulosComponent implements OnInit {
 
   ngOnInit() {
     this.ordernarYFiltrarLista();
+    this.totalArticulosPorMarca
+      .map((articulo: Articulo) => articulo.tipoRepuesto)
+      .forEach((repuesto: TipoRepuesto) => {
+        if (!this.tipoRepuestos.some(repList => repList.id === repuesto.id)) {
+          this.tipoRepuestos.push(repuesto);
+        }
+      });
   }
 
   modificarPorcentageLista(marca: Marca, porcentage: number) {
     const modal = this.modalService.open(UpdateRepuestosListComponent, { size: 'lg' });
     modal.componentInstance.marca = marca;
     modal.componentInstance.porcentage = porcentage;
+    modal.componentInstance.tipoRepuesto = this.repuestoElegido;
     modal.result.then(
       res => {
         this.guardarLista(marca, porcentage);
@@ -50,9 +61,10 @@ export class ListaArticulosComponent implements OnInit {
   }
 
   guardarLista(marca: Marca, porcentage: number) {
-    this.totalArticulosPorMarca.forEach(articulo => (articulo.valor = articulo.valor * (1 + porcentage / 100)));
-    this.repuestosService.saveListaActualizada(this.totalArticulosPorMarca).subscribe((articulosRes: Articulo[]) => {
-      this.totalArticulosPorMarca = articulosRes;
+    let articulos: Articulo[] = this.totalArticulosPorMarca.filter(articulo => articulo.tipoRepuesto.id === this.repuestoElegido.id);
+    articulos.forEach(articulo => (articulo.valor = articulo.valor * (1 + porcentage / 100)));
+    this.repuestosService.saveListaActualizada(articulos).subscribe((articulosRes: Articulo[]) => {
+      articulos = articulosRes;
       this.ordernarYFiltrarLista();
     });
   }

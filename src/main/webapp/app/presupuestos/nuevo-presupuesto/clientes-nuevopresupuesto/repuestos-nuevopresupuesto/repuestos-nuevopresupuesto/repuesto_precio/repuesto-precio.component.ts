@@ -81,7 +81,6 @@ export class RepuestoPrecioComponent implements OnInit {
 
     // Preseleccionar si existe un presupuesto anterior
     if (this.cobranzaUltimoRepuesto) {
-      this.seleccionado = true;
       this.articulo = this.cobranzaUltimoRepuesto.articulo;
       this.actualizarPrecio(this.cobranzaUltimoRepuesto.valor);
     }

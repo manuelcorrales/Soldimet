@@ -2,6 +2,7 @@ package soldimet.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import soldimet.utils.MathUtils;
 
@@ -32,6 +33,7 @@ public class Articulo implements Serializable {
     @Column(name = "valor", nullable = false)
     private Float valor;
 
+    @UpdateTimestamp
     @Column(name = "fecha_costo", columnDefinition = "DATE")
     private LocalDate fechaCosto;
 

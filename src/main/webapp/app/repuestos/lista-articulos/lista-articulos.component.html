@@ -2,8 +2,14 @@
     <div class="container card border-info align-items-center">
         <div class="card-body row">
             <div class="form-inline">
-                <label for="{{marca.id}}" class="form-label mb-2 mr-sm-2">Modificar precios lista: %</label>
-                <input class="form-control mb-2 mr-sm-2" type="number" value="0" step="0.01" id="input_{{marca.id}}" #modificador_lista>
+                <label for="input_{{marca.id}}" class="form-label mb-2 mr-sm-2">Modificar precios lista: %</label>
+                <select class="form-control mb-2 mr-sm-2" name="tipoRepuesto" [(ngModel)]="repuestoElegido">
+                    <option selected disabled>Elija un repuesto</option>
+                    <option [ngValue]="tipoRepuesto" *ngFor="let tipoRepuesto of tipoRepuestos" for="tipoRepuesto">
+                        {{tipoRepuesto.nombreTipoRepuesto}}
+                    </option>
+                </select>
+                <input class="form-control mb-2 mr-sm-2" type="number" value="0" step="0.01" id="input_{{marca.id}}" #modificador_lista >
                 <button class="btn btn-primary mb-2 mr-sm-2" id="recalcular_{{marca.id}}"(click)="modificarPorcentageLista(marca, modificador_lista.value)">Guardar</button>
             </div>
             <br>
