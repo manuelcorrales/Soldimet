@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { TipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
+import { Cilindrada } from 'app/shared/model/cilindrada.model';
 import { CobranzaRepuesto } from 'app/shared/model/cobranza-repuesto.model';
 import { CostoRepuestoProveedor } from 'app/shared/model/costo-repuesto-proveedor.model';
 import { Articulo } from 'app/shared/model/articulo.model';
@@ -17,6 +18,10 @@ export class RepuestoPrecioComponent implements OnInit {
   @Input() cobranzaUltimoRepuesto: CobranzaRepuesto;
   @Input() listaCobranzas: CostoRepuestoProveedor[];
   @Input() articulos: Articulo[];
+  @Input() cilindrada: Cilindrada;
+
+  repuestosPorCilindrada = [1, 3, 39, 40];
+  repuestosPorDobleCilindrada = [2, 7];
 
   articulo: Articulo;
 
@@ -76,14 +81,25 @@ export class RepuestoPrecioComponent implements OnInit {
     // y ademas puedo filtrar y seleccionar un articulo nuevo a este tipo repuesto (al momento de guardar el presupuesto)
     if (this.listaCobranzas.length > 0) {
       this.articulo = this.listaCobranzas[0].articulo;
-      this.actualizarPrecio(this.articulo.valor);
+      this._multiplicarSegunTipo(this.articulo);
     }
-
     // Preseleccionar si existe un presupuesto anterior
     if (this.cobranzaUltimoRepuesto) {
       this.articulo = this.cobranzaUltimoRepuesto.articulo;
-      this.actualizarPrecio(this.cobranzaUltimoRepuesto.valor);
+      this._multiplicarSegunTipo(this.articulo);
     }
+  }
+
+  private _multiplicarSegunTipo(articulo: Articulo) {
+    let valor = articulo.valor;
+    if (this.repuestosPorCilindrada.includes(articulo.tipoRepuesto.id)) {
+      valor = valor * this.cilindrada.cantidadDeCilindros;
+    }
+    if (this.repuestosPorDobleCilindrada.includes(articulo.tipoRepuesto.id)) {
+      valor = valor * this.cilindrada.cantidadDeCilindros * 2;
+    }
+
+    this.actualizarPrecio(valor);
   }
 
   actualizarPrecio(precio) {
@@ -116,6 +132,6 @@ export class RepuestoPrecioComponent implements OnInit {
   }
 
   pisarPrecioConArticulo(event: NgbTypeaheadSelectItemEvent) {
-    this.actualizarPrecio(event.item.valor);
+    this._multiplicarSegunTipo(event.item);
   }
 }

@@ -56,7 +56,8 @@ export class RepuestosNuevopresupuestoComponent implements OnInit {
         repuesto: tipoRepuesto,
         cobranzaUltimoRepuesto: cobranzaRepuestoPresupuestoViejo,
         cobranzas: listaCobranzas,
-        articulosList: listaArticulos
+        articulosList: listaArticulos,
+        cilindrada: this.detalle.cilindrada
       });
     });
     return lista;

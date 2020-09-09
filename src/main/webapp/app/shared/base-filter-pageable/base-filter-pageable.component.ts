@@ -9,17 +9,17 @@ import { JhiAlertService } from 'ng-jhipster';
   templateUrl: './base-filter-pageable.component.html'
 })
 export class BaseFilterPageableComponent<T> implements OnInit, OnDestroy {
-  protected searchMethod: Function;
-  protected page = 1;
-  protected pageSize = 15;
-  protected totalItems = 0;
-  protected searchText;
-  protected content: T[] = [];
-  protected searchableService: any;
-  protected debounceTime = 300;
-  protected searchChanged: Subject<string> = new Subject<string>();
-  protected searchChangeSubscription: Subscription;
-  protected alertService: JhiAlertService;
+  searchMethod: Function;
+  page = 1;
+  pageSize = 15;
+  totalItems = 0;
+  searchText;
+  content: T[] = [];
+  searchableService: any;
+  debounceTime = 300;
+  searchChanged: Subject<string> = new Subject<string>();
+  searchChangeSubscription: Subscription;
+  alertService: JhiAlertService;
 
   constructor() {}
 
@@ -47,7 +47,7 @@ export class BaseFilterPageableComponent<T> implements OnInit, OnDestroy {
     );
   }
 
-  protected onError(error) {
+  onError(error) {
     this.alertService.error(error.message, null, null);
   }
 

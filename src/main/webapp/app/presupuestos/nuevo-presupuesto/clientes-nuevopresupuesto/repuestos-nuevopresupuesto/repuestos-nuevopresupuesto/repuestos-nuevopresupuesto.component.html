@@ -1,15 +1,19 @@
 <div class="card-body" style="padding-top: 0px;">
-    <div class="border-bottom text-center">
-        <strong>{{detalle.tipoParteMotor.nombreTipoParteMotor}}</strong>
-    </div>
-    <br>
-    <div *ngFor="let elemento of listado" class="container">
-        <jhi-repuesto-precio #repuestoComponents (eventoCambioValor)="cambioTotalRepuestos()" class="row align-items-center top-buffer"
-            [repuesto]="elemento.repuesto"
-            [cobranzaUltimoRepuesto]="elemento.cobranzaUltimoRepuesto"
-            [listaCobranzas]="elemento.cobranzas"
-            [articulos]="elemento.articulosList"
-            >
-        </jhi-repuesto-precio>
-    </div>
+  <div class="border-bottom text-center">
+    <strong>{{ detalle.tipoParteMotor.nombreTipoParteMotor }}</strong>
+  </div>
+  <br />
+  <div *ngFor="let elemento of listado" class="container">
+    <jhi-repuesto-precio
+      #repuestoComponents
+      (eventoCambioValor)="cambioTotalRepuestos()"
+      class="row align-items-center top-buffer"
+      [repuesto]="elemento.repuesto"
+      [cobranzaUltimoRepuesto]="elemento.cobranzaUltimoRepuesto"
+      [listaCobranzas]="elemento.cobranzas"
+      [articulos]="elemento.articulosList"
+      [cilindrada]="elemento.cilindrada"
+    >
+    </jhi-repuesto-precio>
+  </div>
 </div>
