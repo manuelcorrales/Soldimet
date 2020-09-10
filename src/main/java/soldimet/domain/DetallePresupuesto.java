@@ -1,4 +1,5 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -48,8 +49,8 @@ public class DetallePresupuesto implements Serializable {
     @JsonIgnoreProperties("detallePresupuestos")
     private Motor motor;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
-    @JoinColumn(name= "detallePresupuesto")
+    @OneToMany(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "detallePresupuesto")
     @JsonInclude
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<>();
@@ -59,13 +60,14 @@ public class DetallePresupuesto implements Serializable {
     @JsonIgnoreProperties("detallePresupuestos")
     private TipoParteMotor tipoParteMotor;
 
-    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
-    @JoinColumn(name= "detallePresupuesto")
+    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE })
+    @JoinColumn(name = "detallePresupuesto")
     @JsonInclude
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CobranzaRepuesto> cobranzaRepuestos = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -187,7 +189,7 @@ public class DetallePresupuesto implements Serializable {
 
     public Float getTotalOperaciones() {
         Float total = new Float(0);
-        for (CobranzaOperacion cobranzaOperacion: this.cobranzaOperacions) {
+        for (CobranzaOperacion cobranzaOperacion : this.cobranzaOperacions) {
             total += cobranzaOperacion.getCobranzaOperacion();
         }
         return MathUtils.roundFloat(total);
@@ -195,12 +197,13 @@ public class DetallePresupuesto implements Serializable {
 
     public Float getTotalRepuestos() {
         Float total = new Float(0);
-        for (CobranzaRepuesto cobranzaRepuesto: this.cobranzaRepuestos) {
+        for (CobranzaRepuesto cobranzaRepuesto : this.cobranzaRepuestos) {
             total += cobranzaRepuesto.getValor();
         }
         return MathUtils.roundFloat(total);
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -220,9 +223,6 @@ public class DetallePresupuesto implements Serializable {
 
     @Override
     public String toString() {
-        return "DetallePresupuesto{" +
-            "id=" + getId() +
-            ", importe=" + getImporte() +
-            "}";
+        return "DetallePresupuesto{" + "id=" + getId() + ", importe=" + getImporte() + "}";
     }
 }

@@ -1,4 +1,5 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -32,7 +33,7 @@ public class Persona implements Serializable {
     @Column(name = "apellido")
     private String apellido;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private Direccion direccion;
 
@@ -44,7 +45,8 @@ public class Persona implements Serializable {
     @JsonIgnoreProperties("personas")
     private User user;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -130,7 +132,8 @@ public class Persona implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -150,11 +153,7 @@ public class Persona implements Serializable {
 
     @Override
     public String toString() {
-        return "Persona{" +
-            "id=" + getId() +
-            ", numeroTelefono='" + getNumeroTelefono() + "'" +
-            ", nombre='" + getNombre() + "'" +
-            ", apellido='" + getApellido() + "'" +
-            "}";
+        return "Persona{" + "id=" + getId() + ", numeroTelefono='" + getNumeroTelefono() + "'" + ", nombre='"
+                + getNombre() + "'" + ", apellido='" + getApellido() + "'" + "}";
     }
 }

@@ -79,7 +79,6 @@ public class ExpertoPresupuesto {
 
     private final Logger log = LoggerFactory.getLogger(ExpertoCaja.class);
 
-
     @Autowired
     private Globales globales;
 
@@ -222,16 +221,20 @@ public class ExpertoPresupuesto {
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
 
         if (this.tieneAccesoATodosLosPresupuestos(empleado)) {
-            presupuestos = presupuestoRepository.filterAndPagePresupuestos(filtro, pageable);
+            presupuestos = presupuestoRepository
+                    .findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
+                            filtro, filtro, filtro, pageable);
         } else {
-            presupuestos = presupuestoRepository.findBySucursalfilterAndPageOrderByIdDesc(filtro, empleado.getSucursal().getId(), pageable);
+            presupuestos = presupuestoRepository
+                    .findBySucursalAndClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
+                            empleado.getSucursal(), filtro, filtro, filtro, pageable);
         }
 
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);
     }
 
     public List<Aplicacion> buscarAplicacionPorMotor(Long motorId) {
-        try{
+        try {
             Motor motorEncontrado = motorRepository.findById(motorId).get();
             List<Aplicacion> aplicacionesList = aplicacionRepository
                     .findByMotorOrderByNombreAplicacionAsc(motorEncontrado);

@@ -1,4 +1,5 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
@@ -60,30 +61,31 @@ public class Presupuesto implements Serializable {
     @Column(name = "modelo")
     private Boolean modelo;
 
-    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @NotNull
     @JsonIgnoreProperties("presupuestos")
     private Cliente cliente;
 
-    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @NotNull
     @JsonIgnoreProperties("presupuestos")
     private EstadoPresupuesto estadoPresupuesto;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch= FetchType.EAGER)
-    @JoinColumn(name= "presupuesto")
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinColumn(name = "presupuesto")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<DetallePresupuesto> detallePresupuestos = new HashSet<>();
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch= FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @JsonIgnoreProperties("presupuestos")
     private DocumentationType documentType;
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch= FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("presupuestos")
     private Sucursal sucursal;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -310,7 +312,7 @@ public class Presupuesto implements Serializable {
     @JsonIgnore
     public Float getTotalOperaciones() {
         Float total = new Float(0);
-        for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
+        for (DetallePresupuesto detallePresupuesto : this.detallePresupuestos) {
             total += detallePresupuesto.getTotalOperaciones();
         }
         return MathUtils.roundFloat(total);
@@ -319,12 +321,13 @@ public class Presupuesto implements Serializable {
     @JsonIgnore
     public Float getTotalRepuestos() {
         Float total = new Float(0);
-        for (DetallePresupuesto detallePresupuesto: this.detallePresupuestos) {
+        for (DetallePresupuesto detallePresupuesto : this.detallePresupuestos) {
             total += detallePresupuesto.getTotalRepuestos();
         }
         return MathUtils.roundFloat(total);
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -344,17 +347,10 @@ public class Presupuesto implements Serializable {
 
     @Override
     public String toString() {
-        return "Presupuesto{" +
-            "id=" + getId() +
-            ", descripcionDescuento='" + getDescripcionDescuento() + "'" +
-            ", descuento=" + getDescuento() +
-            ", fechaCreacion='" + getFechaCreacion() + "'" +
-            ", fechaAceptado='" + getFechaAceptado() + "'" +
-            ", fechaEntregado='" + getFechaEntregado() + "'" +
-            ", importeTotal=" + getImporteTotal() +
-            ", observaciones='" + getObservaciones() + "'" +
-            ", soldadura='" + isSoldadura() + "'" +
-            ", modelo='" + isModelo() + "'" +
-            "}";
+        return "Presupuesto{" + "id=" + getId() + ", descripcionDescuento='" + getDescripcionDescuento() + "'"
+                + ", descuento=" + getDescuento() + ", fechaCreacion='" + getFechaCreacion() + "'" + ", fechaAceptado='"
+                + getFechaAceptado() + "'" + ", fechaEntregado='" + getFechaEntregado() + "'" + ", importeTotal="
+                + getImporteTotal() + ", observaciones='" + getObservaciones() + "'" + ", soldadura='" + isSoldadura()
+                + "'" + ", modelo='" + isModelo() + "'" + "}";
     }
 }

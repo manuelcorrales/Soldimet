@@ -29,21 +29,19 @@ public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long>,
 
     public Page<Presupuesto> findAllByOrderByIdDesc(Pageable pageable);
 
-    @Query(value = "SELECT pre.* FROM presupuesto pre INNER JOIN cliente cli ON pre.cliente_id = cli.id INNER JOIN persona per ON cli.persona_id = per.id "
-            + "INNER JOIN detalle_presupuesto det ON det.presupuesto = pre.id INNER JOIN motor mot ON mot.id = det.motor_id "
-            + "WHERE per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1% ORDER BY pre.id DESC", countQuery = "SELECT count(pre.id) FROM presupuesto pre INNER JOIN cliente cli ON pre.cliente_id = cli.id INNER JOIN persona per ON cli.persona_id = per.id "
-                    + "INNER JOIN detalle_presupuesto det ON det.presupuesto = pre.id INNER JOIN motor mot ON mot.id = det.motor_id "
-                    + "WHERE per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1% ORDER BY pre.id DESC", nativeQuery = true)
-    public Page<Presupuesto> filterAndPagePresupuestos(String filtro, Pageable pageable);
+    @EntityGraph(attributePaths = { "detallePresupuestos", "detallePresupuestos.motor",
+            "detallePresupuestos.aplicacion", "detallePresupuestos.tipoParteMotor", "detallePresupuestos.cilindrada",
+            "cliente", "cliente.persona", "estadoPresupuesto" })
+    public Page<Presupuesto> findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
+            String nombre, String apellido, String motor, Pageable pageable);
+
+    @EntityGraph(attributePaths = { "detallePresupuestos", "detallePresupuestos.motor",
+            "detallePresupuestos.aplicacion", "detallePresupuestos.tipoParteMotor", "detallePresupuestos.cilindrada",
+            "cliente", "cliente.persona", "estadoPresupuesto" })
+    public Page<Presupuesto> findBySucursalAndClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
+            Sucursal sucursal, String nombre, String apellido, String motor, Pageable pageable);
 
     public List<Presupuesto> findByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
-
-    @Query(value = "SELECT pre.* FROM presupuesto pre INNER JOIN cliente cli ON pre.cliente_id = cli.id INNER JOIN persona per ON cli.persona_id = per.id "
-            + "INNER JOIN detalle_presupuesto det ON det.presupuesto = pre.id INNER JOIN motor mot ON mot.id = det.motor_id "
-            + "WHERE pre.sucursal_id = ?2 AND (per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1%) ORDER BY pre.id DESC", countQuery = "SELECT count(pre.id) FROM presupuesto pre INNER JOIN cliente cli ON pre.cliente_id = cli.id INNER JOIN persona per ON cli.persona_id = per.id "
-                    + "INNER JOIN detalle_presupuesto det ON det.presupuesto = pre.id INNER JOIN motor mot ON mot.id = det.motor_id "
-                    + "WHERE pre.sucursal_id = ?2 AND (per.nombre LIKE ?1% OR per.apellido LIKE ?1% OR pre.id LIKE ?1% OR mot.marca_motor LIKE ?1%) ORDER BY pre.id DESC", nativeQuery = true)
-    public Page<Presupuesto> findBySucursalfilterAndPageOrderByIdDesc(String filtro, Long sucursal, Pageable pageable);
 
     public List<Presupuesto> findBySucursalAndFechaCreacionGreaterThanEqualAndFechaCreacionLessThanEqualAndEstadoPresupuestoIn(
             Sucursal sucursal, LocalDate fechaInicio, LocalDate fechaFin, List<EstadoPresupuesto> estados);
