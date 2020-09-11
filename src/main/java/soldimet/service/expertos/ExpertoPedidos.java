@@ -136,8 +136,7 @@ public class ExpertoPedidos {
         detallePedido.addCostoRepuesto(costoRepuesto);
         detallePedido = this.transitionDetalleToPedido(detallePedido, null);
 
-        PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository
-                .findPedidoRepuestoByDetallePedidosIn(detallePedido);
+        PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findPedidoRepuestoByDetallePedidosIn(detallePedido);
         EstadoPedidoRepuesto estadoPedidoRepuesto = this.transitionPedidoToPedido(pedidoRepuesto);
 
         if (estadoPedidoRepuesto != null) {
@@ -154,7 +153,7 @@ public class ExpertoPedidos {
     private EstadoPedidoRepuesto transitionPedidoToPedido(PedidoRepuesto pedidoRepuesto) {
         // si el pedido ya esta recibido parcial, no lo vuelvo a pedido o pedido parcial
         if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
-        .equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL)) {
+                .equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL)) {
             return null;
         }
         EstadoPedidoRepuesto nuevoEstado = null;
@@ -166,25 +165,23 @@ public class ExpertoPedidos {
         for (DetallePedido detallePedido : detalles) {
             String estadoDetalle = detallePedido.getEstadoDetallePedido().getNombreEstado();
             if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
-                detallesPedidosPedidos+= 1;
+                detallesPedidosPedidos += 1;
             }
             if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO_PARCIAL)) {
-                detallePedidoParcial+= 1;
+                detallePedidoParcial += 1;
             }
         }
 
         // Si hay algun repuesto ya pedido lo marco como parcial
         if (detallePedidoParcial > 0 || detallesPedidosPedidos > 0) {
             nuevoEstado = estadoPedidoRepuestoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL);
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO_PARCIAL);
         }
 
         // Si ya pedi todos los repuestos, marco todo como pedido
         if (detallesPedidosPedidos == totalDetalles) {
-            nuevoEstado = estadoPedidoRepuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO);
+            nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO);
         }
-
 
         return nuevoEstado;
     }
@@ -199,22 +196,21 @@ public class ExpertoPedidos {
         for (DetallePedido detallePedido : detallesPedidos) {
             String estadoDetalle = detallePedido.getEstadoDetallePedido().getNombreEstado();
             if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
-                detallesRecibidos+= 1;
+                detallesRecibidos += 1;
             }
             if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO_PARCIAL)) {
-                detallesRecibidosParcial+= 1;
+                detallesRecibidosParcial += 1;
             }
         }
         // Si hay algun repuesto ya recibido lo marco como parcial
         if (detallesRecibidosParcial > 0 || detallesRecibidos > 0) {
             nuevoEstado = estadoPedidoRepuestoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL);
+                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO_PARCIAL);
         }
 
         // Si ya recibi todos los repuestos, marco todo como recibido
         if (detallesRecibidos == totalDetalles) {
-            nuevoEstado = estadoPedidoRepuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO);
+            nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO);
         }
 
         return nuevoEstado;
@@ -224,7 +220,8 @@ public class ExpertoPedidos {
     public DetallePedido transitionDetalleToPedido(DetallePedido detallePedido, EstadoDetallePedido estadoDetalle) {
 
         if (estadoDetalle == null) {
-            Set<CobranzaRepuesto> repuestosPresupuestados = detallePedido.getDetallePresupuesto().getCobranzaRepuestos();
+            Set<CobranzaRepuesto> repuestosPresupuestados = detallePedido.getDetallePresupuesto()
+                    .getCobranzaRepuestos();
             int totalRepuestos = repuestosPresupuestados.size();
             int repuestosPedidos = 0;
             for (CobranzaRepuesto cobranzaRepuesto : repuestosPresupuestados) {
@@ -238,11 +235,11 @@ public class ExpertoPedidos {
             if (repuestosPedidos == totalRepuestos) {
                 estadoDetalle = estadoDetallePedidoRepuestoRepository
                         .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO);
-            }else {
+            } else {
                 // Si hay algun repuesto ya pedido lo marco como parcial
                 if (repuestosPedidos > 0 && totalRepuestos > 1) {
                     estadoDetalle = estadoDetallePedidoRepuestoRepository
-                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO_PARCIAL);
+                            .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO_PARCIAL);
                 }
             }
         }
@@ -257,13 +254,11 @@ public class ExpertoPedidos {
 
     public DetallePedido transitionDetalleToRecibido(DetallePedido detallePedido, EstadoDetallePedido estadoDetalle) {
         Set<CobranzaRepuesto> repuestosPresupuestados = detallePedido.getDetallePresupuesto().getCobranzaRepuestos();
-        int totalRepuestos = repuestosPresupuestados.size() ;
+        int totalRepuestos = repuestosPresupuestados.size();
         int repuestosRecibidos = 0;
 
-
         for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
-            if (costoRepuesto.getEstado().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO)){
+            if (costoRepuesto.getEstado().getNombreEstado().equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO)) {
                 repuestosRecibidos += 1;
             }
         }
@@ -271,11 +266,11 @@ public class ExpertoPedidos {
         if (repuestosRecibidos == totalRepuestos) {
             estadoDetalle = estadoDetallePedidoRepuestoRepository
                     .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO);
-        }else {
+        } else {
             // Si hay algun repuesto ya recibido lo marco como parcial
             if (repuestosRecibidos > 0 && totalRepuestos > 1) {
                 estadoDetalle = estadoDetallePedidoRepuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO_PARCIAL);
+                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO_PARCIAL);
             }
         }
 
@@ -339,6 +334,15 @@ public class ExpertoPedidos {
 
         return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
                 || authoritiesNames.contains(AuthoritiesConstants.JEFE);
+    }
+
+    public PedidoRepuesto getPresupuesto(Long pedidoId) {
+        PedidoRepuesto pedido = pedidoRepuestoRepository.findById(pedidoId).get();
+        pedido.getDetallePedidos().iterator().next().getCostoRepuestos();
+        pedido.getPresupuesto().getCliente();
+        pedido.getPresupuesto().getDetallePresupuestos().iterator().next().getCobranzaOperacions().iterator().next();
+        pedido.getPresupuesto().getDetallePresupuestos().iterator().next().getCobranzaRepuestos().iterator().next();
+        return pedido;
     }
 
 }

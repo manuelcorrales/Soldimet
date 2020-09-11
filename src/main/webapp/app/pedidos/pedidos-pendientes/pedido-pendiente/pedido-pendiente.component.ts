@@ -18,8 +18,7 @@ import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 
 @Component({
   selector: 'jhi-pedido-pendiente',
-  templateUrl: './pedido-pendiente.component.html',
-  styles: ['./collapsable.css']
+  templateUrl: './pedido-pendiente.component.html'
 })
 export class PedidoPendienteComponent implements OnInit {
   pedido: PedidoRepuesto;

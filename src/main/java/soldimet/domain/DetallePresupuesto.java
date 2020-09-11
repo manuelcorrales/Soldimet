@@ -1,7 +1,7 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,35 +34,33 @@ public class DetallePresupuesto implements Serializable {
     @Column(name = "importe", nullable = false)
     private Float importe;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
     @JsonIgnoreProperties("detallePresupuestos")
     private Aplicacion aplicacion;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
     @JsonIgnoreProperties("detallePresupuestos")
     private Cilindrada cilindrada;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
     @JsonIgnoreProperties("detallePresupuestos")
     private Motor motor;
 
     @OneToMany(cascade = { CascadeType.ALL })
     @JoinColumn(name = "detallePresupuesto")
-    @JsonInclude
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CobranzaOperacion> cobranzaOperacions = new HashSet<>();
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
     @JsonIgnoreProperties("detallePresupuestos")
     private TipoParteMotor tipoParteMotor;
 
     @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE })
     @JoinColumn(name = "detallePresupuesto")
-    @JsonInclude
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CobranzaRepuesto> cobranzaRepuestos = new HashSet<>();
 
@@ -187,6 +185,7 @@ public class DetallePresupuesto implements Serializable {
         this.cobranzaRepuestos = cobranzaRepuestos;
     }
 
+    @JsonIgnore
     public Float getTotalOperaciones() {
         Float total = new Float(0);
         for (CobranzaOperacion cobranzaOperacion : this.cobranzaOperacions) {
@@ -195,6 +194,7 @@ public class DetallePresupuesto implements Serializable {
         return MathUtils.roundFloat(total);
     }
 
+    @JsonIgnore
     public Float getTotalRepuestos() {
         Float total = new Float(0);
         for (CobranzaRepuesto cobranzaRepuesto : this.cobranzaRepuestos) {

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,14 @@ public class ClienteController {
         log.debug("/buscarclientes: Response {}", pageResp);
 
         return pageResp;
+    }
+
+    @GetMapping("/get/{id}")
+    public Cliente getCliente(@PathVariable("id") Long clienteId) {
+        log.debug("request /api/clientes/get: cliente id {}", clienteId);
+        Cliente cliente = expertoClientes.getClienteCompleto(clienteId);
+        log.debug("response /api/clientes/get: {}", cliente);
+        return cliente;
     }
 
 }

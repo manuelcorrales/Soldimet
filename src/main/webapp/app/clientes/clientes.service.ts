@@ -15,6 +15,7 @@ export class ClientesService {
   private activarClienteUrl = '/activarCliente';
   private buscarClientesUrl = '/buscarClientes';
   private eliminarClienteUrl = '/eliminarCliente';
+  private getClienteUrl = '/get/';
 
   constructor(private http: HttpClient) {}
 
@@ -37,5 +38,10 @@ export class ClientesService {
   eliminarCliente(id): Observable<Cliente> {
     const url = `${this.resourceUrl}${this.eliminarClienteUrl}`;
     return this.http.post<Cliente>(url, id);
+  }
+
+  getCliente(id): Observable<Cliente> {
+    const url = `${this.resourceUrl}${this.getClienteUrl}${id}`;
+    return this.http.get<Cliente>(url);
   }
 }

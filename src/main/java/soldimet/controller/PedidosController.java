@@ -3,7 +3,6 @@ package soldimet.controller;
 import java.net.URISyntaxException;
 import java.util.List;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,8 @@ public class PedidosController {
         List<PedidoRepuesto> pedidos = expertoPedidos.getPedidosPendientes();
 
         if (pedidos != null) {
-            ResponseEntity<List<PedidoRepuesto>> response = new ResponseEntity<List<PedidoRepuesto>>(pedidos, HttpStatus.OK);
+            ResponseEntity<List<PedidoRepuesto>> response = new ResponseEntity<List<PedidoRepuesto>>(pedidos,
+                    HttpStatus.OK);
             log.debug("response api/pedidos/getPedidosPendientes: {}", response);
             return response;
         } else {
@@ -58,7 +58,8 @@ public class PedidosController {
         List<DTOProveedor> pedidos = expertoPedidos.getProveedoresRepuestos();
 
         if (pedidos != null) {
-            ResponseEntity<List<DTOProveedor>> response = new ResponseEntity<List<DTOProveedor>>(pedidos, HttpStatus.OK);
+            ResponseEntity<List<DTOProveedor>> response = new ResponseEntity<List<DTOProveedor>>(pedidos,
+                    HttpStatus.OK);
             log.debug("response api/pedidos/proveedoresRepuestos: {}", response);
             return response;
         } else {
@@ -76,7 +77,8 @@ public class PedidosController {
         List<DTOPedidoCabecera> pedidos = expertoPedidos.getPedidosCabecera();
 
         if (pedidos != null) {
-            ResponseEntity<List<DTOPedidoCabecera>> response = new ResponseEntity<List<DTOPedidoCabecera>>(pedidos, HttpStatus.OK);
+            ResponseEntity<List<DTOPedidoCabecera>> response = new ResponseEntity<List<DTOPedidoCabecera>>(pedidos,
+                    HttpStatus.OK);
             log.debug("response api/pedidos/getPedidosCabecera: {}", response);
             return response;
         } else {
@@ -90,7 +92,8 @@ public class PedidosController {
     @PostMapping("/updateDetallePedido/{detallePedidoId}")
     public ResponseEntity<CostoRepuesto> updateDetallePedido(@RequestBody CostoRepuesto costoRepuesto,
             @PathVariable("detallePedidoId") Long detallePedidoId) throws URISyntaxException {
-        log.debug("request api/pedidos/updateDetallePedido: DetallePedido: {}, CostoRepuesto: {}", detallePedidoId, costoRepuesto);
+        log.debug("request api/pedidos/updateDetallePedido: DetallePedido: {}, CostoRepuesto: {}", detallePedidoId,
+                costoRepuesto);
 
         try {
             costoRepuesto = expertoPedidos.updateDetallePedido(costoRepuesto, detallePedidoId);
@@ -107,7 +110,8 @@ public class PedidosController {
     @PostMapping("/recibirRepuesto/{detallePedidoId}")
     public ResponseEntity<CostoRepuesto> recibirRepuesto(@RequestBody CostoRepuesto costoRepuesto,
             @PathVariable("detallePedidoId") Long detallePedidoId) {
-        log.debug("request api/pedidos/recibirRepuesto: DetallePedido {}, CostoRepuesto: {}", detallePedidoId, costoRepuesto);
+        log.debug("request api/pedidos/recibirRepuesto: DetallePedido {}, CostoRepuesto: {}", detallePedidoId,
+                costoRepuesto);
 
         costoRepuesto = expertoPedidos.recibirRepuesto(costoRepuesto, detallePedidoId);
 
@@ -120,6 +124,14 @@ public class PedidosController {
             return ResponseEntity.status(500).body(null);
         }
 
+    }
+
+    @GetMapping("/get/{id}")
+    public PedidoRepuesto getPedido(@PathVariable("id") Long pedidoId) {
+        log.debug("request /api/pedidos: pedido id {}", pedidoId);
+        PedidoRepuesto pedido = expertoPedidos.getPresupuesto(pedidoId);
+        log.debug("response /api/pedidos: {}", pedido);
+        return pedido;
     }
 
     // @PostMapping("/updateLista")

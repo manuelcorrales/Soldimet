@@ -66,4 +66,10 @@ public class ExpertoClientes {
         return clienteRepository.save(cliente);
     }
 
+    public Cliente getClienteCompleto(Long clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId).get();
+        cliente.getPersona().getDireccion();
+        return cliente;
+    }
+
 }

@@ -18,12 +18,17 @@ export class PedidosService {
   private urlBuscarPedidoCabecera = '/getPedidosCabecera';
   private urlActualizarDetallePedido = '/updateDetallePedido/';
   private urlRecibirRepuesto = '/recibirRepuesto/';
+  private urlGetPedido = '/get/';
 
   constructor(private http: HttpClient) {}
 
   getPedidosPendientes(): Observable<PedidoRepuesto[]> {
     const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarPedidosPendientes}`;
     return this.http.get<PedidoRepuesto[]>(urlLlamada);
+  }
+  getPedido(pedidoId): Observable<PedidoRepuesto> {
+    const urlLlamada = `${this.resourceUrlOperaciones}${this.urlGetPedido}${pedidoId}`;
+    return this.http.get<PedidoRepuesto>(urlLlamada);
   }
   getPedidosRecibidos(): Observable<PedidoRepuesto[]> {
     const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarPedidosRecibidos}`;

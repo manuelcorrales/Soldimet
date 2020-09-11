@@ -38,11 +38,15 @@ export class ModalNuevoClienteComponent implements OnInit {
     private direccionService: DireccionService,
     private estadoPersonaService: EstadoPersonaService
   ) {
-    this.cliente = new Cliente();
-    this.persona = new Persona();
-    this.direccion = new Direccion();
-    this.persona.direccion = this.direccion;
-    this.cliente.persona = this.persona;
+    if (this.cliente == null) {
+      this.cliente = new Cliente();
+      this.persona = new Persona();
+    }
+    if (this.direccion == null) {
+      this.direccion = new Direccion();
+      this.persona.direccion = this.direccion;
+      this.cliente.persona = this.persona;
+    }
   }
 
   ngOnInit() {

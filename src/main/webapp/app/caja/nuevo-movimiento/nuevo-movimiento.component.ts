@@ -284,7 +284,7 @@ export class NuevoMovimientoComponent implements OnInit {
           this._saveMovimientoPresupuesto();
         },
         error => {
-          this.jhiAlertService.error(error);
+          this.jhiAlertService.error(error.message);
         }
       );
     } else {

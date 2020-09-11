@@ -3,7 +3,6 @@ import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { PedidoRepuestoService } from 'app/entities/pedido-repuesto';
 import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { JhiEventManager } from 'ng-jhipster';
 import { Subscription } from 'rxjs';
@@ -69,7 +68,7 @@ export class PedidosComponent implements OnInit {
 export class PedidoModalPopupService {
   private ngbModalRef: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private router: Router, private pedidoEntityService: PedidoRepuestoService) {
+  constructor(private modalService: NgbModal, private router: Router, private pedidoService: PedidosService) {
     this.ngbModalRef = null;
   }
 
@@ -79,8 +78,8 @@ export class PedidoModalPopupService {
       if (isOpen) {
         resolve(this.ngbModalRef);
       }
-      this.pedidoEntityService.find(id).subscribe(pedido => {
-        this.ngbModalRef = this.pedidoModalRef(component, pedido.body);
+      this.pedidoService.getPedido(id).subscribe((pedido: PedidoRepuesto) => {
+        this.ngbModalRef = this.pedidoModalRef(component, pedido);
         resolve(this.ngbModalRef);
       });
     });

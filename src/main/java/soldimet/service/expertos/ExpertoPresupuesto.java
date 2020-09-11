@@ -324,16 +324,12 @@ public class ExpertoPresupuesto {
             for (CobranzaRepuesto cobranzaRepuesto : detalle.getCobranzaRepuestos()) {
                 // Fuerzo a guardar cuando el objeto no es nuevo
                 cobranzaRepuesto = cobranzaRepuestoRepository.save(cobranzaRepuesto);
-                this.actualizarListaDeCostoRepuestoProvedor(
-                    cobranzaRepuesto,
-                    detalle.getAplicacion(),
-                    detalle.getCilindrada()
-                );
+                this.actualizarListaDeCostoRepuestoProvedor(cobranzaRepuesto, detalle.getAplicacion(),
+                        detalle.getCilindrada());
                 totalDetalle += cobranzaRepuesto.getValor();
             }
             detalle.setImporte(totalDetalle);
         }
-
 
         return presupuestoRepository.save(presupuesto);
     }
@@ -343,9 +339,9 @@ public class ExpertoPresupuesto {
         // Reviso si ya existe la union del artículo con todos los detalles del motor
         // sino creo una nueva para que despues sea más facil encontrarla
         if (cobranzaRepuesto.getArticulo() != null) {
-            List<CostoRepuestoProveedor> costosRepuestos = costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoAndArticulo(
-                aplicacion, cilindrada, cobranzaRepuesto.getTipoRepuesto(), cobranzaRepuesto.getArticulo()
-            );
+            List<CostoRepuestoProveedor> costosRepuestos = costoRepuestoProveedorRepository
+                    .findByAplicacionAndCilindradaAndTipoRepuestoAndArticulo(aplicacion, cilindrada,
+                            cobranzaRepuesto.getTipoRepuesto(), cobranzaRepuesto.getArticulo());
             if (costosRepuestos.isEmpty()) {
                 CostoRepuestoProveedor nRepuestoProveedor = new CostoRepuestoProveedor();
                 nRepuestoProveedor.setAplicacion(aplicacion);
@@ -487,7 +483,8 @@ public class ExpertoPresupuesto {
         Boolean puedeTerminar = false;
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
-        if (pedido == null || pedido.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO)) {
+        if (pedido == null
+                || pedido.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO)) {
             puedeTerminar = true;
         }
         return puedeTerminar;
@@ -548,35 +545,43 @@ public class ExpertoPresupuesto {
                 || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
 
-	public Presupuesto getPresupuesto(Long presupuestoId) throws EntityNotFoundException{
-        return  presupuestoRepository.getOne(presupuestoId);
+    public Presupuesto getPresupuesto(Long presupuestoId) throws EntityNotFoundException {
+        Presupuesto pres = presupuestoRepository.getOne(presupuestoId);
+        for (DetallePresupuesto det : pres.getDetallePresupuestos()) {
+            det.getTotalOperaciones();
+            det.getTotalRepuestos();
+        }
+        pres.getCliente().getPersona().getDireccion();
+        pres.getSucursal();
+
+        return pres;
     }
 
-	public Pair<File, String> imprimirPresupuesto(Long idPresupuesto) throws Exception {
+    public Pair<File, String> imprimirPresupuesto(Long idPresupuesto) throws Exception {
 
         Optional<Presupuesto> optPresupuesto = presupuestoRepository.findById(idPresupuesto);
         if (!optPresupuesto.isPresent()) {
             throw new Exception("No se encontro este presupuesto");
         }
-        Presupuesto presupuesto= optPresupuesto.get();
+        Presupuesto presupuesto = optPresupuesto.get();
 
-        File reporte =  expertoImpresionPresupuesto.imprimirPresupuesto(
-            presupuesto,
-            presupuesto.getImporteTotal(),
-            presupuesto.getCliente()
-        );
+        File reporte = expertoImpresionPresupuesto.imprimirPresupuesto(presupuesto, presupuesto.getImporteTotal(),
+                presupuesto.getCliente());
 
-		return new Pair(reporte, presupuesto.getId());
-	}
+        return new Pair(reporte, presupuesto.getId());
+    }
 
-	public Presupuesto buscarPresupuestoExistente(Long aplicacionId, Long cilindradaId) {
+    public Presupuesto buscarPresupuestoExistente(Long aplicacionId, Long cilindradaId) {
         Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
         Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
 
-        return presupuestoRepository.findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(aplicacion, cilindrada, true);
-	}
+        return presupuestoRepository
+                .findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(
+                        aplicacion, cilindrada, true);
+    }
 
-	public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId, Long tipoParteMotorId) {
+    public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId,
+            Long tipoParteMotorId) {
         Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
         Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
         TipoParteMotor tipoParteMotor = tipoParteMotorRepository.getOne(tipoParteMotorId);
@@ -586,7 +591,8 @@ public class ExpertoPresupuesto {
         tipos.add(tipoParte2);
         List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotorIn(tipos);
 
-        return costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada, tipoRepuestos);
+        return costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada,
+                tipoRepuestos);
 
     }
 
