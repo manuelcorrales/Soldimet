@@ -14,21 +14,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CajaRepository extends JpaRepository<Caja, Long>, JpaSpecificationExecutor<Caja> {
-
-    public List<Caja> findByFechaGreaterThanEqual(LocalDate fecha);
-
-    public Caja findByFecha(LocalDate fechaInicio);
-
-    public Caja findByFechaAndSucursal(LocalDate date, Sucursal sucursal);
-
-    public Caja findTopByOrderByIdDesc();
-
-    public Caja findFirstByFechaGreaterThanEqualAndSucursal(LocalDate fecha, Sucursal sucursal);
-
-    public List<Caja> findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(
-        LocalDate fechaInicio,
-        LocalDate fechaFin,
-        Sucursal sucursal
-    );
-}
+public interface CajaRepository extends JpaRepository<Caja, Long>, JpaSpecificationExecutor<Caja> {}

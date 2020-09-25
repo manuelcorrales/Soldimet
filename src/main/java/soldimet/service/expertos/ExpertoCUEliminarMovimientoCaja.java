@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import soldimet.constant.Globales;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.Movimiento;
-import soldimet.repository.EstadoMovimientoRepository;
-import soldimet.repository.MovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
 
 /**
  * @author Manu
@@ -31,10 +31,10 @@ public class ExpertoCUEliminarMovimientoCaja {
     private final String errorPermisoInsuficiente = "Este movimiento fue creado hace mas de 24hrs, necesita permisos para eliminar eliminar";
 
     @Autowired
-    private MovimientoRepository movimientoRepository;
+    private ExtendedMovimientoRepository movimientoRepository;
 
     @Autowired
-    private EstadoMovimientoRepository estadoMovimientoRepository;
+    private ExtendedEstadoMovimientoRepository estadoMovimientoRepository;
 
     @Autowired
     private Globales globales;

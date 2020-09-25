@@ -11,6 +11,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ListaPrecioRectificacionCRAMRepository extends JpaRepository<ListaPrecioRectificacionCRAM, Long> {
 
-    ListaPrecioRectificacionCRAM findByNumeroGrupo(Integer numeroGrupo);
-
 }

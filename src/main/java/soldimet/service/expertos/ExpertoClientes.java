@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import soldimet.constant.Globales;
 import soldimet.domain.Cliente;
 import soldimet.domain.EstadoPersona;
-import soldimet.repository.ClienteRepository;
-import soldimet.repository.EstadoPersonaRepository;
+import soldimet.repository.extendedRepository.ExtendedClienteRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPersonaRepository;
 
 /**
  * @author Manu
@@ -26,10 +26,10 @@ public class ExpertoClientes {
     private final Logger log = LoggerFactory.getLogger(ExpertoClientes.class);
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private ExtendedClienteRepository clienteRepository;
 
     @Autowired
-    private EstadoPersonaRepository estadoPersonaRepository;;
+    private ExtendedEstadoPersonaRepository estadoPersonaRepository;;
 
     @Autowired
     private Globales globales;

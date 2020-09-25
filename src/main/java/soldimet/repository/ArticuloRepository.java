@@ -14,10 +14,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {
-
-    List<Articulo> findDistinctByEstadoAndTipoRepuestoIn(EstadoArticulo estado, List<TipoRepuesto> tipos);
-
-	boolean existsByCodigoArticuloProveedor(String codigoArticuloProveedor);
-
-}
+public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {}

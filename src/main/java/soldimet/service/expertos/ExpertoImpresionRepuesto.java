@@ -36,7 +36,7 @@ import soldimet.domain.Operacion;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.TipoRepuesto;
 import soldimet.repository.OperacionRepository;
-import soldimet.repository.TipoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
 
 /**
  *
@@ -56,7 +56,7 @@ public class ExpertoImpresionRepuesto {
     private OperacionRepository operacionRepository;
 
     @Autowired
-    private TipoRepuestoRepository tipoRepuestoRepository;
+    private ExtendedTipoRepuestoRepository tipoRepuestoRepository;
 
     @Autowired
     private Globales globales;

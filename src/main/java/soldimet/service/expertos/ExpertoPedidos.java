@@ -1,6 +1,5 @@
 package soldimet.service.expertos;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -25,15 +24,15 @@ import soldimet.domain.EstadoPersona;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Persona;
 import soldimet.domain.Proveedor;
-import soldimet.repository.DetallePedidoRepository;
-import soldimet.repository.EstadoCostoRepuestoRepository;
-import soldimet.repository.EstadoDetallePedidoRepository;
-import soldimet.repository.EstadoPedidoRepuestoRepository;
-import soldimet.repository.EstadoPersonaRepository;
-import soldimet.repository.PedidoRepuestoRepository;
-import soldimet.repository.PersonaRepository;
-import soldimet.repository.ProveedorRepository;
-import soldimet.repository.TipoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedDetallePedidoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoCostoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoDetallePedidoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPedidoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPersonaRepository;
+import soldimet.repository.extendedRepository.ExtendedPedidoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedPersonaRepository;
+import soldimet.repository.extendedRepository.ExtendedProveedorRepository;
+import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOPedidoCabecera;
 import soldimet.service.dto.DTOProveedor;
@@ -50,37 +49,37 @@ public class ExpertoPedidos {
     private ExpertoUsuarios expertoUsuarios;
 
     @Autowired
-    private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
+    private ExtendedEstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
 
     @Autowired
-    private EstadoPersonaRepository estadoPersonaRepository;
+    private ExtendedEstadoPersonaRepository estadoPersonaRepository;
 
     @Autowired
-    private EstadoDetallePedidoRepository estadoDetallePedidoRepuestoRepository;
+    private ExtendedEstadoDetallePedidoRepository estadoDetallePedidoRepuestoRepository;
 
     @Autowired
-    private ProveedorRepository proveedorRepository;
+    private ExtendedProveedorRepository proveedorRepository;
 
     @Autowired
-    private PersonaRepository personaRepository;
+    private ExtendedPersonaRepository personaRepository;
 
     @Autowired
     private PedidoConverter pedidoConverter;
 
     @Autowired
-    private PedidoRepuestoRepository pedidoRepuestoRepository;
+    private ExtendedPedidoRepuestoRepository pedidoRepuestoRepository;
 
     @Autowired
     private ProveedorConverter proveedorConverter;
 
     @Autowired
-    private DetallePedidoRepository detallePedidoRepository;
+    private ExtendedDetallePedidoRepository detallePedidoRepository;
 
     @Autowired
-    private TipoRepuestoRepository tipoRepuestoRepository;
+    private ExtendedTipoRepuestoRepository tipoRepuestoRepository;
 
     @Autowired
-    private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
+    private ExtendedEstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
 
     public List<PedidoRepuesto> getPedidosPendientes() {
 

@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import soldimet.constant.Globales;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.Movimiento;
-import soldimet.repository.EstadoMovimientoRepository;
-import soldimet.repository.MovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
 
 /**
  *
@@ -20,10 +20,10 @@ import soldimet.repository.MovimientoRepository;
 public class ExpertoCUCancelarMovimiento {
 
     @Autowired
-    private MovimientoRepository movimientoRepository;
+    private ExtendedMovimientoRepository movimientoRepository;
 
     @Autowired
-    private EstadoMovimientoRepository estadoMovimientoRepository;
+    private ExtendedEstadoMovimientoRepository estadoMovimientoRepository;
 
     @Autowired
     private Globales globales;

@@ -22,8 +22,8 @@ import soldimet.domain.Operacion;
 import soldimet.domain.TipoParteMotor;
 import soldimet.repository.CilindradaRepository;
 import soldimet.repository.ListaPrecioDesdeHastaRepository;
-import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
-import soldimet.repository.TipoParteMotorRepository;
+import soldimet.repository.extendedRepository.ExtendedListaPrecioRectificacionCRAMRepository;
+import soldimet.repository.extendedRepository.ExtendedTipoParteMotorRepository;
 import soldimet.service.dto.DTOListaPrecioManoDeObra;
 
 /**
@@ -38,10 +38,10 @@ public class ExpertoCUModificarCostosDeManoDeObra {
     private final String errorPermisoInsuficiente = "No tiene permisos suficientes para modificar estos valores";
 
     @Autowired
-    private ListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
+    private ExtendedListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
 
     @Autowired
-    private TipoParteMotorRepository tipoParteMotorRepository;
+    private ExtendedTipoParteMotorRepository tipoParteMotorRepository;
 
     @Autowired
     private CilindradaRepository cilindradaRepository;

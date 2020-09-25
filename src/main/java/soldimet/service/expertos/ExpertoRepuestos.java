@@ -12,10 +12,10 @@ import soldimet.domain.Articulo;
 import soldimet.domain.EstadoArticulo;
 import soldimet.domain.Marca;
 import soldimet.domain.TipoRepuesto;
-import soldimet.repository.ArticuloRepository;
-import soldimet.repository.EstadoArticuloRepository;
-import soldimet.repository.MarcaRepository;
-import soldimet.repository.TipoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedArticuloRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoArticuloRepository;
+import soldimet.repository.extendedRepository.ExtendedMarcaRepository;
+import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
 import soldimet.service.ErrorToURIException;
 
 @Service
@@ -26,16 +26,16 @@ public class ExpertoRepuestos {
     private Globales globales;
 
     @Autowired
-    private EstadoArticuloRepository estadoArticuloRepository;
+    private ExtendedEstadoArticuloRepository estadoArticuloRepository;
 
     @Autowired
-    private TipoRepuestoRepository tipoRepuestoRepository;
+    private ExtendedTipoRepuestoRepository tipoRepuestoRepository;
 
     @Autowired
-    private ArticuloRepository articuloRepository;
+    private ExtendedArticuloRepository articuloRepository;
 
     @Autowired
-    private MarcaRepository marcaRepository;
+    private ExtendedMarcaRepository marcaRepository;
 
 	public List<Articulo> buscarRepuestosProveedor() {
         EstadoArticulo estadoAlta = estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);

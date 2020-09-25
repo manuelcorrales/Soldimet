@@ -13,6 +13,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MovimientoPedidoRepository extends JpaRepository<MovimientoPedido, Long> {
 
-    public MovimientoPedido findByMovimiento(Movimiento movimiento);
-
 }

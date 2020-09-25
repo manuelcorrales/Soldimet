@@ -17,11 +17,11 @@ import soldimet.domain.Movimiento;
 import soldimet.domain.MovimientoArticulo;
 import soldimet.domain.MovimientoPedido;
 import soldimet.domain.MovimientoPresupuesto;
-import soldimet.repository.CategoriaPagoRepository;
-import soldimet.repository.MovimientoArticuloRepository;
-import soldimet.repository.MovimientoPedidoRepository;
-import soldimet.repository.MovimientoPresupuestoRepository;
-import soldimet.repository.MovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedCategoriaPagoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoArticuloRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoPedidoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoPresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
 import soldimet.service.dto.DTOCaja;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMovimientoCUConsultarMovimientos;
@@ -33,19 +33,19 @@ public class CajaConverter {
     private Globales globales;
 
     @Autowired
-    private MovimientoArticuloRepository movimientoArticuloRepository;
+    private ExtendedMovimientoArticuloRepository movimientoArticuloRepository;
 
     @Autowired
-    private MovimientoPedidoRepository movimientoPedidoRepository;
+    private ExtendedMovimientoPedidoRepository movimientoPedidoRepository;
 
     @Autowired
-    private MovimientoPresupuestoRepository movimientoPresupuestoRepository;
+    private ExtendedMovimientoPresupuestoRepository movimientoPresupuestoRepository;
 
     @Autowired
-    private CategoriaPagoRepository categoriaPagoRepository;
+    private ExtendedCategoriaPagoRepository categoriaPagoRepository;
 
     @Autowired
-    private MovimientoRepository movimientoRepository;
+    private ExtendedMovimientoRepository movimientoRepository;
 
     public DTOCajaCUConsultarMovimientos cajaADTO(List<Caja> listaCajas, EstadoMovimiento estado, Float totalMes) {
         DTOCajaCUConsultarMovimientos dtoCaja = new DTOCajaCUConsultarMovimientos();

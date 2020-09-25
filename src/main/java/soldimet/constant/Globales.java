@@ -20,8 +20,7 @@ public class Globales {
 
     public final String  PRESUPUESTO_POSIBLE_CANCELAR [] = {
         this.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO,
-        this.NOMBRE_ESTADO_PRESUPUESTO_CREADO,
-        this.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO
+        this.NOMBRE_ESTADO_PRESUPUESTO_CREADO
     };
 
     //-------------------------ESTADOS------------------------

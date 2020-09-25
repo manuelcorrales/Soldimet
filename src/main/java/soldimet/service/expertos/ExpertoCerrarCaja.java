@@ -1,15 +1,15 @@
 package soldimet.service.expertos;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import org.joda.time.Days;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import soldimet.constant.Globales;
 import soldimet.domain.Caja;
-import soldimet.repository.CajaRepository;
+import soldimet.repository.extendedRepository.ExtendedCajaRepository;
 import soldimet.service.dto.DTOMensajeCerrarCaja;
 
 /**
@@ -25,7 +25,7 @@ public class ExpertoCerrarCaja {
     public Boolean cajaAbierta;
 
     @Autowired
-    private CajaRepository cajaRepository;
+    private ExtendedCajaRepository cajaRepository;
 
     @Autowired
     private Globales globales;

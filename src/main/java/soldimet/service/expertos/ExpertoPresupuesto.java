@@ -48,27 +48,26 @@ import soldimet.domain.Presupuesto;
 import soldimet.domain.Sucursal;
 import soldimet.domain.TipoParteMotor;
 import soldimet.domain.TipoRepuesto;
-import soldimet.repository.AplicacionRepository;
 import soldimet.repository.CilindradaRepository;
-import soldimet.repository.ClienteRepository;
 import soldimet.repository.CobranzaRepuestoRepository;
-import soldimet.repository.CostoRepuestoProveedorRepository;
-import soldimet.repository.DetallePresupuestoRepository;
-import soldimet.repository.EstadoCobranzaOperacionRepository;
-import soldimet.repository.EstadoDetallePedidoRepository;
-import soldimet.repository.EstadoPedidoRepuestoRepository;
-import soldimet.repository.EstadoPersonaRepository;
-import soldimet.repository.EstadoPresupuestoRepository;
-import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
-import soldimet.repository.MarcaRepository;
 import soldimet.repository.MotorRepository;
-import soldimet.repository.PedidoRepuestoRepository;
-import soldimet.repository.PersonaRepository;
-import soldimet.repository.PresupuestoRepository;
 import soldimet.repository.SucursalRepository;
-import soldimet.repository.TipoParteMotorRepository;
-import soldimet.repository.TipoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedAplicacionRepository;
+import soldimet.repository.extendedRepository.ExtendedClienteRepository;
+import soldimet.repository.extendedRepository.ExtendedCostoRepuestoProveedorRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoCobranzaOperacionRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoDetallePedidoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPedidoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPersonaRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedListaPrecioRectificacionCRAMRepository;
+import soldimet.repository.extendedRepository.ExtendedPedidoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedPersonaRepository;
+import soldimet.repository.extendedRepository.ExtendedPresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedTipoParteMotorRepository;
+import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
 import soldimet.security.AuthoritiesConstants;
+import soldimet.service.ErrorToURIException;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
 import soldimet.service.dto.DTOEmpleado;
 import soldimet.service.dto.DTOPresupuesto;
@@ -92,22 +91,22 @@ public class ExpertoPresupuesto {
     private SucursalRepository sucursalRepository;
 
     @Autowired
-    private TipoRepuestoRepository tipoRepuestoRepository;
+    private ExtendedTipoRepuestoRepository tipoRepuestoRepository;
 
     @Autowired
-    private EstadoPresupuestoRepository estadoPresupuestoRepository;
+    private ExtendedEstadoPresupuestoRepository estadoPresupuestoRepository;
 
     @Autowired
-    private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
+    private ExtendedEstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
 
     @Autowired
-    private PedidoRepuestoRepository pedidoRepuestoRepository;
+    private ExtendedPedidoRepuestoRepository pedidoRepuestoRepository;
 
     @Autowired
-    private PresupuestoRepository presupuestoRepository;
+    private ExtendedPresupuestoRepository presupuestoRepository;
 
     @Autowired
-    private AplicacionRepository aplicacionRepository;
+    private ExtendedAplicacionRepository aplicacionRepository;
 
     @Autowired
     private MotorRepository motorRepository;
@@ -116,34 +115,31 @@ public class ExpertoPresupuesto {
     private PresupuestoConverter presupuestoConverter;
 
     @Autowired
-    private ListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
+    private ExtendedListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
 
     @Autowired
-    private TipoParteMotorRepository tipoParteMotorRepository;
+    private ExtendedTipoParteMotorRepository tipoParteMotorRepository;
 
     @Autowired
     private CilindradaRepository cilindradaRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private ExtendedClienteRepository clienteRepository;
 
     @Autowired
-    private PersonaRepository personaRepository;
+    private ExtendedPersonaRepository personaRepository;
 
     @Autowired
-    private EstadoPersonaRepository estadoPersonaRepository;
+    private ExtendedEstadoPersonaRepository estadoPersonaRepository;
 
     @Autowired
-    private EstadoCobranzaOperacionRepository estadoCobranzaOperacionRepository;
+    private ExtendedEstadoCobranzaOperacionRepository estadoCobranzaOperacionRepository;
 
     @Autowired
-    private EstadoDetallePedidoRepository estadoDetallePedidoRepository;
+    private ExtendedEstadoDetallePedidoRepository estadoDetallePedidoRepository;
 
     @Autowired
-    private DetallePresupuestoRepository detallePresupuestoRepository;
-
-    @Autowired
-    private CostoRepuestoProveedorRepository costoRepuestoProveedorRepository;
+    private ExtendedCostoRepuestoProveedorRepository costoRepuestoProveedorRepository;
 
     @Autowired
     private CobranzaRepuestoRepository cobranzaRepuestoRepository;
@@ -418,7 +414,7 @@ public class ExpertoPresupuesto {
             return presupuestoConverter.convertirEntidadAModelo(editado);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return null;
+            throw new ErrorToURIException("No se puede cancelar este presupuesto", ExpertoPresupuesto.class.getName(), "ErrorCancelarPresupuesto");
         }
     }
 
@@ -498,9 +494,8 @@ public class ExpertoPresupuesto {
     }
 
     private void puedeCancelarPresupuesto(DTOPresupuesto dto) throws Exception {
-        Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         if (!Arrays.asList(globales.PRESUPUESTO_POSIBLE_CANCELAR)
-                .contains(presupuesto.getEstadoPresupuesto().getNombreEstado())) {
+                .contains(dto.getEstado())) {
             throw new Exception();
         }
     }

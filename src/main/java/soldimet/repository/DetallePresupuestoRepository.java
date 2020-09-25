@@ -18,6 +18,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DetallePresupuestoRepository extends JpaRepository<DetallePresupuesto, Long> {
 
-    public Optional<DetallePresupuesto> findFirstByAplicacionAndCilindradaOrderByIdDesc(Aplicacion aplicacion, Cilindrada cilindrada);
-
 }

@@ -15,6 +15,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
 
-    List<Proveedor> findByPersonaIn(List<Persona> personas);
-
 }

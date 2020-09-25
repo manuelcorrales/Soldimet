@@ -25,32 +25,4 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface PresupuestoRepository extends JpaRepository<Presupuesto, Long>, JpaSpecificationExecutor<Presupuesto> {
 
-    public List<Presupuesto> findAll(Specification specification);
-
-    public Page<Presupuesto> findAllByOrderByIdDesc(Pageable pageable);
-
-    @EntityGraph(attributePaths = { "detallePresupuestos", "detallePresupuestos.motor",
-            "detallePresupuestos.aplicacion", "detallePresupuestos.tipoParteMotor", "detallePresupuestos.cilindrada",
-            "cliente", "cliente.persona", "estadoPresupuesto" })
-    public Page<Presupuesto> findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
-            String nombre, String apellido, String motor, Pageable pageable);
-
-    @EntityGraph(attributePaths = { "detallePresupuestos", "detallePresupuestos.motor",
-            "detallePresupuestos.aplicacion", "detallePresupuestos.tipoParteMotor", "detallePresupuestos.cilindrada",
-            "cliente", "cliente.persona", "estadoPresupuesto" })
-    public Page<Presupuesto> findBySucursalAndClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
-            Sucursal sucursal, String nombre, String apellido, String motor, Pageable pageable);
-
-    public List<Presupuesto> findByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
-
-    public List<Presupuesto> findBySucursalAndFechaCreacionGreaterThanEqualAndFechaCreacionLessThanEqualAndEstadoPresupuestoIn(
-            Sucursal sucursal, LocalDate fechaInicio, LocalDate fechaFin, List<EstadoPresupuesto> estados);
-
-    public Long countByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
-
-    public Presupuesto findByDetallePresupuestosIn(DetallePresupuesto detallePresupuesto);
-
-    public Presupuesto findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(
-            Aplicacion aplicacion, Cilindrada cilindrada, Boolean modelo);
-
 }

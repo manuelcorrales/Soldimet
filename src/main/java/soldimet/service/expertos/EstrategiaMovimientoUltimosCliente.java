@@ -13,6 +13,7 @@ import soldimet.domain.Caja;
 import soldimet.domain.Movimiento;
 import soldimet.repository.CajaRepository;
 import soldimet.repository.MovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedCajaRepository;
 
 /**
  *
@@ -22,7 +23,7 @@ import soldimet.repository.MovimientoRepository;
 public class EstrategiaMovimientoUltimosCliente extends EstrategiaMovimiento {
 
     @Autowired
-    private CajaRepository cajaRepository;
+    private ExtendedCajaRepository cajaRepository;
 
 
     @Override

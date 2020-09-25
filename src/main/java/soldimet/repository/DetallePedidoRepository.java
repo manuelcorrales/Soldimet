@@ -14,6 +14,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Long> {
 
-    public Long countByEstadoDetallePedido(EstadoDetallePedido estado);
-
 }

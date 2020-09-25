@@ -12,10 +12,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CategoriaPagoRepository extends JpaRepository<CategoriaPago, Long> {
-
-    public CategoriaPago findBySubCategoriasContaining(SubCategoria subCategorias);
-
-	public CategoriaPago findByNombreCategoriaPago(String cATEGORIA_PROVEEDORES);
-
-}
+public interface CategoriaPagoRepository extends JpaRepository<CategoriaPago, Long> {}

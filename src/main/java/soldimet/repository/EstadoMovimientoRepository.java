@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EstadoMovimientoRepository extends JpaRepository<EstadoMovimiento, Long> {
 
-    EstadoMovimiento findByNombreEstado(String nombreEstado);
 }

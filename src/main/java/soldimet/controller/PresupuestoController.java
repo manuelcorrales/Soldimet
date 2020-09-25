@@ -44,8 +44,7 @@ import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.TipoParteMotor;
 import soldimet.domain.TipoRepuesto;
-import soldimet.repository.ArticuloRepository;
-import soldimet.security.AuthoritiesConstants;
+import soldimet.repository.extendedRepository.ExtendedArticuloRepository;
 import soldimet.service.dto.DTODatosMotorCUHacerPresupuesto;
 import soldimet.service.dto.DTOPresupuesto;
 import soldimet.service.expertos.ExpertoPresupuesto;
@@ -64,7 +63,7 @@ public class PresupuestoController {
     private ExpertoPresupuesto expertoPresupuesto;
 
     @Autowired
-    private ArticuloRepository repo;
+    private ExtendedArticuloRepository repo;
 
     @GetMapping("/getPresupuestos")
     public Page<DTOPresupuesto> buscarPresupuestos(
@@ -191,12 +190,8 @@ public class PresupuestoController {
         log.debug("REST request to cancel Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
         log.debug("REST response to cancel Presupuesto : {}", result);
-        if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
-                    String.valueOf(result.getCodigo()))).body(result);
-        } else {
-            return ResponseEntity.status(500).body(dtoPresupuesto);
-        }
+        return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
+                String.valueOf(result.getCodigo()))).body(result);
     }
 
     @PostMapping("/entregar")

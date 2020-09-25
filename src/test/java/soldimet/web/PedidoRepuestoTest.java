@@ -92,7 +92,7 @@ public class PedidoRepuestoTest {
     // private PedidoRepuestoRepository pedidoRepuestoRepository;
 
     // @Autowired
-    // private CostoRepuestoRepository costoRepuestoRepository;
+    // private ExtendedCostoRepuestoRepository costoRepuestoRepository;
 
     // @Autowired
     // private PedidoRepuestoService pedidoRepuestoService;

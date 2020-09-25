@@ -15,6 +15,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SubCategoriaRepository extends JpaRepository<SubCategoria, Long> {
 
-	List<SubCategoria> findByNombreSubCategoria(String string);
-
 }

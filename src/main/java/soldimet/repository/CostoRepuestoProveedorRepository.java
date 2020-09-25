@@ -16,14 +16,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CostoRepuestoProveedorRepository extends JpaRepository<CostoRepuestoProveedor, Long> {
-
-    List<CostoRepuestoProveedor> findByAplicacionAndCilindradaAndTipoRepuestoIn(
-        Aplicacion aplicacion, Cilindrada cilindrada, List<TipoRepuesto> tipos
-    );
-
-    List<CostoRepuestoProveedor> findByAplicacionAndCilindradaAndTipoRepuestoAndArticulo(
-        Aplicacion aplicacion, Cilindrada cilindrada, TipoRepuesto tipo, Articulo articulo
-    );
-
-}
+public interface CostoRepuestoProveedorRepository extends JpaRepository<CostoRepuestoProveedor, Long> {}

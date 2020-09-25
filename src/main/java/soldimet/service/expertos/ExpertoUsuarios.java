@@ -12,8 +12,8 @@ import soldimet.converter.UserConverter;
 import soldimet.domain.Empleado;
 import soldimet.domain.Persona;
 import soldimet.domain.User;
-import soldimet.repository.EmpleadoRepository;
-import soldimet.repository.PersonaRepository;
+import soldimet.repository.extendedRepository.ExtendedEmpleadoRepository;
+import soldimet.repository.extendedRepository.ExtendedPersonaRepository;
 import soldimet.service.UserService;
 import soldimet.service.dto.DTOEmpleado;
 
@@ -30,13 +30,13 @@ public class ExpertoUsuarios {
 
 
     @Autowired
-    private PersonaRepository personaRepository;
+    private ExtendedPersonaRepository personaRepository;
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private EmpleadoRepository empleadoRepository;
+    private ExtendedEmpleadoRepository empleadoRepository;
 
     @Autowired
     private UserConverter userConverver;

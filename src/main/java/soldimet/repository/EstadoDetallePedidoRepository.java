@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EstadoDetallePedidoRepository extends JpaRepository<EstadoDetallePedido, Long> {
 
-    EstadoDetallePedido findByNombreEstado(String nombreEstado);
 }

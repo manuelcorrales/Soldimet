@@ -18,13 +18,4 @@ import soldimet.domain.Presupuesto;
 @Repository
 public interface PedidoRepuestoRepository extends JpaRepository<PedidoRepuesto, Long>, JpaSpecificationExecutor<PedidoRepuesto> {
 
-    public PedidoRepuesto findByPresupuesto(Presupuesto presupuesto);
-
-    public List<PedidoRepuesto> findAllByOrderByIdDesc();
-
-    public List<PedidoRepuesto> findByEstadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto);
-
-    public PedidoRepuesto findPedidoRepuestoByDetallePedidosIn(DetallePedido detallePedido);
-
-    public Long countByEstadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto);
 }

@@ -15,12 +15,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-
-    List<Cliente> findClienteByPersonaIn(List<Persona> persona);
-
-    Page<Cliente> findClienteByPersonaNombreContainsOrPersonaApellidoContainsOrPersonaDireccionCalleContainsOrderByIdDesc(
-        String nombre, String apellido, String calle, Pageable paging
-    );
-
-}
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {}

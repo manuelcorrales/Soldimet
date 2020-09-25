@@ -11,6 +11,4 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface RubroRepository extends JpaRepository<Rubro, Long> {
-
-    public Rubro findByNombreRubro(String nombreRubro);
 }

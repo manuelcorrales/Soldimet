@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import soldimet.constant.Globales;
 import soldimet.domain.EstadoPresupuesto;
 import soldimet.domain.Presupuesto;
-import soldimet.repository.EstadoPresupuestoRepository;
-import soldimet.repository.PresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedPresupuestoRepository;
 
 /**
  *
@@ -24,10 +24,10 @@ public class ExpertoCUEntregarTrabajo {
     private final Logger log = LoggerFactory.getLogger(ExpertoCUEntregarTrabajo.class);
 
     @Autowired
-    private EstadoPresupuestoRepository estadoPresupuestoRepository;
+    private ExtendedEstadoPresupuestoRepository estadoPresupuestoRepository;
 
     @Autowired
-    private PresupuestoRepository presupuestoRepository;
+    private ExtendedPresupuestoRepository presupuestoRepository;
 
     @Autowired
     private Globales globales;

@@ -15,11 +15,4 @@ import java.util.List;
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpecificationExecutor<Persona> {
 
-    @Query("select persona from Persona persona where persona.user.login = ?#{principal.username}")
-    Persona findByUserIsCurrentUser();
-
-    Persona findByUser(User usuario);
-
-    List<Persona> findByEstadoPersona(EstadoPersona estadoPersona);
-
 }

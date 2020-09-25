@@ -13,6 +13,5 @@ import java.util.List;
 @Repository
 public interface TipoParteMotorRepository extends JpaRepository<TipoParteMotor, Long> {
 
-    public List<TipoParteMotor> findByIdIn(List<Long> ids);
 
 }

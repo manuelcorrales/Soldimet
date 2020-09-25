@@ -25,17 +25,16 @@ import soldimet.domain.Movimiento;
 import soldimet.domain.SubCategoria;
 import soldimet.domain.Sucursal;
 import soldimet.domain.TipoMovimiento;
-import soldimet.repository.CajaRepository;
-import soldimet.repository.CategoriaPagoRepository;
-import soldimet.repository.EstadoMovimientoRepository;
 import soldimet.repository.MedioDePagoRepository;
-import soldimet.repository.MovimientoRepository;
-import soldimet.repository.SubCategoriaRepository;
 import soldimet.repository.SucursalRepository;
+import soldimet.repository.extendedRepository.ExtendedCajaRepository;
+import soldimet.repository.extendedRepository.ExtendedCategoriaPagoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedSubCategoriaRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.utils.MathUtils;
-import soldimet.web.rest.SucursalResource;
 
 
 /**
@@ -53,13 +52,13 @@ public class ExpertoCaja {
     private ExpertoUsuarios expertoUsuarios;
 
     @Autowired
-    private CajaRepository cajaRepository;
+    private ExtendedCajaRepository cajaRepository;
 
     @Autowired
-    private MovimientoRepository movimientoRepository;
+    private ExtendedMovimientoRepository movimientoRepository;
 
     @Autowired
-    private EstadoMovimientoRepository estadoMovimientoRepository;
+    private ExtendedEstadoMovimientoRepository estadoMovimientoRepository;
 
     @Autowired
     private Globales globales;
@@ -74,10 +73,10 @@ public class ExpertoCaja {
     private SucursalRepository sucursalRepository;
 
     @Autowired
-    private CategoriaPagoRepository categoriaRepository;
+    private ExtendedCategoriaPagoRepository categoriaRepository;
 
     @Autowired
-    private SubCategoriaRepository subCategoriaRepository;
+    private ExtendedSubCategoriaRepository subCategoriaRepository;
 
     public ExpertoCaja() {
 

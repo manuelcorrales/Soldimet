@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import soldimet.domain.Caja;
-import soldimet.repository.CajaRepository;
+import soldimet.repository.extendedRepository.ExtendedCajaRepository;
 
 /**
  *
@@ -25,7 +25,7 @@ public class EstrategiaMovimiento30dia extends EstrategiaMovimiento{
     private final int meses = -1; //busco lo que esta 31 dias antes (ultimo mes)
 
     @Autowired
-    private CajaRepository cajaRepository;
+    private ExtendedCajaRepository cajaRepository;
 
     public List<Caja> buscarMovimientos(){
 

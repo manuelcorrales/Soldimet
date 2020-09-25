@@ -13,8 +13,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface AplicacionRepository extends JpaRepository<Aplicacion, Long> {
-
-    List<Aplicacion> findByMotorOrderByNombreAplicacionAsc(Motor motor);
-
-}
+public interface AplicacionRepository extends JpaRepository<Aplicacion, Long> {}

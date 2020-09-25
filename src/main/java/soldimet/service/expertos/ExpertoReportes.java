@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import soldimet.constant.Globales;
 import soldimet.domain.Caja;
@@ -37,14 +36,14 @@ import soldimet.domain.Movimiento;
 import soldimet.domain.Presupuesto;
 import soldimet.domain.Sucursal;
 import soldimet.domain.TipoMovimiento;
-import soldimet.repository.EstadoMovimientoRepository;
-import soldimet.repository.EstadoPedidoRepuestoRepository;
-import soldimet.repository.EstadoPresupuestoRepository;
-import soldimet.repository.MovimientoRepository;
-import soldimet.repository.PedidoRepuestoRepository;
-import soldimet.repository.PresupuestoRepository;
 import soldimet.repository.SucursalRepository;
-import soldimet.repository.TipoMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPedidoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoPresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedPedidoRepuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedPresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedTipoMovimientoRepository;
 import soldimet.service.ErrorToURIException;
 import soldimet.service.dto.DTOCajaDiario;
 import soldimet.service.dto.DTOMetricaContable;
@@ -69,28 +68,28 @@ public class ExpertoReportes {
     private SucursalRepository sucursalRepository;
 
     @Autowired
-    private MovimientoRepository movimientoRepository;
+    private ExtendedMovimientoRepository movimientoRepository;
 
     @Autowired
-    private EstadoMovimientoRepository estadoMovimientoRepository;
+    private ExtendedEstadoMovimientoRepository estadoMovimientoRepository;
 
     @Autowired
     private ExpertoCaja expertoCaja;
 
     @Autowired
-    private EstadoPresupuestoRepository estadoPresupuestoRepository;
+    private ExtendedEstadoPresupuestoRepository estadoPresupuestoRepository;
 
     @Autowired
-    private PresupuestoRepository presupuestoRepository;
+    private ExtendedPresupuestoRepository presupuestoRepository;
 
     @Autowired
-    private EstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
+    private ExtendedEstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
 
     @Autowired
-    private PedidoRepuestoRepository pedidoRepuestoRepository;
+    private ExtendedPedidoRepuestoRepository pedidoRepuestoRepository;
 
     @Autowired
-    private TipoMovimientoRepository tipoMovimientoRepository;
+    private ExtendedTipoMovimientoRepository tipoMovimientoRepository;
 
     public ExpertoReportes() {
 

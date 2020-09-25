@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import soldimet.constant.Globales;
 import soldimet.domain.Caja;
-import soldimet.repository.CajaRepository;
+import soldimet.repository.extendedRepository.ExtendedCajaRepository;
 import soldimet.service.dto.DTOMensajeAbrirCaja;
 
 /**
@@ -26,7 +26,7 @@ public class ExpertoCUAbrirCaja {
 
 
     @Autowired
-    private CajaRepository cajaRepository;
+    private ExtendedCajaRepository cajaRepository;
 
     @Autowired
     private Globales globales;

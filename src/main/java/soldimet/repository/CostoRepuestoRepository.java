@@ -11,7 +11,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CostoRepuestoRepository extends JpaRepository<CostoRepuesto, Long> {
-
-    Long countByEstado(EstadoCostoRepuesto estado);
-}
+public interface CostoRepuestoRepository extends JpaRepository<CostoRepuesto, Long> {}
