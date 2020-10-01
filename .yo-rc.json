@@ -32,20 +32,10 @@
     "enableHibernateCache": true,
     "serviceDiscoveryType": false,
     "embeddableLaunchScript": false,
-    "clientTheme": "litera",
+    "clientTheme": "flatly",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
-    "blueprints": [],
-    "gcpProjectId": "soldimetqa",
-    "gcpCloudSqlInstanceName": "soldimetqa:us-central1:soldimet",
-    "gcpCloudSqlUserName": "soldimet",
-    "gcpCloudSqlDatabaseName": "Soldimet",
-    "gaeServiceName": "default",
-    "gaeLocation": "us-central",
-    "gaeInstanceClass": "B2",
-    "gaeScalingType": "manual",
-    "gaeCloudSQLInstanceNeeded": "Y",
-    "gaeInstances": "1"
+    "blueprints": []
   }
 }

@@ -90,7 +90,7 @@ public class ExpertoCaja {
         if (sucursalId != null && this.tieneAccesoATodosLosMovimientos(empleado) && mes > 0) {
             sucursal = sucursalRepository.findById(sucursalId).get();
             LocalDate fechaInicio = this.formatearFecha(mes, anio);
-            LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1);
+            LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1).minusDays(1);
             listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(
                 fechaInicio,
                 fechaFin,

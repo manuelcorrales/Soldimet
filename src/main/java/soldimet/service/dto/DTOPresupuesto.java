@@ -22,6 +22,8 @@ public class DTOPresupuesto {
     private double importe;
     private String sucursal;
     private Boolean isSoldadura;
+    private double totalRepuestos;
+    private double totalOperaciones;
 
     public DTOPresupuesto() {
     }
@@ -99,5 +101,21 @@ public class DTOPresupuesto {
      */
     public void setIsSoldadura(Boolean isSoldadura) {
         this.isSoldadura = isSoldadura;
+    }
+
+    public void setTotalRepuestos(double totalRepuestos) {
+        this.totalRepuestos = totalRepuestos;
+    }
+
+    public double getTotalRepuestos() {
+        return totalRepuestos;
+    }
+
+    public void setTotalOperaciones(double totalOperaciones) {
+        this.totalOperaciones = totalOperaciones;
+    }
+
+    public double getTotalOperaciones() {
+        return totalOperaciones;
     }
 }

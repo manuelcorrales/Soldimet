@@ -85,7 +85,11 @@
                     </div>
                     <div *ngIf="presupuesto" class="col">
                         <p>Importe </p>
-                        <label>{{presupuesto.importe}} </label>
+                        <label>{{presupuesto.importe | currency: 'ARS'}} </label>
+                    </div>
+                    <div *ngIf="presupuesto" class="col">
+                        <label>Total operaciones: {{presupuesto?.totalOperaciones | currency: 'ARS'}} </label>
+                        <label>Total repuestos: {{presupuesto?.totalRepuestos | currency: 'ARS'}} </label>
                     </div>
                     <div *ngIf="presupuesto" class="col">
                         <p>Fecha </p>

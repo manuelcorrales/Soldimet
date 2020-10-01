@@ -7,6 +7,8 @@ export class DtoPresupuestoCabeceraComponent {
     public sucursal?: string,
     public importe?: number,
     public estado?: string,
-    public isSoldadura?: boolean
+    public isSoldadura?: boolean,
+    public totalOperaciones?: number,
+    public totalRepuestos?: number
   ) {}
 }

@@ -19,6 +19,8 @@ public class PresupuestoConverter {
         dtoPresupuesto.setEstado(presupuesto.getEstadoPresupuesto().getNombreEstado());
         dtoPresupuesto.setFecha(presupuesto.getFechaCreacion());
         dtoPresupuesto.setImporte(presupuesto.getImporteTotal());
+        dtoPresupuesto.setTotalOperaciones(presupuesto.getTotalOperaciones());
+        dtoPresupuesto.setTotalRepuestos(presupuesto.getTotalRepuestos());
         if (presupuesto.isSoldadura()) {
             dtoPresupuesto.setIsSoldadura(presupuesto.isSoldadura());
             dtoPresupuesto.setMotor("");

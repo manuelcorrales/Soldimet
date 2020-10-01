@@ -7,7 +7,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { CookieModule } from 'ngx-cookie';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { NgJhipsterModule } from 'ng-jhipster';
-import locale from '@angular/common/locales/en';
+import locale from '@angular/common/locales/es-AR';
 
 import * as moment from 'moment';
 import { NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -30,7 +30,7 @@ import { fontAwesomeIcons } from 'app/core/icons/font-awesome-icons';
     Title,
     {
       provide: LOCALE_ID,
-      useValue: 'en' // CAMBIAR ACÁ EL IDIOMA LOCALE
+      useValue: 'es-AR' // CAMBIAR ACÁ EL IDIOMA LOCALE
     },
     { provide: NgbDateAdapter, useClass: NgbDateMomentAdapter },
     DatePipe
