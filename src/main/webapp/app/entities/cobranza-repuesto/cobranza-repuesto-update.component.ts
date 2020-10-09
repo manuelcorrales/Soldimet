@@ -21,7 +21,7 @@ import { ArticuloService } from 'app/entities/articulo/articulo.service';
 export class CobranzaRepuestoUpdateComponent implements OnInit {
   isSaving: boolean;
 
-  tiporepuestos: ITipoRepuesto[];
+  tipoRepuestos: ITipoRepuesto[];
 
   articulos: IArticulo[];
 
@@ -52,7 +52,7 @@ export class CobranzaRepuestoUpdateComponent implements OnInit {
         filter((mayBeOk: HttpResponse<ITipoRepuesto[]>) => mayBeOk.ok),
         map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
       )
-      .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: ITipoRepuesto[]) => (this.tipoRepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.articuloService
       .query()
       .pipe(

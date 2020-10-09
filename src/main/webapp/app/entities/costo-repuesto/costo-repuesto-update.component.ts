@@ -27,7 +27,7 @@ export class CostoRepuestoUpdateComponent implements OnInit {
 
   articulos: IArticulo[];
 
-  tiporepuestos: ITipoRepuesto[];
+  tipoRepuestos: ITipoRepuesto[];
 
   editForm = this.fb.group({
     id: [],
@@ -73,7 +73,7 @@ export class CostoRepuestoUpdateComponent implements OnInit {
         filter((mayBeOk: HttpResponse<ITipoRepuesto[]>) => mayBeOk.ok),
         map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
       )
-      .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: ITipoRepuesto[]) => (this.tipoRepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(costoRepuesto: ICostoRepuesto) {

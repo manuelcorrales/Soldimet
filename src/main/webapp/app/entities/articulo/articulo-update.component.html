@@ -63,7 +63,7 @@
                     <label class="form-control-label" for="field_tipoRepuesto">Tipo Repuesto</label>
                     <select class="form-control" id="field_tipoRepuesto" name="tipoRepuesto" formControlName="tipoRepuesto">
                         <option *ngIf="!editForm.get('tipoRepuesto').value" [ngValue]="null" selected></option>
-                        <option [ngValue]="tipoRepuestoOption.id === editForm.get('tipoRepuesto').value?.id ? editForm.get('tipoRepuesto').value : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tiporepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
+                        <option [ngValue]="tipoRepuestoOption.id === editForm.get('tipoRepuesto').value?.id ? editForm.get('tipoRepuesto').value : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tipoRepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
                     </select>
                 </div>
                 <div *ngIf="editForm.get('tipoRepuesto').invalid && (editForm.get('tipoRepuesto').dirty || editForm.get('tipoRepuesto').touched)">

@@ -33,8 +33,8 @@
                 </dd>
                 <dt><span>Tiporepuesto</span></dt>
                 <dd>
-                    <div *ngIf="costoRepuesto.tiporepuesto">
-                        <a [routerLink]="['/tiporepuesto', costoRepuesto.tiporepuesto?.id, 'view']">{{costoRepuesto.tiporepuesto?.nombreTipoRepuesto}}</a>
+                    <div *ngIf="costoRepuesto.tipoRepuesto">
+                        <a [routerLink]="['/tipoRepuesto', costoRepuesto.tipoRepuesto?.id, 'view']">{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </dd>
             </dl>
