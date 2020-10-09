@@ -2,23 +2,6 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "tipoRepuesto",
-            "otherEntityName": "tipoRepuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoRepuesto",
-            "otherEntityRelationshipName": "costoRepuesto"
-        },
-        {
-            "relationshipName": "proveedor",
-            "otherEntityName": "proveedor",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id",
-            "otherEntityRelationshipName": "costoRepuesto"
-        },
-        {
             "relationshipName": "estado",
             "otherEntityName": "estadoCostoRepuesto",
             "relationshipType": "many-to-one",
@@ -26,6 +9,20 @@
                 "required"
             ],
             "otherEntityField": "nombreEstado",
+            "otherEntityRelationshipName": "costoRepuesto"
+        },
+        {
+            "relationshipName": "articulo",
+            "otherEntityName": "articulo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "codigoArticuloProveedor",
+            "otherEntityRelationshipName": "costoRepuesto"
+        },
+        {
+            "relationshipName": "tipoRepuesto",
+            "otherEntityName": "tipoRepuesto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nombreTipoRepuesto",
             "otherEntityRelationshipName": "costoRepuesto"
         }
     ],
@@ -38,6 +35,10 @@
                 "min"
             ],
             "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "medida",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180616204734",

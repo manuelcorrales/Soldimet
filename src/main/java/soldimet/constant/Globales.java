@@ -34,6 +34,7 @@ public class Globales {
     public final String NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO = "Pedido";
     public final String NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO = "Recibido";
     public final String NOMBRE_ESTADO_COSTO_REPUESTO_DEVUELTO = "Devuelto";
+    public final String NOMBRE_ESTADO_COSTO_REPUESTO_PENDIENTE = "Pendiente de pedido";
 
     public final String NOMBRE_ESTADO_ARTICULO_BAJA = "Baja";
     public final String NOMBRE_ESTADO_COBRANZA_OPERACION_BAJA = "Baja";

@@ -9,22 +9,32 @@
                 <dd>
                     <span>{{costoRepuesto.valor}}</span>
                 </dd>
+                <dt><span>Medida</span></dt>
+                <dd>
+                    <span>{{costoRepuesto.medida}}</span>
+                </dd>
+                <dt><span>Estado</span></dt>
+                <dd>
+                    <div *ngIf="costoRepuesto.estado">
+                        <a [routerLink]="['/estado-costo-repuesto', costoRepuesto.estado?.id, 'view']">{{costoRepuesto.estado?.nombreEstado}}</a>
+                    </div>
+                </dd>
+                <dt><span>Articulo</span></dt>
+                <dd>
+                    <div *ngIf="costoRepuesto.articulo">
+                        <a [routerLink]="['/articulo', costoRepuesto.articulo?.id, 'view']">{{costoRepuesto.articulo?.codigoArticuloProveedor}}</a>
+                    </div>
+                </dd>
                 <dt><span>Tipo Repuesto</span></dt>
                 <dd>
                     <div *ngIf="costoRepuesto.tipoRepuesto">
                         <a [routerLink]="['/tipo-repuesto', costoRepuesto.tipoRepuesto?.id, 'view']">{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </dd>
-                <dt><span>Proveedor</span></dt>
+                <dt><span>Tiporepuesto</span></dt>
                 <dd>
-                    <div *ngIf="costoRepuesto.proveedor">
-                        <a [routerLink]="['/proveedor', costoRepuesto.proveedor?.id, 'view']">{{costoRepuesto.proveedor?.id}}</a>
-                    </div>
-                </dd>
-                <dt><span>Estado</span></dt>
-                <dd>
-                    <div *ngIf="costoRepuesto.estado">
-                        <a [routerLink]="['/estado-costo-repuesto', costoRepuesto.estado?.id, 'view']">{{costoRepuesto.estado?.nombreEstado}}</a>
+                    <div *ngIf="costoRepuesto.tiporepuesto">
+                        <a [routerLink]="['/tiporepuesto', costoRepuesto.tiporepuesto?.id, 'view']">{{costoRepuesto.tiporepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </dd>
             </dl>

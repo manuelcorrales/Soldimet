@@ -2,7 +2,6 @@ package soldimet.web.rest;
 
 import soldimet.SoldimetApp;
 import soldimet.domain.CostoRepuesto;
-import soldimet.domain.TipoRepuesto;
 import soldimet.domain.EstadoCostoRepuesto;
 import soldimet.repository.CostoRepuestoRepository;
 import soldimet.service.CostoRepuestoService;
@@ -39,6 +38,9 @@ public class CostoRepuestoResourceIT {
     private static final Float DEFAULT_VALOR = 0F;
     private static final Float UPDATED_VALOR = 1F;
     private static final Float SMALLER_VALOR = 0F - 1F;
+
+    private static final String DEFAULT_MEDIDA = "AAAAAAAAAA";
+    private static final String UPDATED_MEDIDA = "BBBBBBBBBB";
 
     @Autowired
     private CostoRepuestoRepository costoRepuestoRepository;
@@ -85,17 +87,8 @@ public class CostoRepuestoResourceIT {
      */
     public static CostoRepuesto createEntity(EntityManager em) {
         CostoRepuesto costoRepuesto = new CostoRepuesto()
-            .valor(DEFAULT_VALOR);
-        // Add required entity
-        TipoRepuesto tipoRepuesto;
-        if (TestUtil.findAll(em, TipoRepuesto.class).isEmpty()) {
-            tipoRepuesto = TipoRepuestoResourceIT.createEntity(em);
-            em.persist(tipoRepuesto);
-            em.flush();
-        } else {
-            tipoRepuesto = TestUtil.findAll(em, TipoRepuesto.class).get(0);
-        }
-        costoRepuesto.setTipoRepuesto(tipoRepuesto);
+            .valor(DEFAULT_VALOR)
+            .medida(DEFAULT_MEDIDA);
         // Add required entity
         EstadoCostoRepuesto estadoCostoRepuesto;
         if (TestUtil.findAll(em, EstadoCostoRepuesto.class).isEmpty()) {
@@ -116,17 +109,8 @@ public class CostoRepuestoResourceIT {
      */
     public static CostoRepuesto createUpdatedEntity(EntityManager em) {
         CostoRepuesto costoRepuesto = new CostoRepuesto()
-            .valor(UPDATED_VALOR);
-        // Add required entity
-        TipoRepuesto tipoRepuesto;
-        if (TestUtil.findAll(em, TipoRepuesto.class).isEmpty()) {
-            tipoRepuesto = TipoRepuestoResourceIT.createUpdatedEntity(em);
-            em.persist(tipoRepuesto);
-            em.flush();
-        } else {
-            tipoRepuesto = TestUtil.findAll(em, TipoRepuesto.class).get(0);
-        }
-        costoRepuesto.setTipoRepuesto(tipoRepuesto);
+            .valor(UPDATED_VALOR)
+            .medida(UPDATED_MEDIDA);
         // Add required entity
         EstadoCostoRepuesto estadoCostoRepuesto;
         if (TestUtil.findAll(em, EstadoCostoRepuesto.class).isEmpty()) {
@@ -161,6 +145,7 @@ public class CostoRepuestoResourceIT {
         assertThat(costoRepuestoList).hasSize(databaseSizeBeforeCreate + 1);
         CostoRepuesto testCostoRepuesto = costoRepuestoList.get(costoRepuestoList.size() - 1);
         assertThat(testCostoRepuesto.getValor()).isEqualTo(DEFAULT_VALOR);
+        assertThat(testCostoRepuesto.getMedida()).isEqualTo(DEFAULT_MEDIDA);
     }
 
     @Test
@@ -212,7 +197,8 @@ public class CostoRepuestoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(costoRepuesto.getId().intValue())))
-            .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())));
+            .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())))
+            .andExpect(jsonPath("$.[*].medida").value(hasItem(DEFAULT_MEDIDA.toString())));
     }
     
     @Test
@@ -226,7 +212,8 @@ public class CostoRepuestoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(costoRepuesto.getId().intValue()))
-            .andExpect(jsonPath("$.valor").value(DEFAULT_VALOR.doubleValue()));
+            .andExpect(jsonPath("$.valor").value(DEFAULT_VALOR.doubleValue()))
+            .andExpect(jsonPath("$.medida").value(DEFAULT_MEDIDA.toString()));
     }
 
     @Test
@@ -250,7 +237,8 @@ public class CostoRepuestoResourceIT {
         // Disconnect from session so that the updates on updatedCostoRepuesto are not directly saved in db
         em.detach(updatedCostoRepuesto);
         updatedCostoRepuesto
-            .valor(UPDATED_VALOR);
+            .valor(UPDATED_VALOR)
+            .medida(UPDATED_MEDIDA);
 
         restCostoRepuestoMockMvc.perform(put("/api/costo-repuestos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -262,6 +250,7 @@ public class CostoRepuestoResourceIT {
         assertThat(costoRepuestoList).hasSize(databaseSizeBeforeUpdate);
         CostoRepuesto testCostoRepuesto = costoRepuestoList.get(costoRepuestoList.size() - 1);
         assertThat(testCostoRepuesto.getValor()).isEqualTo(UPDATED_VALOR);
+        assertThat(testCostoRepuesto.getMedida()).isEqualTo(UPDATED_MEDIDA);
     }
 
     @Test

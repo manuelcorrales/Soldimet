@@ -8,13 +8,6 @@ import { DetallePedidoNewComponent } from 'app/pedidos/pedidos-pendientes/pedido
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { DtoBusquedaProveedor } from 'app/dto/dto-pedidos/dto-proveedor-search';
-// import { ArticuloService } from 'app/entities/articulo';
-// import { MarcaService } from 'app/entities/marca';
-// import { IMarca } from 'app/shared/model/marca.model';
-// import { IArticulo } from 'app/shared/model/articulo.model';
-import { TipoRepuestoService } from 'app/entities/tipo-repuesto';
-import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 
 @Component({
   selector: 'jhi-pedido-pendiente',
@@ -22,63 +15,22 @@ import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 })
 export class PedidoPendienteComponent implements OnInit {
   pedido: PedidoRepuesto;
-  proveedores: DtoBusquedaProveedor[];
   @ViewChildren('detPed')
   detallePedidoComponent: QueryList<DetallePedidoNewComponent>;
 
   @ViewChild('toastr', { static: false })
   toastrContainer: ViewContainerRef;
 
-  // marcas: IMarca[];
-  // articulos: IArticulo[];
-  tiposRepuestos: ITipoRepuesto[];
   isSaving = false;
 
-  constructor(
-    private pedidosServices: PedidosService,
-    private activeModal: NgbActiveModal,
-    private eventManager: JhiEventManager,
-    // private articuloService: ArticuloService,
-    // private marcaService: MarcaService,
-    private tipoRepuestoService: TipoRepuestoService
-  ) {}
+  constructor(private pedidosServices: PedidosService, private activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
   ngOnInit() {
     this.isSaving = false;
-    this.pedidosServices.getProveedoresRepuestos().subscribe((listaProveedores: DtoBusquedaProveedor[]) => {
-      this.proveedores = listaProveedores;
-    });
-    // this.marcaService.query().subscribe((res: HttpResponse<IMarca[]>) => {
-    //   this.marcas = res.body;
-    // });
-    this.tipoRepuestoService.query().subscribe((tiposRepuestos: HttpResponse<ITipoRepuesto[]>) => {
-      this.tiposRepuestos = tiposRepuestos.body;
-      // this.buscarArticulos();
-    });
   }
-  // buscarArticulos() {
-  //   this.pedido.presupuesto.detallePresupuestos.forEach(detalle => {
-  //     // let tipoRepuestoID = null;
-  //     // this.tiposRepuestos.forEach((tipoRepuestoI: ITipoRepuesto) => {
-  //     //   if (detalle.tipoParteMotor.id === tipoRepuestoI.tipoParteMotor.id) {
-  //     //     tipoRepuestoID = tipoRepuestoI.id;
-  //     //   }
-  //     // });
-  //     // let query;
-  //     // if (tipoRepuestoID) {
-  //     //   query = {
-  //     //     'tipoRepuestoId.equals': tipoRepuestoID
-  //     //   };
-  //     // }
-  //     // this.articuloService.query(query).subscribe((res: HttpResponse<IArticulo[]>) => {
-  //     //   this.articulos = res.body;
-  //     // });
-  //   });
-  // }
 
   guardarPedidoPendiente() {
     this.isSaving = true;
-    this.detallePedidoComponent.forEach((detalle: DetallePedidoNewComponent) => detalle.updateCostoRepuestos());
     this.subscribeToSavePedido(this.pedidosServices.updatePedido(this.pedido));
   }
 

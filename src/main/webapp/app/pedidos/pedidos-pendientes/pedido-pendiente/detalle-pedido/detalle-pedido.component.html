@@ -3,7 +3,6 @@
         <b>{{detallePedido.detallePresupuesto.tipoParteMotor.nombreTipoParteMotor}}</b>
     </h3>
 </div>
-<div *ngFor="let cobranzaRepuesto of detallePedido.detallePresupuesto.cobranzaRepuestos">
-    <jhi-costo-repuesto #costoRepuestoComponent [cobranzaRepuesto]="cobranzaRepuesto" [proveedores]="proveedores"
-        [detallePedido]="detallePedido"></jhi-costo-repuesto>
+<div *ngFor="let costoRepuesto of getOrderedCostoRepuestos()">
+    <jhi-costo-repuesto #costoRepuestoComponent [costoRepuesto]="costoRepuesto"></jhi-costo-repuesto>
 </div>

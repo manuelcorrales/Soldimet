@@ -1,40 +1,48 @@
-<div class="d-flex mb-2">
-    <label for="example-number-input" class="col-md-3 text-center">{{cobranzaRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}</label>
+<div class="d-flex mb-2 mt-2">
+    <label for="example-number-input" class="col-md-2 text-center">{{costoRepuesto?.tipoRepuesto?.nombreTipoRepuesto}}</label>
     <ng-container *ngIf="isEditing">
-        <div class="col-md-3">
-            <input type="text" placeholder="Proveedor" [(ngModel)]="proveedor" [resultFormatter]="formatterProv" id="typeahead-focusProv_{{cobranzaRepuesto.id}}"
-                type="text" class="form-control" [ngbTypeahead]="searchProv" (focus)="focusProv$.next($event.target.value)" (click)="clickProv$.next($event.target.value)"
-                #instanceNTAProv="ngbTypeahead" [inputFormatter]="formatterProv" />
+        <div class="col-md-2 text-center">
+            <label *ngIf="costoRepuesto?.articulo">
+                {{costoRepuesto?.articulo?.marca?.nombreMarca}}({{costoRepuesto?.articulo?.codigoArticuloProveedor}})
+            </label>
         </div>
         <div class="col-md-2">
-            <input class="form-control" [(ngModel)]="valor" type="number" step="0.01" min=0 value="{{costoRepuesto.valor}}" placeholder="Costo repuesto">
+            <input class="form-control" [(ngModel)]="costoRepuesto.medida" type="text" placeholder="medida">
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" [(ngModel)]="costoRepuesto.valor" type="number" step="0.01" min=0 placeholder="Costo repuesto">
         </div>
     </ng-container>
     <ng-container *ngIf="!isEditing">
-        <div class="col-md-3 text-center">
-            <label>{{costoRepuesto?.proveedor?.nombreProveedor}}</label>
+        <div class="col-md-2 text-center">
+            <label *ngIf="costoRepuesto?.articulo">
+                {{costoRepuesto?.articulo?.marca?.nombreMarca}}({{costoRepuesto?.articulo?.codigoArticuloProveedor}})
+            </label>
+        </div>
+        <div class="col-md-2 text-center">
+            <label>{{costoRepuesto?.medida}}</label>
         </div>
         <div class="col-md-2 text-center">
             <label>${{costoRepuesto.valor}}</label>
         </div>
-        <ng-container *ngIf="costoRepuesto.estado.nombreEstado != 'Recibido' && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else recibidoTemplate">
-            <div class="col-md-1 text-center">
-                <label class="alert-primary" role="alert" style="border-radius: .25rem;">
-                    {{costoRepuesto.estado.nombreEstado}}
-                </label>
-            </div>
-        </ng-container>
-        <ng-template #recibidoTemplate>
-            <div class="col-md-3 text-center">
-                <label class="alert-success" role="alert" style="border-radius: .25rem;">
-                    {{costoRepuesto.estado.nombreEstado}}
-                </label>
-            </div>
-        </ng-template>
     </ng-container>
+    <ng-container *ngIf="costoRepuesto.estado.nombreEstado != 'Recibido' && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else recibidoTemplate">
+        <div class="col-md-2 text-center">
+            <label class="alert-primary" role="alert" style="border-radius: .25rem;">
+                {{costoRepuesto.estado.nombreEstado}}
+            </label>
+        </div>
+    </ng-container>
+    <ng-template #recibidoTemplate>
+        <div class="col-md-2 text-center">
+            <label class="alert-success" role="alert" style="border-radius: .25rem;">
+                {{costoRepuesto.estado.nombreEstado}}
+            </label>
+        </div>
+    </ng-template>
     <ng-container *ngIf="!isPedido && !isRecibido">
-        <div class="col-md-3">
-            <button class="btn btn-primary" [disabled]="isSaving || (proveedor==null || valor==null)" (click)="actualizarPedidoDetalle()">Pedir</button>
+        <div class="col-md-2">
+            <button class="btn btn-primary" [disabled]="isSaving || costoRepuesto.valor==null" (click)="actualizarPedidoDetalle()">Pedir</button>
         </div>
     </ng-container>
     <ng-container *ngIf="isPedido && !isRecibido">
@@ -57,7 +65,7 @@
                 </button>
             </div>
         </ng-container>
-        <div class="col-md-1">
+        <div class="col-md-1" *ngIf="!isEditing">
             <button class="btn btn-outline-success" [disabled]="isSaving || isEditing" (click)="recibirRepuesto()">Recibir</button>
         </div>
     </ng-container>

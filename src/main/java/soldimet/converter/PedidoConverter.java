@@ -6,11 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import soldimet.domain.DetallePedido;
-import soldimet.domain.DetallePresupuesto;
 import soldimet.domain.PedidoRepuesto;
-import soldimet.domain.Presupuesto;
 import soldimet.service.dto.DTOPedidoCabecera;
-import soldimet.service.dto.DTOPresupuesto;
 
 @Component
 public class PedidoConverter {

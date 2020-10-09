@@ -35,6 +35,7 @@ import soldimet.domain.DetallePedido;
 import soldimet.domain.DetallePresupuesto;
 import soldimet.domain.Empleado;
 import soldimet.domain.EstadoCobranzaOperacion;
+import soldimet.domain.EstadoCostoRepuesto;
 import soldimet.domain.EstadoDetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.EstadoPersona;
@@ -56,6 +57,7 @@ import soldimet.repository.extendedRepository.ExtendedAplicacionRepository;
 import soldimet.repository.extendedRepository.ExtendedClienteRepository;
 import soldimet.repository.extendedRepository.ExtendedCostoRepuestoProveedorRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoCobranzaOperacionRepository;
+import soldimet.repository.extendedRepository.ExtendedEstadoCostoRepuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoDetallePedidoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoPedidoRepuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoPersonaRepository;
@@ -137,6 +139,9 @@ public class ExpertoPresupuesto {
 
     @Autowired
     private ExtendedEstadoDetallePedidoRepository estadoDetallePedidoRepository;
+
+    @Autowired
+    private ExtendedEstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
 
     @Autowired
     private ExtendedCostoRepuestoProveedorRepository costoRepuestoProveedorRepository;
@@ -389,7 +394,16 @@ public class ExpertoPresupuesto {
                 .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_DE_PEDIDO);
         for (DetallePresupuesto detallePresupuesto : presupuesto.getDetallePresupuestos()) {
             if (!detallePresupuesto.getCobranzaRepuestos().isEmpty()) {
+                EstadoCostoRepuesto costoPendientePedido = estadoCostoRepuestoRepository
+                        .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PENDIENTE);
                 DetallePedido nuevoDetallePedido = new DetallePedido();
+                for (CobranzaRepuesto cobranza : detallePresupuesto.getCobranzaRepuestos()) {
+                    CostoRepuesto newCosto = new CostoRepuesto();
+                    newCosto.setArticulo(cobranza.getArticulo());
+                    newCosto.setEstado(costoPendientePedido);
+                    newCosto.setTipoRepuesto(cobranza.getTipoRepuesto());
+                    nuevoDetallePedido.getCostoRepuestos().add(newCosto);
+                }
                 nuevoDetallePedido.setDetallePresupuesto(detallePresupuesto);
                 nuevoDetallePedido.setEstadoDetallePedido(estadoPendiente);
                 nuevoPedido.getDetallePedidos().add(nuevoDetallePedido);

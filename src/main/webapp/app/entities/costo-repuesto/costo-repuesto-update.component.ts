@@ -9,12 +9,12 @@ import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { ICostoRepuesto, CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 import { CostoRepuestoService } from './costo-repuesto.service';
-import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
-import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
-import { IProveedor } from 'app/shared/model/proveedor.model';
-import { ProveedorService } from 'app/entities/proveedor/proveedor.service';
 import { IEstadoCostoRepuesto } from 'app/shared/model/estado-costo-repuesto.model';
 import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/estado-costo-repuesto.service';
+import { IArticulo } from 'app/shared/model/articulo.model';
+import { ArticuloService } from 'app/entities/articulo/articulo.service';
+import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
+import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
 
 @Component({
   selector: 'jhi-costo-repuesto-update',
@@ -23,26 +23,27 @@ import { EstadoCostoRepuestoService } from 'app/entities/estado-costo-repuesto/e
 export class CostoRepuestoUpdateComponent implements OnInit {
   isSaving: boolean;
 
-  tiporepuestos: ITipoRepuesto[];
-
-  proveedors: IProveedor[];
-
   estadocostorepuestos: IEstadoCostoRepuesto[];
+
+  articulos: IArticulo[];
+
+  tiporepuestos: ITipoRepuesto[];
 
   editForm = this.fb.group({
     id: [],
     valor: [null, [Validators.required, Validators.min(0)]],
-    tipoRepuesto: [null, Validators.required],
-    proveedor: [],
-    estado: [null, Validators.required]
+    medida: [],
+    estado: [null, Validators.required],
+    articulo: [],
+    tipoRepuesto: []
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected costoRepuestoService: CostoRepuestoService,
-    protected tipoRepuestoService: TipoRepuestoService,
-    protected proveedorService: ProveedorService,
     protected estadoCostoRepuestoService: EstadoCostoRepuestoService,
+    protected articuloService: ArticuloService,
+    protected tipoRepuestoService: TipoRepuestoService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -52,20 +53,6 @@ export class CostoRepuestoUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ costoRepuesto }) => {
       this.updateForm(costoRepuesto);
     });
-    this.tipoRepuestoService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<ITipoRepuesto[]>) => mayBeOk.ok),
-        map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
-      )
-      .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.proveedorService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IProveedor[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IProveedor[]>) => response.body)
-      )
-      .subscribe((res: IProveedor[]) => (this.proveedors = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.estadoCostoRepuestoService
       .query()
       .pipe(
@@ -73,15 +60,30 @@ export class CostoRepuestoUpdateComponent implements OnInit {
         map((response: HttpResponse<IEstadoCostoRepuesto[]>) => response.body)
       )
       .subscribe((res: IEstadoCostoRepuesto[]) => (this.estadocostorepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.articuloService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IArticulo[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IArticulo[]>) => response.body)
+      )
+      .subscribe((res: IArticulo[]) => (this.articulos = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.tipoRepuestoService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ITipoRepuesto[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
+      )
+      .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(costoRepuesto: ICostoRepuesto) {
     this.editForm.patchValue({
       id: costoRepuesto.id,
       valor: costoRepuesto.valor,
-      tipoRepuesto: costoRepuesto.tipoRepuesto,
-      proveedor: costoRepuesto.proveedor,
-      estado: costoRepuesto.estado
+      medida: costoRepuesto.medida,
+      estado: costoRepuesto.estado,
+      articulo: costoRepuesto.articulo,
+      tipoRepuesto: costoRepuesto.tipoRepuesto
     });
   }
 
@@ -104,9 +106,10 @@ export class CostoRepuestoUpdateComponent implements OnInit {
       ...new CostoRepuesto(),
       id: this.editForm.get(['id']).value,
       valor: this.editForm.get(['valor']).value,
-      tipoRepuesto: this.editForm.get(['tipoRepuesto']).value,
-      proveedor: this.editForm.get(['proveedor']).value,
-      estado: this.editForm.get(['estado']).value
+      medida: this.editForm.get(['medida']).value,
+      estado: this.editForm.get(['estado']).value,
+      articulo: this.editForm.get(['articulo']).value,
+      tipoRepuesto: this.editForm.get(['tipoRepuesto']).value
     };
   }
 
@@ -126,15 +129,15 @@ export class CostoRepuestoUpdateComponent implements OnInit {
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
-  trackTipoRepuestoById(index: number, item: ITipoRepuesto) {
-    return item.id;
-  }
-
-  trackProveedorById(index: number, item: IProveedor) {
-    return item.id;
-  }
-
   trackEstadoCostoRepuestoById(index: number, item: IEstadoCostoRepuesto) {
+    return item.id;
+  }
+
+  trackArticuloById(index: number, item: IArticulo) {
+    return item.id;
+  }
+
+  trackTipoRepuestoById(index: number, item: ITipoRepuesto) {
     return item.id;
   }
 }

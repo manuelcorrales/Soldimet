@@ -8,7 +8,7 @@ import 'app/vendor';
 import { AuthInterceptor } from 'app/blocks/interceptor/auth.interceptor';
 import { AuthExpiredInterceptor } from 'app/blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from 'app/blocks/interceptor/errorhandler.interceptor';
-import { NotificationInterceptor } from 'app/blocks/interceptor/notification.interceptor';
+// import { NotificationInterceptor } from 'app/blocks/interceptor/notification.interceptor';
 import { SoldimetSharedModule } from 'app/shared/shared.module';
 import { SoldimetCoreModule } from 'app/core/core.module';
 import { SoldimetAppRoutingModule } from 'app/app-routing.module';
@@ -72,12 +72,14 @@ import { RepuestosModule } from 'app/repuestos/repuestos.module';
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorHandlerInterceptor,
       multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: NotificationInterceptor,
-      multi: true
     }
+    // Ignoro las notificaciones de jhipster
+    // },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: NotificationInterceptor,
+    //   multi: true
+    // }
   ],
   bootstrap: [JhiMainComponent]
 })

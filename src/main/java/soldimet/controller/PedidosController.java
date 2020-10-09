@@ -51,25 +51,6 @@ public class PedidosController {
 
     }
 
-    @GetMapping("/proveedoresRepuestos")
-    public ResponseEntity<List<DTOProveedor>> getProveedoresRepuestos() {
-        log.debug("request api/pedidos/proveedoresRepuestos");
-
-        List<DTOProveedor> pedidos = expertoPedidos.getProveedoresRepuestos();
-
-        if (pedidos != null) {
-            ResponseEntity<List<DTOProveedor>> response = new ResponseEntity<List<DTOProveedor>>(pedidos,
-                    HttpStatus.OK);
-            log.debug("response api/pedidos/proveedoresRepuestos: {}", response);
-            return response;
-        } else {
-            log.error("ERROR api/pedidos/proveedoresRepuestos: No se encontraron proveedores");
-
-            return ResponseEntity.status(500).body(null);
-        }
-
-    }
-
     @GetMapping("/getPedidosCabecera")
     public ResponseEntity<List<DTOPedidoCabecera>> getPedidosCabecera() {
         log.debug("request api/pedidos/getPedidosCabecera");
@@ -89,16 +70,14 @@ public class PedidosController {
     }
 
     @Transactional
-    @PostMapping("/updateDetallePedido/{detallePedidoId}")
-    public ResponseEntity<CostoRepuesto> updateDetallePedido(@RequestBody CostoRepuesto costoRepuesto,
-            @PathVariable("detallePedidoId") Long detallePedidoId) throws URISyntaxException {
-        log.debug("request api/pedidos/updateDetallePedido: DetallePedido: {}, CostoRepuesto: {}", detallePedidoId,
-                costoRepuesto);
+    @PostMapping("/updateCostoRepuesto/")
+    public ResponseEntity<CostoRepuesto> updateCostoRepuesto(@RequestBody CostoRepuesto costoRepuesto) throws URISyntaxException {
+        log.debug("request api/pedidos/updateCostoRepuesto: CostoRepuesto: {}", costoRepuesto);
 
         try {
-            costoRepuesto = expertoPedidos.updateDetallePedido(costoRepuesto, detallePedidoId);
+            costoRepuesto = expertoPedidos.updateCostoRepuesto(costoRepuesto);
             ResponseEntity<CostoRepuesto> response = new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
-            log.debug("response api/pedidos/updateDetallePedido: {}", response);
+            log.debug("response api/pedidos/updateCostoRepuesto: {}", response);
             return response;
 
         } catch (Exception e) {
@@ -107,16 +86,14 @@ public class PedidosController {
 
     }
 
-    @PostMapping("/recibirRepuesto/{detallePedidoId}")
-    public ResponseEntity<CostoRepuesto> recibirRepuesto(@RequestBody CostoRepuesto costoRepuesto,
-            @PathVariable("detallePedidoId") Long detallePedidoId) {
-        log.debug("request api/pedidos/recibirRepuesto: DetallePedido {}, CostoRepuesto: {}", detallePedidoId,
-                costoRepuesto);
+    @PostMapping("/recibirRepuesto/")
+    public ResponseEntity<CostoRepuesto> recibirRepuesto(@RequestBody CostoRepuesto costoRepuesto) {
+        log.debug("request api/pedidos/recibirRepuesto: CostoRepuesto: {}", costoRepuesto);
 
-        costoRepuesto = expertoPedidos.recibirRepuesto(costoRepuesto, detallePedidoId);
+        costoRepuesto = expertoPedidos.recibirRepuesto(costoRepuesto);
 
         if (costoRepuesto != null) {
-            ResponseEntity<CostoRepuesto> response = new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
+            ResponseEntity<CostoRepuesto> response = new ResponseEntity<>(costoRepuesto, HttpStatus.OK);
             log.debug("response api/pedidos/recibirRepuesto: {}", response);
             return response;
         } else {
@@ -128,9 +105,9 @@ public class PedidosController {
 
     @GetMapping("/get/{id}")
     public PedidoRepuesto getPedido(@PathVariable("id") Long pedidoId) {
-        log.debug("request /api/pedidos: pedido id {}", pedidoId);
+        log.debug("request /api/pedidos/get/: pedido id {}", pedidoId);
         PedidoRepuesto pedido = expertoPedidos.getPresupuesto(pedidoId);
-        log.debug("response /api/pedidos: {}", pedido);
+        log.debug("response /api/pedidos/get/: {}", pedido);
         return pedido;
     }
 

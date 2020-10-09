@@ -11,36 +11,32 @@ import org.springframework.stereotype.Service;
 
 import soldimet.constant.Globales;
 import soldimet.converter.PedidoConverter;
-import soldimet.converter.ProveedorConverter;
 import soldimet.domain.Authority;
+import soldimet.domain.CobranzaOperacion;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.DetallePedido;
+import soldimet.domain.DetallePresupuesto;
 import soldimet.domain.Empleado;
 import soldimet.domain.EstadoCostoRepuesto;
 import soldimet.domain.EstadoDetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
-import soldimet.domain.EstadoPersona;
 import soldimet.domain.PedidoRepuesto;
-import soldimet.domain.Persona;
-import soldimet.domain.Proveedor;
+import soldimet.repository.extendedRepository.ExtendedArticuloRepository;
+import soldimet.repository.extendedRepository.ExtendedCostoRepuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedDetallePedidoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoCostoRepuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoDetallePedidoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoPedidoRepuestoRepository;
-import soldimet.repository.extendedRepository.ExtendedEstadoPersonaRepository;
 import soldimet.repository.extendedRepository.ExtendedPedidoRepuestoRepository;
-import soldimet.repository.extendedRepository.ExtendedPersonaRepository;
-import soldimet.repository.extendedRepository.ExtendedProveedorRepository;
 import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOPedidoCabecera;
-import soldimet.service.dto.DTOProveedor;
 
 @Service
 public class ExpertoPedidos {
 
-    private final Logger log = LoggerFactory.getLogger(ExpertoCaja.class);
+    private final Logger log = LoggerFactory.getLogger(ExpertoPedidos.class);
 
     @Autowired
     private Globales globales;
@@ -52,16 +48,10 @@ public class ExpertoPedidos {
     private ExtendedEstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
 
     @Autowired
-    private ExtendedEstadoPersonaRepository estadoPersonaRepository;
-
-    @Autowired
     private ExtendedEstadoDetallePedidoRepository estadoDetallePedidoRepuestoRepository;
 
     @Autowired
-    private ExtendedProveedorRepository proveedorRepository;
-
-    @Autowired
-    private ExtendedPersonaRepository personaRepository;
+    private ExtendedArticuloRepository articuloRepository;
 
     @Autowired
     private PedidoConverter pedidoConverter;
@@ -70,16 +60,16 @@ public class ExpertoPedidos {
     private ExtendedPedidoRepuestoRepository pedidoRepuestoRepository;
 
     @Autowired
-    private ProveedorConverter proveedorConverter;
+    private ExtendedDetallePedidoRepository detallePedidoRepository;
 
     @Autowired
-    private ExtendedDetallePedidoRepository detallePedidoRepository;
+    private ExtendedEstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
 
     @Autowired
     private ExtendedTipoRepuestoRepository tipoRepuestoRepository;
 
     @Autowired
-    private ExtendedEstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
+    private ExtendedCostoRepuestoRepository costoRepuestoRepository;
 
     public List<PedidoRepuesto> getPedidosPendientes() {
 
@@ -91,17 +81,6 @@ public class ExpertoPedidos {
 
         return pedidos;
 
-    }
-
-    public List<DTOProveedor> getProveedoresRepuestos() {
-
-        EstadoPersona estadoActivo = estadoPersonaRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_ALTA);
-
-        List<Persona> personasActivas = personaRepository.findByEstadoPersona(estadoActivo);
-
-        List<Proveedor> proveedores = proveedorRepository.findByPersonaIn(personasActivas);
-
-        return proveedorConverter.convertirListProveedorAListProveedorBusquedaDTO(proveedores);
     }
 
     public List<DTOPedidoCabecera> getPedidosCabecera() {
@@ -124,14 +103,17 @@ public class ExpertoPedidos {
         return pedidoConverter.convertirPedidosAPedidosCabeceras(pedidos);
     }
 
-    public CostoRepuesto updateDetallePedido(CostoRepuesto costoRepuesto, Long detallePedidoId) throws Exception {
+    public CostoRepuesto updateCostoRepuesto(CostoRepuesto costoRepuesto) throws Exception {
         EstadoCostoRepuesto estadoPedido = estadoCostoRepuestoRepository
                 .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
         costoRepuesto.setEstado(estadoPedido);
-        costoRepuesto.setProveedor(proveedorRepository.getOne(costoRepuesto.getProveedor().getId()));
         costoRepuesto.setTipoRepuesto(tipoRepuestoRepository.getOne(costoRepuesto.getTipoRepuesto().getId()));
+        if (costoRepuesto.getArticulo() != null) {
+            costoRepuesto.setArticulo(articuloRepository.getOne(costoRepuesto.getArticulo().getId()));
+        }
+        costoRepuesto = costoRepuestoRepository.save(costoRepuesto);
 
-        DetallePedido detallePedido = detallePedidoRepository.getOne(detallePedidoId);
+        DetallePedido detallePedido = detallePedidoRepository.findByCostoRepuestosIn(costoRepuesto);
         detallePedido.addCostoRepuesto(costoRepuesto);
         detallePedido = this.transitionDetalleToPedido(detallePedido, null);
 
@@ -225,7 +207,8 @@ public class ExpertoPedidos {
             int repuestosPedidos = 0;
             for (CobranzaRepuesto cobranzaRepuesto : repuestosPresupuestados) {
                 for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
-                    if (costoRepuesto.getTipoRepuesto().getId() == cobranzaRepuesto.getTipoRepuesto().getId()) {
+                    if (costoRepuesto.getTipoRepuesto().getId().equals(cobranzaRepuesto.getTipoRepuesto()
+                            .getId())) {
                         repuestosPedidos += 1;
                     }
                 }
@@ -280,10 +263,10 @@ public class ExpertoPedidos {
         return detallePedido;
     }
 
-    public CostoRepuesto recibirRepuesto(CostoRepuesto costoRepuesto, Long detallePedidoId) {
+    public CostoRepuesto recibirRepuesto(CostoRepuesto costoRepuesto) {
 
         try {
-            DetallePedido detallePedido = detallePedidoRepository.getOne(detallePedidoId);
+            DetallePedido detallePedido = detallePedidoRepository.findByCostoRepuestosIn(costoRepuesto);
             PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository
                     .findPedidoRepuestoByDetallePedidosIn(detallePedido);
 
@@ -339,8 +322,10 @@ public class ExpertoPedidos {
         PedidoRepuesto pedido = pedidoRepuestoRepository.findById(pedidoId).get();
         pedido.getDetallePedidos().iterator().next().getCostoRepuestos();
         pedido.getPresupuesto().getCliente();
-        pedido.getPresupuesto().getDetallePresupuestos().iterator().next().getCobranzaOperacions().iterator().next();
-        pedido.getPresupuesto().getDetallePresupuestos().iterator().next().getCobranzaRepuestos().iterator().next();
+        for (DetallePresupuesto detalle : pedido.getPresupuesto().getDetallePresupuestos()) {
+            for (CobranzaOperacion cobranzaOp : detalle.getCobranzaOperacions()) {cobranzaOp.getOperacion();}
+            for (CobranzaRepuesto cobranzaRep : detalle.getCobranzaRepuestos()) {cobranzaRep.getArticulo();}
+        }
         return pedido;
     }
 

@@ -24,21 +24,26 @@ public class CostoRepuesto implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @DecimalMin(value = "0")
-    @Column(name = "valor", nullable = false)
+    @Column(name = "valor")
     private Float valor;
 
-    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
+    @Column(name = "medida")
+    private String medida;
+
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("costoRepuestos")
+    private EstadoCostoRepuesto estado;
+
+    @ManyToOne
+    @JsonIgnoreProperties("costoRepuestos")
+    private Articulo articulo;
+
+    @ManyToOne
+    @JsonIgnoreProperties("costoRepuestos")
     private TipoRepuesto tipoRepuesto;
 
-    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
-    private Proveedor proveedor;
-
-    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch=FetchType.EAGER)
-    @NotNull
-    private EstadoCostoRepuesto estado;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -62,30 +67,17 @@ public class CostoRepuesto implements Serializable {
         this.valor = valor;
     }
 
-    public TipoRepuesto getTipoRepuesto() {
-        return tipoRepuesto;
+    public String getMedida() {
+        return medida;
     }
 
-    public CostoRepuesto tipoRepuesto(TipoRepuesto tipoRepuesto) {
-        this.tipoRepuesto = tipoRepuesto;
+    public CostoRepuesto medida(String medida) {
+        this.medida = medida;
         return this;
     }
 
-    public void setTipoRepuesto(TipoRepuesto tipoRepuesto) {
-        this.tipoRepuesto = tipoRepuesto;
-    }
-
-    public Proveedor getProveedor() {
-        return proveedor;
-    }
-
-    public CostoRepuesto proveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
-        return this;
-    }
-
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
+    public void setMedida(String medida) {
+        this.medida = medida;
     }
 
     public EstadoCostoRepuesto getEstado() {
@@ -100,6 +92,33 @@ public class CostoRepuesto implements Serializable {
     public void setEstado(EstadoCostoRepuesto estadoCostoRepuesto) {
         this.estado = estadoCostoRepuesto;
     }
+
+    public Articulo getArticulo() {
+        return articulo;
+    }
+
+    public CostoRepuesto articulo(Articulo articulo) {
+        this.articulo = articulo;
+        return this;
+    }
+
+    public void setArticulo(Articulo articulo) {
+        this.articulo = articulo;
+    }
+
+    public TipoRepuesto getTipoRepuesto() {
+        return tipoRepuesto;
+    }
+
+    public CostoRepuesto tipoRepuesto(TipoRepuesto tipoRepuesto) {
+        this.tipoRepuesto = tipoRepuesto;
+        return this;
+    }
+
+    public void setTipoRepuesto(TipoRepuesto tipoRepuesto) {
+        this.tipoRepuesto = tipoRepuesto;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -123,6 +142,7 @@ public class CostoRepuesto implements Serializable {
         return "CostoRepuesto{" +
             "id=" + getId() +
             ", valor=" + getValor() +
+            ", medida='" + getMedida() + "'" +
             "}";
     }
 }
