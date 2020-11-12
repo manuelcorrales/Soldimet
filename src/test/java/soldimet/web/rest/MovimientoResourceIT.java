@@ -246,24 +246,6 @@ public class MovimientoResourceIT {
 
     @Test
     @Transactional
-    public void checkImporteIsRequired() throws Exception {
-        int databaseSizeBeforeTest = movimientoRepository.findAll().size();
-        // set the field null
-        movimiento.setImporte(null);
-
-        // Create the Movimiento, which fails.
-
-        restMovimientoMockMvc.perform(post("/api/movimientos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(movimiento)))
-            .andExpect(status().isBadRequest());
-
-        List<Movimiento> movimientoList = movimientoRepository.findAll();
-        assertThat(movimientoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllMovimientos() throws Exception {
         // Initialize the database
         movimientoRepository.saveAndFlush(movimiento);
@@ -278,7 +260,7 @@ public class MovimientoResourceIT {
             .andExpect(jsonPath("$.[*].descuento").value(hasItem(DEFAULT_DESCUENTO.doubleValue())))
             .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getMovimiento() throws Exception {

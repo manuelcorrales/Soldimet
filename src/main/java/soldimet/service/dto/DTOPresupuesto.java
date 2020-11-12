@@ -5,8 +5,6 @@
  */
 package soldimet.service.dto;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.ArrayList;
 
 /**
  *
@@ -24,6 +22,7 @@ public class DTOPresupuesto {
     private Boolean isSoldadura;
     private double totalRepuestos;
     private double totalOperaciones;
+    private Boolean isModelo;
 
     public DTOPresupuesto() {
     }
@@ -117,5 +116,13 @@ public class DTOPresupuesto {
 
     public double getTotalOperaciones() {
         return totalOperaciones;
+    }
+
+    public Boolean getIsModelo() {
+        return this.isModelo;
+    }
+
+    public void setIsModelo(Boolean isModelo) {
+        this.isModelo = isModelo;
     }
 }

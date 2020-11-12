@@ -177,24 +177,6 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void checkPrecioPublicoIsRequired() throws Exception {
-        int databaseSizeBeforeTest = precioRepuestoRepository.findAll().size();
-        // set the field null
-        precioRepuesto.setPrecioPublico(null);
-
-        // Create the PrecioRepuesto, which fails.
-
-        restPrecioRepuestoMockMvc.perform(post("/api/precio-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(precioRepuesto)))
-            .andExpect(status().isBadRequest());
-
-        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
-        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllPrecioRepuestos() throws Exception {
         // Initialize the database
         precioRepuestoRepository.saveAndFlush(precioRepuesto);
@@ -208,7 +190,7 @@ public class PrecioRepuestoResourceIT {
             .andExpect(jsonPath("$.[*].precioPrivado").value(hasItem(DEFAULT_PRECIO_PRIVADO.doubleValue())))
             .andExpect(jsonPath("$.[*].precioPublico").value(hasItem(DEFAULT_PRECIO_PUBLICO.doubleValue())));
     }
-    
+
     @Test
     @Transactional
     public void getPrecioRepuesto() throws Exception {

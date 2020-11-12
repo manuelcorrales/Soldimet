@@ -7,7 +7,7 @@
     "baseName": "Soldimet",
     "packageName": "soldimet",
     "packageFolder": "soldimet",
-    "serverPort": "8080",
+    "serverPort": "80",
     "authenticationType": "jwt",
     "clusteredHttpSession": false,
     "websocket": false,
@@ -36,6 +36,15 @@
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
-    "blueprints": []
+    "blueprints": [],
+    "appsFolders": ["soldimet-spring"],
+    "directoryPath": "../",
+    "monitoring": "elk",
+    "consoleOptions": [],
+    "dockerRepositoryName": "soldimet",
+    "dockerPushCommand": "docker push",
+    "kubernetesNamespace": "default",
+    "kubernetesServiceType": "NodePort",
+    "istio": false
   }
 }

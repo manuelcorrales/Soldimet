@@ -1,0 +1,29 @@
+version: '2'
+services:
+  soldimet-app:
+    image: manuelcorrales/soldimet
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - 'SPRING_PROFILES_ACTIVE=qa'
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=false
+      - JHIPSTER_SLEEP=5
+      - JHIPSTER_LOGGING_LOGSTASH_ENABLED=true
+      - JHIPSTER_LOGGING_LOGSTASH_HOST=localhost
+      - JHIPSTER_METRICS_LOGS_ENABLED=false
+      - JHIPSTER_METRICS_LOGS_REPORT_FREQUENCY=60
+      - SPRING_DATASOURCE_URL=jdbc:mysql://soldimet-mysql:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    ports:
+      - '80:80'
+      - '5000'
+    depends_on:
+      - soldimet-mysql
+  soldimet-mysql:
+    image: 'mysql:8.0.17'
+    environment:
+      - MYSQL_USER=SoldimetQA
+      - MYSQL_USER_PASSWORD=SoldimetQA
+      - MYSQL_ALLOW_EMPTY_PASSWORD=false
+      - MYSQL_DATABASE=Soldimet
+    command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8mb4 --explicit_defaults_for_timestamp --default-authentication-plugin=mysql_native_password
+    ports:
+      - '3306:3306'

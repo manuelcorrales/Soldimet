@@ -164,24 +164,6 @@ public class CobranzaRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void checkValorIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cobranzaRepuestoRepository.findAll().size();
-        // set the field null
-        cobranzaRepuesto.setValor(null);
-
-        // Create the CobranzaRepuesto, which fails.
-
-        restCobranzaRepuestoMockMvc.perform(post("/api/cobranza-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(cobranzaRepuesto)))
-            .andExpect(status().isBadRequest());
-
-        List<CobranzaRepuesto> cobranzaRepuestoList = cobranzaRepuestoRepository.findAll();
-        assertThat(cobranzaRepuestoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllCobranzaRepuestos() throws Exception {
         // Initialize the database
         cobranzaRepuestoRepository.saveAndFlush(cobranzaRepuesto);
@@ -193,7 +175,7 @@ public class CobranzaRepuestoResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(cobranzaRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())));
     }
-    
+
     @Test
     @Transactional
     public void getCobranzaRepuesto() throws Exception {

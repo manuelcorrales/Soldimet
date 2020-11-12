@@ -21,7 +21,7 @@ application {
     promptValues [object Object]
     jhipsterVersion 6.3.0
     baseName Soldimet
-    serverPort 8080
+    serverPort 80
     authenticationType jwt
     clusteredHttpSession false
     buildTool maven

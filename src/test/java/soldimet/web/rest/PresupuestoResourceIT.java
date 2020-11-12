@@ -247,24 +247,6 @@ public class PresupuestoResourceIT {
 
     @Test
     @Transactional
-    public void checkImporteTotalIsRequired() throws Exception {
-        int databaseSizeBeforeTest = presupuestoRepository.findAll().size();
-        // set the field null
-        presupuesto.setImporteTotal(null);
-
-        // Create the Presupuesto, which fails.
-
-        restPresupuestoMockMvc.perform(post("/api/presupuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(presupuesto)))
-            .andExpect(status().isBadRequest());
-
-        List<Presupuesto> presupuestoList = presupuestoRepository.findAll();
-        assertThat(presupuestoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllPresupuestos() throws Exception {
         // Initialize the database
         presupuestoRepository.saveAndFlush(presupuesto);
@@ -284,7 +266,7 @@ public class PresupuestoResourceIT {
             .andExpect(jsonPath("$.[*].soldadura").value(hasItem(DEFAULT_SOLDADURA.booleanValue())))
             .andExpect(jsonPath("$.[*].modelo").value(hasItem(DEFAULT_MODELO.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getPresupuesto() throws Exception {

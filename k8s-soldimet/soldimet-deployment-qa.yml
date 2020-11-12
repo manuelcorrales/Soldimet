@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: soldimet-qa
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: soldimet-qa
+      version: 'v1'
+  template:
+    metadata:
+      labels:
+        app: soldimet-qa
+        version: 'v1'
+    spec:
+      volumes:
+      - name: mysql-data
+        hostPath:
+          path: /mysql-data
+          type: DirectoryOrCreate
+      containers:
+        - name: soldimet-app-qa
+          image: manuelcorrales/soldimet
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+            - name: JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: secret
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://localhost:3306/soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - name: JHIPSTER_METRICS_LOGS_ENABLED
+              value: 'true'
+            - name: JHIPSTER_LOGGING_LOGSTASH_ENABLED
+              value: 'true'
+            - name: JHIPSTER_LOGGING_LOGSTASH_HOST
+              value: soldimet-console
+            - name: JAVA_OPTS
+              value: ' -Xmx256m -Xms256m'
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '250m'
+            limits:
+              memory: '1Gi'
+              cpu: '500m'
+          ports:
+            - name: http
+              containerPort: 80
+          # readinessProbe:
+          #   httpGet:
+          #     path: /management/health
+          #     port: http
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 40
+          #   failureThreshold: 6
+          # livenessProbe:
+          #   httpGet:
+          #     path: /management/health
+          #     port: http
+          #   initialDelaySeconds: 120
+        - name: soldimet-mysql
+          image: mysql:8.0.17
+          env:
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: 'yes'
+            - name: MYSQL_DATABASE
+              value: soldimet
+          args:
+            - --lower_case_table_names=1
+            - --skip-ssl
+            - --character_set_server=utf8mb4
+            - --explicit_defaults_for_timestamp
+          ports:
+            - containerPort: 3306
+          resources:
+            requests:
+              memory: '250Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '250m'
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql/

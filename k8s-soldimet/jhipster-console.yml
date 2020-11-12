@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: soldimet-console
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: soldimet-console
+      version: 'v1'
+  template:
+    metadata:
+      labels:
+        app: soldimet-console
+        version: 'v1'
+    spec:
+      volumes:
+      - name: log-data
+        hostPath:
+          path: /log-data
+          type: DirectoryOrCreate
+      containers:
+        - name: jhipster-elasticsearch
+          image: jhipster/jhipster-elasticsearch:v4.1.0
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: log-data
+              mountPath: /usr/share/elasticsearch/data
+              accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              memory: '500Mi'
+              cpu: '250m'
+            limits:
+              memory: '4Gi'
+              cpu: '2000m'
+        - name: jhipster-logstash
+          image: jhipster/jhipster-logstash:v4.1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: INPUT_TCP_PORT
+              value: '5000'
+            - name: INPUT_UDP_PORT
+              value: '5000'
+            - name: ELASTICSEARCH_HOST
+              value: localhost
+            - name: ELASTICSEARCH_PORT
+              value: '9200'
+            - name: LOGSTASH_DEBUG
+              value: 'true'
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              memory: '250Mi'
+              cpu: '250m'
+            limits:
+              memory: '1Gi'
+              cpu: '1000m'
+        - name: jhipster-console
+          image: jhipster/jhipster-console:v4.1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ELASTICSEARCH_URL
+              value: 'http://localhost:9200'
+          ports:
+            - containerPort: 5601
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '250m'
+            limits:
+              memory: '2Gi'
+              cpu: '2000m'
+        # - name: jhipster-import-dashboards
+        #   image: jhipster/jhipster-import-dashboards:v4.1.0
+        #   imagePullPolicy: IfNotPresent
+        #   env:
+        #     - name: ELASTICSEARCH_URL
+        #       value: 'http://localhost:9200'
+        #   resources:
+        #     requests:
+        #       memory: '250Mi'
+        #       cpu: '250m'
+        #     limits:
+        #       memory: '500Gi'
+        #       cpu: '500m'

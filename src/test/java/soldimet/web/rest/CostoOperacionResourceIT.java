@@ -206,24 +206,6 @@ public class CostoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void checkCostoOperacionIsRequired() throws Exception {
-        int databaseSizeBeforeTest = costoOperacionRepository.findAll().size();
-        // set the field null
-        costoOperacion.setCostoOperacion(null);
-
-        // Create the CostoOperacion, which fails.
-
-        restCostoOperacionMockMvc.perform(post("/api/costo-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(costoOperacion)))
-            .andExpect(status().isBadRequest());
-
-        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
-        assertThat(costoOperacionList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllCostoOperacions() throws Exception {
         // Initialize the database
         costoOperacionRepository.saveAndFlush(costoOperacion);
@@ -235,7 +217,7 @@ public class CostoOperacionResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(costoOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].costoOperacion").value(hasItem(DEFAULT_COSTO_OPERACION.doubleValue())));
     }
-    
+
     @Test
     @Transactional
     public void getCostoOperacion() throws Exception {

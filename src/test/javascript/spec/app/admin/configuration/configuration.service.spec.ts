@@ -57,7 +57,7 @@ describe('Service Tests', () => {
               name: 'server.ports',
               properties: {
                 'local.server.port': {
-                  value: 8080
+                  value: 80
                 }
               }
             }
@@ -69,7 +69,7 @@ describe('Service Tests', () => {
 
         const req = httpMock.expectOne({ method: 'GET' });
         req.flush(propertySources);
-        expect(expectedResult).toEqual({ 'server.ports': [{ key: 'local.server.port', val: 8080 }] });
+        expect(expectedResult).toEqual({ 'server.ports': [{ key: 'local.server.port', val: 80 }] });
       });
     });
   });

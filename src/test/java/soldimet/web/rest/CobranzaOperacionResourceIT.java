@@ -182,25 +182,6 @@ public class CobranzaOperacionResourceIT {
         assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeCreate);
     }
 
-
-    @Test
-    @Transactional
-    public void checkCobranzaOperacionIsRequired() throws Exception {
-        int databaseSizeBeforeTest = cobranzaOperacionRepository.findAll().size();
-        // set the field null
-        cobranzaOperacion.setCobranzaOperacion(null);
-
-        // Create the CobranzaOperacion, which fails.
-
-        restCobranzaOperacionMockMvc.perform(post("/api/cobranza-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion)))
-            .andExpect(status().isBadRequest());
-
-        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
-        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeTest);
-    }
-
     @Test
     @Transactional
     public void getAllCobranzaOperacions() throws Exception {
@@ -214,7 +195,7 @@ public class CobranzaOperacionResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(cobranzaOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].cobranzaOperacion").value(hasItem(DEFAULT_COBRANZA_OPERACION.doubleValue())));
     }
-    
+
     @Test
     @Transactional
     public void getCobranzaOperacion() throws Exception {

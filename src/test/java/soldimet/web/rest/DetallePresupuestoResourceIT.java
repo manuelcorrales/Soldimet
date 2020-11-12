@@ -227,24 +227,6 @@ public class DetallePresupuestoResourceIT {
 
     @Test
     @Transactional
-    public void checkImporteIsRequired() throws Exception {
-        int databaseSizeBeforeTest = detallePresupuestoRepository.findAll().size();
-        // set the field null
-        detallePresupuesto.setImporte(null);
-
-        // Create the DetallePresupuesto, which fails.
-
-        restDetallePresupuestoMockMvc.perform(post("/api/detalle-presupuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(detallePresupuesto)))
-            .andExpect(status().isBadRequest());
-
-        List<DetallePresupuesto> detallePresupuestoList = detallePresupuestoRepository.findAll();
-        assertThat(detallePresupuestoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllDetallePresupuestos() throws Exception {
         // Initialize the database
         detallePresupuestoRepository.saveAndFlush(detallePresupuesto);
@@ -256,7 +238,7 @@ public class DetallePresupuestoResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(detallePresupuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].importe").value(hasItem(DEFAULT_IMPORTE.doubleValue())));
     }
-    
+
     @Test
     @Transactional
     public void getDetallePresupuesto() throws Exception {

@@ -27,6 +27,7 @@ public class PresupuestoConverter {
         } else {
             dtoPresupuesto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
         }
+        dtoPresupuesto.setIsModelo(presupuesto.isModelo());
         dtoPresupuesto.setSucursal(presupuesto.getSucursal().getNombreSucursal());
         return dtoPresupuesto;
     }

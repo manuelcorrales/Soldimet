@@ -798,8 +798,10 @@ public class CajaResourceIT {
         TestUtil.equalsVerifier(Caja.class);
         Caja caja1 = new Caja();
         caja1.setId(1L);
+        caja1.setFecha(DEFAULT_FECHA);
         Caja caja2 = new Caja();
         caja2.setId(caja1.getId());
+        caja2.setFecha(DEFAULT_FECHA);
         assertThat(caja1).isEqualTo(caja2);
         caja2.setId(2L);
         assertThat(caja1).isNotEqualTo(caja2);

@@ -37,6 +37,7 @@
                         <th scope="col">Estado</th>
                         <th scope="col">Sucursal</th>
                         <th scope="col">Operaciones</th>
+                        <th scope="col">Detalle</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="content">
@@ -103,6 +104,11 @@
                                 <fa-icon icon="trash"></fa-icon>
                             </button>
                             <!-- <p *ngIf="presupuesto.estado == 'Cancelado'">No hay operaciones</p> -->
+                        </td>
+                        <td>
+                            <div *ngIf="presupuesto.isModelo">
+                                    <fa-icon icon="tags"ngbTooltip="Es Modelo" placement="top" > ></fa-icon>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

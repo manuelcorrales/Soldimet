@@ -170,24 +170,6 @@ public class CostoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void checkValorIsRequired() throws Exception {
-        int databaseSizeBeforeTest = costoRepuestoRepository.findAll().size();
-        // set the field null
-        costoRepuesto.setValor(null);
-
-        // Create the CostoRepuesto, which fails.
-
-        restCostoRepuestoMockMvc.perform(post("/api/costo-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(costoRepuesto)))
-            .andExpect(status().isBadRequest());
-
-        List<CostoRepuesto> costoRepuestoList = costoRepuestoRepository.findAll();
-        assertThat(costoRepuestoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllCostoRepuestos() throws Exception {
         // Initialize the database
         costoRepuestoRepository.saveAndFlush(costoRepuesto);
@@ -200,7 +182,7 @@ public class CostoRepuestoResourceIT {
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())))
             .andExpect(jsonPath("$.[*].medida").value(hasItem(DEFAULT_MEDIDA.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getCostoRepuesto() throws Exception {
