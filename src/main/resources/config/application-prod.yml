@@ -15,9 +15,11 @@
 
 logging:
   level:
-    ROOT: INFO
-    soldimet: INFO
-    io.github.jhipster: INFO
+    ROOT: DEBUG
+    soldimet: DEBUG
+    io.github.jhipster: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
+    org.hibernate.SQL: DEBUG
 
 management:
   metrics:
@@ -36,8 +38,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password:
+    username: soldimet
+    password: manu
     hikari:
       poolName: Hikari
       auto-commit: false

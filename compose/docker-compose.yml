@@ -1,29 +1,88 @@
-version: '2'
+version: '3.8'
 services:
   soldimet-app:
-    image: manuelcorrales/soldimet
+    image: manuelcorrales/soldimet:latest
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: 512M
+        limits:
+          memory: 2G
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - 'SPRING_PROFILES_ACTIVE=qa'
+      - 'SPRING_PROFILES_ACTIVE=prod,no-liquibase'
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=false
-      - JHIPSTER_SLEEP=5
-      - JHIPSTER_LOGGING_LOGSTASH_ENABLED=true
-      - JHIPSTER_LOGGING_LOGSTASH_HOST=localhost
+      - JHIPSTER_SLEEP=30
+      - JHIPSTER_LOGGING_LOGSTASH_ENABLED=false
+      - JHIPSTER_LOGGING_LOGSTASH_HOST=soldimet-logstash
       - JHIPSTER_METRICS_LOGS_ENABLED=false
-      - JHIPSTER_METRICS_LOGS_REPORT_FREQUENCY=60
+      - JHIPSTER_METRICS_LOGS_REPORT_FREQUENCY=120
+      - SPRING_DATASOURCE_PASSWORD=manu
       - SPRING_DATASOURCE_URL=jdbc:mysql://soldimet-mysql:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     ports:
       - '80:80'
-      - '5000'
     depends_on:
-      - soldimet-mysql
+      soldimet-mysql:
+        condition: service_healthy
+      soldimet-logstash:
+        condition: service_healthy
   soldimet-mysql:
     image: 'mysql:8.0.17'
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: 128M
+        limits:
+          memory: 256M
+    secrets:
+      - mysql_secret
+    cap_add:
+      - SYS_NICE
     environment:
-      - MYSQL_USER=SoldimetQA
-      - MYSQL_USER_PASSWORD=SoldimetQA
-      - MYSQL_ALLOW_EMPTY_PASSWORD=false
-      - MYSQL_DATABASE=Soldimet
+      MYSQL_DATABASE: 'Soldimet'
+      MYSQL_USER: 'soldimet'
+      MYSQL_PASSWORD_FILE: "/run/secrets/mysql_secret"
+      MYSQL_ROOT_PASSWORD_FILE: "/run/secrets/mysql_secret"
     command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8mb4 --explicit_defaults_for_timestamp --default-authentication-plugin=mysql_native_password
     ports:
       - '3306:3306'
+    volumes:
+      - mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  soldimet-logstash:
+    build:
+      context: logstash/
+    # image: logstash:7.9.3
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: 256M
+        limits:
+          memory: 512M
+    environment:
+      INPUT_TCP_PORT: 5000
+      INPUT_UDP_PORT: 5000
+      # command: bash -c "bin/logstash-plugin install logstash-output-loggly && logstash "
+    ports:
+      - '5000:5000'
+      - '5000:5000/udp'
+      - '9600:9600'
+    volumes:
+      - ./logstash-loggly.conf:/usr/share/logstash/pipeline/ro:rw
+      - ./logstash-loggly.yml:/usr/share/logstash/config/logstash.yml:rw
+    healthcheck:
+      test: ["CMD", "curl" ,"-s", "-XGET", "127.0.0.1:9600"]
+      timeout: 20s
+      retries: 10
+volumes:
+  mysql:
+secrets:
+  mysql_secret:
+    file: ./secret.txt
+
