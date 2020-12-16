@@ -43,7 +43,7 @@ export class CajaComponent implements OnInit {
     ['Septiembre', 9],
     ['Octubre', 10],
     ['Noviembre', 11],
-    ['Diciembre', 11]
+    ['Diciembre', 12]
   ];
   filtrado = false;
 
