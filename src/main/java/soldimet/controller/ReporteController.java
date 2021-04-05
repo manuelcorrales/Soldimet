@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.poi.util.IOUtils;
 import org.javatuples.Pair;
@@ -40,18 +41,22 @@ public class ReporteController {
     private ExpertoReportes expertoReportes;
 
     @GetMapping("/cajaDiariaMensual")
-    public List<DTOCajaDiario> buscarCajaDiariaMensual() {
-        log.debug("request api/reportes/cajaDiariaMensual");
+    public List<DTOCajaDiario> buscarCajaDiariaMensual(
+        @RequestParam("fecha_inicio") @DateTimeFormat(iso = ISO.DATE) Optional<LocalDate> fechaInicio,
+        @RequestParam("fecha_fin") @DateTimeFormat(iso = ISO.DATE) Optional<LocalDate> fechaFin
+    ) {
+        log.info("request api/reportes/cajaDiariaMensual: {},{}", fechaInicio, fechaFin);
 
-        List<DTOCajaDiario> cajasMensual = expertoReportes.getcajaDiariaMensual();
+        List<DTOCajaDiario> cajasMensual = expertoReportes.getcajaDiariaMensual(fechaInicio, fechaFin);
 
         log.debug("response api/reportes/cajaDiariaMensual: {}", cajasMensual);
         return cajasMensual;
     }
 
     @GetMapping("/cajaDiaria")
-    public List<DTOCajaDiario> buscarCajaDiaria() {
-        log.debug("request api/reportes/cajaDiaria");
+    public List<DTOCajaDiario> buscarCajaDiaria(
+    ) {
+        log.info("request api/reportes/cajaDiaria");
 
         List<DTOCajaDiario> cajasMensual = expertoReportes.getcajaDiaria();
 
@@ -60,10 +65,13 @@ public class ReporteController {
     }
 
     @GetMapping("/metricasContables")
-    public List<DTOMetricaContable> buscarMetricasContables() {
-        log.debug("request api/reportes/metricasContables");
+    public List<DTOMetricaContable> buscarMetricasContables(
+        @RequestParam("fecha_inicio") @DateTimeFormat(iso = ISO.DATE) Optional<LocalDate> fechaInicio,
+        @RequestParam("fecha_fin") @DateTimeFormat(iso = ISO.DATE) Optional<LocalDate> fechaFin
+    ) {
+        log.info("request api/reportes/metricasContables");
 
-        List<DTOMetricaContable> metricas = expertoReportes.getMetricasContables();
+        List<DTOMetricaContable> metricas = expertoReportes.getMetricasContables(fechaInicio, fechaFin);
 
         log.debug("response api/reportes/metricasContables: {}", metricas);
         return metricas;

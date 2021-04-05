@@ -4,6 +4,7 @@ import { DtoNameSeries } from 'app/dto/dto-reportes/dto-serie';
 import { JhiAlertService } from 'ng-jhipster';
 import { DtoCountMetric } from 'app/dto/dto-reportes/dto-count-metric';
 import { CardMetric } from './card-metric/card-metric';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'jhi-reportes',
@@ -15,12 +16,21 @@ export class ReportesComponent implements OnInit {
   barMetric: { metric: String; values: DtoNameSeries[] } = { metric: '', values: [] };
   countMetric: CardMetric[] = [];
 
+  formGroup: FormGroup;
+  limpiarFiltrado = false;
+  fechaDesde = null;
+  fechaHasta = null;
+
   constructor(private reportService: ReportesService, private alertService: JhiAlertService) {}
 
   ngOnInit() {
     this.generateCardMetrid();
     this.getCajaDiariaYMensual();
     this.getMetricasContables();
+    this.formGroup = new FormGroup({
+      FechaDesde: new FormControl('', [Validators.required]),
+      FechaHasta: new FormControl('', [Validators.required])
+    });
   }
 
   private generateCardMetrid() {
@@ -92,7 +102,7 @@ export class ReportesComponent implements OnInit {
 
   private getCajaDiariaYMensual() {
     this.reportService
-      .getCajaDiariaMensual()
+      .getCajaDiariaMensual(this.fechaDesde, this.fechaHasta)
       .subscribe(
         (diarios: DtoNameSeries[]) => (this.lineMetric.values = diarios),
         (error: Error) => this.alertService.error(error.message)
@@ -103,7 +113,7 @@ export class ReportesComponent implements OnInit {
   }
 
   private getMetricasContables() {
-    this.reportService.getMetricasContables().subscribe(
+    this.reportService.getMetricasContables(this.fechaDesde, this.fechaHasta).subscribe(
       (metricas: DtoCountMetric[]) => {
         metricas.forEach(metrica => {
           this.countMetric.forEach(contadorMetrica => {
@@ -128,5 +138,27 @@ export class ReportesComponent implements OnInit {
       },
       (error: Error) => this.alertService.error(error.message)
     );
+  }
+
+  private limpiarFiltros() {
+    this.limpiarFiltrado = false;
+    this.fechaDesde = null;
+    this.formGroup.get('FechaDesde').setValue('');
+    this.fechaHasta = null;
+    this.formGroup.get('FechaHasta').setValue('');
+    this.getCajaDiariaYMensual();
+    this.getMetricasContables();
+  }
+
+  filtrar() {
+    this.limpiarFiltrado = true;
+    this.fechaDesde = this.formatDate(this.formGroup.value['FechaDesde']);
+    this.fechaHasta = this.formatDate(this.formGroup.value['FechaHasta']);
+    this.getCajaDiariaYMensual();
+    this.getMetricasContables();
+  }
+
+  formatDate(date: any) {
+    return date.format(date._f);
   }
 }

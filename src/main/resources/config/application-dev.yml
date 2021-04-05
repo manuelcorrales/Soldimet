@@ -24,6 +24,7 @@ spring:
     active: dev
     include:
       - swagger
+      - no-liquibase # Ignora liquibase
       # Uncomment to activate TLS for the dev profile
       #- tls
   devtools:
@@ -38,7 +39,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
-    password:
+    password: manu
     hikari:
       poolName: Hikari
       auto-commit: false

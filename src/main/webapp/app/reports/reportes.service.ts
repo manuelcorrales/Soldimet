@@ -16,8 +16,11 @@ export class ReportesService {
 
   constructor(private http: HttpClient) {}
 
-  getCajaDiariaMensual(): Observable<DtoNameSeries[]> {
-    const urlLlamada = `${this.resourceUrlReportes}${this.urlCajaDiariaMensual}/`;
+  getCajaDiariaMensual(desde, hasta): Observable<DtoNameSeries[]> {
+    let urlLlamada = `${this.resourceUrlReportes}${this.urlCajaDiariaMensual}/`;
+    if (desde != null && hasta != null) {
+      urlLlamada += `?fecha_inicio=${desde}&fecha_fin=${hasta}`;
+    }
     return this.http.get<DtoNameSeries[]>(urlLlamada);
   }
 
@@ -26,8 +29,11 @@ export class ReportesService {
     return this.http.get<DtoNameSeries[]>(urlLlamada);
   }
 
-  getMetricasContables(): Observable<DtoCountMetric[]> {
-    const urlLlamada = `${this.resourceUrlReportes}${this.urlMetricasContables}/`;
+  getMetricasContables(desde, hasta): Observable<DtoCountMetric[]> {
+    let urlLlamada = `${this.resourceUrlReportes}${this.urlMetricasContables}/`;
+    if (desde != null && hasta != null) {
+      urlLlamada += `?fecha_inicio=${desde}&fecha_fin=${hasta}`;
+    }
     return this.http.get<DtoCountMetric[]>(urlLlamada);
   }
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -95,7 +96,7 @@ public class ExpertoReportes {
 
     }
 
-    public List<DTOCajaDiario> getcajaDiariaMensual() {
+    public List<DTOCajaDiario> getcajaDiariaMensual(Optional<LocalDate> fechaInicio, Optional<LocalDate> fechaFin) {
 
         List<DTOCajaDiario> reportes = new ArrayList<DTOCajaDiario>();
 
@@ -106,7 +107,7 @@ public class ExpertoReportes {
                 report.setName(sucursal.getNombreSucursal());
                 // Ordeno las cajas por fecha para ir acumulando resultados día a día
                 Float cajaAcumulado = new Float(0);
-                for (Caja caja : expertoCaja.findCajasDelMes(sucursal)) {
+                for (Caja caja : expertoCaja.findCajasDelMes(sucursal, fechaInicio, fechaFin)) {
                     cajaAcumulado += caja.getSaldo();
                     DTOSerie serieCaja = new DTOSerie(caja.getFecha().toString(), cajaAcumulado);
                     report.addSerie(serieCaja);
@@ -167,7 +168,7 @@ public class ExpertoReportes {
 
     }
 
-    public List<DTOMetricaContable> getMetricasContables() {
+    public List<DTOMetricaContable> getMetricasContables(Optional<LocalDate> fechaInicio, Optional<LocalDate> fechaFin) {
 
         List<DTOMetricaContable> metricas = new ArrayList<DTOMetricaContable>();
 
@@ -225,7 +226,7 @@ public class ExpertoReportes {
         try {
             TipoMovimiento tipoIngreso = tipoMovimientoRepository
                     .findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Ingreso);
-            List<Movimiento> ingresos = expertoCaja.getMovimientosMensuales();
+            List<Movimiento> ingresos = expertoCaja.getMovimientosMensuales(fechaInicio, fechaFin);
 
             Float ingresoAcumulado = new Float(0);
 
@@ -247,7 +248,7 @@ public class ExpertoReportes {
         try {
             TipoMovimiento tipoEgreso = tipoMovimientoRepository
                     .findByNombreTipoMovimiento(globales.nombre_Tipo_Movimiento_Egreso);
-            List<Movimiento> egresos = expertoCaja.getMovimientosMensuales();
+            List<Movimiento> egresos = expertoCaja.getMovimientosMensuales(fechaInicio, fechaFin);
 
             Float egresoAcumulado = new Float(0);
 
@@ -270,7 +271,7 @@ public class ExpertoReportes {
         try {
 
             DTOMetricaContable metricaPagoAProveedores = new DTOMetricaContable();
-            metricaPagoAProveedores.setValor(expertoCaja.getGastoMensualProveedores());
+            metricaPagoAProveedores.setValor(expertoCaja.getGastoMensualProveedores(fechaInicio, fechaFin));
             metricaPagoAProveedores.setCategoria("PAGO PROVEEDORES");
             metricas.add(metricaPagoAProveedores);
 
@@ -282,7 +283,7 @@ public class ExpertoReportes {
         try {
 
             DTOMetricaContable metricaGastosFerreteria = new DTOMetricaContable();
-            metricaGastosFerreteria.setValor(expertoCaja.getGastoMensualFerreteria());
+            metricaGastosFerreteria.setValor(expertoCaja.getGastoMensualFerreteria(fechaInicio, fechaFin));
             metricaGastosFerreteria.setCategoria("GASTO FERRETERIA");
             metricas.add(metricaGastosFerreteria);
 
@@ -294,7 +295,7 @@ public class ExpertoReportes {
         try {
 
             DTOMetricaContable metricaGastosFerreteria = new DTOMetricaContable();
-            metricaGastosFerreteria.setValor(expertoCaja.getGastoMensualRepuestos());
+            metricaGastosFerreteria.setValor(expertoCaja.getGastoMensualRepuestos(fechaInicio, fechaFin));
             metricaGastosFerreteria.setCategoria("GASTO REPUESTOS");
             metricas.add(metricaGastosFerreteria);
 

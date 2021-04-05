@@ -6,6 +6,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -118,7 +119,7 @@ public class ExpertoCaja {
 
     private Float calcularTotalMesActual(Sucursal sucursal) {
 
-        List<Caja> listaCajaMes = this.findCajasDelMes(sucursal);
+        List<Caja> listaCajaMes = this.findCajasDelMes(sucursal, Optional.empty(), Optional.empty());
 
         Float montoTotalMes = new Float(0);
         for (Caja caja : listaCajaMes) {
@@ -205,10 +206,23 @@ public class ExpertoCaja {
         return cajaDia;
     }
 
-    public List<Caja> findCajasDelMes(Sucursal sucursal) {
-        LocalDate fechaInicioMes = this.currentMonthFirstDay();
-        LocalDate fechaFinMes = this.currentMonthLastDay();
-        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(fechaInicioMes, fechaFinMes, sucursal);
+    public List<Caja> findCajasDelMes(Sucursal sucursal, Optional<LocalDate> inicio,
+            Optional<LocalDate> fin) {
+        LocalDate fechaInicio;
+        LocalDate fechaFin;
+        if (inicio.isPresent()) {
+            fechaInicio = inicio.get();
+        } else {
+            fechaInicio = this.currentMonthFirstDay();
+        }
+        if (inicio.isPresent()) {
+            fechaFin = fin.get();
+        }  else {
+            fechaFin = this.currentMonthLastDay();
+        }
+
+        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(
+                fechaInicio, fechaFin, sucursal);
     }
 
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {
@@ -267,7 +281,19 @@ public class ExpertoCaja {
                 || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
 
-    public Float getGastoMensualProveedores() {
+    public Float getGastoMensualProveedores(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
+        LocalDate fechaInicio;
+        LocalDate fechaFin;
+        if (inicio.isPresent()) {
+            fechaInicio = inicio.get();
+        } else {
+            fechaInicio = this.currentMonthFirstDay();
+        }
+        if (inicio.isPresent()) {
+            fechaFin = fin.get();
+        } else {
+            fechaFin = this.currentMonthLastDay();
+        }
 
         Float pagoAcumulado= new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
@@ -275,7 +301,7 @@ public class ExpertoCaja {
         Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_PROVEEDORES).getSubCategorias();
 
         for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
-            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias
+            sucursales, fechaInicio, fechaFin, estado, subCategorias
         )){
             pagoAcumulado += movimiento.getImporte();
         }
@@ -283,7 +309,19 @@ public class ExpertoCaja {
 
     }
 
-    public Float getGastoMensualFerreteria() {
+    public Float getGastoMensualFerreteria(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
+        LocalDate fechaInicio;
+        LocalDate fechaFin;
+        if (inicio.isPresent()) {
+            fechaInicio = inicio.get();
+        } else {
+            fechaInicio = this.currentMonthFirstDay();
+        }
+        if (inicio.isPresent()) {
+            fechaFin = fin.get();
+        } else {
+            fechaFin = this.currentMonthLastDay();
+        }
 
         Float gastoFerreteriaAcumulado= new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
@@ -291,7 +329,7 @@ public class ExpertoCaja {
         Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_Ferreteria).getSubCategorias();
 
         for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
-            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias
+            sucursales, fechaInicio, fechaFin, estado, subCategorias
         )){
             gastoFerreteriaAcumulado += movimiento.getImporte();
         }
@@ -299,7 +337,19 @@ public class ExpertoCaja {
 
     }
 
-    public Float getGastoMensualRepuestos() {
+    public Float getGastoMensualRepuestos(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
+        LocalDate fechaInicio;
+        LocalDate fechaFin;
+        if (inicio.isPresent()) {
+            fechaInicio = inicio.get();
+        } else {
+            fechaInicio = this.currentMonthFirstDay();
+        }
+        if (inicio.isPresent()) {
+            fechaFin = fin.get();
+        } else {
+            fechaFin = this.currentMonthLastDay();
+        }
 
         Float pagoAcumulado= new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
@@ -307,7 +357,7 @@ public class ExpertoCaja {
         Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_REPUESTOS).getSubCategorias();
 
         for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
-            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, subCategorias
+            sucursales, fechaInicio, fechaFin, estado, subCategorias
         )){
             pagoAcumulado += movimiento.getImporte();
         }
@@ -326,13 +376,24 @@ public class ExpertoCaja {
             sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, tipoMovimiento);
     }
 
-    public List<Movimiento> getMovimientosMensuales() {
-
+    public List<Movimiento> getMovimientosMensuales(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
+        LocalDate fechaInicio;
+        LocalDate fechaFin;
+        if (inicio.isPresent()) {
+            fechaInicio = inicio.get();
+        } else {
+            fechaInicio = this.currentMonthFirstDay();
+        }
+        if (inicio.isPresent()) {
+            fechaFin = fin.get();
+        } else {
+            fechaFin = this.currentMonthLastDay();
+        }
         List<Sucursal> sucursales = sucursalRepository.findAll();
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
         return movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstado(
-            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado
+            sucursales, fechaInicio, fechaFin, estado
         );
     }
 
