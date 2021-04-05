@@ -140,7 +140,7 @@ export class ReportesComponent implements OnInit {
     );
   }
 
-  private limpiarFiltros() {
+  limpiarFiltros() {
     this.limpiarFiltrado = false;
     this.fechaDesde = null;
     this.formGroup.get('FechaDesde').setValue('');
