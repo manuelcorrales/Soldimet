@@ -81,6 +81,22 @@ public class PresupuestoController {
         return presupuestos;
     }
 
+    @GetMapping("/getAplicaciones")
+    public Page<Aplicacion> buscarAplicaciones(
+        @RequestParam(defaultValue = "") String filtro,
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "200") Integer size
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Pageable paging = PageRequest.of(page, size);
+        log.debug("request /api/presupuestos/getAplicaciones: {}", authentication);
+
+        Page<Aplicacion> presupuestos = expertoPresupuesto.buscarAplicaciones(filtro, paging);
+
+        log.debug("response /api/presupuestos/getAplicaciones: {}", presupuestos);
+        return presupuestos;
+    }
+
     @GetMapping("/view/{id}")
     public Presupuesto getPresupuesto(@PathVariable("id") Long presupuestoId) {
         log.debug("request /api/presupuestos/view: presupuesto id {}", presupuestoId);

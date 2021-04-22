@@ -25,6 +25,7 @@ import { Page } from 'app/dto/page/page';
 export class PresupuestosService {
   private resourceUrlPresupuestos = SERVER_API_URL + 'api/presupuestos';
   private urlPresupuestoCabecera = '/getPresupuestos';
+  private urlAplicaciones = '/getAplicaciones';
   private urlPresupuestoAplicaciones = '/getAplicacionByMotor/';
   private urlPresupuestoOperacionesCosto = '/getOperacionesPresupuesto';
   private urlPresupuestoClientesFiltro = '/getClientesByNombre/';
@@ -95,6 +96,17 @@ export class PresupuestosService {
       url += `&filtro=${text}`;
     }
     return this.http.get<Page<DtoPresupuestoCabeceraComponent>>(url);
+  }
+
+  findByFilteredPageAplicaciones(text, page = 0, size = 15): Observable<Page<Aplicacion>> {
+    let url = `${this.resourceUrlPresupuestos}${this.urlAplicaciones}`;
+    if (page != null) {
+      url = `${this.resourceUrlPresupuestos}${this.urlAplicaciones}/?page=${page}&size=${size}`;
+    }
+    if (text != null) {
+      url += `&filtro=${text}`;
+    }
+    return this.http.get<Page<Aplicacion>>(url);
   }
 
   imprimirPresupuesto(id: number): Observable<Blob> {

@@ -234,6 +234,15 @@ public class ExpertoPresupuesto {
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);
     }
 
+    public Page<Aplicacion> buscarAplicaciones(String filtro, Pageable pageable) {
+        Page<Aplicacion> aplicaciones = aplicacionRepository
+                    .findByNombreAplicacionContainsOrMotorMarcaMotorContainsOrderByIdDesc(
+                            filtro, filtro, pageable);
+
+
+        return aplicaciones;
+    }
+
     public List<Aplicacion> buscarAplicacionPorMotor(Long motorId) {
         try {
             Motor motorEncontrado = motorRepository.findById(motorId).get();

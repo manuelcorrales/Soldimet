@@ -23,51 +23,69 @@
                         </label>
                     </div>
                 </div>
-            </div>
-
-            <!-- Seleccion Motores-->
-            <div class="form-group col">
-                <p class="form-control-label"><strong>Motor:</strong> </p>
-                <select class="custom-select" [(ngModel)]="motor" name="motor" (change)="buscarAplicaciones()" [disabled]="detalleCreado || isSoldadura">
-                    <span disabled *ngIf="detalleCreado || isSoldadura"></span>
-                    <option selected disabled>Elija un motor</option>
-                    <option *ngFor="let motor of motores" [ngValue]="motor">
-                        {{motor?.marcaMotor}}
-                    </option>
-                </select>
-            </div>
-            <!-- Seleccion Aplicacion-->
-            <div class="form-group col">
-                <p class="form-control-label"><strong>Aplicación:</strong> </p>
-                <select class="custom-select" [(ngModel)]="aplicacion" name="aplicacion" [disabled]="detalleCreado || isSoldadura">
-                    <span disabled *ngIf="detalleCreado"></span>
-                    <option selected disabled>Elija una aplicación</option>
-                    <option *ngFor="let aplicacion of aplicaciones" [ngValue]="aplicacion">
-                        {{aplicacion?.nombreAplicacion| json}}
-                    </option>
-                </select>
-            </div>
-            <!-- Seleccion Cilindrada-->
-            <div class="col">
-                <p class="form-control-label"><strong>Cilindrada: </strong></p>
-                <div class="d-inline">
-                    <div class="form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida"
-                                [(ngModel)]="cilindradaElegida" [disabled]="detalleCreado || isSoldadura"
-                            >
-                            {{cilindrada?.cantidadDeCilindros}} cilindros
-                        </label>
+                <!-- Filtro motor y aplicacion -->
+                <div class="input-group custom-search-form mt-4">
+                    <div>
+                        <p class="form-control-label"><strong>Filtro motores:</strong> </p>
+                        <input type="text" placeholder="Filtrar motores" id="typeahead-focusAplicacion" type="text" class="form-control" name="aplicacion_search"
+                                [resultFormatter]="formatterAplicacion" [inputFormatter]="formatterAplicacion" [ngbTypeahead]="searchAplicacion"
+                                (selectItem)="seleccionarAplicacion($event)" [showHint]='true' [editable]='false'
+                                [class.is-invalid]="searchFailed" [disabled]="detalleCreado || isSoldadura"
+                            />
                     </div>
                 </div>
             </div>
-            <!--Seleccion Tipo partes-->
+
+            <div class="form-group col">
+                <!-- Seleccion Motores-->
+                <div class="form-group col" >
+                    <p class="form-control-label"><strong>Motor:</strong> </p>
+                    <select [hidden]="buscado" class="custom-select" [(ngModel)]="motor" name="motor" (change)="buscarAplicaciones()" [disabled]="detalleCreado || isSoldadura">
+                        <span disabled *ngIf="detalleCreado || isSoldadura"></span>
+                        <option selected disabled>Elija un motor</option>
+                        <option *ngFor="let motor of motores" [ngValue]="motor">
+                            {{motor?.marcaMotor}}
+                        </option>
+                    </select>
+                    <label [hidden]="!buscado">{{motor?.marcaMotor}}</label>
+                </div>
+                <!-- Seleccion Aplicacion-->
+                <div class="form-group col">
+                    <p class="form-control-label"><strong>Aplicación:</strong> </p>
+                    <select [hidden]="buscado" class="custom-select" [(ngModel)]="aplicacion" name="aplicacion" [disabled]="detalleCreado || isSoldadura">
+                        <span disabled *ngIf="detalleCreado"></span>
+                        <option selected disabled>Elija una aplicación</option>
+                        <option *ngFor="let aplicacion of aplicaciones" [ngValue]="aplicacion">
+                            {{aplicacion?.nombreAplicacion| json}}
+                        </option>
+                    </select>
+                    <label [hidden]="!buscado">{{aplicacion?.nombreAplicacion}}</label>
+                </div>
+            </div>
+
             <div class="col">
-                <p class="form-control-label"><strong>Tipo:</strong></p>
-                <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
-                    <label class="form-check-label" style="padding-left: 1px">
-                        <input type="checkbox" class="form-check-input" [disabled]="isSoldadura" (change)="crearDetalle(tipoParte, $event.target.checked)"> {{tipoParte?.nombreTipoParteMotor}}
-                    </label>
+                <!-- Seleccion Cilindrada-->
+                <div class="col">
+                    <p class="form-control-label"><strong>Cilindrada: </strong></p>
+                    <div class="d-inline">
+                        <div class="form-check form-check-inline" *ngFor="let cilindrada of cilindradas">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" [value]="cilindrada" name="cilindradaElegida"
+                                    [(ngModel)]="cilindradaElegida" [disabled]="detalleCreado || isSoldadura"
+                                >
+                                {{cilindrada?.cantidadDeCilindros}} cilindros
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!--Seleccion Tipo partes-->
+                <div class="col mt-4">
+                    <p class="form-control-label"><strong>Tipo:</strong></p>
+                    <div class="form-check form-check-inline" *ngFor="let tipoParte of tiposPartesMotores">
+                        <label class="form-check-label" style="padding-left: 1px">
+                            <input type="checkbox" class="form-check-input" [disabled]="isSoldadura" (change)="crearDetalle(tipoParte, $event.target.checked)"> {{tipoParte?.nombreTipoParteMotor}}
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
