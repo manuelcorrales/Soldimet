@@ -1,65 +1,130 @@
-# Java Maven CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
-version: 1
+version: 2.1
 jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-    working_directory: ~/
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
-
-    steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key:
-            - dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      # Install Node for JH Build
-      - run:
-        name: Download Node
-        command: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
-      - run:
-        name: Install Node
-        command: sudo apt-get install -y nodejs
-      - run:
-        name: update-npm
-        command: sudo npm install -g npm@latest
-      - run: mvn dependency:go-offline # gets the project dependencies
-      # Install Yarn
-      - run:
-        name: Download Yarn
-        command: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-      - run:
-        name: Install Yarn
-        command: sudo apt-get update && sudo apt-get install yarn
-
-      - save_cache: # saves the project dependencies
-          paths:
-            - ~/.m2
-          key: dependencies-{{ checksum "pom.xml" }}
-
-      # run tests!
-      # - run: mvn package # run the actual tests
-
-      # - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
-      #     path: target/surefire-reports
-
-      # - store_artifacts: # store the uberjar as an artifact
-      #     path: target/demo-java-spring-0.0.1-SNAPSHOT.ja
-
-      # Package
-      - run: ./mvnw -ntp verify -Pprod -DskipTests
+    test:
+        docker:
+            - image: jhipster/jhipster:v6.3.0
+        steps:
+            - checkout
+            - setup_remote_docker:
+                version: 19.03.13
+            - run:
+                name: Give Executable Power
+                command: 'echo jhipster | sudo -S  chmod +x ./mvnw'
+            - run:
+                name: Install docker and docker-compose
+                command: |
+                    echo jhipster | sudo -S apt update
+                    echo jhipster | sudo -S apt install -y docker.io
+                    echo jhipster | sudo -S curl -Lo /usr/local/bin/docker-compose $(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep "browser_download_url.*docker-compose-Linux" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
+                    echo jhipster | sudo -S chmod +x /usr/local/bin/docker-compose
+                    docker version
+                    docker-compose version
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+                    # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
+                    - v1-dependencies-
+            - run:
+                name: Print Java Version
+                command: 'java -version'
+            - run:
+                name: Print Node Version
+                command: 'node -v'
+            - run:
+                name: Print NPM Version
+                command: 'npm -v'
+            - run:
+                name: Install Node Modules
+                command: 'npm install'
+            - save_cache:
+                paths:
+                    - node
+                    - node_modules
+                    - ~/.m2
+                key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+            - run:
+                name: Login to dockerhub
+                command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASS
+            - run:
+                name: Run Front End Tests
+                command: yarn run webpack:test
+            #- run:
+            #    name: Backend/Integration tests
+            #    command: ./mvnw clean verify
+            #    no_output_timeout: 60m
+            - store_test_results:
+                path: src/test
+            - save_cache:
+                paths:
+                    - node
+                    - node_modules
+                    - ~/.m2
+                key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+            
+    tag-image-and-deploy:
+        docker:
+            - image: jhipster/jhipster:v6.3.0
+        steps:
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+                    # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
+                    - v1-dependencies-
+            - run:
+                name: Give Executable Power
+                command: 'echo jhipster | sudo -S chmod +x ./mvnw'
+            - run:
+                name: Install docker and docker-compose
+                command: |
+                    echo jhipster | sudo -S apt update
+                    echo jhipster | sudo -S apt install -y docker.io
+                    echo jhipster | sudo -S curl -Lo /usr/local/bin/docker-compose $(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep "browser_download_url.*docker-compose-Linux" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
+                    echo jhipster | sudo -S chmod +x /usr/local/bin/docker-compose
+                    docker version
+                    docker-compose version
+            - run:
+                name: Login to dockerhub
+                command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASS
+            # Test deploy flow
+            - run:
+                name: Build docker image
+                command: bash ./mvnw package -Pprod verify jib:build -Djib.to.image=manuelcorrales/soldimet:${CIRCLE_BRANCH}
+            - save_cache:
+                paths:
+                    - node
+                    - node_modules
+                    - ~/.m2
+                key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+            #- run:
+            #    name: Tag Built Image
+            #    command: docker tag soldimet manuelcorrales/soldimet:${CIRCLE_BRANCH}
+            - run:
+                name: Push image to dockerhub
+                command: docker push manuelcorrales/soldimet:${CIRCLE_BRANCH}
+            - run:
+                name: Update env file with new tag
+                command: echo "TAG=${CIRCLE_BRANCH}" > .env
+            - run:
+                name: Update Remote Env file
+                command: rsync .env root@rectificacionsoldimet.com:~/.env
+            - run:
+                name: Restart service
+                command: ssh root@rectificacionsoldimet.com 'docker-compose -f ~/soldimet/docker-compose.yml up -d'
+            
+workflows:
+  build-and-deploy: 
+    jobs:
+      - test:
+          context:
+            - DockerHub
+          filters:
+              branches:
+                  ignore: rc-*
+      - tag-image-and-deploy:
+          context:
+            - DockerHub
+          filters:
+              branches:
+                  only: rc-*
