@@ -63,9 +63,13 @@ jobs:
                 key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
             
     tag-image-and-deploy:
+        
         docker:
             - image: jhipster/jhipster:v6.3.0
         steps:
+            - checkout
+            - setup_remote_docker:
+                version: 19.03.13
             # Download and cache dependencies
             - restore_cache:
                 keys:
@@ -75,6 +79,9 @@ jobs:
             - run:
                 name: Give Executable Power
                 command: 'echo jhipster | sudo -S chmod +x ./mvnw'
+            - run:
+                name: Update mvn size
+                command:  export MAVEN_OPTS="-Xmx1g"
             - run:
                 name: Install docker and docker-compose
                 command: |
@@ -90,7 +97,8 @@ jobs:
             # Test deploy flow
             - run:
                 name: Build docker image
-                command: bash ./mvnw package -Pprod verify jib:build -Djib.to.image=manuelcorrales/soldimet:${CIRCLE_BRANCH}
+                command: ./mvnw package -Pprod verify jib:build -Djib.to.image=manuelcorrales/soldimet:${CIRCLE_BRANCH}
+                no_output_timeout: 60m
             - save_cache:
                 paths:
                     - node
@@ -121,10 +129,10 @@ workflows:
             - DockerHub
           filters:
               branches:
-                  ignore: rc-*
+                  ignore: /rc-.*/
       - tag-image-and-deploy:
           context:
             - DockerHub
           filters:
               branches:
-                  only: rc-*
+                  only: /rc-.*/
