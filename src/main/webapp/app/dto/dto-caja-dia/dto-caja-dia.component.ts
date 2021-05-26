@@ -18,6 +18,7 @@ export class DtoMovimientoCabecera {
     public monto: Number,
     public tipoMovimiento: string,
     public formaDePagoTip: string,
+    public presupuestoId: string,
     public formaDePago: string
   ) {}
 }

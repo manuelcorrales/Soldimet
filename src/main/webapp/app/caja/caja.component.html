@@ -87,7 +87,9 @@
                             {{movimiento.movimientoId}}
                         </th>
                         <td class="text-center text-dark">{{movimiento.descripcion}}</td>
-                        <td class="text-center text-dark">{{movimiento.categoria}}</td>
+                        <td class="text-center text-dark">
+                            {{movimiento.categoria}}
+                        </td>
                         <td class="text-center text-dark">
                             <span *ngIf="movimiento?.formaDePagoTip" container="body" placement="top" ngbTooltip="{{movimiento.formaDePagoTip}}"></span>
                             {{movimiento.formaDePago}}
@@ -111,6 +113,9 @@
                                     <button type="submit" replaceUrl="true" class="btn btn-danger btn-sm"
                                         [routerLink]="['/', { outlets: { popup: 'cajas/'+ movimiento.movimientoId + '/eliminar_movimiento'} }]">
                                         <fa-icon icon="trash"></fa-icon>
+                                    </button>
+                                    <button *ngIf="movimiento.presupuestoID" class="btn btn-outline-secondary" placement="top" [routerLink]="['/presupuestos', movimiento.presupuestoID, 'ver' ]" ngbTooltip="Ver presupuesto">
+                                        <fa-icon icon="eye"></fa-icon>
                                     </button>
                                 </div>
                             </div>

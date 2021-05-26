@@ -15,6 +15,7 @@ public class DTOMovimientoCUConsultarMovimientos {
     private String formaDePago;
     private String estado;
     private String formaDePagoTip;
+    private String presupuestoID;
 
 	public DTOMovimientoCUConsultarMovimientos(){
 
@@ -119,6 +120,14 @@ public class DTOMovimientoCUConsultarMovimientos {
      */
     public void setTipoMovimiento(String tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
+    }
+
+    public void setPresupuestoID(String presupuestoID) {
+        this.presupuestoID = presupuestoID;
+    }
+
+    public String getPresupuestoID() {
+        return presupuestoID;
     }
 
 }

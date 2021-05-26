@@ -9,6 +9,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
 
 import org.javatuples.Pair;
 import org.slf4j.Logger;
@@ -16,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,7 @@ import soldimet.domain.Aplicacion;
 import soldimet.domain.Authority;
 import soldimet.domain.Cilindrada;
 import soldimet.domain.Cliente;
+import soldimet.domain.Cliente_;
 import soldimet.domain.CobranzaOperacion;
 import soldimet.domain.CobranzaRepuesto;
 import soldimet.domain.CostoOperacion;
@@ -45,8 +51,11 @@ import soldimet.domain.ListaPrecioRectificacionCRAM;
 import soldimet.domain.Motor;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.Persona;
+import soldimet.domain.Persona_;
 import soldimet.domain.Presupuesto;
+import soldimet.domain.Presupuesto_;
 import soldimet.domain.Sucursal;
+import soldimet.domain.Sucursal_;
 import soldimet.domain.TipoParteMotor;
 import soldimet.domain.TipoRepuesto;
 import soldimet.repository.CilindradaRepository;
@@ -226,13 +235,35 @@ public class ExpertoPresupuesto {
                     .findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
                             filtro, filtro, filtro, pageable);
         } else {
-            presupuestos = presupuestoRepository
-                    .findBySucursalAndClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
-                            empleado.getSucursal(), filtro, filtro, filtro, pageable);
+            Sucursal sucursal = empleado.getSucursal();
+            Specification<Presupuesto> specs = Specification.where(
+                    (root, query, builder) -> {
+                        final Join<Presupuesto, Sucursal> sucursales = root.join(Presupuesto_.SUCURSAL, JoinType.INNER);
+                        final Join<Presupuesto, Cliente> clientes = root.join(Presupuesto_.CLIENTE, JoinType.INNER);
+                        final Join<Persona, Cliente> personas = clientes.join(Cliente_.PERSONA, JoinType.INNER);
+                        Predicate isSucursal = builder.equal(builder.lower(sucursales.get(Sucursal_.ID)),
+                                sucursal.getId());
+                        Predicate isModelo = builder.equal(root.get(Presupuesto_.MODELO), true);
+                        Predicate isPersona = builder.or(
+                            builder.like(builder.lower(personas.get(Persona_.NOMBRE)), filtro),
+                            builder.like(builder.lower(personas.get(Persona_.APELLIDO)), filtro)
+                        );
+                        Predicate and = builder.and(isSucursal, isPersona);
+                        return builder.or(and, isModelo);
+
+                }
+            );
+            presupuestos = presupuestoRepository.findAll(specs, pageable);
+
+            // presupuestos = presupuestoRepository
+            //         .findByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalAndModeloOrderByIdDesc(
+            //                 filtro, filtro, filtro, sucursal, true, pageable);
         }
 
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);
     }
+
+
 
     public Page<Aplicacion> buscarAplicaciones(String filtro, Pageable pageable) {
         Page<Aplicacion> aplicaciones = aplicacionRepository

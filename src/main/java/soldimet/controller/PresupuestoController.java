@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -72,7 +73,7 @@ public class PresupuestoController {
         @RequestParam(defaultValue = "200") Integer size
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Pageable paging = PageRequest.of(page, size);
+        Pageable paging = PageRequest.of(page, size, Sort.by("id").descending());
         log.debug("request /api/presupuestos/getPresupuestos: {}", authentication);
 
         Page<DTOPresupuesto> presupuestos = expertoPresupuesto.buscarPresupuestos(filtro, paging);

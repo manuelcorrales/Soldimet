@@ -20,7 +20,7 @@ export class RepuestoPrecioComponent implements OnInit {
   @Input() articulos: Articulo[];
   @Input() cilindrada: Cilindrada;
 
-  repuestosPorCilindrada = [1, 3, 39, 40];
+  repuestosPorCilindrada = [1, 3, 12, 39, 40, 41];
   repuestosPorDobleCilindrada = [2, 7];
 
   articulo: Articulo;

@@ -73,6 +73,7 @@ public class CajaConverter {
         DTOMovimientoCUConsultarMovimientos newDto = new DTOMovimientoCUConsultarMovimientos();
         newDto.setCategoria(movimiento.getSubCategoria().getNombreSubCategoria());
         newDto.setDescripcion(this.getDescripcionMovimiento(movimiento));
+        newDto.setPresupuestoID(this.getPresupuestoID(movimiento));
         newDto.setFormaDePago(movimiento.getMedioDePago().getFormaDePago().getNombreFormaDePago());
         newDto.setFormaDePagoTip(this.formaDePagoTip(movimiento.getMedioDePago()));
         if (movimiento.getImporte() < 0) {
@@ -97,6 +98,16 @@ public class CajaConverter {
         return listaDto;
     }
 
+    private String getPresupuestoID(Movimiento movimiento) {
+        String presupuestoID = null;
+        MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoRepository.findByMovimiento(movimiento);
+        if (movimientoPresupuesto != null) {
+            presupuestoID = movimientoPresupuesto.getPresupuesto().getId().toString();
+
+        }
+        return presupuestoID;
+    }
+
     private String getDescripcionMovimiento(Movimiento movimiento) {
         String descripcion = "";
 
@@ -113,13 +124,7 @@ public class CajaConverter {
         MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoRepository.findByMovimiento(movimiento);
         if (movimientoPresupuesto != null) {
             descripcion = "Presupuesto: " + movimientoPresupuesto.getPresupuesto().getId();
-            if (!movimientoPresupuesto.getCostoRepuestos().isEmpty()) {
-                descripcion = descripcion + " (";
-                for (CostoRepuesto costoRepuesto: movimientoPresupuesto.getCostoRepuestos()) {
-                    descripcion = descripcion + " " + costoRepuesto.getTipoRepuesto().getNombreTipoRepuesto();
-                }
-                descripcion = descripcion + ")";
-            }
+
         }
 
         if (descripcion == "" && movimiento.getObservaciones() != null) {
@@ -137,7 +142,7 @@ public class CajaConverter {
     }
 
     private String formaDePagoTip(MedioDePago medioDePago) {
-        String tip = null;
+        String tip = "";
         String formaDePago = medioDePago.getFormaDePago().getNombreFormaDePago();
 
         if (formaDePago.equals(globales.NOMBRE_FORMA_DE_PAGO_CHEQUE)) {
