@@ -71,7 +71,8 @@ public class CajaConverter {
 
     public DTOMovimientoCUConsultarMovimientos movimientoToDtoMovimientoCabecera( Movimiento movimiento) {
         DTOMovimientoCUConsultarMovimientos newDto = new DTOMovimientoCUConsultarMovimientos();
-        newDto.setCategoria(movimiento.getSubCategoria().getNombreSubCategoria());
+        CategoriaPago categoriaPago = categoriaPagoRepository.findBySubCategoriasContaining(movimiento.getSubCategoria());
+        newDto.setCategoria(categoriaPago.getNombreCategoriaPago());
         newDto.setDescripcion(this.getDescripcionMovimiento(movimiento));
         newDto.setPresupuestoID(this.getPresupuestoID(movimiento));
         newDto.setFormaDePago(movimiento.getMedioDePago().getFormaDePago().getNombreFormaDePago());
@@ -109,33 +110,25 @@ public class CajaConverter {
     }
 
     private String getDescripcionMovimiento(Movimiento movimiento) {
-        String descripcion = "";
+        String descripcion = movimiento.getSubCategoria().getNombreSubCategoria();
 
-        MovimientoArticulo movimientoArticulo = movimientoArticuloRepository.findByMovimiento(movimiento);
-        if (movimientoArticulo != null) {
-            descripcion = movimientoArticulo.getCantidad() + " " + movimientoArticulo.getArticulo().getCodigoArticuloProveedor();
-        }
-
-        MovimientoPedido movimientoPedido = movimientoPedidoRepository.findByMovimiento(movimiento);
-        if (movimientoPedido != null) {
-            descripcion = "Pedido: " + movimientoPedido.getPedidoRepuesto().getId();
+        List<MovimientoArticulo> movimientosArticulos = movimientoArticuloRepository.findByMovimiento(movimiento);
+        for(MovimientoArticulo movimientoArticulo: movimientosArticulos) {
+            descripcion +=  " (" +
+                movimientoArticulo.getArticulo().getTipoRepuesto().getNombreTipoRepuesto() +
+                " - '" + movimientoArticulo.getArticulo().getCodigoArticuloProveedor() + "'" +
+                " - " + movimientoArticulo.getCantidad() +
+                " Un)";
         }
 
         MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoRepository.findByMovimiento(movimiento);
         if (movimientoPresupuesto != null) {
-            descripcion = "Presupuesto: " + movimientoPresupuesto.getPresupuesto().getId();
+            descripcion += " (Presupuesto: " + movimientoPresupuesto.getPresupuesto().getId() + ")";
 
         }
 
-        if (descripcion == "" && movimiento.getObservaciones() != null) {
-            descripcion = movimiento.getObservaciones();
-        }
-
-        if (descripcion == "") {
-            CategoriaPago categoriaPago = categoriaPagoRepository.findBySubCategoriasContaining(movimiento.getSubCategoria());
-            if (categoriaPago != null) {
-                descripcion = categoriaPago.getNombreCategoriaPago();
-            }
+        if (movimiento.getObservaciones() != null) {
+            descripcion += " (" + movimiento.getObservaciones() + ")";
         }
 
         return descripcion;

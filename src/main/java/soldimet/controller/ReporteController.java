@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.poi.util.IOUtils;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,8 +52,7 @@ public class ReporteController {
     }
 
     @GetMapping("/cajaDiaria")
-    public List<DTOCajaDiario> buscarCajaDiaria(
-    ) {
+    public List<DTOCajaDiario> buscarCajaDiaria() {
         log.info("request api/reportes/cajaDiaria");
 
         List<DTOCajaDiario> cajasMensual = expertoReportes.getcajaDiaria();
@@ -79,11 +76,17 @@ public class ReporteController {
 
     @GetMapping("/imprimirRepuestos")
     @ResponseBody
-    public ResponseEntity<Resource> imprimirPresupuesto(
+    public ResponseEntity<Resource> imprimirRepuestos(
         @RequestParam("fecha_inicio") @DateTimeFormat(iso = ISO.DATE) LocalDate fechaInicio,
         @RequestParam("fecha_fin") @DateTimeFormat(iso = ISO.DATE) LocalDate fechaFin,
         @RequestParam("sucursal") Long sucursal
     ) throws IOException {
+        log.info(
+            "request api/reportes/imprimirRepuestos: fechaIn {}, fechaFin {}, sucursal {}",
+            fechaInicio,
+            fechaFin,
+            sucursal
+        );
         Pair<File, String> response = expertoReportes.imprimirRepuestos(fechaInicio, fechaFin, sucursal);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=Listado repuestos.xlsx");

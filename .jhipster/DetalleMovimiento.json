@@ -8,25 +8,36 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nombreTipoDetalle"
+            "otherEntityField": "nombreTipoDetalle",
+            "otherEntityRelationshipName": "detalleMovimiento"
         },
         {
             "relationshipName": "articulo",
             "otherEntityName": "articulo",
             "relationshipType": "many-to-one",
-            "otherEntityField": "descripcion"
+            "otherEntityField": "descripcion",
+            "otherEntityRelationshipName": "detalleMovimiento"
         },
         {
             "relationshipName": "pedidoRepuesto",
             "otherEntityName": "pedidoRepuesto",
             "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "otherEntityRelationshipName": "detalleMovimiento"
         },
         {
             "relationshipName": "presupuesto",
             "otherEntityName": "presupuesto",
             "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "otherEntityRelationshipName": "detalleMovimiento"
+        },
+        {
+            "relationshipName": "medida",
+            "otherEntityName": "medidaArticulo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "medida",
+            "otherEntityRelationshipName": "detalleMovimiento"
         }
     ],
     "fields": [
@@ -53,6 +64,7 @@
     "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "detalle_movimiento",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
     "pagination": "no"
 }

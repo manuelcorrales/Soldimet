@@ -3,6 +3,7 @@ import { DetallePedido } from 'app/shared/model/detalle-pedido.model';
 import { CostoRepuestoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
 // import { IArticulo } from 'app/shared/model/articulo.model';
 // import { Marca } from 'app/shared/model/marca.model';
+import { IMedidaArticulo } from '../../../../shared/model/medida-articulo.model';
 
 @Component({
   selector: 'jhi-detalle-pedido',
@@ -12,6 +13,8 @@ import { CostoRepuestoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pe
 export class DetallePedidoNewComponent implements OnInit {
   @Input()
   detallePedido: DetallePedido;
+  @Input()
+  medidas: IMedidaArticulo[];
   @ViewChildren('costoRepuestoComponent')
   costosRepuestoComponent: QueryList<CostoRepuestoComponent>;
 

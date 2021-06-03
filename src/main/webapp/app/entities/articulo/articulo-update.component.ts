@@ -27,14 +27,17 @@ export class ArticuloUpdateComponent implements OnInit {
 
   marcas: IMarca[];
 
-  tipoRepuestos: ITipoRepuesto[];
+  tiporepuestos: ITipoRepuesto[];
   fechaCostoDp: any;
+  fechaCostoProveedorDp: any;
 
   editForm = this.fb.group({
     id: [],
     codigoArticuloProveedor: [],
     valor: [null, [Validators.required]],
     fechaCosto: [],
+    costoProveedor: [],
+    fechaCostoProveedor: [],
     estado: [null, Validators.required],
     marca: [],
     tipoRepuesto: [null, Validators.required]
@@ -75,7 +78,7 @@ export class ArticuloUpdateComponent implements OnInit {
         filter((mayBeOk: HttpResponse<ITipoRepuesto[]>) => mayBeOk.ok),
         map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
       )
-      .subscribe((res: ITipoRepuesto[]) => (this.tipoRepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(articulo: IArticulo) {
@@ -84,6 +87,8 @@ export class ArticuloUpdateComponent implements OnInit {
       codigoArticuloProveedor: articulo.codigoArticuloProveedor,
       valor: articulo.valor,
       fechaCosto: articulo.fechaCosto,
+      costoProveedor: articulo.costoProveedor,
+      fechaCostoProveedor: articulo.fechaCostoProveedor,
       estado: articulo.estado,
       marca: articulo.marca,
       tipoRepuesto: articulo.tipoRepuesto
@@ -111,6 +116,8 @@ export class ArticuloUpdateComponent implements OnInit {
       codigoArticuloProveedor: this.editForm.get(['codigoArticuloProveedor']).value,
       valor: this.editForm.get(['valor']).value,
       fechaCosto: this.editForm.get(['fechaCosto']).value,
+      costoProveedor: this.editForm.get(['costoProveedor']).value,
+      fechaCostoProveedor: this.editForm.get(['fechaCostoProveedor']).value,
       estado: this.editForm.get(['estado']).value,
       marca: this.editForm.get(['marca']).value,
       tipoRepuesto: this.editForm.get(['tipoRepuesto']).value

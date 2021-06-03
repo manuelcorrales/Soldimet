@@ -15,6 +15,8 @@ import { IArticulo } from 'app/shared/model/articulo.model';
 import { ArticuloService } from 'app/entities/articulo/articulo.service';
 import { ITipoRepuesto } from 'app/shared/model/tipo-repuesto.model';
 import { TipoRepuestoService } from 'app/entities/tipo-repuesto/tipo-repuesto.service';
+import { IMedidaArticulo } from 'app/shared/model/medida-articulo.model';
+import { MedidaArticuloService } from 'app/entities/medida-articulo/medida-articulo.service';
 
 @Component({
   selector: 'jhi-costo-repuesto-update',
@@ -27,15 +29,17 @@ export class CostoRepuestoUpdateComponent implements OnInit {
 
   articulos: IArticulo[];
 
-  tipoRepuestos: ITipoRepuesto[];
+  tiporepuestos: ITipoRepuesto[];
+
+  medidaarticulos: IMedidaArticulo[];
 
   editForm = this.fb.group({
     id: [],
     valor: [null, [Validators.required, Validators.min(0)]],
-    medida: [],
     estado: [null, Validators.required],
     articulo: [],
-    tipoRepuesto: []
+    tipoRepuesto: [],
+    medidaArticulo: []
   });
 
   constructor(
@@ -44,6 +48,7 @@ export class CostoRepuestoUpdateComponent implements OnInit {
     protected estadoCostoRepuestoService: EstadoCostoRepuestoService,
     protected articuloService: ArticuloService,
     protected tipoRepuestoService: TipoRepuestoService,
+    protected medidaArticuloService: MedidaArticuloService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -73,17 +78,24 @@ export class CostoRepuestoUpdateComponent implements OnInit {
         filter((mayBeOk: HttpResponse<ITipoRepuesto[]>) => mayBeOk.ok),
         map((response: HttpResponse<ITipoRepuesto[]>) => response.body)
       )
-      .subscribe((res: ITipoRepuesto[]) => (this.tipoRepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: ITipoRepuesto[]) => (this.tiporepuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.medidaArticuloService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IMedidaArticulo[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IMedidaArticulo[]>) => response.body)
+      )
+      .subscribe((res: IMedidaArticulo[]) => (this.medidaarticulos = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(costoRepuesto: ICostoRepuesto) {
     this.editForm.patchValue({
       id: costoRepuesto.id,
       valor: costoRepuesto.valor,
-      medida: costoRepuesto.medida,
       estado: costoRepuesto.estado,
       articulo: costoRepuesto.articulo,
-      tipoRepuesto: costoRepuesto.tipoRepuesto
+      tipoRepuesto: costoRepuesto.tipoRepuesto,
+      medidaArticulo: costoRepuesto.medidaArticulo
     });
   }
 
@@ -106,10 +118,10 @@ export class CostoRepuestoUpdateComponent implements OnInit {
       ...new CostoRepuesto(),
       id: this.editForm.get(['id']).value,
       valor: this.editForm.get(['valor']).value,
-      medida: this.editForm.get(['medida']).value,
       estado: this.editForm.get(['estado']).value,
       articulo: this.editForm.get(['articulo']).value,
-      tipoRepuesto: this.editForm.get(['tipoRepuesto']).value
+      tipoRepuesto: this.editForm.get(['tipoRepuesto']).value,
+      medidaArticulo: this.editForm.get(['medidaArticulo']).value
     };
   }
 
@@ -138,6 +150,10 @@ export class CostoRepuestoUpdateComponent implements OnInit {
   }
 
   trackTipoRepuestoById(index: number, item: ITipoRepuesto) {
+    return item.id;
+  }
+
+  trackMedidaArticuloById(index: number, item: IMedidaArticulo) {
     return item.id;
   }
 }

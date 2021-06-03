@@ -1,0 +1,37 @@
+<div class="card jh-card border-info shadow">
+    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
+        Datos del movimiento
+    </div>
+    <div class="container-fluid row">
+        <div class="form-group col-md-3">
+            <p>Tipo</p>
+            <div class="form-check form-check-inline" *ngFor="let tipo of tipos">
+                <input required class="form-check-input" type="radio" id="{{tipo.nombreTipoMovimiento}}" #tipo_mov="ngModel" [value]="tipo" name="tipoMovimiento" [(ngModel)]="tipoMovimiento">
+                <label class="form-check-label" for="{{tipo.nombreTipoMovimiento}}" >
+                    {{tipo.nombreTipoMovimiento}}
+                </label>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Categoría</label>
+            <select required class="form-control" (change)="buscarSubCategorias()" [(ngModel)]="categoria" name="categoria">
+                <option selected disabled>Elija una categoría</option>
+                <option *ngFor="let categoria of categorias" [ngValue]="categoria">
+                    {{categoria.nombreCategoriaPago}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Concepto</label>
+            <input required type="text" [disabled]="!conceptos" placeholder="Buscar concepto" [(ngModel)]="concepto" [resultFormatter]="formatterconcepto"
+                id="typeahead-focusconcepto" type="text" class="form-control" [ngbTypeahead]="searchconcepto" (focus)="focusconcepto$.next($event.target.value)"
+                (click)="clickconcepto$.next($event.target.value)" #instanceNTAconcepto="ngbTypeahead" [inputFormatter]="formatterconcepto"
+                name="concepto_search" />
+        </div>
+        <div class="form-group col-md-3">
+            <label>Importe</label>
+            <input required type="number" class="form-control" aria-label="Importe" [value]="importe" [(ngModel)]="importe"
+                name="importe">
+        </div>
+    </div>
+</div>

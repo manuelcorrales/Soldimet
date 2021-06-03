@@ -24,6 +24,13 @@
             "relationshipType": "many-to-one",
             "otherEntityField": "nombreTipoRepuesto",
             "otherEntityRelationshipName": "costoRepuesto"
+        },
+        {
+            "relationshipName": "medidaArticulo",
+            "otherEntityName": "medidaArticulo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "medida",
+            "otherEntityRelationshipName": "costoRepuesto"
         }
     ],
     "fields": [
@@ -35,10 +42,6 @@
                 "min"
             ],
             "fieldValidateRulesMin": 0
-        },
-        {
-            "fieldName": "medida",
-            "fieldType": "String"
         }
     ],
     "changelogDate": "20180616204734",

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+    <changeSet author="manuelc (generated)" id="1608305253236-39">
+        <createTable tableName="medida_articulo">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="medida_articuloPK"/>
+            </column>
+            <column name="medida" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1608305253236-40">
+        <addColumn tableName="articulo">
+            <column name="costo_proveedor" type="float"/>
+            <column name="fecha_costo_proveedor" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="manuelc (generated)" id="1608305253236-42">
+        <addColumn tableName="costo_repuesto">
+            <column name="medida_articulo_id" type="bigint"></column>
+        </addColumn>
+        <!--addColumn tableName="costo_repuesto">
+            <column name="movimiento_presupuesto" type="bigint"></column>
+        </addColumn-->
+    </changeSet>
+    <changeSet id="20201218191728-1" author="jhipster">
+        <createTable tableName="stock_articulo">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="cantidad" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="medida_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="articulo_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="sucursal_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="20201218191728-2" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="medida_id" baseTableName="stock_articulo" constraintName="fk_stock_articulo_medida_id" referencedColumnNames="id" referencedTableName="medida_articulo"/>
+        <addForeignKeyConstraint baseColumnNames="articulo_id" baseTableName="stock_articulo" constraintName="fk_stock_articulo_articulo_id" referencedColumnNames="id" referencedTableName="articulo"/>
+        <addForeignKeyConstraint baseColumnNames="sucursal_id" baseTableName="stock_articulo" constraintName="fk_stock_articulo_sucursal_id" referencedColumnNames="id" referencedTableName="sucursal"/>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-60">
+        <addForeignKeyConstraint baseColumnNames="articulo_id" baseTableName="movimiento_articulo" constraintName="FKntyy86s5d9txgc6baryr9pidv" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="articulo" validate="true"/>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-70">
+        <addColumn tableName="detalle_movimiento">
+            <column name="medida_id" type="BIGINT"/>
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="medida_id" baseTableName="detalle_movimiento" constraintName="FK3ba4hod8ccuy35mnf80tuno2G" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="medida_articulo" validate="true"/>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-71">
+        <addUniqueConstraint columnNames="medida_id, articulo_id" constraintName="unico_stock" tableName="stock_articulo" />
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-73">
+        <insert tableName="estado_costo_repuesto">
+            <column name="id" value="6"/>
+            <column name="nombre_estado" value="En Stock"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-74">
+        <dropForeignKeyConstraint baseTableName="movimiento_articulo" constraintName="FKntyy86s5d9txgc6baryr9pidv"/>
+        <dropUniqueConstraint constraintName="fk_movimiento_articulo_articulo_id" tableName="movimiento_articulo"/>
+        <addForeignKeyConstraint baseColumnNames="movimiento_id" baseTableName="movimiento_articulo" constraintName="fk_movimiento_articulo_movimiento_id" referencedColumnNames="id" referencedTableName="movimiento"/>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-75">
+        <insert tableName="medida_articulo">
+            <column name="id" value="1"/>
+            <column name="medida" value="Estandar"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="2"/>
+            <column name="medida" value="0,3"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="3"/>
+            <column name="medida" value="0,5"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="4"/>
+            <column name="medida" value="0,10"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="5"/>
+            <column name="medida" value="0,15"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="6"/>
+            <column name="medida" value="0,20"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="7"/>
+            <column name="medida" value="10"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="8"/>
+            <column name="medida" value="20"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="9"/>
+            <column name="medida" value="30"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="10"/>
+            <column name="medida" value="40"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="11"/>
+            <column name="medida" value="50"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="12"/>
+            <column name="medida" value="60"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="13"/>
+            <column name="medida" value="1mm"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-76">
+        <addColumn tableName="movimiento_articulo">
+            <column name="medida_id" type="bigint"/>
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="medida_id"
+                                 baseTableName="movimiento_articulo"
+                                 constraintName="fk_movimiento_articulo_medida_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="medida_articulo"/>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-77">
+        <dropForeignKeyConstraint baseTableName="movimiento_articulo"
+        constraintName="fk_movimiento_articulo_movimiento_id"/>
+        <dropUniqueConstraint constraintName="ux_movimiento_articulo_movimiento_id"
+            tableName="movimiento_articulo"/>
+        <addForeignKeyConstraint baseColumnNames="movimiento_id"
+                                 baseTableName="movimiento_articulo"
+                                 constraintName="fk_movimiento_articulo_movimiento_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="movimiento"/>
+    </changeSet>
+
+    <changeSet author="manuelc (generated)" id="1608305253236-78">
+        <addForeignKeyConstraint baseColumnNames="movimiento_id"
+                                 baseTableName="movimiento_presupuesto"
+                                 constraintName="fk_movimiento_presupuesto_movimiento_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="movimiento"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,16 +1,17 @@
 <div class="jh-card">
-    <div class="container-fluid card shadow">
-        <br>
-        <ngb-tabset #tabSet="ngbTabset">
-            <div *ngFor="let tab of articulosPorMarca">
-                <ngb-tab title=" {{tab.marca.nombreMarca}} ">
-                    <ng-template ngbTabContent>
-                        <br>
-                        <jhi-lista-articulos [totalArticulosPorMarca]="tab.articulos" [marca]="tab.marca">
-                        </jhi-lista-articulos>
-                    </ng-template>
-                </ngb-tab>
-            </div>
-        </ngb-tabset>
-    </div>
+  <div class="container-fluid card shadow">
+    <br />
+    <ngb-tabset #tabSet="ngbTabset" [destroyOnHide]="false" (tabChange)="tabStatus[$event.nextId] = true">
+      <div *ngFor="let marca of marcas; index as i">
+      <p>{{i}}</p>
+        <ngb-tab title=" {{ marca.nombreMarca }} " id="{{i}}">
+          <ng-template ngbTabContent>
+            <br />
+            <jhi-lista-articulos *ngIf="tabStatus[i] === true" [marca]="marca">
+            </jhi-lista-articulos>
+          </ng-template>
+        </ngb-tab>
+      </div>
+    </ngb-tabset>
+  </div>
 </div>

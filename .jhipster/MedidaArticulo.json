@@ -1,0 +1,19 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "medida",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20201218143108",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "medida_articulo",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

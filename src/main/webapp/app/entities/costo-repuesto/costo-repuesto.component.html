@@ -19,10 +19,10 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Valor</span></th>
-            <th><span>Medida</span></th>
             <th><span>Estado</span></th>
             <th><span>Articulo</span></th>
             <th><span>Tipo Repuesto</span></th>
+            <th><span>Medida Articulo</span></th>
             <th></th>
             </tr>
             </thead>
@@ -30,7 +30,6 @@
             <tr *ngFor="let costoRepuesto of costoRepuestos ;trackBy: trackId">
                 <td><a [routerLink]="['/costo-repuesto', costoRepuesto.id, 'view' ]">{{costoRepuesto.id}}</a></td>
                 <td>{{costoRepuesto.valor}}</td>
-                <td>{{costoRepuesto.medida}}</td>
                 <td>
                     <div *ngIf="costoRepuesto.estado">
                         <a [routerLink]="['/estado-costo-repuesto', costoRepuesto.estado?.id, 'view' ]" >{{costoRepuesto.estado?.nombreEstado}}</a>
@@ -44,6 +43,11 @@
                 <td>
                     <div *ngIf="costoRepuesto.tipoRepuesto">
                         <a [routerLink]="['/tipo-repuesto', costoRepuesto.tipoRepuesto?.id, 'view' ]" >{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="costoRepuesto.medidaArticulo">
+                        <a [routerLink]="['/medida-articulo', costoRepuesto.medidaArticulo?.id, 'view' ]" >{{costoRepuesto.medidaArticulo?.medida}}</a>
                     </div>
                 </td>
                 <td class="text-right">

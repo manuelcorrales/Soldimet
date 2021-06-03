@@ -21,6 +21,8 @@
             <th jhiSortBy="codigoArticuloProveedor"><span>Codigo Articulo Proveedor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="valor"><span>Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="fechaCosto"><span>Fecha Costo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="costoProveedor"><span>Costo Proveedor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fechaCostoProveedor"><span>Fecha Costo Proveedor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="estado.nombreEstado"><span>Estado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="marca.nombreMarca"><span>Marca</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="tipoRepuesto.nombreTipoRepuesto"><span>Tipo Repuesto</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -33,6 +35,8 @@
                 <td>{{articulo.codigoArticuloProveedor}}</td>
                 <td>{{articulo.valor}}</td>
                 <td>{{articulo.fechaCosto | date:'mediumDate'}}</td>
+                <td>{{articulo.costoProveedor}}</td>
+                <td>{{articulo.fechaCostoProveedor | date:'mediumDate'}}</td>
                 <td>
                     <div *ngIf="articulo.estado">
                         <a [routerLink]="['/estado-articulo', articulo.estado?.id, 'view' ]" >{{articulo.estado?.nombreEstado}}</a>

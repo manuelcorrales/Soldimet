@@ -232,8 +232,8 @@ public class ExpertoPresupuesto {
 
         if (this.tieneAccesoATodosLosPresupuestos(empleado)) {
             presupuestos = presupuestoRepository
-                    .findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
-                            filtro, filtro, filtro, pageable);
+                    .findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrDetallePresupuestosAplicacionNombreAplicacionContainsOrderByIdDesc(
+                            filtro, filtro, filtro, filtro, pageable);
         } else {
             Sucursal sucursal = empleado.getSucursal();
             Specification<Presupuesto> specs = Specification.where(
@@ -256,7 +256,7 @@ public class ExpertoPresupuesto {
             presupuestos = presupuestoRepository.findAll(specs, pageable);
 
             // presupuestos = presupuestoRepository
-            //         .findByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalAndModeloOrderByIdDesc(
+            //         .findByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalAndModeloOrderByIdDesc(
             //                 filtro, filtro, filtro, sucursal, true, pageable);
         }
 
@@ -621,12 +621,10 @@ public class ExpertoPresupuesto {
     }
 
     public Presupuesto buscarPresupuestoExistente(Long aplicacionId, Long cilindradaId) {
-        Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
-        Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
 
         return presupuestoRepository
-                .findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(
-                        aplicacion, cilindrada, true);
+                .findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdOrderByModeloDescIdDesc(
+                        aplicacionId, cilindradaId);
     }
 
     public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId,

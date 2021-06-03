@@ -7,19 +7,19 @@ import { UpdateRepuestosListComponent } from '../update-repuestos-list/update-re
 import { Articulo } from 'app/shared/model/articulo.model';
 import { RepuestosService } from '../repuestos-services';
 import { TipoRepuesto } from '../../shared/model/tipo-repuesto.model';
+import { BaseFilterPageableComponent } from '../../shared/base-filter-pageable/base-filter-pageable.component';
+import { Page } from '../../dto/page/page';
 
 @Component({
   selector: 'jhi-lista-articulos',
   templateUrl: './lista-articulos.component.html',
   styleUrls: ['./lista-articulos.component.scss']
 })
-export class ListaArticulosComponent implements OnInit {
+export class ListaArticulosComponent extends BaseFilterPageableComponent<Articulo> implements OnInit {
   @ViewChild('toastr', { static: false })
   toastrContainer: ViewContainerRef;
 
-  @Input() totalArticulosPorMarca: Articulo[] = [];
   @Input() marca: Marca;
-  articulosPorMarca: Articulo[] = [];
   tipoRepuestos: TipoRepuesto[] = [];
   repuestoElegido: TipoRepuesto;
 
@@ -28,21 +28,34 @@ export class ListaArticulosComponent implements OnInit {
   page = 1;
 
   constructor(
-    private articuloService: ArticuloService,
-    private alertService: JhiAlertService,
+    protected articuloService: ArticuloService,
+    public alertService: JhiAlertService,
     private modalService: NgbModal,
     private repuestosService: RepuestosService
-  ) {}
+  ) {
+    super();
+    this.searchableService = repuestosService;
+  }
 
   ngOnInit() {
-    this.ordernarYFiltrarLista();
-    this.totalArticulosPorMarca
+    super.ngOnInit();
+    this.content
       .map((articulo: Articulo) => articulo.tipoRepuesto)
       .forEach((repuesto: TipoRepuesto) => {
         if (!this.tipoRepuestos.some(repList => repList.id === repuesto.id)) {
           this.tipoRepuestos.push(repuesto);
         }
       });
+  }
+
+  protected requestContent() {
+    this.searchableService.findByFilteredPage(this.marca, this.searchText, this.page - 1, this.pageSize).subscribe(
+      (response: Page<Articulo>) => {
+        this.totalItems = response.totalElements;
+        this.content = response.content;
+      },
+      error => this.onError(error.message)
+    );
   }
 
   modificarPorcentageLista(marca: Marca, porcentage: number) {
@@ -61,19 +74,16 @@ export class ListaArticulosComponent implements OnInit {
   }
 
   guardarLista(marca: Marca, porcentage: number) {
-    let articulos: Articulo[] = this.totalArticulosPorMarca.filter(articulo => articulo.tipoRepuesto.id === this.repuestoElegido.id);
+    const articulos: Articulo[] = this.content.filter(articulo => articulo.tipoRepuesto.id === this.repuestoElegido.id);
     articulos.forEach(articulo => (articulo.valor = articulo.valor * (1 + porcentage / 100)));
     this.repuestosService.saveListaActualizada(articulos).subscribe((articulosRes: Articulo[]) => {
-      articulos = articulosRes;
-      this.ordernarYFiltrarLista();
+      this.requestContent();
     });
   }
 
   actualizarArticulo(articulo: Articulo) {
     this.repuestosService.actualizarRepuestoProveedor(articulo).subscribe((resArticulo: Articulo) => {
-      this.totalArticulosPorMarca = this.totalArticulosPorMarca.filter(articuloEnLista => articuloEnLista.id !== articulo.id);
-      this.totalArticulosPorMarca.push(resArticulo);
-      this.ordernarYFiltrarLista();
+      this.requestContent();
       this.alertService.success('Se actualizó un artículo');
     });
   }
@@ -81,36 +91,8 @@ export class ListaArticulosComponent implements OnInit {
   cancelarArticulo(articulo: Articulo) {
     // llamo al back para fletarlo y lo saco de la lista
     this.articuloService.delete(articulo.id).subscribe(res => {
-      this.totalArticulosPorMarca = this.totalArticulosPorMarca.filter(articuloEnLista => articuloEnLista.id !== articulo.id);
-      this.ordernarYFiltrarLista();
+      this.requestContent();
       this.alertService.success('Se eliminó un artículo');
     });
-  }
-
-  agregarArticuloALista(articulo: Articulo) {
-    this.totalArticulosPorMarca.push(articulo);
-    this.ordernarYFiltrarLista();
-  }
-
-  ordernarYFiltrarLista() {
-    this.totalArticulosPorMarca.sort((a, b) => (b.tipoRepuesto.nombreTipoRepuesto < a.tipoRepuesto.nombreTipoRepuesto ? 1 : -1));
-    this.search();
-  }
-
-  search() {
-    setTimeout(() => {
-      const articulos = this.totalArticulosPorMarca.filter(articulo => {
-        const term = this.busqueda.toLowerCase();
-        return (
-          articulo.codigoArticuloProveedor.toLowerCase().includes(term) ||
-          articulo.tipoRepuesto.nombreTipoRepuesto.toLowerCase().includes(term) ||
-          articulo.fechaCosto
-            .toString()
-            .toLowerCase()
-            .includes(term)
-        );
-      });
-      this.articulosPorMarca = articulos;
-    }, 300);
   }
 }

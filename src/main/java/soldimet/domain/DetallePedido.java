@@ -25,18 +25,19 @@ public class DetallePedido implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(unique = true)
     private DetallePresupuesto detallePresupuesto;
 
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinColumn(name="detallePedido")
-    @JsonInclude
+    @JsonInclude(JsonInclude.Include.ALWAYS)
+    @NotNull
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
-    @ManyToOne (cascade ={CascadeType.DETACH, CascadeType.MERGE}, optional = false)
+    @ManyToOne (cascade ={CascadeType.DETACH, CascadeType.MERGE}, optional = false, fetch=FetchType.EAGER)
     @NotNull
     private EstadoDetallePedido estadoDetallePedido;
 

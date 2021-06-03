@@ -31,7 +31,7 @@ public class OperacionesController {
 
     @GetMapping("/getListaPreciosOperacionesActualizada")
     public List<DTOListaPrecioManoDeObra> getListaPreciosOperacionesActualizada(){
-        log.debug("request api/operaciones/getListaPreciosOperacionesActualizada");
+        log.info("request api/operaciones/getListaPreciosOperacionesActualizada");
 
         List<DTOListaPrecioManoDeObra> listaDto =  expertoOperaciones.buscarCostos();
         log.debug("response api/operaciones/getListaPreciosOperacionesActualizada: {}", listaDto);
@@ -41,7 +41,7 @@ public class OperacionesController {
 
     @PostMapping("/updateLista")
     public DTOListaPrecioManoDeObra actualizarListaPRecio(@RequestBody DTOListaPrecioManoDeObra dtoLista) {
-        log.debug("request api/operaciones/updateLista");
+        log.info("request api/operaciones/updateLista");
 
         DTOListaPrecioManoDeObra dto = expertoOperaciones.modificarCostos(dtoLista);
         log.debug("response api/operaciones/updateLista: {}", dto);
@@ -50,7 +50,7 @@ public class OperacionesController {
 
     @PostMapping("/agregar_en_listas")
     public Boolean agregarOperacionAListas(@RequestBody Operacion operacion) {
-        log.debug("request api/operaciones/agregar_en_listas");
+        log.info("request api/operaciones/agregar_en_listas");
 
         Boolean guardado = expertoOperaciones.agregarAListas(operacion);
         log.debug("response api/operaciones/agregar_en_listas: {}", operacion, guardado);

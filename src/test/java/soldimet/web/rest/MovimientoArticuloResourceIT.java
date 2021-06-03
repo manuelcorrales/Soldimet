@@ -3,7 +3,6 @@ package soldimet.web.rest;
 import soldimet.SoldimetApp;
 import soldimet.domain.MovimientoArticulo;
 import soldimet.domain.Articulo;
-import soldimet.domain.Movimiento;
 import soldimet.repository.MovimientoArticuloRepository;
 import soldimet.service.MovimientoArticuloService;
 import soldimet.web.rest.errors.ExceptionTranslator;
@@ -96,16 +95,6 @@ public class MovimientoArticuloResourceIT {
             articulo = TestUtil.findAll(em, Articulo.class).get(0);
         }
         movimientoArticulo.setArticulo(articulo);
-        // Add required entity
-        Movimiento movimiento;
-        if (TestUtil.findAll(em, Movimiento.class).isEmpty()) {
-            movimiento = MovimientoResourceIT.createEntity(em);
-            em.persist(movimiento);
-            em.flush();
-        } else {
-            movimiento = TestUtil.findAll(em, Movimiento.class).get(0);
-        }
-        movimientoArticulo.setMovimiento(movimiento);
         return movimientoArticulo;
     }
     /**
@@ -127,16 +116,6 @@ public class MovimientoArticuloResourceIT {
             articulo = TestUtil.findAll(em, Articulo.class).get(0);
         }
         movimientoArticulo.setArticulo(articulo);
-        // Add required entity
-        Movimiento movimiento;
-        if (TestUtil.findAll(em, Movimiento.class).isEmpty()) {
-            movimiento = MovimientoResourceIT.createUpdatedEntity(em);
-            em.persist(movimiento);
-            em.flush();
-        } else {
-            movimiento = TestUtil.findAll(em, Movimiento.class).get(0);
-        }
-        movimientoArticulo.setMovimiento(movimiento);
         return movimientoArticulo;
     }
 

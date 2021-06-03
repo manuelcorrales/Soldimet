@@ -9,4 +9,11 @@ public class MathUtils {
         return new Float(0);
     }
 
+    public static Integer roundFloatToInteger(Float number) {
+        if (number != null) {
+            return Math.round(number);
+        }
+        return new Integer(0);
+    }
+
 }

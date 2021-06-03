@@ -26,7 +26,7 @@
     <br/>
     <div class="container-fluid card shadow">
         <div class="table-responsive pt-3" *ngIf="content">
-            <table class="table table-hover">
+            <table class="table table-hover text-center">
                 <thead>
                     <tr>
                         <th scope="col" class="text-center">Nombre</th>
@@ -93,6 +93,8 @@
                 #numPages
                 [pageSize]="pageSize"
                 [(page)]="page"
+                [rotate]="true"
+                [boundaryLinks]="true"
                 (pageChange)="requestContent()"
                 >
             </ngb-pagination>

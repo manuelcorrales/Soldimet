@@ -11216,8 +11216,8 @@ INSERT INTO `costo_operacion` (`id`, `costo_operacion`, `cilindrada_id`, `operac
 
 CREATE TABLE `costo_repuesto` (
   `id` bigint(20) NOT NULL,
-  `valor` float NOT NULL,
-  `tipo_repuesto_id` bigint(20) NOT NULL,
+  `valor` float DEFAULT 0,
+  `tipo_repuesto_id` bigint(20) DEFAULT NULL,
   `estado_id` bigint(20) NOT NULL,
   `detalle_pedido` bigint(20) DEFAULT NULL,
   `articulo_id` bigint(20) DEFAULT NULL

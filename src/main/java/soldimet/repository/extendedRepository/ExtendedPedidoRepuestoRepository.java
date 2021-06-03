@@ -21,6 +21,32 @@ public interface ExtendedPedidoRepuestoRepository extends PedidoRepuestoReposito
 
     public PedidoRepuesto findByPresupuesto(Presupuesto presupuesto);
 
+    @EntityGraph(attributePaths = {
+            "estadoPedidoRepuesto",
+            "detallePedidos",
+            "presupuesto",
+            "presupuesto.cliente",
+            "presupuesto.cliente.persona",
+            "presupuesto.estadoPresupuesto",
+            "presupuesto.sucursal",
+            "presupuesto.detallePresupuestos",
+            "presupuesto.detallePresupuestos.motor",
+            "presupuesto.detallePresupuestos.aplicacion",
+            "presupuesto.detallePresupuestos.tipoParteMotor",
+            "presupuesto.detallePresupuestos.cilindrada",
+            "presupuesto.detallePresupuestos.cobranzaRepuestos",
+            "detallePedidos",
+            "detallePedidos.detallePresupuesto",
+            "detallePedidos.estadoDetallePedido",
+            "detallePedidos.costoRepuestos",
+            "detallePedidos.costoRepuestos.estado",
+            "detallePedidos.costoRepuestos.tipoRepuesto",
+            "detallePedidos.costoRepuestos.medidaArticulo",
+            "detallePedidos.costoRepuestos.articulo",
+            "detallePedidos.costoRepuestos.articulo.marca",
+        })
+    public PedidoRepuesto findCompleteById(Long id);
+
     public List<PedidoRepuesto> findAllByOrderByIdDesc();
 
     public List<PedidoRepuesto> findByEstadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto);

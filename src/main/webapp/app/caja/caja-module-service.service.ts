@@ -1,3 +1,4 @@
+import { MovimientoArticulo } from 'app/shared/model/movimiento-articulo.model';
 import { Injectable } from '@angular/core';
 import { SERVER_API_URL } from 'app/app.constants';
 import { HttpClient } from '@angular/common/http';
@@ -12,6 +13,7 @@ export class CajaModuleServiceService {
   private resourceUrlCaja = SERVER_API_URL + 'api/caja';
   private urlMovimientosDia = '/movimientos';
   private urlSaveMovimiento = '/nuevo_movimiento';
+  private urlSaveMovimientosArticulos = '/nuevos_movimientos_articulos';
   private urlBorrarMovimiento = '/borrar_movimiento';
 
   constructor(private http: HttpClient) {}
@@ -29,5 +31,9 @@ export class CajaModuleServiceService {
   delete(id: number): Observable<Movimiento> {
     const urlLlamada = `${this.resourceUrlCaja}${this.urlBorrarMovimiento}/${id}`;
     return this.http.post<Movimiento>(urlLlamada, {});
+  }
+  guardarMovimientoArticulos(movimientoId: number, movimientos: MovimientoArticulo[]): Observable<MovimientoArticulo[]> {
+    const urlLlamada = `${this.resourceUrlCaja}${this.urlSaveMovimientosArticulos}/?movimientoId=${movimientoId}`;
+    return this.http.post<MovimientoArticulo[]>(urlLlamada, movimientos);
   }
 }

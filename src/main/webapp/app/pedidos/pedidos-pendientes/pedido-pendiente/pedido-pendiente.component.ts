@@ -8,6 +8,9 @@ import { DetallePedidoNewComponent } from 'app/pedidos/pedidos-pendientes/pedido
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MedidaArticuloService } from 'app/entities/medida-articulo/medida-articulo.service';
+import { filter, map } from 'rxjs/operators';
+import { IMedidaArticulo } from 'app/shared/model/medida-articulo.model';
 
 @Component({
   selector: 'jhi-pedido-pendiente',
@@ -22,11 +25,24 @@ export class PedidoPendienteComponent implements OnInit {
   toastrContainer: ViewContainerRef;
 
   isSaving = false;
+  medidas: IMedidaArticulo[] = [];
 
-  constructor(private pedidosServices: PedidosService, private activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+  constructor(
+    private pedidosServices: PedidosService,
+    private activeModal: NgbActiveModal,
+    private eventManager: JhiEventManager,
+    private medidaService: MedidaArticuloService
+  ) {}
 
   ngOnInit() {
     this.isSaving = false;
+    this.medidaService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IMedidaArticulo[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IMedidaArticulo[]>) => response.body)
+      )
+      .subscribe((res: IMedidaArticulo[]) => (this.medidas = res));
   }
 
   guardarPedidoPendiente() {

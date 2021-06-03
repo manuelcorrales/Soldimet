@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.service.dto.DTOPedidoCabecera;
-import soldimet.service.dto.DTOProveedor;
 import soldimet.service.expertos.ExpertoPedidos;
 
 @RestController
@@ -36,7 +35,7 @@ public class PedidosController {
 
     @GetMapping("/getPedidosPendientes")
     public ResponseEntity<List<PedidoRepuesto>> getPedidosPendientes() {
-        log.debug("request api/pedidos/getPedidosPendientes");
+        log.info("request api/pedidos/getPedidosPendientes");
         List<PedidoRepuesto> pedidos = expertoPedidos.getPedidosPendientes();
 
         if (pedidos != null) {
@@ -53,7 +52,7 @@ public class PedidosController {
 
     @GetMapping("/getPedidosCabecera")
     public ResponseEntity<List<DTOPedidoCabecera>> getPedidosCabecera() {
-        log.debug("request api/pedidos/getPedidosCabecera");
+        log.info("request api/pedidos/getPedidosCabecera");
 
         List<DTOPedidoCabecera> pedidos = expertoPedidos.getPedidosCabecera();
 
@@ -72,7 +71,7 @@ public class PedidosController {
     @Transactional
     @PostMapping("/updateCostoRepuesto/")
     public ResponseEntity<CostoRepuesto> updateCostoRepuesto(@RequestBody CostoRepuesto costoRepuesto) throws URISyntaxException {
-        log.debug("request api/pedidos/updateCostoRepuesto: CostoRepuesto: {}", costoRepuesto);
+        log.info("request api/pedidos/updateCostoRepuesto: CostoRepuesto: {}", costoRepuesto);
 
         try {
             costoRepuesto = expertoPedidos.updateCostoRepuesto(costoRepuesto);
@@ -88,7 +87,7 @@ public class PedidosController {
 
     @PostMapping("/recibirRepuesto/")
     public ResponseEntity<CostoRepuesto> recibirRepuesto(@RequestBody CostoRepuesto costoRepuesto) {
-        log.debug("request api/pedidos/recibirRepuesto: CostoRepuesto: {}", costoRepuesto);
+        log.info("request api/pedidos/recibirRepuesto: CostoRepuesto: {}", costoRepuesto);
 
         costoRepuesto = expertoPedidos.recibirRepuesto(costoRepuesto);
 
@@ -105,8 +104,8 @@ public class PedidosController {
 
     @GetMapping("/get/{id}")
     public PedidoRepuesto getPedido(@PathVariable("id") Long pedidoId) {
-        log.debug("request /api/pedidos/get/: pedido id {}", pedidoId);
-        PedidoRepuesto pedido = expertoPedidos.getPresupuesto(pedidoId);
+        log.info("request /api/pedidos/get/: pedido id {}", pedidoId);
+        PedidoRepuesto pedido = expertoPedidos.getPedido(pedidoId);
         log.debug("response /api/pedidos/get/: {}", pedido);
         return pedido;
     }

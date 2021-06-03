@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IDetalleMovimiento, DetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
-import { DetalleMovimientoService } from 'app/entities/detalle-movimiento/detalle-movimiento.service';
+import { DetalleMovimientoService } from './detalle-movimiento.service';
 import { ITipoDetalleMovimiento } from 'app/shared/model/tipo-detalle-movimiento.model';
 import { TipoDetalleMovimientoService } from 'app/entities/tipo-detalle-movimiento/tipo-detalle-movimiento.service';
 import { IArticulo } from 'app/shared/model/articulo.model';
@@ -17,6 +17,8 @@ import { IPedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { PedidoRepuestoService } from 'app/entities/pedido-repuesto/pedido-repuesto.service';
 import { IPresupuesto } from 'app/shared/model/presupuesto.model';
 import { PresupuestoService } from 'app/entities/presupuesto/presupuesto.service';
+import { IMedidaArticulo } from 'app/shared/model/medida-articulo.model';
+import { MedidaArticuloService } from 'app/entities/medida-articulo/medida-articulo.service';
 
 @Component({
   selector: 'jhi-detalle-movimiento-update',
@@ -33,6 +35,8 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
 
   presupuestos: IPresupuesto[];
 
+  medidaarticulos: IMedidaArticulo[];
+
   editForm = this.fb.group({
     id: [],
     valorUnitario: [],
@@ -41,7 +45,8 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
     tipoDetalleMovimiento: [null, Validators.required],
     articulo: [],
     pedidoRepuesto: [],
-    presupuesto: []
+    presupuesto: [],
+    medida: []
   });
 
   constructor(
@@ -51,6 +56,7 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
     protected articuloService: ArticuloService,
     protected pedidoRepuestoService: PedidoRepuestoService,
     protected presupuestoService: PresupuestoService,
+    protected medidaArticuloService: MedidaArticuloService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -91,6 +97,13 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
         map((response: HttpResponse<IPresupuesto[]>) => response.body)
       )
       .subscribe((res: IPresupuesto[]) => (this.presupuestos = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.medidaArticuloService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IMedidaArticulo[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IMedidaArticulo[]>) => response.body)
+      )
+      .subscribe((res: IMedidaArticulo[]) => (this.medidaarticulos = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(detalleMovimiento: IDetalleMovimiento) {
@@ -102,7 +115,8 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
       tipoDetalleMovimiento: detalleMovimiento.tipoDetalleMovimiento,
       articulo: detalleMovimiento.articulo,
       pedidoRepuesto: detalleMovimiento.pedidoRepuesto,
-      presupuesto: detalleMovimiento.presupuesto
+      presupuesto: detalleMovimiento.presupuesto,
+      medida: detalleMovimiento.medida
     });
   }
 
@@ -130,7 +144,8 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
       tipoDetalleMovimiento: this.editForm.get(['tipoDetalleMovimiento']).value,
       articulo: this.editForm.get(['articulo']).value,
       pedidoRepuesto: this.editForm.get(['pedidoRepuesto']).value,
-      presupuesto: this.editForm.get(['presupuesto']).value
+      presupuesto: this.editForm.get(['presupuesto']).value,
+      medida: this.editForm.get(['medida']).value
     };
   }
 
@@ -163,6 +178,10 @@ export class DetalleMovimientoUpdateComponent implements OnInit {
   }
 
   trackPresupuestoById(index: number, item: IPresupuesto) {
+    return item.id;
+  }
+
+  trackMedidaArticuloById(index: number, item: IMedidaArticulo) {
     return item.id;
   }
 }

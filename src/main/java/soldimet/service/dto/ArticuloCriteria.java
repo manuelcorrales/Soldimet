@@ -33,6 +33,10 @@ public class ArticuloCriteria implements Serializable, Criteria {
 
     private LocalDateFilter fechaCosto;
 
+    private FloatFilter costoProveedor;
+
+    private LocalDateFilter fechaCostoProveedor;
+
     private LongFilter estadoId;
 
     private LongFilter marcaId;
@@ -47,6 +51,8 @@ public class ArticuloCriteria implements Serializable, Criteria {
         this.codigoArticuloProveedor = other.codigoArticuloProveedor == null ? null : other.codigoArticuloProveedor.copy();
         this.valor = other.valor == null ? null : other.valor.copy();
         this.fechaCosto = other.fechaCosto == null ? null : other.fechaCosto.copy();
+        this.costoProveedor = other.costoProveedor == null ? null : other.costoProveedor.copy();
+        this.fechaCostoProveedor = other.fechaCostoProveedor == null ? null : other.fechaCostoProveedor.copy();
         this.estadoId = other.estadoId == null ? null : other.estadoId.copy();
         this.marcaId = other.marcaId == null ? null : other.marcaId.copy();
         this.tipoRepuestoId = other.tipoRepuestoId == null ? null : other.tipoRepuestoId.copy();
@@ -89,6 +95,22 @@ public class ArticuloCriteria implements Serializable, Criteria {
         this.fechaCosto = fechaCosto;
     }
 
+    public FloatFilter getCostoProveedor() {
+        return costoProveedor;
+    }
+
+    public void setCostoProveedor(FloatFilter costoProveedor) {
+        this.costoProveedor = costoProveedor;
+    }
+
+    public LocalDateFilter getFechaCostoProveedor() {
+        return fechaCostoProveedor;
+    }
+
+    public void setFechaCostoProveedor(LocalDateFilter fechaCostoProveedor) {
+        this.fechaCostoProveedor = fechaCostoProveedor;
+    }
+
     public LongFilter getEstadoId() {
         return estadoId;
     }
@@ -128,6 +150,8 @@ public class ArticuloCriteria implements Serializable, Criteria {
             Objects.equals(codigoArticuloProveedor, that.codigoArticuloProveedor) &&
             Objects.equals(valor, that.valor) &&
             Objects.equals(fechaCosto, that.fechaCosto) &&
+            Objects.equals(costoProveedor, that.costoProveedor) &&
+            Objects.equals(fechaCostoProveedor, that.fechaCostoProveedor) &&
             Objects.equals(estadoId, that.estadoId) &&
             Objects.equals(marcaId, that.marcaId) &&
             Objects.equals(tipoRepuestoId, that.tipoRepuestoId);
@@ -140,6 +164,8 @@ public class ArticuloCriteria implements Serializable, Criteria {
         codigoArticuloProveedor,
         valor,
         fechaCosto,
+        costoProveedor,
+        fechaCostoProveedor,
         estadoId,
         marcaId,
         tipoRepuestoId
@@ -153,6 +179,8 @@ public class ArticuloCriteria implements Serializable, Criteria {
                 (codigoArticuloProveedor != null ? "codigoArticuloProveedor=" + codigoArticuloProveedor + ", " : "") +
                 (valor != null ? "valor=" + valor + ", " : "") +
                 (fechaCosto != null ? "fechaCosto=" + fechaCosto + ", " : "") +
+                (costoProveedor != null ? "costoProveedor=" + costoProveedor + ", " : "") +
+                (fechaCostoProveedor != null ? "fechaCostoProveedor=" + fechaCostoProveedor + ", " : "") +
                 (estadoId != null ? "estadoId=" + estadoId + ", " : "") +
                 (marcaId != null ? "marcaId=" + marcaId + ", " : "") +
                 (tipoRepuestoId != null ? "tipoRepuestoId=" + tipoRepuestoId + ", " : "") +

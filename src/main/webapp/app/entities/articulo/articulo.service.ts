@@ -52,7 +52,11 @@ export class ArticuloService {
 
   protected convertDateFromClient(articulo: IArticulo): IArticulo {
     const copy: IArticulo = Object.assign({}, articulo, {
-      fechaCosto: articulo.fechaCosto != null && articulo.fechaCosto.isValid() ? articulo.fechaCosto.format(DATE_FORMAT) : null
+      fechaCosto: articulo.fechaCosto != null && articulo.fechaCosto.isValid() ? articulo.fechaCosto.format(DATE_FORMAT) : null,
+      fechaCostoProveedor:
+        articulo.fechaCostoProveedor != null && articulo.fechaCostoProveedor.isValid()
+          ? articulo.fechaCostoProveedor.format(DATE_FORMAT)
+          : null
     });
     return copy;
   }
@@ -60,6 +64,7 @@ export class ArticuloService {
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       res.body.fechaCosto = res.body.fechaCosto != null ? moment(res.body.fechaCosto) : null;
+      res.body.fechaCostoProveedor = res.body.fechaCostoProveedor != null ? moment(res.body.fechaCostoProveedor) : null;
     }
     return res;
   }
@@ -68,6 +73,7 @@ export class ArticuloService {
     if (res.body) {
       res.body.forEach((articulo: IArticulo) => {
         articulo.fechaCosto = articulo.fechaCosto != null ? moment(articulo.fechaCosto) : null;
+        articulo.fechaCostoProveedor = articulo.fechaCostoProveedor != null ? moment(articulo.fechaCostoProveedor) : null;
       });
     }
     return res;

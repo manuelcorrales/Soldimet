@@ -32,6 +32,7 @@ import soldimet.repository.extendedRepository.ExtendedPedidoRepuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOPedidoCabecera;
+import soldimet.utils.MathUtils;
 
 @Service
 public class ExpertoPedidos {
@@ -43,6 +44,9 @@ public class ExpertoPedidos {
 
     @Autowired
     private ExpertoUsuarios expertoUsuarios;
+
+    @Autowired
+    private ExpertoRepuestos expertoRepuestos;
 
     @Autowired
     private ExtendedEstadoPedidoRepuestoRepository estadoPedidoRepuestoRepository;
@@ -104,18 +108,26 @@ public class ExpertoPedidos {
     }
 
     public CostoRepuesto updateCostoRepuesto(CostoRepuesto costoRepuesto) throws Exception {
-        EstadoCostoRepuesto estadoPedido = estadoCostoRepuestoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO);
-        costoRepuesto.setEstado(estadoPedido);
+        String nombreEstado = globales.NOMBRE_ESTADO_COSTO_REPUESTO_PEDIDO;
+        if (costoRepuesto.getEstado() != null
+                && costoRepuesto.getEstado().getNombreEstado() != null
+                && costoRepuesto.getEstado().getNombreEstado().equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_STOCK)
+        ) {
+            nombreEstado = costoRepuesto.getEstado().getNombreEstado();
+        }
+        EstadoCostoRepuesto estadoCostoRepuesto = estadoCostoRepuestoRepository.findByNombreEstado(nombreEstado);
+        costoRepuesto.setEstado(estadoCostoRepuesto);
         costoRepuesto.setTipoRepuesto(tipoRepuestoRepository.getOne(costoRepuesto.getTipoRepuesto().getId()));
         if (costoRepuesto.getArticulo() != null) {
             costoRepuesto.setArticulo(articuloRepository.getOne(costoRepuesto.getArticulo().getId()));
         }
         costoRepuesto = costoRepuestoRepository.save(costoRepuesto);
+        // Si saque el articulo del stock, lo descuento
+        descontarStock(costoRepuesto);
 
         DetallePedido detallePedido = detallePedidoRepository.findByCostoRepuestosIn(costoRepuesto);
         detallePedido.addCostoRepuesto(costoRepuesto);
-        detallePedido = this.transitionDetalleToPedido(detallePedido, null);
+        detallePedido = this.transitionDetalle(detallePedido, null);
 
         PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findPedidoRepuestoByDetallePedidosIn(detallePedido);
         EstadoPedidoRepuesto estadoPedidoRepuesto = this.transitionPedidoToPedido(pedidoRepuesto);
@@ -131,6 +143,16 @@ public class ExpertoPedidos {
         return detallePedido.filterCostoRepuesto(costoRepuesto);
     }
 
+    private void descontarStock(CostoRepuesto costo) {
+        if (costo.getEstado().getNombreEstado().equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_STOCK)) {
+            expertoRepuestos.descontarStockDesdeArticuloyMedida(
+                costo.getArticulo(),
+                costo.getMedidaArticulo(),
+                MathUtils.roundFloatToInteger(costo.getValor())
+            );
+        }
+    }
+
     private EstadoPedidoRepuesto transitionPedidoToPedido(PedidoRepuesto pedidoRepuesto) {
         // si el pedido ya esta recibido parcial, no lo vuelvo a pedido o pedido parcial
         if (pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado()
@@ -143,6 +165,7 @@ public class ExpertoPedidos {
         int totalDetalles = detalles.size();
         int detallesPedidosPedidos = 0;
         int detallePedidoParcial = 0;
+        int detalleRecibido = 0;
         for (DetallePedido detallePedido : detalles) {
             String estadoDetalle = detallePedido.getEstadoDetallePedido().getNombreEstado();
             if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO)) {
@@ -151,6 +174,10 @@ public class ExpertoPedidos {
             if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO_PARCIAL)) {
                 detallePedidoParcial += 1;
             }
+            if (estadoDetalle.equals(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO)) {
+                detalleRecibido += 1;
+            }
+
         }
 
         // Si hay algun repuesto ya pedido lo marco como parcial
@@ -162,6 +189,10 @@ public class ExpertoPedidos {
         // Si ya pedi todos los repuestos, marco todo como pedido
         if (detallesPedidosPedidos == totalDetalles) {
             nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_PEDIDO);
+        }
+        // Si ya tengo en stock todos los repuestos, marco todo como recibido
+        if (detalleRecibido == totalDetalles) {
+            nuevoEstado = estadoPedidoRepuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO);
         }
 
         return nuevoEstado;
@@ -198,25 +229,37 @@ public class ExpertoPedidos {
 
     }
 
-    public DetallePedido transitionDetalleToPedido(DetallePedido detallePedido, EstadoDetallePedido estadoDetalle) {
+    public DetallePedido transitionDetalle(DetallePedido detallePedido, EstadoDetallePedido estadoDetalle) {
 
         if (estadoDetalle == null) {
             Set<CobranzaRepuesto> repuestosPresupuestados = detallePedido.getDetallePresupuesto()
                     .getCobranzaRepuestos();
             int totalRepuestos = repuestosPresupuestados.size();
             int repuestosPedidos = 0;
+            int repuestosEnStock = 0;
             for (CobranzaRepuesto cobranzaRepuesto : repuestosPresupuestados) {
                 for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
                     if (costoRepuesto.getTipoRepuesto().getId().equals(cobranzaRepuesto.getTipoRepuesto()
                             .getId())) {
                         repuestosPedidos += 1;
+                        if (costoRepuesto.getEstado().getNombreEstado().equals(
+                                globales.NOMBRE_ESTADO_COSTO_REPUESTO_STOCK)) {
+                            repuestosEnStock += 1;
+                        }
                     }
                 }
             }
             // Si ya pedi todos los repuestos, marco todo como pedido
             if (repuestosPedidos == totalRepuestos) {
-                estadoDetalle = estadoDetallePedidoRepuestoRepository
-                        .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO);
+                if (totalRepuestos == repuestosEnStock) {
+                    // Todos los repuestos estaban en stock (lo marco como recibido de 1)
+                    estadoDetalle = estadoDetallePedidoRepuestoRepository
+                            .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_RECIBIDO);
+                } else {
+                    // algun repuesto fue pedido, los demas en stock
+                    estadoDetalle = estadoDetallePedidoRepuestoRepository
+                            .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PEDIDO);
+                }
             } else {
                 // Si hay algun repuesto ya pedido lo marco como parcial
                 if (repuestosPedidos > 0 && totalRepuestos > 1) {
@@ -240,7 +283,10 @@ public class ExpertoPedidos {
         int repuestosRecibidos = 0;
 
         for (CostoRepuesto costoRepuesto : detallePedido.getCostoRepuestos()) {
-            if (costoRepuesto.getEstado().getNombreEstado().equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO)) {
+            if (
+                costoRepuesto.getEstado().getNombreEstado().equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO) ||
+                costoRepuesto.getEstado().getNombreEstado().equals(globales.NOMBRE_ESTADO_COSTO_REPUESTO_STOCK)
+            ) {
                 repuestosRecibidos += 1;
             }
         }
@@ -318,14 +364,8 @@ public class ExpertoPedidos {
                 || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
 
-    public PedidoRepuesto getPresupuesto(Long pedidoId) {
-        PedidoRepuesto pedido = pedidoRepuestoRepository.findById(pedidoId).get();
-        pedido.getDetallePedidos().iterator().next().getCostoRepuestos();
-        pedido.getPresupuesto().getCliente();
-        for (DetallePresupuesto detalle : pedido.getPresupuesto().getDetallePresupuestos()) {
-            for (CobranzaOperacion cobranzaOp : detalle.getCobranzaOperacions()) {cobranzaOp.getOperacion();}
-            for (CobranzaRepuesto cobranzaRep : detalle.getCobranzaRepuestos()) {cobranzaRep.getArticulo();}
-        }
+    public PedidoRepuesto getPedido(Long pedidoId) {
+        PedidoRepuesto pedido = pedidoRepuestoRepository.findCompleteById(pedidoId);
         return pedido;
     }
 

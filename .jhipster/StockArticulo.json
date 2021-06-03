@@ -1,0 +1,51 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "medida",
+            "otherEntityName": "medidaArticulo",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "medida",
+            "otherEntityRelationshipName": "stockArticulo"
+        },
+        {
+            "relationshipName": "articulo",
+            "otherEntityName": "articulo",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [],
+            "otherEntityField": "codigoArticuloProveedor",
+            "otherEntityRelationshipName": "stockArticulo"
+        },
+        {
+            "relationshipName": "sucursal",
+            "otherEntityName": "sucursal",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nombreSucursal",
+            "otherEntityRelationshipName": "stockArticulo"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "cantidad",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20201218191728",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "stock_articulo",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

@@ -29,8 +29,8 @@ public class MovimientoPresupuesto implements Serializable {
     @JsonIgnoreProperties("movimientoPresupuestos")
     private Presupuesto presupuesto;
 
-    @OneToOne(optional = false)    @NotNull
-
+    @OneToOne(optional = false)
+    @NotNull
     @JoinColumn(unique = true)
     private Movimiento movimiento;
 

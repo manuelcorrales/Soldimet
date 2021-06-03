@@ -25,25 +25,25 @@ public class CostoRepuesto implements Serializable {
     private Long id;
 
     @DecimalMin(value = "0")
-    @Column(name = "valor")
+    @Column(name = "valor", nullable = false)
     private Float valor;
 
-    @Column(name = "medida")
-    private String medida;
-
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
     @JsonIgnoreProperties("costoRepuestos")
     private EstadoCostoRepuesto estado;
 
-    @ManyToOne
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JsonIgnoreProperties("costoRepuestos")
     private Articulo articulo;
 
-    @ManyToOne
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JsonIgnoreProperties("costoRepuestos")
     private TipoRepuesto tipoRepuesto;
 
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JsonIgnoreProperties("costoRepuestos")
+    private MedidaArticulo medidaArticulo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -65,19 +65,6 @@ public class CostoRepuesto implements Serializable {
 
     public void setValor(Float valor) {
         this.valor = valor;
-    }
-
-    public String getMedida() {
-        return medida;
-    }
-
-    public CostoRepuesto medida(String medida) {
-        this.medida = medida;
-        return this;
-    }
-
-    public void setMedida(String medida) {
-        this.medida = medida;
     }
 
     public EstadoCostoRepuesto getEstado() {
@@ -119,6 +106,18 @@ public class CostoRepuesto implements Serializable {
         this.tipoRepuesto = tipoRepuesto;
     }
 
+    public MedidaArticulo getMedidaArticulo() {
+        return medidaArticulo;
+    }
+
+    public CostoRepuesto medidaArticulo(MedidaArticulo medidaArticulo) {
+        this.medidaArticulo = medidaArticulo;
+        return this;
+    }
+
+    public void setMedidaArticulo(MedidaArticulo medidaArticulo) {
+        this.medidaArticulo = medidaArticulo;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -142,7 +141,6 @@ public class CostoRepuesto implements Serializable {
         return "CostoRepuesto{" +
             "id=" + getId() +
             ", valor=" + getValor() +
-            ", medida='" + getMedida() + "'" +
             "}";
     }
 }

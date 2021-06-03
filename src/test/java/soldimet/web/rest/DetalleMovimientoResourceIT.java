@@ -208,7 +208,7 @@ public class DetalleMovimientoResourceIT {
             .andExpect(jsonPath("$.[*].cantidad").value(hasItem(DEFAULT_CANTIDAD)))
             .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getDetalleMovimiento() throws Exception {

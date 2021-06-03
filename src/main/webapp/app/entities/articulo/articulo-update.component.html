@@ -38,6 +38,20 @@
                         </span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_costoProveedor">Costo Proveedor</label>
+                    <input type="number" class="form-control" name="costoProveedor" id="field_costoProveedor"
+                           formControlName="costoProveedor"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fechaCostoProveedor">Fecha Costo Proveedor</label>
+                    <div class="input-group">
+                        <input id="field_fechaCostoProveedor" type="text" class="form-control" name="fechaCostoProveedor" ngbDatepicker  #fechaCostoProveedorDp="ngbDatepicker" formControlName="fechaCostoProveedor"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaCostoProveedorDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_estado">Estado</label>
@@ -63,7 +77,7 @@
                     <label class="form-control-label" for="field_tipoRepuesto">Tipo Repuesto</label>
                     <select class="form-control" id="field_tipoRepuesto" name="tipoRepuesto" formControlName="tipoRepuesto">
                         <option *ngIf="!editForm.get('tipoRepuesto').value" [ngValue]="null" selected></option>
-                        <option [ngValue]="tipoRepuestoOption.id === editForm.get('tipoRepuesto').value?.id ? editForm.get('tipoRepuesto').value : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tipoRepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
+                        <option [ngValue]="tipoRepuestoOption.id === editForm.get('tipoRepuesto').value?.id ? editForm.get('tipoRepuesto').value : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tiporepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
                     </select>
                 </div>
                 <div *ngIf="editForm.get('tipoRepuesto').invalid && (editForm.get('tipoRepuesto').dirty || editForm.get('tipoRepuesto').touched)">

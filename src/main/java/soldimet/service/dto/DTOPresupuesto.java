@@ -17,6 +17,7 @@ public class DTOPresupuesto {
     private Long codigo;
     private LocalDate fecha;
     private String motor;
+    private String aplicacion;
     private double importe;
     private String sucursal;
     private Boolean isSoldadura;
@@ -124,5 +125,13 @@ public class DTOPresupuesto {
 
     public void setIsModelo(Boolean isModelo) {
         this.isModelo = isModelo;
+    }
+
+    public String getAplicacion() {
+        return aplicacion;
+    }
+
+    public void setAplicacion(String aplicacion) {
+        this.aplicacion = aplicacion;
     }
 }

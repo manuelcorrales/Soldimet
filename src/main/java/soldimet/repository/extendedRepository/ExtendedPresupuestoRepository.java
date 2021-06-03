@@ -23,7 +23,6 @@ import org.springframework.data.repository.query.Param;
 /**
  * Spring Data JPA repository for the Presupuesto entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface ExtendedPresupuestoRepository extends PresupuestoRepository {
 
@@ -51,17 +50,18 @@ public interface ExtendedPresupuestoRepository extends PresupuestoRepository {
             "detallePresupuestos.cobranzaRepuestos.articulo.marca", "detallePresupuestos.cobranzaRepuestos.articulo.tipoRepuesto",
             "detallePresupuestos.cobranzaRepuestos.articulo", "detallePresupuestos.cobranzaRepuestos.tipoRepuesto", "detallePresupuestos.cobranzaOperacions.operacion",
             "cliente", "cliente.persona", "estadoPresupuesto" })
-    public Page<Presupuesto> findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrderByIdDesc(
-            String nombre, String apellido, String motor, Pageable pageable);
+    public Page<Presupuesto> findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrDetallePresupuestosAplicacionNombreAplicacionContainsOrderByIdDesc(
+            String nombre, String apellido, String motor, String aplicacion, Pageable pageable);
 
     @EntityGraph(attributePaths = { "detallePresupuestos", "detallePresupuestos.motor",
             "detallePresupuestos.aplicacion", "detallePresupuestos.tipoParteMotor", "detallePresupuestos.cilindrada",
             "detallePresupuestos.cobranzaOperacions", "detallePresupuestos.cobranzaRepuestos", "cliente",
             "cliente.persona", "estadoPresupuesto" })
-    public Page<Presupuesto> findByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalAndModeloOrderByIdDesc(
+    public Page<Presupuesto> findByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalAndModeloOrderByIdDesc(
         String nombre,
         String apellido,
         String motor,
+        String aplicacion,
         Sucursal sucursal,
         Boolean isModelo,
         Pageable pageable
@@ -76,7 +76,7 @@ public interface ExtendedPresupuestoRepository extends PresupuestoRepository {
 
     public Presupuesto findByDetallePresupuestosIn(DetallePresupuesto detallePresupuesto);
 
-    public Presupuesto findFirstByDetallePresupuestosAplicacionAndDetallePresupuestosCilindradaAndModeloOrderByIdDesc(
-            Aplicacion aplicacion, Cilindrada cilindrada, Boolean modelo);
+    public Presupuesto findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdOrderByModeloDescIdDesc(
+            Long aplicacionIdd, Long cilindradaId);
 
 }

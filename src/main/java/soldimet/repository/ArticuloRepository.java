@@ -1,10 +1,5 @@
 package soldimet.repository;
 import soldimet.domain.Articulo;
-import soldimet.domain.EstadoArticulo;
-import soldimet.domain.TipoRepuesto;
-
-import java.util.List;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {}
+public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {
+
+}

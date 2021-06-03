@@ -1,0 +1,35 @@
+<div class="card jh-card border-info shadow">
+    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
+        Medio de pago
+    </div>
+    <div class="row">
+        <div class="form-group col-md-2">
+            <label>Medio de pago</label>
+            <select class="form-control" [(ngModel)]="formaDePago" name="formaDePago" (change)="buscarMedioDePagoData()">
+                <option *ngFor="let medioPago of formasDePago" [ngValue]="medioPago">{{medioPago.nombreFormaDePago}}</option>
+            </select>
+        </div>
+        <!-- Informacion del medio de pago-->
+        <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoEfectivo" class="row">
+        </div>
+        <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoTarjeta" class="row col">
+        </div>
+        <div *ngIf="formaDePago?.nombreFormaDePago == formaTipoChecke" class="col">
+            <div class="row col">
+                <div class="form-group col">
+                    <label>Últimos 4</label>
+                    <input type="number" class="form-control" aria-label="numero_cheque" name="numero_cheque" [(ngModel)]="medioPagoCheque.numeroCheque">
+                </div>
+                <div class="form-group col">
+                    <label>Banco</label>
+                    <select class="form-control" [(ngModel)]="medioPagoCheque.banco" name="banco">
+                        <option selected disabled>Elija el banco emisor</option>
+                        <option *ngFor="let banco of bancos" [ngValue]="banco">
+                            {{banco.nombreBanco}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

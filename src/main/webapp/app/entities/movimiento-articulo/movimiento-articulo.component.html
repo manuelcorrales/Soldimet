@@ -21,6 +21,7 @@
             <th><span>Cantidad</span></th>
             <th><span>Articulo</span></th>
             <th><span>Movimiento</span></th>
+            <th><span>Medida</span></th>
             <th></th>
             </tr>
             </thead>
@@ -30,12 +31,17 @@
                 <td>{{movimientoArticulo.cantidad}}</td>
                 <td>
                     <div *ngIf="movimientoArticulo.articulo">
-                        <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view' ]" >{{movimientoArticulo.articulo?.codigoArticuloProveedor}}</a>
+                        <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view' ]" >{{movimientoArticulo.articulo?.descripcion}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="movimientoArticulo.movimiento">
                         <a [routerLink]="['/movimiento', movimientoArticulo.movimiento?.id, 'view' ]" >{{movimientoArticulo.movimiento?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="movimientoArticulo.medida">
+                        <a [routerLink]="['/medida-articulo', movimientoArticulo.medida?.id, 'view' ]" >{{movimientoArticulo.medida?.medida}}</a>
                     </div>
                 </td>
                 <td class="text-right">

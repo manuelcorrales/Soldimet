@@ -17,7 +17,7 @@
                         <small *ngFor="let detalleViejo of presupuestoViejo?.detallePresupuestos"> ({{detalleViejo?.tipoParteMotor?.nombreTipoParteMotor}})</small>.
                     </h5>
                     <p class="card-text">
-                        Se va a utilizar como base para la creación de este presupuesto
+                        Se va a utilizar como base para la creación de este presupuesto <small *ngIf="!presupuestoViejo.modelo"> (No es un modelo)</small>.
                     </p>
                 </div>
             </div>

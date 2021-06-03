@@ -1,0 +1,108 @@
+<div class="jh-card">
+    <div class="container">
+        <div class="row">
+            <jhi-alert-error></jhi-alert-error>
+            <div class="col-md-10">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" #searchBar [(ngModel)]="searchText" (ngModelChange)='searchChanged.next($event)'
+                        placeholder="Buscar repuesto..."placement="bottom" ngbTooltip="Filtrar por código de repuesto"
+                    >
+                    <span class="input-group-btn">
+                        <button class="btn btn-light" type="button" (click)="searchChanged.next($event)">
+                            <span><fa-icon icon="search"></fa-icon></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['/', { outlets: { popup: ['nuevo'] } }]">
+                    <span>
+                        Nuevo Repuesto
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="container-fluid card shadow">
+        <div class="table-responsive pt-3">
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Número</th>
+                        <th scope="col">Marca</th>
+                        <th scope="col">Repuesto</th>
+                        <th scope="col">Código</th>
+                        <!--th scope="col">Costo</th-->
+                        <th scope="col">Venta</th>
+                        <th scope="col">Medida</th>
+                        <th scope="col">Sucursal</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Operaciones</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="content">
+                    <tr *ngFor="let repuesto of content" [ngbTooltip]="tipContent" placement="top-left">
+                        <ng-template #tipContent>
+                            Motores: <p *ngFor="let aplicacion of repuesto.aplicaciones"><b>{{aplicacion.motor.marcaMotor}}</b> - {{aplicacion.nombreAplicacion}}</p>
+                        </ng-template>
+                        <th>{{repuesto.id}}</th>
+                        <td>{{repuesto.marca}}</td>
+                        <td>{{repuesto.tipoRepuesto}}</td>
+                        <td>{{repuesto.codigo}}</td>
+                        <!--td>${{repuesto.costo | number:'1.2-2'}}</td-->
+                        <td>${{repuesto.venta | number:'1.2-2'}}</td>
+                        <td class="font-weight-bold">{{repuesto.medida}}</td>
+                        <td>{{repuesto.sucursal}}</td>
+                        <td>
+                            <div *ngIf="repuesto.cantidad > 0" class="text-center">
+                                <div class="alert-success" role="alert" style="border-radius: .25rem;">
+                                    {{repuesto.cantidad}}
+                                </div>
+                            </div>
+                            <div *ngIf="repuesto.cantidad==0" class="text-center">
+                                <div class="alert-warning" role="alert" style="border-radius: .25rem;">
+                                    {{repuesto.cantidad}}
+                                </div>
+                            </div>
+                            <div *ngIf="repuesto.cantidad < 0" class="text-center">
+                                <div class="alert-danger" role="alert" style="border-radius: .25rem;">
+                                    {{repuesto.cantidad}}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-outline-primary" placement="top"
+                                has-any-authority="['ROLE_USER']"
+                                replaceUrl="true"
+                                [routerLink]="['/', { outlets: { popup: 'stock/'+repuesto.id + '/editar'} }]"
+                                ngbTooltip="Editar">
+                                <fa-icon icon="pen"></fa-icon>
+                            </button>
+                            <button class="btn btn-outline-primary" placement="top"
+                                ngbTooltip="Sumar 1" (click)="addStock(repuesto)">
+                                <fa-icon icon="plus"></fa-icon>
+                            </button>
+                            <button class="btn btn-outline-secondary" placement="top"
+                                ngbTooltip="Restar 1" (click)="minusStock(repuesto)">
+                                <fa-icon icon="minus"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ngb-pagination
+                class="d-flex justify-content-center"
+                [collectionSize]="totalItems"
+                #numPages
+                [pageSize]="pageSize"
+                [(page)]="page"
+                [rotate]="true"
+                [boundaryLinks]="true"
+                [maxSize]="10"
+                (pageChange)="requestContent()"
+                >
+            </ngb-pagination>
+        </div>
+    </div>
+</div>

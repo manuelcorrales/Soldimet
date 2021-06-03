@@ -1,5 +1,6 @@
 package soldimet.controller;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import soldimet.domain.Movimiento;
+import soldimet.domain.MovimientoArticulo;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.expertos.ExpertoCaja;
 
@@ -66,6 +68,23 @@ public class CajaController {
             return new ResponseEntity<Movimiento>(movimientoEliminado, HttpStatus.OK);
         } catch (Exception e) {
             log.error("error api/caja/borrar_movimiento: {}", e);
+            return ResponseEntity.status(500).body(null);
+        }
+
+    }
+
+    @PostMapping("/nuevos_movimientos_articulos/")
+    public ResponseEntity<List<MovimientoArticulo>> crearMovimientosArticulos(
+        @RequestParam("movimientoId") Long movimientoID,
+        @RequestBody List<MovimientoArticulo> movimientosArticulos
+    ) {
+        log.debug("request api/caja/nuevos_movimientos_articulos: {}, {}", movimientoID, movimientosArticulos);
+        try {
+            List<MovimientoArticulo> movimientos = expertoCaja.crearMovimientosArticulos(movimientoID, movimientosArticulos);
+            log.debug("response api/caja/nuevos_movimientos_articulos", movimientos);
+            return new ResponseEntity<List<MovimientoArticulo>>(movimientos, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("error api/caja/nuevos_movimientos_articulos: {}", e);
             return ResponseEntity.status(500).body(null);
         }
 

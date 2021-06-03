@@ -37,7 +37,7 @@ export class BaseFilterPageableComponent<T> implements OnInit, OnDestroy {
       });
   }
 
-  requestContent() {
+  protected requestContent() {
     this.searchableService.findByFilteredPage(this.searchText, this.page - 1, this.pageSize).subscribe(
       (response: Page<T>) => {
         this.totalItems = response.totalElements;

@@ -44,6 +44,14 @@
         {
             "fieldName": "fechaCosto",
             "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "costoProveedor",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "fechaCostoProveedor",
+            "fieldType": "LocalDate"
         }
     ],
     "changelogDate": "20171213233426",

@@ -7,10 +7,20 @@
             </label>
         </div>
         <div class="col-md-2">
-            <input class="form-control" [(ngModel)]="costoRepuesto.medida" type="text" placeholder="medida">
+            <!-- Seleccion Medida-->
+            <select class="custom-select" [(ngModel)]="costoRepuesto.medidaArticulo" name="medida" (change)="revisarEnStock()">
+                <option selected disabled>Medida</option>
+                <option *ngFor="let medida of medidas" [ngValue]="medida">
+                    {{medida?.medida| json}}
+                </option>
+            </select>
         </div>
         <div class="col-md-2">
-            <input class="form-control" [(ngModel)]="costoRepuesto.valor" type="number" step="0.01" min=0 placeholder="Costo repuesto">
+            <input class="form-control" [(ngModel)]="costoRepuesto.valor" type="number" step="0.01" min=0 placeholder="Costo repuesto" (change)="revisarAlcanzaEnStock()">
+            <p [hidden]="!buscoStock">
+                <label *ngIf="hayStock">Hay {{stockArticulo?.cantidad}} en stock! </label>
+                <label *ngIf="!hayStock">Sin stock.</label>
+            </p>
         </div>
     </ng-container>
     <ng-container *ngIf="!isEditing">
@@ -20,13 +30,14 @@
             </label>
         </div>
         <div class="col-md-2 text-center">
-            <label>{{costoRepuesto?.medida}}</label>
+            <label>{{costoRepuesto?.medidaArticulo?.medida}}</label>
         </div>
         <div class="col-md-2 text-center">
-            <label>${{costoRepuesto.valor}}</label>
+            <label *ngIf="costoRepuesto.estado.nombreEstado != 'En Stock'">${{costoRepuesto.valor}}</label>
+            <label *ngIf="costoRepuesto.estado.nombreEstado == 'En Stock'">{{costoRepuesto.valor}} Un</label>
         </div>
     </ng-container>
-    <ng-container *ngIf="costoRepuesto.estado.nombreEstado != 'Recibido' && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else recibidoTemplate">
+    <ng-container *ngIf="!isRecibido && !isStock && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else recibidoTemplate">
         <div class="col-md-2 text-center">
             <label class="alert-primary" role="alert" style="border-radius: .25rem;">
                 {{costoRepuesto.estado.nombreEstado}}
@@ -40,12 +51,19 @@
             </label>
         </div>
     </ng-template>
-    <ng-container *ngIf="!isPedido && !isRecibido">
+    <ng-container *ngIf="!isPedido && !isRecibido && !isStock">
         <div class="col-md-2">
-            <button class="btn btn-primary" [disabled]="isSaving || costoRepuesto.valor==null" (click)="actualizarPedidoDetalle()">Pedir</button>
+            <ng-container *ngIf="!alcanzaStock">
+                <button class="btn btn-primary" [disabled]="isSaving || costoRepuesto.valor==null"
+                (click)="actualizarPedidoDetalle()">Pedir</button>
+            </ng-container>
+            <ng-container *ngIf="alcanzaStock">
+                <button class="btn btn-success" [disabled]="isSaving || costoRepuesto.valor==null"
+                (click)="reservarStock()">Usar Stock</button>
+            </ng-container>
         </div>
     </ng-container>
-    <ng-container *ngIf="isPedido && !isRecibido">
+    <ng-container *ngIf="isPedido && !isRecibido && !isStock">
         <ng-container *ngIf="!isEditing">
             <div class="col-md-1">
                 <button class="btn btn-info" (click)="editarCostoRepuesto()" placement="top" ngbTooltip="Editar">
@@ -69,7 +87,7 @@
             <button class="btn btn-outline-success" [disabled]="isSaving || isEditing" (click)="recibirRepuesto()">Recibir</button>
         </div>
     </ng-container>
-    <ng-container *ngIf="isRecibido">
+    <ng-container *ngIf="isRecibido || isStock">
         <!-- Don't show any button -->
     </ng-container>
 </div>

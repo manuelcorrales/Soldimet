@@ -10,6 +10,7 @@ export class DtoPresupuestoCabeceraComponent {
     public isSoldadura?: boolean,
     public isModelo?: boolean,
     public totalOperaciones?: number,
-    public totalRepuestos?: number
+    public totalRepuestos?: number,
+    public aplicacion?: string
   ) {}
 }

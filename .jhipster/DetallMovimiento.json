@@ -1,0 +1,21 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "medida",
+            "otherEntityName": "medidaArticulo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "medida"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20201218143540",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "detall_movimiento",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

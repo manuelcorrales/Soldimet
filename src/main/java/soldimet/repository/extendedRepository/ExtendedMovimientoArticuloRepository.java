@@ -1,5 +1,7 @@
 package soldimet.repository.extendedRepository;
 
+import java.util.List;
+
 import soldimet.domain.Movimiento;
 import soldimet.domain.MovimientoArticulo;
 import soldimet.repository.MovimientoArticuloRepository;
@@ -15,6 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ExtendedMovimientoArticuloRepository extends MovimientoArticuloRepository {
 
-    public MovimientoArticulo findByMovimiento(Movimiento movimiento);
+    public List<MovimientoArticulo> findByMovimiento(Movimiento movimiento);
 
 }

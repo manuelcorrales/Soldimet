@@ -8,6 +8,7 @@ import soldimet.domain.TipoRepuesto;
 import soldimet.repository.ArticuloRepository;
 import soldimet.service.ArticuloService;
 import soldimet.web.rest.errors.ExceptionTranslator;
+import soldimet.service.dto.ArticuloCriteria;
 import soldimet.service.ArticuloQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +51,14 @@ public class ArticuloResourceIT {
     private static final LocalDate DEFAULT_FECHA_COSTO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_COSTO = LocalDate.now(ZoneId.systemDefault());
     private static final LocalDate SMALLER_FECHA_COSTO = LocalDate.ofEpochDay(-1L);
+
+    private static final Float DEFAULT_COSTO_PROVEEDOR = 1F;
+    private static final Float UPDATED_COSTO_PROVEEDOR = 2F;
+    private static final Float SMALLER_COSTO_PROVEEDOR = 1F - 1F;
+
+    private static final LocalDate DEFAULT_FECHA_COSTO_PROVEEDOR = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_FECHA_COSTO_PROVEEDOR = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate SMALLER_FECHA_COSTO_PROVEEDOR = LocalDate.ofEpochDay(-1L);
 
     @Autowired
     private ArticuloRepository articuloRepository;
@@ -101,7 +110,9 @@ public class ArticuloResourceIT {
         Articulo articulo = new Articulo()
             .codigoArticuloProveedor(DEFAULT_CODIGO_ARTICULO_PROVEEDOR)
             .valor(DEFAULT_VALOR)
-            .fechaCosto(DEFAULT_FECHA_COSTO);
+            .fechaCosto(DEFAULT_FECHA_COSTO)
+            .costoProveedor(DEFAULT_COSTO_PROVEEDOR)
+            .fechaCostoProveedor(DEFAULT_FECHA_COSTO_PROVEEDOR);
         // Add required entity
         EstadoArticulo estadoArticulo;
         if (TestUtil.findAll(em, EstadoArticulo.class).isEmpty()) {
@@ -134,7 +145,9 @@ public class ArticuloResourceIT {
         Articulo articulo = new Articulo()
             .codigoArticuloProveedor(UPDATED_CODIGO_ARTICULO_PROVEEDOR)
             .valor(UPDATED_VALOR)
-            .fechaCosto(UPDATED_FECHA_COSTO);
+            .fechaCosto(UPDATED_FECHA_COSTO)
+            .costoProveedor(UPDATED_COSTO_PROVEEDOR)
+            .fechaCostoProveedor(UPDATED_FECHA_COSTO_PROVEEDOR);
         // Add required entity
         EstadoArticulo estadoArticulo;
         if (TestUtil.findAll(em, EstadoArticulo.class).isEmpty()) {
@@ -180,7 +193,9 @@ public class ArticuloResourceIT {
         Articulo testArticulo = articuloList.get(articuloList.size() - 1);
         assertThat(testArticulo.getCodigoArticuloProveedor()).isEqualTo(DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
         assertThat(testArticulo.getValor()).isEqualTo(DEFAULT_VALOR);
-        assertThat(testArticulo.getFechaCosto()).isEqualTo(UPDATED_FECHA_COSTO);
+        assertThat(testArticulo.getFechaCosto()).isEqualTo(DEFAULT_FECHA_COSTO);
+        assertThat(testArticulo.getCostoProveedor()).isEqualTo(DEFAULT_COSTO_PROVEEDOR);
+        assertThat(testArticulo.getFechaCostoProveedor()).isEqualTo(DEFAULT_FECHA_COSTO_PROVEEDOR);
     }
 
     @Test
@@ -202,6 +217,25 @@ public class ArticuloResourceIT {
         assertThat(articuloList).hasSize(databaseSizeBeforeCreate);
     }
 
+
+    @Test
+    @Transactional
+    public void checkValorIsRequired() throws Exception {
+        int databaseSizeBeforeTest = articuloRepository.findAll().size();
+        // set the field null
+        articulo.setValor(null);
+
+        // Create the Articulo, which fails.
+
+        restArticuloMockMvc.perform(post("/api/articulos")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(articulo)))
+            .andExpect(status().isBadRequest());
+
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeTest);
+    }
+
     @Test
     @Transactional
     public void getAllArticulos() throws Exception {
@@ -215,9 +249,11 @@ public class ArticuloResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(articulo.getId().intValue())))
             .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString())))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())))
-            .andExpect(jsonPath("$.[*].fechaCosto").value(hasItem(UPDATED_FECHA_COSTO.toString())));
+            .andExpect(jsonPath("$.[*].fechaCosto").value(hasItem(DEFAULT_FECHA_COSTO.toString())))
+            .andExpect(jsonPath("$.[*].costoProveedor").value(hasItem(DEFAULT_COSTO_PROVEEDOR.doubleValue())))
+            .andExpect(jsonPath("$.[*].fechaCostoProveedor").value(hasItem(DEFAULT_FECHA_COSTO_PROVEEDOR.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getArticulo() throws Exception {
@@ -231,7 +267,9 @@ public class ArticuloResourceIT {
             .andExpect(jsonPath("$.id").value(articulo.getId().intValue()))
             .andExpect(jsonPath("$.codigoArticuloProveedor").value(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString()))
             .andExpect(jsonPath("$.valor").value(DEFAULT_VALOR.doubleValue()))
-            .andExpect(jsonPath("$.fechaCosto").value(UPDATED_FECHA_COSTO.toString()));
+            .andExpect(jsonPath("$.fechaCosto").value(DEFAULT_FECHA_COSTO.toString()))
+            .andExpect(jsonPath("$.costoProveedor").value(DEFAULT_COSTO_PROVEEDOR.doubleValue()))
+            .andExpect(jsonPath("$.fechaCostoProveedor").value(DEFAULT_FECHA_COSTO_PROVEEDOR.toString()));
     }
 
     @Test
@@ -367,6 +405,282 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
+    public void getAllArticulosByFechaCostoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto equals to DEFAULT_FECHA_COSTO
+        defaultArticuloShouldBeFound("fechaCosto.equals=" + DEFAULT_FECHA_COSTO);
+
+        // Get all the articuloList where fechaCosto equals to UPDATED_FECHA_COSTO
+        defaultArticuloShouldNotBeFound("fechaCosto.equals=" + UPDATED_FECHA_COSTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoIsInShouldWork() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto in DEFAULT_FECHA_COSTO or UPDATED_FECHA_COSTO
+        defaultArticuloShouldBeFound("fechaCosto.in=" + DEFAULT_FECHA_COSTO + "," + UPDATED_FECHA_COSTO);
+
+        // Get all the articuloList where fechaCosto equals to UPDATED_FECHA_COSTO
+        defaultArticuloShouldNotBeFound("fechaCosto.in=" + UPDATED_FECHA_COSTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto is not null
+        defaultArticuloShouldBeFound("fechaCosto.specified=true");
+
+        // Get all the articuloList where fechaCosto is null
+        defaultArticuloShouldNotBeFound("fechaCosto.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto is greater than or equal to DEFAULT_FECHA_COSTO
+        defaultArticuloShouldBeFound("fechaCosto.greaterThanOrEqual=" + DEFAULT_FECHA_COSTO);
+
+        // Get all the articuloList where fechaCosto is greater than or equal to UPDATED_FECHA_COSTO
+        defaultArticuloShouldNotBeFound("fechaCosto.greaterThanOrEqual=" + UPDATED_FECHA_COSTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto is less than or equal to DEFAULT_FECHA_COSTO
+        defaultArticuloShouldBeFound("fechaCosto.lessThanOrEqual=" + DEFAULT_FECHA_COSTO);
+
+        // Get all the articuloList where fechaCosto is less than or equal to SMALLER_FECHA_COSTO
+        defaultArticuloShouldNotBeFound("fechaCosto.lessThanOrEqual=" + SMALLER_FECHA_COSTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoIsLessThanSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto is less than DEFAULT_FECHA_COSTO
+        defaultArticuloShouldNotBeFound("fechaCosto.lessThan=" + DEFAULT_FECHA_COSTO);
+
+        // Get all the articuloList where fechaCosto is less than UPDATED_FECHA_COSTO
+        defaultArticuloShouldBeFound("fechaCosto.lessThan=" + UPDATED_FECHA_COSTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto is greater than DEFAULT_FECHA_COSTO
+        defaultArticuloShouldNotBeFound("fechaCosto.greaterThan=" + DEFAULT_FECHA_COSTO);
+
+        // Get all the articuloList where fechaCosto is greater than SMALLER_FECHA_COSTO
+        defaultArticuloShouldBeFound("fechaCosto.greaterThan=" + SMALLER_FECHA_COSTO);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCostoProveedorIsEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor equals to DEFAULT_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("costoProveedor.equals=" + DEFAULT_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where costoProveedor equals to UPDATED_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("costoProveedor.equals=" + UPDATED_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCostoProveedorIsInShouldWork() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor in DEFAULT_COSTO_PROVEEDOR or UPDATED_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("costoProveedor.in=" + DEFAULT_COSTO_PROVEEDOR + "," + UPDATED_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where costoProveedor equals to UPDATED_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("costoProveedor.in=" + UPDATED_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCostoProveedorIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor is not null
+        defaultArticuloShouldBeFound("costoProveedor.specified=true");
+
+        // Get all the articuloList where costoProveedor is null
+        defaultArticuloShouldNotBeFound("costoProveedor.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCostoProveedorIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor is greater than or equal to DEFAULT_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("costoProveedor.greaterThanOrEqual=" + DEFAULT_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where costoProveedor is greater than or equal to UPDATED_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("costoProveedor.greaterThanOrEqual=" + UPDATED_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCostoProveedorIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor is less than or equal to DEFAULT_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("costoProveedor.lessThanOrEqual=" + DEFAULT_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where costoProveedor is less than or equal to SMALLER_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("costoProveedor.lessThanOrEqual=" + SMALLER_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCostoProveedorIsLessThanSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor is less than DEFAULT_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("costoProveedor.lessThan=" + DEFAULT_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where costoProveedor is less than UPDATED_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("costoProveedor.lessThan=" + UPDATED_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByCostoProveedorIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor is greater than DEFAULT_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("costoProveedor.greaterThan=" + DEFAULT_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where costoProveedor is greater than SMALLER_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("costoProveedor.greaterThan=" + SMALLER_COSTO_PROVEEDOR);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoProveedorIsEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor equals to DEFAULT_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("fechaCostoProveedor.equals=" + DEFAULT_FECHA_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where fechaCostoProveedor equals to UPDATED_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.equals=" + UPDATED_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoProveedorIsInShouldWork() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor in DEFAULT_FECHA_COSTO_PROVEEDOR or UPDATED_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("fechaCostoProveedor.in=" + DEFAULT_FECHA_COSTO_PROVEEDOR + "," + UPDATED_FECHA_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where fechaCostoProveedor equals to UPDATED_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.in=" + UPDATED_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoProveedorIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor is not null
+        defaultArticuloShouldBeFound("fechaCostoProveedor.specified=true");
+
+        // Get all the articuloList where fechaCostoProveedor is null
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoProveedorIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor is greater than or equal to DEFAULT_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("fechaCostoProveedor.greaterThanOrEqual=" + DEFAULT_FECHA_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where fechaCostoProveedor is greater than or equal to UPDATED_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.greaterThanOrEqual=" + UPDATED_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoProveedorIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor is less than or equal to DEFAULT_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("fechaCostoProveedor.lessThanOrEqual=" + DEFAULT_FECHA_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where fechaCostoProveedor is less than or equal to SMALLER_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.lessThanOrEqual=" + SMALLER_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoProveedorIsLessThanSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor is less than DEFAULT_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.lessThan=" + DEFAULT_FECHA_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where fechaCostoProveedor is less than UPDATED_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("fechaCostoProveedor.lessThan=" + UPDATED_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllArticulosByFechaCostoProveedorIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor is greater than DEFAULT_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.greaterThan=" + DEFAULT_FECHA_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where fechaCostoProveedor is greater than SMALLER_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("fechaCostoProveedor.greaterThan=" + SMALLER_FECHA_COSTO_PROVEEDOR);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllArticulosByEstadoIsEqualToSomething() throws Exception {
         // Get already existing entity
         EstadoArticulo estado = articulo.getEstado();
@@ -426,7 +740,9 @@ public class ArticuloResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(articulo.getId().intValue())))
             .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR)))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())))
-            .andExpect(jsonPath("$.[*].fechaCosto").value(hasItem(UPDATED_FECHA_COSTO.toString())));
+            .andExpect(jsonPath("$.[*].fechaCosto").value(hasItem(DEFAULT_FECHA_COSTO.toString())))
+            .andExpect(jsonPath("$.[*].costoProveedor").value(hasItem(DEFAULT_COSTO_PROVEEDOR.doubleValue())))
+            .andExpect(jsonPath("$.[*].fechaCostoProveedor").value(hasItem(DEFAULT_FECHA_COSTO_PROVEEDOR.toString())));
 
         // Check, that the count call also returns 1
         restArticuloMockMvc.perform(get("/api/articulos/count?sort=id,desc&" + filter))
@@ -476,7 +792,9 @@ public class ArticuloResourceIT {
         updatedArticulo
             .codigoArticuloProveedor(UPDATED_CODIGO_ARTICULO_PROVEEDOR)
             .valor(UPDATED_VALOR)
-            .fechaCosto(UPDATED_FECHA_COSTO);
+            .fechaCosto(UPDATED_FECHA_COSTO)
+            .costoProveedor(UPDATED_COSTO_PROVEEDOR)
+            .fechaCostoProveedor(UPDATED_FECHA_COSTO_PROVEEDOR);
 
         restArticuloMockMvc.perform(put("/api/articulos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -490,6 +808,8 @@ public class ArticuloResourceIT {
         assertThat(testArticulo.getCodigoArticuloProveedor()).isEqualTo(UPDATED_CODIGO_ARTICULO_PROVEEDOR);
         assertThat(testArticulo.getValor()).isEqualTo(UPDATED_VALOR);
         assertThat(testArticulo.getFechaCosto()).isEqualTo(UPDATED_FECHA_COSTO);
+        assertThat(testArticulo.getCostoProveedor()).isEqualTo(UPDATED_COSTO_PROVEEDOR);
+        assertThat(testArticulo.getFechaCostoProveedor()).isEqualTo(UPDATED_FECHA_COSTO_PROVEEDOR);
     }
 
     @Test

@@ -23,6 +23,7 @@ import soldimet.domain.Empleado;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.Movimiento;
+import soldimet.domain.MovimientoArticulo;
 import soldimet.domain.SubCategoria;
 import soldimet.domain.Sucursal;
 import soldimet.domain.TipoMovimiento;
@@ -32,9 +33,11 @@ import soldimet.repository.extendedRepository.ExtendedCajaRepository;
 import soldimet.repository.extendedRepository.ExtendedCategoriaPagoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoMovimientoRepository;
 import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoArticuloRepository;
 import soldimet.repository.extendedRepository.ExtendedSubCategoriaRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
+import soldimet.service.expertos.ExpertoRepuestos;
 import soldimet.utils.MathUtils;
 
 
@@ -51,6 +54,9 @@ public class ExpertoCaja {
 
     @Autowired
     private ExpertoUsuarios expertoUsuarios;
+
+    @Autowired
+    private ExpertoRepuestos expertoRepuestos;
 
     @Autowired
     private ExtendedCajaRepository cajaRepository;
@@ -78,6 +84,9 @@ public class ExpertoCaja {
 
     @Autowired
     private ExtendedSubCategoriaRepository subCategoriaRepository;
+
+    @Autowired
+    private ExtendedMovimientoArticuloRepository movimientoArticuloRepository;
 
     public ExpertoCaja() {
 
@@ -165,6 +174,7 @@ public class ExpertoCaja {
 
         }catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -395,6 +405,20 @@ public class ExpertoCaja {
         return movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstado(
             sucursales, fechaInicio, fechaFin, estado
         );
+    }
+
+    public List<MovimientoArticulo> crearMovimientosArticulos(Long movimientoID, List<MovimientoArticulo> movimientosArticulos) {
+        Movimiento movimiento = movimientoRepository.findById(movimientoID).get();
+        for(MovimientoArticulo movimientoArticulo: movimientosArticulos) {
+            movimientoArticulo.setMovimiento(movimiento);
+            expertoRepuestos.descontarStockDesdeArticuloyMedida(
+                movimientoArticulo.getArticulo(),
+                movimientoArticulo.getMedida(),
+                movimientoArticulo.getCantidad()
+            );
+        }
+
+        return movimientoArticuloRepository.saveAll(movimientosArticulos);
     }
 
 }

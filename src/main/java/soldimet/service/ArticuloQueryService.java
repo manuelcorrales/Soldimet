@@ -94,6 +94,12 @@ public class ArticuloQueryService extends QueryService<Articulo> {
             if (criteria.getFechaCosto() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getFechaCosto(), Articulo_.fechaCosto));
             }
+            if (criteria.getCostoProveedor() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCostoProveedor(), Articulo_.costoProveedor));
+            }
+            if (criteria.getFechaCostoProveedor() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getFechaCostoProveedor(), Articulo_.fechaCostoProveedor));
+            }
             if (criteria.getEstadoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getEstadoId(),
                     root -> root.join(Articulo_.estado, JoinType.LEFT).get(EstadoArticulo_.id)));

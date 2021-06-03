@@ -9,10 +9,6 @@
                 <dd>
                     <span>{{costoRepuesto.valor}}</span>
                 </dd>
-                <dt><span>Medida</span></dt>
-                <dd>
-                    <span>{{costoRepuesto.medida}}</span>
-                </dd>
                 <dt><span>Estado</span></dt>
                 <dd>
                     <div *ngIf="costoRepuesto.estado">
@@ -31,10 +27,10 @@
                         <a [routerLink]="['/tipo-repuesto', costoRepuesto.tipoRepuesto?.id, 'view']">{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
                     </div>
                 </dd>
-                <dt><span>Tiporepuesto</span></dt>
+                <dt><span>Medida Articulo</span></dt>
                 <dd>
-                    <div *ngIf="costoRepuesto.tipoRepuesto">
-                        <a [routerLink]="['/tipoRepuesto', costoRepuesto.tipoRepuesto?.id, 'view']">{{costoRepuesto.tipoRepuesto?.nombreTipoRepuesto}}</a>
+                    <div *ngIf="costoRepuesto.medidaArticulo">
+                        <a [routerLink]="['/medida-articulo', costoRepuesto.medidaArticulo?.id, 'view']">{{costoRepuesto.medidaArticulo?.medida}}</a>
                     </div>
                 </dd>
             </dl>

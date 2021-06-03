@@ -8,6 +8,8 @@ export interface IArticulo {
   codigoArticuloProveedor?: string;
   valor?: number;
   fechaCosto?: Moment;
+  costoProveedor?: number;
+  fechaCostoProveedor?: Moment;
   estado?: IEstadoArticulo;
   marca?: IMarca;
   tipoRepuesto?: ITipoRepuesto;
@@ -19,6 +21,8 @@ export class Articulo implements IArticulo {
     public codigoArticuloProveedor?: string,
     public valor?: number,
     public fechaCosto?: Moment,
+    public costoProveedor?: number,
+    public fechaCostoProveedor?: Moment,
     public estado?: IEstadoArticulo,
     public marca?: IMarca,
     public tipoRepuesto?: ITipoRepuesto

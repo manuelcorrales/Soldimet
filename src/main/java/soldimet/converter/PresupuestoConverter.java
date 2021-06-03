@@ -1,10 +1,8 @@
 package soldimet.converter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
 import soldimet.domain.Presupuesto;
 import soldimet.service.dto.DTOPresupuesto;
 
@@ -24,8 +22,10 @@ public class PresupuestoConverter {
         if (presupuesto.isSoldadura()) {
             dtoPresupuesto.setIsSoldadura(presupuesto.isSoldadura());
             dtoPresupuesto.setMotor("");
+            dtoPresupuesto.setAplicacion("");
         } else {
-            dtoPresupuesto.setMotor(presupuesto.getDetallePresupuestos().iterator().next().getMotor().getMarcaMotor());
+            dtoPresupuesto.setMotor(presupuesto.getMotorName());
+            dtoPresupuesto.setAplicacion(presupuesto.getAplicacionName());
         }
         dtoPresupuesto.setIsModelo(presupuesto.isModelo());
         dtoPresupuesto.setSucursal(presupuesto.getSucursal().getNombreSucursal());

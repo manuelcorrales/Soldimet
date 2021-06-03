@@ -2,7 +2,6 @@ package soldimet.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import soldimet.utils.MathUtils;
 
@@ -33,20 +32,25 @@ public class Articulo implements Serializable {
     @Column(name = "valor", nullable = false)
     private Float valor;
 
-    @UpdateTimestamp
     @Column(name = "fecha_costo", columnDefinition = "DATE")
     private LocalDate fechaCosto;
 
-    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @Column(name = "costo_proveedor")
+    private Float costoProveedor;
+
+    @Column(name = "fecha_costo_proveedor", columnDefinition = "DATE")
+    private LocalDate fechaCostoProveedor;
+
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
     @JsonIgnoreProperties("articulos")
     private EstadoArticulo estado;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JsonIgnoreProperties("articulos")
     private Marca marca;
 
-    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
     @JsonIgnoreProperties("articulos")
     private TipoRepuesto tipoRepuesto;
@@ -97,6 +101,32 @@ public class Articulo implements Serializable {
 
     public void setFechaCosto(LocalDate fechaCosto) {
         this.fechaCosto = fechaCosto;
+    }
+
+    public Float getCostoProveedor() {
+        return costoProveedor;
+    }
+
+    public Articulo costoProveedor(Float costoProveedor) {
+        this.costoProveedor = costoProveedor;
+        return this;
+    }
+
+    public void setCostoProveedor(Float costoProveedor) {
+        this.costoProveedor = costoProveedor;
+    }
+
+    public LocalDate getFechaCostoProveedor() {
+        return fechaCostoProveedor;
+    }
+
+    public Articulo fechaCostoProveedor(LocalDate fechaCostoProveedor) {
+        this.fechaCostoProveedor = fechaCostoProveedor;
+        return this;
+    }
+
+    public void setFechaCostoProveedor(LocalDate fechaCostoProveedor) {
+        this.fechaCostoProveedor = fechaCostoProveedor;
     }
 
     public EstadoArticulo getEstado() {
@@ -162,6 +192,8 @@ public class Articulo implements Serializable {
             ", codigoArticuloProveedor='" + getCodigoArticuloProveedor() + "'" +
             ", valor=" + getValor() +
             ", fechaCosto='" + getFechaCosto() + "'" +
+            ", costoProveedor=" + getCostoProveedor() +
+            ", fechaCostoProveedor='" + getFechaCostoProveedor() + "'" +
             "}";
     }
 }

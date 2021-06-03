@@ -243,6 +243,14 @@ import { RouterModule } from '@angular/router';
         path: 'costo-repuesto-proveedor',
         loadChildren: () =>
           import('./costo-repuesto-proveedor/costo-repuesto-proveedor.module').then(m => m.SoldimetCostoRepuestoProveedorModule)
+      },
+      {
+        path: 'medida-articulo',
+        loadChildren: () => import('./medida-articulo/medida-articulo.module').then(m => m.SoldimetMedidaArticuloModule)
+      },
+      {
+        path: 'stock-articulo',
+        loadChildren: () => import('./stock-articulo/stock-articulo.module').then(m => m.SoldimetStockArticuloModule)
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

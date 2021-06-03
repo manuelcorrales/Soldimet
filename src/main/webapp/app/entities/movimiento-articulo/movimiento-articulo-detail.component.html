@@ -12,13 +12,19 @@
                 <dt><span>Articulo</span></dt>
                 <dd>
                     <div *ngIf="movimientoArticulo.articulo">
-                        <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view']">{{movimientoArticulo.articulo?.codigoArticuloProveedor}}</a>
+                        <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view']">{{movimientoArticulo.articulo?.descripcion}}</a>
                     </div>
                 </dd>
                 <dt><span>Movimiento</span></dt>
                 <dd>
                     <div *ngIf="movimientoArticulo.movimiento">
                         <a [routerLink]="['/movimiento', movimientoArticulo.movimiento?.id, 'view']">{{movimientoArticulo.movimiento?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Medida</span></dt>
+                <dd>
+                    <div *ngIf="movimientoArticulo.medida">
+                        <a [routerLink]="['/medida-articulo', movimientoArticulo.medida?.id, 'view']">{{movimientoArticulo.medida?.medida}}</a>
                     </div>
                 </dd>
             </dl>

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RepuestosService } from 'app/repuestos/repuestos-services';
 import { Articulo } from 'app/shared/model/articulo.model';
 import { Marca } from 'app/shared/model/marca.model';
 import { MarcaService } from 'app/entities/marca';
@@ -16,22 +15,15 @@ interface ArticulosPorMarca {
 })
 export class RepuestosComponent implements OnInit {
   marcas: Marca[] = [];
-  articulosPorMarca: ArticulosPorMarca[] = [];
+  tabStatus = [];
 
-  constructor(private repuestosService: RepuestosService, private marcaService: MarcaService) {}
+  constructor(private marcaService: MarcaService) {}
 
   ngOnInit() {
     this.marcaService.query().subscribe(marcas => {
       this.marcas = marcas.body;
-      this.repuestosService.getArticulos().subscribe(articulos => {
-        this.marcas.forEach(marca => {
-          const articuloMarca = {
-            marca,
-            articulos: articulos.filter(articulo => articulo.marca.id === marca.id)
-          };
-          this.articulosPorMarca.push(articuloMarca);
-        });
-      });
+      this.marcas.forEach((marca: Marca, i) => (this.tabStatus[i] = false));
+      this.tabStatus[0] = true;
     });
   }
 }

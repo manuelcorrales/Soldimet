@@ -30,7 +30,7 @@ public class ClienteController {
 
     @PostMapping("/activarCliente")
     public Cliente activarCliente(@RequestBody Cliente cliente) {
-        log.debug("/activarCliente: {}", cliente);
+        log.info("/activarCliente: {}", cliente);
 
         return expertoClientes.activarCliente(cliente);
 
@@ -38,7 +38,7 @@ public class ClienteController {
 
     @PostMapping("/eliminarCliente")
     public Cliente eliminarCliente(@RequestBody Long clienteId) {
-        log.debug("/eliminarCliente: {}", clienteId);
+        log.info("/eliminarCliente: {}", clienteId);
 
         return expertoClientes.eliminarCliente(clienteId);
 
@@ -47,7 +47,7 @@ public class ClienteController {
     @GetMapping("/buscarClientes")
     public Page<Cliente> buscarClientes(@RequestParam(defaultValue = "") String filtro,
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "200") Integer size) {
-        log.debug("/buscarClientes: Request {}, {}, {}", filtro, page, size);
+        log.info("/buscarClientes: Request {}, {}, {}", filtro, page, size);
         Pageable paging = PageRequest.of(page, size);
 
         Page<Cliente> pageResp = expertoClientes.buscarClientes(filtro, paging);
@@ -59,7 +59,7 @@ public class ClienteController {
 
     @GetMapping("/get/{id}")
     public Cliente getCliente(@PathVariable("id") Long clienteId) {
-        log.debug("request /api/clientes/get: cliente id {}", clienteId);
+        log.info("request /api/clientes/get: cliente id {}", clienteId);
         Cliente cliente = expertoClientes.getClienteCompleto(clienteId);
         log.debug("response /api/clientes/get: {}", cliente);
         return cliente;

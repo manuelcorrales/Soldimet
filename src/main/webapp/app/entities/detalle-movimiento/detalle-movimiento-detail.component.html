@@ -26,7 +26,7 @@
                 <dt><span>Articulo</span></dt>
                 <dd>
                     <div *ngIf="detalleMovimiento.articulo">
-                        <a [routerLink]="['/articulo', detalleMovimiento.articulo?.id, 'view']">{{detalleMovimiento.articulo?.codigoArticuloProveedor}}</a>
+                        <a [routerLink]="['/articulo', detalleMovimiento.articulo?.id, 'view']">{{detalleMovimiento.articulo?.descripcion}}</a>
                     </div>
                 </dd>
                 <dt><span>Pedido Repuesto</span></dt>
@@ -39,6 +39,12 @@
                 <dd>
                     <div *ngIf="detalleMovimiento.presupuesto">
                         <a [routerLink]="['/presupuesto', detalleMovimiento.presupuesto?.id, 'view']">{{detalleMovimiento.presupuesto?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Medida</span></dt>
+                <dd>
+                    <div *ngIf="detalleMovimiento.medida">
+                        <a [routerLink]="['/medida-articulo', detalleMovimiento.medida?.id, 'view']">{{detalleMovimiento.medida?.medida}}</a>
                     </div>
                 </dd>
             </dl>

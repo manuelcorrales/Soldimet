@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { JhiEventManager } from 'ng-jhipster';
 
 import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
-import { DetalleMovimientoService } from 'app/entities/detalle-movimiento/detalle-movimiento.service';
+import { DetalleMovimientoService } from './detalle-movimiento.service';
 
 @Component({
   selector: 'jhi-detalle-movimiento-delete-dialog',

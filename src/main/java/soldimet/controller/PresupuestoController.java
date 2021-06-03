@@ -100,7 +100,7 @@ public class PresupuestoController {
 
     @GetMapping("/view/{id}")
     public Presupuesto getPresupuesto(@PathVariable("id") Long presupuestoId) {
-        log.debug("request /api/presupuestos/view: presupuesto id {}", presupuestoId);
+        log.info("request /api/presupuestos/view: presupuesto id {}", presupuestoId);
         Presupuesto presupuesto = expertoPresupuesto.getPresupuesto(presupuestoId);
         log.debug("response /api/presupuestos/view: {}", presupuesto);
         return presupuesto;
@@ -108,7 +108,7 @@ public class PresupuestoController {
 
     @GetMapping("/getAplicacionByMotor/{motorId}")
     public List<Aplicacion> buscarPresupuestos(@PathVariable("motorId") Long motorId) {
-        log.debug("request /api/presupuestos/getAplicacionByMotor: motorId{}", motorId);
+        log.info("request /api/presupuestos/getAplicacionByMotor: motorId{}", motorId);
         List<Aplicacion> aplicaciones =  expertoPresupuesto.buscarAplicacionPorMotor(motorId);
         log.debug("response /api/presupuestos/getAplicacionByMotor: {}", aplicaciones);
         return aplicaciones;
@@ -116,7 +116,7 @@ public class PresupuestoController {
 
     @GetMapping("/getOperacionesPresupuesto")
     public List<CostoOperacion> buscarOperacionesPresupuesto(DTODatosMotorCUHacerPresupuesto dtoDatosMotor) {
-        log.debug("request /api/presupuestos/getOperacionesPresupuesto: {}", dtoDatosMotor);
+        log.info("request /api/presupuestos/getOperacionesPresupuesto: {}", dtoDatosMotor);
         List<CostoOperacion> operaciones = expertoPresupuesto.buscarOperacionesPresupuesto(dtoDatosMotor);
         log.debug("response /api/presupuestos/getOperacionesPresupuesto: {}", operaciones);
         return operaciones;
@@ -127,7 +127,7 @@ public class PresupuestoController {
         @RequestParam("aplicacion") Long aplicacion,
         @RequestParam("cilindrada") Long cilindrada
     ) {
-        log.debug("request /api/presupuestos/buscarExistente: {}", aplicacion, cilindrada);
+        log.info("request /api/presupuestos/buscarExistente: {}", aplicacion, cilindrada);
         Presupuesto presupuesto = expertoPresupuesto.buscarPresupuestoExistente(aplicacion, cilindrada);
         log.debug("response /api/presupuestos/buscarExistente: {}", presupuesto);
         return presupuesto;
@@ -139,7 +139,7 @@ public class PresupuestoController {
         @RequestParam("cilindrada") Long cilindrada,
         @RequestParam("tipoParteMotor") Long tipoParteMotor
     ) {
-        log.debug("request /api/presupuestos/buscarCostoRepuestoProveedores: {}", aplicacion, cilindrada, tipoParteMotor);
+        log.info("request /api/presupuestos/buscarCostoRepuestoProveedores: {}", aplicacion, cilindrada, tipoParteMotor);
         List<CostoRepuestoProveedor> costos = expertoPresupuesto.buscarCostoRepuestoProveedor(aplicacion, cilindrada, tipoParteMotor);
         log.debug("response /api/presupuestos/buscarCostoRepuestoProveedores: {}", costos);
         return costos;
@@ -147,7 +147,7 @@ public class PresupuestoController {
 
     @GetMapping("/getCostoRepuestoPresupuesto/{presupuestoId}")
     public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(@PathVariable("presupuestoId") Long presupuestoId) {
-        log.debug("request /api/presupuestos/getCostoRepuestoPresupuesto: presupuestoId {}", presupuestoId);
+        log.info("request /api/presupuestos/getCostoRepuestoPresupuesto: presupuestoId {}", presupuestoId);
         List<CostoRepuesto> costos = expertoPresupuesto.buscarCostoRepuestoPresupuesto(presupuestoId);
         log.debug("response /api/presupuestos/getCostoRepuestoPresupuesto: {}", costos);
         return costos;
@@ -155,7 +155,7 @@ public class PresupuestoController {
 
     @GetMapping("/getAllClientes")
     public List<Cliente> buscarTodosLosclientes() {
-        log.debug("request /api/presupuestos/getAllClientes");
+        log.info("request /api/presupuestos/getAllClientes");
         List<Cliente> clientes = expertoPresupuesto.buscarTodosLosClientes();
         log.debug("response /api/presupuestos/getAllClientes: {}", clientes);
         return clientes;
@@ -163,7 +163,7 @@ public class PresupuestoController {
 
     @GetMapping("/getRepuestos/{idTipoParteMotor}")
     public List<TipoRepuesto> buscarRepuestosPresupuesto(@PathVariable("idTipoParteMotor") Long idTipoParteMotor) {
-        log.debug("request /api/presupuestos/getRepuestos: idTipoParteMotor {}", idTipoParteMotor);
+        log.info("request /api/presupuestos/getRepuestos: idTipoParteMotor {}", idTipoParteMotor);
         List<TipoRepuesto> tipos = expertoPresupuesto.buscarRepuestos(idTipoParteMotor);
         log.debug("response /api/presupuestos/getRepuestos: {}", tipos);
         return tipos;
@@ -171,7 +171,7 @@ public class PresupuestoController {
 
     @GetMapping("/getEstadoPresupuestoCreado")
     public EstadoPresupuesto buscarEstadoPresupuestoCreado() {
-        log.debug("request /api/presupuestos/getPresupuestos");
+        log.info("request /api/presupuestos/getPresupuestos");
         EstadoPresupuesto estado = expertoPresupuesto.buscarEstadoPresupuestoCreado();
         log.debug("response /api/presupuestos/getPresupuestos: {}", estado);
         return estado;
@@ -180,7 +180,7 @@ public class PresupuestoController {
     @PostMapping("/save")
     public ResponseEntity<Presupuesto> savePresupuesto(@Valid @RequestBody Presupuesto presupuesto)
             throws URISyntaxException {
-        log.debug("REST request to save Presupuesto : {}", presupuesto);
+        log.info("REST request to save Presupuesto : {}", presupuesto);
         Presupuesto result = expertoPresupuesto.savePresupuesto(presupuesto);
         log.debug("REST response to save Presupuesto : {}", result);
         return ResponseEntity.created(new URI("/api/" + result.getId()))
@@ -190,7 +190,7 @@ public class PresupuestoController {
 
     @PostMapping("/aceptar")
     public ResponseEntity<DTOPresupuesto> aceptarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
-        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        log.info("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.aceptarPresupuesto(dtoPresupuesto);
         log.debug("REST response to accept Presupuesto : {}", result);
         if (result != null) {
@@ -204,7 +204,7 @@ public class PresupuestoController {
 
     @PostMapping("/cancelar")
     public ResponseEntity<DTOPresupuesto> cancelarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
-        log.debug("REST request to cancel Presupuesto : {}", dtoPresupuesto.getCodigo());
+        log.info("REST request to cancel Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
         log.debug("REST response to cancel Presupuesto : {}", result);
         return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
@@ -213,7 +213,7 @@ public class PresupuestoController {
 
     @PostMapping("/entregar")
     public ResponseEntity<DTOPresupuesto> entregarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
-        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        log.info("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.entregarPresupuesto(dtoPresupuesto);
         log.debug("REST response to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         if (result != null) {
@@ -226,7 +226,7 @@ public class PresupuestoController {
 
     @PostMapping("/terminar")
     public ResponseEntity<DTOPresupuesto> terminarPresupuesto(@RequestBody DTOPresupuesto dtoPresupuesto) {
-        log.debug("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
+        log.info("REST request to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.terminarPresupuesto(dtoPresupuesto);
         log.debug("REST response to accept Presupuesto : {}", result);
         if (result != null) {
@@ -243,7 +243,9 @@ public class PresupuestoController {
         produces = MediaType.APPLICATION_PDF_VALUE
     )
     @ResponseBody
-    public ResponseEntity<byte[]> imprimirPresupuesto(@PathVariable("idPresupuesto") Long idPresupuesto) throws Exception {
+    public ResponseEntity<byte[]> imprimirPresupuesto(@PathVariable("idPresupuesto") Long idPresupuesto)
+            throws Exception {
+        log.info("request /api/presupuestos/getRepuestos: id {}", idPresupuesto);
         Pair<File, String> response =  expertoPresupuesto.imprimirPresupuesto(idPresupuesto);
         HttpHeaders headers = new HttpHeaders();
         headers.add("file-name", "presupuesto nº " + String.valueOf(response.getValue1()) + ".pdf");
@@ -256,13 +258,13 @@ public class PresupuestoController {
 
     @GetMapping("/buscarTodosRepuestos")
     public List<Articulo> findAllRepuestos() {
-        log.debug("Request to get all Articulos");
+        log.info("Request to get all Articulos");
         return repo.findAll();
     }
 
     @GetMapping("/buscarTiposPartesPresupuestos")
     public List<TipoParteMotor> findAllTipoParte() {
-        log.debug("Request to buscarTiposPartesPresupuestos");
+        log.info("Request to buscarTiposPartesPresupuestos");
         return expertoPresupuesto.buscarTiposPartesPresupuesto();
     }
 

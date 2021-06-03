@@ -108,6 +108,9 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.MedioDePago.class.getName());
             createCache(cm, soldimet.domain.MedioDePagoCheque.class.getName());
             createCache(cm, soldimet.domain.CostoRepuestoProveedor.class.getName());
+            createCache(cm, soldimet.domain.MedidaArticulo.class.getName());
+            createCache(cm, soldimet.domain.StockArticulo.class.getName());
+            createCache(cm, soldimet.domain.Articulo.class.getName() + ".stocks");
             // jhipster-needle-ehcache-add-entry
         };
     }

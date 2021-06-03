@@ -52,6 +52,10 @@ public class DetalleMovimiento implements Serializable {
     @JsonIgnoreProperties("detalleMovimientos")
     private Presupuesto presupuesto;
 
+    @ManyToOne
+    @JsonIgnoreProperties("detalleMovimientos")
+    private MedidaArticulo medida;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -151,6 +155,19 @@ public class DetalleMovimiento implements Serializable {
 
     public void setPresupuesto(Presupuesto presupuesto) {
         this.presupuesto = presupuesto;
+    }
+
+    public MedidaArticulo getMedida() {
+        return medida;
+    }
+
+    public DetalleMovimiento medida(MedidaArticulo medidaArticulo) {
+        this.medida = medidaArticulo;
+        return this;
+    }
+
+    public void setMedida(MedidaArticulo medidaArticulo) {
+        this.medida = medidaArticulo;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

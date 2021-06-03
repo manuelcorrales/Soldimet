@@ -24,14 +24,15 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Articulo(0, 'AAAAAAA', 0, currentDate);
+      elemDefault = new Articulo(0, 'AAAAAAA', 0, currentDate, 0, currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
         const returnedFromService = Object.assign(
           {
-            fechaCosto: currentDate.format(DATE_FORMAT)
+            fechaCosto: currentDate.format(DATE_FORMAT),
+            fechaCostoProveedor: currentDate.format(DATE_FORMAT)
           },
           elemDefault
         );
@@ -49,13 +50,15 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
-            fechaCosto: currentDate.format(DATE_FORMAT)
+            fechaCosto: currentDate.format(DATE_FORMAT),
+            fechaCostoProveedor: currentDate.format(DATE_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            fechaCosto: currentDate
+            fechaCosto: currentDate,
+            fechaCostoProveedor: currentDate
           },
           returnedFromService
         );
@@ -73,14 +76,17 @@ describe('Service Tests', () => {
           {
             codigoArticuloProveedor: 'BBBBBB',
             valor: 1,
-            fechaCosto: currentDate.format(DATE_FORMAT)
+            fechaCosto: currentDate.format(DATE_FORMAT),
+            costoProveedor: 1,
+            fechaCostoProveedor: currentDate.format(DATE_FORMAT)
           },
           elemDefault
         );
 
         const expected = Object.assign(
           {
-            fechaCosto: currentDate
+            fechaCosto: currentDate,
+            fechaCostoProveedor: currentDate
           },
           returnedFromService
         );
@@ -98,13 +104,16 @@ describe('Service Tests', () => {
           {
             codigoArticuloProveedor: 'BBBBBB',
             valor: 1,
-            fechaCosto: currentDate.format(DATE_FORMAT)
+            fechaCosto: currentDate.format(DATE_FORMAT),
+            costoProveedor: 1,
+            fechaCostoProveedor: currentDate.format(DATE_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            fechaCosto: currentDate
+            fechaCosto: currentDate,
+            fechaCostoProveedor: currentDate
           },
           returnedFromService
         );

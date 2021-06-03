@@ -7,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { IDetalleMovimiento } from 'app/shared/model/detalle-movimiento.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { DetalleMovimientoService } from 'app/entities/detalle-movimiento/detalle-movimiento.service';
+import { DetalleMovimientoService } from './detalle-movimiento.service';
 
 @Component({
   selector: 'jhi-detalle-movimiento',

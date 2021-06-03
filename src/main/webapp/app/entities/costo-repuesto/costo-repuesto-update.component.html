@@ -28,11 +28,6 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_medida">Medida</label>
-                    <input type="text" class="form-control" name="medida" id="field_medida"
-                           formControlName="medida"/>
-                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_estado">Estado</label>
@@ -58,7 +53,14 @@
                     <label class="form-control-label" for="field_tipoRepuesto">Tipo Repuesto</label>
                     <select class="form-control" id="field_tipoRepuesto" name="tipoRepuesto" formControlName="tipoRepuesto">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="tipoRepuestoOption.id === editForm.get('tipoRepuesto').value?.id ? editForm.get('tipoRepuesto').value : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tipoRepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
+                        <option [ngValue]="tipoRepuestoOption.id === editForm.get('tipoRepuesto').value?.id ? editForm.get('tipoRepuesto').value : tipoRepuestoOption" *ngFor="let tipoRepuestoOption of tiporepuestos; trackBy: trackTipoRepuestoById">{{tipoRepuestoOption.nombreTipoRepuesto}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_medidaArticulo">Medida Articulo</label>
+                    <select class="form-control" id="field_medidaArticulo" name="medidaArticulo" formControlName="medidaArticulo">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="medidaArticuloOption.id === editForm.get('medidaArticulo').value?.id ? editForm.get('medidaArticulo').value : medidaArticuloOption" *ngFor="let medidaArticuloOption of medidaarticulos; trackBy: trackMedidaArticuloById">{{medidaArticuloOption.medida}}</option>
                     </select>
                 </div>
             </div>

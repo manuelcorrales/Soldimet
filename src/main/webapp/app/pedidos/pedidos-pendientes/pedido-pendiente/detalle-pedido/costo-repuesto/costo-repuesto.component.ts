@@ -5,6 +5,9 @@ import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
+import { IMedidaArticulo } from 'app/shared/model/medida-articulo.model';
+import { StockArticulo } from 'app/shared/model/stock-articulo.model';
+import { StockService } from 'app/stock/stock.service';
 
 @Component({
   selector: 'jhi-costo-repuesto',
@@ -14,12 +17,20 @@ import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 export class CostoRepuestoComponent implements OnInit {
   @Input()
   costoRepuesto: CostoRepuesto;
+  @Input()
+  medidas: IMedidaArticulo[];
+
+  buscoStock = false;
+  hayStock = false;
+  stockArticulo: StockArticulo;
+  alcanzaStock = false;
 
   isSaving = false;
   isEditing = false;
   isPendiente = false;
   isPedido = false;
   isRecibido = false;
+  isStock = false;
 
   @ViewChild('instanceNTAProv', { static: false })
   instanceProv: NgbTypeahead;
@@ -30,7 +41,8 @@ export class CostoRepuestoComponent implements OnInit {
     config: NgbTypeaheadConfig,
     private pedidoService: PedidosService,
     private eventManager: JhiEventManager,
-    private jhiAlertService: JhiAlertService
+    private jhiAlertService: JhiAlertService,
+    private stockService: StockService
   ) {
     // customize default values of typeaheads used by this component tree
     config.showHint = true;
@@ -58,6 +70,12 @@ export class CostoRepuestoComponent implements OnInit {
 
   actualizarPedidoDetalle() {
     this.isSaving = true;
+    this.updatePedidoDetalle();
+  }
+
+  reservarStock() {
+    this.isSaving = true;
+    this.costoRepuesto.estado.nombreEstado = 'En Stock';
     this.updatePedidoDetalle();
   }
 
@@ -100,6 +118,41 @@ export class CostoRepuestoComponent implements OnInit {
     }
     if (this.costoRepuesto.estado.nombreEstado === 'Pendiente de pedido') {
       this.isPendiente = true;
+    }
+    if (this.costoRepuesto.estado.nombreEstado === 'En Stock') {
+      this.isStock = true;
+    }
+  }
+
+  revisarEnStock() {
+    if (this.costoRepuesto.articulo != null && this.costoRepuesto.medidaArticulo != null) {
+      // Voy a revisar si hay en stock y mostrar cuantos quedan
+      this.stockService.buscarStock(this.costoRepuesto.medidaArticulo, this.costoRepuesto.articulo).subscribe(
+        (stock: StockArticulo) => {
+          this.stockArticulo = stock;
+          this.buscoStock = true;
+          if (stock != null && stock.cantidad > 0) {
+            this.hayStock = true;
+          } else {
+            this.hayStock = false;
+          }
+        },
+        error => {
+          this.jhiAlertService.error('No se pudo buscar en Stock.');
+          this.buscoStock = true;
+        }
+      );
+    }
+  }
+
+  revisarAlcanzaEnStock() {
+    if (this.costoRepuesto.articulo != null && this.costoRepuesto.medidaArticulo != null && this.hayStock) {
+      // Si pienso usar stock valido la cantidad usada con lo que se que hay en stock
+      if (this.stockArticulo.cantidad >= this.costoRepuesto.valor) {
+        this.alcanzaStock = true;
+      } else {
+        this.alcanzaStock = false;
+      }
     }
   }
 }

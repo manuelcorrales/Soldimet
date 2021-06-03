@@ -23,7 +23,7 @@ public class EmpleadoController {
 
     @GetMapping("/getEmpleadoActual")
     public DTOEmpleado getEmpleadoActual() {
-        log.debug("request api/empleado/getEmpleadoActual");
+        log.info("request api/empleado/getEmpleadoActual");
 
         DTOEmpleado dtoEmpleado = expertoUsuarios.getEmpleadoActual();
 

@@ -8,17 +8,21 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "descripcion"
+            "otherEntityField": "descripcion",
+            "otherEntityRelationshipName": "movimientoArticulo"
         },
         {
             "relationshipName": "movimiento",
             "otherEntityName": "movimiento",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
+            "relationshipType": "many-to-one",
             "otherEntityField": "id",
-            "ownerSide": true,
+            "otherEntityRelationshipName": "movimientoArticulo"
+        },
+        {
+            "relationshipName": "medida",
+            "otherEntityName": "medidaArticulo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "medida",
             "otherEntityRelationshipName": "movimientoArticulo"
         }
     ],
@@ -35,8 +39,10 @@
     ],
     "changelogDate": "20180616212130",
     "dto": "no",
+    "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "movimiento_articulo",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
     "pagination": "no"
 }
