@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -69,6 +70,7 @@ public class PresupuestoController {
     @GetMapping("/getPresupuestos")
     public Page<DTOPresupuesto> buscarPresupuestos(
         @RequestParam(defaultValue = "") String filtro,
+        @RequestParam("estado") Optional<Long> estado,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "200") Integer size
     ) {
@@ -76,7 +78,7 @@ public class PresupuestoController {
         Pageable paging = PageRequest.of(page, size, Sort.by("id").descending());
         log.debug("request /api/presupuestos/getPresupuestos: {}", authentication);
 
-        Page<DTOPresupuesto> presupuestos = expertoPresupuesto.buscarPresupuestos(filtro, paging);
+        Page<DTOPresupuesto> presupuestos = expertoPresupuesto.buscarPresupuestos(filtro, estado, paging);
 
         log.debug("response /api/presupuestos/getPresupuestos: {}", presupuestos);
         return presupuestos;

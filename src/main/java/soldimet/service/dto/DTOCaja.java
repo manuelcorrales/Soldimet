@@ -12,7 +12,7 @@ public class DTOCaja {
     private Long cajaId;
     private String estadoCaja;
     private Float totalCaja;
-	public List<DTOMovimientoCUConsultarMovimientos> movimientos;
+    private Float totalMensual;
 
 	public DTOCaja(){
 
@@ -75,14 +75,14 @@ public class DTOCaja {
     /**
      * @return the movimientos
      */
-    public List<DTOMovimientoCUConsultarMovimientos> getMovimientos() {
-        return movimientos;
+    public Float getTotalMensual() {
+        return totalMensual;
     }
     /**
-     * @param movimientos the movimientos to set
+     * @param totalMensual the totalMensual to set
      */
-    public void setMovimientos(List<DTOMovimientoCUConsultarMovimientos> movimientos) {
-        this.movimientos = movimientos;
+    public void setTotalMensual(Float totalMensual) {
+        this.totalMensual = totalMensual;
     }
 
 }

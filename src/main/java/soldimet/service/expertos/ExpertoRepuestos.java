@@ -117,11 +117,12 @@ public class ExpertoRepuestos {
             articulos.add(repuesto.getArticulo());
         }
         Page<StockArticulo> stocks = stockRepository
-                .findBySucursalAndArticuloEstadoNombreEstadoAndArticuloCodigoArticuloProveedorContainsOrArticuloInOrderByArticuloCodigoArticuloProveedorAsc(
+                .findBySucursalAndArticuloEstadoNombreEstadoAndArticuloCodigoArticuloProveedorContainsOrArticuloInAndSucursalOrderByArticuloCodigoArticuloProveedorAsc(
                         empleado.getSucursal(),
                         globales.NOMBRE_ESTADO_ARTICULO_ALTA,
                         filtro,
                         articulos,
+                        empleado.getSucursal(),
                         pageable
                 );
 

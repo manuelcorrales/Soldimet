@@ -5,21 +5,18 @@
                 Total Mes: <p>${{caja?.totalMensual | number:'1.2-2'}}</p>
             </div>
             <div class="card border-success col-md-2 text-center mr-1">
-                Total Día: <p>${{totalDia | number:'1.2-2'}}</p>
+                Total Día: <p>${{caja?.totalCaja | number:'1.2-2'}}</p>
             </div>
             <div class="col-md-5">
                 <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)" placeholder="Buscar movimientos...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-light" type="button" (click)="search(searchBar.value)">
-                            <span><fa-icon icon="search"></fa-icon></span>
-                        </button>
-                    </span>
+                    <input type="text" class="form-control" #searchBar [(ngModel)]="searchText"
+                        (ngModelChange)='searchChanged.next($event)' placeholder="Buscar movimiento..."
+                        placement="bottom" ngbTooltip="Filtrar por descripción...">
                 </div>
-                <!-- /input-group -->
             </div>
             <div class="col-md-2">
-                <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['nuevo_movimiento']">
+                <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']"
+                    [routerLink]="['nuevo_movimiento']">
                     <span>
                         Nuevo Movimiento
                     </span>
@@ -27,41 +24,52 @@
             </div>
         </div>
     </div>
-    <br/>
-    <div class="container-fluid card border-info mb-3" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
+    <br />
+    <div class="container-fluid card border-info mb-3">
         <div class="card-body row">
+            <form [formGroup]="formGroup" class="row col-md-6">
+                <div class="col-md-6">
+                    <label>Fecha desde</label>
+                    <div class="input-group">
+                        <input class="form-control" placeholder="yyyy-mm-dd" name="fecha_desde" ngbDatepicker
+                            #d1="ngbDatepicker" formControlName="FechaDesde" (dateSelect)="onDateSelection()" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
+                                <fa-icon [icon]="'calendar-alt'"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label>Fecha hasta</label>
+                    <div class="input-group">
+                        <input class="form-control" placeholder="yyyy-mm-dd" name="fecha_hasta" ngbDatepicker
+                            #d2="ngbDatepicker" formControlName="FechaHasta" (dateSelect)="onDateSelection()" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
+                                <fa-icon [icon]="'calendar-alt'"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <div class="col-md-3">
-                <span><strong>Mes:</strong></span>
-                <select class="custom-select" [(ngModel)]="mes" name="mes">
-                    <option *ngFor="let mes of meses" [ngValue]="mes[1]">
-                        {{mes[0]}}
-                    </option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <span><strong>Año:</strong></span>
-                <select class="custom-select" [(ngModel)]="anio" name="anio">
-                    <option *ngFor="let anio of [2019, 2020, 2021, 2022]" [ngValue]="anio">
-                        {{anio}}
-                    </option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <span><strong>Sucursal:</strong></span>
-                <select class="custom-select" [(ngModel)]="sucursal" name="sucursal">
-                    <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
-                        {{sucursal?.nombreSucursal}}
-                    </option>
-                </select>
+                <label><strong>Sucursal:</strong></label>
+                <div class="input-group">
+                    <select class="custom-select" [(ngModel)]="sucursal" name="sucursal" (change)="requestContent()">
+                        <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
+                            {{sucursal?.nombreSucursal}}
+                        </option>
+                    </select>
+                </div>
             </div>
             <div class="col-auto my-auto">
-                <button type="button" class="btn btn-outline-success" (click)="filtrarPorSucursal()">Filtrar</button>
-
-                <button *ngIf="filtrado" type="button" class="btn btn-outline-danger" (click)="limpiarFiltros()">Limpiar filtros</button>
+                <button type="button" class="btn btn-outline-danger" (click)="limpiarFiltros()">Limpiar
+                    filtros</button>
             </div>
         </div>
     </div>
-    <br/>
+    <br />
     <div class="container-fluid card shadow">
         <div class="table-responsive pt-3">
             <table class="table table-hover table-bordered table-sm text-center">
@@ -76,31 +84,40 @@
                         <th scope="col" class="text-center">Operaciones</th>
                     </tr>
                 </thead>
-                <tbody *ngIf="caja">
+                <tbody *ngIf="content">
                     <tr [ngClass]="{
                         'table-success': movimiento.tipoMovimiento=='Ingreso',
                         'table-danger': movimiento.tipoMovimiento=='Egreso'
-                    }"
-                    *ngFor="let movimiento of movimientos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                    }" *ngFor="let movimiento of content">
                         <td class="text-center text-dark">{{movimiento.fecha}}</td>
                         <th class="text-center text-dark">{{movimiento.movimientoId}}</th>
                         <td class="text-center text-dark">{{movimiento.categoria}}</td>
-                        <td class="text-center text-dark">{{movimiento.descripcion}}</td>
+                        <td class="text-center text-dark">
+                            <p>{{movimiento.descripcion}}</p>
+                            <div *ngIf="movimiento.articulos?.length > 0">
+                                <ul>
+                                    <li class="point" *ngFor="let articulo of movimiento.articulos">{{articulo}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
                         <td class="text-center text-dark">
                             <span *ngIf="movimiento.formaDePago == 'Tarjeta'">
-                                <fa-icon icon="credit-card" [ngbTooltip]="movimiento.formaDePago" placement="top"></fa-icon>
+                                <fa-icon icon="credit-card" [ngbTooltip]="movimiento.formaDePago" placement="top">
+                                </fa-icon>
                             </span>
                             <span *ngIf="movimiento.formaDePago == 'Efectivo'">
-                                <fa-icon icon="money-bill-wave" [ngbTooltip]="movimiento.formaDePago" placement="top"></fa-icon>
+                                <fa-icon icon="money-bill-wave" [ngbTooltip]="movimiento.formaDePago" placement="top">
+                                </fa-icon>
                             </span>
                             <span *ngIf="movimiento.formaDePago == 'Cheque'">
                                 <ng-template #tipCheque>
                                     <p>{{movimiento.formaDePago}}: {{movimiento.formaDePagoTip}}</p>
-                                 </ng-template>
+                                </ng-template>
                                 <fa-icon icon="pager" [ngbTooltip]="tipCheque" placement="top"></fa-icon>
                             </span>
                         </td>
-                        <td class="text-center text-dark">${{movimiento.monto | number:'1.2-2'}}</td>
+                        <td class="text-center text-dark">${{movimiento.importe | number:'1.2-2'}}</td>
                         <td>
                             <div class="text-center">
                                 <div *ngIf="movimiento?.estado== 'Alta'">
@@ -114,7 +131,10 @@
                                         [routerLink]="['/', { outlets: { popup: 'cajas/'+ movimiento.movimientoId + '/eliminar_movimiento'} }]">
                                         <fa-icon icon="trash"></fa-icon>
                                     </button>
-                                    <button *ngIf="movimiento.presupuestoID" class="btn btn-outline-secondary" placement="top" [routerLink]="['/presupuestos', movimiento.presupuestoID, 'ver' ]" ngbTooltip="Ver presupuesto">
+                                    <button *ngIf="movimiento.presupuestoId" class="btn btn-outline-secondary"
+                                        placement="top"
+                                        [routerLink]="['/presupuestos', movimiento.presupuestoId, 'ver' ]"
+                                        ngbTooltip="Ver presupuesto">
                                         <fa-icon icon="eye"></fa-icon>
                                     </button>
                                 </div>
@@ -124,16 +144,9 @@
                 </tbody>
             </table>
         </div>
-        <ngb-pagination
-                class="d-flex justify-content-center"
-                [collectionSize]="movimientos.length"
-                #numPages
-                [pageSize]="pageSize"
-                [(page)]="page"
-                [rotate]="true"
-                [boundaryLinks]="true"
-                [maxSize]="10"
-                >
-            </ngb-pagination>
+        <ngb-pagination class="d-flex justify-content-center" [collectionSize]="totalItems" #numPages
+            [pageSize]="pageSize" [(page)]="page" [rotate]="true" [boundaryLinks]="true" [maxSize]="10"
+            (pageChange)="requestContent()">
+        </ngb-pagination>
     </div>
 </div>

@@ -223,41 +223,22 @@ public class ExpertoPresupuesto {
         }
     }
 
-    public Page<DTOPresupuesto> buscarPresupuestos(String filtro, Pageable pageable) {
+    public Page<DTOPresupuesto> buscarPresupuestos(String filtro, Optional<Long> estado, Pageable pageable) {
         // Busco todos los presupuestos a mostrar dependiendo los permisos del usuario
         // Jefe o Admin pueden ver todos
         // Encargado y usuario pueden ver los asignados
         Page<Presupuesto> presupuestos = null;
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
 
-        if (this.tieneAccesoATodosLosPresupuestos(empleado)) {
+        if (estado.isPresent()){
             presupuestos = presupuestoRepository
-                    .findDistinctByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrDetallePresupuestosAplicacionNombreAplicacionContainsOrderByIdDesc(
-                            filtro, filtro, filtro, filtro, pageable);
+                    .findDistinctByEstadoPresupuestoIdAndClientePersonaNombreContainsAndSucursalIdOrEstadoPresupuestoIdAndClientePersonaApellidoContainsAndSucursalIdOrEstadoPresupuestoIdAndDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdOrEstadoPresupuestoIdAndDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdOrModeloOrderByIdDesc(
+                            estado.get(), filtro, empleado.getSucursal().getId(), estado.get(), filtro, empleado.getSucursal().getId(), estado.get(), filtro, empleado.getSucursal().getId(), estado.get(), filtro, empleado.getSucursal().getId(), true, pageable);
+
         } else {
-            Sucursal sucursal = empleado.getSucursal();
-            Specification<Presupuesto> specs = Specification.where(
-                    (root, query, builder) -> {
-                        final Join<Presupuesto, Sucursal> sucursales = root.join(Presupuesto_.SUCURSAL, JoinType.INNER);
-                        final Join<Presupuesto, Cliente> clientes = root.join(Presupuesto_.CLIENTE, JoinType.INNER);
-                        final Join<Persona, Cliente> personas = clientes.join(Cliente_.PERSONA, JoinType.INNER);
-                        Predicate isSucursal = builder.equal(builder.lower(sucursales.get(Sucursal_.ID)),
-                                sucursal.getId());
-                        Predicate isModelo = builder.equal(root.get(Presupuesto_.MODELO), true);
-                        Predicate isPersona = builder.or(
-                            builder.like(builder.lower(personas.get(Persona_.NOMBRE)), filtro),
-                            builder.like(builder.lower(personas.get(Persona_.APELLIDO)), filtro)
-                        );
-                        Predicate and = builder.and(isSucursal, isPersona);
-                        return builder.or(and, isModelo);
-
-                }
-            );
-            presupuestos = presupuestoRepository.findAll(specs, pageable);
-
-            // presupuestos = presupuestoRepository
-            //         .findByClientePersonaNombreContainsOrClientePersonaApellidoContainsOrDetallePresupuestosMotorMarcaMotorContainsOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalAndModeloOrderByIdDesc(
-            //                 filtro, filtro, filtro, sucursal, true, pageable);
+            presupuestos = presupuestoRepository
+                    .findDistinctByClientePersonaNombreContainsAndSucursalIdOrClientePersonaApellidoContainsAndSucursalIdOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdOrModeloOrderByIdDesc(
+                            filtro, empleado.getSucursal().getId(), filtro, empleado.getSucursal().getId(), filtro, empleado.getSucursal().getId(), filtro, empleado.getSucursal().getId(), true, pageable);
         }
 
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);

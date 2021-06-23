@@ -1,4 +1,6 @@
+import { DtoMovimientoCabecera } from 'app/dto/dto-caja-dia/dto-caja-dia.component';
 export class DtoPresupuestoCabeceraComponent {
+  colapsado = true;
   constructor(
     public codigo?: number,
     public fecha?: any,
@@ -11,6 +13,7 @@ export class DtoPresupuestoCabeceraComponent {
     public isModelo?: boolean,
     public totalOperaciones?: number,
     public totalRepuestos?: number,
-    public aplicacion?: string
+    public aplicacion?: string,
+    public movimientos?: DtoMovimientoCabecera
   ) {}
 }

@@ -163,4 +163,23 @@
                                  referencedTableName="movimiento"/>
     </changeSet>
 
+    <changeSet author="manuelc (generated)" id="1608305253236-79">
+        <insert tableName="medida_articulo">
+            <column name="id" value="14"/>
+            <column name="medida" value="1M"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="15"/>
+            <column name="medida" value="2M"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="16"/>
+            <column name="medida" value="3M"/>
+        </insert>
+        <insert tableName="medida_articulo">
+            <column name="id" value="17"/>
+            <column name="medida" value="4M"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

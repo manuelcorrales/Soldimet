@@ -28,8 +28,8 @@ public interface ExtendedStockArticuloRepository extends StockArticuloRepository
         "articulo.tipoRepuesto",
         "articulo.tipoRepuesto.tipoParteMotor",
     })
-	Page<StockArticulo> findBySucursalAndArticuloEstadoNombreEstadoAndArticuloCodigoArticuloProveedorContainsOrArticuloInOrderByArticuloCodigoArticuloProveedorAsc(
-            Sucursal sucursal, String estadoArticulo, String filtro, List<Articulo> articulos, Pageable pageable);
+	Page<StockArticulo> findBySucursalAndArticuloEstadoNombreEstadoAndArticuloCodigoArticuloProveedorContainsOrArticuloInAndSucursalOrderByArticuloCodigoArticuloProveedorAsc(
+            Sucursal sucursal, String estadoArticulo, String filtro, List<Articulo> articulos, Sucursal sucursal2, Pageable pageable);
 
     @EntityGraph(attributePaths = { "medida", "sucursal", "articulo", "articulo.estado", "articulo.marca",
             "articulo.tipoRepuesto", "articulo.tipoRepuesto.tipoParteMotor", })

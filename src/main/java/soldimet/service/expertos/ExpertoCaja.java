@@ -23,6 +23,7 @@ import soldimet.domain.Empleado;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.Movimiento;
+import soldimet.domain.MovimientoPresupuesto;
 import soldimet.domain.MovimientoArticulo;
 import soldimet.domain.SubCategoria;
 import soldimet.domain.Sucursal;
@@ -33,12 +34,19 @@ import soldimet.repository.extendedRepository.ExtendedCajaRepository;
 import soldimet.repository.extendedRepository.ExtendedCategoriaPagoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoMovimientoRepository;
 import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoPresupuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedMovimientoArticuloRepository;
 import soldimet.repository.extendedRepository.ExtendedSubCategoriaRepository;
 import soldimet.security.AuthoritiesConstants;
+import soldimet.service.dto.DTOCaja;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
+import soldimet.service.dto.DTOMovimientos;
 import soldimet.service.expertos.ExpertoRepuestos;
 import soldimet.utils.MathUtils;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+
+
 
 
 /**
@@ -63,6 +71,9 @@ public class ExpertoCaja {
 
     @Autowired
     private ExtendedMovimientoRepository movimientoRepository;
+
+    @Autowired
+    private ExtendedMovimientoPresupuestoRepository movimientoPresupuestoRepository;
 
     @Autowired
     private ExtendedEstadoMovimientoRepository estadoMovimientoRepository;
@@ -92,27 +103,42 @@ public class ExpertoCaja {
 
     }
 
-    public DTOCajaCUConsultarMovimientos getMovimientosSucursal(Long sucursalId, Integer mes, Integer anio) {
-
-        Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
-        Sucursal sucursal = empleado.getSucursal();
-        List<Caja> listaCajas = new ArrayList<Caja>();
-        if (sucursalId != null && this.tieneAccesoATodosLosMovimientos(empleado) && mes > 0) {
-            sucursal = sucursalRepository.findById(sucursalId).get();
-            LocalDate fechaInicio = this.formatearFecha(mes, anio);
-            LocalDate fechaFin = this.formatearFecha(mes, anio).plusMonths(1).minusDays(1);
-            listaCajas = cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(
-                fechaInicio,
-                fechaFin,
-                sucursal
+    public Page<DTOMovimientos> getMovimientosSucursal(
+        String filtro,
+        Long sucursalId,
+        Optional<LocalDate> fechaInicio,
+        Optional<LocalDate> fechaFin,
+        Pageable paging
+    ) {
+        Page<Movimiento> movimientos ;
+        if (fechaInicio.isPresent() && fechaFin.isPresent()) {
+            movimientos = movimientoRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
+                fechaInicio.get(), fechaFin.get(), globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA, filtro, sucursalId, paging
             );
+
         } else {
-            Caja cajaDia = this.findCajaDelDia(sucursal);
-            listaCajas.add(cajaDia);
+            movimientos = movimientoRepository.findByEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
+                globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA, filtro, sucursalId, paging
+            );
+
         }
-        EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+        return cajaConverter.movimientosToMovCabecera(movimientos);
+    }
+
+    public DTOCaja findCajaDia(Long sucursalId) {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId).get();
+        Caja cajaDia = this.findCajaDelDia(sucursal);
         Float totalMes = this.calcularTotalMesActual(sucursal);
-        return cajaConverter.cajaADTO(listaCajas, estadoAlta, totalMes);
+        return cajaConverter.cajaADTO(cajaDia, totalMes);
+    }
+
+    public List<DTOMovimientos> buscarMovimientosPresupuesto(Long presupuestoId) {
+        List<MovimientoPresupuesto> movimientosPresupuesto = movimientoPresupuestoRepository.findByPresupuestoId(presupuestoId);
+        List<Movimiento> movimientos = new ArrayList();
+        for(MovimientoPresupuesto mov: movimientosPresupuesto) {
+            movimientos.add(mov.getMovimiento());
+        }
+        return cajaConverter.movimientosToMovCabecera(movimientos);
     }
 
     private LocalDate formatearFecha(Integer mes, Integer anio) {

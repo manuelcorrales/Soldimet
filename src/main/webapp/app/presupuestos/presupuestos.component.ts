@@ -1,4 +1,7 @@
-import { Component, ViewChild, ViewContainerRef, OnInit } from '@angular/core';
+import { Page } from 'app/dto/page/page';
+import { EstadoPresupuesto } from 'app/shared/model/estado-presupuesto.model';
+import { EstadoPresupuestoService } from 'app/entities/estado-presupuesto/estado-presupuesto.service';
+import { Component, ViewChild, ViewContainerRef, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DtoPresupuestoCabeceraComponent } from 'app/dto/dto-presupuesto-cabecera/dto-presupuesto-cabecera.component';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { JhiAlertService } from 'ng-jhipster';
@@ -17,6 +20,8 @@ export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresup
   toastrContainer: ViewContainerRef;
 
   imprimiendo = false;
+  estados: EstadoPresupuesto[];
+  estado: EstadoPresupuesto = null;
 
   public featureToggleData: any = {
     enableImprimir: false
@@ -25,6 +30,8 @@ export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresup
   constructor(
     protected _presupuestosService: PresupuestosService,
     private jhiAlertService: JhiAlertService,
+    private estadoPresupuestoService: EstadoPresupuestoService,
+    private cd: ChangeDetectorRef,
     private ffStoreService: FlagsServiceService
   ) {
     super();
@@ -33,6 +40,7 @@ export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresup
 
   ngOnInit() {
     super.ngOnInit();
+    this.estadoPresupuestoService.query().subscribe(res => (this.estados = res.body));
     this.ffStoreService.getFFStore().subscribe(
       (responseList: DtoFF[]) => {
         responseList.forEach((ff: DtoFF) => {
@@ -44,6 +52,18 @@ export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresup
       error => {
         this.jhiAlertService.error(error.message);
       }
+    );
+  }
+
+  protected requestContent() {
+    const estadoId = this.estado !== null ? this.estado.id : null;
+    this.searchableService.findByFilteredPage(this.searchText, estadoId, this.page - 1, this.pageSize).subscribe(
+      (response: Page<DtoPresupuestoCabeceraComponent>) => {
+        super.totalItems = response.totalElements;
+        super.content = response.content;
+        this.cd.markForCheck();
+      },
+      error => super.onError(error.message)
     );
   }
 

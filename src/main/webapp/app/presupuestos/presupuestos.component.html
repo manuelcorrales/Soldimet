@@ -1,14 +1,25 @@
 <div class="jh-card">
     <div class="container">
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-2">
+                <label class="form-control-label"><strong>Filtrar por estado:</strong> </label>
+                <select class="custom-select" name="estado" [(ngModel)]="estado" (change)="requestContent()">
+                    <option selected [ngValue]=null>Todos</option>
+                    <option *ngFor="let estado of estados" [ngValue]="estado">
+                        {{estado?.nombreEstado}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-8 my-auto">
                 <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" #searchBar [(ngModel)]="searchText" (ngModelChange)='searchChanged.next($event)'
-                        placeholder="Buscar presupuesto..."placement="bottom" ngbTooltip="Filtrar por cliente, motor o número de presupuesto"
-                    >
+                    <input type="text" class="form-control" #searchBar [(ngModel)]="searchText"
+                        (ngModelChange)='searchChanged.next($event)' placeholder="Buscar presupuesto..."
+                        placement="bottom" ngbTooltip="Filtrar por cliente, motor o número de presupuesto">
                     <span class="input-group-btn">
                         <button class="btn btn-light" type="button" (click)="searchChanged.next($event)">
-                            <span><fa-icon icon="search"></fa-icon></span>
+                            <span>
+                                <fa-icon icon="search"></fa-icon>
+                            </span>
                         </button>
                     </span>
                 </div>
@@ -22,7 +33,7 @@
             </div>
         </div>
     </div>
-    <br/>
+    <br />
     <feature-toggle-provider [features]="featureToggleData">
         <div class="container-fluid card shadow">
             <div class="table-responsive pt-3">
@@ -41,16 +52,18 @@
                         </tr>
                     </thead>
                     <tbody *ngIf="content">
-                        <tr *ngFor="let presupuesto of content"
-                        >
+                        <tr *ngFor="let presupuesto of content">
                             <th>{{presupuesto.codigo}}</th>
-                            <span *ngIf="presupuesto.isSoldadura"><td>Soldadura</td></span>
+                            <span *ngIf="presupuesto.isSoldadura">
+                                <td>Soldadura</td>
+                            </span>
                             <span *ngIf="!presupuesto.isSoldadura">
+
                                 <td>
                                     <p><b>{{presupuesto.motor}}</b></p>
                                     <small class="text-muted"><em>
-                                        ({{presupuesto.aplicacion}})
-                                    </em></small>
+                                            ({{presupuesto.aplicacion}})
+                                        </em></small>
                                 </td>
                             </span>
                             <td>{{presupuesto.cliente}} </td>
@@ -85,52 +98,64 @@
                             </td>
                             <td>{{presupuesto.sucursal}}</td>
                             <td>
-                                <button class="btn btn-outline-secondary" placement="top" [routerLink]="['/presupuestos', presupuesto.codigo, 'ver' ]" ngbTooltip="Ver">
+                                <button class="btn btn-outline-secondary" placement="top"
+                                    [routerLink]="['/presupuestos', presupuesto.codigo, 'ver' ]" ngbTooltip="Ver">
                                     <fa-icon icon="eye"></fa-icon>
                                 </button>
                                 <span *ngIf="!presupuesto?.isSoldadura">
-                                <button *featureToggle="'enableImprimir'" class="btn btn-outline-dark" (click)="imprimir(presupuesto)" placement="top" [disabled]="imprimiendo"
-                                    ngbTooltip="Imprimir">
-                                    <fa-icon icon="print"></fa-icon>
-                                </button>
+                                    <button *featureToggle="'enableImprimir'" class="btn btn-outline-dark"
+                                        (click)="imprimir(presupuesto)" placement="top" [disabled]="imprimiendo"
+                                        ngbTooltip="Imprimir">
+                                        <fa-icon icon="print"></fa-icon>
+                                    </button>
                                 </span>
-                                <button class="btn btn-outline-success" *ngIf="presupuesto.estado == 'Creado'" (click)="aceptarPresupuesto(presupuesto)" placement="top"
+                                <button class="btn btn-outline-success" *ngIf="presupuesto.estado == 'Creado'"
+                                    (click)="aceptarPresupuesto(presupuesto)" placement="top"
                                     ngbTooltip="Aceptar presupuesto">
                                     <fa-icon icon="check"></fa-icon>
                                 </button>
-                                <button class="btn btn-outline-info" *ngIf="presupuesto.estado == 'Aceptado'" (click)="terminarPresupuesto(presupuesto)" placement="top"
+                                <button class="btn btn-outline-info" *ngIf="presupuesto.estado == 'Aceptado'"
+                                    (click)="terminarPresupuesto(presupuesto)" placement="top"
                                     ngbTooltip="Terminar trabajo">
                                     <fa-icon icon="check-double"></fa-icon>
                                 </button>
-                                <button class="btn btn-outline-primary" *ngIf="presupuesto.estado == 'Terminado'" (click)="entregarPresupuesto(presupuesto)" placement="top"
+                                <button class="btn btn-outline-primary" *ngIf="presupuesto.estado == 'Terminado'"
+                                    (click)="entregarPresupuesto(presupuesto)" placement="top"
                                     ngbTooltip="Entregar trabajo">
                                     <fa-icon icon="check-square"></fa-icon>
                                 </button>
-                                <button class="btn btn-outline-danger" *ngIf="presupuesto.estado == 'Aceptado' || presupuesto.estado == 'Creado'" (click)="cancelarPresupuesto(presupuesto)" placement="top"
-                                    ngbTooltip="Eliminar">
+                                <button class="btn btn-outline-danger"
+                                    *ngIf="presupuesto.estado == 'Aceptado' || presupuesto.estado == 'Creado'"
+                                    (click)="cancelarPresupuesto(presupuesto)" placement="top" ngbTooltip="Eliminar">
                                     <fa-icon icon="trash"></fa-icon>
+                                </button>
+                                <button class="btn btn-outline-secondary" *ngIf="presupuesto?.movimientos?.length > 0"
+                                    placement="top" ngbTooltip="Movimientos"
+                                    [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="top" container="body">
+                                    <fa-icon icon="money-bill-wave"></fa-icon>
                                 </button>
                                 <!-- <p *ngIf="presupuesto.estado == 'Cancelado'">No hay operaciones</p> -->
                             </td>
                             <td>
                                 <div *ngIf="presupuesto.isModelo">
-                                        <fa-icon icon="tags"ngbTooltip="Es Modelo" placement="top" > ></fa-icon>
+                                    <fa-icon icon="tags" ngbTooltip="Es Modelo" placement="top"> ></fa-icon>
                                 </div>
                             </td>
+                            <ng-template #popTitle class="card-header text-white"
+                                style="background-color: #3498DB !important;">Movimientos relacionados</ng-template>
+                            <ng-template #popContent class="">
+                                <p *ngFor="let movimiento of presupuesto.movimientos">
+                                    {{movimiento.fecha}} {{movimiento.tipoMovimiento}}
+                                    {{movimiento.categoria}}
+                                    {{movimiento.descripcion}} ${{movimiento.importe | number:'1.2-2'}}
+                                </p>
+                            </ng-template>
                         </tr>
                     </tbody>
                 </table>
-                <ngb-pagination
-                    class="d-flex justify-content-center"
-                    [collectionSize]="totalItems"
-                    #numPages
-                    [pageSize]="pageSize"
-                    [(page)]="page"
-                    [rotate]="true"
-                    [boundaryLinks]="true"
-                    [maxSize]="10"
-                    (pageChange)="requestContent()"
-                    >
+                <ngb-pagination class="d-flex justify-content-center" [collectionSize]="totalItems" #numPages
+                    [pageSize]="pageSize" [(page)]="page" [rotate]="true" [boundaryLinks]="true" [maxSize]="10"
+                    (pageChange)="requestContent()">
                 </ngb-pagination>
             </div>
         </div>

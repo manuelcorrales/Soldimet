@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import soldimet.constant.Globales;
@@ -23,6 +24,7 @@ import soldimet.repository.extendedRepository.ExtendedMovimientoPedidoRepository
 import soldimet.repository.extendedRepository.ExtendedMovimientoPresupuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
 import soldimet.service.dto.DTOCaja;
+import soldimet.service.dto.DTOMovimientos;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMovimientoCUConsultarMovimientos;
 
@@ -47,91 +49,70 @@ public class CajaConverter {
     @Autowired
     private ExtendedMovimientoRepository movimientoRepository;
 
-    public DTOCajaCUConsultarMovimientos cajaADTO(List<Caja> listaCajas, EstadoMovimiento estado, Float totalMes) {
-        DTOCajaCUConsultarMovimientos dtoCaja = new DTOCajaCUConsultarMovimientos();
+    public DTOCaja cajaADTO(Caja caja, Float totalMes) {
+        DTOCaja dtoCaja = new DTOCaja();
         dtoCaja.setTotalMensual(totalMes);
-        for(Caja caja: listaCajas) {
-            List<Movimiento> movimientos = movimientoRepository.findByCajaAndEstado(caja, estado);
-            DTOCaja dto = this.cajaACajaMovimiento(caja, movimientos);
-            dtoCaja.addCaja(dto);
-        }
+        dtoCaja.setCajaId(caja.getId());
+        dtoCaja.setTotalCaja(caja.getSaldo());
+        dtoCaja.setFechaCaja(caja.getFecha().toString());
         return dtoCaja;
     }
 
-
-    public DTOCaja cajaACajaMovimiento(Caja caja, List<Movimiento> movimientos) {
-        DTOCaja dto = new DTOCaja();
-        dto.setCajaId(caja.getId());
-        dto.setEstadoCaja("Sin estado");
-        dto.setFechaCaja(caja.getFecha().toString());
-        dto.setTotalCaja(caja.getSaldo());
-        dto.setMovimientos(this.listMovimientoToListDtoMovCabecera(movimientos));
-        return dto;
-    }
-
-    public DTOMovimientoCUConsultarMovimientos movimientoToDtoMovimientoCabecera( Movimiento movimiento) {
-        DTOMovimientoCUConsultarMovimientos newDto = new DTOMovimientoCUConsultarMovimientos();
-        CategoriaPago categoriaPago = categoriaPagoRepository.findBySubCategoriasContaining(movimiento.getSubCategoria());
-        newDto.setCategoria(categoriaPago.getNombreCategoriaPago());
-        newDto.setDescripcion(this.getDescripcionMovimiento(movimiento));
-        newDto.setPresupuestoID(this.getPresupuestoID(movimiento));
+    public DTOMovimientos movimientoToDtoMovimiento(Movimiento movimiento) {
+        DTOMovimientos newDto = new DTOMovimientos();
+        newDto.setMovimientoId(movimiento.getId());
+        newDto.setFecha(movimiento.getFecha().toString());
+        newDto.setEstado(movimiento.getEstado().getNombreEstado());
+        if (movimiento.getImporte() < 0) {
+            newDto.setImporte(movimiento.getImporte() * -1);
+        } else {
+            newDto.setImporte(movimiento.getImporte());
+        }
+        newDto.setTipoMovimiento(movimiento.getTipoMovimiento().getNombreTipoMovimiento());
         newDto.setFormaDePago(movimiento.getMedioDePago().getFormaDePago().getNombreFormaDePago());
         newDto.setFormaDePagoTip(this.formaDePagoTip(movimiento.getMedioDePago()));
-        if (movimiento.getImporte() < 0) {
-            newDto.setMonto(movimiento.getImporte() * -1);
-        } else {
-            newDto.setMonto(movimiento.getImporte());
-        }
+        newDto.setDescripcion(movimiento.getSubCategoria().getNombreSubCategoria());
+        newDto.setEmpleado(movimiento.getEmpleado().getPersona().getNombre());
+        CategoriaPago categoriaPago = categoriaPagoRepository.findBySubCategoriasContaining(movimiento.getSubCategoria());
+        newDto.setCategoria(categoriaPago.getNombreCategoriaPago());
+        newDto.setObservaciones(movimiento.getObservaciones());
 
-        newDto.setMovimientoId(movimiento.getId());
-        newDto.setTipoMovimiento(movimiento.getTipoMovimiento().getNombreTipoMovimiento());
-        newDto.setEstado(movimiento.getEstado().getNombreEstado());
+        this.completePresupuestoData(newDto, movimiento);
+        this.completeArticuloData(newDto, movimiento);
 
         return newDto;
     }
 
-    public List<DTOMovimientoCUConsultarMovimientos> listMovimientoToListDtoMovCabecera ( List<Movimiento> movimientos) {
-        List<DTOMovimientoCUConsultarMovimientos> listaDto = new ArrayList<DTOMovimientoCUConsultarMovimientos>();
+    public List<DTOMovimientos> movimientosToMovCabecera (List<Movimiento> movimientos) {
+        List<DTOMovimientos> dtoMovs = new ArrayList();
         for (Movimiento movimiento: movimientos) {
-            listaDto.add(this.movimientoToDtoMovimientoCabecera(movimiento));
+            dtoMovs.add(movimientoToDtoMovimiento(movimiento));
         }
-
-        return listaDto;
+        return dtoMovs;
     }
 
-    private String getPresupuestoID(Movimiento movimiento) {
-        String presupuestoID = null;
+    public Page<DTOMovimientos> movimientosToMovCabecera (Page<Movimiento> movimientos) {
+        return movimientos.map(movimiento -> movimientoToDtoMovimiento(movimiento));
+    }
+
+    private void completePresupuestoData(DTOMovimientos newDto, Movimiento movimiento) {
         MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoRepository.findByMovimiento(movimiento);
         if (movimientoPresupuesto != null) {
-            presupuestoID = movimientoPresupuesto.getPresupuesto().getId().toString();
-
+            Long presupuestoID = movimientoPresupuesto.getPresupuesto().getId();
+            newDto.setPresupuestoId(presupuestoID);
         }
-        return presupuestoID;
     }
 
-    private String getDescripcionMovimiento(Movimiento movimiento) {
-        String descripcion = movimiento.getSubCategoria().getNombreSubCategoria();
-
+    private void completeArticuloData(DTOMovimientos newDto, Movimiento movimiento) {
+        List<String> articulos = new ArrayList<>();
         List<MovimientoArticulo> movimientosArticulos = movimientoArticuloRepository.findByMovimiento(movimiento);
         for(MovimientoArticulo movimientoArticulo: movimientosArticulos) {
-            descripcion +=  " (" +
-                movimientoArticulo.getArticulo().getTipoRepuesto().getNombreTipoRepuesto() +
+            String descripcion =  movimientoArticulo.getArticulo().getTipoRepuesto().getNombreTipoRepuesto() +
                 " - '" + movimientoArticulo.getArticulo().getCodigoArticuloProveedor() + "'" +
-                " - " + movimientoArticulo.getCantidad() +
-                " Un)";
+                " (" + movimientoArticulo.getCantidad() + " Un)";
+            articulos.add(descripcion);
         }
-
-        MovimientoPresupuesto movimientoPresupuesto = movimientoPresupuestoRepository.findByMovimiento(movimiento);
-        if (movimientoPresupuesto != null) {
-            descripcion += " (Presupuesto: " + movimientoPresupuesto.getPresupuesto().getId() + ")";
-
-        }
-
-        if (movimiento.getObservaciones() != null) {
-            descripcion += " (" + movimiento.getObservaciones() + ")";
-        }
-
-        return descripcion;
+        newDto.setArticulos(articulos);
     }
 
     private String formaDePagoTip(MedioDePago medioDePago) {

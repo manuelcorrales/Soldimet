@@ -14,6 +14,8 @@ import java.util.Set;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 /**
@@ -45,7 +47,40 @@ public interface ExtendedMovimientoRepository extends MovimientoRepository {
 				List<Sucursal> sucursales, LocalDate currentMonthFirstDay, LocalDate currentMonthLastDay,
 				EstadoMovimiento estado, TipoMovimiento tipoMovimiento);
 
+
+
 		List<Movimiento> findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstado(
 				List<Sucursal> sucursales, LocalDate currentMonthFirstDay, LocalDate currentMonthLastDay,
 				EstadoMovimiento estado);
+
+    @EntityGraph(attributePaths = {
+        "estado",
+        "tipoMovimiento",
+        "empleado",
+        "empleado.persona",
+        "empleado.sucursal",
+        "subCategoria",
+        "medioDePago",
+        "medioDePago.formaDePago",
+        "medioDePago.medioDePagoCheque",
+        "medioDePago.medioDePagoCheque.banco"
+    })
+    public Page<Movimiento> findByEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
+            String estado, String filtro, Long sucursalId, Pageable paging);
+
+    @EntityGraph(attributePaths = {
+        "estado",
+        "tipoMovimiento",
+        "empleado",
+        "empleado.persona",
+        "empleado.sucursal",
+        "subCategoria",
+        "medioDePago",
+        "medioDePago.formaDePago",
+        "medioDePago.medioDePagoCheque",
+        "medioDePago.medioDePagoCheque.banco"
+    })
+    public Page<Movimiento> findByFechaGreaterThanEqualAndFechaLessThanEqualAndEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
+            LocalDate fechaInicio, LocalDate fechaFin, String estado, String filtro, Long sucursalId, Pageable paging);
+
 }

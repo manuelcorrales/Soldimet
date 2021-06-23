@@ -23,7 +23,6 @@ public class Empleado implements Serializable {
     private Long id;
 
     @OneToOne(optional = false)    @NotNull
-
     @JoinColumn(unique = true)
     private Persona persona;
 

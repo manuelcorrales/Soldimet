@@ -4,42 +4,31 @@
  * and open the template in the editor.
  */
 package soldimet.service.dto;
-import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Manu
  */
 public class DTOMovimientos {
-    private Date fecha;
-   // private String tipo;
-    private String formaDePago;
-    private String descripcion;
-    private String persona;
-    private int numeroPresupuesto;
+    private Long movimientoId;
+    private String fecha;
     private String estado;
-    private int idPersona;
-    private int idMovimiento;
     private double importe;
-    private String empleado;
     private String tipoMovimiento;
     private String categoria;
-    private double  saldo;
-    private Boolean puedeModificar;
+    private String formaDePago;
+    private String formaDePagoTip;
+    private List<String> articulos;
+    private String descripcion;
+    private String persona;
+    private Long personaId;
+    private Long presupuestoId;
+    private String observaciones;
+    private String empleado;
 
     public DTOMovimientos() {
     }
-
-    public double getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-
-
-
 
     public String getCategoria() {
         return categoria;
@@ -49,7 +38,6 @@ public class DTOMovimientos {
         this.categoria = categoria;
     }
 
-
     public String getTipoMovimiento() {
         return tipoMovimiento;
     }
@@ -57,7 +45,6 @@ public class DTOMovimientos {
     public void setTipoMovimiento(String tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
     }
-
 
     public String getEmpleado() {
         return empleado;
@@ -67,7 +54,6 @@ public class DTOMovimientos {
         this.empleado = empleado;
     }
 
-
     public double getImporte() {
         return importe;
     }
@@ -76,51 +62,40 @@ public class DTOMovimientos {
         this.importe = importe;
     }
 
-
     public String getEstado() {
         return estado;
     }
 
-    public int getIdPersona() {
-        return idPersona;
+    public Long getPersonaId() {
+        return personaId;
     }
 
-    public int getIdMovimiento() {
-        return idMovimiento;
+    public Long getMovimientoId() {
+        return movimientoId;
     }
 
-    public void setIdMovimiento(int idMovimiento) {
-        this.idMovimiento = idMovimiento;
-    }
-
-
-    public void setIdPersona(int idPersona) {
-        this.idPersona = idPersona;
+    public void setMovimientoId(Long movimientoId) {
+        this.movimientoId = movimientoId;
     }
 
 
+    public void setPersonaId(Long personaId) {
+        this.personaId = personaId;
+    }
 
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
-
-   /* public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }*/
 
     public String getFormaDePago() {
         return formaDePago;
@@ -128,6 +103,14 @@ public class DTOMovimientos {
 
     public void setFormaDePago(String formaDePago) {
         this.formaDePago = formaDePago;
+    }
+
+    public String getFormaDePagoTip() {
+        return formaDePagoTip;
+    }
+
+    public void setFormaDePagoTip(String formaDePagoTip) {
+        this.formaDePagoTip = formaDePagoTip;
     }
 
     public String getDescripcion() {
@@ -146,24 +129,29 @@ public class DTOMovimientos {
         this.persona = persona;
     }
 
-    public int getNumeroPresupuesto() {
-        return numeroPresupuesto;
+    public Long getPresupuestoId() {
+        return presupuestoId;
     }
 
-    public void setNumeroPresupuesto(int numeroPresupuesto) {
-        this.numeroPresupuesto = numeroPresupuesto;
-    }
-
-    public Boolean getPuedeModificar() {
-        return puedeModificar;
-    }
-
-    public void setPuedeModificar(Boolean puedeModificar) {
-        this.puedeModificar = puedeModificar;
+    public void setPresupuestoId(Long presupuestoId) {
+        this.presupuestoId = presupuestoId;
     }
 
 
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
 
+    public String getObservaciones() {
+        return observaciones;
+    }
 
+    public List<String> getArticulos() {
+        return articulos;
+    }
+
+    public void setArticulos(List<String> articulos) {
+        this.articulos = articulos;
+    }
 
 }

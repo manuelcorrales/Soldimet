@@ -87,13 +87,16 @@ export class PresupuestosService {
     return this.http.post<DtoPresupuestoCabeceraComponent>(url, dtoPresupuesto);
   }
 
-  findByFilteredPage(text, page = 0, size = 15): Observable<Page<DtoPresupuestoCabeceraComponent>> {
+  findByFilteredPage(text, estadoPresupuesto: number = null, page = 0, size = 15): Observable<Page<DtoPresupuestoCabeceraComponent>> {
     let url = `${this.resourceUrlPresupuestos}${this.urlPresupuestoCabecera}`;
     if (page != null) {
       url = `${this.resourceUrlPresupuestos}${this.urlPresupuestoCabecera}/?page=${page}&size=${size}`;
     }
     if (text != null) {
       url += `&filtro=${text}`;
+    }
+    if (estadoPresupuesto != null) {
+      url += `&estado=${estadoPresupuesto}`;
     }
     return this.http.get<Page<DtoPresupuestoCabeceraComponent>>(url);
   }

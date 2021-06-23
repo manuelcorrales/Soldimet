@@ -5,6 +5,8 @@
  */
 package soldimet.service.dto;
 import java.time.LocalDate;
+import java.util.List;
+
 
 /**
  *
@@ -24,6 +26,7 @@ public class DTOPresupuesto {
     private double totalRepuestos;
     private double totalOperaciones;
     private Boolean isModelo;
+    private List<DTOMovimientos> movimientos;
 
     public DTOPresupuesto() {
     }
@@ -133,5 +136,13 @@ public class DTOPresupuesto {
 
     public void setAplicacion(String aplicacion) {
         this.aplicacion = aplicacion;
+    }
+
+    public List<DTOMovimientos> getMovimientos() {
+        return movimientos;
+    }
+
+    public void setMovimientos(List<DTOMovimientos> movimientos) {
+        this.movimientos = movimientos;
     }
 }

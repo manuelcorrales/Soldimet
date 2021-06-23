@@ -2,12 +2,19 @@ package soldimet.converter;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 import soldimet.domain.Presupuesto;
 import soldimet.service.dto.DTOPresupuesto;
+import soldimet.service.expertos.ExpertoCaja;
+
 
 @Component
 public class PresupuestoConverter {
+
+    @Autowired
+    private ExpertoCaja expertoCaja;
 
     public DTOPresupuesto convertirEntidadAModelo(Presupuesto presupuesto){
         DTOPresupuesto dtoPresupuesto = new DTOPresupuesto();
@@ -29,6 +36,8 @@ public class PresupuestoConverter {
         }
         dtoPresupuesto.setIsModelo(presupuesto.isModelo());
         dtoPresupuesto.setSucursal(presupuesto.getSucursal().getNombreSucursal());
+        dtoPresupuesto.setMovimientos(expertoCaja.buscarMovimientosPresupuesto(presupuesto.getId()));
+
         return dtoPresupuesto;
     }
 
