@@ -50,8 +50,8 @@ public interface ExtendedPresupuestoRepository extends PresupuestoRepository {
             "detallePresupuestos.cobranzaRepuestos.articulo.marca", "detallePresupuestos.cobranzaRepuestos.articulo.tipoRepuesto",
             "detallePresupuestos.cobranzaRepuestos.articulo", "detallePresupuestos.cobranzaRepuestos.tipoRepuesto", "detallePresupuestos.cobranzaOperacions.operacion",
             "cliente", "cliente.persona", "estadoPresupuesto" })
-    public Page<Presupuesto> findDistinctByEstadoPresupuestoIdAndClientePersonaNombreContainsAndSucursalIdOrEstadoPresupuestoIdAndClientePersonaApellidoContainsAndSucursalIdOrEstadoPresupuestoIdAndDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdOrEstadoPresupuestoIdAndDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdOrModeloOrderByIdDesc(
-            Long estadoId, String nombre,  Long sucursal, Long estadoId2, String apellido,  Long sucursal2, Long estadoId3, String motor,  Long sucursal3, Long estadoId4, String aplicacion, Long sucursal4, Boolean modelo, Pageable pageable);
+    public Page<Presupuesto> findDistinctByEstadoPresupuestoIdAndClientePersonaNombreContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndClientePersonaApellidoContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
+            Long estadoId, String nombre,  Long sucursal, Boolean modelo, Long estadoId2, String apellido,  Long sucursal2, Boolean modelo2, Long estadoId3, String motor,  Long sucursal3, Boolean modelo3, Long estadoId4, String aplicacion, Long sucursal4, Boolean modelo4, Pageable pageable);
 
     @EntityGraph(attributePaths = { "detallePresupuestos", "detallePresupuestos.motor", "sucursal",
             "detallePresupuestos.aplicacion", "detallePresupuestos.tipoParteMotor", "detallePresupuestos.cilindrada",
@@ -59,8 +59,8 @@ public interface ExtendedPresupuestoRepository extends PresupuestoRepository {
             "detallePresupuestos.cobranzaRepuestos.articulo.marca", "detallePresupuestos.cobranzaRepuestos.articulo.tipoRepuesto",
             "detallePresupuestos.cobranzaRepuestos.articulo", "detallePresupuestos.cobranzaRepuestos.tipoRepuesto", "detallePresupuestos.cobranzaOperacions.operacion",
             "cliente", "cliente.persona", "estadoPresupuesto" })
-    public Page<Presupuesto> findDistinctByClientePersonaNombreContainsAndSucursalIdOrClientePersonaApellidoContainsAndSucursalIdOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdOrModeloOrderByIdDesc(
-            String nombre, Long sucursal, String apellido, Long sucursal2, String motor, Long sucursal3, String aplicacion, Long sucursal4, Boolean modelo, Pageable pageable);
+    public Page<Presupuesto> findDistinctByClientePersonaNombreContainsAndSucursalIdAndModeloOrClientePersonaApellidoContainsAndSucursalIdAndModeloOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
+            String nombre, Long sucursal, Boolean modelo, String apellido, Long sucursal2, Boolean modelo1, String motor, Long sucursal3, Boolean modelo3, String aplicacion, Long sucursal4, Boolean modelo4, Pageable pageable);
 
     @EntityGraph(attributePaths = { "detallePresupuestos", "detallePresupuestos.motor",
             "detallePresupuestos.aplicacion", "detallePresupuestos.tipoParteMotor", "detallePresupuestos.cilindrada",

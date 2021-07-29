@@ -12,7 +12,7 @@
                 <dt><span>Articulo</span></dt>
                 <dd>
                     <div *ngIf="movimientoArticulo.articulo">
-                        <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view']">{{movimientoArticulo.articulo?.descripcion}}</a>
+                        <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view']">{{movimientoArticulo.articulo?.codigoArticuloProveedor}}</a>
                     </div>
                 </dd>
                 <dt><span>Movimiento</span></dt>

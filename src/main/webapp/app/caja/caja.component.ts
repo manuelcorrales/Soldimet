@@ -67,7 +67,7 @@ export class CajaComponent extends BaseFilterPageableComponent<DtoMovimientoCabe
     this.eventSubscriber = this.eventManager.subscribe('movimientosDiaModificacion', response => this.requestContent());
   }
 
-  protected requestContent() {
+  public requestContent() {
     this.searchableService
       .findByFilteredPage(this.searchText, this.sucursal.id, this.fechaDesde, this.fechaHasta, this.page - 1, this.pageSize)
       .subscribe(

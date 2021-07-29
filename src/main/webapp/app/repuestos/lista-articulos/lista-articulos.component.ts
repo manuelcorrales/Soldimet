@@ -48,7 +48,7 @@ export class ListaArticulosComponent extends BaseFilterPageableComponent<Articul
       });
   }
 
-  protected requestContent() {
+  public requestContent() {
     this.searchableService.findByFilteredPage(this.marca, this.searchText, this.page - 1, this.pageSize).subscribe(
       (response: Page<Articulo>) => {
         this.totalItems = response.totalElements;

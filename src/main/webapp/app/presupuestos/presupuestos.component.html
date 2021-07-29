@@ -1,8 +1,8 @@
 <div class="jh-card">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-2">
-                <label class="form-control-label"><strong>Filtrar por estado:</strong> </label>
+                <p class="form-control-label text-center"><strong>Filtrar por estado:</strong> </p>
                 <select class="custom-select" name="estado" [(ngModel)]="estado" (change)="requestContent()">
                     <option selected [ngValue]=null>Todos</option>
                     <option *ngFor="let estado of estados" [ngValue]="estado">
@@ -10,21 +10,21 @@
                     </option>
                 </select>
             </div>
+            <div  class="col-md-1 my-auto">
+                <label class="form-check-label text-center">
+                    <input class="form-check-input" type="checkbox" [defaultValue]="modelo" (change)="requestContent()"
+                        [(ngModel)]="modelo"
+                    >Solo Modelos
+                </label>
+            </div>
             <div class="col-md-8 my-auto">
                 <div class="input-group custom-search-form">
                     <input type="text" class="form-control" #searchBar [(ngModel)]="searchText"
                         (ngModelChange)='searchChanged.next($event)' placeholder="Buscar presupuesto..."
                         placement="bottom" ngbTooltip="Filtrar por cliente, motor o número de presupuesto">
-                    <span class="input-group-btn">
-                        <button class="btn btn-light" type="button" (click)="searchChanged.next($event)">
-                            <span>
-                                <fa-icon icon="search"></fa-icon>
-                            </span>
-                        </button>
-                    </span>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <button class="btn btn-primary float-right" has-any-authority="['ROLE_USER']" [routerLink]="['nuevo']">
                     <span>
                         Nuevo Presupuesto

@@ -223,7 +223,7 @@ public class ExpertoPresupuesto {
         }
     }
 
-    public Page<DTOPresupuesto> buscarPresupuestos(String filtro, Optional<Long> estado, Pageable pageable) {
+    public Page<DTOPresupuesto> buscarPresupuestos(String filtro, Optional<Long> estado, Boolean modelo, Pageable pageable) {
         // Busco todos los presupuestos a mostrar dependiendo los permisos del usuario
         // Jefe o Admin pueden ver todos
         // Encargado y usuario pueden ver los asignados
@@ -232,13 +232,13 @@ public class ExpertoPresupuesto {
 
         if (estado.isPresent()){
             presupuestos = presupuestoRepository
-                    .findDistinctByEstadoPresupuestoIdAndClientePersonaNombreContainsAndSucursalIdOrEstadoPresupuestoIdAndClientePersonaApellidoContainsAndSucursalIdOrEstadoPresupuestoIdAndDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdOrEstadoPresupuestoIdAndDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdOrModeloOrderByIdDesc(
-                            estado.get(), filtro, empleado.getSucursal().getId(), estado.get(), filtro, empleado.getSucursal().getId(), estado.get(), filtro, empleado.getSucursal().getId(), estado.get(), filtro, empleado.getSucursal().getId(), true, pageable);
+                    .findDistinctByEstadoPresupuestoIdAndClientePersonaNombreContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndClientePersonaApellidoContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
+                            estado.get(), filtro, empleado.getSucursal().getId(), modelo, estado.get(), filtro, empleado.getSucursal().getId(), modelo, estado.get(), filtro, empleado.getSucursal().getId(), modelo, estado.get(), filtro, empleado.getSucursal().getId(), modelo, pageable);
 
         } else {
             presupuestos = presupuestoRepository
-                    .findDistinctByClientePersonaNombreContainsAndSucursalIdOrClientePersonaApellidoContainsAndSucursalIdOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdOrModeloOrderByIdDesc(
-                            filtro, empleado.getSucursal().getId(), filtro, empleado.getSucursal().getId(), filtro, empleado.getSucursal().getId(), filtro, empleado.getSucursal().getId(), true, pageable);
+                    .findDistinctByClientePersonaNombreContainsAndSucursalIdAndModeloOrClientePersonaApellidoContainsAndSucursalIdAndModeloOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
+                            filtro, empleado.getSucursal().getId(), modelo, filtro, empleado.getSucursal().getId(), modelo, filtro, empleado.getSucursal().getId(), modelo, filtro, empleado.getSucursal().getId(), modelo, pageable);
         }
 
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);

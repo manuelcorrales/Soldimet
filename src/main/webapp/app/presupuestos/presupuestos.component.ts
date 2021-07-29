@@ -20,6 +20,7 @@ export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresup
   toastrContainer: ViewContainerRef;
 
   imprimiendo = false;
+  modelo = false;
   estados: EstadoPresupuesto[];
   estado: EstadoPresupuesto = null;
 
@@ -55,9 +56,9 @@ export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresup
     );
   }
 
-  protected requestContent() {
+  public requestContent() {
     const estadoId = this.estado !== null ? this.estado.id : null;
-    this.searchableService.findByFilteredPage(this.searchText, estadoId, this.page - 1, this.pageSize).subscribe(
+    this.searchableService.findByFilteredPage(this.searchText, estadoId, this.modelo, this.page - 1, this.pageSize).subscribe(
       (response: Page<DtoPresupuestoCabeceraComponent>) => {
         super.totalItems = response.totalElements;
         super.content = response.content;

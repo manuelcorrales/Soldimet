@@ -71,14 +71,20 @@ public class PresupuestoController {
     public Page<DTOPresupuesto> buscarPresupuestos(
         @RequestParam(defaultValue = "") String filtro,
         @RequestParam("estado") Optional<Long> estado,
+        @RequestParam("modelo") Boolean modelo,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "200") Integer size
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Pageable paging = PageRequest.of(page, size, Sort.by("id").descending());
-        log.debug("request /api/presupuestos/getPresupuestos: {}", authentication);
+        log.debug(
+            "request /api/presupuestos/getPresupuestos: filtro: {}, estado: {}, page: {}, size: {}",
+            filtro,
+            estado,
+            page,
+            size
+        );
 
-        Page<DTOPresupuesto> presupuestos = expertoPresupuesto.buscarPresupuestos(filtro, estado, paging);
+        Page<DTOPresupuesto> presupuestos = expertoPresupuesto.buscarPresupuestos(filtro, estado, modelo, paging);
 
         log.debug("response /api/presupuestos/getPresupuestos: {}", presupuestos);
         return presupuestos;
