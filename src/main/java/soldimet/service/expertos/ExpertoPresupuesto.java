@@ -603,9 +603,21 @@ public class ExpertoPresupuesto {
 
     public Presupuesto buscarPresupuestoExistente(Long aplicacionId, Long cilindradaId) {
 
-        return presupuestoRepository
-                .findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdOrderByModeloDescIdDesc(
-                        aplicacionId, cilindradaId);
+        Presupuesto presupuesto = presupuestoRepository
+            .findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
+                aplicacionId,
+                cilindradaId,
+                true
+        );
+        if (presupuesto == null) {
+            presupuesto = presupuestoRepository
+                .findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
+                    aplicacionId,
+                    cilindradaId,
+                    false
+            );
+        }
+        return presupuesto;
     }
 
     public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId,

@@ -85,7 +85,7 @@ public interface ExtendedPresupuestoRepository extends PresupuestoRepository {
 
     public Presupuesto findByDetallePresupuestosIn(DetallePresupuesto detallePresupuesto);
 
-    public Presupuesto findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdOrderByModeloDescIdDesc(
-            Long aplicacionIdd, Long cilindradaId);
+    public Presupuesto findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
+            Long aplicacionId, Long cilindradaId, Boolean modelo);
 
 }

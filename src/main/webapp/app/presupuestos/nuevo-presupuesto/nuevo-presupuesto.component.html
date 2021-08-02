@@ -15,6 +15,7 @@
                     <h5 class="card-title">
                         Se encontró un modelo de presupuesto para este motor!
                         <small *ngFor="let detalleViejo of presupuestoViejo?.detallePresupuestos"> ({{detalleViejo?.tipoParteMotor?.nombreTipoParteMotor}})</small>.
+                        <a target="_blank" [routerLink]="['/presupuestos', presupuestoViejo.id, 'ver']">Ver presupuesto.</a>
                     </h5>
                     <p class="card-text">
                         Se va a utilizar como base para la creación de este presupuesto <small *ngIf="!presupuestoViejo.modelo"> (No es un modelo)</small>.
