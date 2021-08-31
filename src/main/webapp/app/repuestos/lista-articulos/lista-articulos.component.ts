@@ -13,7 +13,7 @@ import { Page } from '../../dto/page/page';
 @Component({
   selector: 'jhi-lista-articulos',
   templateUrl: './lista-articulos.component.html',
-  styleUrls: ['./lista-articulos.component.scss']
+  styleUrls: ['./lista-articulos.component.scss'],
 })
 export class ListaArticulosComponent extends BaseFilterPageableComponent<Articulo> implements OnInit {
   @ViewChild('toastr', { static: false })
@@ -39,13 +39,6 @@ export class ListaArticulosComponent extends BaseFilterPageableComponent<Articul
 
   ngOnInit() {
     super.ngOnInit();
-    this.content
-      .map((articulo: Articulo) => articulo.tipoRepuesto)
-      .forEach((repuesto: TipoRepuesto) => {
-        if (!this.tipoRepuestos.some(repList => repList.id === repuesto.id)) {
-          this.tipoRepuestos.push(repuesto);
-        }
-      });
   }
 
   public requestContent() {
@@ -53,9 +46,20 @@ export class ListaArticulosComponent extends BaseFilterPageableComponent<Articul
       (response: Page<Articulo>) => {
         this.totalItems = response.totalElements;
         this.content = response.content;
+        this.filtrarTiposRepuesto();
       },
       error => this.onError(error.message)
     );
+  }
+
+  public filtrarTiposRepuesto() {
+    this.content
+      .map((articulo: Articulo) => articulo.tipoRepuesto)
+      .forEach((repuesto: TipoRepuesto) => {
+        if (!this.tipoRepuestos.some(repList => repList.id === repuesto.id)) {
+          this.tipoRepuestos.push(repuesto);
+        }
+      });
   }
 
   modificarPorcentageLista(marca: Marca, porcentage: number) {
