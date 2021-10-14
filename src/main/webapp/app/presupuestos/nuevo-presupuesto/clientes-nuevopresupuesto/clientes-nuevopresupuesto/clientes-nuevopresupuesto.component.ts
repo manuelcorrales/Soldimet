@@ -10,7 +10,7 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
 @Component({
   selector: 'jhi-clientes-nuevopresupuesto',
   templateUrl: './clientes-nuevopresupuesto.component.html',
-  styles: []
+  styles: [],
 })
 export class ClientesNuevopresupuestoComponent implements OnInit {
   clientes: Cliente[] = [];
@@ -39,10 +39,7 @@ export class ClientesNuevopresupuestoComponent implements OnInit {
 
   formatterCliente = (result: Cliente) => result.persona.nombre + ' ' + result.persona.apellido;
   searchCliente = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged()
-    );
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
     const clicksWithClosedPopup$ = this.clickCliente$.pipe(filter(() => !this.instanceCliente.isPopupOpen()));
     const inputFocus$ = this.focusCliente$;
 

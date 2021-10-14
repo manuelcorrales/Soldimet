@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'jhi-pedidos',
   templateUrl: './pedidos.component.html',
-  styles: ['.pedidos-style.css']
+  styles: ['.pedidos-style.css'],
 })
 export class PedidosComponent implements OnInit {
   @ViewChild('toastr', { static: false })

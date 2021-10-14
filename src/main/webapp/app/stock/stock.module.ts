@@ -18,6 +18,6 @@ const STOCK_ROUTES_ALL = [...STOCK_ROUTES, ...STOCK_POPUP_ROUTE];
   declarations: [StockComponent, CreateUpdateStockComponent, StockModalPopupComponent],
   entryComponents: [StockComponent, CreateUpdateStockComponent],
   exports: [RouterModule],
-  providers: [StockService, StockModalPopupService]
+  providers: [StockService, StockModalPopupService],
 })
 export class StockModule {}

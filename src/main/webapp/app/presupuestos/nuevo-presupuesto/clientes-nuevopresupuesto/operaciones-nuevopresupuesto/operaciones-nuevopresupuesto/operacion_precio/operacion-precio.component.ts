@@ -5,7 +5,7 @@ import { CostoOperacion } from 'app/shared/model/costo-operacion.model';
 @Component({
   selector: 'jhi-operacion-precio',
   templateUrl: './operacion-precio.component.html',
-  styles: []
+  styles: [],
 })
 export class OperacionPrecioComponent implements OnInit {
   @Input() costoOperacion: CostoOperacion;

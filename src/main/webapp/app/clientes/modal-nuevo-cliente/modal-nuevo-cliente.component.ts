@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'jhi-modal-nuevo-cliente',
-  templateUrl: './modal-nuevo-cliente.component.html'
+  templateUrl: './modal-nuevo-cliente.component.html',
 })
 export class ModalNuevoClienteComponent implements OnInit {
   cliente: Cliente;
@@ -101,7 +101,10 @@ export class ModalNuevoClienteComponent implements OnInit {
   }
 
   private subscribeToSavePersonaResponse(result: Observable<HttpResponse<Persona>>) {
-    result.subscribe((res: HttpResponse<Persona>) => this.onSavePersonaSuccess(res.body), (res: Response) => this.onSavePersonaError());
+    result.subscribe(
+      (res: HttpResponse<Persona>) => this.onSavePersonaSuccess(res.body),
+      (res: Response) => this.onSavePersonaError()
+    );
   }
 
   private onSavePersonaSuccess(result: Persona) {
@@ -118,7 +121,10 @@ export class ModalNuevoClienteComponent implements OnInit {
   }
 
   private subscribeToSaveClienteResponse(result: Observable<HttpResponse<Cliente>>) {
-    result.subscribe((res: HttpResponse<Cliente>) => this.onSaveClienteSuccess(res.body), (res: Response) => this.onSaveClienteError());
+    result.subscribe(
+      (res: HttpResponse<Cliente>) => this.onSaveClienteSuccess(res.body),
+      (res: Response) => this.onSaveClienteError()
+    );
   }
 
   private onSaveClienteSuccess(result: Cliente) {
@@ -142,7 +148,7 @@ export class ModalNuevoClienteComponent implements OnInit {
 
 @Component({
   selector: 'jhi-cliente-modal-popup',
-  template: ''
+  template: '',
 })
 export class ClienteModalPopupComponent implements OnInit, OnDestroy {
   routeSub: any;

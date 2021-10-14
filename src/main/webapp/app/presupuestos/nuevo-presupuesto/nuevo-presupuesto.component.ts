@@ -19,7 +19,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'jhi-nuevo-presupuesto',
   templateUrl: './nuevo-presupuesto.component.html',
-  styles: []
+  styles: [],
 })
 export class NuevoPresupuestoComponent implements OnInit {
   fecha: Date;
@@ -118,7 +118,10 @@ export class NuevoPresupuestoComponent implements OnInit {
   }
 
   private subscribeToSaveResponse(result: Observable<Presupuesto>) {
-    result.subscribe((res: Presupuesto) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res));
+    result.subscribe(
+      (res: Presupuesto) => this.onSaveSuccess(res),
+      (res: Response) => this.onSaveError(res)
+    );
   }
 
   private onSaveSuccess(result: Presupuesto) {

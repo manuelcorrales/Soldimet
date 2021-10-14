@@ -2,7 +2,6 @@ package soldimet.controller;
 
 import java.net.URISyntaxException;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import soldimet.domain.CostoRepuesto;
 import soldimet.domain.PedidoRepuesto;
 import soldimet.service.dto.DTOPedidoCabecera;
@@ -39,15 +37,13 @@ public class PedidosController {
         List<PedidoRepuesto> pedidos = expertoPedidos.getPedidosPendientes();
 
         if (pedidos != null) {
-            ResponseEntity<List<PedidoRepuesto>> response = new ResponseEntity<List<PedidoRepuesto>>(pedidos,
-                    HttpStatus.OK);
+            ResponseEntity<List<PedidoRepuesto>> response = new ResponseEntity<List<PedidoRepuesto>>(pedidos, HttpStatus.OK);
             log.debug("response api/pedidos/getPedidosPendientes: {}", response);
             return response;
         } else {
             log.error("ERROR api/pedidos/getPedidosPendientes: No se encontraron pedidos pendientes");
             return ResponseEntity.status(500).body(null);
         }
-
     }
 
     @GetMapping("/getPedidosCabecera")
@@ -57,15 +53,13 @@ public class PedidosController {
         List<DTOPedidoCabecera> pedidos = expertoPedidos.getPedidosCabecera();
 
         if (pedidos != null) {
-            ResponseEntity<List<DTOPedidoCabecera>> response = new ResponseEntity<List<DTOPedidoCabecera>>(pedidos,
-                    HttpStatus.OK);
+            ResponseEntity<List<DTOPedidoCabecera>> response = new ResponseEntity<List<DTOPedidoCabecera>>(pedidos, HttpStatus.OK);
             log.debug("response api/pedidos/getPedidosCabecera: {}", response);
             return response;
         } else {
             log.debug("ERROR api/pedidos/getPedidosCabecera");
             return ResponseEntity.status(500).body(null);
         }
-
     }
 
     @Transactional
@@ -78,11 +72,9 @@ public class PedidosController {
             ResponseEntity<CostoRepuesto> response = new ResponseEntity<CostoRepuesto>(costoRepuesto, HttpStatus.OK);
             log.debug("response api/pedidos/updateCostoRepuesto: {}", response);
             return response;
-
         } catch (Exception e) {
             throw new URISyntaxException(e.getMessage(), ENTITY_NAME);
         }
-
     }
 
     @PostMapping("/recibirRepuesto/")
@@ -99,7 +91,6 @@ public class PedidosController {
             log.debug("ERROR api/pedidos/recibirRepuesto");
             return ResponseEntity.status(500).body(null);
         }
-
     }
 
     @GetMapping("/get/{id}")
@@ -109,7 +100,6 @@ public class PedidosController {
         log.debug("response /api/pedidos/get/: {}", pedido);
         return pedido;
     }
-
     // @PostMapping("/updateLista")
     // public DTOListaPrecioManoDeObra actualizarListaPRecio(@RequestBody
     // DTOListaPrecioManoDeObra dtoLista) {

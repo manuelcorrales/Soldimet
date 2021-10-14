@@ -7,21 +7,17 @@ package soldimet.service.dto;
  */
 public class DTOArticuloCUHacerPresupuesto {
 
-	private String marca;
-	private String nombreArticulo;
-	private float precio;
-	private String proveedor;
-	private String rubro;
-        private String codigoArticuloProveedor;
-        private int articuloID;
+    private String marca;
+    private String nombreArticulo;
+    private float precio;
+    private String proveedor;
+    private String rubro;
+    private String codigoArticuloProveedor;
+    private int articuloID;
 
-	public DTOArticuloCUHacerPresupuesto(){
+    public DTOArticuloCUHacerPresupuesto() {}
 
-	}
-
-	public void finalize() throws Throwable {
-
-	}
+    public void finalize() throws Throwable {}
 
     public String getMarca() {
         return marca;
@@ -78,7 +74,4 @@ public class DTOArticuloCUHacerPresupuesto {
     public void setArticuloID(int articuloID) {
         this.articuloID = articuloID;
     }
-
-
-
 }

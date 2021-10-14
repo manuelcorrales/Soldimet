@@ -9,9 +9,9 @@ export const PEDIDOS_SUBROUTES: Routes = [
     component: PedidosComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Pedidos'
-    }
-  }
+      pageTitle: 'Pedidos',
+    },
+  },
 ];
 export const PEDIDOS_NEW_POPUP_ROUTE: Routes = [
   {
@@ -19,11 +19,11 @@ export const PEDIDOS_NEW_POPUP_ROUTE: Routes = [
     component: PedidoPendienteModalPopupComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Pedidos Pendientes'
+      pageTitle: 'Pedidos Pendientes',
     },
     canActivate: [UserRouteAccessService],
-    outlet: 'popup'
-  }
+    outlet: 'popup',
+  },
   // {
   //     path: 'clientes/:id/editar',
   //     component: ClienteModalPopupComponent,

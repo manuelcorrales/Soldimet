@@ -1,7 +1,6 @@
 package soldimet.controller;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import soldimet.domain.Operacion;
 import soldimet.service.dto.DTOListaPrecioManoDeObra;
 import soldimet.service.expertos.ExpertoCUModificarCostosDeManoDeObra;
-
 
 @RestController
 @RequestMapping("/api/operaciones")
@@ -30,13 +27,12 @@ public class OperacionesController {
     private ExpertoCUModificarCostosDeManoDeObra expertoOperaciones;
 
     @GetMapping("/getListaPreciosOperacionesActualizada")
-    public List<DTOListaPrecioManoDeObra> getListaPreciosOperacionesActualizada(){
+    public List<DTOListaPrecioManoDeObra> getListaPreciosOperacionesActualizada() {
         log.info("request api/operaciones/getListaPreciosOperacionesActualizada");
 
-        List<DTOListaPrecioManoDeObra> listaDto =  expertoOperaciones.buscarCostos();
+        List<DTOListaPrecioManoDeObra> listaDto = expertoOperaciones.buscarCostos();
         log.debug("response api/operaciones/getListaPreciosOperacionesActualizada: {}", listaDto);
         return listaDto;
-
     }
 
     @PostMapping("/updateLista")
@@ -56,5 +52,4 @@ public class OperacionesController {
         log.debug("response api/operaciones/agregar_en_listas: {}", operacion, guardado);
         return guardado;
     }
-
 }

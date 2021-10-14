@@ -1,23 +1,22 @@
 <div class="jh-card">
-    <div class="container-fluid card shadow">
-        <br>
-        <ngb-tabset #tabSet="ngbTabset">
-            <div *ngFor="let lista of listas">
-                <ngb-tab title=" {{lista.numeroLista}} ">
-                    <ng-template ngbTabContent>
-                        <jhi-operacion-lista [lista]="lista">
-                        </jhi-operacion-lista>
-                    </ng-template>
-                </ngb-tab>
-            </div>
-            <!-- <ngb-tab title="Subir archivo" [disabled]="true" id="archivo">
+  <div class="container-fluid card shadow">
+    <br />
+    <ngb-tabset #tabSet="ngbTabset">
+      <div *ngFor="let lista of listas">
+        <ngb-tab title=" {{ lista.numeroLista }} ">
+          <ng-template ngbTabContent>
+            <jhi-operacion-lista [lista]="lista"> </jhi-operacion-lista>
+          </ng-template>
+        </ngb-tab>
+      </div>
+      <!-- <ngb-tab title="Subir archivo" [disabled]="true" id="archivo">
                 <ng-template ngbTabContent>
                     <div>
                         <p><ngb-progressbar type="info" showValue="true" [striped]="true" [animated]="true" value="10">10%</ngb-progressbar></p>
                     </div>
                 </ng-template>
             </ngb-tab> -->
-        </ngb-tabset>
-        <br>
-    </div>
+    </ngb-tabset>
+    <br />
+  </div>
 </div>

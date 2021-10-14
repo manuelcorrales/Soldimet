@@ -13,11 +13,8 @@ import java.util.Date;
  */
 public class DTOMovimientoExistente {
 
-
-
     //DATOS DE EMPLEADO QUE REALIZO EL MOVIMIENTO
     private String nombreEmpleado;
-
 
     //DATOS DE FORMA DE PAGO
     private String tipoFormaDePago;
@@ -34,17 +31,10 @@ public class DTOMovimientoExistente {
     private String pagoTarjetaNombreTarjeta;
     private String pagoTarjetaUltimosDigitos;
     private String pagoTarjetaCantidadDeCuotas;
-
     //DATOS FORMA DE PAGO EFECTIVO
-
-
 
     //DATOS DE COBRANZA
 
-
-
-
     //DATOS DE PAGO
-
 
 }

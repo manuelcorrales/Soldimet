@@ -13,8 +13,7 @@ public class DTODetalle {
 
     private String idDetalle;
 
-    public DTODetalle() {
-    }
+    public DTODetalle() {}
 
     public DTODetalle(String idDetalle) {
         this.idDetalle = idDetalle;
@@ -27,6 +26,4 @@ public class DTODetalle {
     public void setIdDetalle(String idDetalle) {
         this.idDetalle = idDetalle;
     }
-
-
 }

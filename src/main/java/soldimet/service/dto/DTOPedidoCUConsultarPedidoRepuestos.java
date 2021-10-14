@@ -26,11 +26,9 @@ public class DTOPedidoCUConsultarPedidoRepuestos {
 
     private ArrayList<DTODetallePedidoCUConsultarPedidoRepuestos> m_DetallePedido;
 
+    public DTOPedidoCUConsultarPedidoRepuestos() {}
 
-    public DTOPedidoCUConsultarPedidoRepuestos() {
-    }
-
-    public void agregarDetalle(DTODetallePedidoCUConsultarPedidoRepuestos detalle){
+    public void agregarDetalle(DTODetallePedidoCUConsultarPedidoRepuestos detalle) {
         this.m_DetallePedido.add(detalle);
     }
 
@@ -41,7 +39,6 @@ public class DTOPedidoCUConsultarPedidoRepuestos {
     public void setTipoDTO(String tipoDTO) {
         this.tipoDTO = tipoDTO;
     }
-
 
     public LocalDate getFechaCreacion() {
         return fechaCreacion;
@@ -98,16 +95,4 @@ public class DTOPedidoCUConsultarPedidoRepuestos {
     public void setIdPresupuesto(Long idPresupuesto) {
         this.idPresupuesto = idPresupuesto;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

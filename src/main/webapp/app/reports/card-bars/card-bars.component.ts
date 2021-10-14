@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'jhi-card-bars',
   templateUrl: './card-bars.component.html',
-  styleUrls: ['./card-bars.component.scss']
+  styleUrls: ['./card-bars.component.scss'],
 })
 export class CardBarsComponent implements OnInit {
   @Input() metric = 'Cajas Hoy por sucursal';
@@ -18,18 +18,18 @@ export class CardBarsComponent implements OnInit {
   showYAxisLabel = true;
 
   colorScheme = {
-    domain: ['#5AA454', '#A10A28']
+    domain: ['#5AA454', '#A10A28'],
   };
 
   @Input() data = [
     {
       name: 'San Martin',
-      series: []
+      series: [],
     },
     {
       name: 'Guaymallen',
-      series: []
-    }
+      series: [],
+    },
   ];
 
   constructor() {}

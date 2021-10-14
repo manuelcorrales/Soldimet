@@ -5,7 +5,6 @@
  */
 package soldimet.service.expertos;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import soldimet.constant.Globales;
 import soldimet.domain.EstadoMovimiento;
@@ -28,21 +27,16 @@ public class ExpertoCUCancelarMovimiento {
     @Autowired
     private Globales globales;
 
-
-    public void eliminarMovimiento(Long movimiento){
-
-
+    public void eliminarMovimiento(Long movimiento) {
         EstadoMovimiento estadoBaja = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_BAJA);
 
         EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
-        Movimiento mov =movimientoRepository.findById(movimiento).get();
+        Movimiento mov = movimientoRepository.findById(movimiento).get();
 
         mov.setEstado(estadoBaja);
 
         //GUARDAR MOVIMIENDO CAMBIADO
         movimientoRepository.save(mov);
-
     }
-
 }

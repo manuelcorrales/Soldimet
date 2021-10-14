@@ -22,7 +22,7 @@ import { JhiFlagsComponent } from './flags/flags.component';
   imports: [
     SoldimetSharedModule,
     /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
-    RouterModule.forChild(adminState)
+    RouterModule.forChild(adminState),
   ],
   declarations: [
     AuditsComponent,
@@ -36,8 +36,8 @@ import { JhiFlagsComponent } from './flags/flags.component';
     JhiHealthModalComponent,
     JhiFlagsComponent,
     JhiDocsComponent,
-    JhiMetricsMonitoringComponent
+    JhiMetricsMonitoringComponent,
   ],
-  entryComponents: [UserMgmtDeleteDialogComponent, JhiHealthModalComponent]
+  entryComponents: [UserMgmtDeleteDialogComponent, JhiHealthModalComponent],
 })
 export class SoldimetAdminModule {}

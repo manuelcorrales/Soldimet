@@ -9,30 +9,30 @@ export const CAJAS_ROUTE: Routes = [
   {
     path: 'cajas',
     data: {
-      authorities: ['ROLE_USER']
+      authorities: ['ROLE_USER'],
     },
     canActivate: [UserRouteAccessService],
     children: [
       {
         path: '',
-        component: CajaComponent
+        component: CajaComponent,
       },
       {
         path: 'nuevo_movimiento',
         component: NuevoMovimientoComponent,
         data: {
-          pageTitle: 'Nuevo Movimiento'
-        }
+          pageTitle: 'Nuevo Movimiento',
+        },
       },
       {
         path: 'editar_movimiento',
         component: NuevoMovimientoComponent,
         data: {
-          pageTitle: 'Nuevo Movimiento'
-        }
-      }
-    ]
-  }
+          pageTitle: 'Nuevo Movimiento',
+        },
+      },
+    ],
+  },
 ];
 
 export const CAJA_POPUP_ROUTES: Routes = [
@@ -41,9 +41,9 @@ export const CAJA_POPUP_ROUTES: Routes = [
     component: BorrarMovimientoPopupComponent,
     data: {
       authorities: ['ROLE_JEFE', 'ROLE_ADMIN'],
-      pageTitle: 'Eliminar movimiento'
+      pageTitle: 'Eliminar movimiento',
     },
     canActivate: [UserRouteAccessService],
-    outlet: 'popup'
-  }
+    outlet: 'popup',
+  },
 ];

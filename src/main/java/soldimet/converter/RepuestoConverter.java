@@ -2,12 +2,10 @@ package soldimet.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
-
 import soldimet.domain.Articulo;
 import soldimet.domain.CostoRepuestoProveedor;
 import soldimet.domain.StockArticulo;
@@ -37,11 +35,8 @@ public class RepuestoConverter {
         dtoStockRepuestoCabecera.setVenta(repuesto.getValor());
         dtoStockRepuestoCabecera.setTipoRepuesto(repuesto.getTipoRepuesto().getNombreTipoRepuesto());
 
-
-
         return dtoStockRepuestoCabecera;
     }
-
 
     public Page<DTOStockRepuestoCabecera> convertirEntidadesAModelos(Page<StockArticulo> stockList) {
         ArrayList<DTOStockRepuestoCabecera> lista = new ArrayList<DTOStockRepuestoCabecera>();

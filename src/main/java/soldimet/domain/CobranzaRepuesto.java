@@ -31,7 +31,7 @@ public class CobranzaRepuesto implements Serializable {
     @JsonIgnoreProperties(value = { "tipoParteMotor" }, allowSetters = true)
     private TipoRepuesto tipoRepuesto;
 
-    @ManyToOne(cascade ={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, optional = true)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, optional = true)
     @JsonIgnoreProperties(value = { "estado", "marca", "tipoRepuesto" }, allowSetters = true)
     private Articulo articulo;
 

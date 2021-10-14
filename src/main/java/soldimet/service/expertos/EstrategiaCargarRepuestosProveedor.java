@@ -10,7 +10,15 @@ package soldimet.service.expertos;
  * @author Manu
  */
 public interface EstrategiaCargarRepuestosProveedor {
-
-    public void cargarRepuestos(String fuente, String Proveedor, String rubro, String descripcion,
-            String marca, String tipoRepuesto, float precio,String codigoArticuloProveedor, String ubicacion);
+    public void cargarRepuestos(
+        String fuente,
+        String Proveedor,
+        String rubro,
+        String descripcion,
+        String marca,
+        String tipoRepuesto,
+        float precio,
+        String codigoArticuloProveedor,
+        String ubicacion
+    );
 }

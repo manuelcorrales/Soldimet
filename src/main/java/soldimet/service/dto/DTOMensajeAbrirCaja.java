@@ -21,8 +21,5 @@ public class DTOMensajeAbrirCaja {
         this.mensaje = mensaje;
     }
 
-    public DTOMensajeAbrirCaja() {
-    }
-
-
+    public DTOMensajeAbrirCaja() {}
 }

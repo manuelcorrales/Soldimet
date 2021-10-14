@@ -11,12 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 
+import io.micrometer.core.lang.Nullable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-
 import javax.persistence.EntityManager;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -29,8 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
-
-import io.micrometer.core.lang.Nullable;
 import soldimet.SoldimetApp;
 import soldimet.constant.Globales;
 import soldimet.controller.PedidosController;
@@ -71,7 +68,7 @@ public class PedidoRepuestoTest {
      * Un pedido se crea si hay algun DetallePresupuesto con cobranza de repuestro
      * El pedido se crea solo con los detalles en estado pendiente de pedido
      * Los detalles no tienen costo de pedido (se crea cuando se hace)
-    */
+     */
 
     private static final LocalDate DEFAULT_FECHA_CREACION = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_CREACION = LocalDate.now(ZoneId.systemDefault());
@@ -84,7 +81,6 @@ public class PedidoRepuestoTest {
     private static final LocalDate DEFAULT_FECHA_RECIBO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_RECIBO = LocalDate.now(ZoneId.systemDefault());
     private static final LocalDate SMALLER_FECHA_RECIBO = LocalDate.ofEpochDay(-1L);
-
     // @Autowired
     // private Globales globales;
 
@@ -181,7 +177,6 @@ public class PedidoRepuestoTest {
     //         detallePedido = TestUtil.findAll(em, DetallePedido.class).get(0);
     //     }
     //     pedidoRepuesto.getDetallePedidos().add(detallePedido);
-
 
     //     return pedidoRepuesto;
     // }
@@ -454,8 +449,6 @@ public class PedidoRepuestoTest {
     //     assertThat(costoRepuesto.getTipoRepuesto()).isEqualTo(testCostoRepuesto.getTipoRepuesto().getId());
     //     assertThat(costoRepuesto.getProveedor()).isEqualTo(testCostoRepuesto.getProveedor().getId());
     //     assertThat(testCostoRepuesto.getEstado().getNombreEstado()).isEqualTo(globales.NOMBRE_ESTADO_COSTO_REPUESTO_RECIBIDO);
-
-
 
     // }
 }

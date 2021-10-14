@@ -1,16 +1,16 @@
 package soldimet.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link soldimet.domain.PedidoRepuesto} entity. This class is used
@@ -41,10 +41,9 @@ public class PedidoRepuestoCriteria implements Serializable, Criteria {
 
     private LongFilter documentTypeId;
 
-    public PedidoRepuestoCriteria(){
-    }
+    public PedidoRepuestoCriteria() {}
 
-    public PedidoRepuestoCriteria(PedidoRepuestoCriteria other){
+    public PedidoRepuestoCriteria(PedidoRepuestoCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.fechaCreacion = other.fechaCreacion == null ? null : other.fechaCreacion.copy();
         this.fechaPedido = other.fechaPedido == null ? null : other.fechaPedido.copy();
@@ -124,7 +123,6 @@ public class PedidoRepuestoCriteria implements Serializable, Criteria {
         this.documentTypeId = documentTypeId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -134,7 +132,7 @@ public class PedidoRepuestoCriteria implements Serializable, Criteria {
             return false;
         }
         final PedidoRepuestoCriteria that = (PedidoRepuestoCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(fechaCreacion, that.fechaCreacion) &&
             Objects.equals(fechaPedido, that.fechaPedido) &&
@@ -142,35 +140,37 @@ public class PedidoRepuestoCriteria implements Serializable, Criteria {
             Objects.equals(estadoPedidoRepuestoId, that.estadoPedidoRepuestoId) &&
             Objects.equals(detallePedidoId, that.detallePedidoId) &&
             Objects.equals(presupuestoId, that.presupuestoId) &&
-            Objects.equals(documentTypeId, that.documentTypeId);
+            Objects.equals(documentTypeId, that.documentTypeId)
+        );
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        fechaCreacion,
-        fechaPedido,
-        fechaRecibo,
-        estadoPedidoRepuestoId,
-        detallePedidoId,
-        presupuestoId,
-        documentTypeId
+            id,
+            fechaCreacion,
+            fechaPedido,
+            fechaRecibo,
+            estadoPedidoRepuestoId,
+            detallePedidoId,
+            presupuestoId,
+            documentTypeId
         );
     }
 
     @Override
     public String toString() {
-        return "PedidoRepuestoCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (fechaCreacion != null ? "fechaCreacion=" + fechaCreacion + ", " : "") +
-                (fechaPedido != null ? "fechaPedido=" + fechaPedido + ", " : "") +
-                (fechaRecibo != null ? "fechaRecibo=" + fechaRecibo + ", " : "") +
-                (estadoPedidoRepuestoId != null ? "estadoPedidoRepuestoId=" + estadoPedidoRepuestoId + ", " : "") +
-                (detallePedidoId != null ? "detallePedidoId=" + detallePedidoId + ", " : "") +
-                (presupuestoId != null ? "presupuestoId=" + presupuestoId + ", " : "") +
-                (documentTypeId != null ? "documentTypeId=" + documentTypeId + ", " : "") +
-            "}";
+        return (
+            "PedidoRepuestoCriteria{" +
+            (id != null ? "id=" + id + ", " : "") +
+            (fechaCreacion != null ? "fechaCreacion=" + fechaCreacion + ", " : "") +
+            (fechaPedido != null ? "fechaPedido=" + fechaPedido + ", " : "") +
+            (fechaRecibo != null ? "fechaRecibo=" + fechaRecibo + ", " : "") +
+            (estadoPedidoRepuestoId != null ? "estadoPedidoRepuestoId=" + estadoPedidoRepuestoId + ", " : "") +
+            (detallePedidoId != null ? "detallePedidoId=" + detallePedidoId + ", " : "") +
+            (presupuestoId != null ? "presupuestoId=" + presupuestoId + ", " : "") +
+            (documentTypeId != null ? "documentTypeId=" + documentTypeId + ", " : "") +
+            "}"
+        );
     }
-
 }

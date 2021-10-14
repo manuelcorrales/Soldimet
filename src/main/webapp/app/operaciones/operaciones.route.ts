@@ -8,7 +8,7 @@ export const OPERACIONES_ROUTE: Route = {
   component: OperacionesComponent,
   data: {
     authorities: ['ROLE_USER'],
-    pageTitle: 'Operaciones'
+    pageTitle: 'Operaciones',
   },
-  canActivate: [UserRouteAccessService]
+  canActivate: [UserRouteAccessService],
 };

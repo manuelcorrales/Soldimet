@@ -1,11 +1,9 @@
 package soldimet.repository.extendedRepository;
 
-import soldimet.domain.EstadoDetallePedido;
-import soldimet.repository.EstadoDetallePedidoRepository;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.EstadoDetallePedido;
+import soldimet.repository.EstadoDetallePedidoRepository;
 
 /**
  * Spring Data  repository for the EstadoDetallePedido entity.
@@ -13,6 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedEstadoDetallePedidoRepository extends EstadoDetallePedidoRepository {
-
     EstadoDetallePedido findByNombreEstado(String nombreEstado);
 }

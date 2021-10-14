@@ -1,4 +1,5 @@
 package soldimet.service.dto;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +10,10 @@ import java.util.List;
  */
 public class DTOCajaDiario {
 
-    private String name;  // Sucursal
-	public List<DTOSerie> series = new ArrayList<DTOSerie>();
+    private String name; // Sucursal
+    public List<DTOSerie> series = new ArrayList<DTOSerie>();
 
-	public DTOCajaDiario(){
-
-    }
+    public DTOCajaDiario() {}
 
     /**
      * @return the name
@@ -47,5 +46,4 @@ public class DTOCajaDiario {
     public void addSerie(DTOSerie serie) {
         this.series.add(serie);
     }
-
 }

@@ -1,46 +1,54 @@
 <div class="card jh-card border-info shadow">
-    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
-        Detalle Movimiento
+  <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498db !important">Detalle Movimiento</div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label>Presupuesto</label>
+        <input
+          type="text"
+          placeholder="Buscar Presupuesto"
+          id="typeahead-focusPresup"
+          type="text"
+          class="form-control"
+          name="presup_search"
+          [resultFormatter]="formatterPresup"
+          [inputFormatter]="formatterPresup"
+          [ngbTypeahead]="searchPresup"
+          (selectItem)="seleccionarPresupuesto($event)"
+          [showHint]="true"
+          [editable]="false"
+          [class.is-invalid]="searchFailed"
+        />
+        <small *ngIf="searchingPresupuesto" class="form-text text-muted">buscando...</small>
+        <small *ngIf="noResults && !searchingPresupuesto" class="form-text text-muted">No hay resultados.</small>
+        <div class="invalid-feedback" *ngIf="searchFailed">Error en la búsqueda.</div>
+      </div>
+      <div *ngIf="presupuesto" class="col">
+        <p>Cliente</p>
+        <label>{{ presupuesto.cliente }} </label>
+      </div>
+      <div *ngIf="presupuesto?.motor" class="col">
+        <p>Motor</p>
+        <label>{{ presupuesto.motor }} </label>
+      </div>
+      <div *ngIf="presupuesto?.isSoldadura" class="col">
+        <p>Detalle</p>
+        <label>Soldadura</label>
+      </div>
+      <div *ngIf="presupuesto" class="col">
+        <p>Importe</p>
+        <label>{{ presupuesto.importe | currency: 'ARS' }} </label>
+      </div>
+      <div *ngIf="presupuesto" class="col">
+        <label>Total operaciones: {{ presupuesto?.totalOperaciones | currency: 'ARS' }} </label>
+        <label>Total repuestos: {{ presupuesto?.totalRepuestos | currency: 'ARS' }} </label>
+      </div>
+      <div *ngIf="presupuesto" class="col">
+        <p>Fecha</p>
+        <label>{{ presupuesto.fecha }} </label>
+      </div>
     </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label>Presupuesto</label>
-                <input type="text" placeholder="Buscar Presupuesto" id="typeahead-focusPresup" type="text" class="form-control" name="presup_search"
-                    [resultFormatter]="formatterPresup" [inputFormatter]="formatterPresup" [ngbTypeahead]="searchPresup"
-                    (selectItem)="seleccionarPresupuesto($event)" [showHint]='true' [editable]='false'
-                    [class.is-invalid]="searchFailed"
-                />
-                <small *ngIf="searchingPresupuesto" class="form-text text-muted">buscando...</small>
-                <small *ngIf="noResults && !searchingPresupuesto" class="form-text text-muted">No hay resultados.</small>
-                <div class="invalid-feedback" *ngIf="searchFailed">Error en la búsqueda.</div>
-            </div>
-            <div *ngIf="presupuesto" class="col">
-                <p>Cliente </p>
-                <label>{{presupuesto.cliente}} </label>
-            </div>
-            <div *ngIf="presupuesto?.motor" class="col">
-                <p>Motor </p>
-                <label>{{presupuesto.motor}} </label>
-            </div>
-            <div *ngIf="presupuesto?.isSoldadura" class="col">
-                <p>Detalle </p>
-                <label>Soldadura</label>
-            </div>
-            <div *ngIf="presupuesto" class="col">
-                <p>Importe </p>
-                <label>{{presupuesto.importe | currency: 'ARS'}} </label>
-            </div>
-            <div *ngIf="presupuesto" class="col">
-                <label>Total operaciones: {{presupuesto?.totalOperaciones | currency: 'ARS'}} </label>
-                <label>Total repuestos: {{presupuesto?.totalRepuestos | currency: 'ARS'}} </label>
-            </div>
-            <div *ngIf="presupuesto" class="col">
-                <p>Fecha </p>
-                <label>{{presupuesto.fecha}} </label>
-            </div>
-        </div>
-        <!--div *ngIf="costoRepuestos && costoRepuestos.length > 0 && !presupuesto?.isSoldadura" class="container-fluid">
+    <!--div *ngIf="costoRepuestos && costoRepuestos.length > 0 && !presupuesto?.isSoldadura" class="container-fluid">
             <label>Repuestos</label>
             <div class="row">
                 <div class="col-md-3" *ngFor="let costoRepuesto of costoRepuestos">
@@ -55,5 +63,5 @@
                 </div>
             </div>
         </div-->
-    </div>
+  </div>
 </div>

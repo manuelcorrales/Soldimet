@@ -8,7 +8,7 @@ import { IMedidaArticulo } from '../../../../shared/model/medida-articulo.model'
 @Component({
   selector: 'jhi-detalle-pedido',
   templateUrl: './detalle-pedido.component.html',
-  styles: []
+  styles: [],
 })
 export class DetallePedidoNewComponent implements OnInit {
   @Input()

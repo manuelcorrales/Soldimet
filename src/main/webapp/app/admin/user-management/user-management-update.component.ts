@@ -7,7 +7,7 @@ import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'jhi-user-mgmt-update',
-  templateUrl: './user-management-update.component.html'
+  templateUrl: './user-management-update.component.html',
 })
 export class UserMgmtUpdateComponent implements OnInit {
   user: User;
@@ -23,7 +23,7 @@ export class UserMgmtUpdateComponent implements OnInit {
     email: ['', [Validators.minLength(5), Validators.maxLength(254), Validators.email]],
     activated: [true],
     langKey: [],
-    authorities: []
+    authorities: [],
   });
 
   constructor(private userService: UserService, private route: ActivatedRoute, private router: Router, private fb: FormBuilder) {}
@@ -49,7 +49,7 @@ export class UserMgmtUpdateComponent implements OnInit {
       email: user.email,
       activated: user.activated,
       langKey: user.langKey,
-      authorities: user.authorities
+      authorities: user.authorities,
     });
   }
 
@@ -61,10 +61,16 @@ export class UserMgmtUpdateComponent implements OnInit {
     this.isSaving = true;
     this.updateUser(this.user);
     if (this.user.id !== null) {
-      this.userService.update(this.user).subscribe(response => this.onSaveSuccess(response), () => this.onSaveError());
+      this.userService.update(this.user).subscribe(
+        response => this.onSaveSuccess(response),
+        () => this.onSaveError()
+      );
     } else {
       this.user.langKey = 'en';
-      this.userService.create(this.user).subscribe(response => this.onSaveSuccess(response), () => this.onSaveError());
+      this.userService.create(this.user).subscribe(
+        response => this.onSaveSuccess(response),
+        () => this.onSaveError()
+      );
     }
   }
 

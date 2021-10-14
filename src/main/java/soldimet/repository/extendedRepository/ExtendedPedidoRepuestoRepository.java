@@ -1,16 +1,13 @@
 package soldimet.repository.extendedRepository;
 
 import java.util.List;
-
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 import soldimet.domain.DetallePedido;
 import soldimet.domain.EstadoPedidoRepuesto;
 import soldimet.domain.PedidoRepuesto;
-import org.springframework.stereotype.Repository;
-
-import org.springframework.data.jpa.repository.*;
 import soldimet.domain.Presupuesto;
 import soldimet.repository.PedidoRepuestoRepository;
-
 
 /**
  * Spring Data JPA repository for the PedidoRepuesto entity.
@@ -18,10 +15,10 @@ import soldimet.repository.PedidoRepuestoRepository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedPedidoRepuestoRepository extends PedidoRepuestoRepository {
-
     public PedidoRepuesto findByPresupuesto(Presupuesto presupuesto);
 
-    @EntityGraph(attributePaths = {
+    @EntityGraph(
+        attributePaths = {
             "estadoPedidoRepuesto",
             "detallePedidos",
             "presupuesto",
@@ -44,7 +41,8 @@ public interface ExtendedPedidoRepuestoRepository extends PedidoRepuestoReposito
             "detallePedidos.costoRepuestos.medidaArticulo",
             "detallePedidos.costoRepuestos.articulo",
             "detallePedidos.costoRepuestos.articulo.marca",
-        })
+        }
+    )
     public PedidoRepuesto findCompleteById(Long id);
 
     public List<PedidoRepuesto> findAllByOrderByIdDesc();

@@ -16,7 +16,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 @Component({
   selector: 'jhi-nuevo-movimiento-detalle',
   templateUrl: './nuevo-movimiento-detalle.component.html',
-  styleUrls: ['./nuevo-movimiento-detalle.component.scss']
+  styleUrls: ['./nuevo-movimiento-detalle.component.scss'],
 })
 export class NuevoMovimientoDetalleComponent implements OnInit {
   isPresupuesto = false;

@@ -1,4 +1,5 @@
 package soldimet.service.dto;
+
 import java.util.List;
 
 /**
@@ -14,9 +15,7 @@ public class DTOCaja {
     private Float totalCaja;
     private Float totalMensual;
 
-	public DTOCaja(){
-
-	}
+    public DTOCaja() {}
 
     /**
      * @return the cajaId
@@ -52,6 +51,7 @@ public class DTOCaja {
     public Float getTotalCaja() {
         return totalCaja;
     }
+
     /**
      * @param totalCaja the totalCaja to set
      */
@@ -65,6 +65,7 @@ public class DTOCaja {
     public String getFechaCaja() {
         return fechaCaja;
     }
+
     /**
      * @param fechaCaja the fechaCaja to set
      */
@@ -78,11 +79,11 @@ public class DTOCaja {
     public Float getTotalMensual() {
         return totalMensual;
     }
+
     /**
      * @param totalMensual the totalMensual to set
      */
     public void setTotalMensual(Float totalMensual) {
         this.totalMensual = totalMensual;
     }
-
 }

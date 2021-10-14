@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import soldimet.service.dto.DTOCajaDiario;
 import soldimet.service.dto.DTOMetricaContable;
 import soldimet.service.expertos.ExpertoReportes;
@@ -81,22 +79,13 @@ public class ReporteController {
         @RequestParam("fecha_fin") @DateTimeFormat(iso = ISO.DATE) LocalDate fechaFin,
         @RequestParam("sucursal") Long sucursal
     ) throws IOException {
-        log.info(
-            "request api/reportes/imprimirRepuestos: fechaIn {}, fechaFin {}, sucursal {}",
-            fechaInicio,
-            fechaFin,
-            sucursal
-        );
+        log.info("request api/reportes/imprimirRepuestos: fechaIn {}, fechaFin {}, sucursal {}", fechaInicio, fechaFin, sucursal);
         Pair<File, String> response = expertoReportes.imprimirRepuestos(fechaInicio, fechaFin, sucursal);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=Listado repuestos.xlsx");
         headers.add("Content-type", "application/excel");
         InputStreamResource file = new InputStreamResource(new FileInputStream(response.getValue0()));
 
-        return ResponseEntity
-            .ok()
-            .headers(headers)
-            .body(file);
+        return ResponseEntity.ok().headers(headers).body(file);
     }
-
 }

@@ -20,17 +20,16 @@ import soldimet.repository.extendedRepository.ExtendedCajaRepository;
  * @author Manu
  */
 @Service
-public class EstrategiaMovimiento30dia extends EstrategiaMovimiento{
+public class EstrategiaMovimiento30dia extends EstrategiaMovimiento {
 
     private final int meses = -1; //busco lo que esta 31 dias antes (ultimo mes)
 
     @Autowired
     private ExtendedCajaRepository cajaRepository;
 
-    public List<Caja> buscarMovimientos(){
-
+    public List<Caja> buscarMovimientos() {
         DateTime fecha = new DateTime().minusMonths(meses);
-        LocalDate fechaPasada = LocalDate.of(fecha.getYear(),fecha.getMonthOfYear(),fecha.getDayOfWeek());
+        LocalDate fechaPasada = LocalDate.of(fecha.getYear(), fecha.getMonthOfYear(), fecha.getDayOfWeek());
         /*
         Date fecha = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -43,6 +42,6 @@ public class EstrategiaMovimiento30dia extends EstrategiaMovimiento{
         //formateo la fecha despues que restarle los 30 dias y  busco--dateFormat.format(calendar.getTime())
         List<Caja> listaCaja = cajaRepository.findByFechaGreaterThanEqual(fechaPasada);
 
-    return listaCaja;
-}
+        return listaCaja;
+    }
 }

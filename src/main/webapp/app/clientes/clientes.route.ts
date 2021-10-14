@@ -11,10 +11,10 @@ export const CLIENTES_ROUTE: Routes = [
     component: ClientesComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Clientes'
+      pageTitle: 'Clientes',
     },
-    canActivate: [UserRouteAccessService]
-  }
+    canActivate: [UserRouteAccessService],
+  },
 ];
 export const CLIENTES_POPUP_ROUTE: Routes = [
   {
@@ -22,29 +22,29 @@ export const CLIENTES_POPUP_ROUTE: Routes = [
     component: ClienteModalPopupComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Nuevo Cliente'
+      pageTitle: 'Nuevo Cliente',
     },
     canActivate: [UserRouteAccessService],
-    outlet: 'popup'
+    outlet: 'popup',
   },
   {
     path: 'clientes/:id/editar',
     component: ClienteModalPopupComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Editar Cliente'
+      pageTitle: 'Editar Cliente',
     },
     canActivate: [UserRouteAccessService],
-    outlet: 'popup'
+    outlet: 'popup',
   },
   {
     path: 'clientes/:id/eliminar',
     component: ClienteBorrarPopupComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Eliminar cliente'
+      pageTitle: 'Eliminar cliente',
     },
     canActivate: [UserRouteAccessService],
-    outlet: 'popup'
-  }
+    outlet: 'popup',
+  },
 ];

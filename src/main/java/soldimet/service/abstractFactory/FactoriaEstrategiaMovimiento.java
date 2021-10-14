@@ -7,7 +7,6 @@ package soldimet.service.abstractFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import soldimet.service.expertos.EstrategiaMovimiento;
 import soldimet.service.expertos.EstrategiaMovimiento30dia;
 
@@ -18,21 +17,14 @@ import soldimet.service.expertos.EstrategiaMovimiento30dia;
 @Component
 public class FactoriaEstrategiaMovimiento {
 
-   @Autowired
-   private EstrategiaMovimiento30dia estrategiaMovimiento30dia;
+    @Autowired
+    private EstrategiaMovimiento30dia estrategiaMovimiento30dia;
 
-    public EstrategiaMovimiento obtenerEstrategia (){
-
+    public EstrategiaMovimiento obtenerEstrategia() {
         EstrategiaMovimiento estrategia;
 
+        estrategia = estrategiaMovimiento30dia;
 
-            estrategia = estrategiaMovimiento30dia;
-
-            return estrategia;
-
-
-
+        return estrategia;
     }
-
-
 }

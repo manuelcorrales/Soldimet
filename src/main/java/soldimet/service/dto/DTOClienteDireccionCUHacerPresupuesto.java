@@ -7,26 +7,21 @@ package soldimet.service.dto;
  */
 public class DTOClienteDireccionCUHacerPresupuesto {
 
-	private String clienteDireccion;
+    private String clienteDireccion;
 
-	public DTOClienteDireccionCUHacerPresupuesto(){
+    public DTOClienteDireccionCUHacerPresupuesto() {}
 
-	}
+    public void finalize() throws Throwable {}
 
-	public void finalize() throws Throwable {
+    public String getclienteDireccion() {
+        return clienteDireccion;
+    }
 
-	}
-
-	public String getclienteDireccion(){
-		return clienteDireccion;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setclienteDireccion(String newVal){
-		clienteDireccion = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void setclienteDireccion(String newVal) {
+        clienteDireccion = newVal;
+    }
 }

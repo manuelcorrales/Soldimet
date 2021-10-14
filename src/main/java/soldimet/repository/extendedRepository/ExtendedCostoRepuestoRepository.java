@@ -1,11 +1,10 @@
 package soldimet.repository.extendedRepository;
-import soldimet.domain.CostoRepuesto;
-import soldimet.domain.EstadoCostoRepuesto;
-import soldimet.repository.CostoRepuestoRepository;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.CostoRepuesto;
+import soldimet.domain.EstadoCostoRepuesto;
+import soldimet.repository.CostoRepuestoRepository;
 
 /**
  * Spring Data  repository for the CostoRepuesto entity.
@@ -13,6 +12,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedCostoRepuestoRepository extends CostoRepuestoRepository {
-
     Long countByEstado(EstadoCostoRepuesto estado);
 }

@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 package soldimet.service.dto;
+
 import java.time.LocalDate;
 import java.util.List;
-
 
 /**
  *
@@ -28,8 +28,7 @@ public class DTOPresupuesto {
     private Boolean isModelo;
     private List<DTOMovimientos> movimientos;
 
-    public DTOPresupuesto() {
-    }
+    public DTOPresupuesto() {}
 
     @Override
     public String toString() {

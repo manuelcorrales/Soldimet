@@ -96,6 +96,7 @@ public class ListaPrecioDesdeHasta implements Serializable {
     public void setCostoOperacions(Set<CostoOperacion> costoOperacions) {
         this.costoOperacions = costoOperacions;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

@@ -8,7 +8,7 @@ import { Marca } from 'app/shared/model/marca.model';
 
 @Component({
   selector: 'jhi-articulo-nuevo',
-  templateUrl: './articulo-nuevo.component.html'
+  templateUrl: './articulo-nuevo.component.html',
 })
 export class ArticuloNuevoComponent implements OnInit {
   articulo: Articulo = new Articulo();

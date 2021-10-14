@@ -9,7 +9,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 @Component({
   selector: 'jhi-reportes',
   templateUrl: './reportes.component.html',
-  styles: []
+  styles: [],
 })
 export class ReportesComponent implements OnInit {
   lineMetric: { metric: String; values: DtoNameSeries[] } = { metric: '', values: [] };
@@ -29,7 +29,7 @@ export class ReportesComponent implements OnInit {
     this.getMetricasContables();
     this.formGroup = new FormGroup({
       FechaDesde: new FormControl('', [Validators.required]),
-      FechaHasta: new FormControl('', [Validators.required])
+      FechaHasta: new FormControl('', [Validators.required]),
     });
   }
 
@@ -42,7 +42,7 @@ export class ReportesComponent implements OnInit {
         link: '#',
         bgColor: 'bg-secondary',
         textColor: 'text-white',
-        valor: 0
+        valor: 0,
       },
       {
         categoria: 'INGRESO MENSUAL',
@@ -51,7 +51,7 @@ export class ReportesComponent implements OnInit {
         link: '#',
         bgColor: 'bg-success',
         textColor: 'text-white',
-        valor: 0
+        valor: 0,
       },
       {
         categoria: 'GASTO MENSUAL',
@@ -60,7 +60,7 @@ export class ReportesComponent implements OnInit {
         link: '#',
         bgColor: 'bg-warning',
         textColor: 'text-white',
-        valor: 0
+        valor: 0,
       },
       {
         categoria: 'GASTO REPUESTOS',
@@ -69,7 +69,7 @@ export class ReportesComponent implements OnInit {
         link: '#',
         bgColor: 'bg-info',
         textColor: 'text-white',
-        valor: 0
+        valor: 0,
       },
       {
         categoria: 'PAGO PROVEEDORES',
@@ -78,7 +78,7 @@ export class ReportesComponent implements OnInit {
         link: '#',
         bgColor: 'bg-primary',
         textColor: 'text-white',
-        valor: 0
+        valor: 0,
       },
       {
         categoria: 'GASTO FERRETERIA',
@@ -87,29 +87,28 @@ export class ReportesComponent implements OnInit {
         link: '#',
         bgColor: 'bg-danger',
         textColor: 'text-white',
-        valor: 0
-      }
+        valor: 0,
+      },
     ];
     this.lineMetric = {
       metric: 'Caja diaria por sucursal',
-      values: []
+      values: [],
     };
     this.barMetric = {
       metric: 'Caja hoy por sucursal',
-      values: []
+      values: [],
     };
   }
 
   private getCajaDiariaYMensual() {
-    this.reportService
-      .getCajaDiariaMensual(this.fechaDesde, this.fechaHasta)
-      .subscribe(
-        (diarios: DtoNameSeries[]) => (this.lineMetric.values = diarios),
-        (error: Error) => this.alertService.error(error.message)
-      );
-    this.reportService
-      .getCajaDiaria()
-      .subscribe((diarios: DtoNameSeries[]) => (this.barMetric.values = diarios), (error: Error) => this.alertService.error(error.message));
+    this.reportService.getCajaDiariaMensual(this.fechaDesde, this.fechaHasta).subscribe(
+      (diarios: DtoNameSeries[]) => (this.lineMetric.values = diarios),
+      (error: Error) => this.alertService.error(error.message)
+    );
+    this.reportService.getCajaDiaria().subscribe(
+      (diarios: DtoNameSeries[]) => (this.barMetric.values = diarios),
+      (error: Error) => this.alertService.error(error.message)
+    );
   }
 
   private getMetricasContables() {

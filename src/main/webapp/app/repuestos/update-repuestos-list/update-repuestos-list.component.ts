@@ -6,7 +6,7 @@ import { TipoRepuesto } from '../../shared/model/tipo-repuesto.model';
 @Component({
   selector: 'jhi-update-repuestos-list',
   templateUrl: './update-repuestos-list.component.html',
-  styleUrls: ['./update-repuestos-list.component.scss']
+  styleUrls: ['./update-repuestos-list.component.scss'],
 })
 export class UpdateRepuestosListComponent {
   @Input() marca: Marca;

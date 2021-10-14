@@ -1,6 +1,5 @@
 package soldimet.service.dto;
 
-
 import soldimet.domain.DetallePresupuesto;
 
 /**
@@ -10,60 +9,53 @@ import soldimet.domain.DetallePresupuesto;
  */
 public class DtoRepuestosElegidos {
 
-	private int cantidadRepuesto;
-	private String nombreRepuesto;
-	private float precioRepuesto;
+    private int cantidadRepuesto;
+    private String nombreRepuesto;
+    private float precioRepuesto;
 
-	public DtoRepuestosElegidos(){
+    public DtoRepuestosElegidos() {}
 
-	}
+    public void finalize() throws Throwable {}
 
-	public void finalize() throws Throwable {
+    /**
+     *
+     * @param detalle
+     */
+    public void AddDetallePresupuesto(DetallePresupuesto detalle) {}
 
-	}
+    public int getcantidadRepuesto() {
+        return cantidadRepuesto;
+    }
 
-	/**
-	 *
-	 * @param detalle
-	 */
-	public void AddDetallePresupuesto(DetallePresupuesto detalle){
+    public String getnombreRepuesto() {
+        return nombreRepuesto;
+    }
 
-	}
+    public float getprecioRepuesto() {
+        return precioRepuesto;
+    }
 
-	public int getcantidadRepuesto(){
-		return cantidadRepuesto;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setcantidadRepuesto(int newVal) {
+        cantidadRepuesto = newVal;
+    }
 
-	public String getnombreRepuesto(){
-		return nombreRepuesto;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setnombreRepuesto(String newVal) {
+        nombreRepuesto = newVal;
+    }
 
-	public float getprecioRepuesto(){
-		return precioRepuesto;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setcantidadRepuesto(int newVal){
-		cantidadRepuesto = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreRepuesto(String newVal){
-		nombreRepuesto = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setprecioRepuesto(float newVal){
-		precioRepuesto = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void setprecioRepuesto(float newVal) {
+        precioRepuesto = newVal;
+    }
 }

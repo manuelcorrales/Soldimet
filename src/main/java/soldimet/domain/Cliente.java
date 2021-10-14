@@ -22,7 +22,7 @@ public class Cliente implements Serializable {
     private Long id;
 
     @JsonIgnoreProperties(value = { "direccion", "estadoPersona", "user" }, allowSetters = true)
-    @OneToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch= FetchType.EAGER)
+    @OneToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(unique = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

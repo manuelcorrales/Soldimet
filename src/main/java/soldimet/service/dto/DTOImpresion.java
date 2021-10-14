@@ -145,8 +145,7 @@ public class DTOImpresion {
     public String v29 = "";
     public String v30 = "";
 
-    public DTOImpresion() {
-    }
+    public DTOImpresion() {}
 
     /**
      * @return the aplicacion
@@ -161,84 +160,98 @@ public class DTOImpresion {
     public String getCliente() {
         return cliente;
     }
+
     /**
      * @return the fecha
      */
     public String getFecha() {
         return fecha;
     }
+
     /**
      * @return the motor
      */
     public String getMotor() {
         return motor;
     }
+
     /**
      * @return the numero
      */
     public String getNumero() {
         return numero;
     }
+
     /**
      * @return the observaciones
      */
     public String getObservaciones() {
         return observaciones;
     }
+
     /**
      * @return the total
      */
     public String getTotal() {
         return total;
     }
+
     /**
      * @return the totRep
      */
     public String getTotRep() {
         return totRep;
     }
+
     /**
      * @return the totOp
      */
     public String getTotOp() {
         return totOp;
     }
+
     /**
      * @param aplicacion the aplicacion to set
      */
     public void setAplicacion(String aplicacion) {
         this.aplicacion = aplicacion;
     }
+
     /**
      * @param cliente the cliente to set
      */
     public void setCliente(String cliente) {
         this.cliente = cliente;
     }
+
     /**
      * @param fecha the fecha to set
      */
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
+
     /**
      * @param motor the motor to set
      */
     public void setMotor(String motor) {
         this.motor = motor;
     }
+
     /**
      * @param numero the numero to set
      */
     public void setNumero(String numero) {
         this.numero = numero;
     }
+
     /**
      * @param observaciones the observaciones to set
      */
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+
     /**
      * @param total the total to set
      */
@@ -247,14 +260,15 @@ public class DTOImpresion {
     }/**
      * @param totOp the totOp to set
      */
+
     public void setTotOp(String totOp) {
         this.totOp = totOp;
     }
+
     /**
      * @param totRep the totRep to set
      */
     public void setTotRep(String totRep) {
         this.totRep = totRep;
     }
-
 }

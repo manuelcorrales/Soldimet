@@ -18,7 +18,7 @@ describe('Component Tests', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [SoldimetTestModule],
-        declarations: [UserMgmtDeleteDialogComponent]
+        declarations: [UserMgmtDeleteDialogComponent],
       })
         .overrideTemplate(UserMgmtDeleteDialogComponent, '')
         .compileComponents();

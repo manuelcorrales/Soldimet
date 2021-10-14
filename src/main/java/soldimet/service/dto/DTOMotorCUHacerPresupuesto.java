@@ -1,4 +1,5 @@
 package soldimet.service.dto;
+
 import java.util.ArrayList;
 
 /**
@@ -8,18 +9,14 @@ import java.util.ArrayList;
  */
 public class DTOMotorCUHacerPresupuesto {
 
-	private int idMotor;
-	private String nombreMotor;
-	public ArrayList<DTOAplicacionCUHacerPresupuesto> m_DTOAplicacionCUHacerPresupuesto;
-	public ArrayList<DTOCilindradaCUHacerPresupuesto> m_DTOCilindradaCUHacerPresupuesto;
+    private int idMotor;
+    private String nombreMotor;
+    public ArrayList<DTOAplicacionCUHacerPresupuesto> m_DTOAplicacionCUHacerPresupuesto;
+    public ArrayList<DTOCilindradaCUHacerPresupuesto> m_DTOCilindradaCUHacerPresupuesto;
 
-	public DTOMotorCUHacerPresupuesto(){
+    public DTOMotorCUHacerPresupuesto() {}
 
-	}
-
-	public void finalize() throws Throwable {
-
-	}
+    public void finalize() throws Throwable {}
 
     public int getIdMotor() {
         return idMotor;
@@ -52,5 +49,4 @@ public class DTOMotorCUHacerPresupuesto {
     public void setM_DTOCilindradaCUHacerPresupuesto(ArrayList<DTOCilindradaCUHacerPresupuesto> m_DTOCilindradaCUHacerPresupuesto) {
         this.m_DTOCilindradaCUHacerPresupuesto = m_DTOCilindradaCUHacerPresupuesto;
     }
-
 }

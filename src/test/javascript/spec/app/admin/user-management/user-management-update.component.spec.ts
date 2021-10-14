@@ -14,9 +14,9 @@ describe('Component Tests', () => {
     let comp: UserMgmtUpdateComponent;
     let fixture: ComponentFixture<UserMgmtUpdateComponent>;
     let service: UserService;
-    const route = ({
-      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_USER'], 'admin', null, null, null) })
-    } as any) as ActivatedRoute;
+    const route = {
+      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_USER'], 'admin', null, null, null) }),
+    } as any as ActivatedRoute;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -26,9 +26,9 @@ describe('Component Tests', () => {
           FormBuilder,
           {
             provide: ActivatedRoute,
-            useValue: route
-          }
-        ]
+            useValue: route,
+          },
+        ],
       })
         .overrideTemplate(UserMgmtUpdateComponent, '')
         .compileComponents();
@@ -66,7 +66,7 @@ describe('Component Tests', () => {
           spyOn(service, 'update').and.returnValue(
             of(
               new HttpResponse({
-                body: entity
+                body: entity,
               })
             )
           );

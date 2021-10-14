@@ -15,7 +15,7 @@ interface Grupo {
 @Component({
   selector: 'jhi-operacion-lista',
   templateUrl: './operacion-lista.component.html',
-  styles: []
+  styles: [],
 })
 export class OperacionListaComponent implements OnInit {
   @Input()
@@ -73,7 +73,7 @@ export class OperacionListaComponent implements OnInit {
       ) {
         this.grupos.push({
           tipoParte: costoOperacion.tipoParteMotor,
-          cilindrada: costoOperacion.cilindrada
+          cilindrada: costoOperacion.cilindrada,
         });
       }
     });

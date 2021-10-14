@@ -1,27 +1,35 @@
 <div class="card jh-card border-info mb-3 shadow">
-    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
-        Cliente
+  <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498db !important">Cliente</div>
+  <div class="card-body" style="padding-top: 0px">
+    <input
+      type="text"
+      placeholder="Buscar cliente"
+      [(ngModel)]="clienteElegido"
+      [resultFormatter]="formatterCliente"
+      id="typeahead-focusCliente"
+      type="text"
+      class="form-control"
+      [ngbTypeahead]="searchCliente"
+      (focus)="focusCliente$.next($event.target.value)"
+      (click)="clickCliente$.next($event.target.value)"
+      #instanceNTACliente="ngbTypeahead"
+      [inputFormatter]="formatterCliente"
+      name="cliente_search"
+    />
+    <div class="row" *ngIf="clienteElegido?.persona" style="padding-top: 15px">
+      <div class="col">
+        <span [routerLink]="['/persona', clienteElegido.persona?.id]"
+          ><strong>Nombre:</strong> {{ clienteElegido.persona?.nombre }},{{ clienteElegido.persona?.apellido }}</span
+        >
+      </div>
+      <div class="col"><strong>Número de cliente:</strong> {{ clienteElegido?.id }}</div>
+      <div class="col"><strong>Teléfono:</strong> {{ clienteElegido?.persona?.numeroTelefono }}</div>
+      <div class="col">
+        <span *ngIf="clienteElegido?.persona?.direccion">
+          <strong>Dirección:</strong> {{ clienteElegido?.persona?.direccion?.calle }} {{ clienteElegido?.persona?.direccion?.numero }},
+          {{ clienteElegido?.persona?.direccion?.localidad?.nombreLocalidad }}
+        </span>
+      </div>
     </div>
-    <div class="card-body" style="padding-top: 0px;">
-        <input type="text" placeholder="Buscar cliente" [(ngModel)]="clienteElegido" [resultFormatter]="formatterCliente"
-            id="typeahead-focusCliente" type="text" class="form-control" [ngbTypeahead]="searchCliente" (focus)="focusCliente$.next($event.target.value)"
-            (click)="clickCliente$.next($event.target.value)" #instanceNTACliente="ngbTypeahead" [inputFormatter]="formatterCliente"
-            name="cliente_search"/>
-        <div class="row" *ngIf="clienteElegido?.persona" style="padding-top: 15px;">
-            <div class="col">
-                <span [routerLink]="['/persona', clienteElegido.persona?.id]"><strong>Nombre:</strong> {{clienteElegido.persona?.nombre}},{{clienteElegido.persona?.apellido}}</span>
-            </div>
-            <div class="col">
-                <strong>Número de cliente:</strong> {{clienteElegido?.id}}
-            </div>
-            <div class="col">
-                    <strong>Teléfono:</strong> {{clienteElegido?.persona?.numeroTelefono}}
-            </div>
-            <div class="col">
-                    <span *ngIf="clienteElegido?.persona?.direccion">
-                    <strong>Dirección:</strong> {{clienteElegido?.persona?.direccion?.calle}} {{clienteElegido?.persona?.direccion?.numero}}, {{clienteElegido?.persona?.direccion?.localidad?.nombreLocalidad}}
-                    </span>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>

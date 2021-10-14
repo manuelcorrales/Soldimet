@@ -7,13 +7,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DTOGetMovimientos {
+
     public Long sucursalId;
     private String fechaInicio;
     private String fechaFin;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
 
-    public DTOGetMovimientos() {
-    }
+    public DTOGetMovimientos() {}
 
     public LocalDate getFechaFin() {
         return LocalDate.parse(this.fechaFin, this.formatter);
@@ -34,6 +34,6 @@ public class DTOGetMovimientos {
     }
 
     public Boolean isZoneFiltered() {
-        return sucursalId!= null;
+        return sucursalId != null;
     }
 }

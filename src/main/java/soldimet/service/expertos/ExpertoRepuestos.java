@@ -4,13 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import soldimet.constant.Globales;
 import soldimet.converter.RepuestoConverter;
 import soldimet.domain.Articulo;
@@ -28,9 +26,9 @@ import soldimet.repository.extendedRepository.ExtendedEstadoArticuloRepository;
 import soldimet.repository.extendedRepository.ExtendedMarcaRepository;
 import soldimet.repository.extendedRepository.ExtendedStockArticuloRepository;
 import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
-import soldimet.service.dto.DTOStockRepuestoCabecera;
 import soldimet.service.ErrorToURIException;
 import soldimet.service.UserService;
+import soldimet.service.dto.DTOStockRepuestoCabecera;
 
 @Service
 @Transactional
@@ -65,14 +63,16 @@ public class ExpertoRepuestos {
 
     public Page<Articulo> buscarRepuestosProveedor(Long marca, String filtro, Pageable paging) {
         EstadoArticulo estadoAlta = estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);
-        return articuloRepository.findByEstadoAndCodigoArticuloProveedorContainsAndMarcaIdOrderByIdDesc(estadoAlta,
-                filtro, marca, paging);
+        return articuloRepository.findByEstadoAndCodigoArticuloProveedorContainsAndMarcaIdOrderByIdDesc(estadoAlta, filtro, marca, paging);
     }
 
     public Page<CostoRepuestoProveedor> buscarCostoRepuestosProveedor(String filtro, Pageable paging) {
-        return costoRepuestoProveedorRepository
-                .findByAplicacionNombreAplicacionContainsOrAplicacionMotorMarcaMotorContainsOrTipoRepuestoNombreTipoRepuestoContainsOrArticuloCodigoArticuloProveedorContainsOrderByIdDesc(
-                filtro, filtro, filtro, filtro, paging
+        return costoRepuestoProveedorRepository.findByAplicacionNombreAplicacionContainsOrAplicacionMotorMarcaMotorContainsOrTipoRepuestoNombreTipoRepuestoContainsOrArticuloCodigoArticuloProveedorContainsOrderByIdDesc(
+            filtro,
+            filtro,
+            filtro,
+            filtro,
+            paging
         );
     }
 
@@ -82,8 +82,11 @@ public class ExpertoRepuestos {
 
     public Articulo crearRepuestoProveedor(Articulo articulo) {
         if (articuloRepository.existsByCodigoArticuloProveedor(articulo.getCodigoArticuloProveedor())) {
-            throw new ErrorToURIException("Ya existe este código en otro artículo!", Articulo.class.getName(),
-                    "codigoArticuloProveedorexists");
+            throw new ErrorToURIException(
+                "Ya existe este código en otro artículo!",
+                Articulo.class.getName(),
+                "codigoArticuloProveedorexists"
+            );
         }
 
         return this.guardarArticulo(articulo);
@@ -94,7 +97,6 @@ public class ExpertoRepuestos {
     }
 
     private Articulo guardarArticulo(Articulo articulo) {
-
         EstadoArticulo estadoAlta = estadoArticuloRepository.findByNombreEstado(globales.NOMBRE_ESTADO_ARTICULO_ALTA);
         TipoRepuesto tiposRepuesto = tipoRepuestoRepository.getOne(articulo.getTipoRepuesto().getId());
         Marca marca = marcaRepository.getOne(articulo.getMarca().getId());
@@ -107,24 +109,25 @@ public class ExpertoRepuestos {
     }
 
     public Page<DTOStockRepuestoCabecera> buscarStockCabecera(String filtro, Pageable pageable) {
-
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
-        List<CostoRepuestoProveedor> repuestosProveedor = costoRepuestoProveedorRepository
-                .findByAplicacionNombreAplicacionContainsOrAplicacionMotorMarcaMotorContainsOrTipoRepuestoNombreTipoRepuestoContainsOrArticuloCodigoArticuloProveedorContainsOrderByIdDesc(
-                        filtro, filtro, filtro, filtro);
+        List<CostoRepuestoProveedor> repuestosProveedor = costoRepuestoProveedorRepository.findByAplicacionNombreAplicacionContainsOrAplicacionMotorMarcaMotorContainsOrTipoRepuestoNombreTipoRepuestoContainsOrArticuloCodigoArticuloProveedorContainsOrderByIdDesc(
+            filtro,
+            filtro,
+            filtro,
+            filtro
+        );
         List<Articulo> articulos = new ArrayList<>();
         for (CostoRepuestoProveedor repuesto : repuestosProveedor) {
             articulos.add(repuesto.getArticulo());
         }
-        Page<StockArticulo> stocks = stockRepository
-                .findBySucursalAndArticuloEstadoNombreEstadoAndArticuloCodigoArticuloProveedorContainsOrArticuloInAndSucursalOrderByArticuloCodigoArticuloProveedorAsc(
-                        empleado.getSucursal(),
-                        globales.NOMBRE_ESTADO_ARTICULO_ALTA,
-                        filtro,
-                        articulos,
-                        empleado.getSucursal(),
-                        pageable
-                );
+        Page<StockArticulo> stocks = stockRepository.findBySucursalAndArticuloEstadoNombreEstadoAndArticuloCodigoArticuloProveedorContainsOrArticuloInAndSucursalOrderByArticuloCodigoArticuloProveedorAsc(
+            empleado.getSucursal(),
+            globales.NOMBRE_ESTADO_ARTICULO_ALTA,
+            filtro,
+            articulos,
+            empleado.getSucursal(),
+            pageable
+        );
 
         return repuestoConverter.convertirEntidadesAModelos(stocks);
     }
@@ -132,22 +135,23 @@ public class ExpertoRepuestos {
     public DTOStockRepuestoCabecera actualizarStock(DTOStockRepuestoCabecera stock) {
         Optional<StockArticulo> optionalStockArticulo = stockRepository.findById(stock.getId());
         if (!optionalStockArticulo.isPresent()) {
-            new ErrorToURIException("No se pudo actualizar el stock", ExpertoRepuestos.class.getName(),
-                    "StockInexistente");
+            new ErrorToURIException("No se pudo actualizar el stock", ExpertoRepuestos.class.getName(), "StockInexistente");
         }
         StockArticulo stockArticulo = optionalStockArticulo.get();
         stockArticulo.setCantidad(stock.getCantidad());
         return repuestoConverter.convertirEntidadAModelo(stockRepository.save(stockArticulo));
     }
 
-    public StockArticulo descontarStockDesdeArticuloyMedida(Articulo articulo, MedidaArticulo medida,
-            Integer cantidadUsada) {
+    public StockArticulo descontarStockDesdeArticuloyMedida(Articulo articulo, MedidaArticulo medida, Integer cantidadUsada) {
         Integer cantidadEnStock = 0;
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
-        StockArticulo stock = stockRepository.findBySucursalAndArticuloIdAndMedidaId(empleado.getSucursal(),
-                articulo.getId(), medida.getId());
+        StockArticulo stock = stockRepository.findBySucursalAndArticuloIdAndMedidaId(
+            empleado.getSucursal(),
+            articulo.getId(),
+            medida.getId()
+        );
         // Si no se encuentra stock lo creo y lo marco como negativo
-        if(stock == null) {
+        if (stock == null) {
             stock = new StockArticulo();
             stock.setArticulo(articulo);
             stock.setSucursal(empleado.getSucursal());
@@ -164,5 +168,4 @@ public class ExpertoRepuestos {
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
         return stockRepository.findBySucursalAndArticuloIdAndMedidaId(empleado.getSucursal(), articuloID, medidaId);
     }
-
 }

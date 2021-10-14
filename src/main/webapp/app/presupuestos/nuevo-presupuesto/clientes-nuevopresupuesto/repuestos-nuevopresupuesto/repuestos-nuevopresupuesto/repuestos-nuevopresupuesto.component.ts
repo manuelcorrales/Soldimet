@@ -10,7 +10,7 @@ import { Articulo, IArticulo } from 'app/shared/model/articulo.model';
 @Component({
   selector: 'jhi-repuestos-nuevopresupuesto',
   templateUrl: './repuestos-nuevopresupuesto.component.html',
-  styles: []
+  styles: [],
 })
 export class RepuestosNuevopresupuestoComponent implements OnInit {
   @Input() detalle: DetallePresupuesto;
@@ -57,7 +57,7 @@ export class RepuestosNuevopresupuestoComponent implements OnInit {
         cobranzaUltimoRepuesto: cobranzaRepuestoPresupuestoViejo,
         cobranzas: listaCobranzas,
         articulosList: listaArticulos,
-        cilindrada: this.detalle.cilindrada
+        cilindrada: this.detalle.cilindrada,
       });
     });
     return lista;

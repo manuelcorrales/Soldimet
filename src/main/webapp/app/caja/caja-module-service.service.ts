@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { Movimiento } from 'app/shared/model/movimiento.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CajaModuleServiceService {
   private resourceUrlCaja = SERVER_API_URL + 'api/caja';

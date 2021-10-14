@@ -26,7 +26,7 @@ export const PRESUPUESTOS_ROUTES: Routes = [
   {
     path: 'presupuestos',
     data: {
-      authorities: ['ROLE_USER']
+      authorities: ['ROLE_USER'],
     },
     canActivate: [UserRouteAccessService],
     children: [
@@ -34,31 +34,31 @@ export const PRESUPUESTOS_ROUTES: Routes = [
         path: '',
         component: PresupuestosComponent,
         resolve: {
-          pagingParams: JhiResolvePagingParams
+          pagingParams: JhiResolvePagingParams,
         },
         data: {
           pageTitle: 'Presupuestos',
-          defaultSort: 'id,asc'
-        }
+          defaultSort: 'id,asc',
+        },
       },
       {
         path: 'nuevo',
         component: NuevoPresupuestoComponent,
         data: {
-          pageTitle: 'Nuevo Presupuesto'
-        }
+          pageTitle: 'Nuevo Presupuesto',
+        },
       },
       {
         path: ':id/ver',
         component: PresupuestoDetailComponent,
         resolve: {
-          presupuesto: PresupuestoResolve
+          presupuesto: PresupuestoResolve,
         },
         data: {
           authorities: ['ROLE_USER'],
-          pageTitle: 'Presupuesto'
-        }
-      }
-    ]
-  }
+          pageTitle: 'Presupuesto',
+        },
+      },
+    ],
+  },
 ];

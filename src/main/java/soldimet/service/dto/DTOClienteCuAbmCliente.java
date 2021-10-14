@@ -5,12 +5,15 @@
  */
 
 package soldimet.service.dto;
+
 import java.util.ArrayList;
+
 /**
  *
  * @author Manu
  */
 public class DTOClienteCuAbmCliente {
+
     private String nombreCliente;
     private String calle;
     private int numero;
@@ -19,10 +22,16 @@ public class DTOClienteCuAbmCliente {
     private ArrayList<Integer> telefonos;
     private String localidad;
 
-    public DTOClienteCuAbmCliente() {
-    }
+    public DTOClienteCuAbmCliente() {}
 
-    public DTOClienteCuAbmCliente(String nombreCliente, String calle, int numero, String apellido, int idCliente, ArrayList<Integer> telefonos) {
+    public DTOClienteCuAbmCliente(
+        String nombreCliente,
+        String calle,
+        int numero,
+        String apellido,
+        int idCliente,
+        ArrayList<Integer> telefonos
+    ) {
         this.nombreCliente = nombreCliente;
         this.calle = calle;
         this.numero = numero;
@@ -38,7 +47,6 @@ public class DTOClienteCuAbmCliente {
     public void setLocalidad(String localidad) {
         this.localidad = localidad;
     }
-
 
     public String getNombreCliente() {
         return nombreCliente;
@@ -87,9 +95,4 @@ public class DTOClienteCuAbmCliente {
     public void addTelefono(Integer telefono) {
         this.telefonos.add(telefono);
     }
-
-
-
-
-
 }

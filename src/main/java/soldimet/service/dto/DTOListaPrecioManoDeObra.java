@@ -8,7 +8,6 @@ package soldimet.service.dto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.Operacion;
 
@@ -26,8 +25,7 @@ public class DTOListaPrecioManoDeObra {
 
     private List<CostoOperacion> operaciones = new ArrayList<CostoOperacion>();
 
-    public DTOListaPrecioManoDeObra() {
-    }
+    public DTOListaPrecioManoDeObra() {}
 
     public int getNumeroLista() {
         return numeroLista;
@@ -78,5 +76,4 @@ public class DTOListaPrecioManoDeObra {
     public void setOperaciones(ArrayList<CostoOperacion> operaciones) {
         this.operaciones = operaciones;
     }
-
 }

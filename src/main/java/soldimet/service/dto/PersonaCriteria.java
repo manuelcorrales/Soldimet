@@ -1,7 +1,5 @@
 package soldimet.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
@@ -10,6 +8,8 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link soldimet.domain.Persona} entity. This class is used
@@ -38,10 +38,9 @@ public class PersonaCriteria implements Serializable, Criteria {
 
     private LongFilter userId;
 
-    public PersonaCriteria(){
-    }
+    public PersonaCriteria() {}
 
-    public PersonaCriteria(PersonaCriteria other){
+    public PersonaCriteria(PersonaCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.numeroTelefono = other.numeroTelefono == null ? null : other.numeroTelefono.copy();
         this.nombre = other.nombre == null ? null : other.nombre.copy();
@@ -112,7 +111,6 @@ public class PersonaCriteria implements Serializable, Criteria {
         this.userId = userId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,40 +120,34 @@ public class PersonaCriteria implements Serializable, Criteria {
             return false;
         }
         final PersonaCriteria that = (PersonaCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(numeroTelefono, that.numeroTelefono) &&
             Objects.equals(nombre, that.nombre) &&
             Objects.equals(apellido, that.apellido) &&
             Objects.equals(direccionId, that.direccionId) &&
             Objects.equals(estadoPersonaId, that.estadoPersonaId) &&
-            Objects.equals(userId, that.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-        id,
-        numeroTelefono,
-        nombre,
-        apellido,
-        direccionId,
-        estadoPersonaId,
-        userId
+            Objects.equals(userId, that.userId)
         );
     }
 
     @Override
-    public String toString() {
-        return "PersonaCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (numeroTelefono != null ? "numeroTelefono=" + numeroTelefono + ", " : "") +
-                (nombre != null ? "nombre=" + nombre + ", " : "") +
-                (apellido != null ? "apellido=" + apellido + ", " : "") +
-                (direccionId != null ? "direccionId=" + direccionId + ", " : "") +
-                (estadoPersonaId != null ? "estadoPersonaId=" + estadoPersonaId + ", " : "") +
-                (userId != null ? "userId=" + userId + ", " : "") +
-            "}";
+    public int hashCode() {
+        return Objects.hash(id, numeroTelefono, nombre, apellido, direccionId, estadoPersonaId, userId);
     }
 
+    @Override
+    public String toString() {
+        return (
+            "PersonaCriteria{" +
+            (id != null ? "id=" + id + ", " : "") +
+            (numeroTelefono != null ? "numeroTelefono=" + numeroTelefono + ", " : "") +
+            (nombre != null ? "nombre=" + nombre + ", " : "") +
+            (apellido != null ? "apellido=" + apellido + ", " : "") +
+            (direccionId != null ? "direccionId=" + direccionId + ", " : "") +
+            (estadoPersonaId != null ? "estadoPersonaId=" + estadoPersonaId + ", " : "") +
+            (userId != null ? "userId=" + userId + ", " : "") +
+            "}"
+        );
+    }
 }

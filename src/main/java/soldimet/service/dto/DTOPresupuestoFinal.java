@@ -1,4 +1,5 @@
 package soldimet.service.dto;
+
 import java.util.ArrayList;
 
 /**
@@ -9,20 +10,16 @@ import java.util.ArrayList;
 public class DTOPresupuestoFinal {
 
     private String clienteID;
-	private String aplicacion;
-	private int cilindrada;
-	private String motor;
-	private String tipoParteMotor;
-	public ArrayList<DTOCobroOperacionCUHacerPresupuesto> m_DTOCobroOperacionCUHacerPresupuesto;
-	public ArrayList<DtoRepuestosElegidos> m_DtoRepuestosElegidos;
+    private String aplicacion;
+    private int cilindrada;
+    private String motor;
+    private String tipoParteMotor;
+    public ArrayList<DTOCobroOperacionCUHacerPresupuesto> m_DTOCobroOperacionCUHacerPresupuesto;
+    public ArrayList<DtoRepuestosElegidos> m_DtoRepuestosElegidos;
 
-	public DTOPresupuestoFinal(){
+    public DTOPresupuestoFinal() {}
 
-	}
-
-	public void finalize() throws Throwable {
-
-	}
+    public void finalize() throws Throwable {}
 
     public String getAplicacion() {
         return aplicacion;
@@ -60,7 +57,9 @@ public class DTOPresupuestoFinal {
         return m_DTOCobroOperacionCUHacerPresupuesto;
     }
 
-    public void setM_DTOCobroOperacionCUHacerPresupuesto(ArrayList<DTOCobroOperacionCUHacerPresupuesto> m_DTOCobroOperacionCUHacerPresupuesto) {
+    public void setM_DTOCobroOperacionCUHacerPresupuesto(
+        ArrayList<DTOCobroOperacionCUHacerPresupuesto> m_DTOCobroOperacionCUHacerPresupuesto
+    ) {
         this.m_DTOCobroOperacionCUHacerPresupuesto = m_DTOCobroOperacionCUHacerPresupuesto;
     }
 
@@ -79,8 +78,4 @@ public class DTOPresupuestoFinal {
     public void setClienteID(String clienteID) {
         this.clienteID = clienteID;
     }
-
-
-
-
 }

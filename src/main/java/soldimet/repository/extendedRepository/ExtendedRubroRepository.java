@@ -1,11 +1,9 @@
 package soldimet.repository.extendedRepository;
 
-import soldimet.domain.Rubro;
-import soldimet.repository.RubroRepository;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Rubro;
+import soldimet.repository.RubroRepository;
 
 /**
  * Spring Data  repository for the Rubro entity.
@@ -13,6 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedRubroRepository extends RubroRepository {
-
     public Rubro findByNombreRubro(String nombreRubro);
 }

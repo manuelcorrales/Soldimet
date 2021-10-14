@@ -1,7 +1,8 @@
 package soldimet.service.dto;
+
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,20 +12,16 @@ import java.util.List;
  */
 public class DTOPresupuestoDetalleCUBuscarPresupuesto {
 
-        private Long idPresupuesto;
-	private String cliente;
-	private LocalDate fechaCreacion;
-	private Float importeTotal;
+    private Long idPresupuesto;
+    private String cliente;
+    private LocalDate fechaCreacion;
+    private Float importeTotal;
     private String estado;
-	public List<DTOPresupuestoDetalleParteCUBuscarPresupuesto> m_DTOPresupuestoDetalleParteCUBuscarPresupuesto;
+    public List<DTOPresupuestoDetalleParteCUBuscarPresupuesto> m_DTOPresupuestoDetalleParteCUBuscarPresupuesto;
 
-	public DTOPresupuestoDetalleCUBuscarPresupuesto(){
+    public DTOPresupuestoDetalleCUBuscarPresupuesto() {}
 
-	}
-
-	public void finalize() throws Throwable {
-
-	}
+    public void finalize() throws Throwable {}
 
     public Long getIdPresupuesto() {
         return idPresupuesto;
@@ -34,18 +31,13 @@ public class DTOPresupuestoDetalleCUBuscarPresupuesto {
         this.idPresupuesto = idPresupuesto;
     }
 
-
-
-	/**
-	 *
-	 * @param parte
-	 */
-	public void addDetalle(DTOPresupuestoDetalleParteCUBuscarPresupuesto parte){
-
-            m_DTOPresupuestoDetalleParteCUBuscarPresupuesto.add(parte);
-
-	}
-
+    /**
+     *
+     * @param parte
+     */
+    public void addDetalle(DTOPresupuestoDetalleParteCUBuscarPresupuesto parte) {
+        m_DTOPresupuestoDetalleParteCUBuscarPresupuesto.add(parte);
+    }
 
     public String getCliente() {
         return cliente;
@@ -78,6 +70,4 @@ public class DTOPresupuestoDetalleCUBuscarPresupuesto {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
-
 }

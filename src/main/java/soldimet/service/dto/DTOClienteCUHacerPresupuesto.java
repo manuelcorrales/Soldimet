@@ -7,100 +7,87 @@ package soldimet.service.dto;
  */
 public class DTOClienteCUHacerPresupuesto {
 
-	private String apellido;
-	private String direccion;
-	private String nombreCliente;
-	private String numeroTelefono;
-	public DTOCLienteApellidoCUHacerPresupuesto m_DTOCLienteApellidoCUHacerPresupuesto;
-	public DTOClienteDireccionCUHacerPresupuesto m_DTOClienteDireccionCUHacerPresupuesto;
-	public DTOClienteTelefonoCUHacerPresupuesto m_DTOClienteTelefonoCUHacerPresupuesto;
+    private String apellido;
+    private String direccion;
+    private String nombreCliente;
+    private String numeroTelefono;
+    public DTOCLienteApellidoCUHacerPresupuesto m_DTOCLienteApellidoCUHacerPresupuesto;
+    public DTOClienteDireccionCUHacerPresupuesto m_DTOClienteDireccionCUHacerPresupuesto;
+    public DTOClienteTelefonoCUHacerPresupuesto m_DTOClienteTelefonoCUHacerPresupuesto;
 
-	public DTOClienteCUHacerPresupuesto(){
+    public DTOClienteCUHacerPresupuesto() {}
 
-	}
+    public void finalize() throws Throwable {}
 
-	public void finalize() throws Throwable {
+    /**
+     *
+     * @param apellido
+     */
+    public void AddApellidoCliente(DTOCLienteApellidoCUHacerPresupuesto apellido) {}
 
-	}
+    /**
+     *
+     * @param telefono
+     */
+    public void AddClienteTelefono(DTOClienteTelefonoCUHacerPresupuesto telefono) {}
 
-	/**
-	 *
-	 * @param apellido
-	 */
-	public void AddApellidoCliente(DTOCLienteApellidoCUHacerPresupuesto apellido){
+    /**
+     *
+     * @param direccion
+     */
+    public void AddDireccionCliente(DTOClienteDireccionCUHacerPresupuesto direccion) {}
 
-	}
+    public String getapellido() {
+        return apellido;
+    }
 
-	/**
-	 *
-	 * @param telefono
-	 */
-	public void AddClienteTelefono(DTOClienteTelefonoCUHacerPresupuesto telefono){
+    public String getdireccion() {
+        return direccion;
+    }
 
-	}
+    public String getnombreCliente() {
+        return nombreCliente;
+    }
 
-	/**
-	 *
-	 * @param direccion
-	 */
-	public void AddDireccionCliente(DTOClienteDireccionCUHacerPresupuesto direccion){
+    public String getnumeroTelefono() {
+        return numeroTelefono;
+    }
 
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setapellido(String newVal) {
+        apellido = newVal;
+    }
 
-	public String getapellido(){
-		return apellido;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setdireccion(String newVal) {
+        direccion = newVal;
+    }
 
-	public String getdireccion(){
-		return direccion;
-	}
+    /**
+     *
+     * @param idCliente
+     */
+    public void setIdCliente(String idCliente) {}
 
-	public String getnombreCliente(){
-		return nombreCliente;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setnombreCliente(String newVal) {
+        nombreCliente = newVal;
+    }
 
-	public String getnumeroTelefono(){
-		return numeroTelefono;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setapellido(String newVal){
-		apellido = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setdireccion(String newVal){
-		direccion = newVal;
-	}
-
-	/**
-	 *
-	 * @param idCliente
-	 */
-	public void setIdCliente(String idCliente){
-
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreCliente(String newVal){
-		nombreCliente = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnumeroTelefono(String newVal){
-		numeroTelefono = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void setnumeroTelefono(String newVal) {
+        numeroTelefono = newVal;
+    }
 }

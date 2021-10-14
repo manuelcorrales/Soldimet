@@ -13,13 +13,11 @@ import java.util.ArrayList;
  */
 public class DtoRubroYCategoria {
 
-
     private String nombreRubro;
 
     private ArrayList<String> categorias;
 
-    public DtoRubroYCategoria() {
-    }
+    public DtoRubroYCategoria() {}
 
     public DtoRubroYCategoria(String nombreRubro, ArrayList<String> categorias) {
         this.nombreRubro = nombreRubro;
@@ -42,9 +40,7 @@ public class DtoRubroYCategoria {
         this.categorias = categorias;
     }
 
-    public void agregarCategoria(String cat){
+    public void agregarCategoria(String cat) {
         this.categorias.add(cat);
     }
-
-
 }

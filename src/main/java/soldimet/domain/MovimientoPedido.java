@@ -26,8 +26,8 @@ public class MovimientoPedido implements Serializable {
     @JsonIgnoreProperties("movimientoPedidos")
     private PedidoRepuesto pedidoRepuesto;
 
-    @OneToOne(optional = false)    @NotNull
-
+    @OneToOne(optional = false)
+    @NotNull
     @JoinColumn(unique = true)
     private Movimiento movimiento;
 

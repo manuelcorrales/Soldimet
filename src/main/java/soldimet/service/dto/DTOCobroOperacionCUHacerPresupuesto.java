@@ -7,17 +7,13 @@ package soldimet.service.dto;
  */
 public class DTOCobroOperacionCUHacerPresupuesto {
 
-	private String cobroOperacion;
-	private String nombreOperacion;
-        private int cantidad;
+    private String cobroOperacion;
+    private String nombreOperacion;
+    private int cantidad;
 
-	public DTOCobroOperacionCUHacerPresupuesto(){
+    public DTOCobroOperacionCUHacerPresupuesto() {}
 
-	}
-
-	public void finalize() throws Throwable {
-
-	}
+    public void finalize() throws Throwable {}
 
     public int getCantidad() {
         return cantidad;
@@ -27,29 +23,27 @@ public class DTOCobroOperacionCUHacerPresupuesto {
         this.cantidad = cantidad;
     }
 
+    public String getcobroOperacion() {
+        return cobroOperacion;
+    }
 
-	public String getcobroOperacion(){
-		return cobroOperacion;
-	}
+    public String getNombreOperacion() {
+        return nombreOperacion;
+    }
 
-	public String getNombreOperacion(){
-		return nombreOperacion;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setcobroOperacion(String newVal) {
+        cobroOperacion = newVal;
+    }
 
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setcobroOperacion(String newVal){
-		cobroOperacion = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreOperacion(String newVal){
-		nombreOperacion = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void setnombreOperacion(String newVal) {
+        nombreOperacion = newVal;
+    }
 }

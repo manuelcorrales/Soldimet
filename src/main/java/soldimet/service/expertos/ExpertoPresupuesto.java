@@ -7,13 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
-
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +22,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import soldimet.constant.Globales;
 import soldimet.converter.PresupuestoConverter;
 import soldimet.domain.Aplicacion;
@@ -160,28 +157,23 @@ public class ExpertoPresupuesto {
 
     // Cambio el estado del presupuesto y del pedido de repuestos
     public void aceptarPresupuesto(Long idPresupuesto) {
-
         Presupuesto presupuesto = buscarPresupuesto(idPresupuesto);
 
-        EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
+        EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
         if (presupuesto.getEstadoPresupuesto().equals(estadoAceptado)) {
-
             // este presupuesto ya fue aceptado
             // avisar por pantalla la fecha de aceptacion
             LocalDate fechaAceptado = presupuesto.getFechaAceptado();
-
         } else {
             // cambio el estado del presupuesto a aceptado y tambien del pedido de repuesto
-            EstadoPresupuesto estadoCreado = estadoPresupuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_CREADO);
+            EstadoPresupuesto estadoCreado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_CREADO);
             if (presupuesto.getEstadoPresupuesto().equals(estadoCreado)) {
-
                 presupuesto.setEstadoPresupuesto(estadoAceptado);
                 presupuesto.setFechaAceptado(LocalDate.now());
 
-                EstadoPedidoRepuesto estadoPendienteDePedido = estadoPedidoRepuestoRepository
-                        .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
+                EstadoPedidoRepuesto estadoPendienteDePedido = estadoPedidoRepuestoRepository.findByNombreEstado(
+                    globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO
+                );
 
                 PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
 
@@ -200,18 +192,15 @@ public class ExpertoPresupuesto {
         Presupuesto presupuesto = buscarPresupuesto(idPresupuesto);
         // primero me fijo si el presupuesto esta aceptado
         // si no lo esta, devuelvo el estado en el que se encuentra
-        EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
+        EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
 
         if (presupuesto.getEstadoPresupuesto().equals(estadoAceptado)) {
             // presupuesto aceptado, comienzo el CU
 
         } else {
-
             // aviso que el presupuesto no se encuentra aceptado
             // no se puede cancelar y paso el nombre del estado
         }
-
     }
 
     private Presupuesto buscarPresupuesto(Long id) {
@@ -230,27 +219,55 @@ public class ExpertoPresupuesto {
         Page<Presupuesto> presupuestos = null;
         Empleado empleado = expertoUsuarios.getEmpleadoLogeado();
 
-        if (estado.isPresent()){
-            presupuestos = presupuestoRepository
-                    .findDistinctByEstadoPresupuestoIdAndClientePersonaNombreContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndClientePersonaApellidoContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
-                            estado.get(), filtro, empleado.getSucursal().getId(), modelo, estado.get(), filtro, empleado.getSucursal().getId(), modelo, estado.get(), filtro, empleado.getSucursal().getId(), modelo, estado.get(), filtro, empleado.getSucursal().getId(), modelo, pageable);
-
+        if (estado.isPresent()) {
+            presupuestos =
+                presupuestoRepository.findDistinctByEstadoPresupuestoIdAndClientePersonaNombreContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndClientePersonaApellidoContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrEstadoPresupuestoIdAndDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
+                    estado.get(),
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    estado.get(),
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    estado.get(),
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    estado.get(),
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    pageable
+                );
         } else {
-            presupuestos = presupuestoRepository
-                    .findDistinctByClientePersonaNombreContainsAndSucursalIdAndModeloOrClientePersonaApellidoContainsAndSucursalIdAndModeloOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
-                            filtro, empleado.getSucursal().getId(), modelo, filtro, empleado.getSucursal().getId(), modelo, filtro, empleado.getSucursal().getId(), modelo, filtro, empleado.getSucursal().getId(), modelo, pageable);
+            presupuestos =
+                presupuestoRepository.findDistinctByClientePersonaNombreContainsAndSucursalIdAndModeloOrClientePersonaApellidoContainsAndSucursalIdAndModeloOrDetallePresupuestosMotorMarcaMotorContainsAndSucursalIdAndModeloOrDetallePresupuestosAplicacionNombreAplicacionContainsAndSucursalIdAndModeloOrderByIdDesc(
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    filtro,
+                    empleado.getSucursal().getId(),
+                    modelo,
+                    pageable
+                );
         }
 
         return presupuestoConverter.convertirEntidadesAModelos(presupuestos);
     }
 
-
-
     public Page<Aplicacion> buscarAplicaciones(String filtro, Pageable pageable) {
-        Page<Aplicacion> aplicaciones = aplicacionRepository
-                    .findByNombreAplicacionContainsOrMotorMarcaMotorContainsOrderByIdDesc(
-                            filtro, filtro, pageable);
-
+        Page<Aplicacion> aplicaciones = aplicacionRepository.findByNombreAplicacionContainsOrMotorMarcaMotorContainsOrderByIdDesc(
+            filtro,
+            filtro,
+            pageable
+        );
 
         return aplicaciones;
     }
@@ -258,8 +275,7 @@ public class ExpertoPresupuesto {
     public List<Aplicacion> buscarAplicacionPorMotor(Long motorId) {
         try {
             Motor motorEncontrado = motorRepository.findById(motorId).get();
-            List<Aplicacion> aplicacionesList = aplicacionRepository
-                    .findByMotorOrderByNombreAplicacionAsc(motorEncontrado);
+            List<Aplicacion> aplicacionesList = aplicacionRepository.findByMotorOrderByNombreAplicacionAsc(motorEncontrado);
 
             return aplicacionesList;
         } catch (NullPointerException e) {
@@ -269,7 +285,6 @@ public class ExpertoPresupuesto {
     }
 
     public List<CostoOperacion> buscarOperacionesPresupuesto(DTODatosMotorCUHacerPresupuesto dtoDatosMotor) {
-
         List<CostoOperacion> listaDTO = new ArrayList<CostoOperacion>();
 
         try {
@@ -277,11 +292,11 @@ public class ExpertoPresupuesto {
 
             motorRepository.existsById(dtoDatosMotor.getIdMotor());
             Cilindrada cilindrada = cilindradaRepository.findById(dtoDatosMotor.getIdCilindrada()).get();
-            TipoParteMotor tipoParteMotor = tipoParteMotorRepository.findById(dtoDatosMotor.getIdTiposPartesMotores())
-                    .get();
+            TipoParteMotor tipoParteMotor = tipoParteMotorRepository.findById(dtoDatosMotor.getIdTiposPartesMotores()).get();
 
-            ListaPrecioRectificacionCRAM listaPrecio = listaPrecioRectificacionCRAMRepository
-                    .findByNumeroGrupo(aplicacion.getNumeroGrupo());
+            ListaPrecioRectificacionCRAM listaPrecio = listaPrecioRectificacionCRAMRepository.findByNumeroGrupo(
+                aplicacion.getNumeroGrupo()
+            );
 
             if (listaPrecio != null) {
                 ListaPrecioDesdeHasta ultimaListaPrecio = null; // listaPrecio.getFechas().iterator().next();
@@ -291,8 +306,7 @@ public class ExpertoPresupuesto {
                     }
                 }
                 for (CostoOperacion costoOperacion : ultimaListaPrecio.getCostoOperacions()) {
-                    if (costoOperacion.getCilindrada() == cilindrada
-                            && costoOperacion.getTipoParteMotor() == tipoParteMotor) {
+                    if (costoOperacion.getCilindrada() == cilindrada && costoOperacion.getTipoParteMotor() == tipoParteMotor) {
                         listaDTO.add(costoOperacion);
                     }
                 }
@@ -315,8 +329,7 @@ public class ExpertoPresupuesto {
     }
 
     public List<Cliente> buscarTodosLosClientes() {
-        EstadoPersona estadoClienteActivo = estadoPersonaRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_ALTA);
+        EstadoPersona estadoClienteActivo = estadoPersonaRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_ALTA);
         List<Persona> personas = personaRepository.findByEstadoPersona(estadoClienteActivo);
         return clienteRepository.findClienteByPersonaIn(personas);
     }
@@ -329,8 +342,9 @@ public class ExpertoPresupuesto {
         if (presupuesto.getFechaCreacion() == null) {
             presupuesto.setFechaCreacion(LocalDate.now());
         }
-        EstadoCobranzaOperacion estadoCobranzaOperacion = estadoCobranzaOperacionRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA);
+        EstadoCobranzaOperacion estadoCobranzaOperacion = estadoCobranzaOperacionRepository.findByNombreEstado(
+            globales.NOMBRE_ESTADO_COBRANZA_OPERACION_ALTA
+        );
 
         DTOEmpleado empleado = expertoUsuarios.getEmpleadoActual();
 
@@ -346,8 +360,7 @@ public class ExpertoPresupuesto {
             for (CobranzaRepuesto cobranzaRepuesto : detalle.getCobranzaRepuestos()) {
                 // Fuerzo a guardar cuando el objeto no es nuevo
                 cobranzaRepuesto = cobranzaRepuestoRepository.save(cobranzaRepuesto);
-                this.actualizarListaDeCostoRepuestoProvedor(cobranzaRepuesto, detalle.getAplicacion(),
-                        detalle.getCilindrada());
+                this.actualizarListaDeCostoRepuestoProvedor(cobranzaRepuesto, detalle.getAplicacion(), detalle.getCilindrada());
                 totalDetalle += cobranzaRepuesto.getValor();
             }
             detalle.setImporte(totalDetalle);
@@ -356,14 +369,16 @@ public class ExpertoPresupuesto {
         return presupuestoRepository.save(presupuesto);
     }
 
-    private void actualizarListaDeCostoRepuestoProvedor(CobranzaRepuesto cobranzaRepuesto, Aplicacion aplicacion,
-            Cilindrada cilindrada) {
+    private void actualizarListaDeCostoRepuestoProvedor(CobranzaRepuesto cobranzaRepuesto, Aplicacion aplicacion, Cilindrada cilindrada) {
         // Reviso si ya existe la union del artículo con todos los detalles del motor
         // sino creo una nueva para que despues sea más facil encontrarla
         if (cobranzaRepuesto.getArticulo() != null) {
-            List<CostoRepuestoProveedor> costosRepuestos = costoRepuestoProveedorRepository
-                    .findByAplicacionAndCilindradaAndTipoRepuestoAndArticulo(aplicacion, cilindrada,
-                            cobranzaRepuesto.getTipoRepuesto(), cobranzaRepuesto.getArticulo());
+            List<CostoRepuestoProveedor> costosRepuestos = costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoAndArticulo(
+                aplicacion,
+                cilindrada,
+                cobranzaRepuesto.getTipoRepuesto(),
+                cobranzaRepuesto.getArticulo()
+            );
             if (costosRepuestos.isEmpty()) {
                 CostoRepuestoProveedor nRepuestoProveedor = new CostoRepuestoProveedor();
                 nRepuestoProveedor.setAplicacion(aplicacion);
@@ -373,13 +388,11 @@ public class ExpertoPresupuesto {
                 costoRepuestoProveedorRepository.save(nRepuestoProveedor);
             }
         }
-
     }
 
     public DTOPresupuesto aceptarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
-            EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
+            EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
             Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoAceptado);
             if (this.validarCreacionPedido(editado)) {
                 editado = crearPedidoRepuesto(editado);
@@ -389,7 +402,6 @@ public class ExpertoPresupuesto {
             log.error(e.getMessage());
             return null;
         }
-
     }
 
     private boolean validarCreacionPedido(Presupuesto presupuesto) {
@@ -406,17 +418,20 @@ public class ExpertoPresupuesto {
 
     private Presupuesto crearPedidoRepuesto(Presupuesto presupuesto) {
         PedidoRepuesto nuevoPedido = new PedidoRepuesto();
-        EstadoPedidoRepuesto estadoCreado = estadoPedidoRepuestoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO);
+        EstadoPedidoRepuesto estadoCreado = estadoPedidoRepuestoRepository.findByNombreEstado(
+            globales.NOMBRE_ESTADO_PEDIDO_REPUESTO_PENDIENTE_DE_PEDIDO
+        );
         nuevoPedido.setEstadoPedidoRepuesto(estadoCreado);
         nuevoPedido.setFechaCreacion(LocalDate.now());
         nuevoPedido.setPresupuesto(presupuesto);
-        EstadoDetallePedido estadoPendiente = estadoDetallePedidoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_DE_PEDIDO);
+        EstadoDetallePedido estadoPendiente = estadoDetallePedidoRepository.findByNombreEstado(
+            globales.NOMBRE_ESTADO_DETALLE_PEDIDO_PENDIENTE_DE_PEDIDO
+        );
         for (DetallePresupuesto detallePresupuesto : presupuesto.getDetallePresupuestos()) {
             if (!detallePresupuesto.getCobranzaRepuestos().isEmpty()) {
-                EstadoCostoRepuesto costoPendientePedido = estadoCostoRepuestoRepository
-                        .findByNombreEstado(globales.NOMBRE_ESTADO_COSTO_REPUESTO_PENDIENTE);
+                EstadoCostoRepuesto costoPendientePedido = estadoCostoRepuestoRepository.findByNombreEstado(
+                    globales.NOMBRE_ESTADO_COSTO_REPUESTO_PENDIENTE
+                );
                 DetallePedido nuevoDetallePedido = new DetallePedido();
                 for (CobranzaRepuesto cobranza : detallePresupuesto.getCobranzaRepuestos()) {
                     CostoRepuesto newCosto = new CostoRepuesto();
@@ -436,9 +451,9 @@ public class ExpertoPresupuesto {
 
     public DTOPresupuesto cancelarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
-
-            EstadoPresupuesto estadoPresupuestoCancelado = estadoPresupuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO);
+            EstadoPresupuesto estadoPresupuestoCancelado = estadoPresupuestoRepository.findByNombreEstado(
+                globales.NOMBRE_ESTADO_PRESUPUESTO_CANCELADO
+            );
             this.puedeCancelarPresupuesto(dtoPresupuesto);
             Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoPresupuestoCancelado);
 
@@ -449,7 +464,11 @@ public class ExpertoPresupuesto {
             return presupuestoConverter.convertirEntidadAModelo(editado);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new ErrorToURIException("No se puede cancelar este presupuesto", ExpertoPresupuesto.class.getName(), "ErrorCancelarPresupuesto");
+            throw new ErrorToURIException(
+                "No se puede cancelar este presupuesto",
+                ExpertoPresupuesto.class.getName(),
+                "ErrorCancelarPresupuesto"
+            );
         }
     }
 
@@ -458,13 +477,15 @@ public class ExpertoPresupuesto {
     }
 
     private void cancelarPedido(Presupuesto presupuesto) {
-        EstadoPedidoRepuesto estadoPedidoRepuestoCancelado = estadoPedidoRepuestoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_PEDIDO_CANCELADO);
+        EstadoPedidoRepuesto estadoPedidoRepuestoCancelado = estadoPedidoRepuestoRepository.findByNombreEstado(
+            globales.NOMBRE_ESTADO_PEDIDO_CANCELADO
+        );
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
         pedido.setEstadoPedidoRepuesto(estadoPedidoRepuestoCancelado);
 
-        EstadoDetallePedido estadoDetallePedido = estadoDetallePedidoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO);
+        EstadoDetallePedido estadoDetallePedido = estadoDetallePedidoRepository.findByNombreEstado(
+            globales.NOMBRE_ESTADO_DETALLE_PEDIDO_CANCELADO
+        );
         pedido.cambiarEstadoADetalles(estadoDetallePedido);
 
         pedidoRepuestoRepository.save(pedido);
@@ -473,13 +494,13 @@ public class ExpertoPresupuesto {
     public DTOPresupuesto entregarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
             if (this.puedeEntregarPresupuesto(dtoPresupuesto)) {
-                EstadoPresupuesto estadoEntregado = estadoPresupuestoRepository
-                        .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO);
+                EstadoPresupuesto estadoEntregado = estadoPresupuestoRepository.findByNombreEstado(
+                    globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO
+                );
                 Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoEntregado);
                 return presupuestoConverter.convertirEntidadAModelo(editado);
             }
             return null;
-
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;
@@ -488,22 +509,21 @@ public class ExpertoPresupuesto {
 
     public DTOPresupuesto terminarPresupuesto(DTOPresupuesto dtoPresupuesto) {
         try {
-            EstadoPresupuesto estadoTerminado = estadoPresupuestoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+            EstadoPresupuesto estadoTerminado = estadoPresupuestoRepository.findByNombreEstado(
+                globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO
+            );
             if (this.puedeTerminarPresupuesto(dtoPresupuesto)) {
                 Presupuesto editado = cambiarEstadoPresupuesto(dtoPresupuesto, estadoTerminado);
                 return presupuestoConverter.convertirEntidadAModelo(editado);
             }
             return null;
-
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;
         }
     }
 
-    private Presupuesto cambiarEstadoPresupuesto(DTOPresupuesto dtoPresupuesto, EstadoPresupuesto estado)
-            throws Exception {
+    private Presupuesto cambiarEstadoPresupuesto(DTOPresupuesto dtoPresupuesto, EstadoPresupuesto estado) throws Exception {
         Presupuesto presupuesto = presupuestoRepository.findById(dtoPresupuesto.getCodigo()).get();
         presupuesto.setEstadoPresupuesto(estado);
         Presupuesto editado = presupuestoRepository.save(presupuesto);
@@ -514,32 +534,26 @@ public class ExpertoPresupuesto {
         Boolean puedeTerminar = false;
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
         PedidoRepuesto pedido = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
-        if (pedido == null
-                || pedido.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO)) {
+        if (pedido == null || pedido.getEstadoPedidoRepuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PEDIDO_RECIBIDO)) {
             puedeTerminar = true;
         }
         return puedeTerminar;
-
     }
 
     private Boolean puedeEntregarPresupuesto(DTOPresupuesto dto) {
         Presupuesto presupuesto = presupuestoRepository.getOne(dto.getCodigo());
-        return presupuesto.getEstadoPresupuesto().getNombreEstado()
-                .equals(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
+        return presupuesto.getEstadoPresupuesto().getNombreEstado().equals(globales.NOMBRE_ESTADO_PRESUPUESTO_TERMINADO);
     }
 
     private void puedeCancelarPresupuesto(DTOPresupuesto dto) throws Exception {
-        if (!Arrays.asList(globales.PRESUPUESTO_POSIBLE_CANCELAR)
-                .contains(dto.getEstado())) {
+        if (!Arrays.asList(globales.PRESUPUESTO_POSIBLE_CANCELAR).contains(dto.getEstado())) {
             throw new Exception();
         }
     }
 
     public List<CostoRepuesto> buscarCostoRepuestoPresupuesto(Long presupuestoId) {
-
         List<CostoRepuesto> costosRepuestos = new ArrayList<CostoRepuesto>();
         try {
-
             Presupuesto presupuesto = presupuestoRepository.getOne(presupuestoId);
             PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findByPresupuesto(presupuesto);
             String estadoPedido = pedidoRepuesto.getEstadoPedidoRepuesto().getNombreEstado();
@@ -550,13 +564,11 @@ public class ExpertoPresupuesto {
                     }
                 }
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
             return costosRepuestos;
         }
-
     }
 
     private Boolean tieneAccesoATodosLosPresupuestos(Empleado empleado) {
@@ -571,8 +583,7 @@ public class ExpertoPresupuesto {
             authoritiesNames.add(authority.getName());
         }
 
-        return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
-                || authoritiesNames.contains(AuthoritiesConstants.JEFE);
+        return authoritiesNames.contains(AuthoritiesConstants.ADMIN) || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
 
     public Presupuesto getPresupuesto(Long presupuestoId) throws EntityNotFoundException {
@@ -588,40 +599,39 @@ public class ExpertoPresupuesto {
     }
 
     public Pair<File, String> imprimirPresupuesto(Long idPresupuesto) throws Exception {
-
         Optional<Presupuesto> optPresupuesto = presupuestoRepository.findById(idPresupuesto);
         if (!optPresupuesto.isPresent()) {
             throw new Exception("No se encontro este presupuesto");
         }
         Presupuesto presupuesto = optPresupuesto.get();
 
-        File reporte = expertoImpresionPresupuesto.imprimirPresupuesto(presupuesto, presupuesto.getImporteTotal(),
-                presupuesto.getCliente());
+        File reporte = expertoImpresionPresupuesto.imprimirPresupuesto(
+            presupuesto,
+            presupuesto.getImporteTotal(),
+            presupuesto.getCliente()
+        );
 
         return new Pair(reporte, presupuesto.getId());
     }
 
     public Presupuesto buscarPresupuestoExistente(Long aplicacionId, Long cilindradaId) {
-
-        Presupuesto presupuesto = presupuestoRepository
-            .findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
-                aplicacionId,
-                cilindradaId,
-                true
+        Presupuesto presupuesto = presupuestoRepository.findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
+            aplicacionId,
+            cilindradaId,
+            true
         );
         if (presupuesto == null) {
-            presupuesto = presupuestoRepository
-                .findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
+            presupuesto =
+                presupuestoRepository.findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
                     aplicacionId,
                     cilindradaId,
                     false
-            );
+                );
         }
         return presupuesto;
     }
 
-    public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId,
-            Long tipoParteMotorId) {
+    public List<CostoRepuestoProveedor> buscarCostoRepuestoProveedor(Long aplicacionId, Long cilindradaId, Long tipoParteMotorId) {
         Aplicacion aplicacion = aplicacionRepository.getOne(aplicacionId);
         Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
         TipoParteMotor tipoParteMotor = tipoParteMotorRepository.getOne(tipoParteMotorId);
@@ -631,9 +641,7 @@ public class ExpertoPresupuesto {
         tipos.add(tipoParte2);
         List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotorIn(tipos);
 
-        return costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada,
-                tipoRepuestos);
-
+        return costoRepuestoProveedorRepository.findByAplicacionAndCilindradaAndTipoRepuestoIn(aplicacion, cilindrada, tipoRepuestos);
     }
 
     public List<TipoParteMotor> buscarTiposPartesPresupuesto() {

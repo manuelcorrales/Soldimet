@@ -1,16 +1,16 @@
 package soldimet.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link soldimet.domain.Presupuesto} entity. This class is used
@@ -55,10 +55,9 @@ public class PresupuestoCriteria implements Serializable, Criteria {
 
     private LongFilter sucursalId;
 
-    public PresupuestoCriteria(){
-    }
+    public PresupuestoCriteria() {}
 
-    public PresupuestoCriteria(PresupuestoCriteria other){
+    public PresupuestoCriteria(PresupuestoCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.descripcionDescuento = other.descripcionDescuento == null ? null : other.descripcionDescuento.copy();
         this.descuento = other.descuento == null ? null : other.descuento.copy();
@@ -201,7 +200,6 @@ public class PresupuestoCriteria implements Serializable, Criteria {
         this.sucursalId = sucursalId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -211,7 +209,7 @@ public class PresupuestoCriteria implements Serializable, Criteria {
             return false;
         }
         final PresupuestoCriteria that = (PresupuestoCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(descripcionDescuento, that.descripcionDescuento) &&
             Objects.equals(descuento, that.descuento) &&
@@ -226,49 +224,51 @@ public class PresupuestoCriteria implements Serializable, Criteria {
             Objects.equals(estadoPresupuestoId, that.estadoPresupuestoId) &&
             Objects.equals(detallePresupuestoId, that.detallePresupuestoId) &&
             Objects.equals(documentTypeId, that.documentTypeId) &&
-            Objects.equals(sucursalId, that.sucursalId);
+            Objects.equals(sucursalId, that.sucursalId)
+        );
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        descripcionDescuento,
-        descuento,
-        fechaCreacion,
-        fechaAceptado,
-        fechaEntregado,
-        importeTotal,
-        observaciones,
-        soldadura,
-        modelo,
-        clienteId,
-        estadoPresupuestoId,
-        detallePresupuestoId,
-        documentTypeId,
-        sucursalId
+            id,
+            descripcionDescuento,
+            descuento,
+            fechaCreacion,
+            fechaAceptado,
+            fechaEntregado,
+            importeTotal,
+            observaciones,
+            soldadura,
+            modelo,
+            clienteId,
+            estadoPresupuestoId,
+            detallePresupuestoId,
+            documentTypeId,
+            sucursalId
         );
     }
 
     @Override
     public String toString() {
-        return "PresupuestoCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (descripcionDescuento != null ? "descripcionDescuento=" + descripcionDescuento + ", " : "") +
-                (descuento != null ? "descuento=" + descuento + ", " : "") +
-                (fechaCreacion != null ? "fechaCreacion=" + fechaCreacion + ", " : "") +
-                (fechaAceptado != null ? "fechaAceptado=" + fechaAceptado + ", " : "") +
-                (fechaEntregado != null ? "fechaEntregado=" + fechaEntregado + ", " : "") +
-                (importeTotal != null ? "importeTotal=" + importeTotal + ", " : "") +
-                (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
-                (soldadura != null ? "soldadura=" + soldadura + ", " : "") +
-                (modelo != null ? "modelo=" + modelo + ", " : "") +
-                (clienteId != null ? "clienteId=" + clienteId + ", " : "") +
-                (estadoPresupuestoId != null ? "estadoPresupuestoId=" + estadoPresupuestoId + ", " : "") +
-                (detallePresupuestoId != null ? "detallePresupuestoId=" + detallePresupuestoId + ", " : "") +
-                (documentTypeId != null ? "documentTypeId=" + documentTypeId + ", " : "") +
-                (sucursalId != null ? "sucursalId=" + sucursalId + ", " : "") +
-            "}";
+        return (
+            "PresupuestoCriteria{" +
+            (id != null ? "id=" + id + ", " : "") +
+            (descripcionDescuento != null ? "descripcionDescuento=" + descripcionDescuento + ", " : "") +
+            (descuento != null ? "descuento=" + descuento + ", " : "") +
+            (fechaCreacion != null ? "fechaCreacion=" + fechaCreacion + ", " : "") +
+            (fechaAceptado != null ? "fechaAceptado=" + fechaAceptado + ", " : "") +
+            (fechaEntregado != null ? "fechaEntregado=" + fechaEntregado + ", " : "") +
+            (importeTotal != null ? "importeTotal=" + importeTotal + ", " : "") +
+            (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
+            (soldadura != null ? "soldadura=" + soldadura + ", " : "") +
+            (modelo != null ? "modelo=" + modelo + ", " : "") +
+            (clienteId != null ? "clienteId=" + clienteId + ", " : "") +
+            (estadoPresupuestoId != null ? "estadoPresupuestoId=" + estadoPresupuestoId + ", " : "") +
+            (detallePresupuestoId != null ? "detallePresupuestoId=" + detallePresupuestoId + ", " : "") +
+            (documentTypeId != null ? "documentTypeId=" + documentTypeId + ", " : "") +
+            (sucursalId != null ? "sucursalId=" + sucursalId + ", " : "") +
+            "}"
+        );
     }
-
 }

@@ -15,5 +15,4 @@ public class MathUtils {
         }
         return new Integer(0);
     }
-
 }

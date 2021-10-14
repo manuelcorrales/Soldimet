@@ -19,8 +19,7 @@ public class DTOTipoParteMotor {
         this.oid = oid;
     }
 
-    public DTOTipoParteMotor() {
-    }
+    public DTOTipoParteMotor() {}
 
     public String getNombretipoParteMotor() {
         return nombretipoParteMotor;
@@ -37,8 +36,4 @@ public class DTOTipoParteMotor {
     public void setOid(Integer oid) {
         this.oid = oid;
     }
-
-
-
-
 }

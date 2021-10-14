@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package soldimet.service.expertos;
+
 import java.util.List;
 import org.springframework.stereotype.Service;
 import soldimet.domain.Caja;
@@ -17,5 +18,4 @@ import soldimet.domain.Movimiento;
 public abstract class EstrategiaMovimiento {
 
     public abstract List<Caja> buscarMovimientos();
-
 }

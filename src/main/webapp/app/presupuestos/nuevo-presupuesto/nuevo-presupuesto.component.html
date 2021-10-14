@@ -1,106 +1,117 @@
 <jhi-alert></jhi-alert>
 <form role="form" class="jh-create-entity" #presupuestoForm="ngForm" (ngSubmit)="guardarPresupuesto()">
-    <div class="col-auto align-center container jh-card">
-        <div class="row">
-            <div class="col-md-6"></div>
-            <div class="col-md-2 text-left">Fecha: {{fecha | date:'mediumDate'}}</div>
-            <div class="col-md-2 text-left">Sucursal: {{this.empleado?.sucursal}}</div>
-            <div class="col-md-2 text-left">Empleado: {{this.empleado?.nombre}}</div>
+  <div class="col-auto align-center container jh-card">
+    <div class="row">
+      <div class="col-md-6"></div>
+      <div class="col-md-2 text-left">Fecha: {{ fecha | date: 'mediumDate' }}</div>
+      <div class="col-md-2 text-left">Sucursal: {{ this.empleado?.sucursal }}</div>
+      <div class="col-md-2 text-left">Empleado: {{ this.empleado?.nombre }}</div>
+    </div>
+    <jhi-clientes-nuevopresupuesto #cliente></jhi-clientes-nuevopresupuesto>
+    <jhi-motor-nuevo-presupuesto
+      (eventoDetallePresupuesto)="recibirDetalle($event)"
+      (eventoIsSoldadura)="recibirIsSoldadura($event)"
+    ></jhi-motor-nuevo-presupuesto>
+    <div *ngIf="mostrarResultadoBusquedaPresupuestoViejo" class="container">
+      <div *ngIf="presupuestoViejo" class="card border-success mb-3">
+        <div class="card-body text-success text-center">
+          <h5 class="card-title">
+            Se encontró un modelo de presupuesto para este motor!
+            <small *ngFor="let detalleViejo of presupuestoViejo?.detallePresupuestos">
+              ({{ detalleViejo?.tipoParteMotor?.nombreTipoParteMotor }})</small
+            >.
+            <a target="_blank" [routerLink]="['/presupuestos', presupuestoViejo.id, 'ver']">Ver presupuesto.</a>
+          </h5>
+          <p class="card-text">
+            Se va a utilizar como base para la creación de este presupuesto
+            <small *ngIf="!presupuestoViejo.modelo"> (No es un modelo)</small>.
+          </p>
         </div>
-        <jhi-clientes-nuevopresupuesto #cliente></jhi-clientes-nuevopresupuesto>
-        <jhi-motor-nuevo-presupuesto (eventoDetallePresupuesto)="recibirDetalle($event)" (eventoIsSoldadura)="recibirIsSoldadura($event)"></jhi-motor-nuevo-presupuesto>
-        <div *ngIf="mostrarResultadoBusquedaPresupuestoViejo" class="container">
-            <div *ngIf="presupuestoViejo" class="card border-success mb-3">
-                <div class="card-body text-success text-center">
-                    <h5 class="card-title">
-                        Se encontró un modelo de presupuesto para este motor!
-                        <small *ngFor="let detalleViejo of presupuestoViejo?.detallePresupuestos"> ({{detalleViejo?.tipoParteMotor?.nombreTipoParteMotor}})</small>.
-                        <a target="_blank" [routerLink]="['/presupuestos', presupuestoViejo.id, 'ver']">Ver presupuesto.</a>
-                    </h5>
-                    <p class="card-text">
-                        Se va a utilizar como base para la creación de este presupuesto <small *ngIf="!presupuestoViejo.modelo"> (No es un modelo)</small>.
-                    </p>
-                </div>
-            </div>
-            <div *ngIf="!presupuestoViejo" class="card border-info mb-3">
-                <div class="card-body text-info text-center">
-                    <h5 class="card-title">No existe un modelo para este motor.</h5>
-                </div>
-            </div>
+      </div>
+      <div *ngIf="!presupuestoViejo" class="card border-info mb-3">
+        <div class="card-body text-info text-center">
+          <h5 class="card-title">No existe un modelo para este motor.</h5>
         </div>
-        <div class="row row-eq-height">
-            <div class="col-md-4">
-                <div class="card jh-card border-info mb-3 shadow">
-                    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
-                        Operaciones
-                    </div>
-                    <div *ngFor="let detalle of detallesPresupuestos">
-                        <jhi-operaciones-nuevopresupuesto (eventoTotalOperaciones)="setTotalOperaciones()" #operaciones [detalle]="detalle">
-                        </jhi-operaciones-nuevopresupuesto>
-                    </div>
-                    <div class="card-footer">
-                        <div>
-                            <label>Total Operaciones: ${{totalOperaciones | number:'1.2-2'}}</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="card jh-card border-info mb-3 shadow">
-                    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
-                        Repuestos
-                    </div>
-                    <div *ngFor="let detalle of detallesPresupuestos">
-                        <jhi-repuestos-nuevopresupuesto (eventoTotalRepuestos)="setTotalRepuestos()" #repuestos [detalle]="detalle">
-                        </jhi-repuestos-nuevopresupuesto>
-                    </div>
-                    <div class="card-footer">
-                        <div>
-                            <label>Total Repuestos: ${{totalRepuestos | number:'1.2-2'}}</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
+    </div>
+    <div class="row row-eq-height">
+      <div class="col-md-4">
         <div class="card jh-card border-info mb-3 shadow">
-                <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
-                    Observaciones
-                </div>
-                <div class="card-body" style="padding-top: 0px;">
-                    <div class="row">
-                        <textarea class="form-control" id="observaciones" name="observaciones" [(ngModel)]="presupuesto.observaciones" rows="3"></textarea>
-                    </div>
-                </div>
+          <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498db !important">Operaciones</div>
+          <div *ngFor="let detalle of detallesPresupuestos">
+            <jhi-operaciones-nuevopresupuesto (eventoTotalOperaciones)="setTotalOperaciones()" #operaciones [detalle]="detalle">
+            </jhi-operaciones-nuevopresupuesto>
+          </div>
+          <div class="card-footer">
+            <div>
+              <label>Total Operaciones: ${{ totalOperaciones | number: '1.2-2' }}</label>
             </div>
-    </div>
-    <div class="card-footer">
-        <div class="row">
-            <div class="col">
-            </div>
-            <div class="col form-check form-check-inline">
-                <label id="total_presupuesto">
-                    Total Presupuesto:
-                    <input for="total_presupuesto" type="number" class="form-control" name="importeTotal"
-                        step="0.01" [(ngModel)]="presupuesto.importeTotal"
-                    >
-                </label>
-            </div>
-            <div class="col form-check form-check-inline">
-                <label id="presupuesto_modelo"class="form-check-label">
-                    Usar como modelo:
-                    <input for="presupuesto_modelo" class="form-check-input" type="checkbox" name="modelo"
-                        [(ngModel)]="presupuesto.modelo" [disabled]="presupuesto.soldadura"
-                    >
-                </label>
-            </div>
-            <div class="col text-right">
-                <button [disabled]="isSaving || !presupuestoForm.valid" type="submit" class="btn btn-primary" >
-                    Crear
-                </button>
-                <button type="button" class="btn btn-danger" [routerLink]="['/presupuestos']">
-                    Cancelar
-                </button>
-            </div>
+          </div>
         </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card jh-card border-info mb-3 shadow">
+          <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498db !important">Repuestos</div>
+          <div *ngFor="let detalle of detallesPresupuestos">
+            <jhi-repuestos-nuevopresupuesto (eventoTotalRepuestos)="setTotalRepuestos()" #repuestos [detalle]="detalle">
+            </jhi-repuestos-nuevopresupuesto>
+          </div>
+          <div class="card-footer">
+            <div>
+              <label>Total Repuestos: ${{ totalRepuestos | number: '1.2-2' }}</label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="card jh-card border-info mb-3 shadow">
+      <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498db !important">Observaciones</div>
+      <div class="card-body" style="padding-top: 0px">
+        <div class="row">
+          <textarea
+            class="form-control"
+            id="observaciones"
+            name="observaciones"
+            [(ngModel)]="presupuesto.observaciones"
+            rows="3"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col form-check form-check-inline">
+        <label id="total_presupuesto">
+          Total Presupuesto:
+          <input
+            for="total_presupuesto"
+            type="number"
+            class="form-control"
+            name="importeTotal"
+            step="0.01"
+            [(ngModel)]="presupuesto.importeTotal"
+          />
+        </label>
+      </div>
+      <div class="col form-check form-check-inline">
+        <label id="presupuesto_modelo" class="form-check-label">
+          Usar como modelo:
+          <input
+            for="presupuesto_modelo"
+            class="form-check-input"
+            type="checkbox"
+            name="modelo"
+            [(ngModel)]="presupuesto.modelo"
+            [disabled]="presupuesto.soldadura"
+          />
+        </label>
+      </div>
+      <div class="col text-right">
+        <button [disabled]="isSaving || !presupuestoForm.valid" type="submit" class="btn btn-primary">Crear</button>
+        <button type="button" class="btn btn-danger" [routerLink]="['/presupuestos']">Cancelar</button>
+      </div>
+    </div>
+  </div>
 </form>

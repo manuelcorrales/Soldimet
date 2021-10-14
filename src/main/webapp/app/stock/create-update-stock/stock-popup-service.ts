@@ -53,7 +53,7 @@ export class StockModalPopupService {
 
 @Component({
   selector: 'jhi-stock-modal-popup',
-  template: ''
+  template: '',
 })
 export class StockModalPopupComponent implements OnInit, OnDestroy {
   routeSub: any;

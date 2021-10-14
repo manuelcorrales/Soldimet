@@ -16,7 +16,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'jhi-nuevo-movimiento-articulo',
   templateUrl: './nuevo-movimiento-articulo.component.html',
-  styleUrls: ['./nuevo-movimiento-articulo.component.scss']
+  styleUrls: ['./nuevo-movimiento-articulo.component.scss'],
 })
 export class NuevoMovimientoArticuloComponent implements OnInit {
   searching = false;
@@ -43,7 +43,10 @@ export class NuevoMovimientoArticuloComponent implements OnInit {
         filter((mayBeOk: HttpResponse<IMedidaArticulo[]>) => mayBeOk.ok),
         map((response: HttpResponse<IMedidaArticulo[]>) => response.body)
       )
-      .subscribe((res: IMedidaArticulo[]) => (this.medidas = res), (res: HttpErrorResponse) => this.alertService.error(res.message));
+      .subscribe(
+        (res: IMedidaArticulo[]) => (this.medidas = res),
+        (res: HttpErrorResponse) => this.alertService.error(res.message)
+      );
   }
 
   searchRepuestoProveedor = (text$: Observable<string>) =>

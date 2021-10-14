@@ -9,7 +9,7 @@ import { CobranzaOperacion } from 'app/shared/model/cobranza-operacion.model';
 @Component({
   selector: 'jhi-operaciones-nuevopresupuesto',
   templateUrl: './operaciones-nuevopresupuesto.component.html',
-  styles: []
+  styles: [],
 })
 export class OperacionesNuevopresupuestoComponent implements OnInit {
   @Input() detalle: DetallePresupuesto;

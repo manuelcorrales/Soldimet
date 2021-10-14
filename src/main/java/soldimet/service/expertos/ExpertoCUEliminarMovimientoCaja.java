@@ -5,7 +5,6 @@
  */
 package soldimet.service.expertos;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,9 @@ public class ExpertoCUEliminarMovimientoCaja {
 
     private final Logger log = LoggerFactory.getLogger(ExpertoCUEliminarMovimientoCaja.class);
 
-
     private final String errorEstadoMovimiento = "Este movimiento no esta dado de alta";
-    private final String errorPermisoInsuficiente = "Este movimiento fue creado hace mas de 24hrs, necesita permisos para eliminar eliminar";
+    private final String errorPermisoInsuficiente =
+        "Este movimiento fue creado hace mas de 24hrs, necesita permisos para eliminar eliminar";
 
     @Autowired
     private ExtendedMovimientoRepository movimientoRepository;
@@ -40,17 +39,14 @@ public class ExpertoCUEliminarMovimientoCaja {
     private Globales globales;
 
     public Boolean eliminarMovimiento(Long movimientoID) {
-
         try {
             Movimiento mov = movimientoRepository.findById(movimientoID).get();
 
-            EstadoMovimiento estadoAlta = estadoMovimientoRepository
-                .findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
+            EstadoMovimiento estadoAlta = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
             if (mov.getEstado().equals(estadoAlta)) {
                 //cambio el estado del movimiento
-                EstadoMovimiento estadoBaja = estadoMovimientoRepository
-                    .findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_BAJA);
+                EstadoMovimiento estadoBaja = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_BAJA);
 
                 mov.setEstado(estadoBaja);
 
@@ -59,13 +55,9 @@ public class ExpertoCUEliminarMovimientoCaja {
                 return true;
             }
             return false;
-
         } catch (NullPointerException e) {
             log.error(e.getMessage());
             return false;
         }
-
-
     }
-
 }

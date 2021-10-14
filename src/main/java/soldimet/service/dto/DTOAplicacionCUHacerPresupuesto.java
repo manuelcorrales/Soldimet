@@ -7,39 +7,34 @@ package soldimet.service.dto;
  */
 public class DTOAplicacionCUHacerPresupuesto {
 
-	private String nombreAplicacion;
-	private int numeroGrupo;
+    private String nombreAplicacion;
+    private int numeroGrupo;
 
-	public DTOAplicacionCUHacerPresupuesto(){
+    public DTOAplicacionCUHacerPresupuesto() {}
 
-	}
+    public void finalize() throws Throwable {}
 
-	public void finalize() throws Throwable {
+    public String getnombreAplicacion() {
+        return nombreAplicacion;
+    }
 
-	}
+    public int getnumeroGrupo() {
+        return numeroGrupo;
+    }
 
-	public String getnombreAplicacion(){
-		return nombreAplicacion;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setnombreAplicacion(String newVal) {
+        nombreAplicacion = newVal;
+    }
 
-	public int getnumeroGrupo(){
-		return numeroGrupo;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreAplicacion(String newVal){
-		nombreAplicacion = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnumeroGrupo(int newVal){
-		numeroGrupo = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void setnumeroGrupo(int newVal) {
+        numeroGrupo = newVal;
+    }
 }

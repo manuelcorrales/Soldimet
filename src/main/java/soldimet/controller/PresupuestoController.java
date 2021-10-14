@@ -1,14 +1,13 @@
 package soldimet.controller;
 
+import io.github.jhipster.web.util.HeaderUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-
 import javax.validation.Valid;
-
 import org.apache.poi.util.IOUtils;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
@@ -34,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.github.jhipster.web.util.HeaderUtil;
 import soldimet.domain.Aplicacion;
 import soldimet.domain.Articulo;
 import soldimet.domain.Cliente;
@@ -53,7 +50,7 @@ import soldimet.service.expertos.ExpertoPresupuesto;
 
 @RestController
 @RequestMapping("/api/presupuestos")
-@Transactional()
+@Transactional
 public class PresupuestoController {
 
     private final Logger log = LoggerFactory.getLogger(PresupuestoController.class);
@@ -76,13 +73,7 @@ public class PresupuestoController {
         @RequestParam(defaultValue = "200") Integer size
     ) {
         Pageable paging = PageRequest.of(page, size, Sort.by("id").descending());
-        log.debug(
-            "request /api/presupuestos/getPresupuestos: filtro: {}, estado: {}, page: {}, size: {}",
-            filtro,
-            estado,
-            page,
-            size
-        );
+        log.debug("request /api/presupuestos/getPresupuestos: filtro: {}, estado: {}, page: {}, size: {}", filtro, estado, page, size);
 
         Page<DTOPresupuesto> presupuestos = expertoPresupuesto.buscarPresupuestos(filtro, estado, modelo, paging);
 
@@ -117,7 +108,7 @@ public class PresupuestoController {
     @GetMapping("/getAplicacionByMotor/{motorId}")
     public List<Aplicacion> buscarPresupuestos(@PathVariable("motorId") Long motorId) {
         log.info("request /api/presupuestos/getAplicacionByMotor: motorId{}", motorId);
-        List<Aplicacion> aplicaciones =  expertoPresupuesto.buscarAplicacionPorMotor(motorId);
+        List<Aplicacion> aplicaciones = expertoPresupuesto.buscarAplicacionPorMotor(motorId);
         log.debug("response /api/presupuestos/getAplicacionByMotor: {}", aplicaciones);
         return aplicaciones;
     }
@@ -131,10 +122,7 @@ public class PresupuestoController {
     }
 
     @GetMapping("/buscarModelo")
-    public Presupuesto buscarPresupuestoModelo(
-        @RequestParam("aplicacion") Long aplicacion,
-        @RequestParam("cilindrada") Long cilindrada
-    ) {
+    public Presupuesto buscarPresupuestoModelo(@RequestParam("aplicacion") Long aplicacion, @RequestParam("cilindrada") Long cilindrada) {
         log.info("request /api/presupuestos/buscarExistente: {}", aplicacion, cilindrada);
         Presupuesto presupuesto = expertoPresupuesto.buscarPresupuestoExistente(aplicacion, cilindrada);
         log.debug("response /api/presupuestos/buscarExistente: {}", presupuesto);
@@ -186,14 +174,14 @@ public class PresupuestoController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Presupuesto> savePresupuesto(@Valid @RequestBody Presupuesto presupuesto)
-            throws URISyntaxException {
+    public ResponseEntity<Presupuesto> savePresupuesto(@Valid @RequestBody Presupuesto presupuesto) throws URISyntaxException {
         log.info("REST request to save Presupuesto : {}", presupuesto);
         Presupuesto result = expertoPresupuesto.savePresupuesto(presupuesto);
         log.debug("REST response to save Presupuesto : {}", result);
-        return ResponseEntity.created(new URI("/api/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(APP_NAME, false, ENTITY_NAME, result.getId().toString()))
-                .body(result);
+        return ResponseEntity
+            .created(new URI("/api/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(APP_NAME, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     @PostMapping("/aceptar")
@@ -202,8 +190,10 @@ public class PresupuestoController {
         DTOPresupuesto result = expertoPresupuesto.aceptarPresupuesto(dtoPresupuesto);
         log.debug("REST response to accept Presupuesto : {}", result);
         if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
-                    String.valueOf(result.getCodigo()))).body(result);
+            return ResponseEntity
+                .accepted()
+                .headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
+                .body(result);
         } else {
             log.debug("Error :) ", dtoPresupuesto);
             return ResponseEntity.status(500).body(dtoPresupuesto);
@@ -215,8 +205,10 @@ public class PresupuestoController {
         log.info("REST request to cancel Presupuesto : {}", dtoPresupuesto.getCodigo());
         DTOPresupuesto result = expertoPresupuesto.cancelarPresupuesto(dtoPresupuesto);
         log.debug("REST response to cancel Presupuesto : {}", result);
-        return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
-                String.valueOf(result.getCodigo()))).body(result);
+        return ResponseEntity
+            .accepted()
+            .headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
+            .body(result);
     }
 
     @PostMapping("/entregar")
@@ -225,8 +217,10 @@ public class PresupuestoController {
         DTOPresupuesto result = expertoPresupuesto.entregarPresupuesto(dtoPresupuesto);
         log.debug("REST response to accept Presupuesto : {}", dtoPresupuesto.getCodigo());
         if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
-                    String.valueOf(result.getCodigo()))).body(result);
+            return ResponseEntity
+                .accepted()
+                .headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
+                .body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);
         }
@@ -238,30 +232,23 @@ public class PresupuestoController {
         DTOPresupuesto result = expertoPresupuesto.terminarPresupuesto(dtoPresupuesto);
         log.debug("REST response to accept Presupuesto : {}", result);
         if (result != null) {
-            return ResponseEntity.accepted().headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME,
-                    String.valueOf(result.getCodigo()))).body(result);
+            return ResponseEntity
+                .accepted()
+                .headers(HeaderUtil.createEntityUpdateAlert(APP_NAME, false, ENTITY_NAME, String.valueOf(result.getCodigo())))
+                .body(result);
         } else {
             return ResponseEntity.status(500).body(dtoPresupuesto);
         }
     }
 
-    @RequestMapping(
-        value = "/imprimir/{idPresupuesto}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_PDF_VALUE
-    )
+    @RequestMapping(value = "/imprimir/{idPresupuesto}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
-    public ResponseEntity<byte[]> imprimirPresupuesto(@PathVariable("idPresupuesto") Long idPresupuesto)
-            throws Exception {
+    public ResponseEntity<byte[]> imprimirPresupuesto(@PathVariable("idPresupuesto") Long idPresupuesto) throws Exception {
         log.info("request /api/presupuestos/getRepuestos: id {}", idPresupuesto);
-        Pair<File, String> response =  expertoPresupuesto.imprimirPresupuesto(idPresupuesto);
+        Pair<File, String> response = expertoPresupuesto.imprimirPresupuesto(idPresupuesto);
         HttpHeaders headers = new HttpHeaders();
         headers.add("file-name", "presupuesto nº " + String.valueOf(response.getValue1()) + ".pdf");
-        return new ResponseEntity<byte[]>(
-            IOUtils.toByteArray(new FileInputStream(response.getValue0())),
-            headers,
-            HttpStatus.OK
-        );
+        return new ResponseEntity<byte[]>(IOUtils.toByteArray(new FileInputStream(response.getValue0())), headers, HttpStatus.OK);
     }
 
     @GetMapping("/buscarTodosRepuestos")
@@ -275,5 +262,4 @@ public class PresupuestoController {
         log.info("Request to buscarTiposPartesPresupuestos");
         return expertoPresupuesto.buscarTiposPartesPresupuesto();
     }
-
 }

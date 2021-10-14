@@ -31,8 +31,8 @@ public class MovimientoPresupuesto implements Serializable {
     @JoinColumn(unique = true)
     private Movimiento movimiento;
 
-    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch= FetchType.EAGER)
-    @JoinColumn(name= "movimientoPresupuesto", nullable=true)
+    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JoinColumn(name = "movimientoPresupuesto", nullable = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 

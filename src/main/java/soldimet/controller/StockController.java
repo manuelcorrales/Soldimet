@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import soldimet.domain.StockArticulo;
 import soldimet.service.dto.DTOStockRepuestoCabecera;
 import soldimet.service.expertos.ExpertoRepuestos;
@@ -42,10 +41,7 @@ public class StockController {
     }
 
     @GetMapping("/checkStock")
-    public StockArticulo checkStock(
-        @RequestParam("medida_id") Long medidaId,
-        @RequestParam("articulo_id") Long articuloID
-    ) {
+    public StockArticulo checkStock(@RequestParam("medida_id") Long medidaId, @RequestParam("articulo_id") Long articuloID) {
         log.info("request /api/stock/checkStock: {}, {}", medidaId, articuloID);
 
         StockArticulo repuestos = expertoRepuestos.checkStock(medidaId, articuloID);
@@ -61,5 +57,4 @@ public class StockController {
         log.debug("/updateStock, RESPONSE: {}", stock);
         return stock;
     }
-
 }

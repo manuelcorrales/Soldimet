@@ -17,6 +17,6 @@ import { ListaArticulosComponent } from './lista-articulos/lista-articulos.compo
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [RepuestosComponent, ArticuloNuevoComponent, UpdateRepuestosListComponent, ListaArticulosComponent],
   providers: [RepuestosService, DecimalPipe],
-  entryComponents: [RepuestosComponent, UpdateRepuestosListComponent]
+  entryComponents: [RepuestosComponent, UpdateRepuestosListComponent],
 })
 export class RepuestosModule {}

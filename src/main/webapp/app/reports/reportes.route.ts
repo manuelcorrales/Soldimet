@@ -7,7 +7,7 @@ export const REPORTES_ROUTES: Routes = [
     component: ReportesComponent,
     data: {
       authorities: ['ROLE_JEFE', 'ROLE_ADMIN'],
-      pageTitle: 'Pedidos'
-    }
-  }
+      pageTitle: 'Pedidos',
+    },
+  },
 ];

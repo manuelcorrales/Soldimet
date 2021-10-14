@@ -8,6 +8,6 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
 
 @NgModule({
   imports: [RouterModule.forRoot(LAYOUT_ROUTES, { useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class LayoutRoutingModule {}

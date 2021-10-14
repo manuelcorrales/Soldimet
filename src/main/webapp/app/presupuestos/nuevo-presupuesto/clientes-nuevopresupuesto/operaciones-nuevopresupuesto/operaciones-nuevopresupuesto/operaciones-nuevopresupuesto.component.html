@@ -1,13 +1,16 @@
-<div class="card-body" style="padding-top: 0px;">
-    <div class="border-bottom text-center">
-        <strong>{{detalle.tipoParteMotor.nombreTipoParteMotor}}</strong>
-    </div>
-    <br>
-    <div *ngFor="let costoOperacion of operaciones" class="container">
-        <jhi-operacion-precio #operaciones [costoOperacion]="costoOperacion"
-        [seleccionado]="isOperacionElegida(costoOperacion)"
-        class="row align-items-center top-buffer"
-        (eventoCambioValor)="cambioTotalOperaciones()">
-        </jhi-operacion-precio>
-    </div>
+<div class="card-body" style="padding-top: 0px">
+  <div class="border-bottom text-center">
+    <strong>{{ detalle.tipoParteMotor.nombreTipoParteMotor }}</strong>
+  </div>
+  <br />
+  <div *ngFor="let costoOperacion of operaciones" class="container">
+    <jhi-operacion-precio
+      #operaciones
+      [costoOperacion]="costoOperacion"
+      [seleccionado]="isOperacionElegida(costoOperacion)"
+      class="row align-items-center top-buffer"
+      (eventoCambioValor)="cambioTotalOperaciones()"
+    >
+    </jhi-operacion-precio>
+  </div>
 </div>

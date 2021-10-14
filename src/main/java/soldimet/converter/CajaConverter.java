@@ -2,11 +2,9 @@ package soldimet.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-
 import soldimet.constant.Globales;
 import soldimet.domain.Caja;
 import soldimet.domain.CategoriaPago;
@@ -24,9 +22,9 @@ import soldimet.repository.extendedRepository.ExtendedMovimientoPedidoRepository
 import soldimet.repository.extendedRepository.ExtendedMovimientoPresupuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
 import soldimet.service.dto.DTOCaja;
-import soldimet.service.dto.DTOMovimientos;
 import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMovimientoCUConsultarMovimientos;
+import soldimet.service.dto.DTOMovimientos;
 
 @Component
 public class CajaConverter {
@@ -83,15 +81,15 @@ public class CajaConverter {
         return newDto;
     }
 
-    public List<DTOMovimientos> movimientosToMovCabecera (List<Movimiento> movimientos) {
+    public List<DTOMovimientos> movimientosToMovCabecera(List<Movimiento> movimientos) {
         List<DTOMovimientos> dtoMovs = new ArrayList();
-        for (Movimiento movimiento: movimientos) {
+        for (Movimiento movimiento : movimientos) {
             dtoMovs.add(movimientoToDtoMovimiento(movimiento));
         }
         return dtoMovs;
     }
 
-    public Page<DTOMovimientos> movimientosToMovCabecera (Page<Movimiento> movimientos) {
+    public Page<DTOMovimientos> movimientosToMovCabecera(Page<Movimiento> movimientos) {
         return movimientos.map(movimiento -> movimientoToDtoMovimiento(movimiento));
     }
 
@@ -106,10 +104,15 @@ public class CajaConverter {
     private void completeArticuloData(DTOMovimientos newDto, Movimiento movimiento) {
         List<String> articulos = new ArrayList<>();
         List<MovimientoArticulo> movimientosArticulos = movimientoArticuloRepository.findByMovimiento(movimiento);
-        for(MovimientoArticulo movimientoArticulo: movimientosArticulos) {
-            String descripcion =  movimientoArticulo.getArticulo().getTipoRepuesto().getNombreTipoRepuesto() +
-                " - '" + movimientoArticulo.getArticulo().getCodigoArticuloProveedor() + "'" +
-                " (" + movimientoArticulo.getCantidad() + " Un)";
+        for (MovimientoArticulo movimientoArticulo : movimientosArticulos) {
+            String descripcion =
+                movimientoArticulo.getArticulo().getTipoRepuesto().getNombreTipoRepuesto() +
+                " - '" +
+                movimientoArticulo.getArticulo().getCodigoArticuloProveedor() +
+                "'" +
+                " (" +
+                movimientoArticulo.getCantidad() +
+                " Un)";
             articulos.add(descripcion);
         }
         newDto.setArticulos(articulos);

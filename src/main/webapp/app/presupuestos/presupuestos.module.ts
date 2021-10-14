@@ -28,7 +28,7 @@ import { FeatureToggleModule } from 'ngx-feature-toggle';
     FormsModule,
     SoldimetSharedModule,
     CommonModule,
-    RouterModule.forChild(PRESUPUESTOS_ROUTES)
+    RouterModule.forChild(PRESUPUESTOS_ROUTES),
   ],
   declarations: [
     PresupuestosComponent,
@@ -39,7 +39,7 @@ import { FeatureToggleModule } from 'ngx-feature-toggle';
     MotorNuevoPresupuestoComponent,
     OperacionPrecioComponent,
     RepuestoPrecioComponent,
-    PresupuestoDetailComponent
+    PresupuestoDetailComponent,
   ],
   entryComponents: [
     PresupuestosComponent,
@@ -47,10 +47,10 @@ import { FeatureToggleModule } from 'ngx-feature-toggle';
     ClientesNuevopresupuestoComponent,
     OperacionesNuevopresupuestoComponent,
     RepuestosNuevopresupuestoComponent,
-    MotorNuevoPresupuestoComponent
+    MotorNuevoPresupuestoComponent,
   ],
   providers: [PresupuestosService, NgbActiveModal],
   exports: [RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PresupuestosModule {}

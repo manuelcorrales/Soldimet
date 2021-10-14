@@ -5,7 +5,7 @@ import { DtoFF } from './dto-ff';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FlagsServiceService {
   private resourceUrlPresupuestos = SERVER_API_URL + '/api/ff4j';

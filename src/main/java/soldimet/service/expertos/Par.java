@@ -4,16 +4,17 @@
  * and open the template in the editor.
  */
 package soldimet.service.expertos;
+
 /**
  *
  * @author Manu
  */
 public class Par {
+
     private Object a;
     private Object b;
 
-    public Par() {
-    }
+    public Par() {}
 
     public Par(Object a, Object b) {
         this.a = a;
@@ -35,8 +36,4 @@ public class Par {
     public void setB(Object b) {
         this.b = b;
     }
-
-
-
-
 }

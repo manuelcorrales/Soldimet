@@ -25,9 +25,7 @@ import soldimet.repository.extendedRepository.ExtendedListaPrecioRectificacionCR
 @Service
 public class EstrategiaPresupuestoRectificacionCRAMExcel extends EstrategiaPresupuestoRectificacionCRAM {
 
-    public EstrategiaPresupuestoRectificacionCRAMExcel() {
-
-    }
+    public EstrategiaPresupuestoRectificacionCRAMExcel() {}
 
     @Autowired
     private ExtendedListaPrecioRectificacionCRAMRepository listaPrecioRectificacionCRAMRepository;
@@ -39,18 +37,16 @@ public class EstrategiaPresupuestoRectificacionCRAMExcel extends EstrategiaPresu
     private Globales globales;
 
     @Override
-    public List<CostoOperacion> buscarOperaciones(Cilindrada cilindros, Motor motor, Aplicacion aplicacion,
-            TipoParteMotor parte) {
+    public List<CostoOperacion> buscarOperaciones(Cilindrada cilindros, Motor motor, Aplicacion aplicacion, TipoParteMotor parte) {
         // busco la lista
-        ListaPrecioRectificacionCRAM lista = listaPrecioRectificacionCRAMRepository
-                .findByNumeroGrupo(aplicacion.getNumeroGrupo());
+        ListaPrecioRectificacionCRAM lista = listaPrecioRectificacionCRAMRepository.findByNumeroGrupo(aplicacion.getNumeroGrupo());
 
         // busco el estado de la operacion
         EstadoOperacion estado = estadoOperacionRepository.findByNombreEstado(globales.NOMBRE_ESTADO_OPERACION_ALTA);
 
         // BUSCO LAS OPERACIONES
 
-        Set<ListaPrecioDesdeHasta> listaDesde = lista.getFechas();// obtengo lista DESDE
+        Set<ListaPrecioDesdeHasta> listaDesde = lista.getFechas(); // obtengo lista DESDE
 
         // Busco la instancia que no tiene asigando el valor HASTA
         ListaPrecioDesdeHasta ultimaLista = new ListaPrecioDesdeHasta();
@@ -70,16 +66,12 @@ public class EstrategiaPresupuestoRectificacionCRAMExcel extends EstrategiaPresu
 
         for (CostoOperacion costo : listaCostosEncontrados) {
             if (costo.getTipoParteMotor().equals(parte)) {
-                if (costo.getCilindrada().equals(cilindros))
-                    if (costo.getOperacion().getEstadoOperacion().equals(estado)) {
-                        listaCosto.add(costo);
-                    }
+                if (costo.getCilindrada().equals(cilindros)) if (costo.getOperacion().getEstadoOperacion().equals(estado)) {
+                    listaCosto.add(costo);
+                }
             }
-
         }
 
         return listaCosto;
-
     }
-
 }

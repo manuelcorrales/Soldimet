@@ -1,11 +1,9 @@
 package soldimet.repository.extendedRepository;
 
-import soldimet.domain.EstadoOperacion;
-import soldimet.repository.EstadoOperacionRepository;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.EstadoOperacion;
+import soldimet.repository.EstadoOperacionRepository;
 
 /**
  * Spring Data  repository for the EstadoOperacion entity.
@@ -13,6 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedEstadoOperacionRepository extends EstadoOperacionRepository {
-
     EstadoOperacion findByNombreEstado(String nombreEstado);
 }

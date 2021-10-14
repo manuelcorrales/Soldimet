@@ -7,7 +7,7 @@ public class SimpleStringDto {
 
     private String response;
 
-    public  SimpleStringDto(String response) {
+    public SimpleStringDto(String response) {
         this.response = response;
     }
 

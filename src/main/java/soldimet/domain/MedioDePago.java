@@ -21,16 +21,15 @@ public class MedioDePago implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
     @JsonIgnoreProperties("medioDePagos")
     private FormaDePago formaDePago;
 
-    @OneToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.EAGER)
+    @OneToOne(cascade = { CascadeType.ALL }, optional = true, fetch = FetchType.EAGER)
     @JoinColumn(unique = true, nullable = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private MedioDePagoCheque medioDePagoCheque;
-
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {

@@ -12,7 +12,7 @@ import { StockService } from 'app/stock/stock.service';
 @Component({
   selector: 'jhi-costo-repuesto',
   templateUrl: './costo-repuesto.component.html',
-  styles: []
+  styles: [],
 })
 export class CostoRepuestoComponent implements OnInit {
   @Input()

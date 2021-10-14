@@ -12,7 +12,7 @@ describe('Service Tests', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule]
+        imports: [HttpClientTestingModule],
       });
 
       expectedResult = {};
@@ -37,9 +37,9 @@ describe('Service Tests', () => {
         const angularConfig = {
           contexts: {
             angular: {
-              beans: ['test2']
-            }
-          }
+              beans: ['test2'],
+            },
+          },
         };
         service.get().subscribe(received => {
           expectedResult = received;
@@ -57,11 +57,11 @@ describe('Service Tests', () => {
               name: 'server.ports',
               properties: {
                 'local.server.port': {
-                  value: 80
-                }
-              }
-            }
-          ]
+                  value: 80,
+                },
+              },
+            },
+          ],
         };
         service.getEnv().subscribe(received => {
           expectedResult = received;

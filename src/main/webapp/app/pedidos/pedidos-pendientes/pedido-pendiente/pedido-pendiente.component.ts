@@ -14,7 +14,7 @@ import { IMedidaArticulo } from 'app/shared/model/medida-articulo.model';
 
 @Component({
   selector: 'jhi-pedido-pendiente',
-  templateUrl: './pedido-pendiente.component.html'
+  templateUrl: './pedido-pendiente.component.html',
 })
 export class PedidoPendienteComponent implements OnInit {
   pedido: PedidoRepuesto;
@@ -75,7 +75,7 @@ export class PedidoPendienteComponent implements OnInit {
 
 @Component({
   selector: 'jhi-pedido-pendiente-modal-popup',
-  template: ''
+  template: '',
 })
 export class PedidoPendienteModalPopupComponent implements OnInit, OnDestroy {
   routeSub: any;

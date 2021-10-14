@@ -1,12 +1,12 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import io.github.jhipster.config.JHipsterProperties;
-import soldimet.config.audit.AuditEventConverter;
-import soldimet.domain.PersistentAuditEvent;
-import soldimet.repository.PersistenceAuditEventRepository;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import soldimet.service.AuditEventService;
+import io.github.jhipster.config.JHipsterProperties;
+import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -20,13 +20,11 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import soldimet.SoldimetApp;
+import soldimet.config.audit.AuditEventConverter;
+import soldimet.domain.PersistentAuditEvent;
+import soldimet.repository.PersistenceAuditEventRepository;
+import soldimet.service.AuditEventService;
 
 /**
  * Integration tests for the {@link AuditResource} REST controller.
@@ -66,13 +64,15 @@ public class AuditResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        AuditEventService auditEventService =
-            new AuditEventService(auditEventRepository, auditEventConverter, jhipsterProperties);
+        AuditEventService auditEventService = new AuditEventService(auditEventRepository, auditEventConverter, jhipsterProperties);
         AuditResource auditResource = new AuditResource(auditEventService);
-        this.restAuditMockMvc = MockMvcBuilders.standaloneSetup(auditResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setConversionService(formattingConversionService)
-            .setMessageConverters(jacksonMessageConverter).build();
+        this.restAuditMockMvc =
+            MockMvcBuilders
+                .standaloneSetup(auditResource)
+                .setCustomArgumentResolvers(pageableArgumentResolver)
+                .setConversionService(formattingConversionService)
+                .setMessageConverters(jacksonMessageConverter)
+                .build();
     }
 
     @BeforeEach
@@ -90,7 +90,8 @@ public class AuditResourceIT {
         auditEventRepository.save(auditEvent);
 
         // Get all the audits
-        restAuditMockMvc.perform(get("/management/audits"))
+        restAuditMockMvc
+            .perform(get("/management/audits"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
@@ -102,7 +103,8 @@ public class AuditResourceIT {
         auditEventRepository.save(auditEvent);
 
         // Get the audit
-        restAuditMockMvc.perform(get("/management/audits/{id}", auditEvent.getId()))
+        restAuditMockMvc
+            .perform(get("/management/audits/{id}", auditEvent.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.principal").value(SAMPLE_PRINCIPAL));
@@ -118,7 +120,8 @@ public class AuditResourceIT {
         String toDate = SAMPLE_TIMESTAMP.plusSeconds(SECONDS_PER_DAY).toString().substring(0, 10);
 
         // Get the audit
-        restAuditMockMvc.perform(get("/management/audits?fromDate="+fromDate+"&toDate="+toDate))
+        restAuditMockMvc
+            .perform(get("/management/audits?fromDate=" + fromDate + "&toDate=" + toDate))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
@@ -130,11 +133,12 @@ public class AuditResourceIT {
         auditEventRepository.save(auditEvent);
 
         // Generate dates for selecting audits by date, making sure the period will not contain the sample audit
-        String fromDate  = SAMPLE_TIMESTAMP.minusSeconds(2*SECONDS_PER_DAY).toString().substring(0, 10);
+        String fromDate = SAMPLE_TIMESTAMP.minusSeconds(2 * SECONDS_PER_DAY).toString().substring(0, 10);
         String toDate = SAMPLE_TIMESTAMP.minusSeconds(SECONDS_PER_DAY).toString().substring(0, 10);
 
         // Query audits but expect no results
-        restAuditMockMvc.perform(get("/management/audits?fromDate=" + fromDate + "&toDate=" + toDate))
+        restAuditMockMvc
+            .perform(get("/management/audits?fromDate=" + fromDate + "&toDate=" + toDate))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(header().string("X-Total-Count", "0"));
@@ -143,8 +147,7 @@ public class AuditResourceIT {
     @Test
     public void getNonExistingAudit() throws Exception {
         // Get the audit
-        restAuditMockMvc.perform(get("/management/audits/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restAuditMockMvc.perform(get("/management/audits/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test

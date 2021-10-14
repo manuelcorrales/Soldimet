@@ -24,8 +24,8 @@ public class CategoriaPago implements Serializable {
     @Column(name = "nombre_categoria_pago", nullable = false)
     private String nombreCategoriaPago;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name= "categoria_pago")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "categoria_pago")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<SubCategoria> subCategorias = new HashSet<>();
 
@@ -78,6 +78,7 @@ public class CategoriaPago implements Serializable {
     public void setSubCategorias(Set<SubCategoria> subCategorias) {
         this.subCategorias = subCategorias;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

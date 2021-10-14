@@ -4,7 +4,7 @@ import { DtoNameSeries } from 'app/dto/dto-reportes/dto-serie';
 @Component({
   selector: 'jhi-linear',
   templateUrl: './linear.component.html',
-  styleUrls: ['./linear.component.scss']
+  styleUrls: ['./linear.component.scss'],
 })
 export class LinearComponent implements OnInit {
   @Input() metric = 'Cajas por sucursal';
@@ -21,12 +21,12 @@ export class LinearComponent implements OnInit {
   @Input() data: DtoNameSeries[] = [
     {
       name: 'San Martin',
-      series: []
+      series: [],
     },
     {
       name: 'Guaymallen',
-      series: []
-    }
+      series: [],
+    },
   ];
 
   constructor() {}

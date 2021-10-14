@@ -199,6 +199,7 @@ public class DetallePresupuesto implements Serializable {
         }
         return MathUtils.roundFloat(total);
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
     // setters here, do not remove
 

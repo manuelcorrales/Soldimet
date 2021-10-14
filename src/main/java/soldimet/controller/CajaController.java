@@ -1,19 +1,18 @@
 package soldimet.controller;
 
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import soldimet.domain.Movimiento;
 import soldimet.domain.MovimientoArticulo;
-import soldimet.service.dto.DTOMovimientos;
 import soldimet.service.dto.DTOCaja;
+import soldimet.service.dto.DTOMovimientos;
 import soldimet.service.expertos.ExpertoCaja;
 
 @Transactional
@@ -49,7 +47,8 @@ public class CajaController {
         @RequestParam("fecha_inicio") @DateTimeFormat(iso = ISO.DATE) Optional<LocalDate> fechaInicio,
         @RequestParam("fecha_fin") @DateTimeFormat(iso = ISO.DATE) Optional<LocalDate> fechaFin
     ) {
-        log.debug("request api/caja/movimientos. sucursal: {}, fechaInicio: {}, fechaFin: {}, filtro: {}, page: {}, size: {}",
+        log.debug(
+            "request api/caja/movimientos. sucursal: {}, fechaInicio: {}, fechaFin: {}, filtro: {}, page: {}, size: {}",
             sucursal,
             fechaInicio,
             fechaFin,
@@ -60,13 +59,7 @@ public class CajaController {
 
         Pageable paging = PageRequest.of(page, size);
 
-        Page<DTOMovimientos> movimientos = expertoCaja.getMovimientosSucursal(
-            filtro,
-            sucursal,
-            fechaInicio,
-            fechaFin,
-            paging
-        );
+        Page<DTOMovimientos> movimientos = expertoCaja.getMovimientosSucursal(filtro, sucursal, fechaInicio, fechaFin, paging);
 
         log.debug("response api/caja/movimientos: {}", movimientos);
         return movimientos;
@@ -93,7 +86,6 @@ public class CajaController {
         return caja;
     }
 
-
     @PostMapping("/nuevo_movimiento")
     public Movimiento saveNewMovimiento(@RequestBody Movimiento movimiento) {
         log.debug("request api/caja/nuevo_movimiento");
@@ -114,7 +106,6 @@ public class CajaController {
             log.error("error api/caja/borrar_movimiento: {}", e);
             return ResponseEntity.status(500).body(null);
         }
-
     }
 
     @PostMapping("/nuevos_movimientos_articulos/")
@@ -131,7 +122,5 @@ public class CajaController {
             log.error("error api/caja/nuevos_movimientos_articulos: {}", e);
             return ResponseEntity.status(500).body(null);
         }
-
     }
-
 }

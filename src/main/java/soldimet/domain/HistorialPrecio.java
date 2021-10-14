@@ -1,14 +1,12 @@
 package soldimet.domain;
 
-import soldimet.utils.MathUtils;
-
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import soldimet.utils.MathUtils;
 
 /**
  * A HistorialPrecio.

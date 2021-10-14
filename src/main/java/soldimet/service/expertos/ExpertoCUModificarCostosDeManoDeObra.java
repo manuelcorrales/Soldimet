@@ -8,12 +8,10 @@ package soldimet.service.expertos;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import soldimet.domain.Cilindrada;
 import soldimet.domain.CostoOperacion;
 import soldimet.domain.ListaPrecioDesdeHasta;
@@ -32,8 +30,8 @@ import soldimet.service.dto.DTOListaPrecioManoDeObra;
  */
 @Service
 public class ExpertoCUModificarCostosDeManoDeObra {
-    private final Logger log = LoggerFactory.getLogger(ExpertoCUModificarCostosDeManoDeObra.class);
 
+    private final Logger log = LoggerFactory.getLogger(ExpertoCUModificarCostosDeManoDeObra.class);
 
     private final String errorPermisoInsuficiente = "No tiene permisos suficientes para modificar estos valores";
 
@@ -55,8 +53,7 @@ public class ExpertoCUModificarCostosDeManoDeObra {
         // luego creo una nueva
 
         try {
-            ListaPrecioRectificacionCRAM listaNumero = listaPrecioRectificacionCRAMRepository
-                    .findByNumeroGrupo(dtoLista.getNumeroLista());
+            ListaPrecioRectificacionCRAM listaNumero = listaPrecioRectificacionCRAMRepository.findByNumeroGrupo(dtoLista.getNumeroLista());
             ListaPrecioDesdeHasta listaACerrar = listaNumero.getUltimaListaActiva();
             listaACerrar.setFechaHasta(LocalDate.now());
 
@@ -75,16 +72,13 @@ public class ExpertoCUModificarCostosDeManoDeObra {
             ListaPrecioRectificacionCRAM listaNueva = listaPrecioRectificacionCRAMRepository.save(listaNumero);
 
             return crearDtoConUltimaLista(listaNueva);
-
         } catch (NullPointerException e) {
             log.error(e.getMessage());
             return null;
         }
-
     }
 
     public List<DTOListaPrecioManoDeObra> buscarCostos() {
-
         List<DTOListaPrecioManoDeObra> listaDTO = new ArrayList<DTOListaPrecioManoDeObra>();
         try {
             // busco la lista que contiene el numero de lista
@@ -92,7 +86,6 @@ public class ExpertoCUModificarCostosDeManoDeObra {
 
             // por cada lista identificada por su numero
             for (ListaPrecioRectificacionCRAM listaPrecio : listaNumeroLista) {
-
                 DTOListaPrecioManoDeObra dtoLista = crearDtoConUltimaLista(listaPrecio);
                 if (dtoLista != null) {
                     listaDTO.add(crearDtoConUltimaLista(listaPrecio));
@@ -106,7 +99,6 @@ public class ExpertoCUModificarCostosDeManoDeObra {
     }
 
     private DTOListaPrecioManoDeObra crearDtoConUltimaLista(ListaPrecioRectificacionCRAM listaPrecio) {
-
         DTOListaPrecioManoDeObra dto = new DTOListaPrecioManoDeObra();
 
         ListaPrecioDesdeHasta listaActiva = listaPrecio.getUltimaListaActiva();
@@ -125,7 +117,6 @@ public class ExpertoCUModificarCostosDeManoDeObra {
             dto.getOperaciones().add(costoOp);
         }
         return dto;
-
     }
 
     public Boolean agregarAListas(Operacion operacion) {
@@ -135,9 +126,9 @@ public class ExpertoCUModificarCostosDeManoDeObra {
 
             List<ListaPrecioRectificacionCRAM> listas = listaPrecioRectificacionCRAMRepository.findAll();
 
-            for( ListaPrecioRectificacionCRAM listaNumero: listas) {
+            for (ListaPrecioRectificacionCRAM listaNumero : listas) {
                 ListaPrecioDesdeHasta listaActiva = listaNumero.getUltimaListaActiva();
-                for( Cilindrada cilindrada: cilindradas) {
+                for (Cilindrada cilindrada : cilindradas) {
                     if (cilindrada.getCantidadDeCilindros() < 8) {
                         CostoOperacion nuevoCostoOperacion = new CostoOperacion();
                         nuevoCostoOperacion.setCilindrada(cilindrada);
@@ -156,5 +147,4 @@ public class ExpertoCUModificarCostosDeManoDeObra {
             return false;
         }
     }
-
 }

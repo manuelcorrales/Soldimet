@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package soldimet.service.dto;
+
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ import java.util.List;
  * @author Manu
  */
 public class DTOMovimientos {
+
     private Long movimientoId;
     private String fecha;
     private String estado;
@@ -27,8 +29,7 @@ public class DTOMovimientos {
     private String observaciones;
     private String empleado;
 
-    public DTOMovimientos() {
-    }
+    public DTOMovimientos() {}
 
     public String getCategoria() {
         return categoria;
@@ -78,7 +79,6 @@ public class DTOMovimientos {
         this.movimientoId = movimientoId;
     }
 
-
     public void setPersonaId(Long personaId) {
         this.personaId = personaId;
     }
@@ -87,7 +87,6 @@ public class DTOMovimientos {
         this.estado = estado;
     }
 
-
     public String getFecha() {
         return fecha;
     }
@@ -95,7 +94,6 @@ public class DTOMovimientos {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
-
 
     public String getFormaDePago() {
         return formaDePago;
@@ -137,7 +135,6 @@ public class DTOMovimientos {
         this.presupuestoId = presupuestoId;
     }
 
-
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
@@ -153,5 +150,4 @@ public class DTOMovimientos {
     public void setArticulos(List<String> articulos) {
         this.articulos = articulos;
     }
-
 }

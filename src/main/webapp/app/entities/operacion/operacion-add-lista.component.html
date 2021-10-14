@@ -1,11 +1,11 @@
 <div>
-    <h2 id="page-heading">
-        <span>Agregar operacion a listas</span>
-    </h2>
-    <jhi-alert></jhi-alert>
-    <br/>
+  <h2 id="page-heading">
+    <span>Agregar operacion a listas</span>
+  </h2>
+  <jhi-alert></jhi-alert>
+  <br />
 
-    <!--div class="form-group">
+  <!--div class="form-group">
         <label class="form-control-label" for="field_tipoParteMotor">Tipo Parte Motor</label>
         <select class="form-control" id="field_tipoParteMotor" name="tipoParteMotor">
             <option >{{tipoParteMotorOption.nombreTipoParteMotor}}</option>
@@ -14,23 +14,23 @@
             </option>
         </select>
     </div-->
-    <!-- Seleccion Aplicacion-->
-    <div class="form-group col">
-        <p class="form-control-label"><strong>Operaciones:</strong> </p>
-        <select class="custom-select" [(ngModel)]="operacion" required name="operacion">
-            <option selected disabled>Elija una operacion</option>
-            <option *ngFor="let operacion of operaciones" [ngValue]="operacion">
-                {{operacion?.nombreOperacion| json}}
-            </option>
-        </select>
-    </div>
-    <br/>
-    <div>
-        <button type="button" id="cancel-save" class="btn btn-secondary" [routerLink]="['/operacion']">
-            <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancelar</span>
-        </button>
-        <button type="submit" id="save-entity" [disabled]="isSaving" class="btn btn-primary" (click)="save()" [routerLink]="['/operacion']">
-            <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Guardar</span>
-        </button>
-    </div>
+  <!-- Seleccion Aplicacion-->
+  <div class="form-group col">
+    <p class="form-control-label"><strong>Operaciones:</strong></p>
+    <select class="custom-select" [(ngModel)]="operacion" required name="operacion">
+      <option selected disabled>Elija una operacion</option>
+      <option *ngFor="let operacion of operaciones" [ngValue]="operacion">
+        {{ operacion?.nombreOperacion | json }}
+      </option>
+    </select>
+  </div>
+  <br />
+  <div>
+    <button type="button" id="cancel-save" class="btn btn-secondary" [routerLink]="['/operacion']">
+      <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancelar</span>
+    </button>
+    <button type="submit" id="save-entity" [disabled]="isSaving" class="btn btn-primary" (click)="save()" [routerLink]="['/operacion']">
+      <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Guardar</span>
+    </button>
+  </div>
 </div>

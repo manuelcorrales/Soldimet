@@ -14,14 +14,12 @@ public class DTOMetricaContable {
     private String categoria;
     private Float valor;
 
-    public DTOMetricaContable() {
-
-    }
+    public DTOMetricaContable() {}
 
     @Override
     public String toString() {
         // TODO Auto-generated method stub
-        return this.categoria +": "+ this.valor.toString();
+        return this.categoria + ": " + this.valor.toString();
     }
 
     /**
@@ -37,18 +35,18 @@ public class DTOMetricaContable {
     public Float getValor() {
         return valor;
     }
+
     /**
      * @param categoria the categoria to set
      */
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
+
     /**
      * @param valor the valor to set
      */
     public void setValor(Float valor) {
         this.valor = valor;
     }
-
-
 }

@@ -2,13 +2,11 @@ package soldimet.repository.extendedRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 import soldimet.domain.Caja;
 import soldimet.domain.Sucursal;
 import soldimet.repository.CajaRepository;
-
-import org.springframework.data.jpa.repository.*;
-import org.springframework.stereotype.Repository;
-
 
 /**
  * Spring Data  repository for the Caja entity.
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedCajaRepository extends CajaRepository {
-
     public List<Caja> findByFechaGreaterThanEqual(LocalDate fecha);
 
     public Caja findByFecha(LocalDate fechaInicio);

@@ -5,7 +5,7 @@ import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'jhi-operacion-lista-precio',
   templateUrl: './operacion-lista-precio.component.html',
-  styles: []
+  styles: [],
 })
 export class OperacionListaPrecioComponent implements OnInit {
   @Input() costoOperacion: CostoOperacion;

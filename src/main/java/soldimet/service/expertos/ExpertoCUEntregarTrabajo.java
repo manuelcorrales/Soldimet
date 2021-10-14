@@ -5,7 +5,6 @@
  */
 package soldimet.service.expertos;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +32,11 @@ public class ExpertoCUEntregarTrabajo {
     private Globales globales;
 
     public Boolean entregarTrabajo(Long idPresupuesto) {
-
         try {
             //verifico ademas que no este en estado baja
-            EstadoPresupuesto estadoEntregado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO);
+            EstadoPresupuesto estadoEntregado = estadoPresupuestoRepository.findByNombreEstado(
+                globales.NOMBRE_ESTADO_PRESUPUESTO_ENTREGADO
+            );
 
             EstadoPresupuesto estadoAceptado = estadoPresupuestoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PRESUPUESTO_ACEPTADO);
 
@@ -53,6 +53,5 @@ public class ExpertoCUEntregarTrabajo {
             log.error(e.getMessage());
             return false;
         }
-
     }
 }

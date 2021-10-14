@@ -10,10 +10,10 @@ export const STOCK_ROUTES: Routes = [
     component: StockComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Stock'
+      pageTitle: 'Stock',
     },
-    canActivate: [UserRouteAccessService]
-  }
+    canActivate: [UserRouteAccessService],
+  },
 ];
 
 export const STOCK_POPUP_ROUTE: Routes = [
@@ -22,19 +22,19 @@ export const STOCK_POPUP_ROUTE: Routes = [
     component: StockModalPopupComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'StockArticulos'
+      pageTitle: 'StockArticulos',
     },
     canActivate: [UserRouteAccessService],
-    outlet: 'popup'
+    outlet: 'popup',
   },
   {
     path: 'stock/:id/editar',
     component: StockModalPopupComponent,
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'Editar Stock'
+      pageTitle: 'Editar Stock',
     },
     canActivate: [UserRouteAccessService],
-    outlet: 'popup'
-  }
+    outlet: 'popup',
+  },
 ];

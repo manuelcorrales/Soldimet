@@ -1,21 +1,19 @@
 package soldimet.service.mapper;
 
-
-import soldimet.SoldimetApp;
-import soldimet.domain.User;
-import soldimet.service.dto.UserDTO;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import soldimet.SoldimetApp;
+import soldimet.domain.User;
+import soldimet.service.dto.UserDTO;
 
 /**
  * Integration tests for {@link UserMapper}.

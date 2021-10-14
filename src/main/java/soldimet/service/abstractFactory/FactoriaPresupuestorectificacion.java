@@ -1,6 +1,5 @@
 package soldimet.service.abstractFactory;
 
-
 /**
  * @author Manu
  * @version 1.0
@@ -18,13 +17,8 @@ public class FactoriaPresupuestorectificacion {
     @Autowired
     private EstrategiaPresupuestoRectificacionCRAMExcel estrategiaPresupuestoRectificacionCRAMExcel;
 
-
-	public EstrategiaPresupuestoRectificacionCRAM obtenerEstrategia(){
-
-                EstrategiaPresupuestoRectificacionCRAMExcel estrategia = estrategiaPresupuestoRectificacionCRAMExcel;
-                return estrategia;
-
-
-	}
-
+    public EstrategiaPresupuestoRectificacionCRAM obtenerEstrategia() {
+        EstrategiaPresupuestoRectificacionCRAMExcel estrategia = estrategiaPresupuestoRectificacionCRAMExcel;
+        return estrategia;
+    }
 }

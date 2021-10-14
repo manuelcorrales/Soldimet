@@ -16,8 +16,7 @@ public class DTOABMmovimientoSubcategorias {
     private ArrayList<String> subcategorias;
     private String categoria;
 
-    public DTOABMmovimientoSubcategorias() {
-    }
+    public DTOABMmovimientoSubcategorias() {}
 
     public DTOABMmovimientoSubcategorias(ArrayList<String> subcategoriasPago, String categoriaPago) {
         this.subcategorias = subcategoriasPago;
@@ -30,12 +29,9 @@ public class DTOABMmovimientoSubcategorias {
 
     public void setSubcategorias(ArrayList<String> subcategorias) {
         this.subcategorias = subcategorias;
-
-
     }
 
-    public void addsubcategoria(String subcategoria){
-
+    public void addsubcategoria(String subcategoria) {
         this.subcategorias.add(subcategoria);
     }
 
@@ -46,14 +42,4 @@ public class DTOABMmovimientoSubcategorias {
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
-
-
-
-
-
-
-
-
-
-
 }

@@ -1,16 +1,16 @@
 package soldimet.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link soldimet.domain.Articulo} entity. This class is used
@@ -43,10 +43,9 @@ public class ArticuloCriteria implements Serializable, Criteria {
 
     private LongFilter tipoRepuestoId;
 
-    public ArticuloCriteria(){
-    }
+    public ArticuloCriteria() {}
 
-    public ArticuloCriteria(ArticuloCriteria other){
+    public ArticuloCriteria(ArticuloCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.codigoArticuloProveedor = other.codigoArticuloProveedor == null ? null : other.codigoArticuloProveedor.copy();
         this.valor = other.valor == null ? null : other.valor.copy();
@@ -135,7 +134,6 @@ public class ArticuloCriteria implements Serializable, Criteria {
         this.tipoRepuestoId = tipoRepuestoId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -145,7 +143,7 @@ public class ArticuloCriteria implements Serializable, Criteria {
             return false;
         }
         final ArticuloCriteria that = (ArticuloCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(codigoArticuloProveedor, that.codigoArticuloProveedor) &&
             Objects.equals(valor, that.valor) &&
@@ -154,37 +152,39 @@ public class ArticuloCriteria implements Serializable, Criteria {
             Objects.equals(fechaCostoProveedor, that.fechaCostoProveedor) &&
             Objects.equals(estadoId, that.estadoId) &&
             Objects.equals(marcaId, that.marcaId) &&
-            Objects.equals(tipoRepuestoId, that.tipoRepuestoId);
+            Objects.equals(tipoRepuestoId, that.tipoRepuestoId)
+        );
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        codigoArticuloProveedor,
-        valor,
-        fechaCosto,
-        costoProveedor,
-        fechaCostoProveedor,
-        estadoId,
-        marcaId,
-        tipoRepuestoId
+            id,
+            codigoArticuloProveedor,
+            valor,
+            fechaCosto,
+            costoProveedor,
+            fechaCostoProveedor,
+            estadoId,
+            marcaId,
+            tipoRepuestoId
         );
     }
 
     @Override
     public String toString() {
-        return "ArticuloCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (codigoArticuloProveedor != null ? "codigoArticuloProveedor=" + codigoArticuloProveedor + ", " : "") +
-                (valor != null ? "valor=" + valor + ", " : "") +
-                (fechaCosto != null ? "fechaCosto=" + fechaCosto + ", " : "") +
-                (costoProveedor != null ? "costoProveedor=" + costoProveedor + ", " : "") +
-                (fechaCostoProveedor != null ? "fechaCostoProveedor=" + fechaCostoProveedor + ", " : "") +
-                (estadoId != null ? "estadoId=" + estadoId + ", " : "") +
-                (marcaId != null ? "marcaId=" + marcaId + ", " : "") +
-                (tipoRepuestoId != null ? "tipoRepuestoId=" + tipoRepuestoId + ", " : "") +
-            "}";
+        return (
+            "ArticuloCriteria{" +
+            (id != null ? "id=" + id + ", " : "") +
+            (codigoArticuloProveedor != null ? "codigoArticuloProveedor=" + codigoArticuloProveedor + ", " : "") +
+            (valor != null ? "valor=" + valor + ", " : "") +
+            (fechaCosto != null ? "fechaCosto=" + fechaCosto + ", " : "") +
+            (costoProveedor != null ? "costoProveedor=" + costoProveedor + ", " : "") +
+            (fechaCostoProveedor != null ? "fechaCostoProveedor=" + fechaCostoProveedor + ", " : "") +
+            (estadoId != null ? "estadoId=" + estadoId + ", " : "") +
+            (marcaId != null ? "marcaId=" + marcaId + ", " : "") +
+            (tipoRepuestoId != null ? "tipoRepuestoId=" + tipoRepuestoId + ", " : "") +
+            "}"
+        );
     }
-
 }

@@ -11,7 +11,7 @@ import { OperacionService } from './operacion.service';
 
 @Component({
   selector: 'jhi-operacion-update',
-  templateUrl: './operacion-add-lista.component.html'
+  templateUrl: './operacion-add-lista.component.html',
 })
 export class OperacionAddListasComponent implements OnInit {
   isSaving: boolean;
@@ -34,7 +34,10 @@ export class OperacionAddListasComponent implements OnInit {
         filter((mayBeOk: HttpResponse<IOperacion[]>) => mayBeOk.ok),
         map((response: HttpResponse<IOperacion[]>) => response.body)
       )
-      .subscribe((res: IOperacion[]) => (this.operaciones = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe(
+        (res: IOperacion[]) => (this.operaciones = res),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
   }
 
   protected onError(errorMessage: string) {

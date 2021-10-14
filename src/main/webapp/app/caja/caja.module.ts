@@ -29,9 +29,9 @@ const CAJAS_ROUTES_ALL = [...CAJAS_ROUTE, ...CAJA_POPUP_ROUTES];
     NuevoMovimientoCabeceraComponent,
     NuevoMovimientoDetalleComponent,
     NuevoMovimientoArticuloComponent,
-    NuevoMovimientoMedioDePagoComponent
+    NuevoMovimientoMedioDePagoComponent,
   ],
   entryComponents: [CajaComponent, NuevoMovimientoComponent, BorrarMovimientoDialogComponent, BorrarMovimientoPopupComponent],
-  providers: [BorrarMovimientoPopupService, CajaModuleServiceService]
+  providers: [BorrarMovimientoPopupService, CajaModuleServiceService],
 })
 export class CajaModule {}

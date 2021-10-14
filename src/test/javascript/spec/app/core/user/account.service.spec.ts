@@ -13,7 +13,7 @@ describe('Service Tests', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot()],
-        providers: [JhiDateUtils]
+        providers: [JhiDateUtils],
       });
 
       service = TestBed.get(AccountService);
@@ -40,7 +40,7 @@ describe('Service Tests', () => {
 
         expect(req.request.url).toEqual(`${resourceUrl}`);
         req.flush({
-          firstName: 'John'
+          firstName: 'John',
         });
       });
 
@@ -52,7 +52,7 @@ describe('Service Tests', () => {
 
         it('should return false if user is logged and has not authority', async () => {
           service.authenticate({
-            authorities: ['ROLE_USER']
+            authorities: ['ROLE_USER'],
           });
 
           const hasAuthority = await service.hasAuthority('ROLE_ADMIN');
@@ -62,7 +62,7 @@ describe('Service Tests', () => {
 
         it('should return true if user is logged and has authority', async () => {
           service.authenticate({
-            authorities: ['ROLE_USER']
+            authorities: ['ROLE_USER'],
           });
 
           const hasAuthority = await service.hasAuthority('ROLE_USER');
@@ -79,7 +79,7 @@ describe('Service Tests', () => {
 
         it('should return false if user is logged and has not authority', () => {
           service.authenticate({
-            authorities: ['ROLE_USER']
+            authorities: ['ROLE_USER'],
           });
 
           const hasAuthority = service.hasAnyAuthority(['ROLE_ADMIN']);
@@ -89,7 +89,7 @@ describe('Service Tests', () => {
 
         it('should return true if user is logged and has authority', () => {
           service.authenticate({
-            authorities: ['ROLE_USER']
+            authorities: ['ROLE_USER'],
           });
 
           const hasAuthority = service.hasAnyAuthority(['ROLE_USER', 'ROLE_ADMIN']);

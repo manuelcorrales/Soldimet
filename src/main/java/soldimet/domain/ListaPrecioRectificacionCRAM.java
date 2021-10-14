@@ -82,6 +82,7 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
     public void setFechas(Set<ListaPrecioDesdeHasta> listaPrecioDesdeHastas) {
         this.fechas = listaPrecioDesdeHastas;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
     // setters here, do not remove
 
@@ -116,6 +117,5 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
             }
         }
         return ultimaLista;
-
     }
 }

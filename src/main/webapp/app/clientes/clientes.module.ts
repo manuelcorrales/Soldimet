@@ -9,7 +9,7 @@ import { ClienteBorrarPopupService } from 'app/clientes/modal-borrar-cliente/cli
 import { BrowserModule } from '@angular/platform-browser';
 import {
   ClienteBorrarDialogComponent,
-  ClienteBorrarPopupComponent
+  ClienteBorrarPopupComponent,
 } from 'app/clientes/modal-borrar-cliente/cliente-borrar-dialog.component';
 import { ClienteModalPopupService } from 'app/clientes/modal-nuevo-cliente/cliente-nuevo-popup-service';
 import { ClientesService } from 'app/clientes/clientes.service';
@@ -25,15 +25,15 @@ const CLIENTES_ROUTES_ALL = [...CLIENTES_ROUTE, ...CLIENTES_POPUP_ROUTE];
     ModalNuevoClienteComponent,
     ClienteModalPopupComponent,
     ClienteBorrarPopupComponent,
-    ClienteBorrarDialogComponent
+    ClienteBorrarDialogComponent,
   ],
   entryComponents: [
     ClientesComponent,
     ModalNuevoClienteComponent,
     ClienteModalPopupComponent,
     ClienteBorrarPopupComponent,
-    ClienteBorrarDialogComponent
+    ClienteBorrarDialogComponent,
   ],
-  providers: [ClienteService, ClienteModalPopupService, ClienteBorrarPopupService, ClientesService]
+  providers: [ClienteService, ClienteModalPopupService, ClienteBorrarPopupService, ClientesService],
 })
 export class ClientesModule {}

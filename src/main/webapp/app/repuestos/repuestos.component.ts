@@ -11,7 +11,7 @@ interface ArticulosPorMarca {
 @Component({
   selector: 'jhi-repuestos',
   templateUrl: './repuestos.component.html',
-  styles: []
+  styles: [],
 })
 export class RepuestosComponent implements OnInit {
   marcas: Marca[] = [];

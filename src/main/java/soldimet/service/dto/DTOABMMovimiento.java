@@ -4,20 +4,20 @@
  * and open the template in the editor.
  */
 package soldimet.service.dto;
+
 import java.util.ArrayList;
+
 /**
  *
  * @author Manu
  */
 public class DTOABMMovimiento {
 
-
     private ArrayList<String> formaDePago;
 
-    private ArrayList<DtoTipoMovimiento>  tiposmovimiento;
+    private ArrayList<DtoTipoMovimiento> tiposmovimiento;
 
-    public DTOABMMovimiento() {
-    }
+    public DTOABMMovimiento() {}
 
     public ArrayList<String> getFormaDePago() {
         return formaDePago;
@@ -26,7 +26,8 @@ public class DTOABMMovimiento {
     public void setFormaDePago(ArrayList<String> formaDePago) {
         this.formaDePago = formaDePago;
     }
-    public void agregarFormaDePago(String forma){
+
+    public void agregarFormaDePago(String forma) {
         this.formaDePago.add(forma);
     }
 
@@ -38,10 +39,7 @@ public class DTOABMMovimiento {
         this.tiposmovimiento = tiposmovimiento;
     }
 
-    public void agregarTipoMovimiento (DtoTipoMovimiento dto){
+    public void agregarTipoMovimiento(DtoTipoMovimiento dto) {
         this.tiposmovimiento.add(dto);
     }
-
-
-
 }

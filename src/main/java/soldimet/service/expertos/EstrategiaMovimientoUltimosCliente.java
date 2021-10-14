@@ -25,18 +25,11 @@ public class EstrategiaMovimientoUltimosCliente extends EstrategiaMovimiento {
     @Autowired
     private ExtendedCajaRepository cajaRepository;
 
-
     @Override
-    public List<Caja> buscarMovimientos(){
-
+    public List<Caja> buscarMovimientos() {
         //busco todos los movimientos
-        List<Caja> listaCaja= cajaRepository.findAll();
+        List<Caja> listaCaja = cajaRepository.findAll();
 
         return listaCaja;
-
     }
-
-
-
-
 }

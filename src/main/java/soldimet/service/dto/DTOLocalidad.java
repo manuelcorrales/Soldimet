@@ -11,11 +11,9 @@ package soldimet.service.dto;
  */
 public class DTOLocalidad {
 
-
     private String nombreLocalidad;
 
-    public DTOLocalidad() {
-    }
+    public DTOLocalidad() {}
 
     public DTOLocalidad(String nombreLocalidad) {
         this.nombreLocalidad = nombreLocalidad;
@@ -28,6 +26,4 @@ public class DTOLocalidad {
     public void setNombreLocalidad(String nombreLocalidad) {
         this.nombreLocalidad = nombreLocalidad;
     }
-
-
 }

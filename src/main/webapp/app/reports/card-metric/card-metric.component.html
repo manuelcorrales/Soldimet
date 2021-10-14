@@ -1,27 +1,27 @@
-<div class="card {{metric.bgColor}} shadow" style="max-height: 150px;">
-    <a>
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h6 class="card-title text-uppercase mb-2 text-white">
-                        {{metric.titulo}}
-                    </h6>
-                </div>
-                <div class="col">
-                    <span class="h2 mb-0 text-white">
-                        <ng-container *ngIf="metric.icon">
-                            <fa-icon icon="{{metric.icon}}"></fa-icon>
-                        </ng-container>
-                    </span>
-                </div>
-            </div>
-            <div class="row center">
-                <div class="col">
-                    <span class="h2 mb-0 text-white">
-                        {{metric.valor}}
-                    </span>
-                </div>
-            </div>
+<div class="card {{ metric.bgColor }} shadow" style="max-height: 150px">
+  <a>
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col">
+          <h6 class="card-title text-uppercase mb-2 text-white">
+            {{ metric.titulo }}
+          </h6>
         </div>
-    </a>
+        <div class="col">
+          <span class="h2 mb-0 text-white">
+            <ng-container *ngIf="metric.icon">
+              <fa-icon icon="{{ metric.icon }}"></fa-icon>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+      <div class="row center">
+        <div class="col">
+          <span class="h2 mb-0 text-white">
+            {{ metric.valor }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </a>
 </div>

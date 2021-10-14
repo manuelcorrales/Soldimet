@@ -1,67 +1,73 @@
 <div class="card jh-card border-info shadow">
-    <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
-        Articulos
+  <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498db !important">Articulos</div>
+  <div class="container-fluid row">
+    <div class="form-group col">
+      <div class="form-group">
+        <label class="form-control-label" for="field_repuestoProveedor">Buscar articulos</label>
+        <input
+          id="field_repuestoProveedor"
+          type="text"
+          class="form-control"
+          name="repuestoProveedor"
+          (selectItem)="seleccionarArticulo($event)"
+          [class.is-invalid]="searchFailed"
+          [ngbTypeahead]="searchRepuestoProveedor"
+          placeholder="Buscar artículo por motor..."
+          [resultFormatter]="formatterRepuestoProveedor"
+          [inputFormatter]="formatterRepuestoProveedor"
+        />
+        <small *ngIf="searching" class="form-text text-muted">buscando...</small>
+        <div class="invalid-feedback" *ngIf="searchFailed">No se encontraron resultados.</div>
+      </div>
     </div>
-    <div class="container-fluid row">
-        <div class="form-group col">
-            <div class="form-group">
-                <label class="form-control-label" for="field_repuestoProveedor">Buscar articulos</label>
-                <input
-                  id="field_repuestoProveedor"
-                  type="text"
-                  class="form-control"
-                  name="repuestoProveedor"
-                  (selectItem)="seleccionarArticulo($event)"
-                  [class.is-invalid]="searchFailed"
-                  [ngbTypeahead]="searchRepuestoProveedor"
-                  placeholder="Buscar artículo por motor..."
-                  [resultFormatter]="formatterRepuestoProveedor"
-                  [inputFormatter]="formatterRepuestoProveedor"
-                />
-                <small *ngIf="searching" class="form-text text-muted">buscando...</small>
-                <div class="invalid-feedback" *ngIf="searchFailed">No se encontraron resultados.</div>
-              </div>
-        </div>
+  </div>
+  <div class="container-fluid row">
+    <div class="table-responsive pt-3">
+      <table class="table table-hover table-sm text-center" *ngIf="movimientosArticulo.length > 0">
+        <thead>
+          <tr>
+            <th scope="col" class="text-center">Marca</th>
+            <th scope="col" class="text-center">Código</th>
+            <th scope="col" class="text-center">Repuesto</th>
+            <th scope="col" class="text-center">Precio de lista</th>
+            <th scope="col" class="text-center">Medida</th>
+            <th scope="col" class="text-center">Cantidad</th>
+            <th scope="col" class="text-center">Operaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let movimientoArticulo of movimientosArticulo">
+            <td class="text-center text-dark">{{ movimientoArticulo.articulo.marca.nombreMarca }}</td>
+            <td class="text-center text-dark">{{ movimientoArticulo.articulo.codigoArticuloProveedor }}</td>
+            <td class="text-center text-dark">{{ movimientoArticulo.articulo.tipoRepuesto.nombreTipoRepuesto }}</td>
+            <td class="text-center text-dark">{{ movimientoArticulo.articulo.valor }}</td>
+            <td class="text-center text-dark">
+              <select required class="form-control" [(ngModel)]="movimientoArticulo.medida" name="medida">
+                <option *ngFor="let medida of medidas" [ngValue]="medida">
+                  {{ medida.medida }}
+                </option>
+              </select>
+            </td>
+            <td class="text-center text-dark">
+              <input
+                required
+                type="number"
+                class="form-control"
+                aria-label="Cantidad"
+                [value]="movimientoArticulo.cantidad"
+                [(ngModel)]="movimientoArticulo.cantidad"
+                name="cantidad"
+                min="1"
+              />
+            </td>
+            <td class="text-center text-dark">
+              <button type="submit" class="btn btn-danger btn-sm" (click)="eliminarArticulo(movimientoArticulo)">
+                <fa-icon icon="trash"></fa-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="container-fluid row">
-        <div class="table-responsive pt-3">
-            <table class="table table-hover table-sm text-center"  *ngIf="movimientosArticulo.length > 0">
-                <thead>
-                    <tr>
-                        <th scope="col" class="text-center">Marca</th>
-                        <th scope="col" class="text-center">Código</th>
-                        <th scope="col" class="text-center">Repuesto</th>
-                        <th scope="col" class="text-center">Precio de lista</th>
-                        <th scope="col" class="text-center">Medida</th>
-                        <th scope="col" class="text-center">Cantidad</th>
-                        <th scope="col" class="text-center">Operaciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let movimientoArticulo of movimientosArticulo">
-                        <td class="text-center text-dark">{{movimientoArticulo.articulo.marca.nombreMarca}}</td>
-                        <td class="text-center text-dark">{{movimientoArticulo.articulo.codigoArticuloProveedor}}</td>
-                        <td class="text-center text-dark">{{movimientoArticulo.articulo.tipoRepuesto.nombreTipoRepuesto}}</td>
-                        <td class="text-center text-dark">{{movimientoArticulo.articulo.valor}}</td>
-                        <td class="text-center text-dark">
-                            <select required class="form-control" [(ngModel)]="movimientoArticulo.medida" name="medida">
-                                <option *ngFor="let medida of medidas" [ngValue]="medida">
-                                    {{medida.medida}}
-                                </option>
-                            </select>
-                        </td>
-                        <td class="text-center text-dark">
-                            <input required type="number" class="form-control" aria-label="Cantidad" [value]="movimientoArticulo.cantidad" [(ngModel)]="movimientoArticulo.cantidad"
-                            name="cantidad" min="1">
-                        </td>
-                        <td class="text-center text-dark">
-                            <button type="submit" class="btn btn-danger btn-sm" (click)="eliminarArticulo(movimientoArticulo)">
-                                <fa-icon icon="trash"></fa-icon>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+  </div>
 </div>

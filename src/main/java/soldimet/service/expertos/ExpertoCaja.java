@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import soldimet.constant.Globales;
 import soldimet.converter.CajaConverter;
 import soldimet.domain.Authority;
@@ -23,8 +23,8 @@ import soldimet.domain.Empleado;
 import soldimet.domain.EstadoMovimiento;
 import soldimet.domain.MedioDePago;
 import soldimet.domain.Movimiento;
-import soldimet.domain.MovimientoPresupuesto;
 import soldimet.domain.MovimientoArticulo;
+import soldimet.domain.MovimientoPresupuesto;
 import soldimet.domain.SubCategoria;
 import soldimet.domain.Sucursal;
 import soldimet.domain.TipoMovimiento;
@@ -33,9 +33,9 @@ import soldimet.repository.SucursalRepository;
 import soldimet.repository.extendedRepository.ExtendedCajaRepository;
 import soldimet.repository.extendedRepository.ExtendedCategoriaPagoRepository;
 import soldimet.repository.extendedRepository.ExtendedEstadoMovimientoRepository;
-import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
-import soldimet.repository.extendedRepository.ExtendedMovimientoPresupuestoRepository;
 import soldimet.repository.extendedRepository.ExtendedMovimientoArticuloRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoPresupuestoRepository;
+import soldimet.repository.extendedRepository.ExtendedMovimientoRepository;
 import soldimet.repository.extendedRepository.ExtendedSubCategoriaRepository;
 import soldimet.security.AuthoritiesConstants;
 import soldimet.service.dto.DTOCaja;
@@ -43,11 +43,6 @@ import soldimet.service.dto.DTOCajaCUConsultarMovimientos;
 import soldimet.service.dto.DTOMovimientos;
 import soldimet.service.expertos.ExpertoRepuestos;
 import soldimet.utils.MathUtils;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-
-
-
 
 /**
  * @author Manu
@@ -99,9 +94,7 @@ public class ExpertoCaja {
     @Autowired
     private ExtendedMovimientoArticuloRepository movimientoArticuloRepository;
 
-    public ExpertoCaja() {
-
-    }
+    public ExpertoCaja() {}
 
     public Page<DTOMovimientos> getMovimientosSucursal(
         String filtro,
@@ -110,17 +103,25 @@ public class ExpertoCaja {
         Optional<LocalDate> fechaFin,
         Pageable paging
     ) {
-        Page<Movimiento> movimientos ;
+        Page<Movimiento> movimientos;
         if (fechaInicio.isPresent() && fechaFin.isPresent()) {
-            movimientos = movimientoRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
-                fechaInicio.get(), fechaFin.get(), globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA, filtro, sucursalId, paging
-            );
-
+            movimientos =
+                movimientoRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
+                    fechaInicio.get(),
+                    fechaFin.get(),
+                    globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA,
+                    filtro,
+                    sucursalId,
+                    paging
+                );
         } else {
-            movimientos = movimientoRepository.findByEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
-                globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA, filtro, sucursalId, paging
-            );
-
+            movimientos =
+                movimientoRepository.findByEstadoNombreEstadoAndSubCategoriaNombreSubCategoriaContainsAndCajaSucursalIdOrderByIdDesc(
+                    globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA,
+                    filtro,
+                    sucursalId,
+                    paging
+                );
         }
         return cajaConverter.movimientosToMovCabecera(movimientos);
     }
@@ -135,7 +136,7 @@ public class ExpertoCaja {
     public List<DTOMovimientos> buscarMovimientosPresupuesto(Long presupuestoId) {
         List<MovimientoPresupuesto> movimientosPresupuesto = movimientoPresupuestoRepository.findByPresupuestoId(presupuestoId);
         List<Movimiento> movimientos = new ArrayList();
-        for(MovimientoPresupuesto mov: movimientosPresupuesto) {
+        for (MovimientoPresupuesto mov : movimientosPresupuesto) {
             movimientos.add(mov.getMovimiento());
         }
         return cajaConverter.movimientosToMovCabecera(movimientos);
@@ -144,7 +145,7 @@ public class ExpertoCaja {
     private LocalDate formatearFecha(Integer mes, Integer anio) {
         // Creo la fecha para coincidir solo con el mes
         String strMes = "";
-        if ( mes < 10) {
+        if (mes < 10) {
             strMes += "0";
         }
         strMes += mes;
@@ -153,12 +154,10 @@ public class ExpertoCaja {
     }
 
     private Float calcularTotalMesActual(Sucursal sucursal) {
-
         List<Caja> listaCajaMes = this.findCajasDelMes(sucursal, Optional.empty(), Optional.empty());
 
         Float montoTotalMes = new Float(0);
         for (Caja caja : listaCajaMes) {
-
             montoTotalMes += caja.getSaldo();
         }
         return montoTotalMes;
@@ -182,7 +181,6 @@ public class ExpertoCaja {
             Caja cajaDia = this.findCajaDelDia(movimientoDto.getEmpleado().getSucursal());
             movimientoDto.setCaja(cajaDia);
 
-
             // Guardo el medio de pago creado con los datos puntuales de este movimiento
             // antes de guardar el movimiento
             MedioDePago medioDePagoMovimiento = movimientoDto.getMedioDePago();
@@ -190,15 +188,14 @@ public class ExpertoCaja {
             movimientoDto.setMedioDePago(medioDePagoMovimiento);
 
             // Guardo la subcategoria
-            movimientoDto.setSubCategoria( subCategoriaRepository.save(movimientoDto.getSubCategoria()) );
+            movimientoDto.setSubCategoria(subCategoriaRepository.save(movimientoDto.getSubCategoria()));
 
             this.actualizarSaldoCaja(cajaDia, movimientoDto);
 
             Movimiento newMovimiento = movimientoRepository.save(movimientoDto);
 
             return newMovimiento;
-
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
             return null;
@@ -206,7 +203,6 @@ public class ExpertoCaja {
     }
 
     private Caja AbrirCaja(Sucursal sucursal) {
-
         Caja cajaDiaHoy = new Caja();
 
         cajaDiaHoy.setSaldo(new Float(0));
@@ -228,22 +224,17 @@ public class ExpertoCaja {
 
     private LocalDate currentMonthLastDay() {
         return YearMonth.now().atEndOfMonth();
-
     }
 
     public Caja findCajaDelDia(Sucursal sucursal) {
-        Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(
-            this.currentDay(),
-            sucursal
-        );
+        Caja cajaDia = cajaRepository.findFirstByFechaGreaterThanEqualAndSucursal(this.currentDay(), sucursal);
         if (cajaDia == null) {
             cajaDia = this.AbrirCaja(sucursal);
         }
         return cajaDia;
     }
 
-    public List<Caja> findCajasDelMes(Sucursal sucursal, Optional<LocalDate> inicio,
-            Optional<LocalDate> fin) {
+    public List<Caja> findCajasDelMes(Sucursal sucursal, Optional<LocalDate> inicio, Optional<LocalDate> fin) {
         LocalDate fechaInicio;
         LocalDate fechaFin;
         if (inicio.isPresent()) {
@@ -253,12 +244,11 @@ public class ExpertoCaja {
         }
         if (inicio.isPresent()) {
             fechaFin = fin.get();
-        }  else {
+        } else {
             fechaFin = this.currentMonthLastDay();
         }
 
-        return  cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(
-                fechaInicio, fechaFin, sucursal);
+        return cajaRepository.findByFechaGreaterThanEqualAndFechaLessThanEqualAndSucursalOrderByFechaAsc(fechaInicio, fechaFin, sucursal);
     }
 
     private Caja actualizarSaldoCaja(Caja caja, Movimiento movimiento) {
@@ -279,7 +269,7 @@ public class ExpertoCaja {
             *Egreso Baja:
                 Saldo = 13
         */
-        if(estadoMovimiento.equals(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA)){
+        if (estadoMovimiento.equals(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA)) {
             saldo = saldo + movimiento.getImporte();
         } else {
             saldo = saldo - movimiento.getImporte();
@@ -290,15 +280,13 @@ public class ExpertoCaja {
         return caja;
     }
 
-	public Movimiento borrarMovimiento(Long idMovimiento) throws NoSuchElementException{
-
+    public Movimiento borrarMovimiento(Long idMovimiento) throws NoSuchElementException {
         Movimiento movimientoAEliminar = movimientoRepository.findById(idMovimiento).get();
         EstadoMovimiento estadoBaja = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_BAJA);
         movimientoAEliminar.setEstado(estadoBaja);
         this.actualizarSaldoCaja(movimientoAEliminar.getCaja(), movimientoAEliminar);
         Movimiento movimiento = movimientoRepository.save(movimientoAEliminar);
         return movimiento;
-
     }
 
     private Boolean tieneAccesoATodosLosMovimientos(Empleado empleado) {
@@ -313,8 +301,7 @@ public class ExpertoCaja {
             authoritiesNames.add(authority.getName());
         }
 
-        return authoritiesNames.contains(AuthoritiesConstants.ADMIN)
-                || authoritiesNames.contains(AuthoritiesConstants.JEFE);
+        return authoritiesNames.contains(AuthoritiesConstants.ADMIN) || authoritiesNames.contains(AuthoritiesConstants.JEFE);
     }
 
     public Float getGastoMensualProveedores(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
@@ -331,18 +318,21 @@ public class ExpertoCaja {
             fechaFin = this.currentMonthLastDay();
         }
 
-        Float pagoAcumulado= new Float(0);
+        Float pagoAcumulado = new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
         Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_PROVEEDORES).getSubCategorias();
 
-        for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
-            sucursales, fechaInicio, fechaFin, estado, subCategorias
-        )){
+        for (Movimiento movimiento : movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
+            sucursales,
+            fechaInicio,
+            fechaFin,
+            estado,
+            subCategorias
+        )) {
             pagoAcumulado += movimiento.getImporte();
         }
         return MathUtils.roundFloat(pagoAcumulado);
-
     }
 
     public Float getGastoMensualFerreteria(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
@@ -359,18 +349,21 @@ public class ExpertoCaja {
             fechaFin = this.currentMonthLastDay();
         }
 
-        Float gastoFerreteriaAcumulado= new Float(0);
+        Float gastoFerreteriaAcumulado = new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
         Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_Ferreteria).getSubCategorias();
 
-        for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
-            sucursales, fechaInicio, fechaFin, estado, subCategorias
-        )){
+        for (Movimiento movimiento : movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
+            sucursales,
+            fechaInicio,
+            fechaFin,
+            estado,
+            subCategorias
+        )) {
             gastoFerreteriaAcumulado += movimiento.getImporte();
         }
         return MathUtils.roundFloat(gastoFerreteriaAcumulado);
-
     }
 
     public Float getGastoMensualRepuestos(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
@@ -387,29 +380,36 @@ public class ExpertoCaja {
             fechaFin = this.currentMonthLastDay();
         }
 
-        Float pagoAcumulado= new Float(0);
+        Float pagoAcumulado = new Float(0);
         List<Sucursal> sucursales = sucursalRepository.findAll();
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
         Set<SubCategoria> subCategorias = categoriaRepository.findByNombreCategoriaPago(globales.CATEGORIA_REPUESTOS).getSubCategorias();
 
-        for (Movimiento movimiento: movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
-            sucursales, fechaInicio, fechaFin, estado, subCategorias
-        )){
+        for (Movimiento movimiento : movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndSubCategoriaIn(
+            sucursales,
+            fechaInicio,
+            fechaFin,
+            estado,
+            subCategorias
+        )) {
             pagoAcumulado += movimiento.getImporte();
         }
         return MathUtils.roundFloat(pagoAcumulado);
-
     }
 
     public List<Movimiento> getMovimientosMensuales(TipoMovimiento tipoMovimiento, Sucursal sucursal) {
-
         List<Sucursal> sucursales;
         sucursales = new ArrayList<>();
         sucursales.add(sucursal);
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
         return movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstadoAndTipoMovimiento(
-            sucursales, this.currentMonthFirstDay(), this.currentMonthLastDay(), estado, tipoMovimiento);
+            sucursales,
+            this.currentMonthFirstDay(),
+            this.currentMonthLastDay(),
+            estado,
+            tipoMovimiento
+        );
     }
 
     public List<Movimiento> getMovimientosMensuales(Optional<LocalDate> inicio, Optional<LocalDate> fin) {
@@ -429,13 +429,16 @@ public class ExpertoCaja {
         EstadoMovimiento estado = estadoMovimientoRepository.findByNombreEstado(globales.NOMBRE_ESTADO_MOVIMIENTO_ALTA);
 
         return movimientoRepository.findByCajaSucursalInAndCajaFechaGreaterThanEqualAndCajaFechaLessThanEqualAndEstado(
-            sucursales, fechaInicio, fechaFin, estado
+            sucursales,
+            fechaInicio,
+            fechaFin,
+            estado
         );
     }
 
     public List<MovimientoArticulo> crearMovimientosArticulos(Long movimientoID, List<MovimientoArticulo> movimientosArticulos) {
         Movimiento movimiento = movimientoRepository.findById(movimientoID).get();
-        for(MovimientoArticulo movimientoArticulo: movimientosArticulos) {
+        for (MovimientoArticulo movimientoArticulo : movimientosArticulos) {
             movimientoArticulo.setMovimiento(movimiento);
             expertoRepuestos.descontarStockDesdeArticuloyMedida(
                 movimientoArticulo.getArticulo(),
@@ -446,5 +449,4 @@ public class ExpertoCaja {
 
         return movimientoArticuloRepository.saveAll(movimientosArticulos);
     }
-
 }

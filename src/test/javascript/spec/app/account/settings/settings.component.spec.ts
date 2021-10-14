@@ -16,7 +16,7 @@ describe('Component Tests', () => {
       TestBed.configureTestingModule({
         imports: [SoldimetTestModule],
         declarations: [SettingsComponent],
-        providers: [FormBuilder]
+        providers: [FormBuilder],
       })
         .overrideTemplate(SettingsComponent, '')
         .compileComponents();
@@ -37,7 +37,7 @@ describe('Component Tests', () => {
         activated: true,
         email: 'john.doe@mail.com',
         langKey: 'en',
-        login: 'john'
+        login: 'john',
       };
       mockAuth.setIdentityResponse(accountValues);
 
@@ -55,11 +55,11 @@ describe('Component Tests', () => {
       // GIVEN
       const accountValues = {
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       };
       comp.settingsForm.patchValue({
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
       });
       mockAuth.setIdentityResponse(accountValues);
       // WHEN

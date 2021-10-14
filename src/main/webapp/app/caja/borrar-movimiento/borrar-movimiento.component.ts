@@ -9,7 +9,7 @@ import { CajaModuleServiceService } from 'app/caja/caja-module-service.service';
 @Component({
   selector: 'jhi-borrar-movimiento',
   templateUrl: './borrar-movimiento.component.html',
-  styles: []
+  styles: [],
 })
 export class BorrarMovimientoDialogComponent {
   movimiento: Movimiento;
@@ -28,7 +28,7 @@ export class BorrarMovimientoDialogComponent {
     this.movimientoService.delete(this.movimiento.id).subscribe(response => {
       this.eventManager.broadcast({
         name: 'movimientosDiaModificacion',
-        content: 'Movimiento eliminado'
+        content: 'Movimiento eliminado',
       });
       this.activeModal.dismiss(true);
     });
@@ -37,7 +37,7 @@ export class BorrarMovimientoDialogComponent {
 
 @Component({
   selector: 'jhi-movimiento-borrar-popup',
-  template: ''
+  template: '',
 })
 export class BorrarMovimientoPopupComponent implements OnInit, OnDestroy {
   routeSub: any;

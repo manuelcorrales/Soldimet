@@ -9,7 +9,7 @@ import { ClientesService } from '../clientes.service';
 
 @Component({
   selector: 'jhi-cliente-borrar-dialog',
-  templateUrl: './cliente-borrar-dialog.component.html'
+  templateUrl: './cliente-borrar-dialog.component.html',
 })
 export class ClienteBorrarDialogComponent {
   cliente: Cliente;
@@ -24,7 +24,7 @@ export class ClienteBorrarDialogComponent {
     this.clienteService.eliminarCliente(id).subscribe(response => {
       this.eventManager.broadcast({
         name: 'clienteListModification',
-        content: 'Cliente eliminado'
+        content: 'Cliente eliminado',
       });
       this.activeModal.dismiss(true);
     });
@@ -33,7 +33,7 @@ export class ClienteBorrarDialogComponent {
 
 @Component({
   selector: 'jhi-cliente-borrar-popup',
-  template: ''
+  template: '',
 })
 export class ClienteBorrarPopupComponent implements OnInit, OnDestroy {
   routeSub: any;

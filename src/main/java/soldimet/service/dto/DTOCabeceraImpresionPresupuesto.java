@@ -24,8 +24,7 @@ public class DTOCabeceraImpresionPresupuesto {
     private String totalRepuestos;
     private String totalNeto;
 
-    public DTOCabeceraImpresionPresupuesto() {
-    }
+    public DTOCabeceraImpresionPresupuesto() {}
 
     public String getNumeroPresupuesto() {
         return numeroPresupuesto;
@@ -122,7 +121,4 @@ public class DTOCabeceraImpresionPresupuesto {
     public void setTotalNeto(String totalNeto) {
         this.totalNeto = totalNeto;
     }
-
-
-
 }

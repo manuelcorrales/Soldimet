@@ -1,4 +1,5 @@
 package soldimet.service.dto;
+
 /**
  * @author Manu
  * @version 1.0
@@ -6,52 +7,47 @@ package soldimet.service.dto;
  */
 public class DTOOperacionNuevoCostoCUHacerPresupuesto {
 
-	private float costoOperacion;
-	private String nombreOperacion;
-	private String tipoParteMotor;
+    private float costoOperacion;
+    private String nombreOperacion;
+    private String tipoParteMotor;
 
-	public DTOOperacionNuevoCostoCUHacerPresupuesto(){
+    public DTOOperacionNuevoCostoCUHacerPresupuesto() {}
 
-	}
+    public void finalize() throws Throwable {}
 
-	public void finalize() throws Throwable {
+    public float getcostoOperacion() {
+        return costoOperacion;
+    }
 
-	}
+    public String getnombreOperacion() {
+        return nombreOperacion;
+    }
 
-	public float getcostoOperacion(){
-		return costoOperacion;
-	}
+    public String gettipoParteMotor() {
+        return tipoParteMotor;
+    }
 
-	public String getnombreOperacion(){
-		return nombreOperacion;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setcostoOperacion(float newVal) {
+        costoOperacion = newVal;
+    }
 
-	public String gettipoParteMotor(){
-		return tipoParteMotor;
-	}
+    /**
+     *
+     * @param newVal
+     */
+    public void setnombreOperacion(String newVal) {
+        nombreOperacion = newVal;
+    }
 
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setcostoOperacion(float newVal){
-		costoOperacion = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setnombreOperacion(String newVal){
-		nombreOperacion = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void settipoParteMotor(String newVal){
-		tipoParteMotor = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void settipoParteMotor(String newVal) {
+        tipoParteMotor = newVal;
+    }
 }

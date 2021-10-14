@@ -1,8 +1,8 @@
 <div class="">
-    <h3>
-        <b>{{detallePedido.detallePresupuesto.tipoParteMotor.nombreTipoParteMotor}}</b>
-    </h3>
+  <h3>
+    <b>{{ detallePedido.detallePresupuesto.tipoParteMotor.nombreTipoParteMotor }}</b>
+  </h3>
 </div>
 <div *ngFor="let costoRepuesto of getOrderedCostoRepuestos()">
-    <jhi-costo-repuesto #costoRepuestoComponent [costoRepuesto]="costoRepuesto" [medidas]="medidas"></jhi-costo-repuesto>
+  <jhi-costo-repuesto #costoRepuestoComponent [costoRepuesto]="costoRepuesto" [medidas]="medidas"></jhi-costo-repuesto>
 </div>

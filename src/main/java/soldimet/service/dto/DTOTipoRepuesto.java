@@ -13,8 +13,7 @@ public class DTOTipoRepuesto {
 
     private String nombreTipoRepuesto;
 
-    public DTOTipoRepuesto() {
-    }
+    public DTOTipoRepuesto() {}
 
     public String getNombreTipoRepuesto() {
         return nombreTipoRepuesto;
@@ -23,7 +22,4 @@ public class DTOTipoRepuesto {
     public void setNombreTipoRepuesto(String nombreTipoRepuesto) {
         this.nombreTipoRepuesto = nombreTipoRepuesto;
     }
-
-
-
 }

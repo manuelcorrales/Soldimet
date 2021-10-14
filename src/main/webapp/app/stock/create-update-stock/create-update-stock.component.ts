@@ -23,7 +23,7 @@ import { IStockArticulo } from '../../shared/model/stock-articulo.model';
 @Component({
   selector: 'jhi-create-update-stock',
   templateUrl: './create-update-stock.component.html',
-  styleUrls: ['./create-update-stock.component.scss']
+  styleUrls: ['./create-update-stock.component.scss'],
 })
 export class CreateUpdateStockComponent extends StockArticuloUpdateComponent implements OnInit {
   empleado: DtoEmpleado;
@@ -33,7 +33,7 @@ export class CreateUpdateStockComponent extends StockArticuloUpdateComponent imp
     medida: [null, Validators.required],
     sucursal: [null, Validators.required],
     articulo: [null],
-    repuestoProveedor: [{ value: '' }, Validators.required]
+    repuestoProveedor: [{ value: '' }, Validators.required],
   });
 
   stock: StockArticulo;
@@ -75,22 +75,28 @@ export class CreateUpdateStockComponent extends StockArticuloUpdateComponent imp
         filter((mayBeOk: HttpResponse<IMedidaArticulo[]>) => mayBeOk.ok),
         map((response: HttpResponse<IMedidaArticulo[]>) => response.body)
       )
-      .subscribe((res: IMedidaArticulo[]) => (this.medidaarticulos = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe(
+        (res: IMedidaArticulo[]) => (this.medidaarticulos = res),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
     this.sucursalService
       .query()
       .pipe(
         filter((mayBeOk: HttpResponse<ISucursal[]>) => mayBeOk.ok),
         map((response: HttpResponse<ISucursal[]>) => response.body)
       )
-      .subscribe((res: ISucursal[]) => (this.sucursals = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe(
+        (res: ISucursal[]) => (this.sucursals = res),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
     this.userService.getCurrentEmpleado().subscribe(
       (res: DtoEmpleado) => {
         this.empleado = res;
         this.editForm.patchValue({
           sucursal: {
             id: this.empleado.sucursalId,
-            nombreSucursal: this.empleado.sucursal
-          }
+            nombreSucursal: this.empleado.sucursal,
+          },
         });
         // eslint-disable-next-line no-console
         console.log(this.fb);
@@ -151,7 +157,7 @@ export class CreateUpdateStockComponent extends StockArticuloUpdateComponent imp
       cantidad: this.editForm.get(['cantidad']).value,
       medida: this.editForm.get(['medida']).value,
       articulo: this.editForm.get(['repuestoProveedor']).value.articulo,
-      sucursal: this.editForm.get(['sucursal']).value
+      sucursal: this.editForm.get(['sucursal']).value,
     };
   }
 }

@@ -17,8 +17,7 @@ public class DtoTipoMovimiento {
 
     private ArrayList<DtoRubroYCategoria> rubrosycat;
 
-    public DtoTipoMovimiento() {
-    }
+    public DtoTipoMovimiento() {}
 
     public String getTipoMovimiento() {
         return tipoMovimiento;
@@ -36,8 +35,7 @@ public class DtoTipoMovimiento {
         this.rubrosycat = rubrosycat;
     }
 
-    public void agregarRubroYCategoria(DtoRubroYCategoria dto){
+    public void agregarRubroYCategoria(DtoRubroYCategoria dto) {
         this.rubrosycat.add(dto);
     }
-
 }

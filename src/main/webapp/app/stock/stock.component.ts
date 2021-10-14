@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'jhi-stock',
   templateUrl: './stock.component.html',
-  styleUrls: ['./stock.component.scss']
+  styleUrls: ['./stock.component.scss'],
 })
 export class StockComponent extends BaseFilterPageableComponent<DTOStockRepuestoCabecera> implements OnInit {
   eventSubscriber: Subscription;

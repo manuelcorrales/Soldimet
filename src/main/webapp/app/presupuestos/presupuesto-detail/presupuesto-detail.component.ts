@@ -6,7 +6,7 @@ import { DetallePresupuesto } from '../../shared/model/detalle-presupuesto.model
 @Component({
   selector: 'jhi-presupuesto-detail',
   templateUrl: './presupuesto-detail.component.html',
-  styleUrls: ['./presupuesto-detail.component.scss']
+  styleUrls: ['./presupuesto-detail.component.scss'],
 })
 export class PresupuestoDetailComponent implements OnInit {
   presupuesto: Presupuesto;

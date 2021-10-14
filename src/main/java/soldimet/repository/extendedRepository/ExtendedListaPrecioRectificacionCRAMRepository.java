@@ -1,10 +1,9 @@
 package soldimet.repository.extendedRepository;
-import soldimet.domain.ListaPrecioRectificacionCRAM;
-import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.ListaPrecioRectificacionCRAM;
+import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
 
 /**
  * Spring Data  repository for the ListaPrecioRectificacionCRAM entity.
@@ -12,7 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedListaPrecioRectificacionCRAMRepository extends ListaPrecioRectificacionCRAMRepository {
-
     ListaPrecioRectificacionCRAM findByNumeroGrupo(Integer numeroGrupo);
-
 }

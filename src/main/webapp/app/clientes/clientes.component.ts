@@ -10,7 +10,7 @@ import { BaseFilterPageableComponent } from 'app/shared/base-filter-pageable/bas
 @Component({
   selector: 'jhi-clientes',
   templateUrl: './clientes.component.html',
-  styles: []
+  styles: [],
 })
 export class ClientesComponent extends BaseFilterPageableComponent<ICliente> implements OnInit, OnDestroy {
   clientes: ICliente[] = [];

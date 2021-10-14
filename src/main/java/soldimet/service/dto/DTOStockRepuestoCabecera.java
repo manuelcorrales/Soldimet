@@ -2,7 +2,6 @@ package soldimet.service.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import soldimet.domain.Aplicacion;
 
 public class DTOStockRepuestoCabecera {
@@ -19,8 +18,7 @@ public class DTOStockRepuestoCabecera {
     private String motoresRelacionados = "";
     private List<Aplicacion> aplicaciones = new ArrayList<>();
 
-    public DTOStockRepuestoCabecera() {
-    }
+    public DTOStockRepuestoCabecera() {}
 
     public Integer getCantidad() {
         return cantidad;
@@ -114,5 +112,4 @@ public class DTOStockRepuestoCabecera {
     public void setMotoresRelacionados(String motoresRelacionados) {
         this.motoresRelacionados = motoresRelacionados;
     }
-
 }

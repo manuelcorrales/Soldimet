@@ -15,7 +15,7 @@ import { Observable, Subject, merge } from 'rxjs';
 @Component({
   selector: 'jhi-nuevo-movimiento-cabecera',
   templateUrl: './nuevo-movimiento-cabecera.component.html',
-  styleUrls: ['./nuevo-movimiento-cabecera.component.scss']
+  styleUrls: ['./nuevo-movimiento-cabecera.component.scss'],
 })
 export class NuevoMovimientoCabeceraComponent implements OnInit {
   tipos: TipoMovimiento[];
@@ -60,10 +60,7 @@ export class NuevoMovimientoCabeceraComponent implements OnInit {
 
   formatterconcepto = result => result.nombreSubCategoria;
   searchconcepto = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged()
-    );
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
     const clicksWithClosedPopup$ = this.clickconcepto$.pipe(filter(() => !this.instanceconcepto.isPopupOpen()));
     const inputFocus$ = this.focusconcepto$;
 

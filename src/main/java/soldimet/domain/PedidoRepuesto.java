@@ -37,8 +37,8 @@ public class PedidoRepuesto implements Serializable {
     @JsonIgnoreProperties("pedidoRepuestos")
     private EstadoPedidoRepuesto estadoPedidoRepuesto;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch= FetchType.EAGER)
-    @JoinColumn(name= "pedidoRepuesto")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "pedidoRepuesto")
     @NotNull
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -49,7 +49,7 @@ public class PedidoRepuesto implements Serializable {
     @JsonIgnoreProperties(value = { "cliente", "estadoPresupuesto", "documentType", "sucursal" }, allowSetters = true)
     private Presupuesto presupuesto;
 
-    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("pedidoRepuestos")
     private DocumentationType documentType;
 
@@ -197,15 +197,16 @@ public class PedidoRepuesto implements Serializable {
             ", fechaRecibo='" + getFechaRecibo() + "'" +
             "}";
     }
-    public void cambiarEstadoADetalles( EstadoDetallePedido estadoDetallePedido) {
-        for( DetallePedido detalle: this.detallePedidos) {
+
+    public void cambiarEstadoADetalles(EstadoDetallePedido estadoDetallePedido) {
+        for (DetallePedido detalle : this.detallePedidos) {
             detalle.setEstadoDetallePedido(estadoDetallePedido);
         }
     }
 
     public DetallePedido filterDetallePedido(DetallePedido detallePedido) {
-        for(DetallePedido detalleInList: this.getDetallePedidos()) {
-            if ( detalleInList.getId().equals(detallePedido.getId())){
+        for (DetallePedido detalleInList : this.getDetallePedidos()) {
+            if (detalleInList.getId().equals(detallePedido.getId())) {
                 return detalleInList;
             }
         }

@@ -1,25 +1,43 @@
 <div class="form-check col-md-3">
-    <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" [defaultValue]="seleccionado"
-            [(ngModel)]="seleccionado" (change)='cambioValor()'
-        >{{repuesto.nombreTipoRepuesto}}
-    </label>
+  <label class="form-check-label">
+    <input class="form-check-input" type="checkbox" [defaultValue]="seleccionado" [(ngModel)]="seleccionado" (change)="cambioValor()" />{{
+      repuesto.nombreTipoRepuesto
+    }}
+  </label>
 </div>
 <!-- Muestro siempre el autocompletar y la marca del artículo que se eligió con el precio-->
 <div class="form-group col-md-3">
-    <input type="text" placeholder="Código de artículo" [(ngModel)]="articulo"
-        [resultFormatter]="formatterArticulo" id="typeahead-focusArticulo" [disabled]="!seleccionado"
-        type="text" class="form-control" [ngbTypeahead]="searchArticulo"
-        (focus)="focusArticulo$.next($event.target.value)" (click)="clearOnClick($event.target); clickArticulo$.next($event.target.value)"
-        #instanceNTAArticulo="ngbTypeahead" [inputFormatter]="formatterArticulo" name="articulo_search"
-        [editable]='false' typeahead-no-results="noResults" (selectItem)="pisarPrecioConArticulo($event)"
-    />
+  <input
+    type="text"
+    placeholder="Código de artículo"
+    [(ngModel)]="articulo"
+    [resultFormatter]="formatterArticulo"
+    id="typeahead-focusArticulo"
+    [disabled]="!seleccionado"
+    type="text"
+    class="form-control"
+    [ngbTypeahead]="searchArticulo"
+    (focus)="focusArticulo$.next($event.target.value)"
+    (click)="clearOnClick($event.target); clickArticulo$.next($event.target.value)"
+    #instanceNTAArticulo="ngbTypeahead"
+    [inputFormatter]="formatterArticulo"
+    name="articulo_search"
+    [editable]="false"
+    typeahead-no-results="noResults"
+    (selectItem)="pisarPrecioConArticulo($event)"
+  />
 </div>
 <div class="form-group col-md-3">
-    <label>{{articulo?.marca?.nombreMarca}}</label>
+  <label>{{ articulo?.marca?.nombreMarca }}</label>
 </div>
 <div class="form-group col-md-3">
-    <input type="number" class="form-control" aria-label="Ingrese un nuevo valor"
-    [(ngModel)]="precio" [disabled]="!seleccionado" (change)='cambioValor()'>
-    <small class="form-check-label text-muted" *ngIf="articulo">{{articulo?.fechaCosto | date:'MM/yy' }}</small>
+  <input
+    type="number"
+    class="form-control"
+    aria-label="Ingrese un nuevo valor"
+    [(ngModel)]="precio"
+    [disabled]="!seleccionado"
+    (change)="cambioValor()"
+  />
+  <small class="form-check-label text-muted" *ngIf="articulo">{{ articulo?.fechaCosto | date: 'MM/yy' }}</small>
 </div>

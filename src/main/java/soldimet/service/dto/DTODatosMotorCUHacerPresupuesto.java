@@ -9,15 +9,12 @@ import java.util.List;
  */
 public class DTODatosMotorCUHacerPresupuesto {
 
-	private Long idCilindrada;
-	private Long idAplicacion;
-	private Long idMotor;
-	private Long idTiposPartesMotores;
+    private Long idCilindrada;
+    private Long idAplicacion;
+    private Long idMotor;
+    private Long idTiposPartesMotores;
 
-	public DTODatosMotorCUHacerPresupuesto(){
-
-	}
-
+    public DTODatosMotorCUHacerPresupuesto() {}
 
     public Long getIdCilindrada() {
         return idCilindrada;

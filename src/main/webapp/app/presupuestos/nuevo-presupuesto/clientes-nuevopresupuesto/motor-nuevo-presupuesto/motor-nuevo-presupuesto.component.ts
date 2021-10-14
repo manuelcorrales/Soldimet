@@ -13,7 +13,7 @@ import { Page } from '../../../../dto/page/page';
 @Component({
   selector: 'jhi-motor-nuevo-presupuesto',
   templateUrl: './motor-nuevo-presupuesto.component.html',
-  styles: []
+  styles: [],
 })
 export class MotorNuevoPresupuestoComponent implements OnInit {
   cilindradas: Cilindrada[] = [];

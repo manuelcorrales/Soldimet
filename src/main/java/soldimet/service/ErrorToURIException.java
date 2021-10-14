@@ -21,5 +21,4 @@ public class ErrorToURIException extends RuntimeException {
     public String getErrorKey() {
         return errorKey;
     }
-
 }

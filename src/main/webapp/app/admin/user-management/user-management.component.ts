@@ -15,7 +15,7 @@ import { ModalUtilComponent } from 'app/shared/util/modal-util';
 
 @Component({
   selector: 'jhi-user-mgmt',
-  templateUrl: './user-management.component.html'
+  templateUrl: './user-management.component.html',
 })
 export class UserMgmtComponent implements OnInit, OnDestroy {
   currentAccount: any;
@@ -90,9 +90,12 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
       .query({
         page: this.page - 1,
         size: this.itemsPerPage,
-        sort: this.sort()
+        sort: this.sort(),
       })
-      .subscribe((res: HttpResponse<User[]>) => this.onSuccess(res.body, res.headers), (res: HttpResponse<any>) => this.onError(res.body));
+      .subscribe(
+        (res: HttpResponse<User[]>) => this.onSuccess(res.body, res.headers),
+        (res: HttpResponse<any>) => this.onError(res.body)
+      );
   }
 
   trackIdentity(index, item: User) {
@@ -118,8 +121,8 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/user-management'], {
       queryParams: {
         page: this.page,
-        sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-      }
+        sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc'),
+      },
     });
     this.loadAll();
   }

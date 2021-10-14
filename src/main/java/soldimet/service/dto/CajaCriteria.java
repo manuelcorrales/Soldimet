@@ -1,8 +1,5 @@
 package soldimet.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
@@ -10,6 +7,8 @@ import io.github.jhipster.service.filter.InstantFilter;
 import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link soldimet.domain.Caja} entity. This class is used
@@ -40,10 +39,9 @@ public class CajaCriteria implements Serializable, Criteria {
 
     private LongFilter sucursalId;
 
-    public CajaCriteria(){
-    }
+    public CajaCriteria() {}
 
-    public CajaCriteria(CajaCriteria other){
+    public CajaCriteria(CajaCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.fecha = other.fecha == null ? null : other.fecha.copy();
         this.horaApertura = other.horaApertura == null ? null : other.horaApertura.copy();
@@ -123,7 +121,6 @@ public class CajaCriteria implements Serializable, Criteria {
         this.sucursalId = sucursalId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -133,7 +130,7 @@ public class CajaCriteria implements Serializable, Criteria {
             return false;
         }
         final CajaCriteria that = (CajaCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(fecha, that.fecha) &&
             Objects.equals(horaApertura, that.horaApertura) &&
@@ -141,35 +138,28 @@ public class CajaCriteria implements Serializable, Criteria {
             Objects.equals(saldo, that.saldo) &&
             Objects.equals(observaciones, that.observaciones) &&
             Objects.equals(saldoFisico, that.saldoFisico) &&
-            Objects.equals(sucursalId, that.sucursalId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-        id,
-        fecha,
-        horaApertura,
-        horaCierre,
-        saldo,
-        observaciones,
-        saldoFisico,
-        sucursalId
+            Objects.equals(sucursalId, that.sucursalId)
         );
     }
 
     @Override
-    public String toString() {
-        return "CajaCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (fecha != null ? "fecha=" + fecha + ", " : "") +
-                (horaApertura != null ? "horaApertura=" + horaApertura + ", " : "") +
-                (horaCierre != null ? "horaCierre=" + horaCierre + ", " : "") +
-                (saldo != null ? "saldo=" + saldo + ", " : "") +
-                (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
-                (saldoFisico != null ? "saldoFisico=" + saldoFisico + ", " : "") +
-                (sucursalId != null ? "sucursalId=" + sucursalId + ", " : "") +
-            "}";
+    public int hashCode() {
+        return Objects.hash(id, fecha, horaApertura, horaCierre, saldo, observaciones, saldoFisico, sucursalId);
     }
 
+    @Override
+    public String toString() {
+        return (
+            "CajaCriteria{" +
+            (id != null ? "id=" + id + ", " : "") +
+            (fecha != null ? "fecha=" + fecha + ", " : "") +
+            (horaApertura != null ? "horaApertura=" + horaApertura + ", " : "") +
+            (horaCierre != null ? "horaCierre=" + horaCierre + ", " : "") +
+            (saldo != null ? "saldo=" + saldo + ", " : "") +
+            (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
+            (saldoFisico != null ? "saldoFisico=" + saldoFisico + ", " : "") +
+            (sucursalId != null ? "sucursalId=" + sucursalId + ", " : "") +
+            "}"
+        );
+    }
 }

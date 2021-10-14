@@ -1,12 +1,15 @@
 <div class="modal-header">
-    <h4 class="modal-title">Cambiar por porcentage</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+  <h4 class="modal-title">Cambiar por porcentage</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
     <span aria-hidden="true">&times;</span>
-    </button>
+  </button>
 </div>
 <div class="modal-body">
-    <p>Actualizar el precio de todos los articulos "{{tipoRepuesto.nombreTipoRepuesto}}" de marca "{{marca.nombreMarca}}" en un {{porcentage}}%?</p>
+  <p>
+    Actualizar el precio de todos los articulos "{{ tipoRepuesto.nombreTipoRepuesto }}" de marca "{{ marca.nombreMarca }}" en un
+    {{ porcentage }}%?
+  </p>
 </div>
 <div class="modal-footer">
-    <button type="submit" class="btn btn-outline-primary" ngbAutofocus (click)="activeModal.close()">Aceptar</button>
+  <button type="submit" class="btn btn-outline-primary" ngbAutofocus (click)="activeModal.close()">Aceptar</button>
 </div>

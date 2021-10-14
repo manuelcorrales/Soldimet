@@ -1,7 +1,6 @@
 package soldimet.controller;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import soldimet.domain.Articulo;
 import soldimet.domain.CostoRepuestoProveedor;
 import soldimet.service.expertos.ExpertoRepuestos;
@@ -74,8 +72,11 @@ public class RepuestosController {
         try {
             articulo = expertoRepuestos.crearRepuestoProveedor(articulo);
         } catch (Exception e) {
-            throw new BadRequestAlertException("Ya existe este código en otro artículo!", Articulo.class.getName(),
-                    "codigoArticuloProveedorexists");
+            throw new BadRequestAlertException(
+                "Ya existe este código en otro artículo!",
+                Articulo.class.getName(),
+                "codigoArticuloProveedorexists"
+            );
         }
         log.debug("/crearRepuestoProveedor, RESPONSE: {}", articulo);
         return articulo;
@@ -88,5 +89,4 @@ public class RepuestosController {
         log.debug("/actualizarRepuestoProveedor, RESPONSE: {}", articulo);
         return articulo;
     }
-
 }

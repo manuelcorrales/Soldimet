@@ -11,7 +11,7 @@ import { NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-boot
 @Component({
   selector: 'jhi-repuesto-precio',
   templateUrl: './repuesto-precio.component.html',
-  styles: []
+  styles: [],
 })
 export class RepuestoPrecioComponent implements OnInit {
   @Input() repuesto: TipoRepuesto;
@@ -41,19 +41,13 @@ export class RepuestoPrecioComponent implements OnInit {
 
   formatterArticulo = (articulo: Articulo) => `${articulo.marca.nombreMarca} (${articulo.codigoArticuloProveedor})`;
   searchArticulo = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(
-      debounceTime(this.waitTime),
-      distinctUntilChanged()
-    );
+    const debouncedText$ = text$.pipe(debounceTime(this.waitTime), distinctUntilChanged());
     const clicksWithClosedPopup$ = this.clickArticulo$.pipe(
       debounceTime(this.waitTime),
       distinctUntilChanged(),
       filter(() => !this.instanceArticulo.isPopupOpen())
     );
-    const inputFocus$ = this.focusArticulo$.pipe(
-      debounceTime(this.waitTime),
-      distinctUntilChanged()
-    );
+    const inputFocus$ = this.focusArticulo$.pipe(debounceTime(this.waitTime), distinctUntilChanged());
 
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term =>

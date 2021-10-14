@@ -11,7 +11,6 @@ package soldimet.service.dto;
  */
 public class DTODetallePedidoRepuesto {
 
-
     private String articulo;
     private String marca;
     private String rubro;
@@ -24,9 +23,7 @@ public class DTODetallePedidoRepuesto {
     private String proveedor;
     private Long idProveedor;
 
-
-    public DTODetallePedidoRepuesto() {
-    }
+    public DTODetallePedidoRepuesto() {}
 
     public Long getIdProveedor() {
         return idProveedor;
@@ -36,7 +33,6 @@ public class DTODetallePedidoRepuesto {
         this.idProveedor = idProveedor;
     }
 
-
     public String getProveedor() {
         return proveedor;
     }
@@ -44,8 +40,6 @@ public class DTODetallePedidoRepuesto {
     public void setProveedor(String proveedor) {
         this.proveedor = proveedor;
     }
-
-
 
     public String getArticulo() {
         return articulo;
@@ -118,6 +112,4 @@ public class DTODetallePedidoRepuesto {
     public void setDetallePedidoID(String detallePedidoID) {
         this.detallePedidoID = detallePedidoID;
     }
-
-
 }

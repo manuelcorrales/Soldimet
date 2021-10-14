@@ -14,7 +14,7 @@ import { UserService } from 'app/core/user/user.service';
 @Component({
   selector: 'jhi-nuevo-movimiento',
   templateUrl: './nuevo-movimiento.component.html',
-  styles: []
+  styles: [],
 })
 export class NuevoMovimientoComponent implements OnInit {
   eventSubscriber: Subscription;

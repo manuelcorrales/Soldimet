@@ -6,7 +6,7 @@ import { NgbTabChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'jhi-operaciones',
   templateUrl: './operaciones.component.html',
-  styles: []
+  styles: [],
 })
 export class OperacionesComponent implements OnInit {
   @ViewChild('toastr', { static: false })

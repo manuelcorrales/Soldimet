@@ -1,13 +1,11 @@
 package soldimet.service.expertos;
 
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import soldimet.converter.UserConverter;
 import soldimet.domain.Empleado;
 import soldimet.domain.Persona;
@@ -28,7 +26,6 @@ public class ExpertoUsuarios {
 
     private final Logger log = LoggerFactory.getLogger(ExpertoUsuarios.class);
 
-
     @Autowired
     private ExtendedPersonaRepository personaRepository;
 
@@ -41,17 +38,12 @@ public class ExpertoUsuarios {
     @Autowired
     private UserConverter userConverver;
 
-    public ExpertoUsuarios() {
-
-    }
+    public ExpertoUsuarios() {}
 
     public DTOEmpleado getEmpleadoActual() {
         try {
             return userConverver.convertirEntidadAModelo(this.getEmpleadoLogeado());
-
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
         return null;
@@ -70,5 +62,4 @@ public class ExpertoUsuarios {
         }
         return null;
     }
-
 }

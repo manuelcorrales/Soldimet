@@ -13,7 +13,7 @@ import { BaseFilterPageableComponent } from 'app/shared/base-filter-pageable/bas
 @Component({
   selector: 'jhi-presupuestos',
   templateUrl: './presupuestos.component.html',
-  styles: []
+  styles: [],
 })
 export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresupuestoCabeceraComponent> implements OnInit {
   @ViewChild('toastr', { static: false })
@@ -25,7 +25,7 @@ export class PresupuestosComponent extends BaseFilterPageableComponent<DtoPresup
   estado: EstadoPresupuesto = null;
 
   public featureToggleData: any = {
-    enableImprimir: false
+    enableImprimir: false,
   };
 
   constructor(

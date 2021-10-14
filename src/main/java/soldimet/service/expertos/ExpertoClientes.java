@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import soldimet.constant.Globales;
 import soldimet.domain.Cliente;
 import soldimet.domain.EstadoPersona;
@@ -29,31 +28,30 @@ public class ExpertoClientes {
     private ExtendedClienteRepository clienteRepository;
 
     @Autowired
-    private ExtendedEstadoPersonaRepository estadoPersonaRepository;;
+    private ExtendedEstadoPersonaRepository estadoPersonaRepository;
 
     @Autowired
     private Globales globales;
 
-    public ExpertoClientes() {
-
-    }
+    public ExpertoClientes() {}
 
     public Cliente activarCliente(Cliente cliente) {
-
         EstadoPersona estadoPersona = estadoPersonaRepository.findByNombreEstado(globales.NOMBRE_ESTADO_PERSONA_ALTA);
 
         cliente.getPersona().setEstadoPersona(estadoPersona);
 
         return clienteRepository.save(cliente);
-
     }
 
     public Page<Cliente> buscarClientes(String filtro, Pageable paging) {
         // filtro = "%"+ filtro +"%";
 
-        return clienteRepository
-                .findClienteByPersonaNombreContainsOrPersonaApellidoContainsOrPersonaDireccionCalleContainsOrderByIdDesc(
-                        filtro, filtro, filtro, paging);
+        return clienteRepository.findClienteByPersonaNombreContainsOrPersonaApellidoContainsOrPersonaDireccionCalleContainsOrderByIdDesc(
+            filtro,
+            filtro,
+            filtro,
+            paging
+        );
     }
 
     public Cliente eliminarCliente(Long clienteId) {
@@ -71,5 +69,4 @@ public class ExpertoClientes {
         cliente.getPersona().getDireccion();
         return cliente;
     }
-
 }

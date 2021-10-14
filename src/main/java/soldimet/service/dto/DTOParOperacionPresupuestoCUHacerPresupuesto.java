@@ -9,12 +9,10 @@ import soldimet.domain.Operacion;
  */
 public class DTOParOperacionPresupuestoCUHacerPresupuesto {
 
-	private Float costoOperacion;
-	private Operacion nombreOperacion;
+    private Float costoOperacion;
+    private Operacion nombreOperacion;
 
-	public DTOParOperacionPresupuestoCUHacerPresupuesto(){
-
-	}
+    public DTOParOperacionPresupuestoCUHacerPresupuesto() {}
 
     public Float getCostoOperacion() {
         return costoOperacion;
@@ -37,5 +35,4 @@ public class DTOParOperacionPresupuestoCUHacerPresupuesto {
     public void setNombreOperacion(Operacion nombreOperacion) {
         this.nombreOperacion = nombreOperacion;
     }
-
 }

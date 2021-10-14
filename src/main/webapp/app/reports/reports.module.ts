@@ -19,8 +19,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 export const CUSTOM_ERRORS: ErrorMessage[] = [
   {
     error: 'required',
-    format: (label: string, error: any) => 'Requerido.'
-  }
+    format: (label: string, error: any) => 'Requerido.',
+  },
 ];
 
 @NgModule({
@@ -32,7 +32,7 @@ export const CUSTOM_ERRORS: ErrorMessage[] = [
     CircleMetricComponent,
     CardBarsComponent,
     CardPunteroComponent,
-    DescargaReportesComponent
+    DescargaReportesComponent,
   ],
   imports: [
     NgxChartsModule,
@@ -40,9 +40,9 @@ export const CUSTOM_ERRORS: ErrorMessage[] = [
     CommonModule,
     RouterModule.forRoot(REPORTES_ROUTES),
     ReactiveFormsModule,
-    NgBootstrapFormValidationModule
+    NgBootstrapFormValidationModule,
   ],
   entryComponents: [ReportesComponent, CardMetricComponent, CircleComponent, LinearComponent, CircleMetricComponent, CardBarsComponent],
-  providers: [ReportesService, { provide: CUSTOM_ERROR_MESSAGES, useValue: CUSTOM_ERRORS, multi: true }]
+  providers: [ReportesService, { provide: CUSTOM_ERROR_MESSAGES, useValue: CUSTOM_ERRORS, multi: true }],
 })
 export class ReportsModule {}

@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ public class ExpertoCUAbrirCaja {
 
     private final Logger log = LoggerFactory.getLogger(ExpertoCUAbrirCaja.class);
 
-
     @Autowired
     private ExtendedCajaRepository cajaRepository;
 
@@ -33,23 +31,18 @@ public class ExpertoCUAbrirCaja {
 
     private Caja cajaDia;
 
-    public ExpertoCUAbrirCaja() {
-
-    }
+    public ExpertoCUAbrirCaja() {}
 
     public Boolean cajaEstaAbierta() {
         try {
             if (cajaDia == null) {
-
                 //creo una fecha actual y le doy formato (puede ser yyyy/MM/dd HH:mm:ss)
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 Date date = new Date();
 
-
                 cajaDia = cajaRepository.findByFecha(LocalDate.now());
 
-                return cajaDia!=null;
-
+                return cajaDia != null;
             } else {
                 return true;
             }
@@ -57,11 +50,9 @@ public class ExpertoCUAbrirCaja {
             log.error(e.getMessage());
             return false;
         }
-
     }
 
     public DTOMensajeAbrirCaja verEstadoCaja() {
-
         DTOMensajeAbrirCaja mensaje = new DTOMensajeAbrirCaja();
 
         if (cajaEstaAbierta()) {
@@ -71,28 +62,29 @@ public class ExpertoCUAbrirCaja {
                 //La caja se abrio a X hora y ahora se encuentra cerrada
                 //preguntar si la quiere re abrir
 
-                String mensajeConFecha1 = globales.MENSAJE_CAJA_CERRADA_VOLVER_A_ABRIR.replaceFirst(globales.SIMBOLO_REEMPLAZAR,dateFormat.format(cajaDia.getHoraApertura()).toString());
+                String mensajeConFecha1 = globales.MENSAJE_CAJA_CERRADA_VOLVER_A_ABRIR.replaceFirst(
+                    globales.SIMBOLO_REEMPLAZAR,
+                    dateFormat.format(cajaDia.getHoraApertura()).toString()
+                );
 
-                String mensajeConFecha2 = mensajeConFecha1.replaceFirst(globales.SIMBOLO_REEMPLAZAR,dateFormat.format(cajaDia.getHoraCierre()).toString());
+                String mensajeConFecha2 = mensajeConFecha1.replaceFirst(
+                    globales.SIMBOLO_REEMPLAZAR,
+                    dateFormat.format(cajaDia.getHoraCierre()).toString()
+                );
 
                 mensaje.setMensaje(mensajeConFecha2);
                 return mensaje;
-
             } else {
-
                 //la caja ya esta abierta y no se ha cerrado
                 mensaje.setMensaje(globales.MENSAJE_CAJA_YA_ABIERTA);
                 return mensaje;
-
             }
-
         } else {
             //la caja esta cerrada
 
             mensaje.setMensaje(globales.MENSAJE_CAJA_CERRADA_SIN_MOVIMIENTOS);
             return mensaje;
         }
-
     }
 
     public void respuestaMensaje(Boolean respuesta) {
@@ -102,16 +94,11 @@ public class ExpertoCUAbrirCaja {
             //me fijo que la caja este cerrada para abrirla de nuevo por las dudas que la quiera abrir 2 veces
             if (cajaDia == null) {
                 AbrirCaja();
-
             }
-        } else {
-
-        }
-
+        } else {}
     }
 
     private void AbrirCaja() {
-
         //creo una fecha actual y le doy formato (puede ser yyyy/MM/dd HH:mm:ss)
         Caja cajaDiaHoy = new Caja();
 
@@ -121,13 +108,10 @@ public class ExpertoCUAbrirCaja {
 
         //GUARDO LA CAJA
         cajaRepository.save(cajaDiaHoy);
-
-
     }
 
     //me fijo si la caja del dia ya fue abierta
     public Caja getCaja() {
         return cajaDia;
     }
-
 }

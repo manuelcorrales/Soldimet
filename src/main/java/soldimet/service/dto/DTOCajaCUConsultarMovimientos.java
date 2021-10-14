@@ -1,4 +1,5 @@
 package soldimet.service.dto;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +10,10 @@ import java.util.List;
  */
 public class DTOCajaCUConsultarMovimientos {
 
-    List<DTOCaja> cajas = new ArrayList<DTOCaja>();;
+    List<DTOCaja> cajas = new ArrayList<DTOCaja>();
     private Float totalMensual;
 
-	public DTOCajaCUConsultarMovimientos(){
-
-	}
+    public DTOCajaCUConsultarMovimientos() {}
 
     /**
      * @return the totalDia
@@ -22,6 +21,7 @@ public class DTOCajaCUConsultarMovimientos {
     public Float getTotalMensual() {
         return totalMensual;
     }
+
     /**
      * @param totalMensual the totalDia to set
      */
@@ -43,11 +43,11 @@ public class DTOCajaCUConsultarMovimientos {
     public List<DTOCaja> getCajas() {
         return cajas;
     }
+
     /**
      * @param cajas the cajas to set
      */
     public void setCajas(List<DTOCaja> cajas) {
         this.cajas = cajas;
     }
-
 }

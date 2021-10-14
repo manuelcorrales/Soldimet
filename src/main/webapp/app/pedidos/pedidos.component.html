@@ -1,97 +1,108 @@
 <div class="jh-card">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)"  placeholder="Buscar pedido...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-light" type="button" (click)="search(searchBar.value)">
-                            <span><fa-icon icon="search"></fa-icon></span>
-                        </button>
-                    </span>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="input-group custom-search-form">
+          <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)" placeholder="Buscar pedido..." />
+          <span class="input-group-btn">
+            <button class="btn btn-light" type="button" (click)="search(searchBar.value)">
+              <span><fa-icon icon="search"></fa-icon></span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="container-fluid card shadow">
+    <div class="table-responsive pt-3">
+      <table class="table table-hover text-center">
+        <thead>
+          <tr>
+            <th scope="col">Nº Pedido</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Presupuesto</th>
+            <th scope="col">Motor</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Sucursal</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Operaciones</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="pedidos">
+          <tr *ngFor="let pedido of pedidos | slice: (page - 1) * pageSize:(page - 1) * pageSize + pageSize">
+            <th>{{ pedido.id }}</th>
+            <td>{{ pedido.cliente }}</td>
+            <td>{{ pedido.fecha }}</td>
+            <td>
+              <a [routerLink]="['/presupuestos', pedido.presupuestoId, 'ver']" placement="top" ngbTooltip="Ver">{{
+                pedido.presupuestoId
+              }}</a>
+            </td>
+            <td>{{ pedido.motor }}</td>
+            <td>{{ pedido.tipo }}</td>
+            <td>{{ pedido.sucursal }}</td>
+            <td>
+              <div *ngIf="pedido.estado == 'Pendiente de pedido'" class="text-center">
+                <div class="alert-primary" style="border-radius: 0.25rem" role="alert">
+                  {{ pedido.estado }}
                 </div>
-            </div>
-        </div>
+              </div>
+              <div *ngIf="pedido.estado == 'Pedido'" class="text-center">
+                <div class="alert-info" role="alert" style="border-radius: 0.25rem">
+                  {{ pedido.estado }}
+                </div>
+              </div>
+              <div *ngIf="pedido.estado == 'Pedido Parcial'" class="text-center">
+                <div class="alert-info" role="alert" style="border-radius: 0.25rem">
+                  {{ pedido.estado }}
+                </div>
+              </div>
+              <div *ngIf="pedido.estado == 'Recibido'" class="text-center">
+                <div class="alert-success" role="alert" style="border-radius: 0.25rem">
+                  {{ pedido.estado }}
+                </div>
+              </div>
+              <div *ngIf="pedido.estado == 'Recibido Parcial'" class="text-center">
+                <div class="alert-success" role="alert" style="border-radius: 0.25rem">
+                  {{ pedido.estado }}
+                </div>
+              </div>
+              <div *ngIf="pedido.estado == 'Cancelado'" class="text-center">
+                <div class="alert-danger" role="alert" style="border-radius: 0.25rem">
+                  {{ pedido.estado }}
+                </div>
+              </div>
+            </td>
+            <td>
+              <button
+                class="btn btn-info"
+                type="submit"
+                [routerLink]="['/', { outlets: { popup: 'pedidos/' + pedido.id } }]"
+                replaceUrl="true"
+                *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'"
+                placement="top"
+                ngbTooltip="Operar pedido"
+              >
+                <fa-icon icon="cogs"></fa-icon>
+              </button>
+              <p *ngIf="pedido.estado == 'Recibido' || pedido.estado == 'Cancelado'">No hay operaciones</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <br/>
-    <div class="container-fluid card shadow">
-        <div class="table-responsive pt-3">
-            <table class="table table-hover text-center">
-                <thead>
-                    <tr>
-                        <th scope="col">Nº Pedido</th>
-                        <th scope="col">Cliente</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Presupuesto</th>
-                        <th scope="col">Motor</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Sucursal</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Operaciones</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="pedidos">
-                    <tr *ngFor="let pedido of pedidos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-                        <th>{{pedido.id}}</th>
-                        <td>{{pedido.cliente}}</td>
-                        <td>{{pedido.fecha}} </td>
-                        <td><a [routerLink]="['/presupuestos', pedido.presupuestoId, 'ver' ]" placement="top" ngbTooltip="Ver">{{pedido.presupuestoId}}</a></td>
-                        <td>{{pedido.motor}}</td>
-                        <td>{{pedido.tipo}}</td>
-                        <td>{{pedido.sucursal}}</td>
-                        <td>
-                            <div *ngIf="pedido.estado== 'Pendiente de pedido'" class="text-center">
-                                <div class="alert-primary" style="border-radius: .25rem;" role="alert">
-                                    {{pedido.estado}}
-                                </div>
-                            </div>
-                            <div *ngIf="pedido.estado== 'Pedido'" class="text-center">
-                                <div class="alert-info" role="alert" style="border-radius: .25rem;">
-                                    {{pedido.estado}}
-                                </div>
-                            </div>
-                            <div *ngIf="pedido.estado== 'Pedido Parcial'" class="text-center">
-                                <div class="alert-info" role="alert" style="border-radius: .25rem;">
-                                    {{pedido.estado}}
-                                </div>
-                            </div>
-                            <div *ngIf="pedido.estado== 'Recibido'" class="text-center">
-                                <div class="alert-success" role="alert" style="border-radius: .25rem;">
-                                    {{pedido.estado}}
-                                </div>
-                            </div>
-                            <div *ngIf="pedido.estado== 'Recibido Parcial'" class="text-center">
-                                <div class="alert-success" role="alert" style="border-radius: .25rem;">
-                                    {{pedido.estado}}
-                                </div>
-                            </div>
-                            <div *ngIf="pedido.estado== 'Cancelado'" class="text-center">
-                                <div class="alert-danger" role="alert" style="border-radius: .25rem;">
-                                    {{pedido.estado}}
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-info" type="submit" [routerLink]="['/', { outlets: { popup: 'pedidos/'+ pedido.id } }]" replaceUrl="true"
-                                *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'" placement="top" ngbTooltip="Operar pedido">
-                                <fa-icon icon="cogs"></fa-icon>
-                            </button>
-                            <p *ngIf="pedido.estado == 'Recibido' || pedido.estado == 'Cancelado'">No hay operaciones</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <ngb-pagination
-                class="d-flex justify-content-center"
-                [collectionSize]="pedidos.length"
-                #numPages
-                [pageSize]="pageSize"
-                [(page)]="page"
-                [rotate]="true"
-                [boundaryLinks]="true"
-                [maxSize]="10"
-                >
-            </ngb-pagination>
-    </div>
+    <ngb-pagination
+      class="d-flex justify-content-center"
+      [collectionSize]="pedidos.length"
+      #numPages
+      [pageSize]="pageSize"
+      [(page)]="page"
+      [rotate]="true"
+      [boundaryLinks]="true"
+      [maxSize]="10"
+    >
+    </ngb-pagination>
+  </div>
 </div>

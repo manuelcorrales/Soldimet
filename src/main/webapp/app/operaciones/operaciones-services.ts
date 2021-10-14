@@ -6,18 +6,18 @@ import { SERVER_API_URL } from 'app/app.constants';
 
 @Injectable()
 export class OperacionesService {
-    private resourceUrlOperaciones = SERVER_API_URL + 'api/operaciones';
-    private urlBuscarListasActivas = '/getListaPreciosOperacionesActualizada';
-    private urlActualizarPrecioLista = '/updateLista';
+  private resourceUrlOperaciones = SERVER_API_URL + 'api/operaciones';
+  private urlBuscarListasActivas = '/getListaPreciosOperacionesActualizada';
+  private urlActualizarPrecioLista = '/updateLista';
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    getListasOperacionesAutorizadas(): Observable<DTOListaPrecioManoDeObra[]> {
-        const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarListasActivas}`;
-        return this.http.get<DTOListaPrecioManoDeObra[]>(urlLlamada);
-    }
-    saveListaActualizada(lista: DTOListaPrecioManoDeObra): Observable<DTOListaPrecioManoDeObra> {
-        const urlLlamada = `${this.resourceUrlOperaciones}${this.urlActualizarPrecioLista}`;
-        return this.http.post<DTOListaPrecioManoDeObra>(urlLlamada, lista);
-    }
+  getListasOperacionesAutorizadas(): Observable<DTOListaPrecioManoDeObra[]> {
+    const urlLlamada = `${this.resourceUrlOperaciones}${this.urlBuscarListasActivas}`;
+    return this.http.get<DTOListaPrecioManoDeObra[]>(urlLlamada);
+  }
+  saveListaActualizada(lista: DTOListaPrecioManoDeObra): Observable<DTOListaPrecioManoDeObra> {
+    const urlLlamada = `${this.resourceUrlOperaciones}${this.urlActualizarPrecioLista}`;
+    return this.http.post<DTOListaPrecioManoDeObra>(urlLlamada, lista);
+  }
 }

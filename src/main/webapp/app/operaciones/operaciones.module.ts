@@ -15,6 +15,6 @@ import { NgbTabsetModule, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstra
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [OperacionesComponent, OperacionListaComponent, OperacionListaPrecioComponent],
   providers: [OperacionesService, DecimalPipe],
-  entryComponents: [OperacionesComponent, OperacionListaComponent, OperacionListaPrecioComponent]
+  entryComponents: [OperacionesComponent, OperacionListaComponent, OperacionListaPrecioComponent],
 })
 export class OperacionesModule {}

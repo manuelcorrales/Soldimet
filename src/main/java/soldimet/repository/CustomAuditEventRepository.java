@@ -1,9 +1,7 @@
 package soldimet.repository;
 
-import soldimet.config.Constants;
-import soldimet.config.audit.AuditEventConverter;
-import soldimet.domain.PersistentAuditEvent;
-
+import java.time.Instant;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.audit.AuditEvent;
@@ -11,9 +9,9 @@ import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.*;
+import soldimet.config.Constants;
+import soldimet.config.audit.AuditEventConverter;
+import soldimet.domain.PersistentAuditEvent;
 
 /**
  * An implementation of Spring Boot's AuditEventRepository.
@@ -34,26 +32,28 @@ public class CustomAuditEventRepository implements AuditEventRepository {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public CustomAuditEventRepository(PersistenceAuditEventRepository persistenceAuditEventRepository,
-            AuditEventConverter auditEventConverter) {
-
+    public CustomAuditEventRepository(
+        PersistenceAuditEventRepository persistenceAuditEventRepository,
+        AuditEventConverter auditEventConverter
+    ) {
         this.persistenceAuditEventRepository = persistenceAuditEventRepository;
         this.auditEventConverter = auditEventConverter;
     }
 
     @Override
     public List<AuditEvent> find(String principal, Instant after, String type) {
-        Iterable<PersistentAuditEvent> persistentAuditEvents =
-            persistenceAuditEventRepository.findByPrincipalAndAuditEventDateAfterAndAuditEventType(principal, after, type);
+        Iterable<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findByPrincipalAndAuditEventDateAfterAndAuditEventType(
+            principal,
+            after,
+            type
+        );
         return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void add(AuditEvent event) {
-        if (!AUTHORIZATION_FAILURE.equals(event.getType()) &&
-            !Constants.ANONYMOUS_USER.equals(event.getPrincipal())) {
-
+        if (!AUTHORIZATION_FAILURE.equals(event.getType()) && !Constants.ANONYMOUS_USER.equals(event.getPrincipal())) {
             PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
             persistentAuditEvent.setPrincipal(event.getPrincipal());
             persistentAuditEvent.setAuditEventType(event.getType());
@@ -77,8 +77,12 @@ public class CustomAuditEventRepository implements AuditEventRepository {
                     int length = value.length();
                     if (length > EVENT_DATA_COLUMN_MAX_LENGTH) {
                         value = value.substring(0, EVENT_DATA_COLUMN_MAX_LENGTH);
-                        log.warn("Event data for {} too long ({}) has been truncated to {}. Consider increasing column width.",
-                                 entry.getKey(), length, EVENT_DATA_COLUMN_MAX_LENGTH);
+                        log.warn(
+                            "Event data for {} too long ({}) has been truncated to {}. Consider increasing column width.",
+                            entry.getKey(),
+                            length,
+                            EVENT_DATA_COLUMN_MAX_LENGTH
+                        );
                     }
                 }
                 results.put(entry.getKey(), value);

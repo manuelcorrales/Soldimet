@@ -60,7 +60,7 @@ public class Movimiento implements Serializable {
     @JsonIgnoreProperties("movimientos")
     private Caja caja;
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("movimientos")
     private SubCategoria subCategoria;
 

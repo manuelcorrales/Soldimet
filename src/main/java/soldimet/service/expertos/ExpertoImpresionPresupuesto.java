@@ -5,6 +5,11 @@
  */
 package soldimet.service.expertos;
 
+import fr.opensagres.xdocreport.converter.ConverterRegistry;
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.IConverter;
+import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,7 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.docx4j.model.datastorage.migration.VariablePrepare;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
@@ -21,12 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
-import fr.opensagres.xdocreport.converter.ConverterRegistry;
-import fr.opensagres.xdocreport.converter.ConverterTypeTo;
-import fr.opensagres.xdocreport.converter.IConverter;
-import fr.opensagres.xdocreport.converter.Options;
-import fr.opensagres.xdocreport.core.document.DocumentKind;
 import soldimet.constant.Globales;
 import soldimet.domain.Cliente;
 import soldimet.domain.CobranzaOperacion;
@@ -44,6 +42,7 @@ import soldimet.repository.extendedRepository.ExtendedTipoRepuestoRepository;
  */
 @Service
 public class ExpertoImpresionPresupuesto {
+
     /*
      * EL mapeo de donde se indica el valor de cada cosa o la cadena es directamente
      * en el documento de word acá busco cada una de las variables, las meto en el
@@ -62,14 +61,12 @@ public class ExpertoImpresionPresupuesto {
     private Globales globales;
 
     public File imprimirPresupuesto(Presupuesto presupuesto, Float toal, Cliente cliente) throws Exception {
-
         HashMap<String, String> dto = this.crearMap(presupuesto);
         File impresion = this.printWithdocx4j(dto);
         return impresion;
     }
 
     private File convertToPdf(File archivo) throws Exception {
-
         // 1) Create options ODT 2 PDF to select well converter form the registry
         Options options = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF);
         // 2) Get the converter from the registry
@@ -82,7 +79,6 @@ public class ExpertoImpresionPresupuesto {
         out.close();
 
         return archivoPDF;
-
     }
 
     private File printWithdocx4j(HashMap<String, String> dtoImpresion) throws Exception {
@@ -160,7 +156,6 @@ public class ExpertoImpresionPresupuesto {
 
         return variables;
     }
-
     // private File printWithXDocReport(DTOImpresion dtoImpresion) throws Exception
     // {
     // InputStream in = new FileInputStream(new File(globales.reporteHtmlPath));

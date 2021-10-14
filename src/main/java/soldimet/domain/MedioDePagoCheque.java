@@ -24,7 +24,7 @@ public class MedioDePagoCheque implements Serializable {
     @Column(name = "numero_cheque", nullable = false)
     private String numeroCheque;
 
-    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
     @JsonIgnoreProperties("medioDePagoCheques")
     private Banco banco;

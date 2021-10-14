@@ -7,26 +7,21 @@ package soldimet.service.dto;
  */
 public class DTOCilindradaCUHacerPresupuesto {
 
-	private int cantidadDeCilindros;
+    private int cantidadDeCilindros;
 
-	public DTOCilindradaCUHacerPresupuesto(){
+    public DTOCilindradaCUHacerPresupuesto() {}
 
-	}
+    public void finalize() throws Throwable {}
 
-	public void finalize() throws Throwable {
+    public int getcantidadDeCilindros() {
+        return cantidadDeCilindros;
+    }
 
-	}
-
-	public int getcantidadDeCilindros(){
-		return cantidadDeCilindros;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setcantidadDeCilindros(int newVal){
-		cantidadDeCilindros = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void setcantidadDeCilindros(int newVal) {
+        cantidadDeCilindros = newVal;
+    }
 }

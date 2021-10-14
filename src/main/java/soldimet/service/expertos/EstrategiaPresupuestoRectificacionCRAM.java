@@ -1,6 +1,5 @@
 package soldimet.service.expertos;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -18,21 +17,16 @@ import soldimet.domain.TipoParteMotor;
 @Service
 public abstract class EstrategiaPresupuestoRectificacionCRAM {
 
-	public EstrategiaPresupuestoRectificacionCRAM(){
+    public EstrategiaPresupuestoRectificacionCRAM() {}
 
-	}
+    public void finalize() throws Throwable {}
 
-	public void finalize() throws Throwable {
-
-	}
-
-	/**
-	 *
-	 * @param cilindros
-	 * @param motor
-	 * @param aplicacion
-	 * @param parte
-	 */
-	public abstract List<CostoOperacion> buscarOperaciones(Cilindrada cilindros, Motor motor, Aplicacion aplicacion, TipoParteMotor parte);
-
+    /**
+     *
+     * @param cilindros
+     * @param motor
+     * @param aplicacion
+     * @param parte
+     */
+    public abstract List<CostoOperacion> buscarOperaciones(Cilindrada cilindros, Motor motor, Aplicacion aplicacion, TipoParteMotor parte);
 }

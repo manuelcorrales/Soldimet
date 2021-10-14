@@ -8,11 +8,9 @@ package soldimet.service.dto;
 public class DTOSerie {
 
     private String name;
-	public Float value;
+    public Float value;
 
-	public DTOSerie(){
-
-    }
+    public DTOSerie() {}
 
     public DTOSerie(String name, Float value) {
         this.name = name;
@@ -46,5 +44,4 @@ public class DTOSerie {
     public void setValue(Float value) {
         this.value = value;
     }
-
 }

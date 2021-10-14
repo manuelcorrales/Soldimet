@@ -27,7 +27,7 @@ public class Empleado implements Serializable {
     @JoinColumn(unique = true)
     private Persona persona;
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch= FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("empleados")
     private Sucursal sucursal;
 

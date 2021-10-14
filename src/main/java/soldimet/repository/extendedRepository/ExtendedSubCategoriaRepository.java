@@ -1,13 +1,10 @@
 package soldimet.repository.extendedRepository;
 
-import soldimet.domain.SubCategoria;
-import soldimet.repository.SubCategoriaRepository;
-
 import java.util.List;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.SubCategoria;
+import soldimet.repository.SubCategoriaRepository;
 
 /**
  * Spring Data  repository for the SubCategoria entity.
@@ -15,7 +12,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedSubCategoriaRepository extends SubCategoriaRepository {
-
-	List<SubCategoria> findByNombreSubCategoria(String string);
-
+    List<SubCategoria> findByNombreSubCategoria(String string);
 }

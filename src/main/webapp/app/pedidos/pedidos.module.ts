@@ -9,7 +9,7 @@ import { PedidosRecibidosComponent } from 'app/pedidos/pedidos-recibidos/pedidos
 import { PedidosRealizadosComponent } from 'app/pedidos/pedidos-realizados/pedidos-realizados.component';
 import {
   PedidoPendienteComponent,
-  PedidoPendienteModalPopupComponent
+  PedidoPendienteModalPopupComponent,
 } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/pedido-pendiente.component';
 import { DetallePedidoNewComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
 import { PedidosService } from 'app/pedidos/pedidos-services';
@@ -31,7 +31,7 @@ const PEDIDOS_NEW_ROUTES_ALL = [...PEDIDOS_NEW_POPUP_ROUTE, ...PEDIDOS_SUBROUTES
     CommonModule,
     BrowserModule,
     FormsModule,
-    RouterModule.forChild(PEDIDOS_NEW_ROUTES_ALL)
+    RouterModule.forChild(PEDIDOS_NEW_ROUTES_ALL),
   ],
   exports: [RouterModule],
   entryComponents: [PedidosComponent, PedidoPendienteModalPopupComponent, PedidoPendienteComponent],
@@ -45,7 +45,7 @@ const PEDIDOS_NEW_ROUTES_ALL = [...PEDIDOS_NEW_POPUP_ROUTE, ...PEDIDOS_SUBROUTES
     PedidoPendienteComponent,
     DetallePedidoNewComponent,
     CostoRepuestoComponent,
-    PedidoPendienteModalPopupComponent
-  ]
+    PedidoPendienteModalPopupComponent,
+  ],
 })
 export class PedidosModule {}

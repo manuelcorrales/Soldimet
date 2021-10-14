@@ -26,14 +26,14 @@ public class DetallePedido implements Serializable {
     @JoinColumn(unique = true)
     private DetallePresupuesto detallePresupuesto;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name="detallePedido")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "detallePedido")
     @JsonInclude(JsonInclude.Include.ALWAYS)
     @NotNull
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
-    @ManyToOne (cascade ={CascadeType.DETACH, CascadeType.MERGE}, optional = false, fetch=FetchType.EAGER)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE }, optional = false, fetch = FetchType.EAGER)
     @NotNull
     private EstadoDetallePedido estadoDetallePedido;
 
@@ -129,8 +129,8 @@ public class DetallePedido implements Serializable {
     }
 
     public CostoRepuesto filterCostoRepuesto(CostoRepuesto costoRepuesto) {
-        for(CostoRepuesto costoInList: this.getCostoRepuestos()) {
-            if (costoInList.getId().equals(costoRepuesto.getId())){
+        for (CostoRepuesto costoInList : this.getCostoRepuestos()) {
+            if (costoInList.getId().equals(costoRepuesto.getId())) {
                 return costoInList;
             }
         }

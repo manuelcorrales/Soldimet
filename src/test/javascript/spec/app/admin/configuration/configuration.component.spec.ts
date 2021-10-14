@@ -15,7 +15,7 @@ describe('Component Tests', () => {
       TestBed.configureTestingModule({
         imports: [SoldimetTestModule],
         declarations: [JhiConfigurationComponent],
-        providers: [JhiConfigurationService]
+        providers: [JhiConfigurationService],
       })
         .overrideTemplate(JhiConfigurationComponent, '')
         .compileComponents();
@@ -56,7 +56,7 @@ describe('Component Tests', () => {
         // GIVEN
         const data = {
           key1: 'test',
-          key2: 'test2'
+          key2: 'test2',
         };
 
         // THEN

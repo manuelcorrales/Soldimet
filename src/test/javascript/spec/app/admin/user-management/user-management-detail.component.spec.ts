@@ -10,9 +10,9 @@ describe('Component Tests', () => {
   describe('User Management Detail Component', () => {
     let comp: UserMgmtDetailComponent;
     let fixture: ComponentFixture<UserMgmtDetailComponent>;
-    const route = ({
-      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_USER'], 'admin', null, null, null) })
-    } as any) as ActivatedRoute;
+    const route = {
+      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_USER'], 'admin', null, null, null) }),
+    } as any as ActivatedRoute;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -21,9 +21,9 @@ describe('Component Tests', () => {
         providers: [
           {
             provide: ActivatedRoute,
-            useValue: route
-          }
-        ]
+            useValue: route,
+          },
+        ],
       })
         .overrideTemplate(UserMgmtDetailComponent, '')
         .compileComponents();
@@ -56,7 +56,7 @@ describe('Component Tests', () => {
             createdDate: null,
             lastModifiedBy: null,
             lastModifiedDate: null,
-            password: null
+            password: null,
           })
         );
       });

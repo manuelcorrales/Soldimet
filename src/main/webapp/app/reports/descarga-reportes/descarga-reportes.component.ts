@@ -10,7 +10,7 @@ import { HttpResponse } from '@angular/common/http';
 @Component({
   selector: 'jhi-descarga-reportes',
   templateUrl: './descarga-reportes.component.html',
-  styleUrls: ['./descarga-reportes.component.scss']
+  styleUrls: ['./descarga-reportes.component.scss'],
 })
 export class DescargaReportesComponent implements OnInit {
   sucursales: Sucursal[] = [];
@@ -32,7 +32,7 @@ export class DescargaReportesComponent implements OnInit {
       Reporte: new FormControl('', [Validators.required]),
       Sucursal: new FormControl('', [Validators.required]),
       FechaDesde: new FormControl('', [Validators.required]),
-      FechaHasta: new FormControl('', [Validators.required])
+      FechaHasta: new FormControl('', [Validators.required]),
     });
   }
 

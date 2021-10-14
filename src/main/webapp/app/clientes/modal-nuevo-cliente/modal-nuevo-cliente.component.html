@@ -26,9 +26,7 @@
           maxlength="30"
         />
         <div [hidden]="!(editForm.controls.nombre?.dirty && editForm.controls.nombre?.invalid)">
-          <small class="form-text text-danger" [hidden]="!editForm.controls.nombre?.errors?.required">
-            Campo requerido.
-          </small>
+          <small class="form-text text-danger" [hidden]="!editForm.controls.nombre?.errors?.required"> Campo requerido. </small>
           <small class="form-text text-danger" [hidden]="!editForm.controls.nombre?.errors?.minlength">
             Este campo debe contener al menos 3 Caracteres.
           </small>
@@ -51,9 +49,7 @@
           maxlength="30"
         />
         <div [hidden]="!(editForm.controls.apellido?.dirty && editForm.controls.apellido?.invalid)">
-          <small class="form-text text-danger" [hidden]="!editForm.controls.apellido?.errors?.required">
-            Campo requerido.
-          </small>
+          <small class="form-text text-danger" [hidden]="!editForm.controls.apellido?.errors?.required"> Campo requerido. </small>
           <small class="form-text text-danger" [hidden]="!editForm.controls.apellido?.errors?.minlength">
             Este campo debe contener al menos 3 Caracteres.
           </small>
@@ -102,8 +98,9 @@
           <option
             [ngValue]="localidadOption.id === direccion.localidad?.id ? direccion.localidad : localidadOption"
             *ngFor="let localidadOption of localidades; trackBy: trackLocalidadById"
-            >{{ localidadOption.nombreLocalidad }}</option
           >
+            {{ localidadOption.nombreLocalidad }}
+          </option>
         </select>
       </div>
     </div>

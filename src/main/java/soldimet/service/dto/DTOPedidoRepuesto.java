@@ -14,24 +14,29 @@ import java.util.ArrayList;
  */
 public class DTOPedidoRepuesto {
 
-        private String cliente;
-        private String motor;
-        private LocalDate fechaCreacion;
-	private LocalDate fechaPedido;
-	private LocalDate fechaRecibo;
-        private Long idPedidoRepuesto;
-        private String estadoPedidoRepuesto;
-        private Long idPresupuesto;
+    private String cliente;
+    private String motor;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaPedido;
+    private LocalDate fechaRecibo;
+    private Long idPedidoRepuesto;
+    private String estadoPedidoRepuesto;
+    private Long idPresupuesto;
 
+    private ArrayList<DTODetallePedidoRepuesto> m_DetallePedido;
 
-        private ArrayList<DTODetallePedidoRepuesto> m_DetallePedido;
+    public DTOPedidoRepuesto() {}
 
-    public DTOPedidoRepuesto() {
-    }
-
-    public DTOPedidoRepuesto(String cliente, String motor, LocalDate fechaCreacion,
-        LocalDate fechaPedido, LocalDate fechaRecibo, Long idPedidoRepuesto, String estadoPedidoRepuesto,
-        Long idPresupuesto) {
+    public DTOPedidoRepuesto(
+        String cliente,
+        String motor,
+        LocalDate fechaCreacion,
+        LocalDate fechaPedido,
+        LocalDate fechaRecibo,
+        Long idPedidoRepuesto,
+        String estadoPedidoRepuesto,
+        Long idPresupuesto
+    ) {
         this.cliente = cliente;
         this.motor = motor;
         this.fechaCreacion = fechaCreacion;
@@ -66,11 +71,7 @@ public class DTOPedidoRepuesto {
         this.idPresupuesto = idPresupuesto;
     }
 
-
-
-
-    public void agregarDetallePedidoRepuesto(DTODetallePedidoRepuesto detalle){
-
+    public void agregarDetallePedidoRepuesto(DTODetallePedidoRepuesto detalle) {
         this.m_DetallePedido.add(detalle);
     }
 
@@ -121,8 +122,4 @@ public class DTOPedidoRepuesto {
     public void setEstadoPedidoRepuesto(String estadoPedidoRepuesto) {
         this.estadoPedidoRepuesto = estadoPedidoRepuesto;
     }
-
-
-
-
 }

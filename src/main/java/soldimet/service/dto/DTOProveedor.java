@@ -10,11 +10,11 @@ package soldimet.service.dto;
  * @author Manu
  */
 public class DTOProveedor {
+
     private String nombreProveedor;
     private String idProveedor;
 
-    public DTOProveedor() {
-    }
+    public DTOProveedor() {}
 
     public DTOProveedor(String nombreProveedor, String idProveedor) {
         this.nombreProveedor = nombreProveedor;
@@ -36,8 +36,4 @@ public class DTOProveedor {
     public void setIdProveedor(String idProveedor) {
         this.idProveedor = idProveedor;
     }
-
-
-
-
 }

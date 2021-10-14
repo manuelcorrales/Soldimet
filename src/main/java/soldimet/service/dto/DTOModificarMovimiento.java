@@ -19,8 +19,7 @@ public class DTOModificarMovimiento {
         this.parametrosParaLLenarGUI = parametrosParaLLenarGUI;
     }
 
-    public DTOModificarMovimiento() {
-    }
+    public DTOModificarMovimiento() {}
 
     public DTOMovimientoExistente getMovimientoExistente() {
         return movimientoExistente;
@@ -37,8 +36,4 @@ public class DTOModificarMovimiento {
     public void setParametrosParaLLenarGUI(DTOABMMovimiento parametrosParaLLenarGUI) {
         this.parametrosParaLLenarGUI = parametrosParaLLenarGUI;
     }
-
-
-
-
 }

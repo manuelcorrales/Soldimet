@@ -1,6 +1,13 @@
 <div class="form-row">
-    <label for="example-number-input" class="col-8 col-form-label">{{costoOperacion.operacion.nombreOperacion}}</label>
-    <div class="col-md-4">
-        <input class="form-control" [(ngModel)]="costoOperacion.costoOperacion" type="number" step="0.01" min=0 id="{{costoOperacion.id}}">
-    </div>
+  <label for="example-number-input" class="col-8 col-form-label">{{ costoOperacion.operacion.nombreOperacion }}</label>
+  <div class="col-md-4">
+    <input
+      class="form-control"
+      [(ngModel)]="costoOperacion.costoOperacion"
+      type="number"
+      step="0.01"
+      min="0"
+      id="{{ costoOperacion.id }}"
+    />
+  </div>
 </div>

@@ -6,7 +6,7 @@ import { JhiAlertService } from 'ng-jhipster';
 
 @Component({
   selector: 'jhi-base-filter-pageable',
-  templateUrl: './base-filter-pageable.component.html'
+  templateUrl: './base-filter-pageable.component.html',
 })
 export class BaseFilterPageableComponent<T> implements OnInit, OnDestroy {
   searchMethod: Function;
@@ -25,16 +25,11 @@ export class BaseFilterPageableComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.requestContent();
-    this.searchChangeSubscription = this.searchChanged
-      .pipe(
-        debounceTime(this.debounceTime),
-        distinctUntilChanged()
-      )
-      .subscribe(newText => {
-        this.searchText = newText;
-        this.page = 1;
-        this.requestContent();
-      });
+    this.searchChangeSubscription = this.searchChanged.pipe(debounceTime(this.debounceTime), distinctUntilChanged()).subscribe(newText => {
+      this.searchText = newText;
+      this.page = 1;
+      this.requestContent();
+    });
   }
 
   public requestContent() {

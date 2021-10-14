@@ -16,7 +16,7 @@ import { NgbCalendar, NgbDateParserFormatter, NgbDatepicker } from '@ng-bootstra
 @Component({
   selector: 'jhi-caja',
   templateUrl: './caja.component.html',
-  styles: []
+  styles: [],
 })
 export class CajaComponent extends BaseFilterPageableComponent<DtoMovimientoCabecera> implements OnInit {
   fechaDesde = null;
@@ -52,7 +52,7 @@ export class CajaComponent extends BaseFilterPageableComponent<DtoMovimientoCabe
   async ngOnInit() {
     this.formGroup = new FormGroup({
       FechaDesde: new FormControl('', [Validators.required]),
-      FechaHasta: new FormControl('', [Validators.required])
+      FechaHasta: new FormControl('', [Validators.required]),
     });
     this.datepickerDesde.minDate = { year: 2019, month: 1, day: 1 };
     this.datepickerDesde.maxDate = this.calendar.getToday();

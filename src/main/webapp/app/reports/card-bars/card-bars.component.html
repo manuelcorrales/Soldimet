@@ -1,19 +1,18 @@
 <div class="card shadow">
-    <div class="card-header text-white" style="background-color: #3498DB !important;">{{metric}}
-    </div>
-    <div>
-        <div class="mt-4"></div>
-            <ngx-charts-bar-vertical-2d
-                [scheme]="colorScheme"
-                [results]="data"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [legend]="legend"
-                [legendPosition]="legendPosition"
-                [legendTitle]="legendTitle"
-            >
-            </ngx-charts-bar-vertical-2d>
-    </div>
+  <div class="card-header text-white" style="background-color: #3498db !important">{{ metric }}</div>
+  <div>
+    <div class="mt-4"></div>
+    <ngx-charts-bar-vertical-2d
+      [scheme]="colorScheme"
+      [results]="data"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [legend]="legend"
+      [legendPosition]="legendPosition"
+      [legendTitle]="legendTitle"
+    >
+    </ngx-charts-bar-vertical-2d>
+  </div>
 </div>

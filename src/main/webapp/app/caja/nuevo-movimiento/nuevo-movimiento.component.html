@@ -1,39 +1,39 @@
 <form #movimientoForm="ngForm" class="jh-create-entity" (ngSubmit)="guardarMovimiento()">
-    <div class="row shadow">
-        <div class="col-md-6"></div>
-        <div class="col-md-2 text-left">Fecha: {{fecha | date:'mediumDate'}}</div>
-        <div class="col-md-2 text-left">Sucursal: {{this.empleado?.sucursal}}</div>
-        <div class="col-md-2 text-left">Empleado: {{this.empleado?.nombre}}</div>
+  <div class="row shadow">
+    <div class="col-md-6"></div>
+    <div class="col-md-2 text-left">Fecha: {{ fecha | date: 'mediumDate' }}</div>
+    <div class="col-md-2 text-left">Sucursal: {{ this.empleado?.sucursal }}</div>
+    <div class="col-md-2 text-left">Empleado: {{ this.empleado?.nombre }}</div>
+  </div>
+  <div class="card-header">
+    <div class="text-right">
+      <button [disabled]="isSaving" type="submit" class="btn btn-primary" [disabled]="!movimientoForm.valid">Crear</button>
+      <button type="button" class="btn btn-danger" [routerLink]="['/cajas']">Cancelar</button>
     </div>
-    <div class="card-header">
-        <div class="text-right">
-            <button [disabled]="isSaving" type="submit" class="btn btn-primary" [disabled]="!movimientoForm.valid">
-                Crear
-            </button>
-            <button type="button" class="btn btn-danger" [routerLink]="['/cajas']">
-                Cancelar
-            </button>
-        </div>
+  </div>
+  <div class="col-auto align-center container">
+    <!-- Datos del movimiento-->
+    <jhi-nuevo-movimiento-cabecera #cabecera></jhi-nuevo-movimiento-cabecera>
+
+    <!-- Detalle Movimiento-->
+    <jhi-nuevo-movimiento-detalle #detalle></jhi-nuevo-movimiento-detalle>
+
+    <!-- Articulo Movimiento -->
+    <jhi-nuevo-movimiento-articulo #articulo></jhi-nuevo-movimiento-articulo>
+
+    <!-- Medio de pago-->
+    <jhi-nuevo-movimiento-medio-de-pago #medioDePago></jhi-nuevo-movimiento-medio-de-pago>
+
+    <!--Obervaciones-->
+    <div class="card jh-card border-info shadow">
+      <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498db !important">Observaciones</div>
+      <textarea
+        class="form-control"
+        name="observaciones"
+        rows="5"
+        [(ngModel)]="movimiento.observaciones"
+        #observaciones="ngModel"
+      ></textarea>
     </div>
-    <div class="col-auto align-center container">
-        <!-- Datos del movimiento-->
-        <jhi-nuevo-movimiento-cabecera #cabecera></jhi-nuevo-movimiento-cabecera>
-
-        <!-- Detalle Movimiento-->
-        <jhi-nuevo-movimiento-detalle #detalle></jhi-nuevo-movimiento-detalle>
-
-        <!-- Articulo Movimiento -->
-        <jhi-nuevo-movimiento-articulo #articulo></jhi-nuevo-movimiento-articulo>
-
-        <!-- Medio de pago-->
-        <jhi-nuevo-movimiento-medio-de-pago #medioDePago></jhi-nuevo-movimiento-medio-de-pago>
-
-        <!--Obervaciones-->
-        <div class="card jh-card border-info shadow">
-            <div class="card-header card-header text-white bg-info mb-3" style="background-color: #3498DB !important;">
-                Observaciones
-            </div>
-            <textarea class="form-control" name="observaciones" rows="5" [(ngModel)]="movimiento.observaciones" #observaciones='ngModel'></textarea>
-        </div>
-    </div>
+  </div>
 </form>

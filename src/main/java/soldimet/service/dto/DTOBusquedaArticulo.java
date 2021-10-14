@@ -11,7 +11,6 @@ package soldimet.service.dto;
  */
 public class DTOBusquedaArticulo {
 
-
     private String proveedor;
     private String descripcion;
     private int articuloID;
@@ -22,10 +21,7 @@ public class DTOBusquedaArticulo {
     private String codArtProv;
     private int proveedorID;
 
-    public DTOBusquedaArticulo() {
-    }
-
-
+    public DTOBusquedaArticulo() {}
 
     public String getProveedor() {
         return proveedor;
@@ -67,7 +63,6 @@ public class DTOBusquedaArticulo {
         this.precioPrivado = precioPrivado;
     }
 
-
     public String getRubro() {
         return rubro;
     }
@@ -99,10 +94,4 @@ public class DTOBusquedaArticulo {
     public void setProveedorID(int proveedorID) {
         this.proveedorID = proveedorID;
     }
-
-
-
-
-
-
 }

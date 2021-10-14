@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'jhi-nuevo-movimiento-medio-de-pago',
   templateUrl: './nuevo-movimiento-medio-de-pago.component.html',
-  styleUrls: ['./nuevo-movimiento-medio-de-pago.component.scss']
+  styleUrls: ['./nuevo-movimiento-medio-de-pago.component.scss'],
 })
 export class NuevoMovimientoMedioDePagoComponent implements OnInit {
   formaTipoTarjeta = 'Tarjeta';

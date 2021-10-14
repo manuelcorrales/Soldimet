@@ -21,8 +21,7 @@ public class DTODetallePedidoCUConsultarPedidoRepuestos {
     private String estadoDetalle;
     private String proveedor;
 
-    public DTODetallePedidoCUConsultarPedidoRepuestos() {
-    }
+    public DTODetallePedidoCUConsultarPedidoRepuestos() {}
 
     public String getProveedor() {
         return proveedor;
@@ -32,11 +31,9 @@ public class DTODetallePedidoCUConsultarPedidoRepuestos {
         this.proveedor = proveedor;
     }
 
-
     public String getArticulo() {
         return articulo;
     }
-
 
     public void setArticulo(String articulo) {
         this.articulo = articulo;
@@ -97,8 +94,4 @@ public class DTODetallePedidoCUConsultarPedidoRepuestos {
     public void setEstadoDetalle(String estadoDetalle) {
         this.estadoDetalle = estadoDetalle;
     }
-
-
-
-
 }

@@ -11,14 +11,12 @@ package soldimet.service.dto;
  */
 public class DTOEmpleado {
 
-
     private Long empleadoID;
     private String nombre;
     private String sucursal;
     private Long sucursalId;
 
-    public DTOEmpleado() {
-    }
+    public DTOEmpleado() {}
 
     /**
      * @return the sucursalId
@@ -70,5 +68,4 @@ public class DTOEmpleado {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
 }

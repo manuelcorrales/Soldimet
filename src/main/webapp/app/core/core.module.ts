@@ -23,18 +23,18 @@ import { fontAwesomeIcons } from 'app/core/icons/font-awesome-icons';
     NgJhipsterModule.forRoot({
       // set below to true to make alerts look like toast
       alertAsToast: true,
-      alertTimeout: 5000
-    })
+      alertTimeout: 5000,
+    }),
   ],
   providers: [
     Title,
     {
       provide: LOCALE_ID,
-      useValue: 'es-AR' // CAMBIAR ACÁ EL IDIOMA LOCALE
+      useValue: 'es-AR', // CAMBIAR ACÁ EL IDIOMA LOCALE
     },
     { provide: NgbDateAdapter, useClass: NgbDateMomentAdapter },
-    DatePipe
-  ]
+    DatePipe,
+  ],
 })
 export class SoldimetCoreModule {
   constructor(iconLibrary: FaIconLibrary, private dpConfig: NgbDatepickerConfig) {

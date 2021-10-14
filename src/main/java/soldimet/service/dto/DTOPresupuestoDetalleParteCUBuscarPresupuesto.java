@@ -7,56 +7,47 @@ package soldimet.service.dto;
  */
 public class DTOPresupuestoDetalleParteCUBuscarPresupuesto {
 
-	private String aplicacion;
-	private int cilindrada;
-	private String motor;
+    private String aplicacion;
+    private int cilindrada;
+    private String motor;
 
+    public DTOPresupuestoDetalleParteCUBuscarPresupuesto() {}
 
-	public DTOPresupuestoDetalleParteCUBuscarPresupuesto(){
+    public void finalize() throws Throwable {}
 
-	}
+    public String getaplicacion() {
+        return aplicacion;
+    }
 
-	public void finalize() throws Throwable {
+    public int getcilindrada() {
+        return cilindrada;
+    }
 
-	}
+    public String getmotor() {
+        return motor;
+    }
 
+    /**
+     *
+     * @param newVal
+     */
+    public void setaplicacion(String newVal) {
+        aplicacion = newVal;
+    }
 
+    /**
+     *
+     * @param newVal
+     */
+    public void setcilindrada(int newVal) {
+        cilindrada = newVal;
+    }
 
-
-	public String getaplicacion(){
-		return aplicacion;
-	}
-
-	public int getcilindrada(){
-		return cilindrada;
-	}
-
-	public String getmotor(){
-		return motor;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setaplicacion(String newVal){
-		aplicacion = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setcilindrada(int newVal){
-		cilindrada = newVal;
-	}
-
-	/**
-	 *
-	 * @param newVal
-	 */
-	public void setmotor(String newVal){
-		motor = newVal;
-	}
-
+    /**
+     *
+     * @param newVal
+     */
+    public void setmotor(String newVal) {
+        motor = newVal;
+    }
 }

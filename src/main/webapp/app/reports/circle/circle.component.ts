@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'jhi-circle',
   templateUrl: './circle.component.html',
-  styleUrls: ['./circle.component.scss']
+  styleUrls: ['./circle.component.scss'],
 })
 export class CircleComponent implements OnInit {
   @Input() metric = 'Motores';
@@ -13,44 +13,44 @@ export class CircleComponent implements OnInit {
       name: 'Germany',
       value: 40632,
       extra: {
-        code: 'de'
-      }
+        code: 'de',
+      },
     },
     {
       name: 'United States',
       value: 50000,
       extra: {
-        code: 'us'
-      }
+        code: 'us',
+      },
     },
     {
       name: 'France',
       value: 36745,
       extra: {
-        code: 'fr'
-      }
+        code: 'fr',
+      },
     },
     {
       name: 'United Kingdom',
       value: 36240,
       extra: {
-        code: 'uk'
-      }
+        code: 'uk',
+      },
     },
     {
       name: 'Spain',
       value: 33000,
       extra: {
-        code: 'es'
-      }
+        code: 'es',
+      },
     },
     {
       name: 'Italy',
       value: 35800,
       extra: {
-        code: 'it'
-      }
-    }
+        code: 'it',
+      },
+    },
   ];
 
   constructor() {}
