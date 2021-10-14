@@ -160,7 +160,7 @@
               [ngValue]="clienteOption.id === editForm.get('cliente')!.value?.id ? editForm.get('cliente')!.value : clienteOption"
               *ngFor="let clienteOption of clientesSharedCollection; trackBy: trackClienteById"
             >
-              {{ clienteOption.apellido }}
+              {{ clienteOption?.persona?.apellido }}
             </option>
           </select>
         </div>

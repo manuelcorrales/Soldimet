@@ -65,7 +65,7 @@
           <td>{{ presupuesto.modelo }}</td>
           <td>
             <div *ngIf="presupuesto.cliente">
-              <a [routerLink]="['/cliente', presupuesto.cliente?.id, 'view']">{{ presupuesto.cliente?.apellido }}</a>
+              <a [routerLink]="['/cliente', presupuesto.cliente?.id, 'view']">{{ presupuesto.cliente?.persona?.apellido }}</a>
             </div>
           </td>
           <td>

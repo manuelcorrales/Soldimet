@@ -63,7 +63,7 @@
               [ngValue]="motorOption.id === editForm.get('motor')!.value?.id ? editForm.get('motor')!.value : motorOption"
               *ngFor="let motorOption of motorsSharedCollection; trackBy: trackMotorById"
             >
-              {{ motorOption.nombreMotor }}
+              {{ motorOption.marcaMotor }}
             </option>
           </select>
         </div>

@@ -48,7 +48,9 @@
           <td>{{ movimientoArticulo.cantidad }}</td>
           <td>
             <div *ngIf="movimientoArticulo.articulo">
-              <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view']">{{ movimientoArticulo.articulo?.descripcion }}</a>
+              <a [routerLink]="['/articulo', movimientoArticulo.articulo?.id, 'view']">{{
+                movimientoArticulo.articulo?.codigoArticuloProveedor
+              }}</a>
             </div>
           </td>
           <td>

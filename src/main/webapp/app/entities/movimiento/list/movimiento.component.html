@@ -40,7 +40,7 @@
           <th scope="col" jhiSortBy="medioDePago.id"><span>Medio De Pago</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="estado.nombreEstado"><span>Estado</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="tipoMovimiento.nombreTipoMovimiento"><span>Tipo Movimiento</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="empleado.usuario"><span>Empleado</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="empleado.id"><span>Empleado</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="caja.id"><span>Caja</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="subCategoria.nombreSubCategoria"><span>Sub Categoria</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
@@ -74,7 +74,7 @@
           </td>
           <td>
             <div *ngIf="movimiento.empleado">
-              <a [routerLink]="['/empleado', movimiento.empleado?.id, 'view']">{{ movimiento.empleado?.usuario }}</a>
+              <a [routerLink]="['/empleado', movimiento.empleado?.id, 'view']">{{ movimiento.empleado?.persona?.nombre }}</a>
             </div>
           </td>
           <td>

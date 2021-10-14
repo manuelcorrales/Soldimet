@@ -16,75 +16,78 @@
   </a>
   <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link" (click)="collapseNavbar()" routerLink="['reportes']" *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']">
-              <span>
-                  <fa-icon icon="signal"></fa-icon>
-                  <span>Reportes</span>
-              </span>
-          </a>
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="nav-link" (click)="collapseNavbar()" routerLink="['reportes']" *jhiHasAnyAuthority="['ROLE_JEFE', 'ROLE_ADMIN']">
+          <span>
+            <fa-icon icon="signal"></fa-icon>
+            <span>Reportes</span>
+          </span>
+        </a>
       </li>
-      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link" (click)="collapseNavbar()" routerLink="['presupuestos']" *jhiHasAnyAuthority="'ROLE_USER'">
-              <span>
-                  <fa-icon icon="folder-open"></fa-icon>
-                  <span>Presupuestos</span>
-              </span>
-          </a>
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="nav-link" (click)="collapseNavbar()" routerLink="['presupuestos']" *jhiHasAnyAuthority="'ROLE_USER'">
+          <span>
+            <fa-icon icon="folder-open"></fa-icon>
+            <span>Presupuestos</span>
+          </span>
+        </a>
       </li>
-      <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
-          <a class="nav-link" routerLink="clientes" *jhiHasAnyAuthority="'ROLE_USER'"
-              (click)="collapseNavbar()">
-              <span>
-                  <fa-icon icon="users"></fa-icon>
-                  <span>Clientes</span>
-              </span>
-          </a>
+      <li class="nav-item" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active">
+        <a class="nav-link" routerLink="clientes" *jhiHasAnyAuthority="'ROLE_USER'" (click)="collapseNavbar()">
+          <span>
+            <fa-icon icon="users"></fa-icon>
+            <span>Clientes</span>
+          </span>
+        </a>
       </li>
-      <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
-          <a class="nav-link" routerLink="cajas" *jhiHasAnyAuthority="'ROLE_USER'"
-              (click)="collapseNavbar()">
-              <span>
-                  <fa-icon icon="money-bill-wave"></fa-icon>
-                  <span>Caja</span>
-              </span>
-          </a>
+      <li class="nav-item" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active">
+        <a class="nav-link" routerLink="cajas" *jhiHasAnyAuthority="'ROLE_USER'" (click)="collapseNavbar()">
+          <span>
+            <fa-icon icon="money-bill-wave"></fa-icon>
+            <span>Caja</span>
+          </span>
+        </a>
       </li>
-      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link" routerLink="pedidos" *jhiHasAnyAuthority="'ROLE_USER'"
-              (click)="collapseNavbar()">
-              <fa-icon icon="clipboard-list"></fa-icon>
-                <span>Pedidos</span>
-          </a>
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="nav-link" routerLink="pedidos" *jhiHasAnyAuthority="'ROLE_USER'" (click)="collapseNavbar()">
+          <fa-icon icon="clipboard-list"></fa-icon>
+          <span>Pedidos</span>
+        </a>
       </li>
-      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link" routerLink="stock" *jhiHasAnyAuthority="'ROLE_USER'"
-              (click)="collapseNavbar()">
-              <fa-icon icon="box"></fa-icon>
-                <span>Stock</span>
-          </a>
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="nav-link" routerLink="stock" *jhiHasAnyAuthority="'ROLE_USER'" (click)="collapseNavbar()">
+          <fa-icon icon="box"></fa-icon>
+          <span>Stock</span>
+        </a>
       </li>
-      <li *jhiHasAnyAuthority="['ROLE_JEFE','ROLE_ADMIN']" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
-              <span>
-                  <fa-icon icon="list-alt"></fa-icon>
-                  <span>Lista de Precios</span>
-              </span>
-          </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
-              <li>
-                  <a class="dropdown-item" routerLink="operaciones" routerLinkActive="active" (click)="collapseNavbar()">
-                      <fa-icon icon="tools" fixedWidth="true"></fa-icon>
-                      <span>Operaciones</span>
-                  </a>
-              </li>
-              <li>
-                  <a class="dropdown-item" routerLink="repuestos" routerLinkActive="active" (click)="collapseNavbar()">
-                      <fa-icon icon="hammer" fixedWidth="true"></fa-icon>
-                      <span>Repuestos de proveedores</span>
-                  </a>
-              </li>
-          </ul>
+      <li
+        *jhiHasAnyAuthority="['ROLE_JEFE', 'ROLE_ADMIN']"
+        ngbDropdown
+        class="nav-item dropdown pointer"
+        display="dynamic"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
+          <span>
+            <fa-icon icon="list-alt"></fa-icon>
+            <span>Lista de Precios</span>
+          </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
+          <li>
+            <a class="dropdown-item" routerLink="operaciones" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="tools" [fixedWidth]="true"></fa-icon>
+              <span>Operaciones</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="repuestos" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="hammer" [fixedWidth]="true"></fa-icon>
+              <span>Repuestos de proveedores</span>
+            </a>
+          </li>
+        </ul>
       </li>
       <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
       <li
@@ -94,7 +97,6 @@
         display="dynamic"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
-        *jhiHasAnyAuthority="'ROLE_ADMIN'"
       >
         <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu" data-cy="entity">
           <span>
@@ -865,13 +867,14 @@
               <span>Configuration</span>
             </a>
           </li>
+          <li></li>
           <li>
-          <li>
-              <a class="dropdown-item" routerLink="admin/audits" routerLinkActive="active" (click)="collapseNavbar()">
-                  <fa-icon icon="bell" fixedWidth="true"></fa-icon>
-                  <span>Audits</span>
-              </a>
+            <a class="dropdown-item" routerLink="admin/audits" routerLinkActive="active" (click)="collapseNavbar()">
+              <fa-icon icon="bell" [fixedWidth]="true"></fa-icon>
+              <span>Audits</span>
+            </a>
           </li>
+          <li>
             <a class="dropdown-item" routerLink="admin/logs" routerLinkActive="active" (click)="collapseNavbar()">
               <fa-icon icon="tasks" [fixedWidth]="true"></fa-icon>
               <span>Logs</span>
@@ -884,12 +887,12 @@
             </a>
           </li>
           <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
-          <li >
+          <li>
             <a class="dropdown-item" routerLink="admin/flags" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="flag" fixedWidth="true"></fa-icon>
-                <span>Flags</span>
+              <fa-icon icon="flag" [fixedWidth]="true"></fa-icon>
+              <span>Flags</span>
             </a>
-        </li>
+          </li>
         </ul>
       </li>
       <li

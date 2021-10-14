@@ -1,122 +1,146 @@
-    <div [ngSwitch]="account !== null">
-      <div class="alert alert-success" *ngSwitchCase="true">
-        <span *ngIf="account"> Has ingresado como: "{{account.login}}". </span>
-      </div>
-      </div>
+<div>
+  <div [ngSwitch]="account !== null">
+    <div class="alert alert-success" *ngSwitchCase="true">
+      <span *ngIf="account"> Has ingresado como: "{{ account.login }}". </span>
+    </div>
+  </div>
+
   <body id="page-top">
-
     <!-- Header -->
-  <header class="masthead">
-  </header>
+    <header class="masthead"></header>
 
-  <!-- Services -->
-  <section class="page-section" id="services">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <h2 class="section-heading text-uppercase">Servicios</h2>
-          <h3 class="section-subheading text-muted">En todas nuestras sucursales</h3>
+    <!-- Services -->
+    <section class="page-section" id="services">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-uppercase">Servicios</h2>
+            <h3 class="section-subheading text-muted">En todas nuestras sucursales</h3>
+          </div>
+        </div>
+        <div class="row text-center">
+          <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+              <fa-icon icon="circle" class="fa-stack-3x text-primary"></fa-icon>
+              <fa-icon icon="truck-monster" class="fa-stack-1x fa-inverse"></fa-icon>
+            </span>
+            <h4 class="service-heading">Rectificación</h4>
+            <p class="text-muted">Rectificación de blocks y tapas de cilindros. Cepillado, lavado de motor, etc.</p>
+          </div>
+          <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+              <fa-icon icon="circle" class="fa-stack-3x text-primary"></fa-icon>
+              <fa-icon icon="cogs" class="fa-stack-1x fa-inverse"></fa-icon>
+            </span>
+            <h4 class="service-heading">Soldadura</h4>
+            <p class="text-muted">Soldadura en frío o calor.</p>
+          </div>
+          <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+              <fa-icon icon="circle" class="fa-stack-3x text-primary"></fa-icon>
+              <fa-icon icon="wrench" class="fa-stack-1x fa-inverse"></fa-icon>
+            </span>
+            <h4 class="service-heading">Venta de repuestos</h4>
+            <p class="text-muted">Consegui piezas usadas a menor costo con la misma calidad que una nueva.</p>
+          </div>
         </div>
       </div>
-      <div class="row text-center">
-        <div class="col-md-4">
-          <span class="fa-stack fa-4x">
-            <fa-icon icon="circle" class="fa-stack-3x text-primary"></fa-icon>
-            <fa-icon icon="truck-monster" class="fa-stack-1x fa-inverse"></fa-icon>
-          </span>
-          <h4 class="service-heading">Rectificación</h4>
-          <p class="text-muted">Rectificación de blocks y tapas de cilindros. Cepillado, lavado de motor, etc.</p>
-        </div>
-        <div class="col-md-4">
-          <span class="fa-stack fa-4x">
-            <fa-icon icon="circle" class="fa-stack-3x text-primary"></fa-icon>
-            <fa-icon icon="cogs" class="fa-stack-1x fa-inverse"></fa-icon>
-          </span>
-          <h4 class="service-heading">Soldadura</h4>
-          <p class="text-muted">Soldadura en frío o calor.</p>
-        </div>
-        <div class="col-md-4">
-          <span class="fa-stack fa-4x">
-            <fa-icon icon="circle" class="fa-stack-3x text-primary"></fa-icon>
-            <fa-icon icon="wrench" class="fa-stack-1x fa-inverse"></fa-icon>
-          </span>
-          <h4 class="service-heading">Venta de repuestos</h4>
-          <p class="text-muted">Consegui piezas usadas a menor costo con la misma calidad que una nueva.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Portfolio Grid -->
-  <section class="bg-light page-section" id="portfolio">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <h2 class="section-heading text-uppercase">Nuestros trabajos</h2>
-          <h3 class="section-subheading text-muted">Resultados visibles de nuestra experiencia</h3>
+    <!-- Portfolio Grid -->
+    <section class="bg-light page-section" id="portfolio">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-uppercase">Nuestros trabajos</h2>
+            <h3 class="section-subheading text-muted">Resultados visibles de nuestra experiencia</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-6 portfolio-item">
+            <span class="portfolio-link">
+              <img
+                class="img-fluid"
+                src="https://images.unsplash.com/photo-1527383418406-f85a3b146499?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                alt=""
+              />
+            </span>
+            <div class="portfolio-caption">
+              <h4>Blocks</h4>
+              <p class="text-muted">Illustration</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6 portfolio-item">
+            <span class="portfolio-link">
+              <img
+                class="img-fluid"
+                src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2378&q=80"
+                alt=""
+              />
+            </span>
+            <div class="portfolio-caption">
+              <h4>Tapas de cilindros</h4>
+              <p class="text-muted">Graphic Design</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6 portfolio-item">
+            <span class="portfolio-link">
+              <img
+                class="img-fluid"
+                src="https://images.unsplash.com/photo-1567177173026-402dd75a5ab7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+                alt=""
+              />
+            </span>
+            <div class="portfolio-caption">
+              <h4>Soldadura</h4>
+              <p class="text-muted">Identity</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6 portfolio-item">
+            <span class="portfolio-link">
+              <img
+                class="img-fluid"
+                src="https://images.unsplash.com/photo-1527383418406-f85a3b146499?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                alt=""
+              />
+            </span>
+            <div class="portfolio-caption">
+              <h4>Rectificación</h4>
+              <p class="text-muted">Branding</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6 portfolio-item">
+            <span class="portfolio-link">
+              <img
+                class="img-fluid"
+                src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2378&q=80"
+                alt=""
+              />
+            </span>
+            <div class="portfolio-caption">
+              <h4>Cigüeñales</h4>
+              <p class="text-muted">Website Design</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6 portfolio-item">
+            <span class="portfolio-link">
+              <img
+                class="img-fluid"
+                src="https://images.unsplash.com/photo-1567177173026-402dd75a5ab7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+                alt=""
+              />
+            </span>
+            <div class="portfolio-caption">
+              <h4>Venta de tapas de cilindros</h4>
+              <p class="text-muted">Photography</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4 col-sm-6 portfolio-item">
-          <span class="portfolio-link">
-            <img class="img-fluid" src="https://images.unsplash.com/photo-1527383418406-f85a3b146499?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt="">
-          </span>
-          <div class="portfolio-caption">
-            <h4>Blocks</h4>
-            <p class="text-muted">Illustration</p>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 portfolio-item">
-          <span class="portfolio-link">
-            <img class="img-fluid" src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2378&q=80" alt="">
-          </span>
-          <div class="portfolio-caption">
-            <h4>Tapas de cilindros</h4>
-            <p class="text-muted">Graphic Design</p>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 portfolio-item">
-          <span class="portfolio-link">
-            <img class="img-fluid" src="https://images.unsplash.com/photo-1567177173026-402dd75a5ab7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="">
-          </span>
-          <div class="portfolio-caption">
-            <h4>Soldadura</h4>
-            <p class="text-muted">Identity</p>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 portfolio-item">
-          <span class="portfolio-link">
-            <img class="img-fluid" src="https://images.unsplash.com/photo-1527383418406-f85a3b146499?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt="">
-          </span>
-          <div class="portfolio-caption">
-            <h4>Rectificación</h4>
-            <p class="text-muted">Branding</p>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 portfolio-item">
-          <span class="portfolio-link">
-            <img class="img-fluid" src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2378&q=80" alt="">
-          </span>
-          <div class="portfolio-caption">
-            <h4>Cigüeñales</h4>
-            <p class="text-muted">Website Design</p>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 portfolio-item">
-          <span class="portfolio-link">
-            <img class="img-fluid" src="https://images.unsplash.com/photo-1567177173026-402dd75a5ab7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="">
-          </span>
-          <div class="portfolio-caption">
-            <h4>Venta de tapas de cilindros</h4>
-            <p class="text-muted">Photography</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Clients -->
-  <!--<section class="py-5">
+    <!-- Clients -->
+    <!--<section class="py-5">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3 col-sm-6">
@@ -143,38 +167,37 @@
     </div>
   </section> -->
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container-fluid">
-      <div class="row align-items-center">
-        <div class="col-md-4">
-          <span class="copyright">Copyright &copy; Soldimet S.R.L. 2019</span>
-        </div>
-        <div class="col-md-4">
-          <ul class="list-inline social-buttons">
-            <li class="list-inline-item">
-              <a href="https://www.facebook.com/soldimet/?ref=br_rs">
-                <fa-icon icon="laptop"></fa-icon>
-              </a>
-            </li>
-          </ul>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <span class="copyright">Copyright &copy; Soldimet S.R.L. 2019</span>
+          </div>
+          <div class="col-md-4">
+            <ul class="list-inline social-buttons">
+              <li class="list-inline-item">
+                <a href="https://www.facebook.com/soldimet/?ref=br_rs">
+                  <fa-icon icon="laptop"></fa-icon>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Plugin JavaScript -->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Contact form JavaScript -->
-  <script src="js/jqBootstrapValidation.js"></script>
+    <!-- Contact form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
 
-  <!-- Custom scripts for this template -->
-  <script src="js/agency.min.js"></script>
-
-</body>
+    <!-- Custom scripts for this template -->
+    <script src="js/agency.min.js"></script>
+  </body>
 </div>
