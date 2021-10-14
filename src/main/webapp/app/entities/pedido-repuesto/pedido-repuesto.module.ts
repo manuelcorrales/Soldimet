@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { PedidoRepuestoComponent } from 'app/entities/pedido-repuesto/pedido-repuesto.component';
-import { PedidoRepuestoDetailComponent } from 'app/entities/pedido-repuesto/pedido-repuesto-detail.component';
-import { PedidoRepuestoUpdateComponent } from 'app/entities/pedido-repuesto/pedido-repuesto-update.component';
-import {
-  PedidoRepuestoDeletePopupComponent,
-  PedidoRepuestoDeleteDialogComponent
-} from 'app/entities/pedido-repuesto/pedido-repuesto-delete-dialog.component';
-import { pedidoRepuestoRoute, pedidoRepuestoPopupRoute } from 'app/entities/pedido-repuesto/pedido-repuesto.route';
-
-const ENTITY_STATES = [...pedidoRepuestoRoute, ...pedidoRepuestoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { PedidoRepuestoComponent } from './list/pedido-repuesto.component';
+import { PedidoRepuestoDetailComponent } from './detail/pedido-repuesto-detail.component';
+import { PedidoRepuestoUpdateComponent } from './update/pedido-repuesto-update.component';
+import { PedidoRepuestoDeleteDialogComponent } from './delete/pedido-repuesto-delete-dialog.component';
+import { PedidoRepuestoRoutingModule } from './route/pedido-repuesto-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, PedidoRepuestoRoutingModule],
   declarations: [
     PedidoRepuestoComponent,
     PedidoRepuestoDetailComponent,
     PedidoRepuestoUpdateComponent,
     PedidoRepuestoDeleteDialogComponent,
-    PedidoRepuestoDeletePopupComponent
   ],
-  entryComponents: [
-    PedidoRepuestoComponent,
-    PedidoRepuestoUpdateComponent,
-    PedidoRepuestoDeleteDialogComponent,
-    PedidoRepuestoDeletePopupComponent
-  ]
+  entryComponents: [PedidoRepuestoDeleteDialogComponent],
 })
-export class SoldimetPedidoRepuestoModule {}
+export class PedidoRepuestoModule {}

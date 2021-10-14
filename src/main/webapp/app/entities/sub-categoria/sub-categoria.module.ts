@@ -1,27 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { SubCategoriaComponent } from 'app/entities/sub-categoria/sub-categoria.component';
-import { SubCategoriaDetailComponent } from 'app/entities/sub-categoria/sub-categoria-detail.component';
-import { SubCategoriaUpdateComponent } from 'app/entities/sub-categoria/sub-categoria-update.component';
-import {
-  SubCategoriaDeletePopupComponent,
-  SubCategoriaDeleteDialogComponent
-} from 'app/entities/sub-categoria/sub-categoria-delete-dialog.component';
-import { subCategoriaRoute, subCategoriaPopupRoute } from 'app/entities/sub-categoria/sub-categoria.route';
-
-const ENTITY_STATES = [...subCategoriaRoute, ...subCategoriaPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { SubCategoriaComponent } from './list/sub-categoria.component';
+import { SubCategoriaDetailComponent } from './detail/sub-categoria-detail.component';
+import { SubCategoriaUpdateComponent } from './update/sub-categoria-update.component';
+import { SubCategoriaDeleteDialogComponent } from './delete/sub-categoria-delete-dialog.component';
+import { SubCategoriaRoutingModule } from './route/sub-categoria-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    SubCategoriaComponent,
-    SubCategoriaDetailComponent,
-    SubCategoriaUpdateComponent,
-    SubCategoriaDeleteDialogComponent,
-    SubCategoriaDeletePopupComponent
-  ],
-  entryComponents: [SubCategoriaComponent, SubCategoriaUpdateComponent, SubCategoriaDeleteDialogComponent, SubCategoriaDeletePopupComponent]
+  imports: [SharedModule, SubCategoriaRoutingModule],
+  declarations: [SubCategoriaComponent, SubCategoriaDetailComponent, SubCategoriaUpdateComponent, SubCategoriaDeleteDialogComponent],
+  entryComponents: [SubCategoriaDeleteDialogComponent],
 })
-export class SoldimetSubCategoriaModule {}
+export class SubCategoriaModule {}

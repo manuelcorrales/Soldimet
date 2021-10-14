@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EstadoDetallePedidoComponent } from 'app/entities/estado-detalle-pedido/estado-detalle-pedido.component';
-import { EstadoDetallePedidoDetailComponent } from 'app/entities/estado-detalle-pedido/estado-detalle-pedido-detail.component';
-import { EstadoDetallePedidoUpdateComponent } from 'app/entities/estado-detalle-pedido/estado-detalle-pedido-update.component';
-import {
-  EstadoDetallePedidoDeletePopupComponent,
-  EstadoDetallePedidoDeleteDialogComponent
-} from 'app/entities/estado-detalle-pedido/estado-detalle-pedido-delete-dialog.component';
-import { estadoDetallePedidoRoute, estadoDetallePedidoPopupRoute } from 'app/entities/estado-detalle-pedido/estado-detalle-pedido.route';
-
-const ENTITY_STATES = [...estadoDetallePedidoRoute, ...estadoDetallePedidoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { EstadoDetallePedidoComponent } from './list/estado-detalle-pedido.component';
+import { EstadoDetallePedidoDetailComponent } from './detail/estado-detalle-pedido-detail.component';
+import { EstadoDetallePedidoUpdateComponent } from './update/estado-detalle-pedido-update.component';
+import { EstadoDetallePedidoDeleteDialogComponent } from './delete/estado-detalle-pedido-delete-dialog.component';
+import { EstadoDetallePedidoRoutingModule } from './route/estado-detalle-pedido-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, EstadoDetallePedidoRoutingModule],
   declarations: [
     EstadoDetallePedidoComponent,
     EstadoDetallePedidoDetailComponent,
     EstadoDetallePedidoUpdateComponent,
     EstadoDetallePedidoDeleteDialogComponent,
-    EstadoDetallePedidoDeletePopupComponent
   ],
-  entryComponents: [
-    EstadoDetallePedidoComponent,
-    EstadoDetallePedidoUpdateComponent,
-    EstadoDetallePedidoDeleteDialogComponent,
-    EstadoDetallePedidoDeletePopupComponent
-  ]
+  entryComponents: [EstadoDetallePedidoDeleteDialogComponent],
 })
-export class SoldimetEstadoDetallePedidoModule {}
+export class EstadoDetallePedidoModule {}

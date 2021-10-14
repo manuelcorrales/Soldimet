@@ -1,0 +1,116 @@
+<div>
+  <h2 id="page-heading" data-cy="DetalleMovimientoHeading">
+    <span>Detalle Movimientos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-detalle-movimiento"
+        [routerLink]="['/detalle-movimiento/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Detalle Movimiento </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="detalleMovimientos?.length === 0">
+    <span>No detalleMovimientos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="detalleMovimientos && detalleMovimientos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Valor Unitario</span></th>
+          <th scope="col"><span>Cantidad</span></th>
+          <th scope="col"><span>Descripcion</span></th>
+          <th scope="col"><span>Tipo Detalle Movimiento</span></th>
+          <th scope="col"><span>Articulo</span></th>
+          <th scope="col"><span>Pedido Repuesto</span></th>
+          <th scope="col"><span>Presupuesto</span></th>
+          <th scope="col"><span>Medida</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalleMovimiento of detalleMovimientos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/detalle-movimiento', detalleMovimiento.id, 'view']">{{ detalleMovimiento.id }}</a>
+          </td>
+          <td>{{ detalleMovimiento.valorUnitario }}</td>
+          <td>{{ detalleMovimiento.cantidad }}</td>
+          <td>{{ detalleMovimiento.descripcion }}</td>
+          <td>
+            <div *ngIf="detalleMovimiento.tipoDetalleMovimiento">
+              <a [routerLink]="['/tipo-detalle-movimiento', detalleMovimiento.tipoDetalleMovimiento?.id, 'view']">{{
+                detalleMovimiento.tipoDetalleMovimiento?.nombreTipoDetalle
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detalleMovimiento.articulo">
+              <a [routerLink]="['/articulo', detalleMovimiento.articulo?.id, 'view']">{{ detalleMovimiento.articulo?.descripcion }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detalleMovimiento.pedidoRepuesto">
+              <a [routerLink]="['/pedido-repuesto', detalleMovimiento.pedidoRepuesto?.id, 'view']">{{
+                detalleMovimiento.pedidoRepuesto?.id
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detalleMovimiento.presupuesto">
+              <a [routerLink]="['/presupuesto', detalleMovimiento.presupuesto?.id, 'view']">{{ detalleMovimiento.presupuesto?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detalleMovimiento.medida">
+              <a [routerLink]="['/medida-articulo', detalleMovimiento.medida?.id, 'view']">{{ detalleMovimiento.medida?.medida }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/detalle-movimiento', detalleMovimiento.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/detalle-movimiento', detalleMovimiento.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(detalleMovimiento)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

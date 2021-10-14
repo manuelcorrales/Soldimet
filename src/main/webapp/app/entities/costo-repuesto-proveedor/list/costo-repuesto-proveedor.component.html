@@ -1,0 +1,108 @@
+<div>
+  <h2 id="page-heading" data-cy="CostoRepuestoProveedorHeading">
+    <span>Costo Repuesto Proveedors</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-costo-repuesto-proveedor"
+        [routerLink]="['/costo-repuesto-proveedor/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Costo Repuesto Proveedor </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="costoRepuestoProveedors?.length === 0">
+    <span>No costoRepuestoProveedors found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="costoRepuestoProveedors && costoRepuestoProveedors.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Tipo Repuesto</span></th>
+          <th scope="col"><span>Aplicacion</span></th>
+          <th scope="col"><span>Cilindrada</span></th>
+          <th scope="col"><span>Articulo</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let costoRepuestoProveedor of costoRepuestoProveedors; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/costo-repuesto-proveedor', costoRepuestoProveedor.id, 'view']">{{ costoRepuestoProveedor.id }}</a>
+          </td>
+          <td>
+            <div *ngIf="costoRepuestoProveedor.tipoRepuesto">
+              <a [routerLink]="['/tipo-repuesto', costoRepuestoProveedor.tipoRepuesto?.id, 'view']">{{
+                costoRepuestoProveedor.tipoRepuesto?.nombreTipoRepuesto
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="costoRepuestoProveedor.aplicacion">
+              <a [routerLink]="['/aplicacion', costoRepuestoProveedor.aplicacion?.id, 'view']">{{
+                costoRepuestoProveedor.aplicacion?.nombreAplicacion
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="costoRepuestoProveedor.cilindrada">
+              <a [routerLink]="['/cilindrada', costoRepuestoProveedor.cilindrada?.id, 'view']">{{
+                costoRepuestoProveedor.cilindrada?.cantidadDeCilindros
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="costoRepuestoProveedor.articulo">
+              <a [routerLink]="['/articulo', costoRepuestoProveedor.articulo?.id, 'view']">{{
+                costoRepuestoProveedor.articulo?.codigoArticuloProveedor
+              }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/costo-repuesto-proveedor', costoRepuestoProveedor.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/costo-repuesto-proveedor', costoRepuestoProveedor.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(costoRepuestoProveedor)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

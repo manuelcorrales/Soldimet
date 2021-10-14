@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="historialPrecio">
+      <h2 data-cy="historialPrecioDetailsHeading"><span>Historial Precio</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ historialPrecio.id }}</span>
+        </dd>
+        <dt><span>Fecha Historial</span></dt>
+        <dd>
+          <span>{{ historialPrecio.fechaHistorial | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Precio Repuesto</span></dt>
+        <dd>
+          <div *ngIf="historialPrecio.precioRepuesto">
+            <a [routerLink]="['/precio-repuesto', historialPrecio.precioRepuesto?.id, 'view']">{{ historialPrecio.precioRepuesto?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/historial-precio', historialPrecio.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { CobranzaOperacionComponent } from 'app/entities/cobranza-operacion/cobranza-operacion.component';
-import { CobranzaOperacionDetailComponent } from 'app/entities/cobranza-operacion/cobranza-operacion-detail.component';
-import { CobranzaOperacionUpdateComponent } from 'app/entities/cobranza-operacion/cobranza-operacion-update.component';
-import {
-  CobranzaOperacionDeletePopupComponent,
-  CobranzaOperacionDeleteDialogComponent
-} from 'app/entities/cobranza-operacion/cobranza-operacion-delete-dialog.component';
-import { cobranzaOperacionRoute, cobranzaOperacionPopupRoute } from 'app/entities/cobranza-operacion/cobranza-operacion.route';
-
-const ENTITY_STATES = [...cobranzaOperacionRoute, ...cobranzaOperacionPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { CobranzaOperacionComponent } from './list/cobranza-operacion.component';
+import { CobranzaOperacionDetailComponent } from './detail/cobranza-operacion-detail.component';
+import { CobranzaOperacionUpdateComponent } from './update/cobranza-operacion-update.component';
+import { CobranzaOperacionDeleteDialogComponent } from './delete/cobranza-operacion-delete-dialog.component';
+import { CobranzaOperacionRoutingModule } from './route/cobranza-operacion-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, CobranzaOperacionRoutingModule],
   declarations: [
     CobranzaOperacionComponent,
     CobranzaOperacionDetailComponent,
     CobranzaOperacionUpdateComponent,
     CobranzaOperacionDeleteDialogComponent,
-    CobranzaOperacionDeletePopupComponent
   ],
-  entryComponents: [
-    CobranzaOperacionComponent,
-    CobranzaOperacionUpdateComponent,
-    CobranzaOperacionDeleteDialogComponent,
-    CobranzaOperacionDeletePopupComponent
-  ]
+  entryComponents: [CobranzaOperacionDeleteDialogComponent],
 })
-export class SoldimetCobranzaOperacionModule {}
+export class CobranzaOperacionModule {}

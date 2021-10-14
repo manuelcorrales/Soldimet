@@ -1,0 +1,32 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="estadoPedidoRepuesto">
+      <h2 data-cy="estadoPedidoRepuestoDetailsHeading"><span>Estado Pedido Repuesto</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ estadoPedidoRepuesto.id }}</span>
+        </dd>
+        <dt><span>Nombre Estado</span></dt>
+        <dd>
+          <span>{{ estadoPedidoRepuesto.nombreEstado }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/estado-pedido-repuesto', estadoPedidoRepuesto.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

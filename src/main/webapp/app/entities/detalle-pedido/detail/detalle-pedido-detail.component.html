@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="detallePedido">
+      <h2 data-cy="detallePedidoDetailsHeading"><span>Detalle Pedido</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ detallePedido.id }}</span>
+        </dd>
+        <dt><span>Detalle Presupuesto</span></dt>
+        <dd>
+          <div *ngIf="detallePedido.detallePresupuesto">
+            <a [routerLink]="['/detalle-presupuesto', detallePedido.detallePresupuesto?.id, 'view']">{{
+              detallePedido.detallePresupuesto?.id
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/detalle-pedido', detallePedido.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

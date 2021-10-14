@@ -1,18 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { MotorComponent } from 'app/entities/motor/motor.component';
-import { MotorDetailComponent } from 'app/entities/motor/motor-detail.component';
-import { MotorUpdateComponent } from 'app/entities/motor/motor-update.component';
-import { MotorDeletePopupComponent, MotorDeleteDialogComponent } from 'app/entities/motor/motor-delete-dialog.component';
-import { motorRoute, motorPopupRoute } from 'app/entities/motor/motor.route';
-
-const ENTITY_STATES = [...motorRoute, ...motorPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { MotorComponent } from './list/motor.component';
+import { MotorDetailComponent } from './detail/motor-detail.component';
+import { MotorUpdateComponent } from './update/motor-update.component';
+import { MotorDeleteDialogComponent } from './delete/motor-delete-dialog.component';
+import { MotorRoutingModule } from './route/motor-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [MotorComponent, MotorDetailComponent, MotorUpdateComponent, MotorDeleteDialogComponent, MotorDeletePopupComponent],
-  entryComponents: [MotorComponent, MotorUpdateComponent, MotorDeleteDialogComponent, MotorDeletePopupComponent]
+  imports: [SharedModule, MotorRoutingModule],
+  declarations: [MotorComponent, MotorDetailComponent, MotorUpdateComponent, MotorDeleteDialogComponent],
+  entryComponents: [MotorDeleteDialogComponent],
 })
-export class SoldimetMotorModule {}
+export class MotorModule {}

@@ -1,0 +1,78 @@
+<div>
+  <h2 id="page-heading" data-cy="MedioDePagoTarjetaHeading">
+    <span>Medio De Pago Tarjetas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-medio-de-pago-tarjeta"
+        [routerLink]="['/medio-de-pago-tarjeta/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Medio De Pago Tarjeta </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="medioDePagoTarjetas?.length === 0">
+    <span>No medioDePagoTarjetas found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="medioDePagoTarjetas && medioDePagoTarjetas.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Ultimos 4</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medioDePagoTarjeta of medioDePagoTarjetas; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/medio-de-pago-tarjeta', medioDePagoTarjeta.id, 'view']">{{ medioDePagoTarjeta.id }}</a>
+          </td>
+          <td>{{ medioDePagoTarjeta.ultimos4 }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/medio-de-pago-tarjeta', medioDePagoTarjeta.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/medio-de-pago-tarjeta', medioDePagoTarjeta.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(medioDePagoTarjeta)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

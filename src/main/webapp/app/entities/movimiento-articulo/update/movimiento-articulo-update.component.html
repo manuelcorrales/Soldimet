@@ -1,0 +1,90 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-movimiento-articulo-heading" data-cy="MovimientoArticuloCreateUpdateHeading">Create or edit a Movimiento Articulo</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_cantidad">Cantidad</label>
+          <input type="number" class="form-control" name="cantidad" id="field_cantidad" data-cy="cantidad" formControlName="cantidad" />
+          <div *ngIf="editForm.get('cantidad')!.invalid && (editForm.get('cantidad')!.dirty || editForm.get('cantidad')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('cantidad')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('cantidad')?.errors?.min"> This field should be at least 1. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('cantidad')?.errors?.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_articulo">Articulo</label>
+          <select class="form-control" id="field_articulo" data-cy="articulo" name="articulo" formControlName="articulo">
+            <option *ngIf="!editForm.get('articulo')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="articuloOption.id === editForm.get('articulo')!.value?.id ? editForm.get('articulo')!.value : articuloOption"
+              *ngFor="let articuloOption of articulosSharedCollection; trackBy: trackArticuloById"
+            >
+              {{ articuloOption.descripcion }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['articulo'])!.invalid && (editForm.get(['articulo'])!.dirty || editForm.get(['articulo'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['articulo'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_movimiento">Movimiento</label>
+          <select class="form-control" id="field_movimiento" data-cy="movimiento" name="movimiento" formControlName="movimiento">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                movimientoOption.id === editForm.get('movimiento')!.value?.id ? editForm.get('movimiento')!.value : movimientoOption
+              "
+              *ngFor="let movimientoOption of movimientosSharedCollection; trackBy: trackMovimientoById"
+            >
+              {{ movimientoOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_medida">Medida</label>
+          <select class="form-control" id="field_medida" data-cy="medida" name="medida" formControlName="medida">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                medidaArticuloOption.id === editForm.get('medida')!.value?.id ? editForm.get('medida')!.value : medidaArticuloOption
+              "
+              *ngFor="let medidaArticuloOption of medidaArticulosSharedCollection; trackBy: trackMedidaArticuloById"
+            >
+              {{ medidaArticuloOption.medida }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

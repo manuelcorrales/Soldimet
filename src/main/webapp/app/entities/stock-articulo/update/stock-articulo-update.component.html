@@ -1,0 +1,93 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-stock-articulo-heading" data-cy="StockArticuloCreateUpdateHeading">Create or edit a Stock Articulo</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_cantidad">Cantidad</label>
+          <input type="number" class="form-control" name="cantidad" id="field_cantidad" data-cy="cantidad" formControlName="cantidad" />
+          <div *ngIf="editForm.get('cantidad')!.invalid && (editForm.get('cantidad')!.dirty || editForm.get('cantidad')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('cantidad')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('cantidad')?.errors?.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_medida">Medida</label>
+          <select class="form-control" id="field_medida" data-cy="medida" name="medida" formControlName="medida">
+            <option *ngIf="!editForm.get('medida')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                medidaArticuloOption.id === editForm.get('medida')!.value?.id ? editForm.get('medida')!.value : medidaArticuloOption
+              "
+              *ngFor="let medidaArticuloOption of medidaArticulosSharedCollection; trackBy: trackMedidaArticuloById"
+            >
+              {{ medidaArticuloOption.medida }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['medida'])!.invalid && (editForm.get(['medida'])!.dirty || editForm.get(['medida'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['medida'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_articulo">Articulo</label>
+          <select class="form-control" id="field_articulo" data-cy="articulo" name="articulo" formControlName="articulo">
+            <option *ngIf="!editForm.get('articulo')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="articuloOption.id === editForm.get('articulo')!.value?.id ? editForm.get('articulo')!.value : articuloOption"
+              *ngFor="let articuloOption of articulosSharedCollection; trackBy: trackArticuloById"
+            >
+              {{ articuloOption.codigoArticuloProveedor }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['articulo'])!.invalid && (editForm.get(['articulo'])!.dirty || editForm.get(['articulo'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['articulo'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_sucursal">Sucursal</label>
+          <select class="form-control" id="field_sucursal" data-cy="sucursal" name="sucursal" formControlName="sucursal">
+            <option *ngIf="!editForm.get('sucursal')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="sucursalOption.id === editForm.get('sucursal')!.value?.id ? editForm.get('sucursal')!.value : sucursalOption"
+              *ngFor="let sucursalOption of sucursalsSharedCollection; trackBy: trackSucursalById"
+            >
+              {{ sucursalOption.nombreSucursal }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['sucursal'])!.invalid && (editForm.get(['sucursal'])!.dirty || editForm.get(['sucursal'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['sucursal'])?.errors?.required"> This field is required. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

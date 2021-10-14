@@ -1,0 +1,140 @@
+<div>
+  <h2 id="page-heading" data-cy="PresupuestoHeading">
+    <span>Presupuestos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-presupuesto"
+        [routerLink]="['/presupuesto/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Presupuesto </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="presupuestos?.length === 0">
+    <span>No presupuestos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="presupuestos && presupuestos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="descripcionDescuento"><span>Descripcion Descuento</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="descuento"><span>Descuento</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="fechaCreacion"><span>Fecha Creacion</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="fechaAceptado"><span>Fecha Aceptado</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="fechaEntregado"><span>Fecha Entregado</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="importeTotal"><span>Importe Total</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="soldadura"><span>Soldadura</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="modelo"><span>Modelo</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="cliente.apellido"><span>Cliente</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="estadoPresupuesto.nombreEstado"><span>Estado Presupuesto</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="documentType.documentName"><span>Document Type</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="sucursal.nombreSucursal"><span>Sucursal</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let presupuesto of presupuestos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/presupuesto', presupuesto.id, 'view']">{{ presupuesto.id }}</a>
+          </td>
+          <td>{{ presupuesto.descripcionDescuento }}</td>
+          <td>{{ presupuesto.descuento }}</td>
+          <td>{{ presupuesto.fechaCreacion | formatMediumDate }}</td>
+          <td>{{ presupuesto.fechaAceptado | formatMediumDate }}</td>
+          <td>{{ presupuesto.fechaEntregado | formatMediumDate }}</td>
+          <td>{{ presupuesto.importeTotal }}</td>
+          <td>{{ presupuesto.observaciones }}</td>
+          <td>{{ presupuesto.soldadura }}</td>
+          <td>{{ presupuesto.modelo }}</td>
+          <td>
+            <div *ngIf="presupuesto.cliente">
+              <a [routerLink]="['/cliente', presupuesto.cliente?.id, 'view']">{{ presupuesto.cliente?.apellido }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="presupuesto.estadoPresupuesto">
+              <a [routerLink]="['/estado-presupuesto', presupuesto.estadoPresupuesto?.id, 'view']">{{
+                presupuesto.estadoPresupuesto?.nombreEstado
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="presupuesto.documentType">
+              <a [routerLink]="['/documentation-type', presupuesto.documentType?.id, 'view']">{{
+                presupuesto.documentType?.documentName
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="presupuesto.sucursal">
+              <a [routerLink]="['/sucursal', presupuesto.sucursal?.id, 'view']">{{ presupuesto.sucursal?.nombreSucursal }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/presupuesto', presupuesto.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/presupuesto', presupuesto.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(presupuesto)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="presupuestos && presupuestos.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

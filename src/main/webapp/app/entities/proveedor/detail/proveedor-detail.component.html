@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="proveedor">
+      <h2 data-cy="proveedorDetailsHeading"><span>Proveedor</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ proveedor.id }}</span>
+        </dd>
+        <dt><span>Nombre Proveedor</span></dt>
+        <dd>
+          <span>{{ proveedor.nombreProveedor }}</span>
+        </dd>
+        <dt><span>Persona</span></dt>
+        <dd>
+          <div *ngIf="proveedor.persona">
+            <a [routerLink]="['/persona', proveedor.persona?.id, 'view']">{{ proveedor.persona?.nombre }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/proveedor', proveedor.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

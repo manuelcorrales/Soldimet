@@ -1,27 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { PagoEfectivoComponent } from 'app/entities/pago-efectivo/pago-efectivo.component';
-import { PagoEfectivoDetailComponent } from 'app/entities/pago-efectivo/pago-efectivo-detail.component';
-import { PagoEfectivoUpdateComponent } from 'app/entities/pago-efectivo/pago-efectivo-update.component';
-import {
-  PagoEfectivoDeletePopupComponent,
-  PagoEfectivoDeleteDialogComponent
-} from 'app/entities/pago-efectivo/pago-efectivo-delete-dialog.component';
-import { pagoEfectivoRoute, pagoEfectivoPopupRoute } from 'app/entities/pago-efectivo/pago-efectivo.route';
-
-const ENTITY_STATES = [...pagoEfectivoRoute, ...pagoEfectivoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { PagoEfectivoComponent } from './list/pago-efectivo.component';
+import { PagoEfectivoDetailComponent } from './detail/pago-efectivo-detail.component';
+import { PagoEfectivoUpdateComponent } from './update/pago-efectivo-update.component';
+import { PagoEfectivoDeleteDialogComponent } from './delete/pago-efectivo-delete-dialog.component';
+import { PagoEfectivoRoutingModule } from './route/pago-efectivo-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    PagoEfectivoComponent,
-    PagoEfectivoDetailComponent,
-    PagoEfectivoUpdateComponent,
-    PagoEfectivoDeleteDialogComponent,
-    PagoEfectivoDeletePopupComponent
-  ],
-  entryComponents: [PagoEfectivoComponent, PagoEfectivoUpdateComponent, PagoEfectivoDeleteDialogComponent, PagoEfectivoDeletePopupComponent]
+  imports: [SharedModule, PagoEfectivoRoutingModule],
+  declarations: [PagoEfectivoComponent, PagoEfectivoDetailComponent, PagoEfectivoUpdateComponent, PagoEfectivoDeleteDialogComponent],
+  entryComponents: [PagoEfectivoDeleteDialogComponent],
 })
-export class SoldimetPagoEfectivoModule {}
+export class PagoEfectivoModule {}

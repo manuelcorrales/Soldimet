@@ -1,0 +1,142 @@
+<div>
+  <h2 id="page-heading" data-cy="MovimientoHeading">
+    <span>Movimientos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-movimiento"
+        [routerLink]="['/movimiento/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Movimiento </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="movimientos?.length === 0">
+    <span>No movimientos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="movimientos && movimientos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="fecha"><span>Fecha</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="importe"><span>Importe</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="descuento"><span>Descuento</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="medioDePago.id"><span>Medio De Pago</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="estado.nombreEstado"><span>Estado</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="tipoMovimiento.nombreTipoMovimiento"><span>Tipo Movimiento</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="empleado.usuario"><span>Empleado</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="caja.id"><span>Caja</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="subCategoria.nombreSubCategoria"><span>Sub Categoria</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movimiento of movimientos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/movimiento', movimiento.id, 'view']">{{ movimiento.id }}</a>
+          </td>
+          <td>{{ movimiento.fecha | formatMediumDate }}</td>
+          <td>{{ movimiento.importe }}</td>
+          <td>{{ movimiento.descuento }}</td>
+          <td>{{ movimiento.observaciones }}</td>
+          <td>
+            <div *ngIf="movimiento.medioDePago">
+              <a [routerLink]="['/medio-de-pago', movimiento.medioDePago?.id, 'view']">{{ movimiento.medioDePago?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="movimiento.estado">
+              <a [routerLink]="['/estado-movimiento', movimiento.estado?.id, 'view']">{{ movimiento.estado?.nombreEstado }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="movimiento.tipoMovimiento">
+              <a [routerLink]="['/tipo-movimiento', movimiento.tipoMovimiento?.id, 'view']">{{
+                movimiento.tipoMovimiento?.nombreTipoMovimiento
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="movimiento.empleado">
+              <a [routerLink]="['/empleado', movimiento.empleado?.id, 'view']">{{ movimiento.empleado?.usuario }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="movimiento.caja">
+              <a [routerLink]="['/caja', movimiento.caja?.id, 'view']">{{ movimiento.caja?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="movimiento.subCategoria">
+              <a [routerLink]="['/sub-categoria', movimiento.subCategoria?.id, 'view']">{{
+                movimiento.subCategoria?.nombreSubCategoria
+              }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/movimiento', movimiento.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/movimiento', movimiento.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(movimiento)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="movimientos && movimientos.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

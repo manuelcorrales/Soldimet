@@ -1,29 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { MedidaArticuloComponent } from './medida-articulo.component';
-import { MedidaArticuloDetailComponent } from './medida-articulo-detail.component';
-import { MedidaArticuloUpdateComponent } from './medida-articulo-update.component';
-import { MedidaArticuloDeletePopupComponent, MedidaArticuloDeleteDialogComponent } from './medida-articulo-delete-dialog.component';
-import { medidaArticuloRoute, medidaArticuloPopupRoute } from './medida-articulo.route';
-
-const ENTITY_STATES = [...medidaArticuloRoute, ...medidaArticuloPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { MedidaArticuloComponent } from './list/medida-articulo.component';
+import { MedidaArticuloDetailComponent } from './detail/medida-articulo-detail.component';
+import { MedidaArticuloUpdateComponent } from './update/medida-articulo-update.component';
+import { MedidaArticuloDeleteDialogComponent } from './delete/medida-articulo-delete-dialog.component';
+import { MedidaArticuloRoutingModule } from './route/medida-articulo-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, MedidaArticuloRoutingModule],
   declarations: [
     MedidaArticuloComponent,
     MedidaArticuloDetailComponent,
     MedidaArticuloUpdateComponent,
     MedidaArticuloDeleteDialogComponent,
-    MedidaArticuloDeletePopupComponent
   ],
-  entryComponents: [
-    MedidaArticuloComponent,
-    MedidaArticuloUpdateComponent,
-    MedidaArticuloDeleteDialogComponent,
-    MedidaArticuloDeletePopupComponent
-  ]
+  entryComponents: [MedidaArticuloDeleteDialogComponent],
 })
-export class SoldimetMedidaArticuloModule {}
+export class MedidaArticuloModule {}

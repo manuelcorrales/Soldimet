@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { DocumentationTypeComponent } from 'app/entities/documentation-type/documentation-type.component';
-import { DocumentationTypeDetailComponent } from 'app/entities/documentation-type/documentation-type-detail.component';
-import { DocumentationTypeUpdateComponent } from 'app/entities/documentation-type/documentation-type-update.component';
-import {
-  DocumentationTypeDeletePopupComponent,
-  DocumentationTypeDeleteDialogComponent
-} from 'app/entities/documentation-type/documentation-type-delete-dialog.component';
-import { documentationTypeRoute, documentationTypePopupRoute } from 'app/entities/documentation-type/documentation-type.route';
-
-const ENTITY_STATES = [...documentationTypeRoute, ...documentationTypePopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { DocumentationTypeComponent } from './list/documentation-type.component';
+import { DocumentationTypeDetailComponent } from './detail/documentation-type-detail.component';
+import { DocumentationTypeUpdateComponent } from './update/documentation-type-update.component';
+import { DocumentationTypeDeleteDialogComponent } from './delete/documentation-type-delete-dialog.component';
+import { DocumentationTypeRoutingModule } from './route/documentation-type-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, DocumentationTypeRoutingModule],
   declarations: [
     DocumentationTypeComponent,
     DocumentationTypeDetailComponent,
     DocumentationTypeUpdateComponent,
     DocumentationTypeDeleteDialogComponent,
-    DocumentationTypeDeletePopupComponent
   ],
-  entryComponents: [
-    DocumentationTypeComponent,
-    DocumentationTypeUpdateComponent,
-    DocumentationTypeDeleteDialogComponent,
-    DocumentationTypeDeletePopupComponent
-  ]
+  entryComponents: [DocumentationTypeDeleteDialogComponent],
 })
-export class SoldimetDocumentationTypeModule {}
+export class DocumentationTypeModule {}

@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="operacion">
+      <h2 data-cy="operacionDetailsHeading"><span>Operacion</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ operacion.id }}</span>
+        </dd>
+        <dt><span>Nombre Operacion</span></dt>
+        <dd>
+          <span>{{ operacion.nombreOperacion }}</span>
+        </dd>
+        <dt><span>Tipo Parte Motor</span></dt>
+        <dd>
+          <div *ngIf="operacion.tipoParteMotor">
+            <a [routerLink]="['/tipo-parte-motor', operacion.tipoParteMotor?.id, 'view']">{{
+              operacion.tipoParteMotor?.nombreTipoParteMotor
+            }}</a>
+          </div>
+        </dd>
+        <dt><span>Estado Operacion</span></dt>
+        <dd>
+          <div *ngIf="operacion.estadoOperacion">
+            <a [routerLink]="['/estado-operacion', operacion.estadoOperacion?.id, 'view']">{{ operacion.estadoOperacion?.nombreEstado }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/operacion', operacion.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

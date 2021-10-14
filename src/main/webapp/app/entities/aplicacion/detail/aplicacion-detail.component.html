@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="aplicacion">
+      <h2 data-cy="aplicacionDetailsHeading"><span>Aplicacion</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ aplicacion.id }}</span>
+        </dd>
+        <dt><span>Nombre Aplicacion</span></dt>
+        <dd>
+          <span>{{ aplicacion.nombreAplicacion }}</span>
+        </dd>
+        <dt><span>Numero Grupo</span></dt>
+        <dd>
+          <span>{{ aplicacion.numeroGrupo }}</span>
+        </dd>
+        <dt><span>Motor</span></dt>
+        <dd>
+          <div *ngIf="aplicacion.motor">
+            <a [routerLink]="['/motor', aplicacion.motor?.id, 'view']">{{ aplicacion.motor?.nombreMotor }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/aplicacion', aplicacion.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

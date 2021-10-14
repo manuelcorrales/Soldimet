@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="listaPrecioRectificacionCRAM">
+      <h2 data-cy="listaPrecioRectificacionCRAMDetailsHeading"><span>Lista Precio Rectificacion CRAM</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ listaPrecioRectificacionCRAM.id }}</span>
+        </dd>
+        <dt><span>Numero Grupo</span></dt>
+        <dd>
+          <span>{{ listaPrecioRectificacionCRAM.numeroGrupo }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button
+        type="button"
+        [routerLink]="['/lista-precio-rectificacion-cram', listaPrecioRectificacionCRAM.id, 'edit']"
+        class="btn btn-primary"
+      >
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

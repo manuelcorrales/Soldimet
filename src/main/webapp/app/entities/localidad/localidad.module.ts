@@ -1,24 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { LocalidadComponent } from 'app/entities/localidad/localidad.component';
-import { LocalidadDetailComponent } from 'app/entities/localidad/localidad-detail.component';
-import { LocalidadUpdateComponent } from 'app/entities/localidad/localidad-update.component';
-import { LocalidadDeletePopupComponent, LocalidadDeleteDialogComponent } from 'app/entities/localidad/localidad-delete-dialog.component';
-import { localidadRoute, localidadPopupRoute } from 'app/entities/localidad/localidad.route';
-
-const ENTITY_STATES = [...localidadRoute, ...localidadPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { LocalidadComponent } from './list/localidad.component';
+import { LocalidadDetailComponent } from './detail/localidad-detail.component';
+import { LocalidadUpdateComponent } from './update/localidad-update.component';
+import { LocalidadDeleteDialogComponent } from './delete/localidad-delete-dialog.component';
+import { LocalidadRoutingModule } from './route/localidad-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    LocalidadComponent,
-    LocalidadDetailComponent,
-    LocalidadUpdateComponent,
-    LocalidadDeleteDialogComponent,
-    LocalidadDeletePopupComponent
-  ],
-  entryComponents: [LocalidadComponent, LocalidadUpdateComponent, LocalidadDeleteDialogComponent, LocalidadDeletePopupComponent]
+  imports: [SharedModule, LocalidadRoutingModule],
+  declarations: [LocalidadComponent, LocalidadDetailComponent, LocalidadUpdateComponent, LocalidadDeleteDialogComponent],
+  entryComponents: [LocalidadDeleteDialogComponent],
 })
-export class SoldimetLocalidadModule {}
+export class LocalidadModule {}

@@ -1,0 +1,96 @@
+<div>
+  <h2 id="page-heading" data-cy="StockArticuloHeading">
+    <span>Stock Articulos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-stock-articulo"
+        [routerLink]="['/stock-articulo/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Stock Articulo </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="stockArticulos?.length === 0">
+    <span>No stockArticulos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="stockArticulos && stockArticulos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Cantidad</span></th>
+          <th scope="col"><span>Medida</span></th>
+          <th scope="col"><span>Articulo</span></th>
+          <th scope="col"><span>Sucursal</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stockArticulo of stockArticulos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/stock-articulo', stockArticulo.id, 'view']">{{ stockArticulo.id }}</a>
+          </td>
+          <td>{{ stockArticulo.cantidad }}</td>
+          <td>
+            <div *ngIf="stockArticulo.medida">
+              <a [routerLink]="['/medida-articulo', stockArticulo.medida?.id, 'view']">{{ stockArticulo.medida?.medida }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="stockArticulo.articulo">
+              <a [routerLink]="['/articulo', stockArticulo.articulo?.id, 'view']">{{ stockArticulo.articulo?.codigoArticuloProveedor }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="stockArticulo.sucursal">
+              <a [routerLink]="['/sucursal', stockArticulo.sucursal?.id, 'view']">{{ stockArticulo.sucursal?.nombreSucursal }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/stock-articulo', stockArticulo.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/stock-articulo', stockArticulo.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(stockArticulo)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

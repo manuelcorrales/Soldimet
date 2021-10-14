@@ -1,0 +1,124 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-costo-operacion-heading" data-cy="CostoOperacionCreateUpdateHeading">Create or edit a Costo Operacion</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_costoOperacion">Costo Operacion</label>
+          <input
+            type="number"
+            class="form-control"
+            name="costoOperacion"
+            id="field_costoOperacion"
+            data-cy="costoOperacion"
+            formControlName="costoOperacion"
+          />
+          <div
+            *ngIf="
+              editForm.get('costoOperacion')!.invalid && (editForm.get('costoOperacion')!.dirty || editForm.get('costoOperacion')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('costoOperacion')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('costoOperacion')?.errors?.min">
+              This field should be at least 0.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('costoOperacion')?.errors?.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_cilindrada">Cilindrada</label>
+          <select class="form-control" id="field_cilindrada" data-cy="cilindrada" name="cilindrada" formControlName="cilindrada">
+            <option *ngIf="!editForm.get('cilindrada')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                cilindradaOption.id === editForm.get('cilindrada')!.value?.id ? editForm.get('cilindrada')!.value : cilindradaOption
+              "
+              *ngFor="let cilindradaOption of cilindradasSharedCollection; trackBy: trackCilindradaById"
+            >
+              {{ cilindradaOption.cantidadDeCilindros }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="editForm.get(['cilindrada'])!.invalid && (editForm.get(['cilindrada'])!.dirty || editForm.get(['cilindrada'])!.touched)"
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['cilindrada'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_operacion">Operacion</label>
+          <select class="form-control" id="field_operacion" data-cy="operacion" name="operacion" formControlName="operacion">
+            <option *ngIf="!editForm.get('operacion')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="operacionOption.id === editForm.get('operacion')!.value?.id ? editForm.get('operacion')!.value : operacionOption"
+              *ngFor="let operacionOption of operacionsSharedCollection; trackBy: trackOperacionById"
+            >
+              {{ operacionOption.nombreOperacion }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['operacion'])!.invalid && (editForm.get(['operacion'])!.dirty || editForm.get(['operacion'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['operacion'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_tipoParteMotor">Tipo Parte Motor</label>
+          <select
+            class="form-control"
+            id="field_tipoParteMotor"
+            data-cy="tipoParteMotor"
+            name="tipoParteMotor"
+            formControlName="tipoParteMotor"
+          >
+            <option *ngIf="!editForm.get('tipoParteMotor')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                tipoParteMotorOption.id === editForm.get('tipoParteMotor')!.value?.id
+                  ? editForm.get('tipoParteMotor')!.value
+                  : tipoParteMotorOption
+              "
+              *ngFor="let tipoParteMotorOption of tipoParteMotorsSharedCollection; trackBy: trackTipoParteMotorById"
+            >
+              {{ tipoParteMotorOption.nombreTipoParteMotor }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['tipoParteMotor'])!.invalid &&
+            (editForm.get(['tipoParteMotor'])!.dirty || editForm.get(['tipoParteMotor'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['tipoParteMotor'])?.errors?.required"> This field is required. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

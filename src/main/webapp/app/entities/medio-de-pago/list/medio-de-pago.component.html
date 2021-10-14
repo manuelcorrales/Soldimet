@@ -1,0 +1,90 @@
+<div>
+  <h2 id="page-heading" data-cy="MedioDePagoHeading">
+    <span>Medio De Pagos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-medio-de-pago"
+        [routerLink]="['/medio-de-pago/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Medio De Pago </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="medioDePagos?.length === 0">
+    <span>No medioDePagos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="medioDePagos && medioDePagos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Medio De Pago Cheque</span></th>
+          <th scope="col"><span>Forma De Pago</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medioDePago of medioDePagos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/medio-de-pago', medioDePago.id, 'view']">{{ medioDePago.id }}</a>
+          </td>
+          <td>
+            <div *ngIf="medioDePago.medioDePagoCheque">
+              <a [routerLink]="['/medio-de-pago-cheque', medioDePago.medioDePagoCheque?.id, 'view']">{{
+                medioDePago.medioDePagoCheque?.id
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="medioDePago.formaDePago">
+              <a [routerLink]="['/forma-de-pago', medioDePago.formaDePago?.id, 'view']">{{ medioDePago.formaDePago?.nombreFormaDePago }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/medio-de-pago', medioDePago.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/medio-de-pago', medioDePago.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(medioDePago)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

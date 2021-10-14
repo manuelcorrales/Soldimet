@@ -1,24 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { SucursalComponent } from 'app/entities/sucursal/sucursal.component';
-import { SucursalDetailComponent } from 'app/entities/sucursal/sucursal-detail.component';
-import { SucursalUpdateComponent } from 'app/entities/sucursal/sucursal-update.component';
-import { SucursalDeletePopupComponent, SucursalDeleteDialogComponent } from 'app/entities/sucursal/sucursal-delete-dialog.component';
-import { sucursalRoute, sucursalPopupRoute } from 'app/entities/sucursal/sucursal.route';
-
-const ENTITY_STATES = [...sucursalRoute, ...sucursalPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { SucursalComponent } from './list/sucursal.component';
+import { SucursalDetailComponent } from './detail/sucursal-detail.component';
+import { SucursalUpdateComponent } from './update/sucursal-update.component';
+import { SucursalDeleteDialogComponent } from './delete/sucursal-delete-dialog.component';
+import { SucursalRoutingModule } from './route/sucursal-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    SucursalComponent,
-    SucursalDetailComponent,
-    SucursalUpdateComponent,
-    SucursalDeleteDialogComponent,
-    SucursalDeletePopupComponent
-  ],
-  entryComponents: [SucursalComponent, SucursalUpdateComponent, SucursalDeleteDialogComponent, SucursalDeletePopupComponent]
+  imports: [SharedModule, SucursalRoutingModule],
+  declarations: [SucursalComponent, SucursalDetailComponent, SucursalUpdateComponent, SucursalDeleteDialogComponent],
+  entryComponents: [SucursalDeleteDialogComponent],
 })
-export class SoldimetSucursalModule {}
+export class SucursalModule {}

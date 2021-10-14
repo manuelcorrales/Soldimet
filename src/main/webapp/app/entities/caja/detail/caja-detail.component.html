@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="caja">
+      <h2 data-cy="cajaDetailsHeading"><span>Caja</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ caja.id }}</span>
+        </dd>
+        <dt><span>Fecha</span></dt>
+        <dd>
+          <span>{{ caja.fecha | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Hora Apertura</span></dt>
+        <dd>
+          <span>{{ caja.horaApertura | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Hora Cierre</span></dt>
+        <dd>
+          <span>{{ caja.horaCierre | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Saldo</span></dt>
+        <dd>
+          <span>{{ caja.saldo }}</span>
+        </dd>
+        <dt><span>Observaciones</span></dt>
+        <dd>
+          <span>{{ caja.observaciones }}</span>
+        </dd>
+        <dt><span>Saldo Fisico</span></dt>
+        <dd>
+          <span>{{ caja.saldoFisico }}</span>
+        </dd>
+        <dt><span>Sucursal</span></dt>
+        <dd>
+          <div *ngIf="caja.sucursal">
+            <a [routerLink]="['/sucursal', caja.sucursal?.id, 'view']">{{ caja.sucursal?.nombreSucursal }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/caja', caja.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

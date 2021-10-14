@@ -1,0 +1,106 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-persona-heading" data-cy="PersonaCreateUpdateHeading">Create or edit a Persona</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_numeroTelefono">Numero Telefono</label>
+          <input
+            type="text"
+            class="form-control"
+            name="numeroTelefono"
+            id="field_numeroTelefono"
+            data-cy="numeroTelefono"
+            formControlName="numeroTelefono"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_nombre">Nombre</label>
+          <input type="text" class="form-control" name="nombre" id="field_nombre" data-cy="nombre" formControlName="nombre" />
+          <div *ngIf="editForm.get('nombre')!.invalid && (editForm.get('nombre')!.dirty || editForm.get('nombre')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('nombre')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_apellido">Apellido</label>
+          <input type="text" class="form-control" name="apellido" id="field_apellido" data-cy="apellido" formControlName="apellido" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_direccion">Direccion</label>
+          <select class="form-control" id="field_direccion" data-cy="direccion" name="direccion" formControlName="direccion">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="direccionOption.id === editForm.get('direccion')!.value?.id ? editForm.get('direccion')!.value : direccionOption"
+              *ngFor="let direccionOption of direccionsCollection; trackBy: trackDireccionById"
+            >
+              {{ direccionOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_estadoPersona">Estado Persona</label>
+          <select
+            class="form-control"
+            id="field_estadoPersona"
+            data-cy="estadoPersona"
+            name="estadoPersona"
+            formControlName="estadoPersona"
+          >
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                estadoPersonaOption.id === editForm.get('estadoPersona')!.value?.id
+                  ? editForm.get('estadoPersona')!.value
+                  : estadoPersonaOption
+              "
+              *ngFor="let estadoPersonaOption of estadoPersonasSharedCollection; trackBy: trackEstadoPersonaById"
+            >
+              {{ estadoPersonaOption.nombreEstado }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_user">User</label>
+          <select class="form-control" id="field_user" data-cy="user" name="user" formControlName="user">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="userOption.id === editForm.get('user')!.value?.id ? editForm.get('user')!.value : userOption"
+              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+            >
+              {{ userOption.login }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

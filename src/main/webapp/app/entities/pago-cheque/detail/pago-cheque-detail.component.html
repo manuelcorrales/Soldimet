@@ -1,0 +1,44 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="pagoCheque">
+      <h2 data-cy="pagoChequeDetailsHeading"><span>Pago Cheque</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ pagoCheque.id }}</span>
+        </dd>
+        <dt><span>Numero Cheque</span></dt>
+        <dd>
+          <span>{{ pagoCheque.numeroCheque }}</span>
+        </dd>
+        <dt><span>Forma De Pago</span></dt>
+        <dd>
+          <div *ngIf="pagoCheque.formaDePago">
+            <a [routerLink]="['/forma-de-pago', pagoCheque.formaDePago?.id, 'view']">{{ pagoCheque.formaDePago?.nombreFormaDePago }}</a>
+          </div>
+        </dd>
+        <dt><span>Banco</span></dt>
+        <dd>
+          <div *ngIf="pagoCheque.banco">
+            <a [routerLink]="['/banco', pagoCheque.banco?.id, 'view']">{{ pagoCheque.banco?.nombreBanco }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/pago-cheque', pagoCheque.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div>
+  <h2 id="page-heading" data-cy="CobranzaOperacionHeading">
+    <span>Cobranza Operacions</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-cobranza-operacion"
+        [routerLink]="['/cobranza-operacion/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Cobranza Operacion </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="cobranzaOperacions?.length === 0">
+    <span>No cobranzaOperacions found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="cobranzaOperacions && cobranzaOperacions.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Cobranza Operacion</span></th>
+          <th scope="col"><span>Estado Cobranza Operacion</span></th>
+          <th scope="col"><span>Operacion</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cobranzaOperacion of cobranzaOperacions; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/cobranza-operacion', cobranzaOperacion.id, 'view']">{{ cobranzaOperacion.id }}</a>
+          </td>
+          <td>{{ cobranzaOperacion.cobranzaOperacion }}</td>
+          <td>
+            <div *ngIf="cobranzaOperacion.estadoCobranzaOperacion">
+              <a [routerLink]="['/estado-cobranza-operacion', cobranzaOperacion.estadoCobranzaOperacion?.id, 'view']">{{
+                cobranzaOperacion.estadoCobranzaOperacion?.nombreEstado
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="cobranzaOperacion.operacion">
+              <a [routerLink]="['/operacion', cobranzaOperacion.operacion?.id, 'view']">{{
+                cobranzaOperacion.operacion?.nombreOperacion
+              }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/cobranza-operacion', cobranzaOperacion.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/cobranza-operacion', cobranzaOperacion.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(cobranzaOperacion)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

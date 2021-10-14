@@ -1,0 +1,172 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-pedido-repuesto-heading" data-cy="PedidoRepuestoCreateUpdateHeading">Create or edit a Pedido Repuesto</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_fechaCreacion">Fecha Creacion</label>
+          <div class="input-group">
+            <input
+              id="field_fechaCreacion"
+              data-cy="fechaCreacion"
+              type="text"
+              class="form-control"
+              name="fechaCreacion"
+              ngbDatepicker
+              #fechaCreacionDp="ngbDatepicker"
+              formControlName="fechaCreacion"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="fechaCreacionDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+          <div
+            *ngIf="
+              editForm.get('fechaCreacion')!.invalid && (editForm.get('fechaCreacion')!.dirty || editForm.get('fechaCreacion')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('fechaCreacion')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_fechaPedido">Fecha Pedido</label>
+          <div class="input-group">
+            <input
+              id="field_fechaPedido"
+              data-cy="fechaPedido"
+              type="text"
+              class="form-control"
+              name="fechaPedido"
+              ngbDatepicker
+              #fechaPedidoDp="ngbDatepicker"
+              formControlName="fechaPedido"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="fechaPedidoDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_fechaRecibo">Fecha Recibo</label>
+          <div class="input-group">
+            <input
+              id="field_fechaRecibo"
+              data-cy="fechaRecibo"
+              type="text"
+              class="form-control"
+              name="fechaRecibo"
+              ngbDatepicker
+              #fechaReciboDp="ngbDatepicker"
+              formControlName="fechaRecibo"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="fechaReciboDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_estadoPedidoRepuesto">Estado Pedido Repuesto</label>
+          <select
+            class="form-control"
+            id="field_estadoPedidoRepuesto"
+            data-cy="estadoPedidoRepuesto"
+            name="estadoPedidoRepuesto"
+            formControlName="estadoPedidoRepuesto"
+          >
+            <option *ngIf="!editForm.get('estadoPedidoRepuesto')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                estadoPedidoRepuestoOption.id === editForm.get('estadoPedidoRepuesto')!.value?.id
+                  ? editForm.get('estadoPedidoRepuesto')!.value
+                  : estadoPedidoRepuestoOption
+              "
+              *ngFor="let estadoPedidoRepuestoOption of estadoPedidoRepuestosSharedCollection; trackBy: trackEstadoPedidoRepuestoById"
+            >
+              {{ estadoPedidoRepuestoOption.nombreEstado }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['estadoPedidoRepuesto'])!.invalid &&
+            (editForm.get(['estadoPedidoRepuesto'])!.dirty || editForm.get(['estadoPedidoRepuesto'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['estadoPedidoRepuesto'])?.errors?.required">
+            This field is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_presupuesto">Presupuesto</label>
+          <select class="form-control" id="field_presupuesto" data-cy="presupuesto" name="presupuesto" formControlName="presupuesto">
+            <option *ngIf="!editForm.get('presupuesto')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                presupuestoOption.id === editForm.get('presupuesto')!.value?.id ? editForm.get('presupuesto')!.value : presupuestoOption
+              "
+              *ngFor="let presupuestoOption of presupuestosSharedCollection; trackBy: trackPresupuestoById"
+            >
+              {{ presupuestoOption.id }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="editForm.get(['presupuesto'])!.invalid && (editForm.get(['presupuesto'])!.dirty || editForm.get(['presupuesto'])!.touched)"
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['presupuesto'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_documentType">Document Type</label>
+          <select class="form-control" id="field_documentType" data-cy="documentType" name="documentType" formControlName="documentType">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                documentationTypeOption.id === editForm.get('documentType')!.value?.id
+                  ? editForm.get('documentType')!.value
+                  : documentationTypeOption
+              "
+              *ngFor="let documentationTypeOption of documentationTypesSharedCollection; trackBy: trackDocumentationTypeById"
+            >
+              {{ documentationTypeOption.documentName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

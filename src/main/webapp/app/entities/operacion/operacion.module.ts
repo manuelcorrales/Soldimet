@@ -1,26 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { OperacionComponent } from './operacion.component';
-import { OperacionDetailComponent } from './operacion-detail.component';
-import { OperacionUpdateComponent } from './operacion-update.component';
-import { OperacionDeletePopupComponent, OperacionDeleteDialogComponent } from './operacion-delete-dialog.component';
-import { operacionRoute, operacionPopupRoute } from './operacion.route';
-import { OperacionAddListasComponent } from './operacion-add-listas.component';
-
-const ENTITY_STATES = [...operacionRoute, ...operacionPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { OperacionComponent } from './list/operacion.component';
+import { OperacionDetailComponent } from './detail/operacion-detail.component';
+import { OperacionUpdateComponent } from './update/operacion-update.component';
+import { OperacionDeleteDialogComponent } from './delete/operacion-delete-dialog.component';
+import { OperacionRoutingModule } from './route/operacion-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    OperacionComponent,
-    OperacionDetailComponent,
-    OperacionUpdateComponent,
-    OperacionDeleteDialogComponent,
-    OperacionDeletePopupComponent,
-    OperacionAddListasComponent
-  ],
-  entryComponents: [OperacionComponent, OperacionUpdateComponent, OperacionDeleteDialogComponent, OperacionDeletePopupComponent]
+  imports: [SharedModule, OperacionRoutingModule],
+  declarations: [OperacionComponent, OperacionDetailComponent, OperacionUpdateComponent, OperacionDeleteDialogComponent],
+  entryComponents: [OperacionDeleteDialogComponent],
 })
-export class SoldimetOperacionModule {}
+export class OperacionModule {}

@@ -1,27 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { MedioDePagoComponent } from 'app/entities/medio-de-pago/medio-de-pago.component';
-import { MedioDePagoDetailComponent } from 'app/entities/medio-de-pago/medio-de-pago-detail.component';
-import { MedioDePagoUpdateComponent } from 'app/entities/medio-de-pago/medio-de-pago-update.component';
-import {
-  MedioDePagoDeletePopupComponent,
-  MedioDePagoDeleteDialogComponent
-} from 'app/entities/medio-de-pago/medio-de-pago-delete-dialog.component';
-import { medioDePagoRoute, medioDePagoPopupRoute } from 'app/entities/medio-de-pago/medio-de-pago.route';
-
-const ENTITY_STATES = [...medioDePagoRoute, ...medioDePagoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { MedioDePagoComponent } from './list/medio-de-pago.component';
+import { MedioDePagoDetailComponent } from './detail/medio-de-pago-detail.component';
+import { MedioDePagoUpdateComponent } from './update/medio-de-pago-update.component';
+import { MedioDePagoDeleteDialogComponent } from './delete/medio-de-pago-delete-dialog.component';
+import { MedioDePagoRoutingModule } from './route/medio-de-pago-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    MedioDePagoComponent,
-    MedioDePagoDetailComponent,
-    MedioDePagoUpdateComponent,
-    MedioDePagoDeleteDialogComponent,
-    MedioDePagoDeletePopupComponent
-  ],
-  entryComponents: [MedioDePagoComponent, MedioDePagoUpdateComponent, MedioDePagoDeleteDialogComponent, MedioDePagoDeletePopupComponent]
+  imports: [SharedModule, MedioDePagoRoutingModule],
+  declarations: [MedioDePagoComponent, MedioDePagoDetailComponent, MedioDePagoUpdateComponent, MedioDePagoDeleteDialogComponent],
+  entryComponents: [MedioDePagoDeleteDialogComponent],
 })
-export class SoldimetMedioDePagoModule {}
+export class MedioDePagoModule {}

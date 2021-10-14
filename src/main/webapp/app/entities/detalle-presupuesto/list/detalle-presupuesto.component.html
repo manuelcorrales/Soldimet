@@ -1,0 +1,108 @@
+<div>
+  <h2 id="page-heading" data-cy="DetallePresupuestoHeading">
+    <span>Detalle Presupuestos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-detalle-presupuesto"
+        [routerLink]="['/detalle-presupuesto/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Detalle Presupuesto </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="detallePresupuestos?.length === 0">
+    <span>No detallePresupuestos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="detallePresupuestos && detallePresupuestos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Importe</span></th>
+          <th scope="col"><span>Aplicacion</span></th>
+          <th scope="col"><span>Cilindrada</span></th>
+          <th scope="col"><span>Motor</span></th>
+          <th scope="col"><span>Tipo Parte Motor</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detallePresupuesto of detallePresupuestos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'view']">{{ detallePresupuesto.id }}</a>
+          </td>
+          <td>{{ detallePresupuesto.importe }}</td>
+          <td>
+            <div *ngIf="detallePresupuesto.aplicacion">
+              <a [routerLink]="['/aplicacion', detallePresupuesto.aplicacion?.id, 'view']">{{
+                detallePresupuesto.aplicacion?.nombreAplicacion
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detallePresupuesto.cilindrada">
+              <a [routerLink]="['/cilindrada', detallePresupuesto.cilindrada?.id, 'view']">{{
+                detallePresupuesto.cilindrada?.cantidadDeCilindros
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detallePresupuesto.motor">
+              <a [routerLink]="['/motor', detallePresupuesto.motor?.id, 'view']">{{ detallePresupuesto.motor?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detallePresupuesto.tipoParteMotor">
+              <a [routerLink]="['/tipo-parte-motor', detallePresupuesto.tipoParteMotor?.id, 'view']">{{
+                detallePresupuesto.tipoParteMotor?.nombreTipoParteMotor
+              }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(detallePresupuesto)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

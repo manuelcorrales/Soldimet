@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cobranzaRepuesto">
+      <h2 data-cy="cobranzaRepuestoDetailsHeading"><span>Cobranza Repuesto</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ cobranzaRepuesto.id }}</span>
+        </dd>
+        <dt><span>Valor</span></dt>
+        <dd>
+          <span>{{ cobranzaRepuesto.valor }}</span>
+        </dd>
+        <dt><span>Tipo Repuesto</span></dt>
+        <dd>
+          <div *ngIf="cobranzaRepuesto.tipoRepuesto">
+            <a [routerLink]="['/tipo-repuesto', cobranzaRepuesto.tipoRepuesto?.id, 'view']">{{
+              cobranzaRepuesto.tipoRepuesto?.nombreTipoRepuesto
+            }}</a>
+          </div>
+        </dd>
+        <dt><span>Articulo</span></dt>
+        <dd>
+          <div *ngIf="cobranzaRepuesto.articulo">
+            <a [routerLink]="['/articulo', cobranzaRepuesto.articulo?.id, 'view']">{{
+              cobranzaRepuesto.articulo?.codigoArticuloProveedor
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/cobranza-repuesto', cobranzaRepuesto.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,27 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { PagoTarjetaComponent } from 'app/entities/pago-tarjeta/pago-tarjeta.component';
-import { PagoTarjetaDetailComponent } from 'app/entities/pago-tarjeta/pago-tarjeta-detail.component';
-import { PagoTarjetaUpdateComponent } from 'app/entities/pago-tarjeta/pago-tarjeta-update.component';
-import {
-  PagoTarjetaDeletePopupComponent,
-  PagoTarjetaDeleteDialogComponent
-} from 'app/entities/pago-tarjeta/pago-tarjeta-delete-dialog.component';
-import { pagoTarjetaRoute, pagoTarjetaPopupRoute } from 'app/entities/pago-tarjeta/pago-tarjeta.route';
-
-const ENTITY_STATES = [...pagoTarjetaRoute, ...pagoTarjetaPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { PagoTarjetaComponent } from './list/pago-tarjeta.component';
+import { PagoTarjetaDetailComponent } from './detail/pago-tarjeta-detail.component';
+import { PagoTarjetaUpdateComponent } from './update/pago-tarjeta-update.component';
+import { PagoTarjetaDeleteDialogComponent } from './delete/pago-tarjeta-delete-dialog.component';
+import { PagoTarjetaRoutingModule } from './route/pago-tarjeta-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    PagoTarjetaComponent,
-    PagoTarjetaDetailComponent,
-    PagoTarjetaUpdateComponent,
-    PagoTarjetaDeleteDialogComponent,
-    PagoTarjetaDeletePopupComponent
-  ],
-  entryComponents: [PagoTarjetaComponent, PagoTarjetaUpdateComponent, PagoTarjetaDeleteDialogComponent, PagoTarjetaDeletePopupComponent]
+  imports: [SharedModule, PagoTarjetaRoutingModule],
+  declarations: [PagoTarjetaComponent, PagoTarjetaDetailComponent, PagoTarjetaUpdateComponent, PagoTarjetaDeleteDialogComponent],
+  entryComponents: [PagoTarjetaDeleteDialogComponent],
 })
-export class SoldimetPagoTarjetaModule {}
+export class PagoTarjetaModule {}

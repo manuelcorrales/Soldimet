@@ -1,0 +1,100 @@
+<div>
+  <h2 id="page-heading" data-cy="CostoOperacionHeading">
+    <span>Costo Operacions</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-costo-operacion"
+        [routerLink]="['/costo-operacion/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Costo Operacion </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="costoOperacions?.length === 0">
+    <span>No costoOperacions found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="costoOperacions && costoOperacions.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span>ID</span></th>
+          <th scope="col"><span>Costo Operacion</span></th>
+          <th scope="col"><span>Cilindrada</span></th>
+          <th scope="col"><span>Operacion</span></th>
+          <th scope="col"><span>Tipo Parte Motor</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let costoOperacion of costoOperacions; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/costo-operacion', costoOperacion.id, 'view']">{{ costoOperacion.id }}</a>
+          </td>
+          <td>{{ costoOperacion.costoOperacion }}</td>
+          <td>
+            <div *ngIf="costoOperacion.cilindrada">
+              <a [routerLink]="['/cilindrada', costoOperacion.cilindrada?.id, 'view']">{{
+                costoOperacion.cilindrada?.cantidadDeCilindros
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="costoOperacion.operacion">
+              <a [routerLink]="['/operacion', costoOperacion.operacion?.id, 'view']">{{ costoOperacion.operacion?.nombreOperacion }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="costoOperacion.tipoParteMotor">
+              <a [routerLink]="['/tipo-parte-motor', costoOperacion.tipoParteMotor?.id, 'view']">{{
+                costoOperacion.tipoParteMotor?.nombreTipoParteMotor
+              }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/costo-operacion', costoOperacion.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/costo-operacion', costoOperacion.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(costoOperacion)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EstadoOperacionComponent } from 'app/entities/estado-operacion/estado-operacion.component';
-import { EstadoOperacionDetailComponent } from 'app/entities/estado-operacion/estado-operacion-detail.component';
-import { EstadoOperacionUpdateComponent } from 'app/entities/estado-operacion/estado-operacion-update.component';
-import {
-  EstadoOperacionDeletePopupComponent,
-  EstadoOperacionDeleteDialogComponent
-} from 'app/entities/estado-operacion/estado-operacion-delete-dialog.component';
-import { estadoOperacionRoute, estadoOperacionPopupRoute } from 'app/entities/estado-operacion/estado-operacion.route';
-
-const ENTITY_STATES = [...estadoOperacionRoute, ...estadoOperacionPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { EstadoOperacionComponent } from './list/estado-operacion.component';
+import { EstadoOperacionDetailComponent } from './detail/estado-operacion-detail.component';
+import { EstadoOperacionUpdateComponent } from './update/estado-operacion-update.component';
+import { EstadoOperacionDeleteDialogComponent } from './delete/estado-operacion-delete-dialog.component';
+import { EstadoOperacionRoutingModule } from './route/estado-operacion-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, EstadoOperacionRoutingModule],
   declarations: [
     EstadoOperacionComponent,
     EstadoOperacionDetailComponent,
     EstadoOperacionUpdateComponent,
     EstadoOperacionDeleteDialogComponent,
-    EstadoOperacionDeletePopupComponent
   ],
-  entryComponents: [
-    EstadoOperacionComponent,
-    EstadoOperacionUpdateComponent,
-    EstadoOperacionDeleteDialogComponent,
-    EstadoOperacionDeletePopupComponent
-  ]
+  entryComponents: [EstadoOperacionDeleteDialogComponent],
 })
-export class SoldimetEstadoOperacionModule {}
+export class EstadoOperacionModule {}

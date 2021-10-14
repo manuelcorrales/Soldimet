@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="persona">
+      <h2 data-cy="personaDetailsHeading"><span>Persona</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ persona.id }}</span>
+        </dd>
+        <dt><span>Numero Telefono</span></dt>
+        <dd>
+          <span>{{ persona.numeroTelefono }}</span>
+        </dd>
+        <dt><span>Nombre</span></dt>
+        <dd>
+          <span>{{ persona.nombre }}</span>
+        </dd>
+        <dt><span>Apellido</span></dt>
+        <dd>
+          <span>{{ persona.apellido }}</span>
+        </dd>
+        <dt><span>Direccion</span></dt>
+        <dd>
+          <div *ngIf="persona.direccion">
+            <a [routerLink]="['/direccion', persona.direccion?.id, 'view']">{{ persona.direccion?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Estado Persona</span></dt>
+        <dd>
+          <div *ngIf="persona.estadoPersona">
+            <a [routerLink]="['/estado-persona', persona.estadoPersona?.id, 'view']">{{ persona.estadoPersona?.nombreEstado }}</a>
+          </div>
+        </dd>
+        <dt><span>User</span></dt>
+        <dd>
+          <span>{{ persona.user?.login }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/persona', persona.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

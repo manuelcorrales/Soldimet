@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { PrecioRepuestoComponent } from 'app/entities/precio-repuesto/precio-repuesto.component';
-import { PrecioRepuestoDetailComponent } from 'app/entities/precio-repuesto/precio-repuesto-detail.component';
-import { PrecioRepuestoUpdateComponent } from 'app/entities/precio-repuesto/precio-repuesto-update.component';
-import {
-  PrecioRepuestoDeletePopupComponent,
-  PrecioRepuestoDeleteDialogComponent
-} from 'app/entities/precio-repuesto/precio-repuesto-delete-dialog.component';
-import { precioRepuestoRoute, precioRepuestoPopupRoute } from 'app/entities/precio-repuesto/precio-repuesto.route';
-
-const ENTITY_STATES = [...precioRepuestoRoute, ...precioRepuestoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { PrecioRepuestoComponent } from './list/precio-repuesto.component';
+import { PrecioRepuestoDetailComponent } from './detail/precio-repuesto-detail.component';
+import { PrecioRepuestoUpdateComponent } from './update/precio-repuesto-update.component';
+import { PrecioRepuestoDeleteDialogComponent } from './delete/precio-repuesto-delete-dialog.component';
+import { PrecioRepuestoRoutingModule } from './route/precio-repuesto-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, PrecioRepuestoRoutingModule],
   declarations: [
     PrecioRepuestoComponent,
     PrecioRepuestoDetailComponent,
     PrecioRepuestoUpdateComponent,
     PrecioRepuestoDeleteDialogComponent,
-    PrecioRepuestoDeletePopupComponent
   ],
-  entryComponents: [
-    PrecioRepuestoComponent,
-    PrecioRepuestoUpdateComponent,
-    PrecioRepuestoDeleteDialogComponent,
-    PrecioRepuestoDeletePopupComponent
-  ]
+  entryComponents: [PrecioRepuestoDeleteDialogComponent],
 })
-export class SoldimetPrecioRepuestoModule {}
+export class PrecioRepuestoModule {}

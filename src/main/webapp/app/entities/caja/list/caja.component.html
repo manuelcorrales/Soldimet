@@ -1,0 +1,102 @@
+<div>
+  <h2 id="page-heading" data-cy="CajaHeading">
+    <span>Cajas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-caja"
+        [routerLink]="['/caja/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Caja </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="cajas?.length === 0">
+    <span>No cajas found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="cajas && cajas.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="fecha"><span>Fecha</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="horaApertura"><span>Hora Apertura</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="horaCierre"><span>Hora Cierre</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="saldo"><span>Saldo</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="observaciones"><span>Observaciones</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="saldoFisico"><span>Saldo Fisico</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="sucursal.nombreSucursal"><span>Sucursal</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let caja of cajas; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/caja', caja.id, 'view']">{{ caja.id }}</a>
+          </td>
+          <td>{{ caja.fecha | formatMediumDate }}</td>
+          <td>{{ caja.horaApertura | formatMediumDatetime }}</td>
+          <td>{{ caja.horaCierre | formatMediumDatetime }}</td>
+          <td>{{ caja.saldo }}</td>
+          <td>{{ caja.observaciones }}</td>
+          <td>{{ caja.saldoFisico }}</td>
+          <td>
+            <div *ngIf="caja.sucursal">
+              <a [routerLink]="['/sucursal', caja.sucursal?.id, 'view']">{{ caja.sucursal?.nombreSucursal }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/caja', caja.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/caja', caja.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(caja)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="cajas && cajas.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

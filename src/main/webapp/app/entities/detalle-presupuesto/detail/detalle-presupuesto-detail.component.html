@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="detallePresupuesto">
+      <h2 data-cy="detallePresupuestoDetailsHeading"><span>Detalle Presupuesto</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ detallePresupuesto.id }}</span>
+        </dd>
+        <dt><span>Importe</span></dt>
+        <dd>
+          <span>{{ detallePresupuesto.importe }}</span>
+        </dd>
+        <dt><span>Aplicacion</span></dt>
+        <dd>
+          <div *ngIf="detallePresupuesto.aplicacion">
+            <a [routerLink]="['/aplicacion', detallePresupuesto.aplicacion?.id, 'view']">{{
+              detallePresupuesto.aplicacion?.nombreAplicacion
+            }}</a>
+          </div>
+        </dd>
+        <dt><span>Cilindrada</span></dt>
+        <dd>
+          <div *ngIf="detallePresupuesto.cilindrada">
+            <a [routerLink]="['/cilindrada', detallePresupuesto.cilindrada?.id, 'view']">{{
+              detallePresupuesto.cilindrada?.cantidadDeCilindros
+            }}</a>
+          </div>
+        </dd>
+        <dt><span>Motor</span></dt>
+        <dd>
+          <div *ngIf="detallePresupuesto.motor">
+            <a [routerLink]="['/motor', detallePresupuesto.motor?.id, 'view']">{{ detallePresupuesto.motor?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Tipo Parte Motor</span></dt>
+        <dd>
+          <div *ngIf="detallePresupuesto.tipoParteMotor">
+            <a [routerLink]="['/tipo-parte-motor', detallePresupuesto.tipoParteMotor?.id, 'view']">{{
+              detallePresupuesto.tipoParteMotor?.nombreTipoParteMotor
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/detalle-presupuesto', detallePresupuesto.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

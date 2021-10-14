@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="movimientoPresupuesto">
+      <h2 data-cy="movimientoPresupuestoDetailsHeading"><span>Movimiento Presupuesto</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ movimientoPresupuesto.id }}</span>
+        </dd>
+        <dt><span>Movimiento</span></dt>
+        <dd>
+          <div *ngIf="movimientoPresupuesto.movimiento">
+            <a [routerLink]="['/movimiento', movimientoPresupuesto.movimiento?.id, 'view']">{{ movimientoPresupuesto.movimiento?.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Presupuesto</span></dt>
+        <dd>
+          <div *ngIf="movimientoPresupuesto.presupuesto">
+            <a [routerLink]="['/presupuesto', movimientoPresupuesto.presupuesto?.id, 'view']">{{
+              movimientoPresupuesto.presupuesto?.id
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/movimiento-presupuesto', movimientoPresupuesto.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

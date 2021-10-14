@@ -1,0 +1,77 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-cobranza-repuesto-heading" data-cy="CobranzaRepuestoCreateUpdateHeading">Create or edit a Cobranza Repuesto</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_valor">Valor</label>
+          <input type="number" class="form-control" name="valor" id="field_valor" data-cy="valor" formControlName="valor" />
+          <div *ngIf="editForm.get('valor')!.invalid && (editForm.get('valor')!.dirty || editForm.get('valor')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('valor')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('valor')?.errors?.min"> This field should be at least 0. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('valor')?.errors?.number"> This field should be a number. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_tipoRepuesto">Tipo Repuesto</label>
+          <select class="form-control" id="field_tipoRepuesto" data-cy="tipoRepuesto" name="tipoRepuesto" formControlName="tipoRepuesto">
+            <option *ngIf="!editForm.get('tipoRepuesto')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                tipoRepuestoOption.id === editForm.get('tipoRepuesto')!.value?.id ? editForm.get('tipoRepuesto')!.value : tipoRepuestoOption
+              "
+              *ngFor="let tipoRepuestoOption of tipoRepuestosSharedCollection; trackBy: trackTipoRepuestoById"
+            >
+              {{ tipoRepuestoOption.nombreTipoRepuesto }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['tipoRepuesto'])!.invalid && (editForm.get(['tipoRepuesto'])!.dirty || editForm.get(['tipoRepuesto'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['tipoRepuesto'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_articulo">Articulo</label>
+          <select class="form-control" id="field_articulo" data-cy="articulo" name="articulo" formControlName="articulo">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="articuloOption.id === editForm.get('articulo')!.value?.id ? editForm.get('articulo')!.value : articuloOption"
+              *ngFor="let articuloOption of articulosSharedCollection; trackBy: trackArticuloById"
+            >
+              {{ articuloOption.codigoArticuloProveedor }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { TipoParteMotorComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor.component';
-import { TipoParteMotorDetailComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor-detail.component';
-import { TipoParteMotorUpdateComponent } from 'app/entities/tipo-parte-motor/tipo-parte-motor-update.component';
-import {
-  TipoParteMotorDeletePopupComponent,
-  TipoParteMotorDeleteDialogComponent
-} from 'app/entities/tipo-parte-motor/tipo-parte-motor-delete-dialog.component';
-import { tipoParteMotorRoute, tipoParteMotorPopupRoute } from 'app/entities/tipo-parte-motor/tipo-parte-motor.route';
-
-const ENTITY_STATES = [...tipoParteMotorRoute, ...tipoParteMotorPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { TipoParteMotorComponent } from './list/tipo-parte-motor.component';
+import { TipoParteMotorDetailComponent } from './detail/tipo-parte-motor-detail.component';
+import { TipoParteMotorUpdateComponent } from './update/tipo-parte-motor-update.component';
+import { TipoParteMotorDeleteDialogComponent } from './delete/tipo-parte-motor-delete-dialog.component';
+import { TipoParteMotorRoutingModule } from './route/tipo-parte-motor-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, TipoParteMotorRoutingModule],
   declarations: [
     TipoParteMotorComponent,
     TipoParteMotorDetailComponent,
     TipoParteMotorUpdateComponent,
     TipoParteMotorDeleteDialogComponent,
-    TipoParteMotorDeletePopupComponent
   ],
-  entryComponents: [
-    TipoParteMotorComponent,
-    TipoParteMotorUpdateComponent,
-    TipoParteMotorDeleteDialogComponent,
-    TipoParteMotorDeletePopupComponent
-  ]
+  entryComponents: [TipoParteMotorDeleteDialogComponent],
 })
-export class SoldimetTipoParteMotorModule {}
+export class TipoParteMotorModule {}

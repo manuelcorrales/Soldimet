@@ -1,35 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EstadoCobranzaOperacionComponent } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.component';
-import { EstadoCobranzaOperacionDetailComponent } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion-detail.component';
-import { EstadoCobranzaOperacionUpdateComponent } from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion-update.component';
-import {
-  EstadoCobranzaOperacionDeletePopupComponent,
-  EstadoCobranzaOperacionDeleteDialogComponent
-} from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion-delete-dialog.component';
-import {
-  estadoCobranzaOperacionRoute,
-  estadoCobranzaOperacionPopupRoute
-} from 'app/entities/estado-cobranza-operacion/estado-cobranza-operacion.route';
-
-const ENTITY_STATES = [...estadoCobranzaOperacionRoute, ...estadoCobranzaOperacionPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { EstadoCobranzaOperacionComponent } from './list/estado-cobranza-operacion.component';
+import { EstadoCobranzaOperacionDetailComponent } from './detail/estado-cobranza-operacion-detail.component';
+import { EstadoCobranzaOperacionUpdateComponent } from './update/estado-cobranza-operacion-update.component';
+import { EstadoCobranzaOperacionDeleteDialogComponent } from './delete/estado-cobranza-operacion-delete-dialog.component';
+import { EstadoCobranzaOperacionRoutingModule } from './route/estado-cobranza-operacion-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, EstadoCobranzaOperacionRoutingModule],
   declarations: [
     EstadoCobranzaOperacionComponent,
     EstadoCobranzaOperacionDetailComponent,
     EstadoCobranzaOperacionUpdateComponent,
     EstadoCobranzaOperacionDeleteDialogComponent,
-    EstadoCobranzaOperacionDeletePopupComponent
   ],
-  entryComponents: [
-    EstadoCobranzaOperacionComponent,
-    EstadoCobranzaOperacionUpdateComponent,
-    EstadoCobranzaOperacionDeleteDialogComponent,
-    EstadoCobranzaOperacionDeletePopupComponent
-  ]
+  entryComponents: [EstadoCobranzaOperacionDeleteDialogComponent],
 })
-export class SoldimetEstadoCobranzaOperacionModule {}
+export class EstadoCobranzaOperacionModule {}

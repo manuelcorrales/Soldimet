@@ -1,24 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EmpleadoComponent } from 'app/entities/empleado/empleado.component';
-import { EmpleadoDetailComponent } from 'app/entities/empleado/empleado-detail.component';
-import { EmpleadoUpdateComponent } from 'app/entities/empleado/empleado-update.component';
-import { EmpleadoDeletePopupComponent, EmpleadoDeleteDialogComponent } from 'app/entities/empleado/empleado-delete-dialog.component';
-import { empleadoRoute, empleadoPopupRoute } from 'app/entities/empleado/empleado.route';
-
-const ENTITY_STATES = [...empleadoRoute, ...empleadoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { EmpleadoComponent } from './list/empleado.component';
+import { EmpleadoDetailComponent } from './detail/empleado-detail.component';
+import { EmpleadoUpdateComponent } from './update/empleado-update.component';
+import { EmpleadoDeleteDialogComponent } from './delete/empleado-delete-dialog.component';
+import { EmpleadoRoutingModule } from './route/empleado-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    EmpleadoComponent,
-    EmpleadoDetailComponent,
-    EmpleadoUpdateComponent,
-    EmpleadoDeleteDialogComponent,
-    EmpleadoDeletePopupComponent
-  ],
-  entryComponents: [EmpleadoComponent, EmpleadoUpdateComponent, EmpleadoDeleteDialogComponent, EmpleadoDeletePopupComponent]
+  imports: [SharedModule, EmpleadoRoutingModule],
+  declarations: [EmpleadoComponent, EmpleadoDetailComponent, EmpleadoUpdateComponent, EmpleadoDeleteDialogComponent],
+  entryComponents: [EmpleadoDeleteDialogComponent],
 })
-export class SoldimetEmpleadoModule {}
+export class EmpleadoModule {}

@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { TipoMovimientoComponent } from 'app/entities/tipo-movimiento/tipo-movimiento.component';
-import { TipoMovimientoDetailComponent } from 'app/entities/tipo-movimiento/tipo-movimiento-detail.component';
-import { TipoMovimientoUpdateComponent } from 'app/entities/tipo-movimiento/tipo-movimiento-update.component';
-import {
-  TipoMovimientoDeletePopupComponent,
-  TipoMovimientoDeleteDialogComponent
-} from 'app/entities/tipo-movimiento/tipo-movimiento-delete-dialog.component';
-import { tipoMovimientoRoute, tipoMovimientoPopupRoute } from 'app/entities/tipo-movimiento/tipo-movimiento.route';
-
-const ENTITY_STATES = [...tipoMovimientoRoute, ...tipoMovimientoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { TipoMovimientoComponent } from './list/tipo-movimiento.component';
+import { TipoMovimientoDetailComponent } from './detail/tipo-movimiento-detail.component';
+import { TipoMovimientoUpdateComponent } from './update/tipo-movimiento-update.component';
+import { TipoMovimientoDeleteDialogComponent } from './delete/tipo-movimiento-delete-dialog.component';
+import { TipoMovimientoRoutingModule } from './route/tipo-movimiento-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, TipoMovimientoRoutingModule],
   declarations: [
     TipoMovimientoComponent,
     TipoMovimientoDetailComponent,
     TipoMovimientoUpdateComponent,
     TipoMovimientoDeleteDialogComponent,
-    TipoMovimientoDeletePopupComponent
   ],
-  entryComponents: [
-    TipoMovimientoComponent,
-    TipoMovimientoUpdateComponent,
-    TipoMovimientoDeleteDialogComponent,
-    TipoMovimientoDeletePopupComponent
-  ]
+  entryComponents: [TipoMovimientoDeleteDialogComponent],
 })
-export class SoldimetTipoMovimientoModule {}
+export class TipoMovimientoModule {}

@@ -1,35 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EstadoPedidoRepuestoComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.component';
-import { EstadoPedidoRepuestoDetailComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto-detail.component';
-import { EstadoPedidoRepuestoUpdateComponent } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto-update.component';
-import {
-  EstadoPedidoRepuestoDeletePopupComponent,
-  EstadoPedidoRepuestoDeleteDialogComponent
-} from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto-delete-dialog.component';
-import {
-  estadoPedidoRepuestoRoute,
-  estadoPedidoRepuestoPopupRoute
-} from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.route';
-
-const ENTITY_STATES = [...estadoPedidoRepuestoRoute, ...estadoPedidoRepuestoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { EstadoPedidoRepuestoComponent } from './list/estado-pedido-repuesto.component';
+import { EstadoPedidoRepuestoDetailComponent } from './detail/estado-pedido-repuesto-detail.component';
+import { EstadoPedidoRepuestoUpdateComponent } from './update/estado-pedido-repuesto-update.component';
+import { EstadoPedidoRepuestoDeleteDialogComponent } from './delete/estado-pedido-repuesto-delete-dialog.component';
+import { EstadoPedidoRepuestoRoutingModule } from './route/estado-pedido-repuesto-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, EstadoPedidoRepuestoRoutingModule],
   declarations: [
     EstadoPedidoRepuestoComponent,
     EstadoPedidoRepuestoDetailComponent,
     EstadoPedidoRepuestoUpdateComponent,
     EstadoPedidoRepuestoDeleteDialogComponent,
-    EstadoPedidoRepuestoDeletePopupComponent
   ],
-  entryComponents: [
-    EstadoPedidoRepuestoComponent,
-    EstadoPedidoRepuestoUpdateComponent,
-    EstadoPedidoRepuestoDeleteDialogComponent,
-    EstadoPedidoRepuestoDeletePopupComponent
-  ]
+  entryComponents: [EstadoPedidoRepuestoDeleteDialogComponent],
 })
-export class SoldimetEstadoPedidoRepuestoModule {}
+export class EstadoPedidoRepuestoModule {}

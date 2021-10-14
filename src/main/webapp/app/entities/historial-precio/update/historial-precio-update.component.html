@@ -1,0 +1,91 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-historial-precio-heading" data-cy="HistorialPrecioCreateUpdateHeading">Create or edit a Historial Precio</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_fechaHistorial">Fecha Historial</label>
+          <div class="input-group">
+            <input
+              id="field_fechaHistorial"
+              data-cy="fechaHistorial"
+              type="text"
+              class="form-control"
+              name="fechaHistorial"
+              ngbDatepicker
+              #fechaHistorialDp="ngbDatepicker"
+              formControlName="fechaHistorial"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="fechaHistorialDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+          <div
+            *ngIf="
+              editForm.get('fechaHistorial')!.invalid && (editForm.get('fechaHistorial')!.dirty || editForm.get('fechaHistorial')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('fechaHistorial')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_precioRepuesto">Precio Repuesto</label>
+          <select
+            class="form-control"
+            id="field_precioRepuesto"
+            data-cy="precioRepuesto"
+            name="precioRepuesto"
+            formControlName="precioRepuesto"
+          >
+            <option *ngIf="editForm.get(['precioRepuesto'])!.value == null" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                precioRepuestoOption.id === editForm.get('precioRepuesto')!.value?.id
+                  ? editForm.get('precioRepuesto')!.value
+                  : precioRepuestoOption
+              "
+              *ngFor="let precioRepuestoOption of precioRepuestosCollection; trackBy: trackPrecioRepuestoById"
+            >
+              {{ precioRepuestoOption.id }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['precioRepuesto'])!.invalid &&
+            (editForm.get(['precioRepuesto'])!.dirty || editForm.get(['precioRepuesto'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['precioRepuesto'])?.errors?.required"> This field is required. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { EstadoPresupuestoComponent } from 'app/entities/estado-presupuesto/estado-presupuesto.component';
-import { EstadoPresupuestoDetailComponent } from 'app/entities/estado-presupuesto/estado-presupuesto-detail.component';
-import { EstadoPresupuestoUpdateComponent } from 'app/entities/estado-presupuesto/estado-presupuesto-update.component';
-import {
-  EstadoPresupuestoDeletePopupComponent,
-  EstadoPresupuestoDeleteDialogComponent
-} from 'app/entities/estado-presupuesto/estado-presupuesto-delete-dialog.component';
-import { estadoPresupuestoRoute, estadoPresupuestoPopupRoute } from 'app/entities/estado-presupuesto/estado-presupuesto.route';
-
-const ENTITY_STATES = [...estadoPresupuestoRoute, ...estadoPresupuestoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { EstadoPresupuestoComponent } from './list/estado-presupuesto.component';
+import { EstadoPresupuestoDetailComponent } from './detail/estado-presupuesto-detail.component';
+import { EstadoPresupuestoUpdateComponent } from './update/estado-presupuesto-update.component';
+import { EstadoPresupuestoDeleteDialogComponent } from './delete/estado-presupuesto-delete-dialog.component';
+import { EstadoPresupuestoRoutingModule } from './route/estado-presupuesto-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, EstadoPresupuestoRoutingModule],
   declarations: [
     EstadoPresupuestoComponent,
     EstadoPresupuestoDetailComponent,
     EstadoPresupuestoUpdateComponent,
     EstadoPresupuestoDeleteDialogComponent,
-    EstadoPresupuestoDeletePopupComponent
   ],
-  entryComponents: [
-    EstadoPresupuestoComponent,
-    EstadoPresupuestoUpdateComponent,
-    EstadoPresupuestoDeleteDialogComponent,
-    EstadoPresupuestoDeletePopupComponent
-  ]
+  entryComponents: [EstadoPresupuestoDeleteDialogComponent],
 })
-export class SoldimetEstadoPresupuestoModule {}
+export class EstadoPresupuestoModule {}

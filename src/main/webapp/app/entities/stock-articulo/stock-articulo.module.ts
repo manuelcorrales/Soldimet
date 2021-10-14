@@ -1,29 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { StockArticuloComponent } from './stock-articulo.component';
-import { StockArticuloDetailComponent } from './stock-articulo-detail.component';
-import { StockArticuloUpdateComponent } from './stock-articulo-update.component';
-import { StockArticuloDeletePopupComponent, StockArticuloDeleteDialogComponent } from './stock-articulo-delete-dialog.component';
-import { stockArticuloRoute, stockArticuloPopupRoute } from './stock-articulo.route';
-
-const ENTITY_STATES = [...stockArticuloRoute, ...stockArticuloPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { StockArticuloComponent } from './list/stock-articulo.component';
+import { StockArticuloDetailComponent } from './detail/stock-articulo-detail.component';
+import { StockArticuloUpdateComponent } from './update/stock-articulo-update.component';
+import { StockArticuloDeleteDialogComponent } from './delete/stock-articulo-delete-dialog.component';
+import { StockArticuloRoutingModule } from './route/stock-articulo-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    StockArticuloComponent,
-    StockArticuloDetailComponent,
-    StockArticuloUpdateComponent,
-    StockArticuloDeleteDialogComponent,
-    StockArticuloDeletePopupComponent
-  ],
-  entryComponents: [
-    StockArticuloComponent,
-    StockArticuloUpdateComponent,
-    StockArticuloDeleteDialogComponent,
-    StockArticuloDeletePopupComponent
-  ]
+  imports: [SharedModule, StockArticuloRoutingModule],
+  declarations: [StockArticuloComponent, StockArticuloDetailComponent, StockArticuloUpdateComponent, StockArticuloDeleteDialogComponent],
+  entryComponents: [StockArticuloDeleteDialogComponent],
 })
-export class SoldimetStockArticuloModule {}
+export class StockArticuloModule {}

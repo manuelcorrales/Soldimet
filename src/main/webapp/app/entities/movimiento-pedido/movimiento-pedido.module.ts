@@ -1,32 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { MovimientoPedidoComponent } from 'app/entities/movimiento-pedido/movimiento-pedido.component';
-import { MovimientoPedidoDetailComponent } from 'app/entities/movimiento-pedido/movimiento-pedido-detail.component';
-import { MovimientoPedidoUpdateComponent } from 'app/entities/movimiento-pedido/movimiento-pedido-update.component';
-import {
-  MovimientoPedidoDeletePopupComponent,
-  MovimientoPedidoDeleteDialogComponent
-} from 'app/entities/movimiento-pedido/movimiento-pedido-delete-dialog.component';
-import { movimientoPedidoRoute, movimientoPedidoPopupRoute } from 'app/entities/movimiento-pedido/movimiento-pedido.route';
-
-const ENTITY_STATES = [...movimientoPedidoRoute, ...movimientoPedidoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { MovimientoPedidoComponent } from './list/movimiento-pedido.component';
+import { MovimientoPedidoDetailComponent } from './detail/movimiento-pedido-detail.component';
+import { MovimientoPedidoUpdateComponent } from './update/movimiento-pedido-update.component';
+import { MovimientoPedidoDeleteDialogComponent } from './delete/movimiento-pedido-delete-dialog.component';
+import { MovimientoPedidoRoutingModule } from './route/movimiento-pedido-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SharedModule, MovimientoPedidoRoutingModule],
   declarations: [
     MovimientoPedidoComponent,
     MovimientoPedidoDetailComponent,
     MovimientoPedidoUpdateComponent,
     MovimientoPedidoDeleteDialogComponent,
-    MovimientoPedidoDeletePopupComponent
   ],
-  entryComponents: [
-    MovimientoPedidoComponent,
-    MovimientoPedidoUpdateComponent,
-    MovimientoPedidoDeleteDialogComponent,
-    MovimientoPedidoDeletePopupComponent
-  ]
+  entryComponents: [MovimientoPedidoDeleteDialogComponent],
 })
-export class SoldimetMovimientoPedidoModule {}
+export class MovimientoPedidoModule {}

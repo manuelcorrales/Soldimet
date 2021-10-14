@@ -1,0 +1,90 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="presupuesto">
+      <h2 data-cy="presupuestoDetailsHeading"><span>Presupuesto</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ presupuesto.id }}</span>
+        </dd>
+        <dt><span>Descripcion Descuento</span></dt>
+        <dd>
+          <span>{{ presupuesto.descripcionDescuento }}</span>
+        </dd>
+        <dt><span>Descuento</span></dt>
+        <dd>
+          <span>{{ presupuesto.descuento }}</span>
+        </dd>
+        <dt><span>Fecha Creacion</span></dt>
+        <dd>
+          <span>{{ presupuesto.fechaCreacion | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Fecha Aceptado</span></dt>
+        <dd>
+          <span>{{ presupuesto.fechaAceptado | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Fecha Entregado</span></dt>
+        <dd>
+          <span>{{ presupuesto.fechaEntregado | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Importe Total</span></dt>
+        <dd>
+          <span>{{ presupuesto.importeTotal }}</span>
+        </dd>
+        <dt><span>Observaciones</span></dt>
+        <dd>
+          <span>{{ presupuesto.observaciones }}</span>
+        </dd>
+        <dt><span>Soldadura</span></dt>
+        <dd>
+          <span>{{ presupuesto.soldadura }}</span>
+        </dd>
+        <dt><span>Modelo</span></dt>
+        <dd>
+          <span>{{ presupuesto.modelo }}</span>
+        </dd>
+        <dt><span>Cliente</span></dt>
+        <dd>
+          <div *ngIf="presupuesto.cliente">
+            <a [routerLink]="['/cliente', presupuesto.cliente?.id, 'view']">{{ presupuesto.cliente?.apellido }}</a>
+          </div>
+        </dd>
+        <dt><span>Estado Presupuesto</span></dt>
+        <dd>
+          <div *ngIf="presupuesto.estadoPresupuesto">
+            <a [routerLink]="['/estado-presupuesto', presupuesto.estadoPresupuesto?.id, 'view']">{{
+              presupuesto.estadoPresupuesto?.nombreEstado
+            }}</a>
+          </div>
+        </dd>
+        <dt><span>Document Type</span></dt>
+        <dd>
+          <div *ngIf="presupuesto.documentType">
+            <a [routerLink]="['/documentation-type', presupuesto.documentType?.id, 'view']">{{ presupuesto.documentType?.documentName }}</a>
+          </div>
+        </dd>
+        <dt><span>Sucursal</span></dt>
+        <dd>
+          <div *ngIf="presupuesto.sucursal">
+            <a [routerLink]="['/sucursal', presupuesto.sucursal?.id, 'view']">{{ presupuesto.sucursal?.nombreSucursal }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/presupuesto', presupuesto.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

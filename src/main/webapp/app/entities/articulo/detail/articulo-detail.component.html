@@ -1,0 +1,66 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="articulo">
+      <h2 data-cy="articuloDetailsHeading"><span>Articulo</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ articulo.id }}</span>
+        </dd>
+        <dt><span>Codigo Articulo Proveedor</span></dt>
+        <dd>
+          <span>{{ articulo.codigoArticuloProveedor }}</span>
+        </dd>
+        <dt><span>Valor</span></dt>
+        <dd>
+          <span>{{ articulo.valor }}</span>
+        </dd>
+        <dt><span>Fecha Costo</span></dt>
+        <dd>
+          <span>{{ articulo.fechaCosto | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Costo Proveedor</span></dt>
+        <dd>
+          <span>{{ articulo.costoProveedor }}</span>
+        </dd>
+        <dt><span>Fecha Costo Proveedor</span></dt>
+        <dd>
+          <span>{{ articulo.fechaCostoProveedor | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Estado</span></dt>
+        <dd>
+          <div *ngIf="articulo.estado">
+            <a [routerLink]="['/estado-articulo', articulo.estado?.id, 'view']">{{ articulo.estado?.nombreEstado }}</a>
+          </div>
+        </dd>
+        <dt><span>Marca</span></dt>
+        <dd>
+          <div *ngIf="articulo.marca">
+            <a [routerLink]="['/marca', articulo.marca?.id, 'view']">{{ articulo.marca?.nombreMarca }}</a>
+          </div>
+        </dd>
+        <dt><span>Tipo Repuesto</span></dt>
+        <dd>
+          <div *ngIf="articulo.tipoRepuesto">
+            <a [routerLink]="['/tipo-repuesto', articulo.tipoRepuesto?.id, 'view']">{{ articulo.tipoRepuesto?.nombreTipoRepuesto }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/articulo', articulo.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

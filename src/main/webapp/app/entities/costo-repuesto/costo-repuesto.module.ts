@@ -1,29 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { CostoRepuestoComponent } from './costo-repuesto.component';
-import { CostoRepuestoDetailComponent } from './costo-repuesto-detail.component';
-import { CostoRepuestoUpdateComponent } from './costo-repuesto-update.component';
-import { CostoRepuestoDeletePopupComponent, CostoRepuestoDeleteDialogComponent } from './costo-repuesto-delete-dialog.component';
-import { costoRepuestoRoute, costoRepuestoPopupRoute } from './costo-repuesto.route';
-
-const ENTITY_STATES = [...costoRepuestoRoute, ...costoRepuestoPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { CostoRepuestoComponent } from './list/costo-repuesto.component';
+import { CostoRepuestoDetailComponent } from './detail/costo-repuesto-detail.component';
+import { CostoRepuestoUpdateComponent } from './update/costo-repuesto-update.component';
+import { CostoRepuestoDeleteDialogComponent } from './delete/costo-repuesto-delete-dialog.component';
+import { CostoRepuestoRoutingModule } from './route/costo-repuesto-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [
-    CostoRepuestoComponent,
-    CostoRepuestoDetailComponent,
-    CostoRepuestoUpdateComponent,
-    CostoRepuestoDeleteDialogComponent,
-    CostoRepuestoDeletePopupComponent
-  ],
-  entryComponents: [
-    CostoRepuestoComponent,
-    CostoRepuestoUpdateComponent,
-    CostoRepuestoDeleteDialogComponent,
-    CostoRepuestoDeletePopupComponent
-  ]
+  imports: [SharedModule, CostoRepuestoRoutingModule],
+  declarations: [CostoRepuestoComponent, CostoRepuestoDetailComponent, CostoRepuestoUpdateComponent, CostoRepuestoDeleteDialogComponent],
+  entryComponents: [CostoRepuestoDeleteDialogComponent],
 })
-export class SoldimetCostoRepuestoModule {}
+export class CostoRepuestoModule {}

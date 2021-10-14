@@ -1,18 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { MarcaComponent } from 'app/entities/marca/marca.component';
-import { MarcaDetailComponent } from 'app/entities/marca/marca-detail.component';
-import { MarcaUpdateComponent } from 'app/entities/marca/marca-update.component';
-import { MarcaDeletePopupComponent, MarcaDeleteDialogComponent } from 'app/entities/marca/marca-delete-dialog.component';
-import { marcaRoute, marcaPopupRoute } from 'app/entities/marca/marca.route';
-
-const ENTITY_STATES = [...marcaRoute, ...marcaPopupRoute];
+import { SharedModule } from 'app/shared/shared.module';
+import { MarcaComponent } from './list/marca.component';
+import { MarcaDetailComponent } from './detail/marca-detail.component';
+import { MarcaUpdateComponent } from './update/marca-update.component';
+import { MarcaDeleteDialogComponent } from './delete/marca-delete-dialog.component';
+import { MarcaRoutingModule } from './route/marca-routing.module';
 
 @NgModule({
-  imports: [SoldimetSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [MarcaComponent, MarcaDetailComponent, MarcaUpdateComponent, MarcaDeleteDialogComponent, MarcaDeletePopupComponent],
-  entryComponents: [MarcaComponent, MarcaUpdateComponent, MarcaDeleteDialogComponent, MarcaDeletePopupComponent]
+  imports: [SharedModule, MarcaRoutingModule],
+  declarations: [MarcaComponent, MarcaDetailComponent, MarcaUpdateComponent, MarcaDeleteDialogComponent],
+  entryComponents: [MarcaDeleteDialogComponent],
 })
-export class SoldimetMarcaModule {}
+export class MarcaModule {}
