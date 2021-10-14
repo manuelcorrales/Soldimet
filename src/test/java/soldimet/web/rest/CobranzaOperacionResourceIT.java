@@ -1,81 +1,55 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.CobranzaOperacion;
-import soldimet.domain.EstadoCobranzaOperacion;
-import soldimet.domain.Operacion;
-import soldimet.repository.CobranzaOperacionRepository;
-import soldimet.service.CobranzaOperacionService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.CobranzaOperacion;
+import soldimet.domain.EstadoCobranzaOperacion;
+import soldimet.domain.Operacion;
+import soldimet.repository.CobranzaOperacionRepository;
+
 /**
  * Integration tests for the {@link CobranzaOperacionResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class CobranzaOperacionResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class CobranzaOperacionResourceIT {
 
     private static final Float DEFAULT_COBRANZA_OPERACION = 0F;
     private static final Float UPDATED_COBRANZA_OPERACION = 1F;
-    private static final Float SMALLER_COBRANZA_OPERACION = 0F - 1F;
+
+    private static final String ENTITY_API_URL = "/api/cobranza-operacions";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private CobranzaOperacionRepository cobranzaOperacionRepository;
 
     @Autowired
-    private CobranzaOperacionService cobranzaOperacionService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restCobranzaOperacionMockMvc;
 
     private CobranzaOperacion cobranzaOperacion;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CobranzaOperacionResource cobranzaOperacionResource = new CobranzaOperacionResource(cobranzaOperacionService);
-        this.restCobranzaOperacionMockMvc = MockMvcBuilders.standaloneSetup(cobranzaOperacionResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -84,8 +58,7 @@ public class CobranzaOperacionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static CobranzaOperacion createEntity(EntityManager em) {
-        CobranzaOperacion cobranzaOperacion = new CobranzaOperacion()
-            .cobranzaOperacion(DEFAULT_COBRANZA_OPERACION);
+        CobranzaOperacion cobranzaOperacion = new CobranzaOperacion().cobranzaOperacion(DEFAULT_COBRANZA_OPERACION);
         // Add required entity
         EstadoCobranzaOperacion estadoCobranzaOperacion;
         if (TestUtil.findAll(em, EstadoCobranzaOperacion.class).isEmpty()) {
@@ -108,6 +81,7 @@ public class CobranzaOperacionResourceIT {
         cobranzaOperacion.setOperacion(operacion);
         return cobranzaOperacion;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -115,8 +89,7 @@ public class CobranzaOperacionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static CobranzaOperacion createUpdatedEntity(EntityManager em) {
-        CobranzaOperacion cobranzaOperacion = new CobranzaOperacion()
-            .cobranzaOperacion(UPDATED_COBRANZA_OPERACION);
+        CobranzaOperacion cobranzaOperacion = new CobranzaOperacion().cobranzaOperacion(UPDATED_COBRANZA_OPERACION);
         // Add required entity
         EstadoCobranzaOperacion estadoCobranzaOperacion;
         if (TestUtil.findAll(em, EstadoCobranzaOperacion.class).isEmpty()) {
@@ -147,13 +120,13 @@ public class CobranzaOperacionResourceIT {
 
     @Test
     @Transactional
-    public void createCobranzaOperacion() throws Exception {
+    void createCobranzaOperacion() throws Exception {
         int databaseSizeBeforeCreate = cobranzaOperacionRepository.findAll().size();
-
         // Create the CobranzaOperacion
-        restCobranzaOperacionMockMvc.perform(post("/api/cobranza-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion)))
+        restCobranzaOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
             .andExpect(status().isCreated());
 
         // Validate the CobranzaOperacion in the database
@@ -165,16 +138,17 @@ public class CobranzaOperacionResourceIT {
 
     @Test
     @Transactional
-    public void createCobranzaOperacionWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = cobranzaOperacionRepository.findAll().size();
-
+    void createCobranzaOperacionWithExistingId() throws Exception {
         // Create the CobranzaOperacion with an existing ID
         cobranzaOperacion.setId(1L);
 
+        int databaseSizeBeforeCreate = cobranzaOperacionRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCobranzaOperacionMockMvc.perform(post("/api/cobranza-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion)))
+        restCobranzaOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the CobranzaOperacion in the database
@@ -184,45 +158,65 @@ public class CobranzaOperacionResourceIT {
 
     @Test
     @Transactional
-    public void getAllCobranzaOperacions() throws Exception {
+    void checkCobranzaOperacionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = cobranzaOperacionRepository.findAll().size();
+        // set the field null
+        cobranzaOperacion.setCobranzaOperacion(null);
+
+        // Create the CobranzaOperacion, which fails.
+
+        restCobranzaOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void getAllCobranzaOperacions() throws Exception {
         // Initialize the database
         cobranzaOperacionRepository.saveAndFlush(cobranzaOperacion);
 
         // Get all the cobranzaOperacionList
-        restCobranzaOperacionMockMvc.perform(get("/api/cobranza-operacions?sort=id,desc"))
+        restCobranzaOperacionMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cobranzaOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].cobranzaOperacion").value(hasItem(DEFAULT_COBRANZA_OPERACION.doubleValue())));
     }
 
     @Test
     @Transactional
-    public void getCobranzaOperacion() throws Exception {
+    void getCobranzaOperacion() throws Exception {
         // Initialize the database
         cobranzaOperacionRepository.saveAndFlush(cobranzaOperacion);
 
         // Get the cobranzaOperacion
-        restCobranzaOperacionMockMvc.perform(get("/api/cobranza-operacions/{id}", cobranzaOperacion.getId()))
+        restCobranzaOperacionMockMvc
+            .perform(get(ENTITY_API_URL_ID, cobranzaOperacion.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(cobranzaOperacion.getId().intValue()))
             .andExpect(jsonPath("$.cobranzaOperacion").value(DEFAULT_COBRANZA_OPERACION.doubleValue()));
     }
 
     @Test
     @Transactional
-    public void getNonExistingCobranzaOperacion() throws Exception {
+    void getNonExistingCobranzaOperacion() throws Exception {
         // Get the cobranzaOperacion
-        restCobranzaOperacionMockMvc.perform(get("/api/cobranza-operacions/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCobranzaOperacionMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateCobranzaOperacion() throws Exception {
+    void putNewCobranzaOperacion() throws Exception {
         // Initialize the database
-        cobranzaOperacionService.save(cobranzaOperacion);
+        cobranzaOperacionRepository.saveAndFlush(cobranzaOperacion);
 
         int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
 
@@ -230,12 +224,14 @@ public class CobranzaOperacionResourceIT {
         CobranzaOperacion updatedCobranzaOperacion = cobranzaOperacionRepository.findById(cobranzaOperacion.getId()).get();
         // Disconnect from session so that the updates on updatedCobranzaOperacion are not directly saved in db
         em.detach(updatedCobranzaOperacion);
-        updatedCobranzaOperacion
-            .cobranzaOperacion(UPDATED_COBRANZA_OPERACION);
+        updatedCobranzaOperacion.cobranzaOperacion(UPDATED_COBRANZA_OPERACION);
 
-        restCobranzaOperacionMockMvc.perform(put("/api/cobranza-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCobranzaOperacion)))
+        restCobranzaOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedCobranzaOperacion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedCobranzaOperacion))
+            )
             .andExpect(status().isOk());
 
         // Validate the CobranzaOperacion in the database
@@ -247,15 +243,17 @@ public class CobranzaOperacionResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingCobranzaOperacion() throws Exception {
+    void putNonExistingCobranzaOperacion() throws Exception {
         int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
-
-        // Create the CobranzaOperacion
+        cobranzaOperacion.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCobranzaOperacionMockMvc.perform(put("/api/cobranza-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion)))
+        restCobranzaOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, cobranzaOperacion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the CobranzaOperacion in the database
@@ -265,34 +263,173 @@ public class CobranzaOperacionResourceIT {
 
     @Test
     @Transactional
-    public void deleteCobranzaOperacion() throws Exception {
+    void putWithIdMismatchCobranzaOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
+        cobranzaOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCobranzaOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the CobranzaOperacion in the database
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamCobranzaOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
+        cobranzaOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCobranzaOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the CobranzaOperacion in the database
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateCobranzaOperacionWithPatch() throws Exception {
         // Initialize the database
-        cobranzaOperacionService.save(cobranzaOperacion);
+        cobranzaOperacionRepository.saveAndFlush(cobranzaOperacion);
+
+        int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
+
+        // Update the cobranzaOperacion using partial update
+        CobranzaOperacion partialUpdatedCobranzaOperacion = new CobranzaOperacion();
+        partialUpdatedCobranzaOperacion.setId(cobranzaOperacion.getId());
+
+        restCobranzaOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCobranzaOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCobranzaOperacion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the CobranzaOperacion in the database
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
+        CobranzaOperacion testCobranzaOperacion = cobranzaOperacionList.get(cobranzaOperacionList.size() - 1);
+        assertThat(testCobranzaOperacion.getCobranzaOperacion()).isEqualTo(DEFAULT_COBRANZA_OPERACION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateCobranzaOperacionWithPatch() throws Exception {
+        // Initialize the database
+        cobranzaOperacionRepository.saveAndFlush(cobranzaOperacion);
+
+        int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
+
+        // Update the cobranzaOperacion using partial update
+        CobranzaOperacion partialUpdatedCobranzaOperacion = new CobranzaOperacion();
+        partialUpdatedCobranzaOperacion.setId(cobranzaOperacion.getId());
+
+        partialUpdatedCobranzaOperacion.cobranzaOperacion(UPDATED_COBRANZA_OPERACION);
+
+        restCobranzaOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCobranzaOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCobranzaOperacion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the CobranzaOperacion in the database
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
+        CobranzaOperacion testCobranzaOperacion = cobranzaOperacionList.get(cobranzaOperacionList.size() - 1);
+        assertThat(testCobranzaOperacion.getCobranzaOperacion()).isEqualTo(UPDATED_COBRANZA_OPERACION);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingCobranzaOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
+        cobranzaOperacion.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restCobranzaOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, cobranzaOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the CobranzaOperacion in the database
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchCobranzaOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
+        cobranzaOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCobranzaOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the CobranzaOperacion in the database
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamCobranzaOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = cobranzaOperacionRepository.findAll().size();
+        cobranzaOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCobranzaOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(cobranzaOperacion))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the CobranzaOperacion in the database
+        List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
+        assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteCobranzaOperacion() throws Exception {
+        // Initialize the database
+        cobranzaOperacionRepository.saveAndFlush(cobranzaOperacion);
 
         int databaseSizeBeforeDelete = cobranzaOperacionRepository.findAll().size();
 
         // Delete the cobranzaOperacion
-        restCobranzaOperacionMockMvc.perform(delete("/api/cobranza-operacions/{id}", cobranzaOperacion.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restCobranzaOperacionMockMvc
+            .perform(delete(ENTITY_API_URL_ID, cobranzaOperacion.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<CobranzaOperacion> cobranzaOperacionList = cobranzaOperacionRepository.findAll();
         assertThat(cobranzaOperacionList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(CobranzaOperacion.class);
-        CobranzaOperacion cobranzaOperacion1 = new CobranzaOperacion();
-        cobranzaOperacion1.setId(1L);
-        CobranzaOperacion cobranzaOperacion2 = new CobranzaOperacion();
-        cobranzaOperacion2.setId(cobranzaOperacion1.getId());
-        assertThat(cobranzaOperacion1).isEqualTo(cobranzaOperacion2);
-        cobranzaOperacion2.setId(2L);
-        assertThat(cobranzaOperacion1).isNotEqualTo(cobranzaOperacion2);
-        cobranzaOperacion1.setId(null);
-        assertThat(cobranzaOperacion1).isNotEqualTo(cobranzaOperacion2);
     }
 }

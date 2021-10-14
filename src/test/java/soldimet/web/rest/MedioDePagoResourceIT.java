@@ -1,72 +1,51 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.MedioDePago;
-import soldimet.domain.FormaDePago;
-import soldimet.repository.MedioDePagoRepository;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.FormaDePago;
+import soldimet.domain.MedioDePago;
+import soldimet.repository.MedioDePagoRepository;
+
 /**
  * Integration tests for the {@link MedioDePagoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class MedioDePagoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class MedioDePagoResourceIT {
+
+    private static final String ENTITY_API_URL = "/api/medio-de-pagos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private MedioDePagoRepository medioDePagoRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restMedioDePagoMockMvc;
 
     private MedioDePago medioDePago;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final MedioDePagoResource medioDePagoResource = new MedioDePagoResource(medioDePagoRepository);
-        this.restMedioDePagoMockMvc = MockMvcBuilders.standaloneSetup(medioDePagoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -88,6 +67,7 @@ public class MedioDePagoResourceIT {
         medioDePago.setFormaDePago(formaDePago);
         return medioDePago;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -116,13 +96,11 @@ public class MedioDePagoResourceIT {
 
     @Test
     @Transactional
-    public void createMedioDePago() throws Exception {
+    void createMedioDePago() throws Exception {
         int databaseSizeBeforeCreate = medioDePagoRepository.findAll().size();
-
         // Create the MedioDePago
-        restMedioDePagoMockMvc.perform(post("/api/medio-de-pagos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(medioDePago)))
+        restMedioDePagoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(medioDePago)))
             .andExpect(status().isCreated());
 
         // Validate the MedioDePago in the database
@@ -133,16 +111,15 @@ public class MedioDePagoResourceIT {
 
     @Test
     @Transactional
-    public void createMedioDePagoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = medioDePagoRepository.findAll().size();
-
+    void createMedioDePagoWithExistingId() throws Exception {
         // Create the MedioDePago with an existing ID
         medioDePago.setId(1L);
 
+        int databaseSizeBeforeCreate = medioDePagoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restMedioDePagoMockMvc.perform(post("/api/medio-de-pagos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(medioDePago)))
+        restMedioDePagoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(medioDePago)))
             .andExpect(status().isBadRequest());
 
         // Validate the MedioDePago in the database
@@ -150,44 +127,44 @@ public class MedioDePagoResourceIT {
         assertThat(medioDePagoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllMedioDePagos() throws Exception {
+    void getAllMedioDePagos() throws Exception {
         // Initialize the database
         medioDePagoRepository.saveAndFlush(medioDePago);
 
         // Get all the medioDePagoList
-        restMedioDePagoMockMvc.perform(get("/api/medio-de-pagos?sort=id,desc"))
+        restMedioDePagoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(medioDePago.getId().intValue())));
     }
-    
+
     @Test
     @Transactional
-    public void getMedioDePago() throws Exception {
+    void getMedioDePago() throws Exception {
         // Initialize the database
         medioDePagoRepository.saveAndFlush(medioDePago);
 
         // Get the medioDePago
-        restMedioDePagoMockMvc.perform(get("/api/medio-de-pagos/{id}", medioDePago.getId()))
+        restMedioDePagoMockMvc
+            .perform(get(ENTITY_API_URL_ID, medioDePago.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(medioDePago.getId().intValue()));
     }
 
     @Test
     @Transactional
-    public void getNonExistingMedioDePago() throws Exception {
+    void getNonExistingMedioDePago() throws Exception {
         // Get the medioDePago
-        restMedioDePagoMockMvc.perform(get("/api/medio-de-pagos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restMedioDePagoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateMedioDePago() throws Exception {
+    void putNewMedioDePago() throws Exception {
         // Initialize the database
         medioDePagoRepository.saveAndFlush(medioDePago);
 
@@ -198,9 +175,12 @@ public class MedioDePagoResourceIT {
         // Disconnect from session so that the updates on updatedMedioDePago are not directly saved in db
         em.detach(updatedMedioDePago);
 
-        restMedioDePagoMockMvc.perform(put("/api/medio-de-pagos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedMedioDePago)))
+        restMedioDePagoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedMedioDePago.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedMedioDePago))
+            )
             .andExpect(status().isOk());
 
         // Validate the MedioDePago in the database
@@ -211,15 +191,17 @@ public class MedioDePagoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingMedioDePago() throws Exception {
+    void putNonExistingMedioDePago() throws Exception {
         int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
-
-        // Create the MedioDePago
+        medioDePago.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restMedioDePagoMockMvc.perform(put("/api/medio-de-pagos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(medioDePago)))
+        restMedioDePagoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, medioDePago.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(medioDePago))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the MedioDePago in the database
@@ -229,34 +211,165 @@ public class MedioDePagoResourceIT {
 
     @Test
     @Transactional
-    public void deleteMedioDePago() throws Exception {
+    void putWithIdMismatchMedioDePago() throws Exception {
+        int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
+        medioDePago.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMedioDePagoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(medioDePago))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the MedioDePago in the database
+        List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
+        assertThat(medioDePagoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamMedioDePago() throws Exception {
+        int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
+        medioDePago.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMedioDePagoMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(medioDePago)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the MedioDePago in the database
+        List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
+        assertThat(medioDePagoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateMedioDePagoWithPatch() throws Exception {
+        // Initialize the database
+        medioDePagoRepository.saveAndFlush(medioDePago);
+
+        int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
+
+        // Update the medioDePago using partial update
+        MedioDePago partialUpdatedMedioDePago = new MedioDePago();
+        partialUpdatedMedioDePago.setId(medioDePago.getId());
+
+        restMedioDePagoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMedioDePago.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMedioDePago))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the MedioDePago in the database
+        List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
+        assertThat(medioDePagoList).hasSize(databaseSizeBeforeUpdate);
+        MedioDePago testMedioDePago = medioDePagoList.get(medioDePagoList.size() - 1);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateMedioDePagoWithPatch() throws Exception {
+        // Initialize the database
+        medioDePagoRepository.saveAndFlush(medioDePago);
+
+        int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
+
+        // Update the medioDePago using partial update
+        MedioDePago partialUpdatedMedioDePago = new MedioDePago();
+        partialUpdatedMedioDePago.setId(medioDePago.getId());
+
+        restMedioDePagoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMedioDePago.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMedioDePago))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the MedioDePago in the database
+        List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
+        assertThat(medioDePagoList).hasSize(databaseSizeBeforeUpdate);
+        MedioDePago testMedioDePago = medioDePagoList.get(medioDePagoList.size() - 1);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingMedioDePago() throws Exception {
+        int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
+        medioDePago.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restMedioDePagoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, medioDePago.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(medioDePago))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the MedioDePago in the database
+        List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
+        assertThat(medioDePagoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchMedioDePago() throws Exception {
+        int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
+        medioDePago.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMedioDePagoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(medioDePago))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the MedioDePago in the database
+        List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
+        assertThat(medioDePagoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamMedioDePago() throws Exception {
+        int databaseSizeBeforeUpdate = medioDePagoRepository.findAll().size();
+        medioDePago.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMedioDePagoMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(medioDePago))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the MedioDePago in the database
+        List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
+        assertThat(medioDePagoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteMedioDePago() throws Exception {
         // Initialize the database
         medioDePagoRepository.saveAndFlush(medioDePago);
 
         int databaseSizeBeforeDelete = medioDePagoRepository.findAll().size();
 
         // Delete the medioDePago
-        restMedioDePagoMockMvc.perform(delete("/api/medio-de-pagos/{id}", medioDePago.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restMedioDePagoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, medioDePago.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<MedioDePago> medioDePagoList = medioDePagoRepository.findAll();
         assertThat(medioDePagoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(MedioDePago.class);
-        MedioDePago medioDePago1 = new MedioDePago();
-        medioDePago1.setId(1L);
-        MedioDePago medioDePago2 = new MedioDePago();
-        medioDePago2.setId(medioDePago1.getId());
-        assertThat(medioDePago1).isEqualTo(medioDePago2);
-        medioDePago2.setId(2L);
-        assertThat(medioDePago1).isNotEqualTo(medioDePago2);
-        medioDePago1.setId(null);
-        assertThat(medioDePago1).isNotEqualTo(medioDePago2);
     }
 }

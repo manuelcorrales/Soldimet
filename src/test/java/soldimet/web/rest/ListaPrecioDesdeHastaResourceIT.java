@@ -1,85 +1,58 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.ListaPrecioDesdeHasta;
-import soldimet.repository.ListaPrecioDesdeHastaRepository;
-import soldimet.service.ListaPrecioDesdeHastaService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.ListaPrecioDesdeHasta;
+import soldimet.repository.ListaPrecioDesdeHastaRepository;
+
 /**
  * Integration tests for the {@link ListaPrecioDesdeHastaResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class ListaPrecioDesdeHastaResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class ListaPrecioDesdeHastaResourceIT {
 
     private static final LocalDate DEFAULT_FECHA_DESDE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_DESDE = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_DESDE = LocalDate.ofEpochDay(-1L);
 
     private static final LocalDate DEFAULT_FECHA_HASTA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_HASTA = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_HASTA = LocalDate.ofEpochDay(-1L);
+
+    private static final String ENTITY_API_URL = "/api/lista-precio-desde-hastas";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ListaPrecioDesdeHastaRepository listaPrecioDesdeHastaRepository;
 
     @Autowired
-    private ListaPrecioDesdeHastaService listaPrecioDesdeHastaService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restListaPrecioDesdeHastaMockMvc;
 
     private ListaPrecioDesdeHasta listaPrecioDesdeHasta;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final ListaPrecioDesdeHastaResource listaPrecioDesdeHastaResource = new ListaPrecioDesdeHastaResource(listaPrecioDesdeHastaService);
-        this.restListaPrecioDesdeHastaMockMvc = MockMvcBuilders.standaloneSetup(listaPrecioDesdeHastaResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -93,6 +66,7 @@ public class ListaPrecioDesdeHastaResourceIT {
             .fechaHasta(DEFAULT_FECHA_HASTA);
         return listaPrecioDesdeHasta;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -113,13 +87,15 @@ public class ListaPrecioDesdeHastaResourceIT {
 
     @Test
     @Transactional
-    public void createListaPrecioDesdeHasta() throws Exception {
+    void createListaPrecioDesdeHasta() throws Exception {
         int databaseSizeBeforeCreate = listaPrecioDesdeHastaRepository.findAll().size();
-
         // Create the ListaPrecioDesdeHasta
-        restListaPrecioDesdeHastaMockMvc.perform(post("/api/lista-precio-desde-hastas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta)))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
             .andExpect(status().isCreated());
 
         // Validate the ListaPrecioDesdeHasta in the database
@@ -132,16 +108,19 @@ public class ListaPrecioDesdeHastaResourceIT {
 
     @Test
     @Transactional
-    public void createListaPrecioDesdeHastaWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = listaPrecioDesdeHastaRepository.findAll().size();
-
+    void createListaPrecioDesdeHastaWithExistingId() throws Exception {
         // Create the ListaPrecioDesdeHasta with an existing ID
         listaPrecioDesdeHasta.setId(1L);
 
+        int databaseSizeBeforeCreate = listaPrecioDesdeHastaRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restListaPrecioDesdeHastaMockMvc.perform(post("/api/lista-precio-desde-hastas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta)))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the ListaPrecioDesdeHasta in the database
@@ -149,19 +128,21 @@ public class ListaPrecioDesdeHastaResourceIT {
         assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkFechaDesdeIsRequired() throws Exception {
+    void checkFechaDesdeIsRequired() throws Exception {
         int databaseSizeBeforeTest = listaPrecioDesdeHastaRepository.findAll().size();
         // set the field null
         listaPrecioDesdeHasta.setFechaDesde(null);
 
         // Create the ListaPrecioDesdeHasta, which fails.
 
-        restListaPrecioDesdeHastaMockMvc.perform(post("/api/lista-precio-desde-hastas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta)))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
             .andExpect(status().isBadRequest());
 
         List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
@@ -170,29 +151,31 @@ public class ListaPrecioDesdeHastaResourceIT {
 
     @Test
     @Transactional
-    public void getAllListaPrecioDesdeHastas() throws Exception {
+    void getAllListaPrecioDesdeHastas() throws Exception {
         // Initialize the database
         listaPrecioDesdeHastaRepository.saveAndFlush(listaPrecioDesdeHasta);
 
         // Get all the listaPrecioDesdeHastaList
-        restListaPrecioDesdeHastaMockMvc.perform(get("/api/lista-precio-desde-hastas?sort=id,desc"))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(listaPrecioDesdeHasta.getId().intValue())))
             .andExpect(jsonPath("$.[*].fechaDesde").value(hasItem(DEFAULT_FECHA_DESDE.toString())))
             .andExpect(jsonPath("$.[*].fechaHasta").value(hasItem(DEFAULT_FECHA_HASTA.toString())));
     }
-    
+
     @Test
     @Transactional
-    public void getListaPrecioDesdeHasta() throws Exception {
+    void getListaPrecioDesdeHasta() throws Exception {
         // Initialize the database
         listaPrecioDesdeHastaRepository.saveAndFlush(listaPrecioDesdeHasta);
 
         // Get the listaPrecioDesdeHasta
-        restListaPrecioDesdeHastaMockMvc.perform(get("/api/lista-precio-desde-hastas/{id}", listaPrecioDesdeHasta.getId()))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(get(ENTITY_API_URL_ID, listaPrecioDesdeHasta.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(listaPrecioDesdeHasta.getId().intValue()))
             .andExpect(jsonPath("$.fechaDesde").value(DEFAULT_FECHA_DESDE.toString()))
             .andExpect(jsonPath("$.fechaHasta").value(DEFAULT_FECHA_HASTA.toString()));
@@ -200,17 +183,16 @@ public class ListaPrecioDesdeHastaResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingListaPrecioDesdeHasta() throws Exception {
+    void getNonExistingListaPrecioDesdeHasta() throws Exception {
         // Get the listaPrecioDesdeHasta
-        restListaPrecioDesdeHastaMockMvc.perform(get("/api/lista-precio-desde-hastas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restListaPrecioDesdeHastaMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateListaPrecioDesdeHasta() throws Exception {
+    void putNewListaPrecioDesdeHasta() throws Exception {
         // Initialize the database
-        listaPrecioDesdeHastaService.save(listaPrecioDesdeHasta);
+        listaPrecioDesdeHastaRepository.saveAndFlush(listaPrecioDesdeHasta);
 
         int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
 
@@ -218,13 +200,14 @@ public class ListaPrecioDesdeHastaResourceIT {
         ListaPrecioDesdeHasta updatedListaPrecioDesdeHasta = listaPrecioDesdeHastaRepository.findById(listaPrecioDesdeHasta.getId()).get();
         // Disconnect from session so that the updates on updatedListaPrecioDesdeHasta are not directly saved in db
         em.detach(updatedListaPrecioDesdeHasta);
-        updatedListaPrecioDesdeHasta
-            .fechaDesde(UPDATED_FECHA_DESDE)
-            .fechaHasta(UPDATED_FECHA_HASTA);
+        updatedListaPrecioDesdeHasta.fechaDesde(UPDATED_FECHA_DESDE).fechaHasta(UPDATED_FECHA_HASTA);
 
-        restListaPrecioDesdeHastaMockMvc.perform(put("/api/lista-precio-desde-hastas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedListaPrecioDesdeHasta)))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedListaPrecioDesdeHasta.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedListaPrecioDesdeHasta))
+            )
             .andExpect(status().isOk());
 
         // Validate the ListaPrecioDesdeHasta in the database
@@ -237,15 +220,17 @@ public class ListaPrecioDesdeHastaResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingListaPrecioDesdeHasta() throws Exception {
+    void putNonExistingListaPrecioDesdeHasta() throws Exception {
         int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
-
-        // Create the ListaPrecioDesdeHasta
+        listaPrecioDesdeHasta.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restListaPrecioDesdeHastaMockMvc.perform(put("/api/lista-precio-desde-hastas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta)))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, listaPrecioDesdeHasta.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the ListaPrecioDesdeHasta in the database
@@ -255,34 +240,177 @@ public class ListaPrecioDesdeHastaResourceIT {
 
     @Test
     @Transactional
-    public void deleteListaPrecioDesdeHasta() throws Exception {
+    void putWithIdMismatchListaPrecioDesdeHasta() throws Exception {
+        int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
+        listaPrecioDesdeHasta.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ListaPrecioDesdeHasta in the database
+        List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamListaPrecioDesdeHasta() throws Exception {
+        int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
+        listaPrecioDesdeHasta.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                put(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the ListaPrecioDesdeHasta in the database
+        List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateListaPrecioDesdeHastaWithPatch() throws Exception {
         // Initialize the database
-        listaPrecioDesdeHastaService.save(listaPrecioDesdeHasta);
+        listaPrecioDesdeHastaRepository.saveAndFlush(listaPrecioDesdeHasta);
+
+        int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
+
+        // Update the listaPrecioDesdeHasta using partial update
+        ListaPrecioDesdeHasta partialUpdatedListaPrecioDesdeHasta = new ListaPrecioDesdeHasta();
+        partialUpdatedListaPrecioDesdeHasta.setId(listaPrecioDesdeHasta.getId());
+
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedListaPrecioDesdeHasta.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedListaPrecioDesdeHasta))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the ListaPrecioDesdeHasta in the database
+        List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
+        ListaPrecioDesdeHasta testListaPrecioDesdeHasta = listaPrecioDesdeHastaList.get(listaPrecioDesdeHastaList.size() - 1);
+        assertThat(testListaPrecioDesdeHasta.getFechaDesde()).isEqualTo(DEFAULT_FECHA_DESDE);
+        assertThat(testListaPrecioDesdeHasta.getFechaHasta()).isEqualTo(DEFAULT_FECHA_HASTA);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateListaPrecioDesdeHastaWithPatch() throws Exception {
+        // Initialize the database
+        listaPrecioDesdeHastaRepository.saveAndFlush(listaPrecioDesdeHasta);
+
+        int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
+
+        // Update the listaPrecioDesdeHasta using partial update
+        ListaPrecioDesdeHasta partialUpdatedListaPrecioDesdeHasta = new ListaPrecioDesdeHasta();
+        partialUpdatedListaPrecioDesdeHasta.setId(listaPrecioDesdeHasta.getId());
+
+        partialUpdatedListaPrecioDesdeHasta.fechaDesde(UPDATED_FECHA_DESDE).fechaHasta(UPDATED_FECHA_HASTA);
+
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedListaPrecioDesdeHasta.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedListaPrecioDesdeHasta))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the ListaPrecioDesdeHasta in the database
+        List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
+        ListaPrecioDesdeHasta testListaPrecioDesdeHasta = listaPrecioDesdeHastaList.get(listaPrecioDesdeHastaList.size() - 1);
+        assertThat(testListaPrecioDesdeHasta.getFechaDesde()).isEqualTo(UPDATED_FECHA_DESDE);
+        assertThat(testListaPrecioDesdeHasta.getFechaHasta()).isEqualTo(UPDATED_FECHA_HASTA);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingListaPrecioDesdeHasta() throws Exception {
+        int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
+        listaPrecioDesdeHasta.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, listaPrecioDesdeHasta.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ListaPrecioDesdeHasta in the database
+        List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchListaPrecioDesdeHasta() throws Exception {
+        int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
+        listaPrecioDesdeHasta.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ListaPrecioDesdeHasta in the database
+        List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamListaPrecioDesdeHasta() throws Exception {
+        int databaseSizeBeforeUpdate = listaPrecioDesdeHastaRepository.findAll().size();
+        listaPrecioDesdeHasta.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restListaPrecioDesdeHastaMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(listaPrecioDesdeHasta))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the ListaPrecioDesdeHasta in the database
+        List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
+        assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteListaPrecioDesdeHasta() throws Exception {
+        // Initialize the database
+        listaPrecioDesdeHastaRepository.saveAndFlush(listaPrecioDesdeHasta);
 
         int databaseSizeBeforeDelete = listaPrecioDesdeHastaRepository.findAll().size();
 
         // Delete the listaPrecioDesdeHasta
-        restListaPrecioDesdeHastaMockMvc.perform(delete("/api/lista-precio-desde-hastas/{id}", listaPrecioDesdeHasta.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restListaPrecioDesdeHastaMockMvc
+            .perform(delete(ENTITY_API_URL_ID, listaPrecioDesdeHasta.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<ListaPrecioDesdeHasta> listaPrecioDesdeHastaList = listaPrecioDesdeHastaRepository.findAll();
         assertThat(listaPrecioDesdeHastaList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(ListaPrecioDesdeHasta.class);
-        ListaPrecioDesdeHasta listaPrecioDesdeHasta1 = new ListaPrecioDesdeHasta();
-        listaPrecioDesdeHasta1.setId(1L);
-        ListaPrecioDesdeHasta listaPrecioDesdeHasta2 = new ListaPrecioDesdeHasta();
-        listaPrecioDesdeHasta2.setId(listaPrecioDesdeHasta1.getId());
-        assertThat(listaPrecioDesdeHasta1).isEqualTo(listaPrecioDesdeHasta2);
-        listaPrecioDesdeHasta2.setId(2L);
-        assertThat(listaPrecioDesdeHasta1).isNotEqualTo(listaPrecioDesdeHasta2);
-        listaPrecioDesdeHasta1.setId(null);
-        assertThat(listaPrecioDesdeHasta1).isNotEqualTo(listaPrecioDesdeHasta2);
     }
 }

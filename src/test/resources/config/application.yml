@@ -14,21 +14,25 @@
 # ===================================================================
 
 spring:
+  profiles:
+    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
+    #active: testcontainers
   application:
     name: Soldimet
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:Soldimet;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MULTI_THREADED=FALSE
+    url: jdbc:h2:mem:soldimet;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     name:
     username:
     password:
     hikari:
       auto-commit: false
+  jackson:
+    serialization:
+      write-durations-as-timestamps: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
-    database: H2
+    database-platform: tech.jhipster.domain.util.FixedH2Dialect
     open-in-view: false
-    show-sql: false
     hibernate:
       ddl-auto: none
       naming:
@@ -40,8 +44,9 @@ spring:
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
-      hibernate.hbm2ddl.auto: create-drop
+      hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
   liquibase:
     contexts: test
   mail:
@@ -50,9 +55,6 @@ spring:
     allow-bean-definition-overriding: true
   messages:
     basename: i18n/messages
-  mvc:
-    favicon:
-      enabled: false
   task:
     execution:
       thread-name-prefix: soldimet-task-
@@ -82,7 +84,7 @@ jhipster:
     name: 'soldimetApp'
   logging:
     # To test json console appender
-    use-json-format: true # By default, logs are in Json format
+    use-json-format: false
     logstash:
       enabled: false
       host: localhost
@@ -90,7 +92,7 @@ jhipster:
       queue-size: 512
   mail:
     from: test@localhost
-    base-url: http://127.0.0.1:80
+    base-url: http://127.0.0.1:8080
   security:
     authentication:
       jwt:
@@ -98,11 +100,6 @@ jhipster:
         base64-secret: ODc3YWI4ZTkwOWVjNjlkNDhhMjZmNmJkYTNmNzQwYjA1MjRlNDk0OTkwNWViMTYxMTYwOGE5ZTBlOTYzYjAzOTc2OTYxZDYzMTM4ODVjMDAxYmEyOGRhNTliNjY5MzM3ZWY4NmFlMjZiNWNkMjA1ZTlmYjI2NGI5MDBjNzJmZjE=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: true
-      report-frequency: 60 # in seconds
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

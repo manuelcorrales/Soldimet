@@ -1,78 +1,53 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.Marca;
-import soldimet.repository.MarcaRepository;
-import soldimet.service.MarcaService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Marca;
+import soldimet.repository.MarcaRepository;
+
 /**
  * Integration tests for the {@link MarcaResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class MarcaResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class MarcaResourceIT {
 
     private static final String DEFAULT_NOMBRE_MARCA = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_MARCA = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/marcas";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private MarcaRepository marcaRepository;
 
     @Autowired
-    private MarcaService marcaService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restMarcaMockMvc;
 
     private Marca marca;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final MarcaResource marcaResource = new MarcaResource(marcaService);
-        this.restMarcaMockMvc = MockMvcBuilders.standaloneSetup(marcaResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -81,10 +56,10 @@ public class MarcaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Marca createEntity(EntityManager em) {
-        Marca marca = new Marca()
-            .nombreMarca(DEFAULT_NOMBRE_MARCA);
+        Marca marca = new Marca().nombreMarca(DEFAULT_NOMBRE_MARCA);
         return marca;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -92,8 +67,7 @@ public class MarcaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Marca createUpdatedEntity(EntityManager em) {
-        Marca marca = new Marca()
-            .nombreMarca(UPDATED_NOMBRE_MARCA);
+        Marca marca = new Marca().nombreMarca(UPDATED_NOMBRE_MARCA);
         return marca;
     }
 
@@ -104,13 +78,11 @@ public class MarcaResourceIT {
 
     @Test
     @Transactional
-    public void createMarca() throws Exception {
+    void createMarca() throws Exception {
         int databaseSizeBeforeCreate = marcaRepository.findAll().size();
-
         // Create the Marca
-        restMarcaMockMvc.perform(post("/api/marcas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(marca)))
+        restMarcaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(marca)))
             .andExpect(status().isCreated());
 
         // Validate the Marca in the database
@@ -122,16 +94,15 @@ public class MarcaResourceIT {
 
     @Test
     @Transactional
-    public void createMarcaWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = marcaRepository.findAll().size();
-
+    void createMarcaWithExistingId() throws Exception {
         // Create the Marca with an existing ID
         marca.setId(1L);
 
+        int databaseSizeBeforeCreate = marcaRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restMarcaMockMvc.perform(post("/api/marcas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(marca)))
+        restMarcaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(marca)))
             .andExpect(status().isBadRequest());
 
         // Validate the Marca in the database
@@ -139,19 +110,17 @@ public class MarcaResourceIT {
         assertThat(marcaList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNombreMarcaIsRequired() throws Exception {
+    void checkNombreMarcaIsRequired() throws Exception {
         int databaseSizeBeforeTest = marcaRepository.findAll().size();
         // set the field null
         marca.setNombreMarca(null);
 
         // Create the Marca, which fails.
 
-        restMarcaMockMvc.perform(post("/api/marcas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(marca)))
+        restMarcaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(marca)))
             .andExpect(status().isBadRequest());
 
         List<Marca> marcaList = marcaRepository.findAll();
@@ -160,45 +129,46 @@ public class MarcaResourceIT {
 
     @Test
     @Transactional
-    public void getAllMarcas() throws Exception {
+    void getAllMarcas() throws Exception {
         // Initialize the database
         marcaRepository.saveAndFlush(marca);
 
         // Get all the marcaList
-        restMarcaMockMvc.perform(get("/api/marcas?sort=id,desc"))
+        restMarcaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(marca.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombreMarca").value(hasItem(DEFAULT_NOMBRE_MARCA.toString())));
+            .andExpect(jsonPath("$.[*].nombreMarca").value(hasItem(DEFAULT_NOMBRE_MARCA)));
     }
-    
+
     @Test
     @Transactional
-    public void getMarca() throws Exception {
+    void getMarca() throws Exception {
         // Initialize the database
         marcaRepository.saveAndFlush(marca);
 
         // Get the marca
-        restMarcaMockMvc.perform(get("/api/marcas/{id}", marca.getId()))
+        restMarcaMockMvc
+            .perform(get(ENTITY_API_URL_ID, marca.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(marca.getId().intValue()))
-            .andExpect(jsonPath("$.nombreMarca").value(DEFAULT_NOMBRE_MARCA.toString()));
+            .andExpect(jsonPath("$.nombreMarca").value(DEFAULT_NOMBRE_MARCA));
     }
 
     @Test
     @Transactional
-    public void getNonExistingMarca() throws Exception {
+    void getNonExistingMarca() throws Exception {
         // Get the marca
-        restMarcaMockMvc.perform(get("/api/marcas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restMarcaMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateMarca() throws Exception {
+    void putNewMarca() throws Exception {
         // Initialize the database
-        marcaService.save(marca);
+        marcaRepository.saveAndFlush(marca);
 
         int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
 
@@ -206,12 +176,14 @@ public class MarcaResourceIT {
         Marca updatedMarca = marcaRepository.findById(marca.getId()).get();
         // Disconnect from session so that the updates on updatedMarca are not directly saved in db
         em.detach(updatedMarca);
-        updatedMarca
-            .nombreMarca(UPDATED_NOMBRE_MARCA);
+        updatedMarca.nombreMarca(UPDATED_NOMBRE_MARCA);
 
-        restMarcaMockMvc.perform(put("/api/marcas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedMarca)))
+        restMarcaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedMarca.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedMarca))
+            )
             .andExpect(status().isOk());
 
         // Validate the Marca in the database
@@ -223,15 +195,17 @@ public class MarcaResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingMarca() throws Exception {
+    void putNonExistingMarca() throws Exception {
         int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
-
-        // Create the Marca
+        marca.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restMarcaMockMvc.perform(put("/api/marcas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(marca)))
+        restMarcaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, marca.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(marca))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Marca in the database
@@ -241,34 +215,167 @@ public class MarcaResourceIT {
 
     @Test
     @Transactional
-    public void deleteMarca() throws Exception {
+    void putWithIdMismatchMarca() throws Exception {
+        int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
+        marca.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMarcaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(marca))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Marca in the database
+        List<Marca> marcaList = marcaRepository.findAll();
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamMarca() throws Exception {
+        int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
+        marca.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMarcaMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(marca)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Marca in the database
+        List<Marca> marcaList = marcaRepository.findAll();
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateMarcaWithPatch() throws Exception {
         // Initialize the database
-        marcaService.save(marca);
+        marcaRepository.saveAndFlush(marca);
+
+        int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
+
+        // Update the marca using partial update
+        Marca partialUpdatedMarca = new Marca();
+        partialUpdatedMarca.setId(marca.getId());
+
+        restMarcaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMarca.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMarca))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Marca in the database
+        List<Marca> marcaList = marcaRepository.findAll();
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
+        Marca testMarca = marcaList.get(marcaList.size() - 1);
+        assertThat(testMarca.getNombreMarca()).isEqualTo(DEFAULT_NOMBRE_MARCA);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateMarcaWithPatch() throws Exception {
+        // Initialize the database
+        marcaRepository.saveAndFlush(marca);
+
+        int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
+
+        // Update the marca using partial update
+        Marca partialUpdatedMarca = new Marca();
+        partialUpdatedMarca.setId(marca.getId());
+
+        partialUpdatedMarca.nombreMarca(UPDATED_NOMBRE_MARCA);
+
+        restMarcaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMarca.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMarca))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Marca in the database
+        List<Marca> marcaList = marcaRepository.findAll();
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
+        Marca testMarca = marcaList.get(marcaList.size() - 1);
+        assertThat(testMarca.getNombreMarca()).isEqualTo(UPDATED_NOMBRE_MARCA);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingMarca() throws Exception {
+        int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
+        marca.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restMarcaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, marca.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(marca))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Marca in the database
+        List<Marca> marcaList = marcaRepository.findAll();
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchMarca() throws Exception {
+        int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
+        marca.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMarcaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(marca))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Marca in the database
+        List<Marca> marcaList = marcaRepository.findAll();
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamMarca() throws Exception {
+        int databaseSizeBeforeUpdate = marcaRepository.findAll().size();
+        marca.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMarcaMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(marca)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Marca in the database
+        List<Marca> marcaList = marcaRepository.findAll();
+        assertThat(marcaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteMarca() throws Exception {
+        // Initialize the database
+        marcaRepository.saveAndFlush(marca);
 
         int databaseSizeBeforeDelete = marcaRepository.findAll().size();
 
         // Delete the marca
-        restMarcaMockMvc.perform(delete("/api/marcas/{id}", marca.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restMarcaMockMvc
+            .perform(delete(ENTITY_API_URL_ID, marca.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Marca> marcaList = marcaRepository.findAll();
         assertThat(marcaList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Marca.class);
-        Marca marca1 = new Marca();
-        marca1.setId(1L);
-        Marca marca2 = new Marca();
-        marca2.setId(marca1.getId());
-        assertThat(marca1).isEqualTo(marca2);
-        marca2.setId(2L);
-        assertThat(marca1).isNotEqualTo(marca2);
-        marca1.setId(null);
-        assertThat(marca1).isNotEqualTo(marca2);
     }
 }

@@ -1,31 +1,40 @@
 import { NgModule } from '@angular/core';
-import { SoldimetSharedLibsModule } from './shared-libs.module';
-import { JhiAlertComponent } from './alert/alert.component';
-import { JhiAlertErrorComponent } from './alert/alert-error.component';
-import { JhiLoginModalComponent } from './login/login.component';
+
+import { SharedLibsModule } from './shared-libs.module';
+import { AlertComponent } from './alert/alert.component';
+import { AlertErrorComponent } from './alert/alert-error.component';
 import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
-import { ModalUtilComponent } from './util/modal-util';
-import { BaseFilterPageableComponent } from './base-filter-pageable/base-filter-pageable.component';
+import { DurationPipe } from './date/duration.pipe';
+import { FormatMediumDatetimePipe } from './date/format-medium-datetime.pipe';
+import { FormatMediumDatePipe } from './date/format-medium-date.pipe';
+import { SortByDirective } from './sort/sort-by.directive';
+import { SortDirective } from './sort/sort.directive';
+import { ItemCountComponent } from './pagination/item-count.component';
 
 @NgModule({
-  imports: [SoldimetSharedLibsModule],
+  imports: [SharedLibsModule],
   declarations: [
-    JhiAlertComponent,
-    JhiAlertErrorComponent,
-    JhiLoginModalComponent,
+    AlertComponent,
+    AlertErrorComponent,
     HasAnyAuthorityDirective,
-    ModalUtilComponent,
-    ModalUtilComponent,
-    BaseFilterPageableComponent
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    SortByDirective,
+    SortDirective,
+    ItemCountComponent,
   ],
-  entryComponents: [JhiLoginModalComponent, ModalUtilComponent],
   exports: [
-    SoldimetSharedLibsModule,
-    JhiAlertComponent,
-    JhiAlertErrorComponent,
-    JhiLoginModalComponent,
+    SharedLibsModule,
+    AlertComponent,
+    AlertErrorComponent,
     HasAnyAuthorityDirective,
-    ModalUtilComponent
-  ]
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    SortByDirective,
+    SortDirective,
+    ItemCountComponent,
+  ],
 })
-export class SoldimetSharedModule {}
+export class SharedModule {}

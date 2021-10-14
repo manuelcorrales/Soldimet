@@ -1,78 +1,53 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.EstadoPresupuesto;
-import soldimet.repository.EstadoPresupuestoRepository;
-import soldimet.service.EstadoPresupuestoService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.EstadoPresupuesto;
+import soldimet.repository.EstadoPresupuestoRepository;
+
 /**
  * Integration tests for the {@link EstadoPresupuestoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class EstadoPresupuestoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class EstadoPresupuestoResourceIT {
 
     private static final String DEFAULT_NOMBRE_ESTADO = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_ESTADO = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/estado-presupuestos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private EstadoPresupuestoRepository estadoPresupuestoRepository;
 
     @Autowired
-    private EstadoPresupuestoService estadoPresupuestoService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restEstadoPresupuestoMockMvc;
 
     private EstadoPresupuesto estadoPresupuesto;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final EstadoPresupuestoResource estadoPresupuestoResource = new EstadoPresupuestoResource(estadoPresupuestoService);
-        this.restEstadoPresupuestoMockMvc = MockMvcBuilders.standaloneSetup(estadoPresupuestoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -81,10 +56,10 @@ public class EstadoPresupuestoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EstadoPresupuesto createEntity(EntityManager em) {
-        EstadoPresupuesto estadoPresupuesto = new EstadoPresupuesto()
-            .nombreEstado(DEFAULT_NOMBRE_ESTADO);
+        EstadoPresupuesto estadoPresupuesto = new EstadoPresupuesto().nombreEstado(DEFAULT_NOMBRE_ESTADO);
         return estadoPresupuesto;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -92,8 +67,7 @@ public class EstadoPresupuestoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EstadoPresupuesto createUpdatedEntity(EntityManager em) {
-        EstadoPresupuesto estadoPresupuesto = new EstadoPresupuesto()
-            .nombreEstado(UPDATED_NOMBRE_ESTADO);
+        EstadoPresupuesto estadoPresupuesto = new EstadoPresupuesto().nombreEstado(UPDATED_NOMBRE_ESTADO);
         return estadoPresupuesto;
     }
 
@@ -104,13 +78,13 @@ public class EstadoPresupuestoResourceIT {
 
     @Test
     @Transactional
-    public void createEstadoPresupuesto() throws Exception {
+    void createEstadoPresupuesto() throws Exception {
         int databaseSizeBeforeCreate = estadoPresupuestoRepository.findAll().size();
-
         // Create the EstadoPresupuesto
-        restEstadoPresupuestoMockMvc.perform(post("/api/estado-presupuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto)))
+        restEstadoPresupuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
             .andExpect(status().isCreated());
 
         // Validate the EstadoPresupuesto in the database
@@ -122,16 +96,17 @@ public class EstadoPresupuestoResourceIT {
 
     @Test
     @Transactional
-    public void createEstadoPresupuestoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = estadoPresupuestoRepository.findAll().size();
-
+    void createEstadoPresupuestoWithExistingId() throws Exception {
         // Create the EstadoPresupuesto with an existing ID
         estadoPresupuesto.setId(1L);
 
+        int databaseSizeBeforeCreate = estadoPresupuestoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEstadoPresupuestoMockMvc.perform(post("/api/estado-presupuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto)))
+        restEstadoPresupuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the EstadoPresupuesto in the database
@@ -139,19 +114,19 @@ public class EstadoPresupuestoResourceIT {
         assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNombreEstadoIsRequired() throws Exception {
+    void checkNombreEstadoIsRequired() throws Exception {
         int databaseSizeBeforeTest = estadoPresupuestoRepository.findAll().size();
         // set the field null
         estadoPresupuesto.setNombreEstado(null);
 
         // Create the EstadoPresupuesto, which fails.
 
-        restEstadoPresupuestoMockMvc.perform(post("/api/estado-presupuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto)))
+        restEstadoPresupuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
             .andExpect(status().isBadRequest());
 
         List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
@@ -160,45 +135,46 @@ public class EstadoPresupuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllEstadoPresupuestos() throws Exception {
+    void getAllEstadoPresupuestos() throws Exception {
         // Initialize the database
         estadoPresupuestoRepository.saveAndFlush(estadoPresupuesto);
 
         // Get all the estadoPresupuestoList
-        restEstadoPresupuestoMockMvc.perform(get("/api/estado-presupuestos?sort=id,desc"))
+        restEstadoPresupuestoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoPresupuesto.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
+            .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO)));
     }
-    
+
     @Test
     @Transactional
-    public void getEstadoPresupuesto() throws Exception {
+    void getEstadoPresupuesto() throws Exception {
         // Initialize the database
         estadoPresupuestoRepository.saveAndFlush(estadoPresupuesto);
 
         // Get the estadoPresupuesto
-        restEstadoPresupuestoMockMvc.perform(get("/api/estado-presupuestos/{id}", estadoPresupuesto.getId()))
+        restEstadoPresupuestoMockMvc
+            .perform(get(ENTITY_API_URL_ID, estadoPresupuesto.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(estadoPresupuesto.getId().intValue()))
-            .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
+            .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO));
     }
 
     @Test
     @Transactional
-    public void getNonExistingEstadoPresupuesto() throws Exception {
+    void getNonExistingEstadoPresupuesto() throws Exception {
         // Get the estadoPresupuesto
-        restEstadoPresupuestoMockMvc.perform(get("/api/estado-presupuestos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restEstadoPresupuestoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateEstadoPresupuesto() throws Exception {
+    void putNewEstadoPresupuesto() throws Exception {
         // Initialize the database
-        estadoPresupuestoService.save(estadoPresupuesto);
+        estadoPresupuestoRepository.saveAndFlush(estadoPresupuesto);
 
         int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
 
@@ -206,12 +182,14 @@ public class EstadoPresupuestoResourceIT {
         EstadoPresupuesto updatedEstadoPresupuesto = estadoPresupuestoRepository.findById(estadoPresupuesto.getId()).get();
         // Disconnect from session so that the updates on updatedEstadoPresupuesto are not directly saved in db
         em.detach(updatedEstadoPresupuesto);
-        updatedEstadoPresupuesto
-            .nombreEstado(UPDATED_NOMBRE_ESTADO);
+        updatedEstadoPresupuesto.nombreEstado(UPDATED_NOMBRE_ESTADO);
 
-        restEstadoPresupuestoMockMvc.perform(put("/api/estado-presupuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedEstadoPresupuesto)))
+        restEstadoPresupuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedEstadoPresupuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedEstadoPresupuesto))
+            )
             .andExpect(status().isOk());
 
         // Validate the EstadoPresupuesto in the database
@@ -223,15 +201,17 @@ public class EstadoPresupuestoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingEstadoPresupuesto() throws Exception {
+    void putNonExistingEstadoPresupuesto() throws Exception {
         int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
-
-        // Create the EstadoPresupuesto
+        estadoPresupuesto.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEstadoPresupuestoMockMvc.perform(put("/api/estado-presupuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto)))
+        restEstadoPresupuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, estadoPresupuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the EstadoPresupuesto in the database
@@ -241,34 +221,175 @@ public class EstadoPresupuestoResourceIT {
 
     @Test
     @Transactional
-    public void deleteEstadoPresupuesto() throws Exception {
+    void putWithIdMismatchEstadoPresupuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
+        estadoPresupuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoPresupuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoPresupuesto in the database
+        List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
+        assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamEstadoPresupuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
+        estadoPresupuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoPresupuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the EstadoPresupuesto in the database
+        List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
+        assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateEstadoPresupuestoWithPatch() throws Exception {
         // Initialize the database
-        estadoPresupuestoService.save(estadoPresupuesto);
+        estadoPresupuestoRepository.saveAndFlush(estadoPresupuesto);
+
+        int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
+
+        // Update the estadoPresupuesto using partial update
+        EstadoPresupuesto partialUpdatedEstadoPresupuesto = new EstadoPresupuesto();
+        partialUpdatedEstadoPresupuesto.setId(estadoPresupuesto.getId());
+
+        partialUpdatedEstadoPresupuesto.nombreEstado(UPDATED_NOMBRE_ESTADO);
+
+        restEstadoPresupuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEstadoPresupuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEstadoPresupuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the EstadoPresupuesto in the database
+        List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
+        assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeUpdate);
+        EstadoPresupuesto testEstadoPresupuesto = estadoPresupuestoList.get(estadoPresupuestoList.size() - 1);
+        assertThat(testEstadoPresupuesto.getNombreEstado()).isEqualTo(UPDATED_NOMBRE_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateEstadoPresupuestoWithPatch() throws Exception {
+        // Initialize the database
+        estadoPresupuestoRepository.saveAndFlush(estadoPresupuesto);
+
+        int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
+
+        // Update the estadoPresupuesto using partial update
+        EstadoPresupuesto partialUpdatedEstadoPresupuesto = new EstadoPresupuesto();
+        partialUpdatedEstadoPresupuesto.setId(estadoPresupuesto.getId());
+
+        partialUpdatedEstadoPresupuesto.nombreEstado(UPDATED_NOMBRE_ESTADO);
+
+        restEstadoPresupuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEstadoPresupuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEstadoPresupuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the EstadoPresupuesto in the database
+        List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
+        assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeUpdate);
+        EstadoPresupuesto testEstadoPresupuesto = estadoPresupuestoList.get(estadoPresupuestoList.size() - 1);
+        assertThat(testEstadoPresupuesto.getNombreEstado()).isEqualTo(UPDATED_NOMBRE_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingEstadoPresupuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
+        estadoPresupuesto.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restEstadoPresupuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, estadoPresupuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoPresupuesto in the database
+        List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
+        assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchEstadoPresupuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
+        estadoPresupuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoPresupuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoPresupuesto in the database
+        List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
+        assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamEstadoPresupuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoPresupuestoRepository.findAll().size();
+        estadoPresupuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoPresupuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoPresupuesto))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the EstadoPresupuesto in the database
+        List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
+        assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteEstadoPresupuesto() throws Exception {
+        // Initialize the database
+        estadoPresupuestoRepository.saveAndFlush(estadoPresupuesto);
 
         int databaseSizeBeforeDelete = estadoPresupuestoRepository.findAll().size();
 
         // Delete the estadoPresupuesto
-        restEstadoPresupuestoMockMvc.perform(delete("/api/estado-presupuestos/{id}", estadoPresupuesto.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restEstadoPresupuestoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, estadoPresupuesto.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<EstadoPresupuesto> estadoPresupuestoList = estadoPresupuestoRepository.findAll();
         assertThat(estadoPresupuestoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(EstadoPresupuesto.class);
-        EstadoPresupuesto estadoPresupuesto1 = new EstadoPresupuesto();
-        estadoPresupuesto1.setId(1L);
-        EstadoPresupuesto estadoPresupuesto2 = new EstadoPresupuesto();
-        estadoPresupuesto2.setId(estadoPresupuesto1.getId());
-        assertThat(estadoPresupuesto1).isEqualTo(estadoPresupuesto2);
-        estadoPresupuesto2.setId(2L);
-        assertThat(estadoPresupuesto1).isNotEqualTo(estadoPresupuesto2);
-        estadoPresupuesto1.setId(null);
-        assertThat(estadoPresupuesto1).isNotEqualTo(estadoPresupuesto2);
     }
 }

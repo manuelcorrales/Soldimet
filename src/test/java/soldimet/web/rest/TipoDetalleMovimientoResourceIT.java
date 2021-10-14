@@ -1,78 +1,53 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.TipoDetalleMovimiento;
-import soldimet.repository.TipoDetalleMovimientoRepository;
-import soldimet.service.TipoDetalleMovimientoService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.TipoDetalleMovimiento;
+import soldimet.repository.TipoDetalleMovimientoRepository;
+
 /**
  * Integration tests for the {@link TipoDetalleMovimientoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class TipoDetalleMovimientoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class TipoDetalleMovimientoResourceIT {
 
     private static final String DEFAULT_NOMBRE_TIPO_DETALLE = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_TIPO_DETALLE = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/tipo-detalle-movimientos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private TipoDetalleMovimientoRepository tipoDetalleMovimientoRepository;
 
     @Autowired
-    private TipoDetalleMovimientoService tipoDetalleMovimientoService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restTipoDetalleMovimientoMockMvc;
 
     private TipoDetalleMovimiento tipoDetalleMovimiento;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final TipoDetalleMovimientoResource tipoDetalleMovimientoResource = new TipoDetalleMovimientoResource(tipoDetalleMovimientoService);
-        this.restTipoDetalleMovimientoMockMvc = MockMvcBuilders.standaloneSetup(tipoDetalleMovimientoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -81,10 +56,10 @@ public class TipoDetalleMovimientoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TipoDetalleMovimiento createEntity(EntityManager em) {
-        TipoDetalleMovimiento tipoDetalleMovimiento = new TipoDetalleMovimiento()
-            .nombreTipoDetalle(DEFAULT_NOMBRE_TIPO_DETALLE);
+        TipoDetalleMovimiento tipoDetalleMovimiento = new TipoDetalleMovimiento().nombreTipoDetalle(DEFAULT_NOMBRE_TIPO_DETALLE);
         return tipoDetalleMovimiento;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -92,8 +67,7 @@ public class TipoDetalleMovimientoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TipoDetalleMovimiento createUpdatedEntity(EntityManager em) {
-        TipoDetalleMovimiento tipoDetalleMovimiento = new TipoDetalleMovimiento()
-            .nombreTipoDetalle(UPDATED_NOMBRE_TIPO_DETALLE);
+        TipoDetalleMovimiento tipoDetalleMovimiento = new TipoDetalleMovimiento().nombreTipoDetalle(UPDATED_NOMBRE_TIPO_DETALLE);
         return tipoDetalleMovimiento;
     }
 
@@ -104,13 +78,15 @@ public class TipoDetalleMovimientoResourceIT {
 
     @Test
     @Transactional
-    public void createTipoDetalleMovimiento() throws Exception {
+    void createTipoDetalleMovimiento() throws Exception {
         int databaseSizeBeforeCreate = tipoDetalleMovimientoRepository.findAll().size();
-
         // Create the TipoDetalleMovimiento
-        restTipoDetalleMovimientoMockMvc.perform(post("/api/tipo-detalle-movimientos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento)))
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
             .andExpect(status().isCreated());
 
         // Validate the TipoDetalleMovimiento in the database
@@ -122,16 +98,19 @@ public class TipoDetalleMovimientoResourceIT {
 
     @Test
     @Transactional
-    public void createTipoDetalleMovimientoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = tipoDetalleMovimientoRepository.findAll().size();
-
+    void createTipoDetalleMovimientoWithExistingId() throws Exception {
         // Create the TipoDetalleMovimiento with an existing ID
         tipoDetalleMovimiento.setId(1L);
 
+        int databaseSizeBeforeCreate = tipoDetalleMovimientoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restTipoDetalleMovimientoMockMvc.perform(post("/api/tipo-detalle-movimientos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento)))
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the TipoDetalleMovimiento in the database
@@ -139,19 +118,21 @@ public class TipoDetalleMovimientoResourceIT {
         assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNombreTipoDetalleIsRequired() throws Exception {
+    void checkNombreTipoDetalleIsRequired() throws Exception {
         int databaseSizeBeforeTest = tipoDetalleMovimientoRepository.findAll().size();
         // set the field null
         tipoDetalleMovimiento.setNombreTipoDetalle(null);
 
         // Create the TipoDetalleMovimiento, which fails.
 
-        restTipoDetalleMovimientoMockMvc.perform(post("/api/tipo-detalle-movimientos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento)))
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
             .andExpect(status().isBadRequest());
 
         List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
@@ -160,45 +141,46 @@ public class TipoDetalleMovimientoResourceIT {
 
     @Test
     @Transactional
-    public void getAllTipoDetalleMovimientos() throws Exception {
+    void getAllTipoDetalleMovimientos() throws Exception {
         // Initialize the database
         tipoDetalleMovimientoRepository.saveAndFlush(tipoDetalleMovimiento);
 
         // Get all the tipoDetalleMovimientoList
-        restTipoDetalleMovimientoMockMvc.perform(get("/api/tipo-detalle-movimientos?sort=id,desc"))
+        restTipoDetalleMovimientoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoDetalleMovimiento.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombreTipoDetalle").value(hasItem(DEFAULT_NOMBRE_TIPO_DETALLE.toString())));
+            .andExpect(jsonPath("$.[*].nombreTipoDetalle").value(hasItem(DEFAULT_NOMBRE_TIPO_DETALLE)));
     }
-    
+
     @Test
     @Transactional
-    public void getTipoDetalleMovimiento() throws Exception {
+    void getTipoDetalleMovimiento() throws Exception {
         // Initialize the database
         tipoDetalleMovimientoRepository.saveAndFlush(tipoDetalleMovimiento);
 
         // Get the tipoDetalleMovimiento
-        restTipoDetalleMovimientoMockMvc.perform(get("/api/tipo-detalle-movimientos/{id}", tipoDetalleMovimiento.getId()))
+        restTipoDetalleMovimientoMockMvc
+            .perform(get(ENTITY_API_URL_ID, tipoDetalleMovimiento.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(tipoDetalleMovimiento.getId().intValue()))
-            .andExpect(jsonPath("$.nombreTipoDetalle").value(DEFAULT_NOMBRE_TIPO_DETALLE.toString()));
+            .andExpect(jsonPath("$.nombreTipoDetalle").value(DEFAULT_NOMBRE_TIPO_DETALLE));
     }
 
     @Test
     @Transactional
-    public void getNonExistingTipoDetalleMovimiento() throws Exception {
+    void getNonExistingTipoDetalleMovimiento() throws Exception {
         // Get the tipoDetalleMovimiento
-        restTipoDetalleMovimientoMockMvc.perform(get("/api/tipo-detalle-movimientos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restTipoDetalleMovimientoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateTipoDetalleMovimiento() throws Exception {
+    void putNewTipoDetalleMovimiento() throws Exception {
         // Initialize the database
-        tipoDetalleMovimientoService.save(tipoDetalleMovimiento);
+        tipoDetalleMovimientoRepository.saveAndFlush(tipoDetalleMovimiento);
 
         int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
 
@@ -206,12 +188,14 @@ public class TipoDetalleMovimientoResourceIT {
         TipoDetalleMovimiento updatedTipoDetalleMovimiento = tipoDetalleMovimientoRepository.findById(tipoDetalleMovimiento.getId()).get();
         // Disconnect from session so that the updates on updatedTipoDetalleMovimiento are not directly saved in db
         em.detach(updatedTipoDetalleMovimiento);
-        updatedTipoDetalleMovimiento
-            .nombreTipoDetalle(UPDATED_NOMBRE_TIPO_DETALLE);
+        updatedTipoDetalleMovimiento.nombreTipoDetalle(UPDATED_NOMBRE_TIPO_DETALLE);
 
-        restTipoDetalleMovimientoMockMvc.perform(put("/api/tipo-detalle-movimientos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedTipoDetalleMovimiento)))
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedTipoDetalleMovimiento.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedTipoDetalleMovimiento))
+            )
             .andExpect(status().isOk());
 
         // Validate the TipoDetalleMovimiento in the database
@@ -223,15 +207,17 @@ public class TipoDetalleMovimientoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingTipoDetalleMovimiento() throws Exception {
+    void putNonExistingTipoDetalleMovimiento() throws Exception {
         int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
-
-        // Create the TipoDetalleMovimiento
+        tipoDetalleMovimiento.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restTipoDetalleMovimientoMockMvc.perform(put("/api/tipo-detalle-movimientos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento)))
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, tipoDetalleMovimiento.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the TipoDetalleMovimiento in the database
@@ -241,34 +227,177 @@ public class TipoDetalleMovimientoResourceIT {
 
     @Test
     @Transactional
-    public void deleteTipoDetalleMovimiento() throws Exception {
+    void putWithIdMismatchTipoDetalleMovimiento() throws Exception {
+        int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
+        tipoDetalleMovimiento.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the TipoDetalleMovimiento in the database
+        List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamTipoDetalleMovimiento() throws Exception {
+        int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
+        tipoDetalleMovimiento.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                put(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the TipoDetalleMovimiento in the database
+        List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateTipoDetalleMovimientoWithPatch() throws Exception {
         // Initialize the database
-        tipoDetalleMovimientoService.save(tipoDetalleMovimiento);
+        tipoDetalleMovimientoRepository.saveAndFlush(tipoDetalleMovimiento);
+
+        int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
+
+        // Update the tipoDetalleMovimiento using partial update
+        TipoDetalleMovimiento partialUpdatedTipoDetalleMovimiento = new TipoDetalleMovimiento();
+        partialUpdatedTipoDetalleMovimiento.setId(tipoDetalleMovimiento.getId());
+
+        partialUpdatedTipoDetalleMovimiento.nombreTipoDetalle(UPDATED_NOMBRE_TIPO_DETALLE);
+
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedTipoDetalleMovimiento.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedTipoDetalleMovimiento))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the TipoDetalleMovimiento in the database
+        List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
+        TipoDetalleMovimiento testTipoDetalleMovimiento = tipoDetalleMovimientoList.get(tipoDetalleMovimientoList.size() - 1);
+        assertThat(testTipoDetalleMovimiento.getNombreTipoDetalle()).isEqualTo(UPDATED_NOMBRE_TIPO_DETALLE);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateTipoDetalleMovimientoWithPatch() throws Exception {
+        // Initialize the database
+        tipoDetalleMovimientoRepository.saveAndFlush(tipoDetalleMovimiento);
+
+        int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
+
+        // Update the tipoDetalleMovimiento using partial update
+        TipoDetalleMovimiento partialUpdatedTipoDetalleMovimiento = new TipoDetalleMovimiento();
+        partialUpdatedTipoDetalleMovimiento.setId(tipoDetalleMovimiento.getId());
+
+        partialUpdatedTipoDetalleMovimiento.nombreTipoDetalle(UPDATED_NOMBRE_TIPO_DETALLE);
+
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedTipoDetalleMovimiento.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedTipoDetalleMovimiento))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the TipoDetalleMovimiento in the database
+        List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
+        TipoDetalleMovimiento testTipoDetalleMovimiento = tipoDetalleMovimientoList.get(tipoDetalleMovimientoList.size() - 1);
+        assertThat(testTipoDetalleMovimiento.getNombreTipoDetalle()).isEqualTo(UPDATED_NOMBRE_TIPO_DETALLE);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingTipoDetalleMovimiento() throws Exception {
+        int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
+        tipoDetalleMovimiento.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, tipoDetalleMovimiento.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the TipoDetalleMovimiento in the database
+        List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchTipoDetalleMovimiento() throws Exception {
+        int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
+        tipoDetalleMovimiento.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the TipoDetalleMovimiento in the database
+        List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamTipoDetalleMovimiento() throws Exception {
+        int databaseSizeBeforeUpdate = tipoDetalleMovimientoRepository.findAll().size();
+        tipoDetalleMovimiento.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restTipoDetalleMovimientoMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(tipoDetalleMovimiento))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the TipoDetalleMovimiento in the database
+        List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
+        assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteTipoDetalleMovimiento() throws Exception {
+        // Initialize the database
+        tipoDetalleMovimientoRepository.saveAndFlush(tipoDetalleMovimiento);
 
         int databaseSizeBeforeDelete = tipoDetalleMovimientoRepository.findAll().size();
 
         // Delete the tipoDetalleMovimiento
-        restTipoDetalleMovimientoMockMvc.perform(delete("/api/tipo-detalle-movimientos/{id}", tipoDetalleMovimiento.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restTipoDetalleMovimientoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, tipoDetalleMovimiento.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<TipoDetalleMovimiento> tipoDetalleMovimientoList = tipoDetalleMovimientoRepository.findAll();
         assertThat(tipoDetalleMovimientoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(TipoDetalleMovimiento.class);
-        TipoDetalleMovimiento tipoDetalleMovimiento1 = new TipoDetalleMovimiento();
-        tipoDetalleMovimiento1.setId(1L);
-        TipoDetalleMovimiento tipoDetalleMovimiento2 = new TipoDetalleMovimiento();
-        tipoDetalleMovimiento2.setId(tipoDetalleMovimiento1.getId());
-        assertThat(tipoDetalleMovimiento1).isEqualTo(tipoDetalleMovimiento2);
-        tipoDetalleMovimiento2.setId(2L);
-        assertThat(tipoDetalleMovimiento1).isNotEqualTo(tipoDetalleMovimiento2);
-        tipoDetalleMovimiento1.setId(null);
-        assertThat(tipoDetalleMovimiento1).isNotEqualTo(tipoDetalleMovimiento2);
     }
 }

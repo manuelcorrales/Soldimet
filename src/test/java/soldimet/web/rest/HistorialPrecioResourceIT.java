@@ -1,82 +1,56 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.HistorialPrecio;
-import soldimet.domain.PrecioRepuesto;
-import soldimet.repository.HistorialPrecioRepository;
-import soldimet.service.HistorialPrecioService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.HistorialPrecio;
+import soldimet.domain.PrecioRepuesto;
+import soldimet.repository.HistorialPrecioRepository;
+
 /**
  * Integration tests for the {@link HistorialPrecioResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class HistorialPrecioResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class HistorialPrecioResourceIT {
 
     private static final LocalDate DEFAULT_FECHA_HISTORIAL = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_HISTORIAL = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA_HISTORIAL = LocalDate.ofEpochDay(-1L);
+
+    private static final String ENTITY_API_URL = "/api/historial-precios";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private HistorialPrecioRepository historialPrecioRepository;
 
     @Autowired
-    private HistorialPrecioService historialPrecioService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restHistorialPrecioMockMvc;
 
     private HistorialPrecio historialPrecio;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final HistorialPrecioResource historialPrecioResource = new HistorialPrecioResource(historialPrecioService);
-        this.restHistorialPrecioMockMvc = MockMvcBuilders.standaloneSetup(historialPrecioResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -85,8 +59,7 @@ public class HistorialPrecioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static HistorialPrecio createEntity(EntityManager em) {
-        HistorialPrecio historialPrecio = new HistorialPrecio()
-            .fechaHistorial(DEFAULT_FECHA_HISTORIAL);
+        HistorialPrecio historialPrecio = new HistorialPrecio().fechaHistorial(DEFAULT_FECHA_HISTORIAL);
         // Add required entity
         PrecioRepuesto precioRepuesto;
         if (TestUtil.findAll(em, PrecioRepuesto.class).isEmpty()) {
@@ -99,6 +72,7 @@ public class HistorialPrecioResourceIT {
         historialPrecio.setPrecioRepuesto(precioRepuesto);
         return historialPrecio;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -106,8 +80,7 @@ public class HistorialPrecioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static HistorialPrecio createUpdatedEntity(EntityManager em) {
-        HistorialPrecio historialPrecio = new HistorialPrecio()
-            .fechaHistorial(UPDATED_FECHA_HISTORIAL);
+        HistorialPrecio historialPrecio = new HistorialPrecio().fechaHistorial(UPDATED_FECHA_HISTORIAL);
         // Add required entity
         PrecioRepuesto precioRepuesto;
         if (TestUtil.findAll(em, PrecioRepuesto.class).isEmpty()) {
@@ -128,13 +101,13 @@ public class HistorialPrecioResourceIT {
 
     @Test
     @Transactional
-    public void createHistorialPrecio() throws Exception {
+    void createHistorialPrecio() throws Exception {
         int databaseSizeBeforeCreate = historialPrecioRepository.findAll().size();
-
         // Create the HistorialPrecio
-        restHistorialPrecioMockMvc.perform(post("/api/historial-precios")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(historialPrecio)))
+        restHistorialPrecioMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
             .andExpect(status().isCreated());
 
         // Validate the HistorialPrecio in the database
@@ -146,16 +119,17 @@ public class HistorialPrecioResourceIT {
 
     @Test
     @Transactional
-    public void createHistorialPrecioWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = historialPrecioRepository.findAll().size();
-
+    void createHistorialPrecioWithExistingId() throws Exception {
         // Create the HistorialPrecio with an existing ID
         historialPrecio.setId(1L);
 
+        int databaseSizeBeforeCreate = historialPrecioRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restHistorialPrecioMockMvc.perform(post("/api/historial-precios")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(historialPrecio)))
+        restHistorialPrecioMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the HistorialPrecio in the database
@@ -163,19 +137,19 @@ public class HistorialPrecioResourceIT {
         assertThat(historialPrecioList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkFechaHistorialIsRequired() throws Exception {
+    void checkFechaHistorialIsRequired() throws Exception {
         int databaseSizeBeforeTest = historialPrecioRepository.findAll().size();
         // set the field null
         historialPrecio.setFechaHistorial(null);
 
         // Create the HistorialPrecio, which fails.
 
-        restHistorialPrecioMockMvc.perform(post("/api/historial-precios")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(historialPrecio)))
+        restHistorialPrecioMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
             .andExpect(status().isBadRequest());
 
         List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
@@ -184,45 +158,46 @@ public class HistorialPrecioResourceIT {
 
     @Test
     @Transactional
-    public void getAllHistorialPrecios() throws Exception {
+    void getAllHistorialPrecios() throws Exception {
         // Initialize the database
         historialPrecioRepository.saveAndFlush(historialPrecio);
 
         // Get all the historialPrecioList
-        restHistorialPrecioMockMvc.perform(get("/api/historial-precios?sort=id,desc"))
+        restHistorialPrecioMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(historialPrecio.getId().intValue())))
             .andExpect(jsonPath("$.[*].fechaHistorial").value(hasItem(DEFAULT_FECHA_HISTORIAL.toString())));
     }
-    
+
     @Test
     @Transactional
-    public void getHistorialPrecio() throws Exception {
+    void getHistorialPrecio() throws Exception {
         // Initialize the database
         historialPrecioRepository.saveAndFlush(historialPrecio);
 
         // Get the historialPrecio
-        restHistorialPrecioMockMvc.perform(get("/api/historial-precios/{id}", historialPrecio.getId()))
+        restHistorialPrecioMockMvc
+            .perform(get(ENTITY_API_URL_ID, historialPrecio.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(historialPrecio.getId().intValue()))
             .andExpect(jsonPath("$.fechaHistorial").value(DEFAULT_FECHA_HISTORIAL.toString()));
     }
 
     @Test
     @Transactional
-    public void getNonExistingHistorialPrecio() throws Exception {
+    void getNonExistingHistorialPrecio() throws Exception {
         // Get the historialPrecio
-        restHistorialPrecioMockMvc.perform(get("/api/historial-precios/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restHistorialPrecioMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateHistorialPrecio() throws Exception {
+    void putNewHistorialPrecio() throws Exception {
         // Initialize the database
-        historialPrecioService.save(historialPrecio);
+        historialPrecioRepository.saveAndFlush(historialPrecio);
 
         int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
 
@@ -230,12 +205,14 @@ public class HistorialPrecioResourceIT {
         HistorialPrecio updatedHistorialPrecio = historialPrecioRepository.findById(historialPrecio.getId()).get();
         // Disconnect from session so that the updates on updatedHistorialPrecio are not directly saved in db
         em.detach(updatedHistorialPrecio);
-        updatedHistorialPrecio
-            .fechaHistorial(UPDATED_FECHA_HISTORIAL);
+        updatedHistorialPrecio.fechaHistorial(UPDATED_FECHA_HISTORIAL);
 
-        restHistorialPrecioMockMvc.perform(put("/api/historial-precios")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedHistorialPrecio)))
+        restHistorialPrecioMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedHistorialPrecio.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedHistorialPrecio))
+            )
             .andExpect(status().isOk());
 
         // Validate the HistorialPrecio in the database
@@ -247,15 +224,17 @@ public class HistorialPrecioResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingHistorialPrecio() throws Exception {
+    void putNonExistingHistorialPrecio() throws Exception {
         int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
-
-        // Create the HistorialPrecio
+        historialPrecio.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restHistorialPrecioMockMvc.perform(put("/api/historial-precios")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(historialPrecio)))
+        restHistorialPrecioMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, historialPrecio.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the HistorialPrecio in the database
@@ -265,34 +244,173 @@ public class HistorialPrecioResourceIT {
 
     @Test
     @Transactional
-    public void deleteHistorialPrecio() throws Exception {
+    void putWithIdMismatchHistorialPrecio() throws Exception {
+        int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
+        historialPrecio.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistorialPrecioMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the HistorialPrecio in the database
+        List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamHistorialPrecio() throws Exception {
+        int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
+        historialPrecio.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistorialPrecioMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the HistorialPrecio in the database
+        List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateHistorialPrecioWithPatch() throws Exception {
         // Initialize the database
-        historialPrecioService.save(historialPrecio);
+        historialPrecioRepository.saveAndFlush(historialPrecio);
+
+        int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
+
+        // Update the historialPrecio using partial update
+        HistorialPrecio partialUpdatedHistorialPrecio = new HistorialPrecio();
+        partialUpdatedHistorialPrecio.setId(historialPrecio.getId());
+
+        restHistorialPrecioMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedHistorialPrecio.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedHistorialPrecio))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the HistorialPrecio in the database
+        List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
+        HistorialPrecio testHistorialPrecio = historialPrecioList.get(historialPrecioList.size() - 1);
+        assertThat(testHistorialPrecio.getFechaHistorial()).isEqualTo(DEFAULT_FECHA_HISTORIAL);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateHistorialPrecioWithPatch() throws Exception {
+        // Initialize the database
+        historialPrecioRepository.saveAndFlush(historialPrecio);
+
+        int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
+
+        // Update the historialPrecio using partial update
+        HistorialPrecio partialUpdatedHistorialPrecio = new HistorialPrecio();
+        partialUpdatedHistorialPrecio.setId(historialPrecio.getId());
+
+        partialUpdatedHistorialPrecio.fechaHistorial(UPDATED_FECHA_HISTORIAL);
+
+        restHistorialPrecioMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedHistorialPrecio.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedHistorialPrecio))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the HistorialPrecio in the database
+        List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
+        HistorialPrecio testHistorialPrecio = historialPrecioList.get(historialPrecioList.size() - 1);
+        assertThat(testHistorialPrecio.getFechaHistorial()).isEqualTo(UPDATED_FECHA_HISTORIAL);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingHistorialPrecio() throws Exception {
+        int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
+        historialPrecio.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restHistorialPrecioMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, historialPrecio.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the HistorialPrecio in the database
+        List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchHistorialPrecio() throws Exception {
+        int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
+        historialPrecio.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistorialPrecioMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the HistorialPrecio in the database
+        List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamHistorialPrecio() throws Exception {
+        int databaseSizeBeforeUpdate = historialPrecioRepository.findAll().size();
+        historialPrecio.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistorialPrecioMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(historialPrecio))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the HistorialPrecio in the database
+        List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
+        assertThat(historialPrecioList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteHistorialPrecio() throws Exception {
+        // Initialize the database
+        historialPrecioRepository.saveAndFlush(historialPrecio);
 
         int databaseSizeBeforeDelete = historialPrecioRepository.findAll().size();
 
         // Delete the historialPrecio
-        restHistorialPrecioMockMvc.perform(delete("/api/historial-precios/{id}", historialPrecio.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restHistorialPrecioMockMvc
+            .perform(delete(ENTITY_API_URL_ID, historialPrecio.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<HistorialPrecio> historialPrecioList = historialPrecioRepository.findAll();
         assertThat(historialPrecioList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(HistorialPrecio.class);
-        HistorialPrecio historialPrecio1 = new HistorialPrecio();
-        historialPrecio1.setId(1L);
-        HistorialPrecio historialPrecio2 = new HistorialPrecio();
-        historialPrecio2.setId(historialPrecio1.getId());
-        assertThat(historialPrecio1).isEqualTo(historialPrecio2);
-        historialPrecio2.setId(2L);
-        assertThat(historialPrecio1).isNotEqualTo(historialPrecio2);
-        historialPrecio1.setId(null);
-        assertThat(historialPrecio1).isNotEqualTo(historialPrecio2);
     }
 }

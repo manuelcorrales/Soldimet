@@ -1,76 +1,51 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.Empleado;
-import soldimet.domain.Persona;
-import soldimet.repository.EmpleadoRepository;
-import soldimet.service.EmpleadoService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Empleado;
+import soldimet.domain.Persona;
+import soldimet.repository.EmpleadoRepository;
+
 /**
  * Integration tests for the {@link EmpleadoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class EmpleadoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class EmpleadoResourceIT {
+
+    private static final String ENTITY_API_URL = "/api/empleados";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
     @Autowired
-    private EmpleadoService empleadoService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restEmpleadoMockMvc;
 
     private Empleado empleado;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final EmpleadoResource empleadoResource = new EmpleadoResource(empleadoService);
-        this.restEmpleadoMockMvc = MockMvcBuilders.standaloneSetup(empleadoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -92,6 +67,7 @@ public class EmpleadoResourceIT {
         empleado.setPersona(persona);
         return empleado;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -120,13 +96,11 @@ public class EmpleadoResourceIT {
 
     @Test
     @Transactional
-    public void createEmpleado() throws Exception {
+    void createEmpleado() throws Exception {
         int databaseSizeBeforeCreate = empleadoRepository.findAll().size();
-
         // Create the Empleado
-        restEmpleadoMockMvc.perform(post("/api/empleados")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(empleado)))
+        restEmpleadoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(empleado)))
             .andExpect(status().isCreated());
 
         // Validate the Empleado in the database
@@ -137,16 +111,15 @@ public class EmpleadoResourceIT {
 
     @Test
     @Transactional
-    public void createEmpleadoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = empleadoRepository.findAll().size();
-
+    void createEmpleadoWithExistingId() throws Exception {
         // Create the Empleado with an existing ID
         empleado.setId(1L);
 
+        int databaseSizeBeforeCreate = empleadoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEmpleadoMockMvc.perform(post("/api/empleados")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(empleado)))
+        restEmpleadoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(empleado)))
             .andExpect(status().isBadRequest());
 
         // Validate the Empleado in the database
@@ -154,46 +127,46 @@ public class EmpleadoResourceIT {
         assertThat(empleadoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllEmpleados() throws Exception {
+    void getAllEmpleados() throws Exception {
         // Initialize the database
         empleadoRepository.saveAndFlush(empleado);
 
         // Get all the empleadoList
-        restEmpleadoMockMvc.perform(get("/api/empleados?sort=id,desc"))
+        restEmpleadoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(empleado.getId().intValue())));
     }
-    
+
     @Test
     @Transactional
-    public void getEmpleado() throws Exception {
+    void getEmpleado() throws Exception {
         // Initialize the database
         empleadoRepository.saveAndFlush(empleado);
 
         // Get the empleado
-        restEmpleadoMockMvc.perform(get("/api/empleados/{id}", empleado.getId()))
+        restEmpleadoMockMvc
+            .perform(get(ENTITY_API_URL_ID, empleado.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(empleado.getId().intValue()));
     }
 
     @Test
     @Transactional
-    public void getNonExistingEmpleado() throws Exception {
+    void getNonExistingEmpleado() throws Exception {
         // Get the empleado
-        restEmpleadoMockMvc.perform(get("/api/empleados/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restEmpleadoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateEmpleado() throws Exception {
+    void putNewEmpleado() throws Exception {
         // Initialize the database
-        empleadoService.save(empleado);
+        empleadoRepository.saveAndFlush(empleado);
 
         int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
 
@@ -202,9 +175,12 @@ public class EmpleadoResourceIT {
         // Disconnect from session so that the updates on updatedEmpleado are not directly saved in db
         em.detach(updatedEmpleado);
 
-        restEmpleadoMockMvc.perform(put("/api/empleados")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedEmpleado)))
+        restEmpleadoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedEmpleado.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedEmpleado))
+            )
             .andExpect(status().isOk());
 
         // Validate the Empleado in the database
@@ -215,15 +191,17 @@ public class EmpleadoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingEmpleado() throws Exception {
+    void putNonExistingEmpleado() throws Exception {
         int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
-
-        // Create the Empleado
+        empleado.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEmpleadoMockMvc.perform(put("/api/empleados")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(empleado)))
+        restEmpleadoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, empleado.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(empleado))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Empleado in the database
@@ -233,34 +211,163 @@ public class EmpleadoResourceIT {
 
     @Test
     @Transactional
-    public void deleteEmpleado() throws Exception {
+    void putWithIdMismatchEmpleado() throws Exception {
+        int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
+        empleado.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEmpleadoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(empleado))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Empleado in the database
+        List<Empleado> empleadoList = empleadoRepository.findAll();
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamEmpleado() throws Exception {
+        int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
+        empleado.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEmpleadoMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(empleado)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Empleado in the database
+        List<Empleado> empleadoList = empleadoRepository.findAll();
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateEmpleadoWithPatch() throws Exception {
         // Initialize the database
-        empleadoService.save(empleado);
+        empleadoRepository.saveAndFlush(empleado);
+
+        int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
+
+        // Update the empleado using partial update
+        Empleado partialUpdatedEmpleado = new Empleado();
+        partialUpdatedEmpleado.setId(empleado.getId());
+
+        restEmpleadoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEmpleado.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmpleado))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Empleado in the database
+        List<Empleado> empleadoList = empleadoRepository.findAll();
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
+        Empleado testEmpleado = empleadoList.get(empleadoList.size() - 1);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateEmpleadoWithPatch() throws Exception {
+        // Initialize the database
+        empleadoRepository.saveAndFlush(empleado);
+
+        int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
+
+        // Update the empleado using partial update
+        Empleado partialUpdatedEmpleado = new Empleado();
+        partialUpdatedEmpleado.setId(empleado.getId());
+
+        restEmpleadoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEmpleado.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEmpleado))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Empleado in the database
+        List<Empleado> empleadoList = empleadoRepository.findAll();
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
+        Empleado testEmpleado = empleadoList.get(empleadoList.size() - 1);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingEmpleado() throws Exception {
+        int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
+        empleado.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restEmpleadoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, empleado.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(empleado))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Empleado in the database
+        List<Empleado> empleadoList = empleadoRepository.findAll();
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchEmpleado() throws Exception {
+        int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
+        empleado.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEmpleadoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(empleado))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Empleado in the database
+        List<Empleado> empleadoList = empleadoRepository.findAll();
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamEmpleado() throws Exception {
+        int databaseSizeBeforeUpdate = empleadoRepository.findAll().size();
+        empleado.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEmpleadoMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(empleado)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Empleado in the database
+        List<Empleado> empleadoList = empleadoRepository.findAll();
+        assertThat(empleadoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteEmpleado() throws Exception {
+        // Initialize the database
+        empleadoRepository.saveAndFlush(empleado);
 
         int databaseSizeBeforeDelete = empleadoRepository.findAll().size();
 
         // Delete the empleado
-        restEmpleadoMockMvc.perform(delete("/api/empleados/{id}", empleado.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restEmpleadoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, empleado.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Empleado> empleadoList = empleadoRepository.findAll();
         assertThat(empleadoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Empleado.class);
-        Empleado empleado1 = new Empleado();
-        empleado1.setId(1L);
-        Empleado empleado2 = new Empleado();
-        empleado2.setId(empleado1.getId());
-        assertThat(empleado1).isEqualTo(empleado2);
-        empleado2.setId(2L);
-        assertThat(empleado1).isNotEqualTo(empleado2);
-        empleado1.setId(null);
-        assertThat(empleado1).isNotEqualTo(empleado2);
     }
 }

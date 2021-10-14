@@ -1,80 +1,53 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.EstadoCostoRepuesto;
-import soldimet.repository.EstadoCostoRepuestoRepository;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.EstadoCostoRepuesto;
+import soldimet.repository.EstadoCostoRepuestoRepository;
+
 /**
  * Integration tests for the {@link EstadoCostoRepuestoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class EstadoCostoRepuestoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class EstadoCostoRepuestoResourceIT {
 
     private static final String DEFAULT_NOMBRE_ESTADO = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_ESTADO = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/estado-costo-repuestos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private EstadoCostoRepuestoRepository estadoCostoRepuestoRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restEstadoCostoRepuestoMockMvc;
 
     private EstadoCostoRepuesto estadoCostoRepuesto;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final EstadoCostoRepuestoResource estadoCostoRepuestoResource = new EstadoCostoRepuestoResource(estadoCostoRepuestoRepository);
-        this.restEstadoCostoRepuestoMockMvc = MockMvcBuilders.standaloneSetup(estadoCostoRepuestoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
-
-    public static EstadoCostoRepuesto createEntityConEstado(String nombreEstado) {
-        EstadoCostoRepuesto estadoCostoRepuesto = new EstadoCostoRepuesto()
-            .nombreEstado(nombreEstado);
-        return estadoCostoRepuesto;
-    }
 
     /**
      * Create an entity for this test.
@@ -83,10 +56,10 @@ public class EstadoCostoRepuestoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EstadoCostoRepuesto createEntity(EntityManager em) {
-        EstadoCostoRepuesto estadoCostoRepuesto = new EstadoCostoRepuesto()
-            .nombreEstado(DEFAULT_NOMBRE_ESTADO);
+        EstadoCostoRepuesto estadoCostoRepuesto = new EstadoCostoRepuesto().nombreEstado(DEFAULT_NOMBRE_ESTADO);
         return estadoCostoRepuesto;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -94,8 +67,7 @@ public class EstadoCostoRepuestoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EstadoCostoRepuesto createUpdatedEntity(EntityManager em) {
-        EstadoCostoRepuesto estadoCostoRepuesto = new EstadoCostoRepuesto()
-            .nombreEstado(UPDATED_NOMBRE_ESTADO);
+        EstadoCostoRepuesto estadoCostoRepuesto = new EstadoCostoRepuesto().nombreEstado(UPDATED_NOMBRE_ESTADO);
         return estadoCostoRepuesto;
     }
 
@@ -106,13 +78,13 @@ public class EstadoCostoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void createEstadoCostoRepuesto() throws Exception {
+    void createEstadoCostoRepuesto() throws Exception {
         int databaseSizeBeforeCreate = estadoCostoRepuestoRepository.findAll().size();
-
         // Create the EstadoCostoRepuesto
-        restEstadoCostoRepuestoMockMvc.perform(post("/api/estado-costo-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto)))
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
             .andExpect(status().isCreated());
 
         // Validate the EstadoCostoRepuesto in the database
@@ -124,16 +96,17 @@ public class EstadoCostoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void createEstadoCostoRepuestoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = estadoCostoRepuestoRepository.findAll().size();
-
+    void createEstadoCostoRepuestoWithExistingId() throws Exception {
         // Create the EstadoCostoRepuesto with an existing ID
         estadoCostoRepuesto.setId(1L);
 
+        int databaseSizeBeforeCreate = estadoCostoRepuestoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEstadoCostoRepuestoMockMvc.perform(post("/api/estado-costo-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto)))
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the EstadoCostoRepuesto in the database
@@ -141,19 +114,19 @@ public class EstadoCostoRepuestoResourceIT {
         assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNombreEstadoIsRequired() throws Exception {
+    void checkNombreEstadoIsRequired() throws Exception {
         int databaseSizeBeforeTest = estadoCostoRepuestoRepository.findAll().size();
         // set the field null
         estadoCostoRepuesto.setNombreEstado(null);
 
         // Create the EstadoCostoRepuesto, which fails.
 
-        restEstadoCostoRepuestoMockMvc.perform(post("/api/estado-costo-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto)))
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
@@ -162,43 +135,44 @@ public class EstadoCostoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllEstadoCostoRepuestos() throws Exception {
+    void getAllEstadoCostoRepuestos() throws Exception {
         // Initialize the database
         estadoCostoRepuestoRepository.saveAndFlush(estadoCostoRepuesto);
 
         // Get all the estadoCostoRepuestoList
-        restEstadoCostoRepuestoMockMvc.perform(get("/api/estado-costo-repuestos?sort=id,desc"))
+        restEstadoCostoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoCostoRepuesto.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
+            .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO)));
     }
 
     @Test
     @Transactional
-    public void getEstadoCostoRepuesto() throws Exception {
+    void getEstadoCostoRepuesto() throws Exception {
         // Initialize the database
         estadoCostoRepuestoRepository.saveAndFlush(estadoCostoRepuesto);
 
         // Get the estadoCostoRepuesto
-        restEstadoCostoRepuestoMockMvc.perform(get("/api/estado-costo-repuestos/{id}", estadoCostoRepuesto.getId()))
+        restEstadoCostoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL_ID, estadoCostoRepuesto.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(estadoCostoRepuesto.getId().intValue()))
-            .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
+            .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO));
     }
 
     @Test
     @Transactional
-    public void getNonExistingEstadoCostoRepuesto() throws Exception {
+    void getNonExistingEstadoCostoRepuesto() throws Exception {
         // Get the estadoCostoRepuesto
-        restEstadoCostoRepuestoMockMvc.perform(get("/api/estado-costo-repuestos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restEstadoCostoRepuestoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateEstadoCostoRepuesto() throws Exception {
+    void putNewEstadoCostoRepuesto() throws Exception {
         // Initialize the database
         estadoCostoRepuestoRepository.saveAndFlush(estadoCostoRepuesto);
 
@@ -208,12 +182,14 @@ public class EstadoCostoRepuestoResourceIT {
         EstadoCostoRepuesto updatedEstadoCostoRepuesto = estadoCostoRepuestoRepository.findById(estadoCostoRepuesto.getId()).get();
         // Disconnect from session so that the updates on updatedEstadoCostoRepuesto are not directly saved in db
         em.detach(updatedEstadoCostoRepuesto);
-        updatedEstadoCostoRepuesto
-            .nombreEstado(UPDATED_NOMBRE_ESTADO);
+        updatedEstadoCostoRepuesto.nombreEstado(UPDATED_NOMBRE_ESTADO);
 
-        restEstadoCostoRepuestoMockMvc.perform(put("/api/estado-costo-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedEstadoCostoRepuesto)))
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedEstadoCostoRepuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedEstadoCostoRepuesto))
+            )
             .andExpect(status().isOk());
 
         // Validate the EstadoCostoRepuesto in the database
@@ -225,15 +201,17 @@ public class EstadoCostoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingEstadoCostoRepuesto() throws Exception {
+    void putNonExistingEstadoCostoRepuesto() throws Exception {
         int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
-
-        // Create the EstadoCostoRepuesto
+        estadoCostoRepuesto.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEstadoCostoRepuestoMockMvc.perform(put("/api/estado-costo-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto)))
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, estadoCostoRepuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the EstadoCostoRepuesto in the database
@@ -243,34 +221,173 @@ public class EstadoCostoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void deleteEstadoCostoRepuesto() throws Exception {
+    void putWithIdMismatchEstadoCostoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
+        estadoCostoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoCostoRepuesto in the database
+        List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
+        assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamEstadoCostoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
+        estadoCostoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the EstadoCostoRepuesto in the database
+        List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
+        assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateEstadoCostoRepuestoWithPatch() throws Exception {
+        // Initialize the database
+        estadoCostoRepuestoRepository.saveAndFlush(estadoCostoRepuesto);
+
+        int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
+
+        // Update the estadoCostoRepuesto using partial update
+        EstadoCostoRepuesto partialUpdatedEstadoCostoRepuesto = new EstadoCostoRepuesto();
+        partialUpdatedEstadoCostoRepuesto.setId(estadoCostoRepuesto.getId());
+
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEstadoCostoRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEstadoCostoRepuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the EstadoCostoRepuesto in the database
+        List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
+        assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+        EstadoCostoRepuesto testEstadoCostoRepuesto = estadoCostoRepuestoList.get(estadoCostoRepuestoList.size() - 1);
+        assertThat(testEstadoCostoRepuesto.getNombreEstado()).isEqualTo(DEFAULT_NOMBRE_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateEstadoCostoRepuestoWithPatch() throws Exception {
+        // Initialize the database
+        estadoCostoRepuestoRepository.saveAndFlush(estadoCostoRepuesto);
+
+        int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
+
+        // Update the estadoCostoRepuesto using partial update
+        EstadoCostoRepuesto partialUpdatedEstadoCostoRepuesto = new EstadoCostoRepuesto();
+        partialUpdatedEstadoCostoRepuesto.setId(estadoCostoRepuesto.getId());
+
+        partialUpdatedEstadoCostoRepuesto.nombreEstado(UPDATED_NOMBRE_ESTADO);
+
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEstadoCostoRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEstadoCostoRepuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the EstadoCostoRepuesto in the database
+        List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
+        assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+        EstadoCostoRepuesto testEstadoCostoRepuesto = estadoCostoRepuestoList.get(estadoCostoRepuestoList.size() - 1);
+        assertThat(testEstadoCostoRepuesto.getNombreEstado()).isEqualTo(UPDATED_NOMBRE_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingEstadoCostoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
+        estadoCostoRepuesto.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, estadoCostoRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoCostoRepuesto in the database
+        List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
+        assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchEstadoCostoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
+        estadoCostoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoCostoRepuesto in the database
+        List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
+        assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamEstadoCostoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = estadoCostoRepuestoRepository.findAll().size();
+        estadoCostoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoCostoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoCostoRepuesto))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the EstadoCostoRepuesto in the database
+        List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
+        assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteEstadoCostoRepuesto() throws Exception {
         // Initialize the database
         estadoCostoRepuestoRepository.saveAndFlush(estadoCostoRepuesto);
 
         int databaseSizeBeforeDelete = estadoCostoRepuestoRepository.findAll().size();
 
         // Delete the estadoCostoRepuesto
-        restEstadoCostoRepuestoMockMvc.perform(delete("/api/estado-costo-repuestos/{id}", estadoCostoRepuesto.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restEstadoCostoRepuestoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, estadoCostoRepuesto.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<EstadoCostoRepuesto> estadoCostoRepuestoList = estadoCostoRepuestoRepository.findAll();
         assertThat(estadoCostoRepuestoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(EstadoCostoRepuesto.class);
-        EstadoCostoRepuesto estadoCostoRepuesto1 = new EstadoCostoRepuesto();
-        estadoCostoRepuesto1.setId(1L);
-        EstadoCostoRepuesto estadoCostoRepuesto2 = new EstadoCostoRepuesto();
-        estadoCostoRepuesto2.setId(estadoCostoRepuesto1.getId());
-        assertThat(estadoCostoRepuesto1).isEqualTo(estadoCostoRepuesto2);
-        estadoCostoRepuesto2.setId(2L);
-        assertThat(estadoCostoRepuesto1).isNotEqualTo(estadoCostoRepuesto2);
-        estadoCostoRepuesto1.setId(null);
-        assertThat(estadoCostoRepuesto1).isNotEqualTo(estadoCostoRepuesto2);
     }
 }

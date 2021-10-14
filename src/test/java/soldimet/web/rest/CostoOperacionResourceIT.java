@@ -1,82 +1,56 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.CostoOperacion;
-import soldimet.domain.Cilindrada;
-import soldimet.domain.Operacion;
-import soldimet.domain.TipoParteMotor;
-import soldimet.repository.CostoOperacionRepository;
-import soldimet.service.CostoOperacionService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Cilindrada;
+import soldimet.domain.CostoOperacion;
+import soldimet.domain.Operacion;
+import soldimet.domain.TipoParteMotor;
+import soldimet.repository.CostoOperacionRepository;
+
 /**
  * Integration tests for the {@link CostoOperacionResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class CostoOperacionResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class CostoOperacionResourceIT {
 
     private static final Float DEFAULT_COSTO_OPERACION = 0F;
     private static final Float UPDATED_COSTO_OPERACION = 1F;
-    private static final Float SMALLER_COSTO_OPERACION = 0F - 1F;
+
+    private static final String ENTITY_API_URL = "/api/costo-operacions";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private CostoOperacionRepository costoOperacionRepository;
 
     @Autowired
-    private CostoOperacionService costoOperacionService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restCostoOperacionMockMvc;
 
     private CostoOperacion costoOperacion;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CostoOperacionResource costoOperacionResource = new CostoOperacionResource(costoOperacionService);
-        this.restCostoOperacionMockMvc = MockMvcBuilders.standaloneSetup(costoOperacionResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -85,8 +59,7 @@ public class CostoOperacionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static CostoOperacion createEntity(EntityManager em) {
-        CostoOperacion costoOperacion = new CostoOperacion()
-            .costoOperacion(DEFAULT_COSTO_OPERACION);
+        CostoOperacion costoOperacion = new CostoOperacion().costoOperacion(DEFAULT_COSTO_OPERACION);
         // Add required entity
         Cilindrada cilindrada;
         if (TestUtil.findAll(em, Cilindrada.class).isEmpty()) {
@@ -119,6 +92,7 @@ public class CostoOperacionResourceIT {
         costoOperacion.setTipoParteMotor(tipoParteMotor);
         return costoOperacion;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -126,8 +100,7 @@ public class CostoOperacionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static CostoOperacion createUpdatedEntity(EntityManager em) {
-        CostoOperacion costoOperacion = new CostoOperacion()
-            .costoOperacion(UPDATED_COSTO_OPERACION);
+        CostoOperacion costoOperacion = new CostoOperacion().costoOperacion(UPDATED_COSTO_OPERACION);
         // Add required entity
         Cilindrada cilindrada;
         if (TestUtil.findAll(em, Cilindrada.class).isEmpty()) {
@@ -168,13 +141,13 @@ public class CostoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void createCostoOperacion() throws Exception {
+    void createCostoOperacion() throws Exception {
         int databaseSizeBeforeCreate = costoOperacionRepository.findAll().size();
-
         // Create the CostoOperacion
-        restCostoOperacionMockMvc.perform(post("/api/costo-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(costoOperacion)))
+        restCostoOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
             .andExpect(status().isCreated());
 
         // Validate the CostoOperacion in the database
@@ -186,16 +159,17 @@ public class CostoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void createCostoOperacionWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = costoOperacionRepository.findAll().size();
-
+    void createCostoOperacionWithExistingId() throws Exception {
         // Create the CostoOperacion with an existing ID
         costoOperacion.setId(1L);
 
+        int databaseSizeBeforeCreate = costoOperacionRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCostoOperacionMockMvc.perform(post("/api/costo-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(costoOperacion)))
+        restCostoOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the CostoOperacion in the database
@@ -203,48 +177,67 @@ public class CostoOperacionResourceIT {
         assertThat(costoOperacionList).hasSize(databaseSizeBeforeCreate);
     }
 
+    @Test
+    @Transactional
+    void checkCostoOperacionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = costoOperacionRepository.findAll().size();
+        // set the field null
+        costoOperacion.setCostoOperacion(null);
+
+        // Create the CostoOperacion, which fails.
+
+        restCostoOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeTest);
+    }
 
     @Test
     @Transactional
-    public void getAllCostoOperacions() throws Exception {
+    void getAllCostoOperacions() throws Exception {
         // Initialize the database
         costoOperacionRepository.saveAndFlush(costoOperacion);
 
         // Get all the costoOperacionList
-        restCostoOperacionMockMvc.perform(get("/api/costo-operacions?sort=id,desc"))
+        restCostoOperacionMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(costoOperacion.getId().intValue())))
             .andExpect(jsonPath("$.[*].costoOperacion").value(hasItem(DEFAULT_COSTO_OPERACION.doubleValue())));
     }
 
     @Test
     @Transactional
-    public void getCostoOperacion() throws Exception {
+    void getCostoOperacion() throws Exception {
         // Initialize the database
         costoOperacionRepository.saveAndFlush(costoOperacion);
 
         // Get the costoOperacion
-        restCostoOperacionMockMvc.perform(get("/api/costo-operacions/{id}", costoOperacion.getId()))
+        restCostoOperacionMockMvc
+            .perform(get(ENTITY_API_URL_ID, costoOperacion.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(costoOperacion.getId().intValue()))
             .andExpect(jsonPath("$.costoOperacion").value(DEFAULT_COSTO_OPERACION.doubleValue()));
     }
 
     @Test
     @Transactional
-    public void getNonExistingCostoOperacion() throws Exception {
+    void getNonExistingCostoOperacion() throws Exception {
         // Get the costoOperacion
-        restCostoOperacionMockMvc.perform(get("/api/costo-operacions/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCostoOperacionMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateCostoOperacion() throws Exception {
+    void putNewCostoOperacion() throws Exception {
         // Initialize the database
-        costoOperacionService.save(costoOperacion);
+        costoOperacionRepository.saveAndFlush(costoOperacion);
 
         int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
 
@@ -252,12 +245,14 @@ public class CostoOperacionResourceIT {
         CostoOperacion updatedCostoOperacion = costoOperacionRepository.findById(costoOperacion.getId()).get();
         // Disconnect from session so that the updates on updatedCostoOperacion are not directly saved in db
         em.detach(updatedCostoOperacion);
-        updatedCostoOperacion
-            .costoOperacion(UPDATED_COSTO_OPERACION);
+        updatedCostoOperacion.costoOperacion(UPDATED_COSTO_OPERACION);
 
-        restCostoOperacionMockMvc.perform(put("/api/costo-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCostoOperacion)))
+        restCostoOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedCostoOperacion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedCostoOperacion))
+            )
             .andExpect(status().isOk());
 
         // Validate the CostoOperacion in the database
@@ -269,15 +264,17 @@ public class CostoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingCostoOperacion() throws Exception {
+    void putNonExistingCostoOperacion() throws Exception {
         int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
-
-        // Create the CostoOperacion
+        costoOperacion.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCostoOperacionMockMvc.perform(put("/api/costo-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(costoOperacion)))
+        restCostoOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, costoOperacion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the CostoOperacion in the database
@@ -287,34 +284,171 @@ public class CostoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void deleteCostoOperacion() throws Exception {
+    void putWithIdMismatchCostoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
+        costoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCostoOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the CostoOperacion in the database
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamCostoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
+        costoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCostoOperacionMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(costoOperacion)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the CostoOperacion in the database
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateCostoOperacionWithPatch() throws Exception {
         // Initialize the database
-        costoOperacionService.save(costoOperacion);
+        costoOperacionRepository.saveAndFlush(costoOperacion);
+
+        int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
+
+        // Update the costoOperacion using partial update
+        CostoOperacion partialUpdatedCostoOperacion = new CostoOperacion();
+        partialUpdatedCostoOperacion.setId(costoOperacion.getId());
+
+        partialUpdatedCostoOperacion.costoOperacion(UPDATED_COSTO_OPERACION);
+
+        restCostoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCostoOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCostoOperacion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the CostoOperacion in the database
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
+        CostoOperacion testCostoOperacion = costoOperacionList.get(costoOperacionList.size() - 1);
+        assertThat(testCostoOperacion.getCostoOperacion()).isEqualTo(UPDATED_COSTO_OPERACION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateCostoOperacionWithPatch() throws Exception {
+        // Initialize the database
+        costoOperacionRepository.saveAndFlush(costoOperacion);
+
+        int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
+
+        // Update the costoOperacion using partial update
+        CostoOperacion partialUpdatedCostoOperacion = new CostoOperacion();
+        partialUpdatedCostoOperacion.setId(costoOperacion.getId());
+
+        partialUpdatedCostoOperacion.costoOperacion(UPDATED_COSTO_OPERACION);
+
+        restCostoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCostoOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCostoOperacion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the CostoOperacion in the database
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
+        CostoOperacion testCostoOperacion = costoOperacionList.get(costoOperacionList.size() - 1);
+        assertThat(testCostoOperacion.getCostoOperacion()).isEqualTo(UPDATED_COSTO_OPERACION);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingCostoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
+        costoOperacion.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restCostoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, costoOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the CostoOperacion in the database
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchCostoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
+        costoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCostoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the CostoOperacion in the database
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamCostoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = costoOperacionRepository.findAll().size();
+        costoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restCostoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(costoOperacion))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the CostoOperacion in the database
+        List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
+        assertThat(costoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteCostoOperacion() throws Exception {
+        // Initialize the database
+        costoOperacionRepository.saveAndFlush(costoOperacion);
 
         int databaseSizeBeforeDelete = costoOperacionRepository.findAll().size();
 
         // Delete the costoOperacion
-        restCostoOperacionMockMvc.perform(delete("/api/costo-operacions/{id}", costoOperacion.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restCostoOperacionMockMvc
+            .perform(delete(ENTITY_API_URL_ID, costoOperacion.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<CostoOperacion> costoOperacionList = costoOperacionRepository.findAll();
         assertThat(costoOperacionList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(CostoOperacion.class);
-        CostoOperacion costoOperacion1 = new CostoOperacion();
-        costoOperacion1.setId(1L);
-        CostoOperacion costoOperacion2 = new CostoOperacion();
-        costoOperacion2.setId(costoOperacion1.getId());
-        assertThat(costoOperacion1).isEqualTo(costoOperacion2);
-        costoOperacion2.setId(2L);
-        assertThat(costoOperacion1).isNotEqualTo(costoOperacion2);
-        costoOperacion1.setId(null);
-        assertThat(costoOperacion1).isNotEqualTo(costoOperacion2);
     }
 }

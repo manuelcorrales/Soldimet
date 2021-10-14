@@ -1,45 +1,39 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.Articulo;
-import soldimet.domain.EstadoArticulo;
-import soldimet.domain.Marca;
-import soldimet.domain.TipoRepuesto;
-import soldimet.repository.ArticuloRepository;
-import soldimet.service.ArticuloService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-import soldimet.service.dto.ArticuloCriteria;
-import soldimet.service.ArticuloQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Articulo;
+import soldimet.domain.EstadoArticulo;
+import soldimet.domain.Marca;
+import soldimet.domain.TipoRepuesto;
+import soldimet.repository.ArticuloRepository;
+import soldimet.service.criteria.ArticuloCriteria;
+
 /**
  * Integration tests for the {@link ArticuloResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class ArticuloResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class ArticuloResourceIT {
 
     private static final String DEFAULT_CODIGO_ARTICULO_PROVEEDOR = "AAAAAAAAAA";
     private static final String UPDATED_CODIGO_ARTICULO_PROVEEDOR = "BBBBBBBBBB";
@@ -60,45 +54,22 @@ public class ArticuloResourceIT {
     private static final LocalDate UPDATED_FECHA_COSTO_PROVEEDOR = LocalDate.now(ZoneId.systemDefault());
     private static final LocalDate SMALLER_FECHA_COSTO_PROVEEDOR = LocalDate.ofEpochDay(-1L);
 
+    private static final String ENTITY_API_URL = "/api/articulos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private ArticuloRepository articuloRepository;
-
-    @Autowired
-    private ArticuloService articuloService;
-
-    @Autowired
-    private ArticuloQueryService articuloQueryService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restArticuloMockMvc;
 
     private Articulo articulo;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final ArticuloResource articuloResource = new ArticuloResource(articuloService, articuloQueryService);
-        this.restArticuloMockMvc = MockMvcBuilders.standaloneSetup(articuloResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -135,6 +106,7 @@ public class ArticuloResourceIT {
         articulo.setTipoRepuesto(tipoRepuesto);
         return articulo;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -178,13 +150,11 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void createArticulo() throws Exception {
+    void createArticulo() throws Exception {
         int databaseSizeBeforeCreate = articuloRepository.findAll().size();
-
         // Create the Articulo
-        restArticuloMockMvc.perform(post("/api/articulos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(articulo)))
+        restArticuloMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(articulo)))
             .andExpect(status().isCreated());
 
         // Validate the Articulo in the database
@@ -200,16 +170,15 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void createArticuloWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = articuloRepository.findAll().size();
-
+    void createArticuloWithExistingId() throws Exception {
         // Create the Articulo with an existing ID
         articulo.setId(1L);
 
+        int databaseSizeBeforeCreate = articuloRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restArticuloMockMvc.perform(post("/api/articulos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(articulo)))
+        restArticuloMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(articulo)))
             .andExpect(status().isBadRequest());
 
         // Validate the Articulo in the database
@@ -217,19 +186,17 @@ public class ArticuloResourceIT {
         assertThat(articuloList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkValorIsRequired() throws Exception {
+    void checkValorIsRequired() throws Exception {
         int databaseSizeBeforeTest = articuloRepository.findAll().size();
         // set the field null
         articulo.setValor(null);
 
         // Create the Articulo, which fails.
 
-        restArticuloMockMvc.perform(post("/api/articulos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(articulo)))
+        restArticuloMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(articulo)))
             .andExpect(status().isBadRequest());
 
         List<Articulo> articuloList = articuloRepository.findAll();
@@ -238,34 +205,36 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulos() throws Exception {
+    void getAllArticulos() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
         // Get all the articuloList
-        restArticuloMockMvc.perform(get("/api/articulos?sort=id,desc"))
+        restArticuloMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(articulo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString())))
+            .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR)))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())))
             .andExpect(jsonPath("$.[*].fechaCosto").value(hasItem(DEFAULT_FECHA_COSTO.toString())))
             .andExpect(jsonPath("$.[*].costoProveedor").value(hasItem(DEFAULT_COSTO_PROVEEDOR.doubleValue())))
             .andExpect(jsonPath("$.[*].fechaCostoProveedor").value(hasItem(DEFAULT_FECHA_COSTO_PROVEEDOR.toString())));
     }
-    
+
     @Test
     @Transactional
-    public void getArticulo() throws Exception {
+    void getArticulo() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
         // Get the articulo
-        restArticuloMockMvc.perform(get("/api/articulos/{id}", articulo.getId()))
+        restArticuloMockMvc
+            .perform(get(ENTITY_API_URL_ID, articulo.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(articulo.getId().intValue()))
-            .andExpect(jsonPath("$.codigoArticuloProveedor").value(DEFAULT_CODIGO_ARTICULO_PROVEEDOR.toString()))
+            .andExpect(jsonPath("$.codigoArticuloProveedor").value(DEFAULT_CODIGO_ARTICULO_PROVEEDOR))
             .andExpect(jsonPath("$.valor").value(DEFAULT_VALOR.doubleValue()))
             .andExpect(jsonPath("$.fechaCosto").value(DEFAULT_FECHA_COSTO.toString()))
             .andExpect(jsonPath("$.costoProveedor").value(DEFAULT_COSTO_PROVEEDOR.doubleValue()))
@@ -274,7 +243,25 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCodigoArticuloProveedorIsEqualToSomething() throws Exception {
+    void getArticulosByIdFiltering() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        Long id = articulo.getId();
+
+        defaultArticuloShouldBeFound("id.equals=" + id);
+        defaultArticuloShouldNotBeFound("id.notEquals=" + id);
+
+        defaultArticuloShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultArticuloShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultArticuloShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultArticuloShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByCodigoArticuloProveedorIsEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -287,12 +274,27 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCodigoArticuloProveedorIsInShouldWork() throws Exception {
+    void getAllArticulosByCodigoArticuloProveedorIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where codigoArticuloProveedor not equals to DEFAULT_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("codigoArticuloProveedor.notEquals=" + DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
+
+        // Get all the articuloList where codigoArticuloProveedor not equals to UPDATED_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldBeFound("codigoArticuloProveedor.notEquals=" + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByCodigoArticuloProveedorIsInShouldWork() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
         // Get all the articuloList where codigoArticuloProveedor in DEFAULT_CODIGO_ARTICULO_PROVEEDOR or UPDATED_CODIGO_ARTICULO_PROVEEDOR
-        defaultArticuloShouldBeFound("codigoArticuloProveedor.in=" + DEFAULT_CODIGO_ARTICULO_PROVEEDOR + "," + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+        defaultArticuloShouldBeFound(
+            "codigoArticuloProveedor.in=" + DEFAULT_CODIGO_ARTICULO_PROVEEDOR + "," + UPDATED_CODIGO_ARTICULO_PROVEEDOR
+        );
 
         // Get all the articuloList where codigoArticuloProveedor equals to UPDATED_CODIGO_ARTICULO_PROVEEDOR
         defaultArticuloShouldNotBeFound("codigoArticuloProveedor.in=" + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
@@ -300,7 +302,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCodigoArticuloProveedorIsNullOrNotNull() throws Exception {
+    void getAllArticulosByCodigoArticuloProveedorIsNullOrNotNull() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -313,7 +315,33 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByValorIsEqualToSomething() throws Exception {
+    void getAllArticulosByCodigoArticuloProveedorContainsSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where codigoArticuloProveedor contains DEFAULT_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldBeFound("codigoArticuloProveedor.contains=" + DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
+
+        // Get all the articuloList where codigoArticuloProveedor contains UPDATED_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("codigoArticuloProveedor.contains=" + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByCodigoArticuloProveedorNotContainsSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where codigoArticuloProveedor does not contain DEFAULT_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("codigoArticuloProveedor.doesNotContain=" + DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
+
+        // Get all the articuloList where codigoArticuloProveedor does not contain UPDATED_CODIGO_ARTICULO_PROVEEDOR
+        defaultArticuloShouldBeFound("codigoArticuloProveedor.doesNotContain=" + UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByValorIsEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -326,7 +354,20 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByValorIsInShouldWork() throws Exception {
+    void getAllArticulosByValorIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where valor not equals to DEFAULT_VALOR
+        defaultArticuloShouldNotBeFound("valor.notEquals=" + DEFAULT_VALOR);
+
+        // Get all the articuloList where valor not equals to UPDATED_VALOR
+        defaultArticuloShouldBeFound("valor.notEquals=" + UPDATED_VALOR);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByValorIsInShouldWork() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -339,7 +380,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByValorIsNullOrNotNull() throws Exception {
+    void getAllArticulosByValorIsNullOrNotNull() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -352,7 +393,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByValorIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByValorIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -365,7 +406,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByValorIsLessThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByValorIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -378,7 +419,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByValorIsLessThanSomething() throws Exception {
+    void getAllArticulosByValorIsLessThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -391,7 +432,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByValorIsGreaterThanSomething() throws Exception {
+    void getAllArticulosByValorIsGreaterThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -402,10 +443,9 @@ public class ArticuloResourceIT {
         defaultArticuloShouldBeFound("valor.greaterThan=" + SMALLER_VALOR);
     }
 
-
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoIsEqualToSomething() throws Exception {
+    void getAllArticulosByFechaCostoIsEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -418,7 +458,20 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoIsInShouldWork() throws Exception {
+    void getAllArticulosByFechaCostoIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCosto not equals to DEFAULT_FECHA_COSTO
+        defaultArticuloShouldNotBeFound("fechaCosto.notEquals=" + DEFAULT_FECHA_COSTO);
+
+        // Get all the articuloList where fechaCosto not equals to UPDATED_FECHA_COSTO
+        defaultArticuloShouldBeFound("fechaCosto.notEquals=" + UPDATED_FECHA_COSTO);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByFechaCostoIsInShouldWork() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -431,7 +484,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoIsNullOrNotNull() throws Exception {
+    void getAllArticulosByFechaCostoIsNullOrNotNull() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -444,7 +497,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByFechaCostoIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -457,7 +510,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoIsLessThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByFechaCostoIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -470,7 +523,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoIsLessThanSomething() throws Exception {
+    void getAllArticulosByFechaCostoIsLessThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -483,7 +536,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoIsGreaterThanSomething() throws Exception {
+    void getAllArticulosByFechaCostoIsGreaterThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -494,10 +547,9 @@ public class ArticuloResourceIT {
         defaultArticuloShouldBeFound("fechaCosto.greaterThan=" + SMALLER_FECHA_COSTO);
     }
 
-
     @Test
     @Transactional
-    public void getAllArticulosByCostoProveedorIsEqualToSomething() throws Exception {
+    void getAllArticulosByCostoProveedorIsEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -510,7 +562,20 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCostoProveedorIsInShouldWork() throws Exception {
+    void getAllArticulosByCostoProveedorIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where costoProveedor not equals to DEFAULT_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("costoProveedor.notEquals=" + DEFAULT_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where costoProveedor not equals to UPDATED_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("costoProveedor.notEquals=" + UPDATED_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByCostoProveedorIsInShouldWork() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -523,7 +588,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCostoProveedorIsNullOrNotNull() throws Exception {
+    void getAllArticulosByCostoProveedorIsNullOrNotNull() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -536,7 +601,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCostoProveedorIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByCostoProveedorIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -549,7 +614,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCostoProveedorIsLessThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByCostoProveedorIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -562,7 +627,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCostoProveedorIsLessThanSomething() throws Exception {
+    void getAllArticulosByCostoProveedorIsLessThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -575,7 +640,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByCostoProveedorIsGreaterThanSomething() throws Exception {
+    void getAllArticulosByCostoProveedorIsGreaterThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -586,10 +651,9 @@ public class ArticuloResourceIT {
         defaultArticuloShouldBeFound("costoProveedor.greaterThan=" + SMALLER_COSTO_PROVEEDOR);
     }
 
-
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoProveedorIsEqualToSomething() throws Exception {
+    void getAllArticulosByFechaCostoProveedorIsEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -602,7 +666,20 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoProveedorIsInShouldWork() throws Exception {
+    void getAllArticulosByFechaCostoProveedorIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        // Get all the articuloList where fechaCostoProveedor not equals to DEFAULT_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldNotBeFound("fechaCostoProveedor.notEquals=" + DEFAULT_FECHA_COSTO_PROVEEDOR);
+
+        // Get all the articuloList where fechaCostoProveedor not equals to UPDATED_FECHA_COSTO_PROVEEDOR
+        defaultArticuloShouldBeFound("fechaCostoProveedor.notEquals=" + UPDATED_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void getAllArticulosByFechaCostoProveedorIsInShouldWork() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -615,7 +692,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoProveedorIsNullOrNotNull() throws Exception {
+    void getAllArticulosByFechaCostoProveedorIsNullOrNotNull() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -628,7 +705,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoProveedorIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByFechaCostoProveedorIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -641,7 +718,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoProveedorIsLessThanOrEqualToSomething() throws Exception {
+    void getAllArticulosByFechaCostoProveedorIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -654,7 +731,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoProveedorIsLessThanSomething() throws Exception {
+    void getAllArticulosByFechaCostoProveedorIsLessThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -667,7 +744,7 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void getAllArticulosByFechaCostoProveedorIsGreaterThanSomething() throws Exception {
+    void getAllArticulosByFechaCostoProveedorIsGreaterThanSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
 
@@ -678,26 +755,28 @@ public class ArticuloResourceIT {
         defaultArticuloShouldBeFound("fechaCostoProveedor.greaterThan=" + SMALLER_FECHA_COSTO_PROVEEDOR);
     }
 
-
     @Test
     @Transactional
-    public void getAllArticulosByEstadoIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        EstadoArticulo estado = articulo.getEstado();
+    void getAllArticulosByEstadoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+        EstadoArticulo estado = EstadoArticuloResourceIT.createEntity(em);
+        em.persist(estado);
+        em.flush();
+        articulo.setEstado(estado);
         articuloRepository.saveAndFlush(articulo);
         Long estadoId = estado.getId();
 
         // Get all the articuloList where estado equals to estadoId
         defaultArticuloShouldBeFound("estadoId.equals=" + estadoId);
 
-        // Get all the articuloList where estado equals to estadoId + 1
+        // Get all the articuloList where estado equals to (estadoId + 1)
         defaultArticuloShouldNotBeFound("estadoId.equals=" + (estadoId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllArticulosByMarcaIsEqualToSomething() throws Exception {
+    void getAllArticulosByMarcaIsEqualToSomething() throws Exception {
         // Initialize the database
         articuloRepository.saveAndFlush(articulo);
         Marca marca = MarcaResourceIT.createEntity(em);
@@ -710,23 +789,26 @@ public class ArticuloResourceIT {
         // Get all the articuloList where marca equals to marcaId
         defaultArticuloShouldBeFound("marcaId.equals=" + marcaId);
 
-        // Get all the articuloList where marca equals to marcaId + 1
+        // Get all the articuloList where marca equals to (marcaId + 1)
         defaultArticuloShouldNotBeFound("marcaId.equals=" + (marcaId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllArticulosByTipoRepuestoIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        TipoRepuesto tipoRepuesto = articulo.getTipoRepuesto();
+    void getAllArticulosByTipoRepuestoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+        TipoRepuesto tipoRepuesto = TipoRepuestoResourceIT.createEntity(em);
+        em.persist(tipoRepuesto);
+        em.flush();
+        articulo.setTipoRepuesto(tipoRepuesto);
         articuloRepository.saveAndFlush(articulo);
         Long tipoRepuestoId = tipoRepuesto.getId();
 
         // Get all the articuloList where tipoRepuesto equals to tipoRepuestoId
         defaultArticuloShouldBeFound("tipoRepuestoId.equals=" + tipoRepuestoId);
 
-        // Get all the articuloList where tipoRepuesto equals to tipoRepuestoId + 1
+        // Get all the articuloList where tipoRepuesto equals to (tipoRepuestoId + 1)
         defaultArticuloShouldNotBeFound("tipoRepuestoId.equals=" + (tipoRepuestoId + 1));
     }
 
@@ -734,9 +816,10 @@ public class ArticuloResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultArticuloShouldBeFound(String filter) throws Exception {
-        restArticuloMockMvc.perform(get("/api/articulos?sort=id,desc&" + filter))
+        restArticuloMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(articulo.getId().intValue())))
             .andExpect(jsonPath("$.[*].codigoArticuloProveedor").value(hasItem(DEFAULT_CODIGO_ARTICULO_PROVEEDOR)))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.doubleValue())))
@@ -745,9 +828,10 @@ public class ArticuloResourceIT {
             .andExpect(jsonPath("$.[*].fechaCostoProveedor").value(hasItem(DEFAULT_FECHA_COSTO_PROVEEDOR.toString())));
 
         // Check, that the count call also returns 1
-        restArticuloMockMvc.perform(get("/api/articulos/count?sort=id,desc&" + filter))
+        restArticuloMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
     }
 
@@ -755,33 +839,33 @@ public class ArticuloResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultArticuloShouldNotBeFound(String filter) throws Exception {
-        restArticuloMockMvc.perform(get("/api/articulos?sort=id,desc&" + filter))
+        restArticuloMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restArticuloMockMvc.perform(get("/api/articulos/count?sort=id,desc&" + filter))
+        restArticuloMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
     }
 
-
     @Test
     @Transactional
-    public void getNonExistingArticulo() throws Exception {
+    void getNonExistingArticulo() throws Exception {
         // Get the articulo
-        restArticuloMockMvc.perform(get("/api/articulos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restArticuloMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateArticulo() throws Exception {
+    void putNewArticulo() throws Exception {
         // Initialize the database
-        articuloService.save(articulo);
+        articuloRepository.saveAndFlush(articulo);
 
         int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
 
@@ -796,9 +880,12 @@ public class ArticuloResourceIT {
             .costoProveedor(UPDATED_COSTO_PROVEEDOR)
             .fechaCostoProveedor(UPDATED_FECHA_COSTO_PROVEEDOR);
 
-        restArticuloMockMvc.perform(put("/api/articulos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedArticulo)))
+        restArticuloMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedArticulo.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedArticulo))
+            )
             .andExpect(status().isOk());
 
         // Validate the Articulo in the database
@@ -814,15 +901,17 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingArticulo() throws Exception {
+    void putNonExistingArticulo() throws Exception {
         int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
-
-        // Create the Articulo
+        articulo.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restArticuloMockMvc.perform(put("/api/articulos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(articulo)))
+        restArticuloMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, articulo.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(articulo))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Articulo in the database
@@ -832,34 +921,182 @@ public class ArticuloResourceIT {
 
     @Test
     @Transactional
-    public void deleteArticulo() throws Exception {
+    void putWithIdMismatchArticulo() throws Exception {
+        int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
+        articulo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restArticuloMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(articulo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Articulo in the database
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamArticulo() throws Exception {
+        int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
+        articulo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restArticuloMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(articulo)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Articulo in the database
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateArticuloWithPatch() throws Exception {
         // Initialize the database
-        articuloService.save(articulo);
+        articuloRepository.saveAndFlush(articulo);
+
+        int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
+
+        // Update the articulo using partial update
+        Articulo partialUpdatedArticulo = new Articulo();
+        partialUpdatedArticulo.setId(articulo.getId());
+
+        partialUpdatedArticulo.valor(UPDATED_VALOR);
+
+        restArticuloMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedArticulo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedArticulo))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Articulo in the database
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
+        Articulo testArticulo = articuloList.get(articuloList.size() - 1);
+        assertThat(testArticulo.getCodigoArticuloProveedor()).isEqualTo(DEFAULT_CODIGO_ARTICULO_PROVEEDOR);
+        assertThat(testArticulo.getValor()).isEqualTo(UPDATED_VALOR);
+        assertThat(testArticulo.getFechaCosto()).isEqualTo(DEFAULT_FECHA_COSTO);
+        assertThat(testArticulo.getCostoProveedor()).isEqualTo(DEFAULT_COSTO_PROVEEDOR);
+        assertThat(testArticulo.getFechaCostoProveedor()).isEqualTo(DEFAULT_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateArticuloWithPatch() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
+
+        int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
+
+        // Update the articulo using partial update
+        Articulo partialUpdatedArticulo = new Articulo();
+        partialUpdatedArticulo.setId(articulo.getId());
+
+        partialUpdatedArticulo
+            .codigoArticuloProveedor(UPDATED_CODIGO_ARTICULO_PROVEEDOR)
+            .valor(UPDATED_VALOR)
+            .fechaCosto(UPDATED_FECHA_COSTO)
+            .costoProveedor(UPDATED_COSTO_PROVEEDOR)
+            .fechaCostoProveedor(UPDATED_FECHA_COSTO_PROVEEDOR);
+
+        restArticuloMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedArticulo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedArticulo))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Articulo in the database
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
+        Articulo testArticulo = articuloList.get(articuloList.size() - 1);
+        assertThat(testArticulo.getCodigoArticuloProveedor()).isEqualTo(UPDATED_CODIGO_ARTICULO_PROVEEDOR);
+        assertThat(testArticulo.getValor()).isEqualTo(UPDATED_VALOR);
+        assertThat(testArticulo.getFechaCosto()).isEqualTo(UPDATED_FECHA_COSTO);
+        assertThat(testArticulo.getCostoProveedor()).isEqualTo(UPDATED_COSTO_PROVEEDOR);
+        assertThat(testArticulo.getFechaCostoProveedor()).isEqualTo(UPDATED_FECHA_COSTO_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingArticulo() throws Exception {
+        int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
+        articulo.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restArticuloMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, articulo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(articulo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Articulo in the database
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchArticulo() throws Exception {
+        int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
+        articulo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restArticuloMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(articulo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Articulo in the database
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamArticulo() throws Exception {
+        int databaseSizeBeforeUpdate = articuloRepository.findAll().size();
+        articulo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restArticuloMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(articulo)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Articulo in the database
+        List<Articulo> articuloList = articuloRepository.findAll();
+        assertThat(articuloList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteArticulo() throws Exception {
+        // Initialize the database
+        articuloRepository.saveAndFlush(articulo);
 
         int databaseSizeBeforeDelete = articuloRepository.findAll().size();
 
         // Delete the articulo
-        restArticuloMockMvc.perform(delete("/api/articulos/{id}", articulo.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restArticuloMockMvc
+            .perform(delete(ENTITY_API_URL_ID, articulo.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Articulo> articuloList = articuloRepository.findAll();
         assertThat(articuloList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Articulo.class);
-        Articulo articulo1 = new Articulo();
-        articulo1.setId(1L);
-        Articulo articulo2 = new Articulo();
-        articulo2.setId(articulo1.getId());
-        assertThat(articulo1).isEqualTo(articulo2);
-        articulo2.setId(2L);
-        assertThat(articulo1).isNotEqualTo(articulo2);
-        articulo1.setId(null);
-        assertThat(articulo1).isNotEqualTo(articulo2);
     }
 }

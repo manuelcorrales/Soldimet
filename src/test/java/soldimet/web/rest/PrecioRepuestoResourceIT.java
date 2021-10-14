@@ -1,89 +1,61 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.PrecioRepuesto;
-import soldimet.repository.PrecioRepuestoRepository;
-import soldimet.service.PrecioRepuestoService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.PrecioRepuesto;
+import soldimet.repository.PrecioRepuestoRepository;
+
 /**
  * Integration tests for the {@link PrecioRepuestoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class PrecioRepuestoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class PrecioRepuestoResourceIT {
 
     private static final LocalDate DEFAULT_FECHA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_FECHA = LocalDate.ofEpochDay(-1L);
 
     private static final Float DEFAULT_PRECIO_PRIVADO = 0F;
     private static final Float UPDATED_PRECIO_PRIVADO = 1F;
-    private static final Float SMALLER_PRECIO_PRIVADO = 0F - 1F;
 
     private static final Float DEFAULT_PRECIO_PUBLICO = 0F;
     private static final Float UPDATED_PRECIO_PUBLICO = 1F;
-    private static final Float SMALLER_PRECIO_PUBLICO = 0F - 1F;
+
+    private static final String ENTITY_API_URL = "/api/precio-repuestos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private PrecioRepuestoRepository precioRepuestoRepository;
 
     @Autowired
-    private PrecioRepuestoService precioRepuestoService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restPrecioRepuestoMockMvc;
 
     private PrecioRepuesto precioRepuesto;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final PrecioRepuestoResource precioRepuestoResource = new PrecioRepuestoResource(precioRepuestoService);
-        this.restPrecioRepuestoMockMvc = MockMvcBuilders.standaloneSetup(precioRepuestoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -98,6 +70,7 @@ public class PrecioRepuestoResourceIT {
             .precioPublico(DEFAULT_PRECIO_PUBLICO);
         return precioRepuesto;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -119,13 +92,13 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void createPrecioRepuesto() throws Exception {
+    void createPrecioRepuesto() throws Exception {
         int databaseSizeBeforeCreate = precioRepuestoRepository.findAll().size();
-
         // Create the PrecioRepuesto
-        restPrecioRepuestoMockMvc.perform(post("/api/precio-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(precioRepuesto)))
+        restPrecioRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
             .andExpect(status().isCreated());
 
         // Validate the PrecioRepuesto in the database
@@ -139,16 +112,17 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void createPrecioRepuestoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = precioRepuestoRepository.findAll().size();
-
+    void createPrecioRepuestoWithExistingId() throws Exception {
         // Create the PrecioRepuesto with an existing ID
         precioRepuesto.setId(1L);
 
+        int databaseSizeBeforeCreate = precioRepuestoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPrecioRepuestoMockMvc.perform(post("/api/precio-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(precioRepuesto)))
+        restPrecioRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the PrecioRepuesto in the database
@@ -156,19 +130,19 @@ public class PrecioRepuestoResourceIT {
         assertThat(precioRepuestoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkFechaIsRequired() throws Exception {
+    void checkFechaIsRequired() throws Exception {
         int databaseSizeBeforeTest = precioRepuestoRepository.findAll().size();
         // set the field null
         precioRepuesto.setFecha(null);
 
         // Create the PrecioRepuesto, which fails.
 
-        restPrecioRepuestoMockMvc.perform(post("/api/precio-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(precioRepuesto)))
+        restPrecioRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
@@ -177,14 +151,34 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPrecioRepuestos() throws Exception {
+    void checkPrecioPublicoIsRequired() throws Exception {
+        int databaseSizeBeforeTest = precioRepuestoRepository.findAll().size();
+        // set the field null
+        precioRepuesto.setPrecioPublico(null);
+
+        // Create the PrecioRepuesto, which fails.
+
+        restPrecioRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void getAllPrecioRepuestos() throws Exception {
         // Initialize the database
         precioRepuestoRepository.saveAndFlush(precioRepuesto);
 
         // Get all the precioRepuestoList
-        restPrecioRepuestoMockMvc.perform(get("/api/precio-repuestos?sort=id,desc"))
+        restPrecioRepuestoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(precioRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].fecha").value(hasItem(DEFAULT_FECHA.toString())))
             .andExpect(jsonPath("$.[*].precioPrivado").value(hasItem(DEFAULT_PRECIO_PRIVADO.doubleValue())))
@@ -193,14 +187,15 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getPrecioRepuesto() throws Exception {
+    void getPrecioRepuesto() throws Exception {
         // Initialize the database
         precioRepuestoRepository.saveAndFlush(precioRepuesto);
 
         // Get the precioRepuesto
-        restPrecioRepuestoMockMvc.perform(get("/api/precio-repuestos/{id}", precioRepuesto.getId()))
+        restPrecioRepuestoMockMvc
+            .perform(get(ENTITY_API_URL_ID, precioRepuesto.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(precioRepuesto.getId().intValue()))
             .andExpect(jsonPath("$.fecha").value(DEFAULT_FECHA.toString()))
             .andExpect(jsonPath("$.precioPrivado").value(DEFAULT_PRECIO_PRIVADO.doubleValue()))
@@ -209,17 +204,16 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingPrecioRepuesto() throws Exception {
+    void getNonExistingPrecioRepuesto() throws Exception {
         // Get the precioRepuesto
-        restPrecioRepuestoMockMvc.perform(get("/api/precio-repuestos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPrecioRepuestoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updatePrecioRepuesto() throws Exception {
+    void putNewPrecioRepuesto() throws Exception {
         // Initialize the database
-        precioRepuestoService.save(precioRepuesto);
+        precioRepuestoRepository.saveAndFlush(precioRepuesto);
 
         int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
 
@@ -227,14 +221,14 @@ public class PrecioRepuestoResourceIT {
         PrecioRepuesto updatedPrecioRepuesto = precioRepuestoRepository.findById(precioRepuesto.getId()).get();
         // Disconnect from session so that the updates on updatedPrecioRepuesto are not directly saved in db
         em.detach(updatedPrecioRepuesto);
-        updatedPrecioRepuesto
-            .fecha(UPDATED_FECHA)
-            .precioPrivado(UPDATED_PRECIO_PRIVADO)
-            .precioPublico(UPDATED_PRECIO_PUBLICO);
+        updatedPrecioRepuesto.fecha(UPDATED_FECHA).precioPrivado(UPDATED_PRECIO_PRIVADO).precioPublico(UPDATED_PRECIO_PUBLICO);
 
-        restPrecioRepuestoMockMvc.perform(put("/api/precio-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPrecioRepuesto)))
+        restPrecioRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedPrecioRepuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedPrecioRepuesto))
+            )
             .andExpect(status().isOk());
 
         // Validate the PrecioRepuesto in the database
@@ -248,15 +242,17 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingPrecioRepuesto() throws Exception {
+    void putNonExistingPrecioRepuesto() throws Exception {
         int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
-
-        // Create the PrecioRepuesto
+        precioRepuesto.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPrecioRepuestoMockMvc.perform(put("/api/precio-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(precioRepuesto)))
+        restPrecioRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, precioRepuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the PrecioRepuesto in the database
@@ -266,34 +262,175 @@ public class PrecioRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void deletePrecioRepuesto() throws Exception {
+    void putWithIdMismatchPrecioRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
+        precioRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPrecioRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PrecioRepuesto in the database
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamPrecioRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
+        precioRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPrecioRepuestoMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(precioRepuesto)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the PrecioRepuesto in the database
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdatePrecioRepuestoWithPatch() throws Exception {
         // Initialize the database
-        precioRepuestoService.save(precioRepuesto);
+        precioRepuestoRepository.saveAndFlush(precioRepuesto);
+
+        int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
+
+        // Update the precioRepuesto using partial update
+        PrecioRepuesto partialUpdatedPrecioRepuesto = new PrecioRepuesto();
+        partialUpdatedPrecioRepuesto.setId(precioRepuesto.getId());
+
+        partialUpdatedPrecioRepuesto.precioPrivado(UPDATED_PRECIO_PRIVADO);
+
+        restPrecioRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPrecioRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPrecioRepuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the PrecioRepuesto in the database
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
+        PrecioRepuesto testPrecioRepuesto = precioRepuestoList.get(precioRepuestoList.size() - 1);
+        assertThat(testPrecioRepuesto.getFecha()).isEqualTo(DEFAULT_FECHA);
+        assertThat(testPrecioRepuesto.getPrecioPrivado()).isEqualTo(UPDATED_PRECIO_PRIVADO);
+        assertThat(testPrecioRepuesto.getPrecioPublico()).isEqualTo(DEFAULT_PRECIO_PUBLICO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdatePrecioRepuestoWithPatch() throws Exception {
+        // Initialize the database
+        precioRepuestoRepository.saveAndFlush(precioRepuesto);
+
+        int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
+
+        // Update the precioRepuesto using partial update
+        PrecioRepuesto partialUpdatedPrecioRepuesto = new PrecioRepuesto();
+        partialUpdatedPrecioRepuesto.setId(precioRepuesto.getId());
+
+        partialUpdatedPrecioRepuesto.fecha(UPDATED_FECHA).precioPrivado(UPDATED_PRECIO_PRIVADO).precioPublico(UPDATED_PRECIO_PUBLICO);
+
+        restPrecioRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPrecioRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPrecioRepuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the PrecioRepuesto in the database
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
+        PrecioRepuesto testPrecioRepuesto = precioRepuestoList.get(precioRepuestoList.size() - 1);
+        assertThat(testPrecioRepuesto.getFecha()).isEqualTo(UPDATED_FECHA);
+        assertThat(testPrecioRepuesto.getPrecioPrivado()).isEqualTo(UPDATED_PRECIO_PRIVADO);
+        assertThat(testPrecioRepuesto.getPrecioPublico()).isEqualTo(UPDATED_PRECIO_PUBLICO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingPrecioRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
+        precioRepuesto.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restPrecioRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, precioRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PrecioRepuesto in the database
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchPrecioRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
+        precioRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPrecioRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PrecioRepuesto in the database
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamPrecioRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = precioRepuestoRepository.findAll().size();
+        precioRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPrecioRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(precioRepuesto))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the PrecioRepuesto in the database
+        List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
+        assertThat(precioRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deletePrecioRepuesto() throws Exception {
+        // Initialize the database
+        precioRepuestoRepository.saveAndFlush(precioRepuesto);
 
         int databaseSizeBeforeDelete = precioRepuestoRepository.findAll().size();
 
         // Delete the precioRepuesto
-        restPrecioRepuestoMockMvc.perform(delete("/api/precio-repuestos/{id}", precioRepuesto.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restPrecioRepuestoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, precioRepuesto.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<PrecioRepuesto> precioRepuestoList = precioRepuestoRepository.findAll();
         assertThat(precioRepuestoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(PrecioRepuesto.class);
-        PrecioRepuesto precioRepuesto1 = new PrecioRepuesto();
-        precioRepuesto1.setId(1L);
-        PrecioRepuesto precioRepuesto2 = new PrecioRepuesto();
-        precioRepuesto2.setId(precioRepuesto1.getId());
-        assertThat(precioRepuesto1).isEqualTo(precioRepuesto2);
-        precioRepuesto2.setId(2L);
-        assertThat(precioRepuesto1).isNotEqualTo(precioRepuesto2);
-        precioRepuesto1.setId(null);
-        assertThat(precioRepuesto1).isNotEqualTo(precioRepuesto2);
     }
 }

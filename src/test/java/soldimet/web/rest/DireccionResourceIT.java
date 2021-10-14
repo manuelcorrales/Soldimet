@@ -1,83 +1,57 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.Direccion;
-import soldimet.domain.Localidad;
-import soldimet.repository.DireccionRepository;
-import soldimet.service.DireccionService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Direccion;
+import soldimet.domain.Localidad;
+import soldimet.repository.DireccionRepository;
+
 /**
  * Integration tests for the {@link DireccionResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class DireccionResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class DireccionResourceIT {
 
     private static final String DEFAULT_CALLE = "AAAAAAAAAA";
     private static final String UPDATED_CALLE = "BBBBBBBBBB";
 
     private static final Integer DEFAULT_NUMERO = 0;
     private static final Integer UPDATED_NUMERO = 1;
-    private static final Integer SMALLER_NUMERO = 0 - 1;
+
+    private static final String ENTITY_API_URL = "/api/direccions";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private DireccionRepository direccionRepository;
 
     @Autowired
-    private DireccionService direccionService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restDireccionMockMvc;
 
     private Direccion direccion;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final DireccionResource direccionResource = new DireccionResource(direccionService);
-        this.restDireccionMockMvc = MockMvcBuilders.standaloneSetup(direccionResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -86,9 +60,7 @@ public class DireccionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Direccion createEntity(EntityManager em) {
-        Direccion direccion = new Direccion()
-            .calle(DEFAULT_CALLE)
-            .numero(DEFAULT_NUMERO);
+        Direccion direccion = new Direccion().calle(DEFAULT_CALLE).numero(DEFAULT_NUMERO);
         // Add required entity
         Localidad localidad;
         if (TestUtil.findAll(em, Localidad.class).isEmpty()) {
@@ -101,6 +73,7 @@ public class DireccionResourceIT {
         direccion.setLocalidad(localidad);
         return direccion;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -108,9 +81,7 @@ public class DireccionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Direccion createUpdatedEntity(EntityManager em) {
-        Direccion direccion = new Direccion()
-            .calle(UPDATED_CALLE)
-            .numero(UPDATED_NUMERO);
+        Direccion direccion = new Direccion().calle(UPDATED_CALLE).numero(UPDATED_NUMERO);
         // Add required entity
         Localidad localidad;
         if (TestUtil.findAll(em, Localidad.class).isEmpty()) {
@@ -131,13 +102,11 @@ public class DireccionResourceIT {
 
     @Test
     @Transactional
-    public void createDireccion() throws Exception {
+    void createDireccion() throws Exception {
         int databaseSizeBeforeCreate = direccionRepository.findAll().size();
-
         // Create the Direccion
-        restDireccionMockMvc.perform(post("/api/direccions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(direccion)))
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(direccion)))
             .andExpect(status().isCreated());
 
         // Validate the Direccion in the database
@@ -150,16 +119,15 @@ public class DireccionResourceIT {
 
     @Test
     @Transactional
-    public void createDireccionWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = direccionRepository.findAll().size();
-
+    void createDireccionWithExistingId() throws Exception {
         // Create the Direccion with an existing ID
         direccion.setId(1L);
 
+        int databaseSizeBeforeCreate = direccionRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restDireccionMockMvc.perform(post("/api/direccions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(direccion)))
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(direccion)))
             .andExpect(status().isBadRequest());
 
         // Validate the Direccion in the database
@@ -167,19 +135,17 @@ public class DireccionResourceIT {
         assertThat(direccionList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkCalleIsRequired() throws Exception {
+    void checkCalleIsRequired() throws Exception {
         int databaseSizeBeforeTest = direccionRepository.findAll().size();
         // set the field null
         direccion.setCalle(null);
 
         // Create the Direccion, which fails.
 
-        restDireccionMockMvc.perform(post("/api/direccions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(direccion)))
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(direccion)))
             .andExpect(status().isBadRequest());
 
         List<Direccion> direccionList = direccionRepository.findAll();
@@ -188,16 +154,15 @@ public class DireccionResourceIT {
 
     @Test
     @Transactional
-    public void checkNumeroIsRequired() throws Exception {
+    void checkNumeroIsRequired() throws Exception {
         int databaseSizeBeforeTest = direccionRepository.findAll().size();
         // set the field null
         direccion.setNumero(null);
 
         // Create the Direccion, which fails.
 
-        restDireccionMockMvc.perform(post("/api/direccions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(direccion)))
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(direccion)))
             .andExpect(status().isBadRequest());
 
         List<Direccion> direccionList = direccionRepository.findAll();
@@ -206,47 +171,48 @@ public class DireccionResourceIT {
 
     @Test
     @Transactional
-    public void getAllDireccions() throws Exception {
+    void getAllDireccions() throws Exception {
         // Initialize the database
         direccionRepository.saveAndFlush(direccion);
 
         // Get all the direccionList
-        restDireccionMockMvc.perform(get("/api/direccions?sort=id,desc"))
+        restDireccionMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(direccion.getId().intValue())))
-            .andExpect(jsonPath("$.[*].calle").value(hasItem(DEFAULT_CALLE.toString())))
+            .andExpect(jsonPath("$.[*].calle").value(hasItem(DEFAULT_CALLE)))
             .andExpect(jsonPath("$.[*].numero").value(hasItem(DEFAULT_NUMERO)));
     }
-    
+
     @Test
     @Transactional
-    public void getDireccion() throws Exception {
+    void getDireccion() throws Exception {
         // Initialize the database
         direccionRepository.saveAndFlush(direccion);
 
         // Get the direccion
-        restDireccionMockMvc.perform(get("/api/direccions/{id}", direccion.getId()))
+        restDireccionMockMvc
+            .perform(get(ENTITY_API_URL_ID, direccion.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(direccion.getId().intValue()))
-            .andExpect(jsonPath("$.calle").value(DEFAULT_CALLE.toString()))
+            .andExpect(jsonPath("$.calle").value(DEFAULT_CALLE))
             .andExpect(jsonPath("$.numero").value(DEFAULT_NUMERO));
     }
 
     @Test
     @Transactional
-    public void getNonExistingDireccion() throws Exception {
+    void getNonExistingDireccion() throws Exception {
         // Get the direccion
-        restDireccionMockMvc.perform(get("/api/direccions/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restDireccionMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateDireccion() throws Exception {
+    void putNewDireccion() throws Exception {
         // Initialize the database
-        direccionService.save(direccion);
+        direccionRepository.saveAndFlush(direccion);
 
         int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
 
@@ -254,13 +220,14 @@ public class DireccionResourceIT {
         Direccion updatedDireccion = direccionRepository.findById(direccion.getId()).get();
         // Disconnect from session so that the updates on updatedDireccion are not directly saved in db
         em.detach(updatedDireccion);
-        updatedDireccion
-            .calle(UPDATED_CALLE)
-            .numero(UPDATED_NUMERO);
+        updatedDireccion.calle(UPDATED_CALLE).numero(UPDATED_NUMERO);
 
-        restDireccionMockMvc.perform(put("/api/direccions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedDireccion)))
+        restDireccionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedDireccion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedDireccion))
+            )
             .andExpect(status().isOk());
 
         // Validate the Direccion in the database
@@ -273,15 +240,17 @@ public class DireccionResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingDireccion() throws Exception {
+    void putNonExistingDireccion() throws Exception {
         int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
-
-        // Create the Direccion
+        direccion.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restDireccionMockMvc.perform(put("/api/direccions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(direccion)))
+        restDireccionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, direccion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(direccion))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Direccion in the database
@@ -291,34 +260,173 @@ public class DireccionResourceIT {
 
     @Test
     @Transactional
-    public void deleteDireccion() throws Exception {
+    void putWithIdMismatchDireccion() throws Exception {
+        int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
+        direccion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restDireccionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(direccion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Direccion in the database
+        List<Direccion> direccionList = direccionRepository.findAll();
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamDireccion() throws Exception {
+        int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
+        direccion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restDireccionMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(direccion)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Direccion in the database
+        List<Direccion> direccionList = direccionRepository.findAll();
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateDireccionWithPatch() throws Exception {
         // Initialize the database
-        direccionService.save(direccion);
+        direccionRepository.saveAndFlush(direccion);
+
+        int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
+
+        // Update the direccion using partial update
+        Direccion partialUpdatedDireccion = new Direccion();
+        partialUpdatedDireccion.setId(direccion.getId());
+
+        partialUpdatedDireccion.calle(UPDATED_CALLE).numero(UPDATED_NUMERO);
+
+        restDireccionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedDireccion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedDireccion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Direccion in the database
+        List<Direccion> direccionList = direccionRepository.findAll();
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
+        Direccion testDireccion = direccionList.get(direccionList.size() - 1);
+        assertThat(testDireccion.getCalle()).isEqualTo(UPDATED_CALLE);
+        assertThat(testDireccion.getNumero()).isEqualTo(UPDATED_NUMERO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateDireccionWithPatch() throws Exception {
+        // Initialize the database
+        direccionRepository.saveAndFlush(direccion);
+
+        int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
+
+        // Update the direccion using partial update
+        Direccion partialUpdatedDireccion = new Direccion();
+        partialUpdatedDireccion.setId(direccion.getId());
+
+        partialUpdatedDireccion.calle(UPDATED_CALLE).numero(UPDATED_NUMERO);
+
+        restDireccionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedDireccion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedDireccion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Direccion in the database
+        List<Direccion> direccionList = direccionRepository.findAll();
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
+        Direccion testDireccion = direccionList.get(direccionList.size() - 1);
+        assertThat(testDireccion.getCalle()).isEqualTo(UPDATED_CALLE);
+        assertThat(testDireccion.getNumero()).isEqualTo(UPDATED_NUMERO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingDireccion() throws Exception {
+        int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
+        direccion.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restDireccionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, direccion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(direccion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Direccion in the database
+        List<Direccion> direccionList = direccionRepository.findAll();
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchDireccion() throws Exception {
+        int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
+        direccion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restDireccionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(direccion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Direccion in the database
+        List<Direccion> direccionList = direccionRepository.findAll();
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamDireccion() throws Exception {
+        int databaseSizeBeforeUpdate = direccionRepository.findAll().size();
+        direccion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restDireccionMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(direccion))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Direccion in the database
+        List<Direccion> direccionList = direccionRepository.findAll();
+        assertThat(direccionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteDireccion() throws Exception {
+        // Initialize the database
+        direccionRepository.saveAndFlush(direccion);
 
         int databaseSizeBeforeDelete = direccionRepository.findAll().size();
 
         // Delete the direccion
-        restDireccionMockMvc.perform(delete("/api/direccions/{id}", direccion.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restDireccionMockMvc
+            .perform(delete(ENTITY_API_URL_ID, direccion.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Direccion> direccionList = direccionRepository.findAll();
         assertThat(direccionList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Direccion.class);
-        Direccion direccion1 = new Direccion();
-        direccion1.setId(1L);
-        Direccion direccion2 = new Direccion();
-        direccion2.setId(direccion1.getId());
-        assertThat(direccion1).isEqualTo(direccion2);
-        direccion2.setId(2L);
-        assertThat(direccion1).isNotEqualTo(direccion2);
-        direccion1.setId(null);
-        assertThat(direccion1).isNotEqualTo(direccion2);
     }
 }

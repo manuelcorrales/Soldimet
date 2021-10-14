@@ -1,43 +1,37 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.Persona;
-import soldimet.domain.Direccion;
-import soldimet.domain.EstadoPersona;
-import soldimet.domain.User;
-import soldimet.repository.PersonaRepository;
-import soldimet.service.PersonaService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-import soldimet.service.dto.PersonaCriteria;
-import soldimet.service.PersonaQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Direccion;
+import soldimet.domain.EstadoPersona;
+import soldimet.domain.Persona;
+import soldimet.domain.User;
+import soldimet.repository.PersonaRepository;
+import soldimet.service.criteria.PersonaCriteria;
+
 /**
  * Integration tests for the {@link PersonaResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class PersonaResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class PersonaResourceIT {
 
     private static final String DEFAULT_NUMERO_TELEFONO = "AAAAAAAAAA";
     private static final String UPDATED_NUMERO_TELEFONO = "BBBBBBBBBB";
@@ -48,45 +42,22 @@ public class PersonaResourceIT {
     private static final String DEFAULT_APELLIDO = "AAAAAAAAAA";
     private static final String UPDATED_APELLIDO = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/personas";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private PersonaRepository personaRepository;
-
-    @Autowired
-    private PersonaService personaService;
-
-    @Autowired
-    private PersonaQueryService personaQueryService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restPersonaMockMvc;
 
     private Persona persona;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final PersonaResource personaResource = new PersonaResource(personaService, personaQueryService);
-        this.restPersonaMockMvc = MockMvcBuilders.standaloneSetup(personaResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -95,32 +66,10 @@ public class PersonaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Persona createEntity(EntityManager em) {
-        Persona persona = new Persona()
-            .numeroTelefono(DEFAULT_NUMERO_TELEFONO)
-            .nombre(DEFAULT_NOMBRE)
-            .apellido(DEFAULT_APELLIDO);
-        // Add required entity
-        Direccion direccion;
-        if (TestUtil.findAll(em, Direccion.class).isEmpty()) {
-            direccion = DireccionResourceIT.createEntity(em);
-            em.persist(direccion);
-            em.flush();
-        } else {
-            direccion = TestUtil.findAll(em, Direccion.class).get(0);
-        }
-        persona.setDireccion(direccion);
-        // Add required entity
-        EstadoPersona estadoPersona;
-        if (TestUtil.findAll(em, EstadoPersona.class).isEmpty()) {
-            estadoPersona = EstadoPersonaResourceIT.createEntity(em);
-            em.persist(estadoPersona);
-            em.flush();
-        } else {
-            estadoPersona = TestUtil.findAll(em, EstadoPersona.class).get(0);
-        }
-        persona.setEstadoPersona(estadoPersona);
+        Persona persona = new Persona().numeroTelefono(DEFAULT_NUMERO_TELEFONO).nombre(DEFAULT_NOMBRE).apellido(DEFAULT_APELLIDO);
         return persona;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -128,30 +77,7 @@ public class PersonaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Persona createUpdatedEntity(EntityManager em) {
-        Persona persona = new Persona()
-            .numeroTelefono(UPDATED_NUMERO_TELEFONO)
-            .nombre(UPDATED_NOMBRE)
-            .apellido(UPDATED_APELLIDO);
-        // Add required entity
-        Direccion direccion;
-        if (TestUtil.findAll(em, Direccion.class).isEmpty()) {
-            direccion = DireccionResourceIT.createUpdatedEntity(em);
-            em.persist(direccion);
-            em.flush();
-        } else {
-            direccion = TestUtil.findAll(em, Direccion.class).get(0);
-        }
-        persona.setDireccion(direccion);
-        // Add required entity
-        EstadoPersona estadoPersona;
-        if (TestUtil.findAll(em, EstadoPersona.class).isEmpty()) {
-            estadoPersona = EstadoPersonaResourceIT.createUpdatedEntity(em);
-            em.persist(estadoPersona);
-            em.flush();
-        } else {
-            estadoPersona = TestUtil.findAll(em, EstadoPersona.class).get(0);
-        }
-        persona.setEstadoPersona(estadoPersona);
+        Persona persona = new Persona().numeroTelefono(UPDATED_NUMERO_TELEFONO).nombre(UPDATED_NOMBRE).apellido(UPDATED_APELLIDO);
         return persona;
     }
 
@@ -162,13 +88,11 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void createPersona() throws Exception {
+    void createPersona() throws Exception {
         int databaseSizeBeforeCreate = personaRepository.findAll().size();
-
         // Create the Persona
-        restPersonaMockMvc.perform(post("/api/personas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(persona)))
             .andExpect(status().isCreated());
 
         // Validate the Persona in the database
@@ -182,16 +106,15 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void createPersonaWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = personaRepository.findAll().size();
-
+    void createPersonaWithExistingId() throws Exception {
         // Create the Persona with an existing ID
         persona.setId(1L);
 
+        int databaseSizeBeforeCreate = personaRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPersonaMockMvc.perform(post("/api/personas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(persona)))
             .andExpect(status().isBadRequest());
 
         // Validate the Persona in the database
@@ -199,97 +122,78 @@ public class PersonaResourceIT {
         assertThat(personaList).hasSize(databaseSizeBeforeCreate);
     }
 
-    // teléfono tampoco es más requerido
-    // @Test
-    // @Transactional
-    // public void checkNumeroTelefonoIsRequired() throws Exception {
-    //     int databaseSizeBeforeTest = personaRepository.findAll().size();
-    //     // set the field null
-    //     persona.setNumeroTelefono(null);
-
-    //     // Create the Persona, which fails.
-
-    //     restPersonaMockMvc.perform(post("/api/personas")
-    //         .contentType(TestUtil.APPLICATION_JSON_UTF8)
-    //         .content(TestUtil.convertObjectToJsonBytes(persona)))
-    //         .andExpect(status().isBadRequest());
-
-    //     List<Persona> personaList = personaRepository.findAll();
-    //     assertThat(personaList).hasSize(databaseSizeBeforeTest);
-    // }
-
     @Test
     @Transactional
-    public void checkNombreIsRequired() throws Exception {
+    void checkNombreIsRequired() throws Exception {
         int databaseSizeBeforeTest = personaRepository.findAll().size();
         // set the field null
         persona.setNombre(null);
 
         // Create the Persona, which fails.
 
-        restPersonaMockMvc.perform(post("/api/personas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(persona)))
             .andExpect(status().isBadRequest());
 
         List<Persona> personaList = personaRepository.findAll();
         assertThat(personaList).hasSize(databaseSizeBeforeTest);
     }
 
-    // No hay problema en dejar a la persona sin apellido
-    // @Test
-    // @Transactional
-    // public void checkApellidoIsRequired() throws Exception {
-    //     int databaseSizeBeforeTest = personaRepository.findAll().size();
-    //     // set the field null
-    //     persona.setApellido(null);
-
-    //     // Create the Persona, which fails.
-
-    //     restPersonaMockMvc.perform(post("/api/personas")
-    //         .contentType(TestUtil.APPLICATION_JSON_UTF8)
-    //         .content(TestUtil.convertObjectToJsonBytes(persona)))
-    //         .andExpect(status().isBadRequest());
-
-    //     List<Persona> personaList = personaRepository.findAll();
-    //     assertThat(personaList).hasSize(databaseSizeBeforeTest);
-    // }
-
     @Test
     @Transactional
-    public void getAllPersonas() throws Exception {
+    void getAllPersonas() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
         // Get all the personaList
-        restPersonaMockMvc.perform(get("/api/personas?sort=id,desc"))
+        restPersonaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persona.getId().intValue())))
-            .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO.toString())))
-            .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE.toString())))
-            .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO.toString())));
+            .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO)))
+            .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE)))
+            .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO)));
     }
 
     @Test
     @Transactional
-    public void getPersona() throws Exception {
+    void getPersona() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
         // Get the persona
-        restPersonaMockMvc.perform(get("/api/personas/{id}", persona.getId()))
+        restPersonaMockMvc
+            .perform(get(ENTITY_API_URL_ID, persona.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(persona.getId().intValue()))
-            .andExpect(jsonPath("$.numeroTelefono").value(DEFAULT_NUMERO_TELEFONO.toString()))
-            .andExpect(jsonPath("$.nombre").value(DEFAULT_NOMBRE.toString()))
-            .andExpect(jsonPath("$.apellido").value(DEFAULT_APELLIDO.toString()));
+            .andExpect(jsonPath("$.numeroTelefono").value(DEFAULT_NUMERO_TELEFONO))
+            .andExpect(jsonPath("$.nombre").value(DEFAULT_NOMBRE))
+            .andExpect(jsonPath("$.apellido").value(DEFAULT_APELLIDO));
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumeroTelefonoIsEqualToSomething() throws Exception {
+    void getPersonasByIdFiltering() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        Long id = persona.getId();
+
+        defaultPersonaShouldBeFound("id.equals=" + id);
+        defaultPersonaShouldNotBeFound("id.notEquals=" + id);
+
+        defaultPersonaShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultPersonaShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultPersonaShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultPersonaShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByNumeroTelefonoIsEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -302,7 +206,20 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByNumeroTelefonoIsInShouldWork() throws Exception {
+    void getAllPersonasByNumeroTelefonoIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where numeroTelefono not equals to DEFAULT_NUMERO_TELEFONO
+        defaultPersonaShouldNotBeFound("numeroTelefono.notEquals=" + DEFAULT_NUMERO_TELEFONO);
+
+        // Get all the personaList where numeroTelefono not equals to UPDATED_NUMERO_TELEFONO
+        defaultPersonaShouldBeFound("numeroTelefono.notEquals=" + UPDATED_NUMERO_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByNumeroTelefonoIsInShouldWork() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -315,7 +232,7 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByNumeroTelefonoIsNullOrNotNull() throws Exception {
+    void getAllPersonasByNumeroTelefonoIsNullOrNotNull() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -328,7 +245,33 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByNombreIsEqualToSomething() throws Exception {
+    void getAllPersonasByNumeroTelefonoContainsSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where numeroTelefono contains DEFAULT_NUMERO_TELEFONO
+        defaultPersonaShouldBeFound("numeroTelefono.contains=" + DEFAULT_NUMERO_TELEFONO);
+
+        // Get all the personaList where numeroTelefono contains UPDATED_NUMERO_TELEFONO
+        defaultPersonaShouldNotBeFound("numeroTelefono.contains=" + UPDATED_NUMERO_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByNumeroTelefonoNotContainsSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where numeroTelefono does not contain DEFAULT_NUMERO_TELEFONO
+        defaultPersonaShouldNotBeFound("numeroTelefono.doesNotContain=" + DEFAULT_NUMERO_TELEFONO);
+
+        // Get all the personaList where numeroTelefono does not contain UPDATED_NUMERO_TELEFONO
+        defaultPersonaShouldBeFound("numeroTelefono.doesNotContain=" + UPDATED_NUMERO_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByNombreIsEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -341,7 +284,20 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByNombreIsInShouldWork() throws Exception {
+    void getAllPersonasByNombreIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where nombre not equals to DEFAULT_NOMBRE
+        defaultPersonaShouldNotBeFound("nombre.notEquals=" + DEFAULT_NOMBRE);
+
+        // Get all the personaList where nombre not equals to UPDATED_NOMBRE
+        defaultPersonaShouldBeFound("nombre.notEquals=" + UPDATED_NOMBRE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByNombreIsInShouldWork() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -354,7 +310,7 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByNombreIsNullOrNotNull() throws Exception {
+    void getAllPersonasByNombreIsNullOrNotNull() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -367,7 +323,33 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByApellidoIsEqualToSomething() throws Exception {
+    void getAllPersonasByNombreContainsSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where nombre contains DEFAULT_NOMBRE
+        defaultPersonaShouldBeFound("nombre.contains=" + DEFAULT_NOMBRE);
+
+        // Get all the personaList where nombre contains UPDATED_NOMBRE
+        defaultPersonaShouldNotBeFound("nombre.contains=" + UPDATED_NOMBRE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByNombreNotContainsSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where nombre does not contain DEFAULT_NOMBRE
+        defaultPersonaShouldNotBeFound("nombre.doesNotContain=" + DEFAULT_NOMBRE);
+
+        // Get all the personaList where nombre does not contain UPDATED_NOMBRE
+        defaultPersonaShouldBeFound("nombre.doesNotContain=" + UPDATED_NOMBRE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByApellidoIsEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -380,7 +362,20 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByApellidoIsInShouldWork() throws Exception {
+    void getAllPersonasByApellidoIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where apellido not equals to DEFAULT_APELLIDO
+        defaultPersonaShouldNotBeFound("apellido.notEquals=" + DEFAULT_APELLIDO);
+
+        // Get all the personaList where apellido not equals to UPDATED_APELLIDO
+        defaultPersonaShouldBeFound("apellido.notEquals=" + UPDATED_APELLIDO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByApellidoIsInShouldWork() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -393,7 +388,7 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByApellidoIsNullOrNotNull() throws Exception {
+    void getAllPersonasByApellidoIsNullOrNotNull() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
@@ -406,39 +401,71 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByDireccionIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        Direccion direccion = persona.getDireccion();
+    void getAllPersonasByApellidoContainsSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where apellido contains DEFAULT_APELLIDO
+        defaultPersonaShouldBeFound("apellido.contains=" + DEFAULT_APELLIDO);
+
+        // Get all the personaList where apellido contains UPDATED_APELLIDO
+        defaultPersonaShouldNotBeFound("apellido.contains=" + UPDATED_APELLIDO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByApellidoNotContainsSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        // Get all the personaList where apellido does not contain DEFAULT_APELLIDO
+        defaultPersonaShouldNotBeFound("apellido.doesNotContain=" + DEFAULT_APELLIDO);
+
+        // Get all the personaList where apellido does not contain UPDATED_APELLIDO
+        defaultPersonaShouldBeFound("apellido.doesNotContain=" + UPDATED_APELLIDO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPersonasByDireccionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+        Direccion direccion = DireccionResourceIT.createEntity(em);
+        em.persist(direccion);
+        em.flush();
+        persona.setDireccion(direccion);
         personaRepository.saveAndFlush(persona);
         Long direccionId = direccion.getId();
 
         // Get all the personaList where direccion equals to direccionId
         defaultPersonaShouldBeFound("direccionId.equals=" + direccionId);
 
-        // Get all the personaList where direccion equals to direccionId + 1
+        // Get all the personaList where direccion equals to (direccionId + 1)
         defaultPersonaShouldNotBeFound("direccionId.equals=" + (direccionId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPersonasByEstadoPersonaIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        EstadoPersona estadoPersona = persona.getEstadoPersona();
+    void getAllPersonasByEstadoPersonaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+        EstadoPersona estadoPersona = EstadoPersonaResourceIT.createEntity(em);
+        em.persist(estadoPersona);
+        em.flush();
+        persona.setEstadoPersona(estadoPersona);
         personaRepository.saveAndFlush(persona);
         Long estadoPersonaId = estadoPersona.getId();
 
         // Get all the personaList where estadoPersona equals to estadoPersonaId
         defaultPersonaShouldBeFound("estadoPersonaId.equals=" + estadoPersonaId);
 
-        // Get all the personaList where estadoPersona equals to estadoPersonaId + 1
+        // Get all the personaList where estadoPersona equals to (estadoPersonaId + 1)
         defaultPersonaShouldNotBeFound("estadoPersonaId.equals=" + (estadoPersonaId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPersonasByUserIsEqualToSomething() throws Exception {
+    void getAllPersonasByUserIsEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
         User user = UserResourceIT.createEntity(em);
@@ -451,7 +478,7 @@ public class PersonaResourceIT {
         // Get all the personaList where user equals to userId
         defaultPersonaShouldBeFound("userId.equals=" + userId);
 
-        // Get all the personaList where user equals to userId + 1
+        // Get all the personaList where user equals to (userId + 1)
         defaultPersonaShouldNotBeFound("userId.equals=" + (userId + 1));
     }
 
@@ -459,18 +486,20 @@ public class PersonaResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultPersonaShouldBeFound(String filter) throws Exception {
-        restPersonaMockMvc.perform(get("/api/personas?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persona.getId().intValue())))
             .andExpect(jsonPath("$.[*].numeroTelefono").value(hasItem(DEFAULT_NUMERO_TELEFONO)))
             .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE)))
             .andExpect(jsonPath("$.[*].apellido").value(hasItem(DEFAULT_APELLIDO)));
 
         // Check, that the count call also returns 1
-        restPersonaMockMvc.perform(get("/api/personas/count?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
     }
 
@@ -478,33 +507,33 @@ public class PersonaResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultPersonaShouldNotBeFound(String filter) throws Exception {
-        restPersonaMockMvc.perform(get("/api/personas?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restPersonaMockMvc.perform(get("/api/personas/count?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
     }
 
-
     @Test
     @Transactional
-    public void getNonExistingPersona() throws Exception {
+    void getNonExistingPersona() throws Exception {
         // Get the persona
-        restPersonaMockMvc.perform(get("/api/personas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPersonaMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updatePersona() throws Exception {
+    void putNewPersona() throws Exception {
         // Initialize the database
-        personaService.save(persona);
+        personaRepository.saveAndFlush(persona);
 
         int databaseSizeBeforeUpdate = personaRepository.findAll().size();
 
@@ -512,14 +541,14 @@ public class PersonaResourceIT {
         Persona updatedPersona = personaRepository.findById(persona.getId()).get();
         // Disconnect from session so that the updates on updatedPersona are not directly saved in db
         em.detach(updatedPersona);
-        updatedPersona
-            .numeroTelefono(UPDATED_NUMERO_TELEFONO)
-            .nombre(UPDATED_NOMBRE)
-            .apellido(UPDATED_APELLIDO);
+        updatedPersona.numeroTelefono(UPDATED_NUMERO_TELEFONO).nombre(UPDATED_NOMBRE).apellido(UPDATED_APELLIDO);
 
-        restPersonaMockMvc.perform(put("/api/personas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPersona)))
+        restPersonaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedPersona.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedPersona))
+            )
             .andExpect(status().isOk());
 
         // Validate the Persona in the database
@@ -533,15 +562,17 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingPersona() throws Exception {
+    void putNonExistingPersona() throws Exception {
         int databaseSizeBeforeUpdate = personaRepository.findAll().size();
-
-        // Create the Persona
+        persona.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPersonaMockMvc.perform(put("/api/personas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, persona.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Persona in the database
@@ -551,34 +582,173 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void deletePersona() throws Exception {
+    void putWithIdMismatchPersona() throws Exception {
+        int databaseSizeBeforeUpdate = personaRepository.findAll().size();
+        persona.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPersonaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Persona in the database
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamPersona() throws Exception {
+        int databaseSizeBeforeUpdate = personaRepository.findAll().size();
+        persona.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPersonaMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(persona)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Persona in the database
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdatePersonaWithPatch() throws Exception {
         // Initialize the database
-        personaService.save(persona);
+        personaRepository.saveAndFlush(persona);
+
+        int databaseSizeBeforeUpdate = personaRepository.findAll().size();
+
+        // Update the persona using partial update
+        Persona partialUpdatedPersona = new Persona();
+        partialUpdatedPersona.setId(persona.getId());
+
+        partialUpdatedPersona.apellido(UPDATED_APELLIDO);
+
+        restPersonaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPersona.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPersona))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Persona in the database
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
+        Persona testPersona = personaList.get(personaList.size() - 1);
+        assertThat(testPersona.getNumeroTelefono()).isEqualTo(DEFAULT_NUMERO_TELEFONO);
+        assertThat(testPersona.getNombre()).isEqualTo(DEFAULT_NOMBRE);
+        assertThat(testPersona.getApellido()).isEqualTo(UPDATED_APELLIDO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdatePersonaWithPatch() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
+
+        int databaseSizeBeforeUpdate = personaRepository.findAll().size();
+
+        // Update the persona using partial update
+        Persona partialUpdatedPersona = new Persona();
+        partialUpdatedPersona.setId(persona.getId());
+
+        partialUpdatedPersona.numeroTelefono(UPDATED_NUMERO_TELEFONO).nombre(UPDATED_NOMBRE).apellido(UPDATED_APELLIDO);
+
+        restPersonaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPersona.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPersona))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Persona in the database
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
+        Persona testPersona = personaList.get(personaList.size() - 1);
+        assertThat(testPersona.getNumeroTelefono()).isEqualTo(UPDATED_NUMERO_TELEFONO);
+        assertThat(testPersona.getNombre()).isEqualTo(UPDATED_NOMBRE);
+        assertThat(testPersona.getApellido()).isEqualTo(UPDATED_APELLIDO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingPersona() throws Exception {
+        int databaseSizeBeforeUpdate = personaRepository.findAll().size();
+        persona.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restPersonaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, persona.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Persona in the database
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchPersona() throws Exception {
+        int databaseSizeBeforeUpdate = personaRepository.findAll().size();
+        persona.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPersonaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Persona in the database
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamPersona() throws Exception {
+        int databaseSizeBeforeUpdate = personaRepository.findAll().size();
+        persona.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPersonaMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(persona)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Persona in the database
+        List<Persona> personaList = personaRepository.findAll();
+        assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deletePersona() throws Exception {
+        // Initialize the database
+        personaRepository.saveAndFlush(persona);
 
         int databaseSizeBeforeDelete = personaRepository.findAll().size();
 
         // Delete the persona
-        restPersonaMockMvc.perform(delete("/api/personas/{id}", persona.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restPersonaMockMvc
+            .perform(delete(ENTITY_API_URL_ID, persona.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Persona> personaList = personaRepository.findAll();
         assertThat(personaList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Persona.class);
-        Persona persona1 = new Persona();
-        persona1.setId(1L);
-        Persona persona2 = new Persona();
-        persona2.setId(persona1.getId());
-        assertThat(persona1).isEqualTo(persona2);
-        persona2.setId(2L);
-        assertThat(persona1).isNotEqualTo(persona2);
-        persona1.setId(null);
-        assertThat(persona1).isNotEqualTo(persona2);
     }
 }

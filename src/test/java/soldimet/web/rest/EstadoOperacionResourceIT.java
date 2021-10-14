@@ -1,78 +1,53 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.EstadoOperacion;
-import soldimet.repository.EstadoOperacionRepository;
-import soldimet.service.EstadoOperacionService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.EstadoOperacion;
+import soldimet.repository.EstadoOperacionRepository;
+
 /**
  * Integration tests for the {@link EstadoOperacionResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class EstadoOperacionResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class EstadoOperacionResourceIT {
 
     private static final String DEFAULT_NOMBRE_ESTADO = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_ESTADO = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/estado-operacions";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private EstadoOperacionRepository estadoOperacionRepository;
 
     @Autowired
-    private EstadoOperacionService estadoOperacionService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restEstadoOperacionMockMvc;
 
     private EstadoOperacion estadoOperacion;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final EstadoOperacionResource estadoOperacionResource = new EstadoOperacionResource(estadoOperacionService);
-        this.restEstadoOperacionMockMvc = MockMvcBuilders.standaloneSetup(estadoOperacionResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -81,10 +56,10 @@ public class EstadoOperacionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EstadoOperacion createEntity(EntityManager em) {
-        EstadoOperacion estadoOperacion = new EstadoOperacion()
-            .nombreEstado(DEFAULT_NOMBRE_ESTADO);
+        EstadoOperacion estadoOperacion = new EstadoOperacion().nombreEstado(DEFAULT_NOMBRE_ESTADO);
         return estadoOperacion;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -92,8 +67,7 @@ public class EstadoOperacionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EstadoOperacion createUpdatedEntity(EntityManager em) {
-        EstadoOperacion estadoOperacion = new EstadoOperacion()
-            .nombreEstado(UPDATED_NOMBRE_ESTADO);
+        EstadoOperacion estadoOperacion = new EstadoOperacion().nombreEstado(UPDATED_NOMBRE_ESTADO);
         return estadoOperacion;
     }
 
@@ -104,13 +78,13 @@ public class EstadoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void createEstadoOperacion() throws Exception {
+    void createEstadoOperacion() throws Exception {
         int databaseSizeBeforeCreate = estadoOperacionRepository.findAll().size();
-
         // Create the EstadoOperacion
-        restEstadoOperacionMockMvc.perform(post("/api/estado-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoOperacion)))
+        restEstadoOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
             .andExpect(status().isCreated());
 
         // Validate the EstadoOperacion in the database
@@ -122,16 +96,17 @@ public class EstadoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void createEstadoOperacionWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = estadoOperacionRepository.findAll().size();
-
+    void createEstadoOperacionWithExistingId() throws Exception {
         // Create the EstadoOperacion with an existing ID
         estadoOperacion.setId(1L);
 
+        int databaseSizeBeforeCreate = estadoOperacionRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEstadoOperacionMockMvc.perform(post("/api/estado-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoOperacion)))
+        restEstadoOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the EstadoOperacion in the database
@@ -139,19 +114,19 @@ public class EstadoOperacionResourceIT {
         assertThat(estadoOperacionList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNombreEstadoIsRequired() throws Exception {
+    void checkNombreEstadoIsRequired() throws Exception {
         int databaseSizeBeforeTest = estadoOperacionRepository.findAll().size();
         // set the field null
         estadoOperacion.setNombreEstado(null);
 
         // Create the EstadoOperacion, which fails.
 
-        restEstadoOperacionMockMvc.perform(post("/api/estado-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoOperacion)))
+        restEstadoOperacionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
             .andExpect(status().isBadRequest());
 
         List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
@@ -160,45 +135,46 @@ public class EstadoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void getAllEstadoOperacions() throws Exception {
+    void getAllEstadoOperacions() throws Exception {
         // Initialize the database
         estadoOperacionRepository.saveAndFlush(estadoOperacion);
 
         // Get all the estadoOperacionList
-        restEstadoOperacionMockMvc.perform(get("/api/estado-operacions?sort=id,desc"))
+        restEstadoOperacionMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(estadoOperacion.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO.toString())));
+            .andExpect(jsonPath("$.[*].nombreEstado").value(hasItem(DEFAULT_NOMBRE_ESTADO)));
     }
-    
+
     @Test
     @Transactional
-    public void getEstadoOperacion() throws Exception {
+    void getEstadoOperacion() throws Exception {
         // Initialize the database
         estadoOperacionRepository.saveAndFlush(estadoOperacion);
 
         // Get the estadoOperacion
-        restEstadoOperacionMockMvc.perform(get("/api/estado-operacions/{id}", estadoOperacion.getId()))
+        restEstadoOperacionMockMvc
+            .perform(get(ENTITY_API_URL_ID, estadoOperacion.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(estadoOperacion.getId().intValue()))
-            .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO.toString()));
+            .andExpect(jsonPath("$.nombreEstado").value(DEFAULT_NOMBRE_ESTADO));
     }
 
     @Test
     @Transactional
-    public void getNonExistingEstadoOperacion() throws Exception {
+    void getNonExistingEstadoOperacion() throws Exception {
         // Get the estadoOperacion
-        restEstadoOperacionMockMvc.perform(get("/api/estado-operacions/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restEstadoOperacionMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateEstadoOperacion() throws Exception {
+    void putNewEstadoOperacion() throws Exception {
         // Initialize the database
-        estadoOperacionService.save(estadoOperacion);
+        estadoOperacionRepository.saveAndFlush(estadoOperacion);
 
         int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
 
@@ -206,12 +182,14 @@ public class EstadoOperacionResourceIT {
         EstadoOperacion updatedEstadoOperacion = estadoOperacionRepository.findById(estadoOperacion.getId()).get();
         // Disconnect from session so that the updates on updatedEstadoOperacion are not directly saved in db
         em.detach(updatedEstadoOperacion);
-        updatedEstadoOperacion
-            .nombreEstado(UPDATED_NOMBRE_ESTADO);
+        updatedEstadoOperacion.nombreEstado(UPDATED_NOMBRE_ESTADO);
 
-        restEstadoOperacionMockMvc.perform(put("/api/estado-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedEstadoOperacion)))
+        restEstadoOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedEstadoOperacion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedEstadoOperacion))
+            )
             .andExpect(status().isOk());
 
         // Validate the EstadoOperacion in the database
@@ -223,15 +201,17 @@ public class EstadoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingEstadoOperacion() throws Exception {
+    void putNonExistingEstadoOperacion() throws Exception {
         int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
-
-        // Create the EstadoOperacion
+        estadoOperacion.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEstadoOperacionMockMvc.perform(put("/api/estado-operacions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(estadoOperacion)))
+        restEstadoOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, estadoOperacion.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the EstadoOperacion in the database
@@ -241,34 +221,175 @@ public class EstadoOperacionResourceIT {
 
     @Test
     @Transactional
-    public void deleteEstadoOperacion() throws Exception {
+    void putWithIdMismatchEstadoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
+        estadoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoOperacion in the database
+        List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamEstadoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
+        estadoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoOperacionMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the EstadoOperacion in the database
+        List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateEstadoOperacionWithPatch() throws Exception {
         // Initialize the database
-        estadoOperacionService.save(estadoOperacion);
+        estadoOperacionRepository.saveAndFlush(estadoOperacion);
+
+        int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
+
+        // Update the estadoOperacion using partial update
+        EstadoOperacion partialUpdatedEstadoOperacion = new EstadoOperacion();
+        partialUpdatedEstadoOperacion.setId(estadoOperacion.getId());
+
+        partialUpdatedEstadoOperacion.nombreEstado(UPDATED_NOMBRE_ESTADO);
+
+        restEstadoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEstadoOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEstadoOperacion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the EstadoOperacion in the database
+        List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
+        EstadoOperacion testEstadoOperacion = estadoOperacionList.get(estadoOperacionList.size() - 1);
+        assertThat(testEstadoOperacion.getNombreEstado()).isEqualTo(UPDATED_NOMBRE_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateEstadoOperacionWithPatch() throws Exception {
+        // Initialize the database
+        estadoOperacionRepository.saveAndFlush(estadoOperacion);
+
+        int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
+
+        // Update the estadoOperacion using partial update
+        EstadoOperacion partialUpdatedEstadoOperacion = new EstadoOperacion();
+        partialUpdatedEstadoOperacion.setId(estadoOperacion.getId());
+
+        partialUpdatedEstadoOperacion.nombreEstado(UPDATED_NOMBRE_ESTADO);
+
+        restEstadoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedEstadoOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedEstadoOperacion))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the EstadoOperacion in the database
+        List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
+        EstadoOperacion testEstadoOperacion = estadoOperacionList.get(estadoOperacionList.size() - 1);
+        assertThat(testEstadoOperacion.getNombreEstado()).isEqualTo(UPDATED_NOMBRE_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingEstadoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
+        estadoOperacion.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restEstadoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, estadoOperacion.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoOperacion in the database
+        List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchEstadoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
+        estadoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the EstadoOperacion in the database
+        List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamEstadoOperacion() throws Exception {
+        int databaseSizeBeforeUpdate = estadoOperacionRepository.findAll().size();
+        estadoOperacion.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restEstadoOperacionMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(estadoOperacion))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the EstadoOperacion in the database
+        List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
+        assertThat(estadoOperacionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteEstadoOperacion() throws Exception {
+        // Initialize the database
+        estadoOperacionRepository.saveAndFlush(estadoOperacion);
 
         int databaseSizeBeforeDelete = estadoOperacionRepository.findAll().size();
 
         // Delete the estadoOperacion
-        restEstadoOperacionMockMvc.perform(delete("/api/estado-operacions/{id}", estadoOperacion.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restEstadoOperacionMockMvc
+            .perform(delete(ENTITY_API_URL_ID, estadoOperacion.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<EstadoOperacion> estadoOperacionList = estadoOperacionRepository.findAll();
         assertThat(estadoOperacionList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(EstadoOperacion.class);
-        EstadoOperacion estadoOperacion1 = new EstadoOperacion();
-        estadoOperacion1.setId(1L);
-        EstadoOperacion estadoOperacion2 = new EstadoOperacion();
-        estadoOperacion2.setId(estadoOperacion1.getId());
-        assertThat(estadoOperacion1).isEqualTo(estadoOperacion2);
-        estadoOperacion2.setId(2L);
-        assertThat(estadoOperacion1).isNotEqualTo(estadoOperacion2);
-        estadoOperacion1.setId(null);
-        assertThat(estadoOperacion1).isNotEqualTo(estadoOperacion2);
     }
 }

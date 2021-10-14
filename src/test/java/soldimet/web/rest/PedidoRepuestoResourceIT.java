@@ -1,46 +1,39 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.PedidoRepuesto;
-import soldimet.domain.EstadoPedidoRepuesto;
-import soldimet.domain.DetallePedido;
-import soldimet.domain.Presupuesto;
-import soldimet.domain.DocumentationType;
-import soldimet.repository.PedidoRepuestoRepository;
-import soldimet.service.PedidoRepuestoService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-import soldimet.service.dto.PedidoRepuestoCriteria;
-import soldimet.service.PedidoRepuestoQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.DocumentationType;
+import soldimet.domain.EstadoPedidoRepuesto;
+import soldimet.domain.PedidoRepuesto;
+import soldimet.domain.Presupuesto;
+import soldimet.repository.PedidoRepuestoRepository;
+import soldimet.service.criteria.PedidoRepuestoCriteria;
+
 /**
  * Integration tests for the {@link PedidoRepuestoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class PedidoRepuestoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class PedidoRepuestoResourceIT {
 
     private static final LocalDate DEFAULT_FECHA_CREACION = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_CREACION = LocalDate.now(ZoneId.systemDefault());
@@ -54,45 +47,22 @@ public class PedidoRepuestoResourceIT {
     private static final LocalDate UPDATED_FECHA_RECIBO = LocalDate.now(ZoneId.systemDefault());
     private static final LocalDate SMALLER_FECHA_RECIBO = LocalDate.ofEpochDay(-1L);
 
+    private static final String ENTITY_API_URL = "/api/pedido-repuestos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private PedidoRepuestoRepository pedidoRepuestoRepository;
-
-    @Autowired
-    private PedidoRepuestoService pedidoRepuestoService;
-
-    @Autowired
-    private PedidoRepuestoQueryService pedidoRepuestoQueryService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restPedidoRepuestoMockMvc;
 
     private PedidoRepuesto pedidoRepuesto;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final PedidoRepuestoResource pedidoRepuestoResource = new PedidoRepuestoResource(pedidoRepuestoService, pedidoRepuestoQueryService);
-        this.restPedidoRepuestoMockMvc = MockMvcBuilders.standaloneSetup(pedidoRepuestoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -127,6 +97,7 @@ public class PedidoRepuestoResourceIT {
         pedidoRepuesto.setPresupuesto(presupuesto);
         return pedidoRepuesto;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -168,13 +139,13 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void createPedidoRepuesto() throws Exception {
+    void createPedidoRepuesto() throws Exception {
         int databaseSizeBeforeCreate = pedidoRepuestoRepository.findAll().size();
-
         // Create the PedidoRepuesto
-        restPedidoRepuestoMockMvc.perform(post("/api/pedido-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto)))
+        restPedidoRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
             .andExpect(status().isCreated());
 
         // Validate the PedidoRepuesto in the database
@@ -188,16 +159,17 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void createPedidoRepuestoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = pedidoRepuestoRepository.findAll().size();
-
+    void createPedidoRepuestoWithExistingId() throws Exception {
         // Create the PedidoRepuesto with an existing ID
         pedidoRepuesto.setId(1L);
 
+        int databaseSizeBeforeCreate = pedidoRepuestoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPedidoRepuestoMockMvc.perform(post("/api/pedido-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto)))
+        restPedidoRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the PedidoRepuesto in the database
@@ -205,19 +177,19 @@ public class PedidoRepuestoResourceIT {
         assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkFechaCreacionIsRequired() throws Exception {
+    void checkFechaCreacionIsRequired() throws Exception {
         int databaseSizeBeforeTest = pedidoRepuestoRepository.findAll().size();
         // set the field null
         pedidoRepuesto.setFechaCreacion(null);
 
         // Create the PedidoRepuesto, which fails.
 
-        restPedidoRepuestoMockMvc.perform(post("/api/pedido-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto)))
+        restPedidoRepuestoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
@@ -226,30 +198,32 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestos() throws Exception {
+    void getAllPedidoRepuestos() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
         // Get all the pedidoRepuestoList
-        restPedidoRepuestoMockMvc.perform(get("/api/pedido-repuestos?sort=id,desc"))
+        restPedidoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pedidoRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].fechaCreacion").value(hasItem(DEFAULT_FECHA_CREACION.toString())))
             .andExpect(jsonPath("$.[*].fechaPedido").value(hasItem(DEFAULT_FECHA_PEDIDO.toString())))
             .andExpect(jsonPath("$.[*].fechaRecibo").value(hasItem(DEFAULT_FECHA_RECIBO.toString())));
     }
-    
+
     @Test
     @Transactional
-    public void getPedidoRepuesto() throws Exception {
+    void getPedidoRepuesto() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
         // Get the pedidoRepuesto
-        restPedidoRepuestoMockMvc.perform(get("/api/pedido-repuestos/{id}", pedidoRepuesto.getId()))
+        restPedidoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL_ID, pedidoRepuesto.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(pedidoRepuesto.getId().intValue()))
             .andExpect(jsonPath("$.fechaCreacion").value(DEFAULT_FECHA_CREACION.toString()))
             .andExpect(jsonPath("$.fechaPedido").value(DEFAULT_FECHA_PEDIDO.toString()))
@@ -258,7 +232,25 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaCreacionIsEqualToSomething() throws Exception {
+    void getPedidoRepuestosByIdFiltering() throws Exception {
+        // Initialize the database
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+
+        Long id = pedidoRepuesto.getId();
+
+        defaultPedidoRepuestoShouldBeFound("id.equals=" + id);
+        defaultPedidoRepuestoShouldNotBeFound("id.notEquals=" + id);
+
+        defaultPedidoRepuestoShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultPedidoRepuestoShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultPedidoRepuestoShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultPedidoRepuestoShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllPedidoRepuestosByFechaCreacionIsEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -271,7 +263,20 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaCreacionIsInShouldWork() throws Exception {
+    void getAllPedidoRepuestosByFechaCreacionIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+
+        // Get all the pedidoRepuestoList where fechaCreacion not equals to DEFAULT_FECHA_CREACION
+        defaultPedidoRepuestoShouldNotBeFound("fechaCreacion.notEquals=" + DEFAULT_FECHA_CREACION);
+
+        // Get all the pedidoRepuestoList where fechaCreacion not equals to UPDATED_FECHA_CREACION
+        defaultPedidoRepuestoShouldBeFound("fechaCreacion.notEquals=" + UPDATED_FECHA_CREACION);
+    }
+
+    @Test
+    @Transactional
+    void getAllPedidoRepuestosByFechaCreacionIsInShouldWork() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -284,7 +289,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaCreacionIsNullOrNotNull() throws Exception {
+    void getAllPedidoRepuestosByFechaCreacionIsNullOrNotNull() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -297,7 +302,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaCreacionIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaCreacionIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -310,7 +315,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaCreacionIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaCreacionIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -323,7 +328,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaCreacionIsLessThanSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaCreacionIsLessThanSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -336,7 +341,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaCreacionIsGreaterThanSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaCreacionIsGreaterThanSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -347,10 +352,9 @@ public class PedidoRepuestoResourceIT {
         defaultPedidoRepuestoShouldBeFound("fechaCreacion.greaterThan=" + SMALLER_FECHA_CREACION);
     }
 
-
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaPedidoIsEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaPedidoIsEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -363,7 +367,20 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaPedidoIsInShouldWork() throws Exception {
+    void getAllPedidoRepuestosByFechaPedidoIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+
+        // Get all the pedidoRepuestoList where fechaPedido not equals to DEFAULT_FECHA_PEDIDO
+        defaultPedidoRepuestoShouldNotBeFound("fechaPedido.notEquals=" + DEFAULT_FECHA_PEDIDO);
+
+        // Get all the pedidoRepuestoList where fechaPedido not equals to UPDATED_FECHA_PEDIDO
+        defaultPedidoRepuestoShouldBeFound("fechaPedido.notEquals=" + UPDATED_FECHA_PEDIDO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPedidoRepuestosByFechaPedidoIsInShouldWork() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -376,7 +393,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaPedidoIsNullOrNotNull() throws Exception {
+    void getAllPedidoRepuestosByFechaPedidoIsNullOrNotNull() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -389,7 +406,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaPedidoIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaPedidoIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -402,7 +419,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaPedidoIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaPedidoIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -415,7 +432,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaPedidoIsLessThanSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaPedidoIsLessThanSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -428,7 +445,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaPedidoIsGreaterThanSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaPedidoIsGreaterThanSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -439,10 +456,9 @@ public class PedidoRepuestoResourceIT {
         defaultPedidoRepuestoShouldBeFound("fechaPedido.greaterThan=" + SMALLER_FECHA_PEDIDO);
     }
 
-
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaReciboIsEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaReciboIsEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -455,7 +471,20 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaReciboIsInShouldWork() throws Exception {
+    void getAllPedidoRepuestosByFechaReciboIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+
+        // Get all the pedidoRepuestoList where fechaRecibo not equals to DEFAULT_FECHA_RECIBO
+        defaultPedidoRepuestoShouldNotBeFound("fechaRecibo.notEquals=" + DEFAULT_FECHA_RECIBO);
+
+        // Get all the pedidoRepuestoList where fechaRecibo not equals to UPDATED_FECHA_RECIBO
+        defaultPedidoRepuestoShouldBeFound("fechaRecibo.notEquals=" + UPDATED_FECHA_RECIBO);
+    }
+
+    @Test
+    @Transactional
+    void getAllPedidoRepuestosByFechaReciboIsInShouldWork() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -468,7 +497,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaReciboIsNullOrNotNull() throws Exception {
+    void getAllPedidoRepuestosByFechaReciboIsNullOrNotNull() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -481,7 +510,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaReciboIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaReciboIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -494,7 +523,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaReciboIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaReciboIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -507,7 +536,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaReciboIsLessThanSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaReciboIsLessThanSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -520,7 +549,7 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByFechaReciboIsGreaterThanSomething() throws Exception {
+    void getAllPedidoRepuestosByFechaReciboIsGreaterThanSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
@@ -531,62 +560,47 @@ public class PedidoRepuestoResourceIT {
         defaultPedidoRepuestoShouldBeFound("fechaRecibo.greaterThan=" + SMALLER_FECHA_RECIBO);
     }
 
-
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByEstadoPedidoRepuestoIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        EstadoPedidoRepuesto estadoPedidoRepuesto = pedidoRepuesto.getEstadoPedidoRepuesto();
+    void getAllPedidoRepuestosByEstadoPedidoRepuestoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+        EstadoPedidoRepuesto estadoPedidoRepuesto = EstadoPedidoRepuestoResourceIT.createEntity(em);
+        em.persist(estadoPedidoRepuesto);
+        em.flush();
+        pedidoRepuesto.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
         Long estadoPedidoRepuestoId = estadoPedidoRepuesto.getId();
 
         // Get all the pedidoRepuestoList where estadoPedidoRepuesto equals to estadoPedidoRepuestoId
         defaultPedidoRepuestoShouldBeFound("estadoPedidoRepuestoId.equals=" + estadoPedidoRepuestoId);
 
-        // Get all the pedidoRepuestoList where estadoPedidoRepuesto equals to estadoPedidoRepuestoId + 1
+        // Get all the pedidoRepuestoList where estadoPedidoRepuesto equals to (estadoPedidoRepuestoId + 1)
         defaultPedidoRepuestoShouldNotBeFound("estadoPedidoRepuestoId.equals=" + (estadoPedidoRepuestoId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByDetallePedidoIsEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByPresupuestoIsEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
-        DetallePedido detallePedido = DetallePedidoResourceIT.createEntity(em);
-        em.persist(detallePedido);
+        Presupuesto presupuesto = PresupuestoResourceIT.createEntity(em);
+        em.persist(presupuesto);
         em.flush();
-        pedidoRepuesto.addDetallePedido(detallePedido);
-        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
-        Long detallePedidoId = detallePedido.getId();
-
-        // Get all the pedidoRepuestoList where detallePedido equals to detallePedidoId
-        defaultPedidoRepuestoShouldBeFound("detallePedidoId.equals=" + detallePedidoId);
-
-        // Get all the pedidoRepuestoList where detallePedido equals to detallePedidoId + 1
-        defaultPedidoRepuestoShouldNotBeFound("detallePedidoId.equals=" + (detallePedidoId + 1));
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllPedidoRepuestosByPresupuestoIsEqualToSomething() throws Exception {
-        // Get already existing entity
-        Presupuesto presupuesto = pedidoRepuesto.getPresupuesto();
+        pedidoRepuesto.setPresupuesto(presupuesto);
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
         Long presupuestoId = presupuesto.getId();
 
         // Get all the pedidoRepuestoList where presupuesto equals to presupuestoId
         defaultPedidoRepuestoShouldBeFound("presupuestoId.equals=" + presupuestoId);
 
-        // Get all the pedidoRepuestoList where presupuesto equals to presupuestoId + 1
+        // Get all the pedidoRepuestoList where presupuesto equals to (presupuestoId + 1)
         defaultPedidoRepuestoShouldNotBeFound("presupuestoId.equals=" + (presupuestoId + 1));
     }
 
-
     @Test
     @Transactional
-    public void getAllPedidoRepuestosByDocumentTypeIsEqualToSomething() throws Exception {
+    void getAllPedidoRepuestosByDocumentTypeIsEqualToSomething() throws Exception {
         // Initialize the database
         pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
         DocumentationType documentType = DocumentationTypeResourceIT.createEntity(em);
@@ -599,7 +613,7 @@ public class PedidoRepuestoResourceIT {
         // Get all the pedidoRepuestoList where documentType equals to documentTypeId
         defaultPedidoRepuestoShouldBeFound("documentTypeId.equals=" + documentTypeId);
 
-        // Get all the pedidoRepuestoList where documentType equals to documentTypeId + 1
+        // Get all the pedidoRepuestoList where documentType equals to (documentTypeId + 1)
         defaultPedidoRepuestoShouldNotBeFound("documentTypeId.equals=" + (documentTypeId + 1));
     }
 
@@ -607,18 +621,20 @@ public class PedidoRepuestoResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultPedidoRepuestoShouldBeFound(String filter) throws Exception {
-        restPedidoRepuestoMockMvc.perform(get("/api/pedido-repuestos?sort=id,desc&" + filter))
+        restPedidoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pedidoRepuesto.getId().intValue())))
             .andExpect(jsonPath("$.[*].fechaCreacion").value(hasItem(DEFAULT_FECHA_CREACION.toString())))
             .andExpect(jsonPath("$.[*].fechaPedido").value(hasItem(DEFAULT_FECHA_PEDIDO.toString())))
             .andExpect(jsonPath("$.[*].fechaRecibo").value(hasItem(DEFAULT_FECHA_RECIBO.toString())));
 
         // Check, that the count call also returns 1
-        restPedidoRepuestoMockMvc.perform(get("/api/pedido-repuestos/count?sort=id,desc&" + filter))
+        restPedidoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
     }
 
@@ -626,33 +642,33 @@ public class PedidoRepuestoResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultPedidoRepuestoShouldNotBeFound(String filter) throws Exception {
-        restPedidoRepuestoMockMvc.perform(get("/api/pedido-repuestos?sort=id,desc&" + filter))
+        restPedidoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restPedidoRepuestoMockMvc.perform(get("/api/pedido-repuestos/count?sort=id,desc&" + filter))
+        restPedidoRepuestoMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
     }
 
-
     @Test
     @Transactional
-    public void getNonExistingPedidoRepuesto() throws Exception {
+    void getNonExistingPedidoRepuesto() throws Exception {
         // Get the pedidoRepuesto
-        restPedidoRepuestoMockMvc.perform(get("/api/pedido-repuestos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPedidoRepuestoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updatePedidoRepuesto() throws Exception {
+    void putNewPedidoRepuesto() throws Exception {
         // Initialize the database
-        pedidoRepuestoService.save(pedidoRepuesto);
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
         int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
 
@@ -660,14 +676,14 @@ public class PedidoRepuestoResourceIT {
         PedidoRepuesto updatedPedidoRepuesto = pedidoRepuestoRepository.findById(pedidoRepuesto.getId()).get();
         // Disconnect from session so that the updates on updatedPedidoRepuesto are not directly saved in db
         em.detach(updatedPedidoRepuesto);
-        updatedPedidoRepuesto
-            .fechaCreacion(UPDATED_FECHA_CREACION)
-            .fechaPedido(UPDATED_FECHA_PEDIDO)
-            .fechaRecibo(UPDATED_FECHA_RECIBO);
+        updatedPedidoRepuesto.fechaCreacion(UPDATED_FECHA_CREACION).fechaPedido(UPDATED_FECHA_PEDIDO).fechaRecibo(UPDATED_FECHA_RECIBO);
 
-        restPedidoRepuestoMockMvc.perform(put("/api/pedido-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPedidoRepuesto)))
+        restPedidoRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedPedidoRepuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedPedidoRepuesto))
+            )
             .andExpect(status().isOk());
 
         // Validate the PedidoRepuesto in the database
@@ -681,15 +697,17 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingPedidoRepuesto() throws Exception {
+    void putNonExistingPedidoRepuesto() throws Exception {
         int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
-
-        // Create the PedidoRepuesto
+        pedidoRepuesto.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPedidoRepuestoMockMvc.perform(put("/api/pedido-repuestos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto)))
+        restPedidoRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, pedidoRepuesto.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the PedidoRepuesto in the database
@@ -699,34 +717,178 @@ public class PedidoRepuestoResourceIT {
 
     @Test
     @Transactional
-    public void deletePedidoRepuesto() throws Exception {
+    void putWithIdMismatchPedidoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
+        pedidoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPedidoRepuestoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PedidoRepuesto in the database
+        List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamPedidoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
+        pedidoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPedidoRepuestoMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the PedidoRepuesto in the database
+        List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdatePedidoRepuestoWithPatch() throws Exception {
         // Initialize the database
-        pedidoRepuestoService.save(pedidoRepuesto);
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+
+        int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
+
+        // Update the pedidoRepuesto using partial update
+        PedidoRepuesto partialUpdatedPedidoRepuesto = new PedidoRepuesto();
+        partialUpdatedPedidoRepuesto.setId(pedidoRepuesto.getId());
+
+        partialUpdatedPedidoRepuesto.fechaRecibo(UPDATED_FECHA_RECIBO);
+
+        restPedidoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPedidoRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPedidoRepuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the PedidoRepuesto in the database
+        List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+        PedidoRepuesto testPedidoRepuesto = pedidoRepuestoList.get(pedidoRepuestoList.size() - 1);
+        assertThat(testPedidoRepuesto.getFechaCreacion()).isEqualTo(DEFAULT_FECHA_CREACION);
+        assertThat(testPedidoRepuesto.getFechaPedido()).isEqualTo(DEFAULT_FECHA_PEDIDO);
+        assertThat(testPedidoRepuesto.getFechaRecibo()).isEqualTo(UPDATED_FECHA_RECIBO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdatePedidoRepuestoWithPatch() throws Exception {
+        // Initialize the database
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
+
+        int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
+
+        // Update the pedidoRepuesto using partial update
+        PedidoRepuesto partialUpdatedPedidoRepuesto = new PedidoRepuesto();
+        partialUpdatedPedidoRepuesto.setId(pedidoRepuesto.getId());
+
+        partialUpdatedPedidoRepuesto
+            .fechaCreacion(UPDATED_FECHA_CREACION)
+            .fechaPedido(UPDATED_FECHA_PEDIDO)
+            .fechaRecibo(UPDATED_FECHA_RECIBO);
+
+        restPedidoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPedidoRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPedidoRepuesto))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the PedidoRepuesto in the database
+        List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+        PedidoRepuesto testPedidoRepuesto = pedidoRepuestoList.get(pedidoRepuestoList.size() - 1);
+        assertThat(testPedidoRepuesto.getFechaCreacion()).isEqualTo(UPDATED_FECHA_CREACION);
+        assertThat(testPedidoRepuesto.getFechaPedido()).isEqualTo(UPDATED_FECHA_PEDIDO);
+        assertThat(testPedidoRepuesto.getFechaRecibo()).isEqualTo(UPDATED_FECHA_RECIBO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingPedidoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
+        pedidoRepuesto.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restPedidoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, pedidoRepuesto.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PedidoRepuesto in the database
+        List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchPedidoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
+        pedidoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPedidoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PedidoRepuesto in the database
+        List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamPedidoRepuesto() throws Exception {
+        int databaseSizeBeforeUpdate = pedidoRepuestoRepository.findAll().size();
+        pedidoRepuesto.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPedidoRepuestoMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(pedidoRepuesto))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the PedidoRepuesto in the database
+        List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
+        assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deletePedidoRepuesto() throws Exception {
+        // Initialize the database
+        pedidoRepuestoRepository.saveAndFlush(pedidoRepuesto);
 
         int databaseSizeBeforeDelete = pedidoRepuestoRepository.findAll().size();
 
         // Delete the pedidoRepuesto
-        restPedidoRepuestoMockMvc.perform(delete("/api/pedido-repuestos/{id}", pedidoRepuesto.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restPedidoRepuestoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, pedidoRepuesto.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<PedidoRepuesto> pedidoRepuestoList = pedidoRepuestoRepository.findAll();
         assertThat(pedidoRepuestoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(PedidoRepuesto.class);
-        PedidoRepuesto pedidoRepuesto1 = new PedidoRepuesto();
-        pedidoRepuesto1.setId(1L);
-        PedidoRepuesto pedidoRepuesto2 = new PedidoRepuesto();
-        pedidoRepuesto2.setId(pedidoRepuesto1.getId());
-        assertThat(pedidoRepuesto1).isEqualTo(pedidoRepuesto2);
-        pedidoRepuesto2.setId(2L);
-        assertThat(pedidoRepuesto1).isNotEqualTo(pedidoRepuesto2);
-        pedidoRepuesto1.setId(null);
-        assertThat(pedidoRepuesto1).isNotEqualTo(pedidoRepuesto2);
     }
 }

@@ -1,78 +1,53 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.Rubro;
-import soldimet.repository.RubroRepository;
-import soldimet.service.RubroService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Rubro;
+import soldimet.repository.RubroRepository;
+
 /**
  * Integration tests for the {@link RubroResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class RubroResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class RubroResourceIT {
 
     private static final String DEFAULT_NOMBRE_RUBRO = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_RUBRO = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/rubros";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private RubroRepository rubroRepository;
 
     @Autowired
-    private RubroService rubroService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restRubroMockMvc;
 
     private Rubro rubro;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final RubroResource rubroResource = new RubroResource(rubroService);
-        this.restRubroMockMvc = MockMvcBuilders.standaloneSetup(rubroResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -81,10 +56,10 @@ public class RubroResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Rubro createEntity(EntityManager em) {
-        Rubro rubro = new Rubro()
-            .nombreRubro(DEFAULT_NOMBRE_RUBRO);
+        Rubro rubro = new Rubro().nombreRubro(DEFAULT_NOMBRE_RUBRO);
         return rubro;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -92,8 +67,7 @@ public class RubroResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Rubro createUpdatedEntity(EntityManager em) {
-        Rubro rubro = new Rubro()
-            .nombreRubro(UPDATED_NOMBRE_RUBRO);
+        Rubro rubro = new Rubro().nombreRubro(UPDATED_NOMBRE_RUBRO);
         return rubro;
     }
 
@@ -104,13 +78,11 @@ public class RubroResourceIT {
 
     @Test
     @Transactional
-    public void createRubro() throws Exception {
+    void createRubro() throws Exception {
         int databaseSizeBeforeCreate = rubroRepository.findAll().size();
-
         // Create the Rubro
-        restRubroMockMvc.perform(post("/api/rubros")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rubro)))
+        restRubroMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rubro)))
             .andExpect(status().isCreated());
 
         // Validate the Rubro in the database
@@ -122,16 +94,15 @@ public class RubroResourceIT {
 
     @Test
     @Transactional
-    public void createRubroWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = rubroRepository.findAll().size();
-
+    void createRubroWithExistingId() throws Exception {
         // Create the Rubro with an existing ID
         rubro.setId(1L);
 
+        int databaseSizeBeforeCreate = rubroRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restRubroMockMvc.perform(post("/api/rubros")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rubro)))
+        restRubroMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rubro)))
             .andExpect(status().isBadRequest());
 
         // Validate the Rubro in the database
@@ -139,19 +110,17 @@ public class RubroResourceIT {
         assertThat(rubroList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNombreRubroIsRequired() throws Exception {
+    void checkNombreRubroIsRequired() throws Exception {
         int databaseSizeBeforeTest = rubroRepository.findAll().size();
         // set the field null
         rubro.setNombreRubro(null);
 
         // Create the Rubro, which fails.
 
-        restRubroMockMvc.perform(post("/api/rubros")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rubro)))
+        restRubroMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rubro)))
             .andExpect(status().isBadRequest());
 
         List<Rubro> rubroList = rubroRepository.findAll();
@@ -160,45 +129,46 @@ public class RubroResourceIT {
 
     @Test
     @Transactional
-    public void getAllRubros() throws Exception {
+    void getAllRubros() throws Exception {
         // Initialize the database
         rubroRepository.saveAndFlush(rubro);
 
         // Get all the rubroList
-        restRubroMockMvc.perform(get("/api/rubros?sort=id,desc"))
+        restRubroMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(rubro.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombreRubro").value(hasItem(DEFAULT_NOMBRE_RUBRO.toString())));
+            .andExpect(jsonPath("$.[*].nombreRubro").value(hasItem(DEFAULT_NOMBRE_RUBRO)));
     }
-    
+
     @Test
     @Transactional
-    public void getRubro() throws Exception {
+    void getRubro() throws Exception {
         // Initialize the database
         rubroRepository.saveAndFlush(rubro);
 
         // Get the rubro
-        restRubroMockMvc.perform(get("/api/rubros/{id}", rubro.getId()))
+        restRubroMockMvc
+            .perform(get(ENTITY_API_URL_ID, rubro.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(rubro.getId().intValue()))
-            .andExpect(jsonPath("$.nombreRubro").value(DEFAULT_NOMBRE_RUBRO.toString()));
+            .andExpect(jsonPath("$.nombreRubro").value(DEFAULT_NOMBRE_RUBRO));
     }
 
     @Test
     @Transactional
-    public void getNonExistingRubro() throws Exception {
+    void getNonExistingRubro() throws Exception {
         // Get the rubro
-        restRubroMockMvc.perform(get("/api/rubros/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restRubroMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateRubro() throws Exception {
+    void putNewRubro() throws Exception {
         // Initialize the database
-        rubroService.save(rubro);
+        rubroRepository.saveAndFlush(rubro);
 
         int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
 
@@ -206,12 +176,14 @@ public class RubroResourceIT {
         Rubro updatedRubro = rubroRepository.findById(rubro.getId()).get();
         // Disconnect from session so that the updates on updatedRubro are not directly saved in db
         em.detach(updatedRubro);
-        updatedRubro
-            .nombreRubro(UPDATED_NOMBRE_RUBRO);
+        updatedRubro.nombreRubro(UPDATED_NOMBRE_RUBRO);
 
-        restRubroMockMvc.perform(put("/api/rubros")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedRubro)))
+        restRubroMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedRubro.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedRubro))
+            )
             .andExpect(status().isOk());
 
         // Validate the Rubro in the database
@@ -223,15 +195,17 @@ public class RubroResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingRubro() throws Exception {
+    void putNonExistingRubro() throws Exception {
         int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
-
-        // Create the Rubro
+        rubro.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restRubroMockMvc.perform(put("/api/rubros")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(rubro)))
+        restRubroMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, rubro.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(rubro))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Rubro in the database
@@ -241,34 +215,167 @@ public class RubroResourceIT {
 
     @Test
     @Transactional
-    public void deleteRubro() throws Exception {
+    void putWithIdMismatchRubro() throws Exception {
+        int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
+        rubro.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restRubroMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(rubro))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Rubro in the database
+        List<Rubro> rubroList = rubroRepository.findAll();
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamRubro() throws Exception {
+        int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
+        rubro.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restRubroMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rubro)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Rubro in the database
+        List<Rubro> rubroList = rubroRepository.findAll();
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateRubroWithPatch() throws Exception {
         // Initialize the database
-        rubroService.save(rubro);
+        rubroRepository.saveAndFlush(rubro);
+
+        int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
+
+        // Update the rubro using partial update
+        Rubro partialUpdatedRubro = new Rubro();
+        partialUpdatedRubro.setId(rubro.getId());
+
+        restRubroMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedRubro.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedRubro))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Rubro in the database
+        List<Rubro> rubroList = rubroRepository.findAll();
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
+        Rubro testRubro = rubroList.get(rubroList.size() - 1);
+        assertThat(testRubro.getNombreRubro()).isEqualTo(DEFAULT_NOMBRE_RUBRO);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateRubroWithPatch() throws Exception {
+        // Initialize the database
+        rubroRepository.saveAndFlush(rubro);
+
+        int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
+
+        // Update the rubro using partial update
+        Rubro partialUpdatedRubro = new Rubro();
+        partialUpdatedRubro.setId(rubro.getId());
+
+        partialUpdatedRubro.nombreRubro(UPDATED_NOMBRE_RUBRO);
+
+        restRubroMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedRubro.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedRubro))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Rubro in the database
+        List<Rubro> rubroList = rubroRepository.findAll();
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
+        Rubro testRubro = rubroList.get(rubroList.size() - 1);
+        assertThat(testRubro.getNombreRubro()).isEqualTo(UPDATED_NOMBRE_RUBRO);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingRubro() throws Exception {
+        int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
+        rubro.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restRubroMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, rubro.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(rubro))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Rubro in the database
+        List<Rubro> rubroList = rubroRepository.findAll();
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchRubro() throws Exception {
+        int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
+        rubro.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restRubroMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(rubro))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Rubro in the database
+        List<Rubro> rubroList = rubroRepository.findAll();
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamRubro() throws Exception {
+        int databaseSizeBeforeUpdate = rubroRepository.findAll().size();
+        rubro.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restRubroMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(rubro)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Rubro in the database
+        List<Rubro> rubroList = rubroRepository.findAll();
+        assertThat(rubroList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteRubro() throws Exception {
+        // Initialize the database
+        rubroRepository.saveAndFlush(rubro);
 
         int databaseSizeBeforeDelete = rubroRepository.findAll().size();
 
         // Delete the rubro
-        restRubroMockMvc.perform(delete("/api/rubros/{id}", rubro.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restRubroMockMvc
+            .perform(delete(ENTITY_API_URL_ID, rubro.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Rubro> rubroList = rubroRepository.findAll();
         assertThat(rubroList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Rubro.class);
-        Rubro rubro1 = new Rubro();
-        rubro1.setId(1L);
-        Rubro rubro2 = new Rubro();
-        rubro2.setId(rubro1.getId());
-        assertThat(rubro1).isEqualTo(rubro2);
-        rubro2.setId(2L);
-        assertThat(rubro1).isNotEqualTo(rubro2);
-        rubro1.setId(null);
-        assertThat(rubro1).isNotEqualTo(rubro2);
     }
 }

@@ -1,79 +1,54 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.Proveedor;
-import soldimet.domain.Persona;
-import soldimet.repository.ProveedorRepository;
-import soldimet.service.ProveedorService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.Persona;
+import soldimet.domain.Proveedor;
+import soldimet.repository.ProveedorRepository;
+
 /**
  * Integration tests for the {@link ProveedorResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class ProveedorResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class ProveedorResourceIT {
 
     private static final String DEFAULT_NOMBRE_PROVEEDOR = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_PROVEEDOR = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/proveedors";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ProveedorRepository proveedorRepository;
 
     @Autowired
-    private ProveedorService proveedorService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restProveedorMockMvc;
 
     private Proveedor proveedor;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final ProveedorResource proveedorResource = new ProveedorResource(proveedorService);
-        this.restProveedorMockMvc = MockMvcBuilders.standaloneSetup(proveedorResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -82,8 +57,7 @@ public class ProveedorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Proveedor createEntity(EntityManager em) {
-        Proveedor proveedor = new Proveedor()
-            .nombreProveedor(DEFAULT_NOMBRE_PROVEEDOR);
+        Proveedor proveedor = new Proveedor().nombreProveedor(DEFAULT_NOMBRE_PROVEEDOR);
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -96,6 +70,7 @@ public class ProveedorResourceIT {
         proveedor.setPersona(persona);
         return proveedor;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -103,8 +78,7 @@ public class ProveedorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Proveedor createUpdatedEntity(EntityManager em) {
-        Proveedor proveedor = new Proveedor()
-            .nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
+        Proveedor proveedor = new Proveedor().nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
         // Add required entity
         Persona persona;
         if (TestUtil.findAll(em, Persona.class).isEmpty()) {
@@ -125,13 +99,11 @@ public class ProveedorResourceIT {
 
     @Test
     @Transactional
-    public void createProveedor() throws Exception {
+    void createProveedor() throws Exception {
         int databaseSizeBeforeCreate = proveedorRepository.findAll().size();
-
         // Create the Proveedor
-        restProveedorMockMvc.perform(post("/api/proveedors")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(proveedor)))
+        restProveedorMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(proveedor)))
             .andExpect(status().isCreated());
 
         // Validate the Proveedor in the database
@@ -143,16 +115,15 @@ public class ProveedorResourceIT {
 
     @Test
     @Transactional
-    public void createProveedorWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = proveedorRepository.findAll().size();
-
+    void createProveedorWithExistingId() throws Exception {
         // Create the Proveedor with an existing ID
         proveedor.setId(1L);
 
+        int databaseSizeBeforeCreate = proveedorRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restProveedorMockMvc.perform(post("/api/proveedors")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(proveedor)))
+        restProveedorMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(proveedor)))
             .andExpect(status().isBadRequest());
 
         // Validate the Proveedor in the database
@@ -160,19 +131,17 @@ public class ProveedorResourceIT {
         assertThat(proveedorList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNombreProveedorIsRequired() throws Exception {
+    void checkNombreProveedorIsRequired() throws Exception {
         int databaseSizeBeforeTest = proveedorRepository.findAll().size();
         // set the field null
         proveedor.setNombreProveedor(null);
 
         // Create the Proveedor, which fails.
 
-        restProveedorMockMvc.perform(post("/api/proveedors")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(proveedor)))
+        restProveedorMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(proveedor)))
             .andExpect(status().isBadRequest());
 
         List<Proveedor> proveedorList = proveedorRepository.findAll();
@@ -181,45 +150,46 @@ public class ProveedorResourceIT {
 
     @Test
     @Transactional
-    public void getAllProveedors() throws Exception {
+    void getAllProveedors() throws Exception {
         // Initialize the database
         proveedorRepository.saveAndFlush(proveedor);
 
         // Get all the proveedorList
-        restProveedorMockMvc.perform(get("/api/proveedors?sort=id,desc"))
+        restProveedorMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(proveedor.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombreProveedor").value(hasItem(DEFAULT_NOMBRE_PROVEEDOR.toString())));
+            .andExpect(jsonPath("$.[*].nombreProveedor").value(hasItem(DEFAULT_NOMBRE_PROVEEDOR)));
     }
-    
+
     @Test
     @Transactional
-    public void getProveedor() throws Exception {
+    void getProveedor() throws Exception {
         // Initialize the database
         proveedorRepository.saveAndFlush(proveedor);
 
         // Get the proveedor
-        restProveedorMockMvc.perform(get("/api/proveedors/{id}", proveedor.getId()))
+        restProveedorMockMvc
+            .perform(get(ENTITY_API_URL_ID, proveedor.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(proveedor.getId().intValue()))
-            .andExpect(jsonPath("$.nombreProveedor").value(DEFAULT_NOMBRE_PROVEEDOR.toString()));
+            .andExpect(jsonPath("$.nombreProveedor").value(DEFAULT_NOMBRE_PROVEEDOR));
     }
 
     @Test
     @Transactional
-    public void getNonExistingProveedor() throws Exception {
+    void getNonExistingProveedor() throws Exception {
         // Get the proveedor
-        restProveedorMockMvc.perform(get("/api/proveedors/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restProveedorMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateProveedor() throws Exception {
+    void putNewProveedor() throws Exception {
         // Initialize the database
-        proveedorService.save(proveedor);
+        proveedorRepository.saveAndFlush(proveedor);
 
         int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
 
@@ -227,12 +197,14 @@ public class ProveedorResourceIT {
         Proveedor updatedProveedor = proveedorRepository.findById(proveedor.getId()).get();
         // Disconnect from session so that the updates on updatedProveedor are not directly saved in db
         em.detach(updatedProveedor);
-        updatedProveedor
-            .nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
+        updatedProveedor.nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
 
-        restProveedorMockMvc.perform(put("/api/proveedors")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedProveedor)))
+        restProveedorMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedProveedor.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedProveedor))
+            )
             .andExpect(status().isOk());
 
         // Validate the Proveedor in the database
@@ -244,15 +216,17 @@ public class ProveedorResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingProveedor() throws Exception {
+    void putNonExistingProveedor() throws Exception {
         int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
-
-        // Create the Proveedor
+        proveedor.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restProveedorMockMvc.perform(put("/api/proveedors")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(proveedor)))
+        restProveedorMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, proveedor.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(proveedor))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Proveedor in the database
@@ -262,34 +236,171 @@ public class ProveedorResourceIT {
 
     @Test
     @Transactional
-    public void deleteProveedor() throws Exception {
+    void putWithIdMismatchProveedor() throws Exception {
+        int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
+        proveedor.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProveedorMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(proveedor))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Proveedor in the database
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamProveedor() throws Exception {
+        int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
+        proveedor.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProveedorMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(proveedor)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Proveedor in the database
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateProveedorWithPatch() throws Exception {
         // Initialize the database
-        proveedorService.save(proveedor);
+        proveedorRepository.saveAndFlush(proveedor);
+
+        int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
+
+        // Update the proveedor using partial update
+        Proveedor partialUpdatedProveedor = new Proveedor();
+        partialUpdatedProveedor.setId(proveedor.getId());
+
+        partialUpdatedProveedor.nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
+
+        restProveedorMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedProveedor.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedProveedor))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Proveedor in the database
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
+        Proveedor testProveedor = proveedorList.get(proveedorList.size() - 1);
+        assertThat(testProveedor.getNombreProveedor()).isEqualTo(UPDATED_NOMBRE_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateProveedorWithPatch() throws Exception {
+        // Initialize the database
+        proveedorRepository.saveAndFlush(proveedor);
+
+        int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
+
+        // Update the proveedor using partial update
+        Proveedor partialUpdatedProveedor = new Proveedor();
+        partialUpdatedProveedor.setId(proveedor.getId());
+
+        partialUpdatedProveedor.nombreProveedor(UPDATED_NOMBRE_PROVEEDOR);
+
+        restProveedorMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedProveedor.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedProveedor))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Proveedor in the database
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
+        Proveedor testProveedor = proveedorList.get(proveedorList.size() - 1);
+        assertThat(testProveedor.getNombreProveedor()).isEqualTo(UPDATED_NOMBRE_PROVEEDOR);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingProveedor() throws Exception {
+        int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
+        proveedor.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restProveedorMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, proveedor.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(proveedor))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Proveedor in the database
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchProveedor() throws Exception {
+        int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
+        proveedor.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProveedorMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(proveedor))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Proveedor in the database
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamProveedor() throws Exception {
+        int databaseSizeBeforeUpdate = proveedorRepository.findAll().size();
+        proveedor.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProveedorMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(proveedor))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Proveedor in the database
+        List<Proveedor> proveedorList = proveedorRepository.findAll();
+        assertThat(proveedorList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteProveedor() throws Exception {
+        // Initialize the database
+        proveedorRepository.saveAndFlush(proveedor);
 
         int databaseSizeBeforeDelete = proveedorRepository.findAll().size();
 
         // Delete the proveedor
-        restProveedorMockMvc.perform(delete("/api/proveedors/{id}", proveedor.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restProveedorMockMvc
+            .perform(delete(ENTITY_API_URL_ID, proveedor.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Proveedor> proveedorList = proveedorRepository.findAll();
         assertThat(proveedorList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Proveedor.class);
-        Proveedor proveedor1 = new Proveedor();
-        proveedor1.setId(1L);
-        Proveedor proveedor2 = new Proveedor();
-        proveedor2.setId(proveedor1.getId());
-        assertThat(proveedor1).isEqualTo(proveedor2);
-        proveedor2.setId(2L);
-        assertThat(proveedor1).isNotEqualTo(proveedor2);
-        proveedor1.setId(null);
-        assertThat(proveedor1).isNotEqualTo(proveedor2);
     }
 }

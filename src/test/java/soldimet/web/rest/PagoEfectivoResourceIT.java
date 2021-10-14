@@ -1,76 +1,51 @@
 package soldimet.web.rest;
 
-import soldimet.SoldimetApp;
-import soldimet.domain.PagoEfectivo;
-import soldimet.domain.FormaDePago;
-import soldimet.repository.PagoEfectivoRepository;
-import soldimet.service.PagoEfectivoService;
-import soldimet.web.rest.errors.ExceptionTranslator;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static soldimet.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.IntegrationTest;
+import soldimet.domain.FormaDePago;
+import soldimet.domain.PagoEfectivo;
+import soldimet.repository.PagoEfectivoRepository;
+
 /**
  * Integration tests for the {@link PagoEfectivoResource} REST controller.
  */
-@SpringBootTest(classes = SoldimetApp.class)
-public class PagoEfectivoResourceIT {
+@IntegrationTest
+@AutoConfigureMockMvc
+@WithMockUser
+class PagoEfectivoResourceIT {
+
+    private static final String ENTITY_API_URL = "/api/pago-efectivos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private PagoEfectivoRepository pagoEfectivoRepository;
 
     @Autowired
-    private PagoEfectivoService pagoEfectivoService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restPagoEfectivoMockMvc;
 
     private PagoEfectivo pagoEfectivo;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final PagoEfectivoResource pagoEfectivoResource = new PagoEfectivoResource(pagoEfectivoService);
-        this.restPagoEfectivoMockMvc = MockMvcBuilders.standaloneSetup(pagoEfectivoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -92,6 +67,7 @@ public class PagoEfectivoResourceIT {
         pagoEfectivo.setFormaDePago(formaDePago);
         return pagoEfectivo;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -120,13 +96,11 @@ public class PagoEfectivoResourceIT {
 
     @Test
     @Transactional
-    public void createPagoEfectivo() throws Exception {
+    void createPagoEfectivo() throws Exception {
         int databaseSizeBeforeCreate = pagoEfectivoRepository.findAll().size();
-
         // Create the PagoEfectivo
-        restPagoEfectivoMockMvc.perform(post("/api/pago-efectivos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pagoEfectivo)))
+        restPagoEfectivoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pagoEfectivo)))
             .andExpect(status().isCreated());
 
         // Validate the PagoEfectivo in the database
@@ -137,16 +111,15 @@ public class PagoEfectivoResourceIT {
 
     @Test
     @Transactional
-    public void createPagoEfectivoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = pagoEfectivoRepository.findAll().size();
-
+    void createPagoEfectivoWithExistingId() throws Exception {
         // Create the PagoEfectivo with an existing ID
         pagoEfectivo.setId(1L);
 
+        int databaseSizeBeforeCreate = pagoEfectivoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPagoEfectivoMockMvc.perform(post("/api/pago-efectivos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pagoEfectivo)))
+        restPagoEfectivoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pagoEfectivo)))
             .andExpect(status().isBadRequest());
 
         // Validate the PagoEfectivo in the database
@@ -154,46 +127,46 @@ public class PagoEfectivoResourceIT {
         assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllPagoEfectivos() throws Exception {
+    void getAllPagoEfectivos() throws Exception {
         // Initialize the database
         pagoEfectivoRepository.saveAndFlush(pagoEfectivo);
 
         // Get all the pagoEfectivoList
-        restPagoEfectivoMockMvc.perform(get("/api/pago-efectivos?sort=id,desc"))
+        restPagoEfectivoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pagoEfectivo.getId().intValue())));
     }
-    
+
     @Test
     @Transactional
-    public void getPagoEfectivo() throws Exception {
+    void getPagoEfectivo() throws Exception {
         // Initialize the database
         pagoEfectivoRepository.saveAndFlush(pagoEfectivo);
 
         // Get the pagoEfectivo
-        restPagoEfectivoMockMvc.perform(get("/api/pago-efectivos/{id}", pagoEfectivo.getId()))
+        restPagoEfectivoMockMvc
+            .perform(get(ENTITY_API_URL_ID, pagoEfectivo.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(pagoEfectivo.getId().intValue()));
     }
 
     @Test
     @Transactional
-    public void getNonExistingPagoEfectivo() throws Exception {
+    void getNonExistingPagoEfectivo() throws Exception {
         // Get the pagoEfectivo
-        restPagoEfectivoMockMvc.perform(get("/api/pago-efectivos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPagoEfectivoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updatePagoEfectivo() throws Exception {
+    void putNewPagoEfectivo() throws Exception {
         // Initialize the database
-        pagoEfectivoService.save(pagoEfectivo);
+        pagoEfectivoRepository.saveAndFlush(pagoEfectivo);
 
         int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
 
@@ -202,9 +175,12 @@ public class PagoEfectivoResourceIT {
         // Disconnect from session so that the updates on updatedPagoEfectivo are not directly saved in db
         em.detach(updatedPagoEfectivo);
 
-        restPagoEfectivoMockMvc.perform(put("/api/pago-efectivos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPagoEfectivo)))
+        restPagoEfectivoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedPagoEfectivo.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedPagoEfectivo))
+            )
             .andExpect(status().isOk());
 
         // Validate the PagoEfectivo in the database
@@ -215,15 +191,17 @@ public class PagoEfectivoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingPagoEfectivo() throws Exception {
+    void putNonExistingPagoEfectivo() throws Exception {
         int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
-
-        // Create the PagoEfectivo
+        pagoEfectivo.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPagoEfectivoMockMvc.perform(put("/api/pago-efectivos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(pagoEfectivo)))
+        restPagoEfectivoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, pagoEfectivo.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(pagoEfectivo))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the PagoEfectivo in the database
@@ -233,34 +211,165 @@ public class PagoEfectivoResourceIT {
 
     @Test
     @Transactional
-    public void deletePagoEfectivo() throws Exception {
+    void putWithIdMismatchPagoEfectivo() throws Exception {
+        int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
+        pagoEfectivo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPagoEfectivoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(pagoEfectivo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PagoEfectivo in the database
+        List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
+        assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamPagoEfectivo() throws Exception {
+        int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
+        pagoEfectivo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPagoEfectivoMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pagoEfectivo)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the PagoEfectivo in the database
+        List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
+        assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdatePagoEfectivoWithPatch() throws Exception {
         // Initialize the database
-        pagoEfectivoService.save(pagoEfectivo);
+        pagoEfectivoRepository.saveAndFlush(pagoEfectivo);
+
+        int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
+
+        // Update the pagoEfectivo using partial update
+        PagoEfectivo partialUpdatedPagoEfectivo = new PagoEfectivo();
+        partialUpdatedPagoEfectivo.setId(pagoEfectivo.getId());
+
+        restPagoEfectivoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPagoEfectivo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPagoEfectivo))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the PagoEfectivo in the database
+        List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
+        assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeUpdate);
+        PagoEfectivo testPagoEfectivo = pagoEfectivoList.get(pagoEfectivoList.size() - 1);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdatePagoEfectivoWithPatch() throws Exception {
+        // Initialize the database
+        pagoEfectivoRepository.saveAndFlush(pagoEfectivo);
+
+        int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
+
+        // Update the pagoEfectivo using partial update
+        PagoEfectivo partialUpdatedPagoEfectivo = new PagoEfectivo();
+        partialUpdatedPagoEfectivo.setId(pagoEfectivo.getId());
+
+        restPagoEfectivoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPagoEfectivo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPagoEfectivo))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the PagoEfectivo in the database
+        List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
+        assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeUpdate);
+        PagoEfectivo testPagoEfectivo = pagoEfectivoList.get(pagoEfectivoList.size() - 1);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingPagoEfectivo() throws Exception {
+        int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
+        pagoEfectivo.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restPagoEfectivoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, pagoEfectivo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(pagoEfectivo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PagoEfectivo in the database
+        List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
+        assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchPagoEfectivo() throws Exception {
+        int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
+        pagoEfectivo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPagoEfectivoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(pagoEfectivo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the PagoEfectivo in the database
+        List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
+        assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamPagoEfectivo() throws Exception {
+        int databaseSizeBeforeUpdate = pagoEfectivoRepository.findAll().size();
+        pagoEfectivo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPagoEfectivoMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(pagoEfectivo))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the PagoEfectivo in the database
+        List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
+        assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deletePagoEfectivo() throws Exception {
+        // Initialize the database
+        pagoEfectivoRepository.saveAndFlush(pagoEfectivo);
 
         int databaseSizeBeforeDelete = pagoEfectivoRepository.findAll().size();
 
         // Delete the pagoEfectivo
-        restPagoEfectivoMockMvc.perform(delete("/api/pago-efectivos/{id}", pagoEfectivo.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+        restPagoEfectivoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, pagoEfectivo.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<PagoEfectivo> pagoEfectivoList = pagoEfectivoRepository.findAll();
         assertThat(pagoEfectivoList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(PagoEfectivo.class);
-        PagoEfectivo pagoEfectivo1 = new PagoEfectivo();
-        pagoEfectivo1.setId(1L);
-        PagoEfectivo pagoEfectivo2 = new PagoEfectivo();
-        pagoEfectivo2.setId(pagoEfectivo1.getId());
-        assertThat(pagoEfectivo1).isEqualTo(pagoEfectivo2);
-        pagoEfectivo2.setId(2L);
-        assertThat(pagoEfectivo1).isNotEqualTo(pagoEfectivo2);
-        pagoEfectivo1.setId(null);
-        assertThat(pagoEfectivo1).isNotEqualTo(pagoEfectivo2);
     }
 }
