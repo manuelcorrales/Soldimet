@@ -1,21 +1,23 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "documentName",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "changelogDate": "20181113233630",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "no",
-    "entityTableName": "documentation_type",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "documentName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20181113233630",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "documentation_type",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "DocumentationType",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

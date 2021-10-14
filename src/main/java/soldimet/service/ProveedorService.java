@@ -1,16 +1,14 @@
 package soldimet.service;
 
-import soldimet.domain.Proveedor;
-import soldimet.repository.ProveedorRepository;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
+import soldimet.domain.Proveedor;
+import soldimet.repository.ProveedorRepository;
 
 /**
  * Service Implementation for managing {@link Proveedor}.
@@ -39,6 +37,29 @@ public class ProveedorService {
     }
 
     /**
+     * Partially update a proveedor.
+     *
+     * @param proveedor the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Proveedor> partialUpdate(Proveedor proveedor) {
+        log.debug("Request to partially update Proveedor : {}", proveedor);
+
+        return proveedorRepository
+            .findById(proveedor.getId())
+            .map(
+                existingProveedor -> {
+                    if (proveedor.getNombreProveedor() != null) {
+                        existingProveedor.setNombreProveedor(proveedor.getNombreProveedor());
+                    }
+
+                    return existingProveedor;
+                }
+            )
+            .map(proveedorRepository::save);
+    }
+
+    /**
      * Get all the proveedors.
      *
      * @param pageable the pagination information.
@@ -49,7 +70,6 @@ public class ProveedorService {
         log.debug("Request to get all Proveedors");
         return proveedorRepository.findAll(pageable);
     }
-
 
     /**
      * Get one proveedor by id.

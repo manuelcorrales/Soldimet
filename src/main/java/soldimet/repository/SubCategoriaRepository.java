@@ -1,18 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.SubCategoria;
-
-import java.util.List;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.SubCategoria;
 
 /**
- * Spring Data  repository for the SubCategoria entity.
+ * Spring Data SQL repository for the SubCategoria entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface SubCategoriaRepository extends JpaRepository<SubCategoria, Long> {
-
-}
+public interface SubCategoriaRepository extends JpaRepository<SubCategoria, Long> {}

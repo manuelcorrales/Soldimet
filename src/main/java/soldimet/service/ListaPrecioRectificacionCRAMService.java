@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.ListaPrecioRectificacionCRAM;
-import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.ListaPrecioRectificacionCRAM;
+import soldimet.repository.ListaPrecioRectificacionCRAMRepository;
 
 /**
  * Service Implementation for managing {@link ListaPrecioRectificacionCRAM}.
@@ -38,6 +36,29 @@ public class ListaPrecioRectificacionCRAMService {
     }
 
     /**
+     * Partially update a listaPrecioRectificacionCRAM.
+     *
+     * @param listaPrecioRectificacionCRAM the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<ListaPrecioRectificacionCRAM> partialUpdate(ListaPrecioRectificacionCRAM listaPrecioRectificacionCRAM) {
+        log.debug("Request to partially update ListaPrecioRectificacionCRAM : {}", listaPrecioRectificacionCRAM);
+
+        return listaPrecioRectificacionCRAMRepository
+            .findById(listaPrecioRectificacionCRAM.getId())
+            .map(
+                existingListaPrecioRectificacionCRAM -> {
+                    if (listaPrecioRectificacionCRAM.getNumeroGrupo() != null) {
+                        existingListaPrecioRectificacionCRAM.setNumeroGrupo(listaPrecioRectificacionCRAM.getNumeroGrupo());
+                    }
+
+                    return existingListaPrecioRectificacionCRAM;
+                }
+            )
+            .map(listaPrecioRectificacionCRAMRepository::save);
+    }
+
+    /**
      * Get all the listaPrecioRectificacionCRAMS.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class ListaPrecioRectificacionCRAMService {
         log.debug("Request to get all ListaPrecioRectificacionCRAMS");
         return listaPrecioRectificacionCRAMRepository.findAll();
     }
-
 
     /**
      * Get one listaPrecioRectificacionCRAM by id.

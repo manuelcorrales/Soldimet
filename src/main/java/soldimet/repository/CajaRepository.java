@@ -1,16 +1,11 @@
 package soldimet.repository;
 
-import java.time.LocalDate;
-import java.util.List;
-import soldimet.domain.Caja;
-import soldimet.domain.Sucursal;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Caja;
 
 /**
- * Spring Data  repository for the Caja entity.
+ * Spring Data SQL repository for the Caja entity.
  */
 @SuppressWarnings("unused")
 @Repository

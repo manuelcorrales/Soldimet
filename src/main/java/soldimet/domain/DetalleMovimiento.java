@@ -1,21 +1,20 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import soldimet.utils.MathUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A DetalleMovimiento.
  */
 @Entity
 @Table(name = "detalle_movimiento")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DetalleMovimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,22 +40,22 @@ public class DetalleMovimiento implements Serializable {
     private TipoDetalleMovimiento tipoDetalleMovimiento;
 
     @ManyToOne
-    @JsonIgnoreProperties("detalleMovimientos")
+    @JsonIgnoreProperties(value = { "estado", "marca", "tipoRepuesto" }, allowSetters = true)
     private Articulo articulo;
 
     @ManyToOne
-    @JsonIgnoreProperties("detalleMovimientos")
+    @JsonIgnoreProperties(value = { "estadoPedidoRepuesto", "presupuesto", "documentType" }, allowSetters = true)
     private PedidoRepuesto pedidoRepuesto;
 
     @ManyToOne
-    @JsonIgnoreProperties("detalleMovimientos")
+    @JsonIgnoreProperties(value = { "cliente", "estadoPresupuesto", "documentType", "sucursal" }, allowSetters = true)
     private Presupuesto presupuesto;
 
     @ManyToOne
     @JsonIgnoreProperties("detalleMovimientos")
     private MedidaArticulo medida;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -65,9 +64,13 @@ public class DetalleMovimiento implements Serializable {
         this.id = id;
     }
 
+    public DetalleMovimiento id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Float getValorUnitario() {
         return MathUtils.roundFloat(this.valorUnitario);
-
     }
 
     public DetalleMovimiento valorUnitario(Float valorUnitario) {
@@ -80,7 +83,7 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public Integer getCantidad() {
-        return cantidad;
+        return this.cantidad;
     }
 
     public DetalleMovimiento cantidad(Integer cantidad) {
@@ -93,7 +96,7 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public String getDescripcion() {
-        return descripcion;
+        return this.descripcion;
     }
 
     public DetalleMovimiento descripcion(String descripcion) {
@@ -106,11 +109,11 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public TipoDetalleMovimiento getTipoDetalleMovimiento() {
-        return tipoDetalleMovimiento;
+        return this.tipoDetalleMovimiento;
     }
 
     public DetalleMovimiento tipoDetalleMovimiento(TipoDetalleMovimiento tipoDetalleMovimiento) {
-        this.tipoDetalleMovimiento = tipoDetalleMovimiento;
+        this.setTipoDetalleMovimiento(tipoDetalleMovimiento);
         return this;
     }
 
@@ -119,11 +122,11 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public Articulo getArticulo() {
-        return articulo;
+        return this.articulo;
     }
 
     public DetalleMovimiento articulo(Articulo articulo) {
-        this.articulo = articulo;
+        this.setArticulo(articulo);
         return this;
     }
 
@@ -132,11 +135,11 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public PedidoRepuesto getPedidoRepuesto() {
-        return pedidoRepuesto;
+        return this.pedidoRepuesto;
     }
 
     public DetalleMovimiento pedidoRepuesto(PedidoRepuesto pedidoRepuesto) {
-        this.pedidoRepuesto = pedidoRepuesto;
+        this.setPedidoRepuesto(pedidoRepuesto);
         return this;
     }
 
@@ -145,11 +148,11 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public Presupuesto getPresupuesto() {
-        return presupuesto;
+        return this.presupuesto;
     }
 
     public DetalleMovimiento presupuesto(Presupuesto presupuesto) {
-        this.presupuesto = presupuesto;
+        this.setPresupuesto(presupuesto);
         return this;
     }
 
@@ -158,18 +161,19 @@ public class DetalleMovimiento implements Serializable {
     }
 
     public MedidaArticulo getMedida() {
-        return medida;
+        return this.medida;
     }
 
     public DetalleMovimiento medida(MedidaArticulo medidaArticulo) {
-        this.medida = medidaArticulo;
+        this.setMedida(medidaArticulo);
         return this;
     }
 
     public void setMedida(MedidaArticulo medidaArticulo) {
         this.medida = medidaArticulo;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -184,9 +188,11 @@ public class DetalleMovimiento implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "DetalleMovimiento{" +

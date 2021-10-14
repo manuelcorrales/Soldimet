@@ -1,14 +1,12 @@
 package soldimet.web.rest;
 
-import soldimet.domain.Presupuesto;
-import soldimet.service.PresupuestoService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.service.dto.PresupuestoCriteria;
-import soldimet.service.PresupuestoQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,16 +14,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import soldimet.domain.Presupuesto;
+import soldimet.repository.PresupuestoRepository;
+import soldimet.service.PresupuestoQueryService;
+import soldimet.service.PresupuestoService;
+import soldimet.service.criteria.PresupuestoCriteria;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.Presupuesto}.
@@ -43,10 +43,17 @@ public class PresupuestoResource {
 
     private final PresupuestoService presupuestoService;
 
+    private final PresupuestoRepository presupuestoRepository;
+
     private final PresupuestoQueryService presupuestoQueryService;
 
-    public PresupuestoResource(PresupuestoService presupuestoService, PresupuestoQueryService presupuestoQueryService) {
+    public PresupuestoResource(
+        PresupuestoService presupuestoService,
+        PresupuestoRepository presupuestoRepository,
+        PresupuestoQueryService presupuestoQueryService
+    ) {
         this.presupuestoService = presupuestoService;
+        this.presupuestoRepository = presupuestoRepository;
         this.presupuestoQueryService = presupuestoQueryService;
     }
 
@@ -64,38 +71,86 @@ public class PresupuestoResource {
             throw new BadRequestAlertException("A new presupuesto cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Presupuesto result = presupuestoService.save(presupuesto);
-        return ResponseEntity.created(new URI("/api/presupuestos/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/presupuestos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /presupuestos} : Updates an existing presupuesto.
+     * {@code PUT  /presupuestos/:id} : Updates an existing presupuesto.
      *
+     * @param id the id of the presupuesto to save.
      * @param presupuesto the presupuesto to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated presupuesto,
      * or with status {@code 400 (Bad Request)} if the presupuesto is not valid,
      * or with status {@code 500 (Internal Server Error)} if the presupuesto couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/presupuestos")
-    public ResponseEntity<Presupuesto> updatePresupuesto(@Valid @RequestBody Presupuesto presupuesto) throws URISyntaxException {
-        log.debug("REST request to update Presupuesto : {}", presupuesto);
+    @PutMapping("/presupuestos/{id}")
+    public ResponseEntity<Presupuesto> updatePresupuesto(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody Presupuesto presupuesto
+    ) throws URISyntaxException {
+        log.debug("REST request to update Presupuesto : {}, {}", id, presupuesto);
         if (presupuesto.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, presupuesto.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!presupuestoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         Presupuesto result = presupuestoService.save(presupuesto);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, presupuesto.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /presupuestos/:id} : Partial updates given fields of an existing presupuesto, field will ignore if it is null
+     *
+     * @param id the id of the presupuesto to save.
+     * @param presupuesto the presupuesto to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated presupuesto,
+     * or with status {@code 400 (Bad Request)} if the presupuesto is not valid,
+     * or with status {@code 404 (Not Found)} if the presupuesto is not found,
+     * or with status {@code 500 (Internal Server Error)} if the presupuesto couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/presupuestos/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<Presupuesto> partialUpdatePresupuesto(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody Presupuesto presupuesto
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Presupuesto partially : {}, {}", id, presupuesto);
+        if (presupuesto.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, presupuesto.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!presupuestoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<Presupuesto> result = presupuestoService.partialUpdate(presupuesto);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, presupuesto.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /presupuestos} : get all the presupuestos.
      *
-
      * @param pageable the pagination information.
-
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of presupuestos in body.
      */
@@ -108,11 +163,11 @@ public class PresupuestoResource {
     }
 
     /**
-    * {@code GET  /presupuestos/count} : count all the presupuestos.
-    *
-    * @param criteria the criteria which the requested entities should match.
-    * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
-    */
+     * {@code GET  /presupuestos/count} : count all the presupuestos.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
     @GetMapping("/presupuestos/count")
     public ResponseEntity<Long> countPresupuestos(PresupuestoCriteria criteria) {
         log.debug("REST request to count Presupuestos by criteria: {}", criteria);
@@ -142,6 +197,9 @@ public class PresupuestoResource {
     public ResponseEntity<Void> deletePresupuesto(@PathVariable Long id) {
         log.debug("REST request to delete Presupuesto : {}", id);
         presupuestoService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

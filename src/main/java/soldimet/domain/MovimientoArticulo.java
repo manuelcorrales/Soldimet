@@ -1,19 +1,18 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A MovimientoArticulo.
  */
 @Entity
 @Table(name = "movimiento_articulo")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MovimientoArticulo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,7 +28,7 @@ public class MovimientoArticulo implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("movimientoArticulos")
+    @JsonIgnoreProperties(value = { "estado", "marca", "tipoRepuesto" }, allowSetters = true)
     private Articulo articulo;
 
     @ManyToOne(optional = false)
@@ -41,7 +40,7 @@ public class MovimientoArticulo implements Serializable {
     @JsonIgnoreProperties("movimientoArticulos")
     private MedidaArticulo medida;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -50,8 +49,13 @@ public class MovimientoArticulo implements Serializable {
         this.id = id;
     }
 
+    public MovimientoArticulo id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getCantidad() {
-        return cantidad;
+        return this.cantidad;
     }
 
     public MovimientoArticulo cantidad(Integer cantidad) {
@@ -64,11 +68,11 @@ public class MovimientoArticulo implements Serializable {
     }
 
     public Articulo getArticulo() {
-        return articulo;
+        return this.articulo;
     }
 
     public MovimientoArticulo articulo(Articulo articulo) {
-        this.articulo = articulo;
+        this.setArticulo(articulo);
         return this;
     }
 
@@ -77,11 +81,11 @@ public class MovimientoArticulo implements Serializable {
     }
 
     public Movimiento getMovimiento() {
-        return movimiento;
+        return this.movimiento;
     }
 
     public MovimientoArticulo movimiento(Movimiento movimiento) {
-        this.movimiento = movimiento;
+        this.setMovimiento(movimiento);
         return this;
     }
 
@@ -90,18 +94,19 @@ public class MovimientoArticulo implements Serializable {
     }
 
     public MedidaArticulo getMedida() {
-        return medida;
+        return this.medida;
     }
 
     public MovimientoArticulo medida(MedidaArticulo medidaArticulo) {
-        this.medida = medidaArticulo;
+        this.setMedida(medidaArticulo);
         return this;
     }
 
     public void setMedida(MedidaArticulo medidaArticulo) {
         this.medida = medidaArticulo;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -116,9 +121,11 @@ public class MovimientoArticulo implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "MovimientoArticulo{" +

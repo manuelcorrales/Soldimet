@@ -1,22 +1,18 @@
 package soldimet.domain;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A DetallePedido.
  */
 @Entity
 @Table(name = "detalle_pedido")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DetallePedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,12 +46,17 @@ public class DetallePedido implements Serializable {
         this.id = id;
     }
 
+    public DetallePedido id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public DetallePresupuesto getDetallePresupuesto() {
-        return detallePresupuesto;
+        return this.detallePresupuesto;
     }
 
     public DetallePedido detallePresupuesto(DetallePresupuesto detallePresupuesto) {
-        this.detallePresupuesto = detallePresupuesto;
+        this.setDetallePresupuesto(detallePresupuesto);
         return this;
     }
 
@@ -115,9 +116,11 @@ public class DetallePedido implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "DetallePedido{" +

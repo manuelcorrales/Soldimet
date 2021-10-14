@@ -1,59 +1,53 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "estadoPedidoRepuesto",
-            "otherEntityName": "estadoPedidoRepuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreEstado"
-        },
-        {
-            "relationshipName": "detallePedido",
-            "otherEntityName": "detallePedido",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "pedidoRepuesto"
-        },
-        {
-            "relationshipName": "presupuesto",
-            "otherEntityName": "presupuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipName": "documentType",
-            "otherEntityName": "documentationType",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "documentName"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "fechaCreacion",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "fechaPedido",
-            "fieldType": "LocalDate"
-        },
-        {
-            "fieldName": "fechaRecibo",
-            "fieldType": "LocalDate"
-        }
-    ],
-    "changelogDate": "20171214015748",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "pedido_repuesto",
-    "jpaMetamodelFiltering": true,
-    "pagination": "pagination"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "estadoPedidoRepuesto",
+      "otherEntityRelationshipName": "pedidoRepuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "estadoPedidoRepuesto",
+      "otherEntityField": "nombreEstado"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "presupuesto",
+      "otherEntityRelationshipName": "pedidoRepuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "presupuesto"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "documentationType",
+      "otherEntityRelationshipName": "pedidoRepuesto",
+      "relationshipName": "documentType",
+      "otherEntityField": "documentName"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "fechaCreacion",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fechaPedido",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaRecibo",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "changelogDate": "20171214015748",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "pedido_repuesto",
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination",
+  "name": "PedidoRepuesto",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

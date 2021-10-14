@@ -1,23 +1,23 @@
 package soldimet.web.rest;
 
-import soldimet.domain.Localidad;
-import soldimet.service.LocalidadService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.Localidad;
+import soldimet.repository.LocalidadRepository;
+import soldimet.service.LocalidadService;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.Localidad}.
@@ -35,8 +35,11 @@ public class LocalidadResource {
 
     private final LocalidadService localidadService;
 
-    public LocalidadResource(LocalidadService localidadService) {
+    private final LocalidadRepository localidadRepository;
+
+    public LocalidadResource(LocalidadService localidadService, LocalidadRepository localidadRepository) {
         this.localidadService = localidadService;
+        this.localidadRepository = localidadRepository;
     }
 
     /**
@@ -53,36 +56,85 @@ public class LocalidadResource {
             throw new BadRequestAlertException("A new localidad cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Localidad result = localidadService.save(localidad);
-        return ResponseEntity.created(new URI("/api/localidads/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/localidads/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /localidads} : Updates an existing localidad.
+     * {@code PUT  /localidads/:id} : Updates an existing localidad.
      *
+     * @param id the id of the localidad to save.
      * @param localidad the localidad to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated localidad,
      * or with status {@code 400 (Bad Request)} if the localidad is not valid,
      * or with status {@code 500 (Internal Server Error)} if the localidad couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/localidads")
-    public ResponseEntity<Localidad> updateLocalidad(@Valid @RequestBody Localidad localidad) throws URISyntaxException {
-        log.debug("REST request to update Localidad : {}", localidad);
+    @PutMapping("/localidads/{id}")
+    public ResponseEntity<Localidad> updateLocalidad(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody Localidad localidad
+    ) throws URISyntaxException {
+        log.debug("REST request to update Localidad : {}, {}", id, localidad);
         if (localidad.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, localidad.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!localidadRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         Localidad result = localidadService.save(localidad);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, localidad.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /localidads/:id} : Partial updates given fields of an existing localidad, field will ignore if it is null
+     *
+     * @param id the id of the localidad to save.
+     * @param localidad the localidad to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated localidad,
+     * or with status {@code 400 (Bad Request)} if the localidad is not valid,
+     * or with status {@code 404 (Not Found)} if the localidad is not found,
+     * or with status {@code 500 (Internal Server Error)} if the localidad couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/localidads/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<Localidad> partialUpdateLocalidad(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody Localidad localidad
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Localidad partially : {}, {}", id, localidad);
+        if (localidad.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, localidad.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!localidadRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<Localidad> result = localidadService.partialUpdate(localidad);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, localidad.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /localidads} : get all the localidads.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of localidads in body.
      */
     @GetMapping("/localidads")
@@ -114,6 +166,9 @@ public class LocalidadResource {
     public ResponseEntity<Void> deleteLocalidad(@PathVariable Long id) {
         log.debug("REST request to delete Localidad : {}", id);
         localidadService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

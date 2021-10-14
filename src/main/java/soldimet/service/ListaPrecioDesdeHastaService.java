@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.ListaPrecioDesdeHasta;
-import soldimet.repository.ListaPrecioDesdeHastaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.ListaPrecioDesdeHasta;
+import soldimet.repository.ListaPrecioDesdeHastaRepository;
 
 /**
  * Service Implementation for managing {@link ListaPrecioDesdeHasta}.
@@ -38,6 +36,32 @@ public class ListaPrecioDesdeHastaService {
     }
 
     /**
+     * Partially update a listaPrecioDesdeHasta.
+     *
+     * @param listaPrecioDesdeHasta the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<ListaPrecioDesdeHasta> partialUpdate(ListaPrecioDesdeHasta listaPrecioDesdeHasta) {
+        log.debug("Request to partially update ListaPrecioDesdeHasta : {}", listaPrecioDesdeHasta);
+
+        return listaPrecioDesdeHastaRepository
+            .findById(listaPrecioDesdeHasta.getId())
+            .map(
+                existingListaPrecioDesdeHasta -> {
+                    if (listaPrecioDesdeHasta.getFechaDesde() != null) {
+                        existingListaPrecioDesdeHasta.setFechaDesde(listaPrecioDesdeHasta.getFechaDesde());
+                    }
+                    if (listaPrecioDesdeHasta.getFechaHasta() != null) {
+                        existingListaPrecioDesdeHasta.setFechaHasta(listaPrecioDesdeHasta.getFechaHasta());
+                    }
+
+                    return existingListaPrecioDesdeHasta;
+                }
+            )
+            .map(listaPrecioDesdeHastaRepository::save);
+    }
+
+    /**
      * Get all the listaPrecioDesdeHastas.
      *
      * @return the list of entities.
@@ -47,7 +71,6 @@ public class ListaPrecioDesdeHastaService {
         log.debug("Request to get all ListaPrecioDesdeHastas");
         return listaPrecioDesdeHastaRepository.findAll();
     }
-
 
     /**
      * Get one listaPrecioDesdeHasta by id.

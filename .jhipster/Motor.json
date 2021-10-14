@@ -1,30 +1,30 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "aplicacion",
-            "otherEntityName": "aplicacion",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "motor"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "marcaMotor",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength",
-                "maxlength"
-            ],
-            "fieldValidateRulesMinlength": "2",
-            "fieldValidateRulesMaxlength": "25"
-        }
-    ],
-    "changelogDate": "20171214012206",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "motor",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "aplicacion",
+      "otherEntityRelationshipName": "motor",
+      "relationshipName": "aplicacion"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "marcaMotor",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "2",
+      "fieldValidateRulesMaxlength": "25"
+    }
+  ],
+  "changelogDate": "20171214012206",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "motor",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "Motor",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

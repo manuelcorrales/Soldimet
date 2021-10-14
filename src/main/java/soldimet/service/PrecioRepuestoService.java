@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.PrecioRepuesto;
-import soldimet.repository.PrecioRepuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.PrecioRepuesto;
+import soldimet.repository.PrecioRepuestoRepository;
 
 /**
  * Service Implementation for managing {@link PrecioRepuesto}.
@@ -38,6 +36,35 @@ public class PrecioRepuestoService {
     }
 
     /**
+     * Partially update a precioRepuesto.
+     *
+     * @param precioRepuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<PrecioRepuesto> partialUpdate(PrecioRepuesto precioRepuesto) {
+        log.debug("Request to partially update PrecioRepuesto : {}", precioRepuesto);
+
+        return precioRepuestoRepository
+            .findById(precioRepuesto.getId())
+            .map(
+                existingPrecioRepuesto -> {
+                    if (precioRepuesto.getFecha() != null) {
+                        existingPrecioRepuesto.setFecha(precioRepuesto.getFecha());
+                    }
+                    if (precioRepuesto.getPrecioPrivado() != null) {
+                        existingPrecioRepuesto.setPrecioPrivado(precioRepuesto.getPrecioPrivado());
+                    }
+                    if (precioRepuesto.getPrecioPublico() != null) {
+                        existingPrecioRepuesto.setPrecioPublico(precioRepuesto.getPrecioPublico());
+                    }
+
+                    return existingPrecioRepuesto;
+                }
+            )
+            .map(precioRepuestoRepository::save);
+    }
+
+    /**
      * Get all the precioRepuestos.
      *
      * @return the list of entities.
@@ -47,7 +74,6 @@ public class PrecioRepuestoService {
         log.debug("Request to get all PrecioRepuestos");
         return precioRepuestoRepository.findAll();
     }
-
 
     /**
      * Get one precioRepuesto by id.

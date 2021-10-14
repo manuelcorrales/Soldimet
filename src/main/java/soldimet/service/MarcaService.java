@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Marca;
-import soldimet.repository.MarcaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Marca;
+import soldimet.repository.MarcaRepository;
 
 /**
  * Service Implementation for managing {@link Marca}.
@@ -38,6 +36,29 @@ public class MarcaService {
     }
 
     /**
+     * Partially update a marca.
+     *
+     * @param marca the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Marca> partialUpdate(Marca marca) {
+        log.debug("Request to partially update Marca : {}", marca);
+
+        return marcaRepository
+            .findById(marca.getId())
+            .map(
+                existingMarca -> {
+                    if (marca.getNombreMarca() != null) {
+                        existingMarca.setNombreMarca(marca.getNombreMarca());
+                    }
+
+                    return existingMarca;
+                }
+            )
+            .map(marcaRepository::save);
+    }
+
+    /**
      * Get all the marcas.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class MarcaService {
         log.debug("Request to get all Marcas");
         return marcaRepository.findAll();
     }
-
 
     /**
      * Get one marca by id.

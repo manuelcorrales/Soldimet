@@ -1,32 +1,38 @@
 package soldimet.config;
 
 import java.time.Duration;
-
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
-
 import org.hibernate.cache.jcache.ConfigSettings;
-import io.github.jhipster.config.JHipsterProperties;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.*;
+import tech.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.cache.PrefixedKeyGenerator;
 
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
 
+    private GitProperties gitProperties;
+    private BuildProperties buildProperties;
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
 
     public CacheConfiguration(JHipsterProperties jHipsterProperties) {
         JHipsterProperties.Cache.Ehcache ehcache = jHipsterProperties.getCache().getEhcache();
 
-        jcacheConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(
-            CacheConfigurationBuilder.newCacheConfigurationBuilder(Object.class, Object.class,
-                ResourcePoolsBuilder.heap(ehcache.getMaxEntries()))
-                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofSeconds(ehcache.getTimeToLiveSeconds())))
-                .build());
+        jcacheConfiguration =
+            Eh107Configuration.fromEhcacheCacheConfiguration(
+                CacheConfigurationBuilder
+                    .newCacheConfigurationBuilder(Object.class, Object.class, ResourcePoolsBuilder.heap(ehcache.getMaxEntries()))
+                    .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofSeconds(ehcache.getTimeToLiveSeconds())))
+                    .build()
+            );
     }
 
     @Bean
@@ -48,15 +54,11 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.Caja.class.getName());
             createCache(cm, soldimet.domain.SubCategoria.class.getName());
             createCache(cm, soldimet.domain.CategoriaPago.class.getName());
-            createCache(cm, soldimet.domain.CategoriaPago.class.getName() + ".subCategorias");
             createCache(cm, soldimet.domain.Cilindrada.class.getName());
             createCache(cm, soldimet.domain.Cliente.class.getName());
             createCache(cm, soldimet.domain.CostoOperacion.class.getName());
             createCache(cm, soldimet.domain.DetallePedido.class.getName());
-            createCache(cm, soldimet.domain.DetallePedido.class.getName() + ".costoRepuestos");
             createCache(cm, soldimet.domain.DetallePresupuesto.class.getName());
-            createCache(cm, soldimet.domain.DetallePresupuesto.class.getName() + ".cobranzaOperacions");
-            createCache(cm, soldimet.domain.DetallePresupuesto.class.getName() + ".cobranzaRepuestos");
             createCache(cm, soldimet.domain.Direccion.class.getName());
             createCache(cm, soldimet.domain.Empleado.class.getName());
             createCache(cm, soldimet.domain.EstadoArticulo.class.getName());
@@ -70,9 +72,7 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.FormaDePago.class.getName());
             createCache(cm, soldimet.domain.HistorialPrecio.class.getName());
             createCache(cm, soldimet.domain.ListaPrecioDesdeHasta.class.getName());
-            createCache(cm, soldimet.domain.ListaPrecioDesdeHasta.class.getName() + ".costoOperacions");
             createCache(cm, soldimet.domain.ListaPrecioRectificacionCRAM.class.getName());
-            createCache(cm, soldimet.domain.ListaPrecioRectificacionCRAM.class.getName() + ".fechas");
             createCache(cm, soldimet.domain.Localidad.class.getName());
             createCache(cm, soldimet.domain.Marca.class.getName());
             createCache(cm, soldimet.domain.Motor.class.getName());
@@ -83,11 +83,9 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.PagoEfectivo.class.getName());
             createCache(cm, soldimet.domain.PagoTarjeta.class.getName());
             createCache(cm, soldimet.domain.PedidoRepuesto.class.getName());
-            createCache(cm, soldimet.domain.PedidoRepuesto.class.getName() + ".detallePedidos");
             createCache(cm, soldimet.domain.Persona.class.getName());
             createCache(cm, soldimet.domain.PrecioRepuesto.class.getName());
             createCache(cm, soldimet.domain.Presupuesto.class.getName());
-            createCache(cm, soldimet.domain.Presupuesto.class.getName() + ".detallePresupuestos");
             createCache(cm, soldimet.domain.Proveedor.class.getName());
             createCache(cm, soldimet.domain.Rubro.class.getName());
             createCache(cm, soldimet.domain.TipoDetalleMovimiento.class.getName());
@@ -100,17 +98,17 @@ public class CacheConfiguration {
             createCache(cm, soldimet.domain.CostoRepuesto.class.getName());
             createCache(cm, soldimet.domain.MovimientoArticulo.class.getName());
             createCache(cm, soldimet.domain.MovimientoPresupuesto.class.getName());
-            createCache(cm, soldimet.domain.MovimientoPresupuesto.class.getName() + ".costoRepuestos");
             createCache(cm, soldimet.domain.MovimientoPedido.class.getName());
             createCache(cm, soldimet.domain.EstadoCostoRepuesto.class.getName());
             createCache(cm, soldimet.domain.DocumentationType.class.getName());
             createCache(cm, soldimet.domain.Sucursal.class.getName());
             createCache(cm, soldimet.domain.MedioDePago.class.getName());
+            createCache(cm, soldimet.domain.MedioDePagoTarjeta.class.getName());
             createCache(cm, soldimet.domain.MedioDePagoCheque.class.getName());
             createCache(cm, soldimet.domain.CostoRepuestoProveedor.class.getName());
             createCache(cm, soldimet.domain.MedidaArticulo.class.getName());
+            createCache(cm, soldimet.domain.DetallMovimiento.class.getName());
             createCache(cm, soldimet.domain.StockArticulo.class.getName());
-            createCache(cm, soldimet.domain.Articulo.class.getName() + ".stocks");
             // jhipster-needle-ehcache-add-entry
         };
     }
@@ -118,8 +116,24 @@ public class CacheConfiguration {
     private void createCache(javax.cache.CacheManager cm, String cacheName) {
         javax.cache.Cache<Object, Object> cache = cm.getCache(cacheName);
         if (cache != null) {
-            cm.destroyCache(cacheName);
+            cache.clear();
+        } else {
+            cm.createCache(cacheName, jcacheConfiguration);
         }
-        cm.createCache(cacheName, jcacheConfiguration);
+    }
+
+    @Autowired(required = false)
+    public void setGitProperties(GitProperties gitProperties) {
+        this.gitProperties = gitProperties;
+    }
+
+    @Autowired(required = false)
+    public void setBuildProperties(BuildProperties buildProperties) {
+        this.buildProperties = buildProperties;
+    }
+
+    @Bean
+    public KeyGenerator keyGenerator() {
+        return new PrefixedKeyGenerator(this.gitProperties, this.buildProperties);
     }
 }

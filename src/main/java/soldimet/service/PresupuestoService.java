@@ -1,16 +1,14 @@
 package soldimet.service;
 
-import soldimet.domain.Presupuesto;
-import soldimet.repository.PresupuestoRepository;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
+import soldimet.domain.Presupuesto;
+import soldimet.repository.PresupuestoRepository;
 
 /**
  * Service Implementation for managing {@link Presupuesto}.
@@ -39,6 +37,53 @@ public class PresupuestoService {
     }
 
     /**
+     * Partially update a presupuesto.
+     *
+     * @param presupuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Presupuesto> partialUpdate(Presupuesto presupuesto) {
+        log.debug("Request to partially update Presupuesto : {}", presupuesto);
+
+        return presupuestoRepository
+            .findById(presupuesto.getId())
+            .map(
+                existingPresupuesto -> {
+                    if (presupuesto.getDescripcionDescuento() != null) {
+                        existingPresupuesto.setDescripcionDescuento(presupuesto.getDescripcionDescuento());
+                    }
+                    if (presupuesto.getDescuento() != null) {
+                        existingPresupuesto.setDescuento(presupuesto.getDescuento());
+                    }
+                    if (presupuesto.getFechaCreacion() != null) {
+                        existingPresupuesto.setFechaCreacion(presupuesto.getFechaCreacion());
+                    }
+                    if (presupuesto.getFechaAceptado() != null) {
+                        existingPresupuesto.setFechaAceptado(presupuesto.getFechaAceptado());
+                    }
+                    if (presupuesto.getFechaEntregado() != null) {
+                        existingPresupuesto.setFechaEntregado(presupuesto.getFechaEntregado());
+                    }
+                    if (presupuesto.getImporteTotal() != null) {
+                        existingPresupuesto.setImporteTotal(presupuesto.getImporteTotal());
+                    }
+                    if (presupuesto.getObservaciones() != null) {
+                        existingPresupuesto.setObservaciones(presupuesto.getObservaciones());
+                    }
+                    if (presupuesto.getSoldadura() != null) {
+                        existingPresupuesto.setSoldadura(presupuesto.getSoldadura());
+                    }
+                    if (presupuesto.getModelo() != null) {
+                        existingPresupuesto.setModelo(presupuesto.getModelo());
+                    }
+
+                    return existingPresupuesto;
+                }
+            )
+            .map(presupuestoRepository::save);
+    }
+
+    /**
      * Get all the presupuestos.
      *
      * @param pageable the pagination information.
@@ -49,7 +94,6 @@ public class PresupuestoService {
         log.debug("Request to get all Presupuestos");
         return presupuestoRepository.findAll(pageable);
     }
-
 
     /**
      * Get one presupuesto by id.

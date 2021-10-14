@@ -1,17 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.TipoParteMotor;
-import soldimet.domain.TipoRepuesto;
-import org.springframework.stereotype.Repository;
-import java.util.List;
 import org.springframework.data.jpa.repository.*;
-
+import org.springframework.stereotype.Repository;
+import soldimet.domain.TipoRepuesto;
 
 /**
- * Spring Data  repository for the TipoRepuesto entity.
+ * Spring Data SQL repository for the TipoRepuesto entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TipoRepuestoRepository extends JpaRepository<TipoRepuesto, Long> {
-
-}
+public interface TipoRepuestoRepository extends JpaRepository<TipoRepuesto, Long> {}

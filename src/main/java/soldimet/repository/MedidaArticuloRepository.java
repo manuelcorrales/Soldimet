@@ -1,14 +1,12 @@
 package soldimet.repository;
-import soldimet.domain.MedidaArticulo;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.MedidaArticulo;
 
 /**
- * Spring Data  repository for the MedidaArticulo entity.
+ * Spring Data SQL repository for the MedidaArticulo entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface MedidaArticuloRepository extends JpaRepository<MedidaArticulo, Long> {
-
-}
+public interface MedidaArticuloRepository extends JpaRepository<MedidaArticulo, Long> {}

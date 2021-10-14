@@ -1,21 +1,22 @@
 {
-    "fluentMethods": true,
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "nombreEstado",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "3"
-        }
-    ],
-    "changelogDate": "20171214002717",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "estado_pedido_repuesto",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nombreEstado",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRulesMinlength": "3"
+    }
+  ],
+  "changelogDate": "20171214002717",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "estado_pedido_repuesto",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "EstadoPedidoRepuesto",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

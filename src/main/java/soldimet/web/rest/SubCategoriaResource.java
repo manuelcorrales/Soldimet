@@ -1,23 +1,23 @@
 package soldimet.web.rest;
 
-import soldimet.domain.SubCategoria;
-import soldimet.service.SubCategoriaService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.SubCategoria;
+import soldimet.repository.SubCategoriaRepository;
+import soldimet.service.SubCategoriaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.SubCategoria}.
@@ -35,8 +35,11 @@ public class SubCategoriaResource {
 
     private final SubCategoriaService subCategoriaService;
 
-    public SubCategoriaResource(SubCategoriaService subCategoriaService) {
+    private final SubCategoriaRepository subCategoriaRepository;
+
+    public SubCategoriaResource(SubCategoriaService subCategoriaService, SubCategoriaRepository subCategoriaRepository) {
         this.subCategoriaService = subCategoriaService;
+        this.subCategoriaRepository = subCategoriaRepository;
     }
 
     /**
@@ -53,36 +56,85 @@ public class SubCategoriaResource {
             throw new BadRequestAlertException("A new subCategoria cannot already have an ID", ENTITY_NAME, "idexists");
         }
         SubCategoria result = subCategoriaService.save(subCategoria);
-        return ResponseEntity.created(new URI("/api/sub-categorias/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/sub-categorias/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /sub-categorias} : Updates an existing subCategoria.
+     * {@code PUT  /sub-categorias/:id} : Updates an existing subCategoria.
      *
+     * @param id the id of the subCategoria to save.
      * @param subCategoria the subCategoria to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated subCategoria,
      * or with status {@code 400 (Bad Request)} if the subCategoria is not valid,
      * or with status {@code 500 (Internal Server Error)} if the subCategoria couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/sub-categorias")
-    public ResponseEntity<SubCategoria> updateSubCategoria(@Valid @RequestBody SubCategoria subCategoria) throws URISyntaxException {
-        log.debug("REST request to update SubCategoria : {}", subCategoria);
+    @PutMapping("/sub-categorias/{id}")
+    public ResponseEntity<SubCategoria> updateSubCategoria(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody SubCategoria subCategoria
+    ) throws URISyntaxException {
+        log.debug("REST request to update SubCategoria : {}, {}", id, subCategoria);
         if (subCategoria.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, subCategoria.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!subCategoriaRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         SubCategoria result = subCategoriaService.save(subCategoria);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, subCategoria.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /sub-categorias/:id} : Partial updates given fields of an existing subCategoria, field will ignore if it is null
+     *
+     * @param id the id of the subCategoria to save.
+     * @param subCategoria the subCategoria to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated subCategoria,
+     * or with status {@code 400 (Bad Request)} if the subCategoria is not valid,
+     * or with status {@code 404 (Not Found)} if the subCategoria is not found,
+     * or with status {@code 500 (Internal Server Error)} if the subCategoria couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/sub-categorias/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<SubCategoria> partialUpdateSubCategoria(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody SubCategoria subCategoria
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update SubCategoria partially : {}, {}", id, subCategoria);
+        if (subCategoria.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, subCategoria.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!subCategoriaRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<SubCategoria> result = subCategoriaService.partialUpdate(subCategoria);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, subCategoria.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /sub-categorias} : get all the subCategorias.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of subCategorias in body.
      */
     @GetMapping("/sub-categorias")
@@ -114,6 +166,9 @@ public class SubCategoriaResource {
     public ResponseEntity<Void> deleteSubCategoria(@PathVariable Long id) {
         log.debug("REST request to delete SubCategoria : {}", id);
         subCategoriaService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

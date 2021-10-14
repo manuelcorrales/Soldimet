@@ -1,29 +1,18 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import soldimet.utils.MathUtils;
 
 /**
  * A CobranzaRepuesto.
  */
 @Entity
 @Table(name = "cobranza_repuesto")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CobranzaRepuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,12 +28,14 @@ public class CobranzaRepuesto implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties(value = { "tipoParteMotor" }, allowSetters = true)
     private TipoRepuesto tipoRepuesto;
 
     @ManyToOne(cascade ={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, optional = true)
+    @JsonIgnoreProperties(value = { "estado", "marca", "tipoRepuesto" }, allowSetters = true)
     private Articulo articulo;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -53,8 +44,13 @@ public class CobranzaRepuesto implements Serializable {
         this.id = id;
     }
 
+    public CobranzaRepuesto id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Float getValor() {
-        return MathUtils.roundFloat(this.valor);
+        return this.valor;
     }
 
     public CobranzaRepuesto valor(Float valor) {
@@ -67,11 +63,11 @@ public class CobranzaRepuesto implements Serializable {
     }
 
     public TipoRepuesto getTipoRepuesto() {
-        return tipoRepuesto;
+        return this.tipoRepuesto;
     }
 
     public CobranzaRepuesto tipoRepuesto(TipoRepuesto tipoRepuesto) {
-        this.tipoRepuesto = tipoRepuesto;
+        this.setTipoRepuesto(tipoRepuesto);
         return this;
     }
 
@@ -80,18 +76,19 @@ public class CobranzaRepuesto implements Serializable {
     }
 
     public Articulo getArticulo() {
-        return articulo;
+        return this.articulo;
     }
 
     public CobranzaRepuesto articulo(Articulo articulo) {
-        this.articulo = articulo;
+        this.setArticulo(articulo);
         return this;
     }
 
     public void setArticulo(Articulo articulo) {
         this.articulo = articulo;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -106,9 +103,11 @@ public class CobranzaRepuesto implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "CobranzaRepuesto{" +

@@ -1,19 +1,18 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A CostoRepuestoProveedor.
  */
 @Entity
 @Table(name = "costo_repuesto_proveedor")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CostoRepuestoProveedor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,12 +23,12 @@ public class CostoRepuestoProveedor implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("costoRepuestoProveedors")
+    @JsonIgnoreProperties(value = { "tipoParteMotor" }, allowSetters = true)
     private TipoRepuesto tipoRepuesto;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("costoRepuestoProveedors")
+    @JsonIgnoreProperties(value = { "motor" }, allowSetters = true)
     private Aplicacion aplicacion;
 
     @ManyToOne(optional = false)
@@ -38,10 +37,10 @@ public class CostoRepuestoProveedor implements Serializable {
     private Cilindrada cilindrada;
 
     @ManyToOne
-    @JsonIgnoreProperties("costoRepuestoProveedors")
+    @JsonIgnoreProperties(value = { "estado", "marca", "tipoRepuesto" }, allowSetters = true)
     private Articulo articulo;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -50,12 +49,17 @@ public class CostoRepuestoProveedor implements Serializable {
         this.id = id;
     }
 
+    public CostoRepuestoProveedor id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public TipoRepuesto getTipoRepuesto() {
-        return tipoRepuesto;
+        return this.tipoRepuesto;
     }
 
     public CostoRepuestoProveedor tipoRepuesto(TipoRepuesto tipoRepuesto) {
-        this.tipoRepuesto = tipoRepuesto;
+        this.setTipoRepuesto(tipoRepuesto);
         return this;
     }
 
@@ -64,11 +68,11 @@ public class CostoRepuestoProveedor implements Serializable {
     }
 
     public Aplicacion getAplicacion() {
-        return aplicacion;
+        return this.aplicacion;
     }
 
     public CostoRepuestoProveedor aplicacion(Aplicacion aplicacion) {
-        this.aplicacion = aplicacion;
+        this.setAplicacion(aplicacion);
         return this;
     }
 
@@ -77,11 +81,11 @@ public class CostoRepuestoProveedor implements Serializable {
     }
 
     public Cilindrada getCilindrada() {
-        return cilindrada;
+        return this.cilindrada;
     }
 
     public CostoRepuestoProveedor cilindrada(Cilindrada cilindrada) {
-        this.cilindrada = cilindrada;
+        this.setCilindrada(cilindrada);
         return this;
     }
 
@@ -90,18 +94,19 @@ public class CostoRepuestoProveedor implements Serializable {
     }
 
     public Articulo getArticulo() {
-        return articulo;
+        return this.articulo;
     }
 
     public CostoRepuestoProveedor articulo(Articulo articulo) {
-        this.articulo = articulo;
+        this.setArticulo(articulo);
         return this;
     }
 
     public void setArticulo(Articulo articulo) {
         this.articulo = articulo;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -116,9 +121,11 @@ public class CostoRepuestoProveedor implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "CostoRepuestoProveedor{" +

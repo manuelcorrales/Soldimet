@@ -2,22 +2,8 @@ package soldimet.domain;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -26,7 +12,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  */
 @Entity
 @Table(name = "lista_precio_desde_hasta")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ListaPrecioDesdeHasta implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,8 +43,13 @@ public class ListaPrecioDesdeHasta implements Serializable {
         this.id = id;
     }
 
+    public ListaPrecioDesdeHasta id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LocalDate getFechaDesde() {
-        return fechaDesde;
+        return this.fechaDesde;
     }
 
     public ListaPrecioDesdeHasta fechaDesde(LocalDate fechaDesde) {
@@ -71,7 +62,7 @@ public class ListaPrecioDesdeHasta implements Serializable {
     }
 
     public LocalDate getFechaHasta() {
-        return fechaHasta;
+        return this.fechaHasta;
     }
 
     public ListaPrecioDesdeHasta fechaHasta(LocalDate fechaHasta) {
@@ -120,9 +111,11 @@ public class ListaPrecioDesdeHasta implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "ListaPrecioDesdeHasta{" +

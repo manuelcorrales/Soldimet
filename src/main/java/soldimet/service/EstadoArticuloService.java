@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.EstadoArticulo;
-import soldimet.repository.EstadoArticuloRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.EstadoArticulo;
+import soldimet.repository.EstadoArticuloRepository;
 
 /**
  * Service Implementation for managing {@link EstadoArticulo}.
@@ -38,6 +36,29 @@ public class EstadoArticuloService {
     }
 
     /**
+     * Partially update a estadoArticulo.
+     *
+     * @param estadoArticulo the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<EstadoArticulo> partialUpdate(EstadoArticulo estadoArticulo) {
+        log.debug("Request to partially update EstadoArticulo : {}", estadoArticulo);
+
+        return estadoArticuloRepository
+            .findById(estadoArticulo.getId())
+            .map(
+                existingEstadoArticulo -> {
+                    if (estadoArticulo.getNombreEstado() != null) {
+                        existingEstadoArticulo.setNombreEstado(estadoArticulo.getNombreEstado());
+                    }
+
+                    return existingEstadoArticulo;
+                }
+            )
+            .map(estadoArticuloRepository::save);
+    }
+
+    /**
      * Get all the estadoArticulos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class EstadoArticuloService {
         log.debug("Request to get all EstadoArticulos");
         return estadoArticuloRepository.findAll();
     }
-
 
     /**
      * Get one estadoArticulo by id.

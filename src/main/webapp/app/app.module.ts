@@ -1,88 +1,58 @@
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgxUiLoaderModule, NgxUiLoaderRouterModule, NgxUiLoaderHttpModule } from 'ngx-ui-loader';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import locale from '@angular/common/locales/en';
+import { BrowserModule, Title } from '@angular/platform-browser';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { NgxWebstorageModule } from 'ngx-webstorage';
+import * as dayjs from 'dayjs';
+import { NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
-import 'app/vendor';
-import { AuthInterceptor } from 'app/blocks/interceptor/auth.interceptor';
-import { AuthExpiredInterceptor } from 'app/blocks/interceptor/auth-expired.interceptor';
-import { ErrorHandlerInterceptor } from 'app/blocks/interceptor/errorhandler.interceptor';
-// import { NotificationInterceptor } from 'app/blocks/interceptor/notification.interceptor';
-import { SoldimetSharedModule } from 'app/shared/shared.module';
-import { SoldimetCoreModule } from 'app/core/core.module';
-import { SoldimetAppRoutingModule } from 'app/app-routing.module';
-import { SoldimetHomeModule } from 'app/home/home.module';
-import { SoldimetEntityModule } from 'app/entities/entity.module';
+import { SERVER_API_URL } from './app.constants';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import './config/dayjs';
+import { SharedModule } from 'app/shared/shared.module';
+import { AppRoutingModule } from './app-routing.module';
+import { HomeModule } from './home/home.module';
+import { EntityRoutingModule } from './entities/entity-routing.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
-import { JhiMainComponent } from 'app/layouts/main/main.component';
-import { NavbarComponent } from 'app/layouts/navbar/navbar.component';
-import { FooterComponent } from 'app/layouts/footer/footer.component';
-import { PageRibbonComponent } from 'app/layouts/profiles/page-ribbon.component';
-import { ErrorComponent } from 'app/layouts/error/error.component';
-import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
-import { FormsModule } from '@angular/forms';
-
-// Import created modules here
-import { CajaModule } from 'app/caja/caja.module';
-import { ClientesModule } from 'app/clientes/clientes.module';
-import { OperacionesModule } from 'app/operaciones/operaciones.module';
-import { PedidosModule } from 'app/pedidos/pedidos.module';
-import { PresupuestosModule } from 'app/presupuestos/presupuestos.module';
-import { ReportsModule } from 'app/reports/reports.module';
-import { RepuestosModule } from 'app/repuestos/repuestos.module';
-import { StockModule } from './stock/stock.module';
+import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
+import { fontAwesomeIcons } from './config/font-awesome-icons';
+import { httpInterceptorProviders } from 'app/core/interceptor/index';
+import { MainComponent } from './layouts/main/main.component';
+import { NavbarComponent } from './layouts/navbar/navbar.component';
+import { FooterComponent } from './layouts/footer/footer.component';
+import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
+import { ErrorComponent } from './layouts/error/error.component';
 
 @NgModule({
   imports: [
     BrowserModule,
-    FormsModule,
-    NgBootstrapFormValidationModule.forRoot(),
-    HttpClientModule,
-    NgxUiLoaderModule,
-    NgxUiLoaderHttpModule,
-    NgxUiLoaderRouterModule,
-    BrowserAnimationsModule,
-    SoldimetSharedModule,
-    SoldimetCoreModule,
-    SoldimetHomeModule,
-    CajaModule,
-    ClientesModule,
-    OperacionesModule,
-    PedidosModule,
-    PresupuestosModule,
-    ReportsModule,
-    RepuestosModule,
-    StockModule,
+    SharedModule,
+    HomeModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
-    SoldimetEntityModule,
-    SoldimetAppRoutingModule
+    EntityRoutingModule,
+    AppRoutingModule,
+    // Set this to true to enable service worker (PWA)
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
+    HttpClientModule,
+    NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
   ],
-  declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthExpiredInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorHandlerInterceptor,
-      multi: true
-    }
-    // Ignoro las notificaciones de jhipster
-    // },
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: NotificationInterceptor,
-    //   multi: true
-    // }
+    Title,
+    { provide: LOCALE_ID, useValue: 'en' },
+    { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
+    httpInterceptorProviders,
   ],
-  bootstrap: [JhiMainComponent]
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+  bootstrap: [MainComponent],
 })
-export class SoldimetAppModule {}
+export class AppModule {
+  constructor(applicationConfigService: ApplicationConfigService, iconLibrary: FaIconLibrary, dpConfig: NgbDatepickerConfig) {
+    applicationConfigService.setEndpointPrefix(SERVER_API_URL);
+    registerLocaleData(locale);
+    iconLibrary.addIcons(...fontAwesomeIcons);
+    dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
+  }
+}

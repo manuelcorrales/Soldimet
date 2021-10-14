@@ -1,50 +1,51 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "sucursal",
-            "otherEntityName": "sucursal",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "nombreSucursal"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "fecha",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "horaApertura",
-            "fieldType": "Instant",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "horaCierre",
-            "fieldType": "Instant"
-        },
-        {
-            "fieldName": "saldo",
-            "fieldType": "Float"
-        },
-        {
-            "fieldName": "observaciones",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "saldoFisico",
-            "fieldType": "Float"
-        }
-    ],
-    "changelogDate": "20171213233926",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "caja",
-    "jpaMetamodelFiltering": true,
-    "pagination": "pagination"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sucursal",
+      "otherEntityRelationshipName": "caja",
+      "relationshipName": "sucursal",
+      "otherEntityField": "nombreSucursal"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "horaApertura",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "horaCierre",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "saldo",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "saldoFisico",
+      "fieldType": "Float"
+    }
+  ],
+  "changelogDate": "20171213233926",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "caja",
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination",
+  "name": "Caja",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

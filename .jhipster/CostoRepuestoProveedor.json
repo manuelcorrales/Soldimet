@@ -1,52 +1,50 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [
-        {
-            "relationshipName": "tipoRepuesto",
-            "otherEntityName": "tipoRepuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoRepuesto",
-            "otherEntityRelationshipName": "costoRepuestoProveedor"
-        },
-        {
-            "relationshipName": "aplicacion",
-            "otherEntityName": "aplicacion",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreAplicacion",
-            "otherEntityRelationshipName": "costoRepuestoProveedor"
-        },
-        {
-            "relationshipName": "cilindrada",
-            "otherEntityName": "cilindrada",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "cantidadDeCilindros",
-            "otherEntityRelationshipName": "costoRepuestoProveedor"
-        },
-        {
-            "relationshipName": "articulo",
-            "otherEntityName": "articulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "codigoArticuloProveedor",
-            "otherEntityRelationshipName": "costoRepuestoProveedor"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20200615225001",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "costo_repuesto_proveedor",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoRepuesto",
+      "otherEntityRelationshipName": "costoRepuestoProveedor",
+      "relationshipValidateRules": "required",
+      "relationshipName": "tipoRepuesto",
+      "otherEntityField": "nombreTipoRepuesto"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aplicacion",
+      "otherEntityRelationshipName": "costoRepuestoProveedor",
+      "relationshipValidateRules": "required",
+      "relationshipName": "aplicacion",
+      "otherEntityField": "nombreAplicacion"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "cilindrada",
+      "otherEntityRelationshipName": "costoRepuestoProveedor",
+      "relationshipValidateRules": "required",
+      "relationshipName": "cilindrada",
+      "otherEntityField": "cantidadDeCilindros"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "articulo",
+      "otherEntityRelationshipName": "costoRepuestoProveedor",
+      "relationshipName": "articulo",
+      "otherEntityField": "codigoArticuloProveedor"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20200615225001",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "costo_repuesto_proveedor",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "CostoRepuestoProveedor",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

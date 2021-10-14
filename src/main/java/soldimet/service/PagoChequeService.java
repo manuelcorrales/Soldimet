@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.PagoCheque;
-import soldimet.repository.PagoChequeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.PagoCheque;
+import soldimet.repository.PagoChequeRepository;
 
 /**
  * Service Implementation for managing {@link PagoCheque}.
@@ -38,6 +36,29 @@ public class PagoChequeService {
     }
 
     /**
+     * Partially update a pagoCheque.
+     *
+     * @param pagoCheque the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<PagoCheque> partialUpdate(PagoCheque pagoCheque) {
+        log.debug("Request to partially update PagoCheque : {}", pagoCheque);
+
+        return pagoChequeRepository
+            .findById(pagoCheque.getId())
+            .map(
+                existingPagoCheque -> {
+                    if (pagoCheque.getNumeroCheque() != null) {
+                        existingPagoCheque.setNumeroCheque(pagoCheque.getNumeroCheque());
+                    }
+
+                    return existingPagoCheque;
+                }
+            )
+            .map(pagoChequeRepository::save);
+    }
+
+    /**
      * Get all the pagoCheques.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class PagoChequeService {
         log.debug("Request to get all PagoCheques");
         return pagoChequeRepository.findAll();
     }
-
 
     /**
      * Get one pagoCheque by id.

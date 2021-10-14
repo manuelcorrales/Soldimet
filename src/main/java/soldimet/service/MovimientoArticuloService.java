@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.MovimientoArticulo;
-import soldimet.repository.MovimientoArticuloRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.MovimientoArticulo;
+import soldimet.repository.MovimientoArticuloRepository;
 
 /**
  * Service Implementation for managing {@link MovimientoArticulo}.
@@ -38,6 +36,29 @@ public class MovimientoArticuloService {
     }
 
     /**
+     * Partially update a movimientoArticulo.
+     *
+     * @param movimientoArticulo the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<MovimientoArticulo> partialUpdate(MovimientoArticulo movimientoArticulo) {
+        log.debug("Request to partially update MovimientoArticulo : {}", movimientoArticulo);
+
+        return movimientoArticuloRepository
+            .findById(movimientoArticulo.getId())
+            .map(
+                existingMovimientoArticulo -> {
+                    if (movimientoArticulo.getCantidad() != null) {
+                        existingMovimientoArticulo.setCantidad(movimientoArticulo.getCantidad());
+                    }
+
+                    return existingMovimientoArticulo;
+                }
+            )
+            .map(movimientoArticuloRepository::save);
+    }
+
+    /**
      * Get all the movimientoArticulos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class MovimientoArticuloService {
         log.debug("Request to get all MovimientoArticulos");
         return movimientoArticuloRepository.findAll();
     }
-
 
     /**
      * Get one movimientoArticulo by id.

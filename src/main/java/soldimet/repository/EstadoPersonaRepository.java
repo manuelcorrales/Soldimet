@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.EstadoPersona;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.EstadoPersona;
 
 /**
- * Spring Data  repository for the EstadoPersona entity.
+ * Spring Data SQL repository for the EstadoPersona entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface EstadoPersonaRepository extends JpaRepository<EstadoPersona, Long> {
-
-}
+public interface EstadoPersonaRepository extends JpaRepository<EstadoPersona, Long> {}

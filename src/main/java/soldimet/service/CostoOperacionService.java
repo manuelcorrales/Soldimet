@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.CostoOperacion;
-import soldimet.repository.CostoOperacionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.CostoOperacion;
+import soldimet.repository.CostoOperacionRepository;
 
 /**
  * Service Implementation for managing {@link CostoOperacion}.
@@ -38,6 +36,29 @@ public class CostoOperacionService {
     }
 
     /**
+     * Partially update a costoOperacion.
+     *
+     * @param costoOperacion the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<CostoOperacion> partialUpdate(CostoOperacion costoOperacion) {
+        log.debug("Request to partially update CostoOperacion : {}", costoOperacion);
+
+        return costoOperacionRepository
+            .findById(costoOperacion.getId())
+            .map(
+                existingCostoOperacion -> {
+                    if (costoOperacion.getCostoOperacion() != null) {
+                        existingCostoOperacion.setCostoOperacion(costoOperacion.getCostoOperacion());
+                    }
+
+                    return existingCostoOperacion;
+                }
+            )
+            .map(costoOperacionRepository::save);
+    }
+
+    /**
      * Get all the costoOperacions.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class CostoOperacionService {
         log.debug("Request to get all CostoOperacions");
         return costoOperacionRepository.findAll();
     }
-
 
     /**
      * Get one costoOperacion by id.

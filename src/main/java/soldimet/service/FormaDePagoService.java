@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.FormaDePago;
-import soldimet.repository.FormaDePagoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.FormaDePago;
+import soldimet.repository.FormaDePagoRepository;
 
 /**
  * Service Implementation for managing {@link FormaDePago}.
@@ -38,6 +36,29 @@ public class FormaDePagoService {
     }
 
     /**
+     * Partially update a formaDePago.
+     *
+     * @param formaDePago the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<FormaDePago> partialUpdate(FormaDePago formaDePago) {
+        log.debug("Request to partially update FormaDePago : {}", formaDePago);
+
+        return formaDePagoRepository
+            .findById(formaDePago.getId())
+            .map(
+                existingFormaDePago -> {
+                    if (formaDePago.getNombreFormaDePago() != null) {
+                        existingFormaDePago.setNombreFormaDePago(formaDePago.getNombreFormaDePago());
+                    }
+
+                    return existingFormaDePago;
+                }
+            )
+            .map(formaDePagoRepository::save);
+    }
+
+    /**
      * Get all the formaDePagos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class FormaDePagoService {
         log.debug("Request to get all FormaDePagos");
         return formaDePagoRepository.findAll();
     }
-
 
     /**
      * Get one formaDePago by id.

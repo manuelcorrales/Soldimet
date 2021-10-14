@@ -1,16 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.EstadoCostoRepuesto;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.EstadoCostoRepuesto;
 
 /**
- * Spring Data  repository for the EstadoCostoRepuesto entity.
+ * Spring Data SQL repository for the EstadoCostoRepuesto entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface EstadoCostoRepuestoRepository extends JpaRepository<EstadoCostoRepuesto, Long> {
-
-
-}
+public interface EstadoCostoRepuestoRepository extends JpaRepository<EstadoCostoRepuesto, Long> {}

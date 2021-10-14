@@ -1,16 +1,14 @@
 package soldimet.service;
 
-import soldimet.domain.Caja;
-import soldimet.repository.CajaRepository;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
+import soldimet.domain.Caja;
+import soldimet.repository.CajaRepository;
 
 /**
  * Service Implementation for managing {@link Caja}.
@@ -39,6 +37,44 @@ public class CajaService {
     }
 
     /**
+     * Partially update a caja.
+     *
+     * @param caja the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Caja> partialUpdate(Caja caja) {
+        log.debug("Request to partially update Caja : {}", caja);
+
+        return cajaRepository
+            .findById(caja.getId())
+            .map(
+                existingCaja -> {
+                    if (caja.getFecha() != null) {
+                        existingCaja.setFecha(caja.getFecha());
+                    }
+                    if (caja.getHoraApertura() != null) {
+                        existingCaja.setHoraApertura(caja.getHoraApertura());
+                    }
+                    if (caja.getHoraCierre() != null) {
+                        existingCaja.setHoraCierre(caja.getHoraCierre());
+                    }
+                    if (caja.getSaldo() != null) {
+                        existingCaja.setSaldo(caja.getSaldo());
+                    }
+                    if (caja.getObservaciones() != null) {
+                        existingCaja.setObservaciones(caja.getObservaciones());
+                    }
+                    if (caja.getSaldoFisico() != null) {
+                        existingCaja.setSaldoFisico(caja.getSaldoFisico());
+                    }
+
+                    return existingCaja;
+                }
+            )
+            .map(cajaRepository::save);
+    }
+
+    /**
      * Get all the cajas.
      *
      * @param pageable the pagination information.
@@ -49,7 +85,6 @@ public class CajaService {
         log.debug("Request to get all Cajas");
         return cajaRepository.findAll(pageable);
     }
-
 
     /**
      * Get one caja by id.

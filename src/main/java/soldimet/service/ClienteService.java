@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Cliente;
-import soldimet.repository.ClienteRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Cliente;
+import soldimet.repository.ClienteRepository;
 
 /**
  * Service Implementation for managing {@link Cliente}.
@@ -38,6 +36,25 @@ public class ClienteService {
     }
 
     /**
+     * Partially update a cliente.
+     *
+     * @param cliente the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Cliente> partialUpdate(Cliente cliente) {
+        log.debug("Request to partially update Cliente : {}", cliente);
+
+        return clienteRepository
+            .findById(cliente.getId())
+            .map(
+                existingCliente -> {
+                    return existingCliente;
+                }
+            )
+            .map(clienteRepository::save);
+    }
+
+    /**
      * Get all the clientes.
      *
      * @return the list of entities.
@@ -47,7 +64,6 @@ public class ClienteService {
         log.debug("Request to get all Clientes");
         return clienteRepository.findAll();
     }
-
 
     /**
      * Get one cliente by id.

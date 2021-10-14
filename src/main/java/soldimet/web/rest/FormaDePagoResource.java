@@ -1,23 +1,23 @@
 package soldimet.web.rest;
 
-import soldimet.domain.FormaDePago;
-import soldimet.service.FormaDePagoService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.FormaDePago;
+import soldimet.repository.FormaDePagoRepository;
+import soldimet.service.FormaDePagoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.FormaDePago}.
@@ -35,8 +35,11 @@ public class FormaDePagoResource {
 
     private final FormaDePagoService formaDePagoService;
 
-    public FormaDePagoResource(FormaDePagoService formaDePagoService) {
+    private final FormaDePagoRepository formaDePagoRepository;
+
+    public FormaDePagoResource(FormaDePagoService formaDePagoService, FormaDePagoRepository formaDePagoRepository) {
         this.formaDePagoService = formaDePagoService;
+        this.formaDePagoRepository = formaDePagoRepository;
     }
 
     /**
@@ -53,36 +56,85 @@ public class FormaDePagoResource {
             throw new BadRequestAlertException("A new formaDePago cannot already have an ID", ENTITY_NAME, "idexists");
         }
         FormaDePago result = formaDePagoService.save(formaDePago);
-        return ResponseEntity.created(new URI("/api/forma-de-pagos/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/forma-de-pagos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /forma-de-pagos} : Updates an existing formaDePago.
+     * {@code PUT  /forma-de-pagos/:id} : Updates an existing formaDePago.
      *
+     * @param id the id of the formaDePago to save.
      * @param formaDePago the formaDePago to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated formaDePago,
      * or with status {@code 400 (Bad Request)} if the formaDePago is not valid,
      * or with status {@code 500 (Internal Server Error)} if the formaDePago couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/forma-de-pagos")
-    public ResponseEntity<FormaDePago> updateFormaDePago(@Valid @RequestBody FormaDePago formaDePago) throws URISyntaxException {
-        log.debug("REST request to update FormaDePago : {}", formaDePago);
+    @PutMapping("/forma-de-pagos/{id}")
+    public ResponseEntity<FormaDePago> updateFormaDePago(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody FormaDePago formaDePago
+    ) throws URISyntaxException {
+        log.debug("REST request to update FormaDePago : {}, {}", id, formaDePago);
         if (formaDePago.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, formaDePago.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!formaDePagoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         FormaDePago result = formaDePagoService.save(formaDePago);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, formaDePago.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /forma-de-pagos/:id} : Partial updates given fields of an existing formaDePago, field will ignore if it is null
+     *
+     * @param id the id of the formaDePago to save.
+     * @param formaDePago the formaDePago to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated formaDePago,
+     * or with status {@code 400 (Bad Request)} if the formaDePago is not valid,
+     * or with status {@code 404 (Not Found)} if the formaDePago is not found,
+     * or with status {@code 500 (Internal Server Error)} if the formaDePago couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/forma-de-pagos/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<FormaDePago> partialUpdateFormaDePago(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody FormaDePago formaDePago
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update FormaDePago partially : {}, {}", id, formaDePago);
+        if (formaDePago.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, formaDePago.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!formaDePagoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<FormaDePago> result = formaDePagoService.partialUpdate(formaDePago);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, formaDePago.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /forma-de-pagos} : get all the formaDePagos.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of formaDePagos in body.
      */
     @GetMapping("/forma-de-pagos")
@@ -114,6 +166,9 @@ public class FormaDePagoResource {
     public ResponseEntity<Void> deleteFormaDePago(@PathVariable Long id) {
         log.debug("REST request to delete FormaDePago : {}", id);
         formaDePagoService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

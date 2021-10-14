@@ -1,55 +1,54 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "estado",
-            "otherEntityName": "estadoCostoRepuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreEstado",
-            "otherEntityRelationshipName": "costoRepuesto"
-        },
-        {
-            "relationshipName": "articulo",
-            "otherEntityName": "articulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "codigoArticuloProveedor",
-            "otherEntityRelationshipName": "costoRepuesto"
-        },
-        {
-            "relationshipName": "tipoRepuesto",
-            "otherEntityName": "tipoRepuesto",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "nombreTipoRepuesto",
-            "otherEntityRelationshipName": "costoRepuesto"
-        },
-        {
-            "relationshipName": "medidaArticulo",
-            "otherEntityName": "medidaArticulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "medida",
-            "otherEntityRelationshipName": "costoRepuesto"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "valor",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": 0
-        }
-    ],
-    "changelogDate": "20180616204734",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "costo_repuesto",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "estadoCostoRepuesto",
+      "otherEntityRelationshipName": "costoRepuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "estado",
+      "otherEntityField": "nombreEstado"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "articulo",
+      "otherEntityRelationshipName": "costoRepuesto",
+      "relationshipName": "articulo",
+      "otherEntityField": "codigoArticuloProveedor"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoRepuesto",
+      "otherEntityRelationshipName": "costoRepuesto",
+      "relationshipName": "tipoRepuesto",
+      "otherEntityField": "nombreTipoRepuesto"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "medidaArticulo",
+      "otherEntityRelationshipName": "costoRepuesto",
+      "relationshipName": "medidaArticulo",
+      "otherEntityField": "medida"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "valor",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "changelogDate": "20180616204734",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "costo_repuesto",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "CostoRepuesto",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

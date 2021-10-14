@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.PagoTarjeta;
-import soldimet.repository.PagoTarjetaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.PagoTarjeta;
+import soldimet.repository.PagoTarjetaRepository;
 
 /**
  * Service Implementation for managing {@link PagoTarjeta}.
@@ -38,6 +36,25 @@ public class PagoTarjetaService {
     }
 
     /**
+     * Partially update a pagoTarjeta.
+     *
+     * @param pagoTarjeta the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<PagoTarjeta> partialUpdate(PagoTarjeta pagoTarjeta) {
+        log.debug("Request to partially update PagoTarjeta : {}", pagoTarjeta);
+
+        return pagoTarjetaRepository
+            .findById(pagoTarjeta.getId())
+            .map(
+                existingPagoTarjeta -> {
+                    return existingPagoTarjeta;
+                }
+            )
+            .map(pagoTarjetaRepository::save);
+    }
+
+    /**
      * Get all the pagoTarjetas.
      *
      * @return the list of entities.
@@ -47,7 +64,6 @@ public class PagoTarjetaService {
         log.debug("Request to get all PagoTarjetas");
         return pagoTarjetaRepository.findAll();
     }
-
 
     /**
      * Get one pagoTarjeta by id.

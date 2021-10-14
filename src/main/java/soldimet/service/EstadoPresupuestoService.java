@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.EstadoPresupuesto;
-import soldimet.repository.EstadoPresupuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.EstadoPresupuesto;
+import soldimet.repository.EstadoPresupuestoRepository;
 
 /**
  * Service Implementation for managing {@link EstadoPresupuesto}.
@@ -38,6 +36,29 @@ public class EstadoPresupuestoService {
     }
 
     /**
+     * Partially update a estadoPresupuesto.
+     *
+     * @param estadoPresupuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<EstadoPresupuesto> partialUpdate(EstadoPresupuesto estadoPresupuesto) {
+        log.debug("Request to partially update EstadoPresupuesto : {}", estadoPresupuesto);
+
+        return estadoPresupuestoRepository
+            .findById(estadoPresupuesto.getId())
+            .map(
+                existingEstadoPresupuesto -> {
+                    if (estadoPresupuesto.getNombreEstado() != null) {
+                        existingEstadoPresupuesto.setNombreEstado(estadoPresupuesto.getNombreEstado());
+                    }
+
+                    return existingEstadoPresupuesto;
+                }
+            )
+            .map(estadoPresupuestoRepository::save);
+    }
+
+    /**
      * Get all the estadoPresupuestos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class EstadoPresupuestoService {
         log.debug("Request to get all EstadoPresupuestos");
         return estadoPresupuestoRepository.findAll();
     }
-
 
     /**
      * Get one estadoPresupuesto by id.

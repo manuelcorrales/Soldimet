@@ -1,105 +1,91 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "cliente",
-            "otherEntityName": "cliente",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "apellido",
-            "otherEntityRelationshipName": "presupuesto"
-        },
-        {
-            "relationshipName": "estadoPresupuesto",
-            "otherEntityName": "estadoPresupuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreEstado",
-            "otherEntityRelationshipName": "presupuesto"
-        },
-        {
-            "relationshipName": "detallePresupuesto",
-            "otherEntityName": "detallePresupuesto",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "presupuesto"
-        },
-        {
-            "relationshipName": "documentType",
-            "otherEntityName": "documentationType",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "documentName",
-            "otherEntityRelationshipName": "presupuesto"
-        },
-        {
-            "relationshipName": "sucursal",
-            "otherEntityName": "sucursal",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "nombreSucursal",
-            "otherEntityRelationshipName": "presupuesto"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "descripcionDescuento",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "5"
-        },
-        {
-            "fieldName": "descuento",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "min"
-            ],
-            "fieldValidateRulesMin": 0
-        },
-        {
-            "fieldName": "fechaCreacion",
-            "fieldType": "LocalDate"
-        },
-        {
-            "fieldName": "fechaAceptado",
-            "fieldType": "LocalDate"
-        },
-        {
-            "fieldName": "fechaEntregado",
-            "fieldType": "LocalDate"
-        },
-        {
-            "fieldName": "importeTotal",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": 0
-        },
-        {
-            "fieldName": "observaciones",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "soldadura",
-            "fieldType": "Boolean",
-            "fieldValidateRules": []
-        },
-        {
-            "fieldName": "modelo",
-            "fieldType": "Boolean"
-        }
-    ],
-    "changelogDate": "20171214020915",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "presupuesto",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": true,
-    "pagination": "pagination"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "cliente",
+      "otherEntityRelationshipName": "presupuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "cliente",
+      "otherEntityField": "apellido"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "estadoPresupuesto",
+      "otherEntityRelationshipName": "presupuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "estadoPresupuesto",
+      "otherEntityField": "nombreEstado"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "documentationType",
+      "otherEntityRelationshipName": "presupuesto",
+      "relationshipName": "documentType",
+      "otherEntityField": "documentName"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sucursal",
+      "otherEntityRelationshipName": "presupuesto",
+      "relationshipName": "sucursal",
+      "otherEntityField": "nombreSucursal"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "descripcionDescuento",
+      "fieldType": "String",
+      "fieldValidateRules": ["minlength"],
+      "fieldValidateRulesMinlength": "5"
+    },
+    {
+      "fieldName": "descuento",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "fechaCreacion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaAceptado",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaEntregado",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "importeTotal",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "soldadura",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "modelo",
+      "fieldType": "Boolean"
+    }
+  ],
+  "changelogDate": "20171214020915",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "presupuesto",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination",
+  "name": "Presupuesto",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

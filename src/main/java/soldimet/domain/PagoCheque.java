@@ -1,19 +1,8 @@
 package soldimet.domain;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -22,7 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  */
 @Entity
 @Table(name = "pago_cheque")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PagoCheque implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,8 +43,13 @@ public class PagoCheque implements Serializable {
         this.id = id;
     }
 
+    public PagoCheque id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNumeroCheque() {
-        return numeroCheque;
+        return this.numeroCheque;
     }
 
     public PagoCheque numeroCheque(String numeroCheque) {
@@ -67,12 +61,25 @@ public class PagoCheque implements Serializable {
         this.numeroCheque = numeroCheque;
     }
 
+    public FormaDePago getFormaDePago() {
+        return this.formaDePago;
+    }
+
+    public PagoCheque formaDePago(FormaDePago formaDePago) {
+        this.setFormaDePago(formaDePago);
+        return this;
+    }
+
+    public void setFormaDePago(FormaDePago formaDePago) {
+        this.formaDePago = formaDePago;
+    }
+
     public Banco getBanco() {
-        return banco;
+        return this.banco;
     }
 
     public PagoCheque banco(Banco banco) {
-        this.banco = banco;
+        this.setBanco(banco);
         return this;
     }
 
@@ -80,19 +87,7 @@ public class PagoCheque implements Serializable {
         this.banco = banco;
     }
 
-    public FormaDePago getFormaDePago() {
-        return formaDePago;
-    }
-
-    public PagoCheque formaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-        return this;
-    }
-
-    public void setFormaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -107,9 +102,11 @@ public class PagoCheque implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "PagoCheque{" +

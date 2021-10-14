@@ -1,18 +1,11 @@
 package soldimet.repository;
-import soldimet.domain.Aplicacion;
-import soldimet.domain.Articulo;
-import soldimet.domain.Cilindrada;
-import soldimet.domain.CostoRepuestoProveedor;
-import soldimet.domain.TipoRepuesto;
-
-import java.util.List;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.CostoRepuestoProveedor;
 
 /**
- * Spring Data  repository for the CostoRepuestoProveedor entity.
+ * Spring Data SQL repository for the CostoRepuestoProveedor entity.
  */
 @SuppressWarnings("unused")
 @Repository

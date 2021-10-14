@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Localidad;
-import soldimet.repository.LocalidadRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Localidad;
+import soldimet.repository.LocalidadRepository;
 
 /**
  * Service Implementation for managing {@link Localidad}.
@@ -38,6 +36,29 @@ public class LocalidadService {
     }
 
     /**
+     * Partially update a localidad.
+     *
+     * @param localidad the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Localidad> partialUpdate(Localidad localidad) {
+        log.debug("Request to partially update Localidad : {}", localidad);
+
+        return localidadRepository
+            .findById(localidad.getId())
+            .map(
+                existingLocalidad -> {
+                    if (localidad.getNombreLocalidad() != null) {
+                        existingLocalidad.setNombreLocalidad(localidad.getNombreLocalidad());
+                    }
+
+                    return existingLocalidad;
+                }
+            )
+            .map(localidadRepository::save);
+    }
+
+    /**
      * Get all the localidads.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class LocalidadService {
         log.debug("Request to get all Localidads");
         return localidadRepository.findAll();
     }
-
 
     /**
      * Get one localidad by id.

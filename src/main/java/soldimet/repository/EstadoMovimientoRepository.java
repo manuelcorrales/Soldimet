@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.EstadoMovimiento;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.EstadoMovimiento;
 
 /**
- * Spring Data  repository for the EstadoMovimiento entity.
+ * Spring Data SQL repository for the EstadoMovimiento entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface EstadoMovimientoRepository extends JpaRepository<EstadoMovimiento, Long> {
-
-}
+public interface EstadoMovimientoRepository extends JpaRepository<EstadoMovimiento, Long> {}

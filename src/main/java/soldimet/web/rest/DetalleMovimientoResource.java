@@ -1,23 +1,23 @@
 package soldimet.web.rest;
 
-import soldimet.domain.DetalleMovimiento;
-import soldimet.service.DetalleMovimientoService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.DetalleMovimiento;
+import soldimet.repository.DetalleMovimientoRepository;
+import soldimet.service.DetalleMovimientoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.DetalleMovimiento}.
@@ -35,8 +35,14 @@ public class DetalleMovimientoResource {
 
     private final DetalleMovimientoService detalleMovimientoService;
 
-    public DetalleMovimientoResource(DetalleMovimientoService detalleMovimientoService) {
+    private final DetalleMovimientoRepository detalleMovimientoRepository;
+
+    public DetalleMovimientoResource(
+        DetalleMovimientoService detalleMovimientoService,
+        DetalleMovimientoRepository detalleMovimientoRepository
+    ) {
         this.detalleMovimientoService = detalleMovimientoService;
+        this.detalleMovimientoRepository = detalleMovimientoRepository;
     }
 
     /**
@@ -47,42 +53,92 @@ public class DetalleMovimientoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/detalle-movimientos")
-    public ResponseEntity<DetalleMovimiento> createDetalleMovimiento(@Valid @RequestBody DetalleMovimiento detalleMovimiento) throws URISyntaxException {
+    public ResponseEntity<DetalleMovimiento> createDetalleMovimiento(@Valid @RequestBody DetalleMovimiento detalleMovimiento)
+        throws URISyntaxException {
         log.debug("REST request to save DetalleMovimiento : {}", detalleMovimiento);
         if (detalleMovimiento.getId() != null) {
             throw new BadRequestAlertException("A new detalleMovimiento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         DetalleMovimiento result = detalleMovimientoService.save(detalleMovimiento);
-        return ResponseEntity.created(new URI("/api/detalle-movimientos/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/detalle-movimientos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /detalle-movimientos} : Updates an existing detalleMovimiento.
+     * {@code PUT  /detalle-movimientos/:id} : Updates an existing detalleMovimiento.
      *
+     * @param id the id of the detalleMovimiento to save.
      * @param detalleMovimiento the detalleMovimiento to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated detalleMovimiento,
      * or with status {@code 400 (Bad Request)} if the detalleMovimiento is not valid,
      * or with status {@code 500 (Internal Server Error)} if the detalleMovimiento couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/detalle-movimientos")
-    public ResponseEntity<DetalleMovimiento> updateDetalleMovimiento(@Valid @RequestBody DetalleMovimiento detalleMovimiento) throws URISyntaxException {
-        log.debug("REST request to update DetalleMovimiento : {}", detalleMovimiento);
+    @PutMapping("/detalle-movimientos/{id}")
+    public ResponseEntity<DetalleMovimiento> updateDetalleMovimiento(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody DetalleMovimiento detalleMovimiento
+    ) throws URISyntaxException {
+        log.debug("REST request to update DetalleMovimiento : {}, {}", id, detalleMovimiento);
         if (detalleMovimiento.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, detalleMovimiento.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!detalleMovimientoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         DetalleMovimiento result = detalleMovimientoService.save(detalleMovimiento);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, detalleMovimiento.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /detalle-movimientos/:id} : Partial updates given fields of an existing detalleMovimiento, field will ignore if it is null
+     *
+     * @param id the id of the detalleMovimiento to save.
+     * @param detalleMovimiento the detalleMovimiento to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated detalleMovimiento,
+     * or with status {@code 400 (Bad Request)} if the detalleMovimiento is not valid,
+     * or with status {@code 404 (Not Found)} if the detalleMovimiento is not found,
+     * or with status {@code 500 (Internal Server Error)} if the detalleMovimiento couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/detalle-movimientos/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<DetalleMovimiento> partialUpdateDetalleMovimiento(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody DetalleMovimiento detalleMovimiento
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update DetalleMovimiento partially : {}, {}", id, detalleMovimiento);
+        if (detalleMovimiento.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, detalleMovimiento.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!detalleMovimientoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<DetalleMovimiento> result = detalleMovimientoService.partialUpdate(detalleMovimiento);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, detalleMovimiento.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /detalle-movimientos} : get all the detalleMovimientos.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of detalleMovimientos in body.
      */
     @GetMapping("/detalle-movimientos")
@@ -114,6 +170,9 @@ public class DetalleMovimientoResource {
     public ResponseEntity<Void> deleteDetalleMovimiento(@PathVariable Long id) {
         log.debug("REST request to delete DetalleMovimiento : {}", id);
         detalleMovimientoService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

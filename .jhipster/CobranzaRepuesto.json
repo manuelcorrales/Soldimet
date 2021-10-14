@@ -1,41 +1,40 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "tipoRepuesto",
-            "otherEntityName": "tipoRepuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoRepuesto",
-            "otherEntityRelationshipName": "cobranzaRepuesto"
-        },
-        {
-            "relationshipName": "articulo",
-            "otherEntityName": "articulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "codigoArticuloProveedor",
-            "otherEntityRelationshipName": "cobranzaRepuesto"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "valor",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": 0
-        }
-    ],
-    "changelogDate": "20180615000159",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "cobranza_repuesto",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoRepuesto",
+      "otherEntityRelationshipName": "cobranzaRepuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "tipoRepuesto",
+      "otherEntityField": "nombreTipoRepuesto"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "articulo",
+      "otherEntityRelationshipName": "cobranzaRepuesto",
+      "relationshipName": "articulo",
+      "otherEntityField": "codigoArticuloProveedor"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "valor",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "changelogDate": "20180615000159",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "cobranza_repuesto",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "CobranzaRepuesto",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

@@ -1,83 +1,80 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "estado",
-            "otherEntityName": "estadoMovimiento",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreEstado"
-        },
-        {
-            "relationshipName": "tipoMovimiento",
-            "otherEntityName": "tipoMovimiento",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoMovimiento"
-        },
-        {
-            "relationshipName": "empleado",
-            "otherEntityName": "empleado",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "usuario"
-        },
-        {
-            "relationshipName": "caja",
-            "otherEntityName": "caja",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipName": "subCategoria",
-            "otherEntityName": "subCategoria",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "nombreSubCategoria"
-        },
-        {
-            "relationshipName": "medioDePago",
-            "otherEntityName": "medioDePago",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "movimiento"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "fecha",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "importe",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "descuento",
-            "fieldType": "Float"
-        },
-        {
-            "fieldName": "observaciones",
-            "fieldType": "String"
-        }
-    ],
-    "changelogDate": "20171214012446",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "movimiento",
-    "jpaMetamodelFiltering": false,
-    "pagination": "pagination"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "medioDePago",
+      "otherEntityRelationshipName": "movimiento",
+      "relationshipName": "medioDePago",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "estadoMovimiento",
+      "otherEntityRelationshipName": "movimiento",
+      "relationshipValidateRules": "required",
+      "relationshipName": "estado",
+      "otherEntityField": "nombreEstado"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoMovimiento",
+      "otherEntityRelationshipName": "movimiento",
+      "relationshipValidateRules": "required",
+      "relationshipName": "tipoMovimiento",
+      "otherEntityField": "nombreTipoMovimiento"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "empleado",
+      "otherEntityRelationshipName": "movimiento",
+      "relationshipValidateRules": "required",
+      "relationshipName": "empleado",
+      "otherEntityField": "usuario"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "caja",
+      "otherEntityRelationshipName": "movimiento",
+      "relationshipName": "caja"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "subCategoria",
+      "otherEntityRelationshipName": "movimiento",
+      "relationshipName": "subCategoria",
+      "otherEntityField": "nombreSubCategoria"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "importe",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descuento",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20171214012446",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "movimiento",
+  "jpaMetamodelFiltering": false,
+  "pagination": "pagination",
+  "name": "Movimiento",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

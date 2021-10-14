@@ -1,39 +1,32 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "presupuesto",
-            "otherEntityName": "presupuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipName": "movimiento",
-            "otherEntityName": "movimiento",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "movimientoPresupuesto"
-        },
-        {
-            "relationshipName": "costoRepuesto",
-            "otherEntityName": "costoRepuesto",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "movimientoPresupuesto"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20180616212814",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "movimiento_presupuesto",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "movimiento",
+      "otherEntityRelationshipName": "movimientoPresupuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "movimiento",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "presupuesto",
+      "otherEntityRelationshipName": "movimientoPresupuesto",
+      "relationshipValidateRules": "required",
+      "relationshipName": "presupuesto"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20180616212814",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "movimiento_presupuesto",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "MovimientoPresupuesto",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

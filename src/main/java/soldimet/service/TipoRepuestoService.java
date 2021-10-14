@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.TipoRepuesto;
-import soldimet.repository.TipoRepuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.TipoRepuesto;
+import soldimet.repository.TipoRepuestoRepository;
 
 /**
  * Service Implementation for managing {@link TipoRepuesto}.
@@ -38,6 +36,29 @@ public class TipoRepuestoService {
     }
 
     /**
+     * Partially update a tipoRepuesto.
+     *
+     * @param tipoRepuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<TipoRepuesto> partialUpdate(TipoRepuesto tipoRepuesto) {
+        log.debug("Request to partially update TipoRepuesto : {}", tipoRepuesto);
+
+        return tipoRepuestoRepository
+            .findById(tipoRepuesto.getId())
+            .map(
+                existingTipoRepuesto -> {
+                    if (tipoRepuesto.getNombreTipoRepuesto() != null) {
+                        existingTipoRepuesto.setNombreTipoRepuesto(tipoRepuesto.getNombreTipoRepuesto());
+                    }
+
+                    return existingTipoRepuesto;
+                }
+            )
+            .map(tipoRepuestoRepository::save);
+    }
+
+    /**
      * Get all the tipoRepuestos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class TipoRepuestoService {
         log.debug("Request to get all TipoRepuestos");
         return tipoRepuestoRepository.findAll();
     }
-
 
     /**
      * Get one tipoRepuesto by id.

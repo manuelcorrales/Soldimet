@@ -1,16 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Motor;
-import soldimet.repository.MotorRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Motor;
+import soldimet.repository.MotorRepository;
 
 /**
  * Service Implementation for managing {@link Motor}.
@@ -39,6 +36,29 @@ public class MotorService {
     }
 
     /**
+     * Partially update a motor.
+     *
+     * @param motor the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Motor> partialUpdate(Motor motor) {
+        log.debug("Request to partially update Motor : {}", motor);
+
+        return motorRepository
+            .findById(motor.getId())
+            .map(
+                existingMotor -> {
+                    if (motor.getMarcaMotor() != null) {
+                        existingMotor.setMarcaMotor(motor.getMarcaMotor());
+                    }
+
+                    return existingMotor;
+                }
+            )
+            .map(motorRepository::save);
+    }
+
+    /**
      * Get all the motors.
      *
      * @return the list of entities.
@@ -46,10 +66,8 @@ public class MotorService {
     @Transactional(readOnly = true)
     public List<Motor> findAll() {
         log.debug("Request to get all Motors");
-        List<Motor> motores = motorRepository.findAll(Sort.by(Sort.Direction.ASC, "marcaMotor"));
-        return motores;
+        return motorRepository.findAll();
     }
-
 
     /**
      * Get one motor by id.

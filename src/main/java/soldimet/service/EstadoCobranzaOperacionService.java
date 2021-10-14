@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.EstadoCobranzaOperacion;
-import soldimet.repository.EstadoCobranzaOperacionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.EstadoCobranzaOperacion;
+import soldimet.repository.EstadoCobranzaOperacionRepository;
 
 /**
  * Service Implementation for managing {@link EstadoCobranzaOperacion}.
@@ -38,6 +36,29 @@ public class EstadoCobranzaOperacionService {
     }
 
     /**
+     * Partially update a estadoCobranzaOperacion.
+     *
+     * @param estadoCobranzaOperacion the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<EstadoCobranzaOperacion> partialUpdate(EstadoCobranzaOperacion estadoCobranzaOperacion) {
+        log.debug("Request to partially update EstadoCobranzaOperacion : {}", estadoCobranzaOperacion);
+
+        return estadoCobranzaOperacionRepository
+            .findById(estadoCobranzaOperacion.getId())
+            .map(
+                existingEstadoCobranzaOperacion -> {
+                    if (estadoCobranzaOperacion.getNombreEstado() != null) {
+                        existingEstadoCobranzaOperacion.setNombreEstado(estadoCobranzaOperacion.getNombreEstado());
+                    }
+
+                    return existingEstadoCobranzaOperacion;
+                }
+            )
+            .map(estadoCobranzaOperacionRepository::save);
+    }
+
+    /**
      * Get all the estadoCobranzaOperacions.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class EstadoCobranzaOperacionService {
         log.debug("Request to get all EstadoCobranzaOperacions");
         return estadoCobranzaOperacionRepository.findAll();
     }
-
 
     /**
      * Get one estadoCobranzaOperacion by id.

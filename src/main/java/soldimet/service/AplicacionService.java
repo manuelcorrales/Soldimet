@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Aplicacion;
-import soldimet.repository.AplicacionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Aplicacion;
+import soldimet.repository.AplicacionRepository;
 
 /**
  * Service Implementation for managing {@link Aplicacion}.
@@ -38,6 +36,32 @@ public class AplicacionService {
     }
 
     /**
+     * Partially update a aplicacion.
+     *
+     * @param aplicacion the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Aplicacion> partialUpdate(Aplicacion aplicacion) {
+        log.debug("Request to partially update Aplicacion : {}", aplicacion);
+
+        return aplicacionRepository
+            .findById(aplicacion.getId())
+            .map(
+                existingAplicacion -> {
+                    if (aplicacion.getNombreAplicacion() != null) {
+                        existingAplicacion.setNombreAplicacion(aplicacion.getNombreAplicacion());
+                    }
+                    if (aplicacion.getNumeroGrupo() != null) {
+                        existingAplicacion.setNumeroGrupo(aplicacion.getNumeroGrupo());
+                    }
+
+                    return existingAplicacion;
+                }
+            )
+            .map(aplicacionRepository::save);
+    }
+
+    /**
      * Get all the aplicacions.
      *
      * @return the list of entities.
@@ -45,9 +69,8 @@ public class AplicacionService {
     @Transactional(readOnly = true)
     public List<Aplicacion> findAll() {
         log.debug("Request to get all Aplicacions");
-        return aplicacionRepository.findAll(Sort.by(Sort.Direction.ASC, "nombreAplicacion"));
+        return aplicacionRepository.findAll();
     }
-
 
     /**
      * Get one aplicacion by id.

@@ -1,16 +1,19 @@
-version: '2'
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.8'
 services:
   soldimet-app:
     image: soldimet
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=qa,swagger
-      # - SPRING_PROFILES_ACTIVE
+      - SPRING_PROFILES_ACTIVE=prod,api-docs
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=false
-      # - SPRING_DATASOURCE_URL=jdbc:mysql://soldimet-mysql:3306/Soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-      - JHIPSTER_SLEEP=5 # gives time for other services to boot before the application
+      # - SPRING_DATASOURCE_URL=jdbc:mysql://soldimet-mysql:3306/soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      # - SPRING_LIQUIBASE_URL=jdbc:mysql://soldimet-mysql:3306/soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
     ports:
-      - 80:80
+      - 127.0.0.1:80:80
     depends_on:
       - soldimet-mysql
   soldimet-mysql:

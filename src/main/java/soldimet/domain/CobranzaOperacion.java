@@ -1,21 +1,18 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import soldimet.utils.MathUtils;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A CobranzaOperacion.
  */
 @Entity
 @Table(name = "cobranza_operacion")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CobranzaOperacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,10 +33,10 @@ public class CobranzaOperacion implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("cobranzaOperacions")
+    @JsonIgnoreProperties(value = { "tipoParteMotor", "estadoOperacion" }, allowSetters = true)
     private Operacion operacion;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -48,8 +45,13 @@ public class CobranzaOperacion implements Serializable {
         this.id = id;
     }
 
+    public CobranzaOperacion id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Float getCobranzaOperacion() {
-        return MathUtils.roundFloat(this.cobranzaOperacion);
+        return this.cobranzaOperacion;
     }
 
     public CobranzaOperacion cobranzaOperacion(Float cobranzaOperacion) {
@@ -62,11 +64,11 @@ public class CobranzaOperacion implements Serializable {
     }
 
     public EstadoCobranzaOperacion getEstadoCobranzaOperacion() {
-        return estadoCobranzaOperacion;
+        return this.estadoCobranzaOperacion;
     }
 
     public CobranzaOperacion estadoCobranzaOperacion(EstadoCobranzaOperacion estadoCobranzaOperacion) {
-        this.estadoCobranzaOperacion = estadoCobranzaOperacion;
+        this.setEstadoCobranzaOperacion(estadoCobranzaOperacion);
         return this;
     }
 
@@ -75,18 +77,19 @@ public class CobranzaOperacion implements Serializable {
     }
 
     public Operacion getOperacion() {
-        return operacion;
+        return this.operacion;
     }
 
     public CobranzaOperacion operacion(Operacion operacion) {
-        this.operacion = operacion;
+        this.setOperacion(operacion);
         return this;
     }
 
     public void setOperacion(Operacion operacion) {
         this.operacion = operacion;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -101,9 +104,11 @@ public class CobranzaOperacion implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "CobranzaOperacion{" +

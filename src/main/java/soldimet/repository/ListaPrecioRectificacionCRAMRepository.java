@@ -1,14 +1,12 @@
 package soldimet.repository;
-import soldimet.domain.ListaPrecioRectificacionCRAM;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.ListaPrecioRectificacionCRAM;
 
 /**
- * Spring Data  repository for the ListaPrecioRectificacionCRAM entity.
+ * Spring Data SQL repository for the ListaPrecioRectificacionCRAM entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ListaPrecioRectificacionCRAMRepository extends JpaRepository<ListaPrecioRectificacionCRAM, Long> {
-
-}
+public interface ListaPrecioRectificacionCRAMRepository extends JpaRepository<ListaPrecioRectificacionCRAM, Long> {}

@@ -1,21 +1,18 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A MovimientoPresupuesto.
  */
 @Entity
 @Table(name = "movimiento_presupuesto")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MovimientoPresupuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +36,7 @@ public class MovimientoPresupuesto implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CostoRepuesto> costoRepuestos = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -48,25 +45,17 @@ public class MovimientoPresupuesto implements Serializable {
         this.id = id;
     }
 
-    public Presupuesto getPresupuesto() {
-        return presupuesto;
-    }
-
-    public MovimientoPresupuesto presupuesto(Presupuesto presupuesto) {
-        this.presupuesto = presupuesto;
+    public MovimientoPresupuesto id(Long id) {
+        this.id = id;
         return this;
     }
 
-    public void setPresupuesto(Presupuesto presupuesto) {
-        this.presupuesto = presupuesto;
-    }
-
     public Movimiento getMovimiento() {
-        return movimiento;
+        return this.movimiento;
     }
 
     public MovimientoPresupuesto movimiento(Movimiento movimiento) {
-        this.movimiento = movimiento;
+        this.setMovimiento(movimiento);
         return this;
     }
 
@@ -74,29 +63,20 @@ public class MovimientoPresupuesto implements Serializable {
         this.movimiento = movimiento;
     }
 
-    public Set<CostoRepuesto> getCostoRepuestos() {
-        return costoRepuestos;
+    public Presupuesto getPresupuesto() {
+        return this.presupuesto;
     }
 
-    public MovimientoPresupuesto costoRepuestos(Set<CostoRepuesto> costoRepuestos) {
-        this.costoRepuestos = costoRepuestos;
+    public MovimientoPresupuesto presupuesto(Presupuesto presupuesto) {
+        this.setPresupuesto(presupuesto);
         return this;
     }
 
-    public MovimientoPresupuesto addCostoRepuesto(CostoRepuesto costoRepuesto) {
-        this.costoRepuestos.add(costoRepuesto);
-        return this;
+    public void setPresupuesto(Presupuesto presupuesto) {
+        this.presupuesto = presupuesto;
     }
 
-    public MovimientoPresupuesto removeCostoRepuesto(CostoRepuesto costoRepuesto) {
-        this.costoRepuestos.remove(costoRepuesto);
-        return this;
-    }
-
-    public void setCostoRepuestos(Set<CostoRepuesto> costoRepuestos) {
-        this.costoRepuestos = costoRepuestos;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -111,9 +91,11 @@ public class MovimientoPresupuesto implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "MovimientoPresupuesto{" +

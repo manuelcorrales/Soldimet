@@ -1,31 +1,33 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [
-        {
-            "relationshipName": "formaDePago",
-            "otherEntityName": "formaDePago",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreFormaDePago"
-        },
-        {
-            "relationshipName": "medioDePagoCheque",
-            "otherEntityName": "medioDePagoCheque",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "medioDePago"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20190222233823",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "no",
-    "entityTableName": "medio_de_pago",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "medioDePagoCheque",
+      "otherEntityRelationshipName": "medioDePago",
+      "relationshipName": "medioDePagoCheque",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "formaDePago",
+      "otherEntityRelationshipName": "medioDePago",
+      "relationshipValidateRules": "required",
+      "relationshipName": "formaDePago",
+      "otherEntityField": "nombreFormaDePago"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20190222233823",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "medio_de_pago",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "MedioDePago",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

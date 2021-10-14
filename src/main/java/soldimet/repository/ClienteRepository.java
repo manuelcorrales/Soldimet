@@ -1,17 +1,11 @@
 package soldimet.repository;
-import soldimet.domain.Cliente;
-import soldimet.domain.Persona;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Cliente;
 
 /**
- * Spring Data  repository for the Cliente entity.
+ * Spring Data SQL repository for the Cliente entity.
  */
 @SuppressWarnings("unused")
 @Repository

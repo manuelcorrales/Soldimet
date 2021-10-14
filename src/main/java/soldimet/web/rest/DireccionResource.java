@@ -1,23 +1,23 @@
 package soldimet.web.rest;
 
-import soldimet.domain.Direccion;
-import soldimet.service.DireccionService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.Direccion;
+import soldimet.repository.DireccionRepository;
+import soldimet.service.DireccionService;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.Direccion}.
@@ -35,8 +35,11 @@ public class DireccionResource {
 
     private final DireccionService direccionService;
 
-    public DireccionResource(DireccionService direccionService) {
+    private final DireccionRepository direccionRepository;
+
+    public DireccionResource(DireccionService direccionService, DireccionRepository direccionRepository) {
         this.direccionService = direccionService;
+        this.direccionRepository = direccionRepository;
     }
 
     /**
@@ -53,36 +56,85 @@ public class DireccionResource {
             throw new BadRequestAlertException("A new direccion cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Direccion result = direccionService.save(direccion);
-        return ResponseEntity.created(new URI("/api/direccions/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/direccions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /direccions} : Updates an existing direccion.
+     * {@code PUT  /direccions/:id} : Updates an existing direccion.
      *
+     * @param id the id of the direccion to save.
      * @param direccion the direccion to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated direccion,
      * or with status {@code 400 (Bad Request)} if the direccion is not valid,
      * or with status {@code 500 (Internal Server Error)} if the direccion couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/direccions")
-    public ResponseEntity<Direccion> updateDireccion(@Valid @RequestBody Direccion direccion) throws URISyntaxException {
-        log.debug("REST request to update Direccion : {}", direccion);
+    @PutMapping("/direccions/{id}")
+    public ResponseEntity<Direccion> updateDireccion(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody Direccion direccion
+    ) throws URISyntaxException {
+        log.debug("REST request to update Direccion : {}, {}", id, direccion);
         if (direccion.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, direccion.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!direccionRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         Direccion result = direccionService.save(direccion);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, direccion.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /direccions/:id} : Partial updates given fields of an existing direccion, field will ignore if it is null
+     *
+     * @param id the id of the direccion to save.
+     * @param direccion the direccion to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated direccion,
+     * or with status {@code 400 (Bad Request)} if the direccion is not valid,
+     * or with status {@code 404 (Not Found)} if the direccion is not found,
+     * or with status {@code 500 (Internal Server Error)} if the direccion couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/direccions/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<Direccion> partialUpdateDireccion(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody Direccion direccion
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Direccion partially : {}, {}", id, direccion);
+        if (direccion.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, direccion.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!direccionRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<Direccion> result = direccionService.partialUpdate(direccion);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, direccion.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /direccions} : get all the direccions.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of direccions in body.
      */
     @GetMapping("/direccions")
@@ -114,6 +166,9 @@ public class DireccionResource {
     public ResponseEntity<Void> deleteDireccion(@PathVariable Long id) {
         log.debug("REST request to delete Direccion : {}", id);
         direccionService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

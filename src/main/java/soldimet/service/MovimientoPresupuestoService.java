@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.MovimientoPresupuesto;
-import soldimet.repository.MovimientoPresupuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.MovimientoPresupuesto;
+import soldimet.repository.MovimientoPresupuestoRepository;
 
 /**
  * Service Implementation for managing {@link MovimientoPresupuesto}.
@@ -38,6 +36,25 @@ public class MovimientoPresupuestoService {
     }
 
     /**
+     * Partially update a movimientoPresupuesto.
+     *
+     * @param movimientoPresupuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<MovimientoPresupuesto> partialUpdate(MovimientoPresupuesto movimientoPresupuesto) {
+        log.debug("Request to partially update MovimientoPresupuesto : {}", movimientoPresupuesto);
+
+        return movimientoPresupuestoRepository
+            .findById(movimientoPresupuesto.getId())
+            .map(
+                existingMovimientoPresupuesto -> {
+                    return existingMovimientoPresupuesto;
+                }
+            )
+            .map(movimientoPresupuestoRepository::save);
+    }
+
+    /**
      * Get all the movimientoPresupuestos.
      *
      * @return the list of entities.
@@ -47,7 +64,6 @@ public class MovimientoPresupuestoService {
         log.debug("Request to get all MovimientoPresupuestos");
         return movimientoPresupuestoRepository.findAll();
     }
-
 
     /**
      * Get one movimientoPresupuesto by id.

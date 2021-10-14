@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.EstadoOperacion;
-import soldimet.repository.EstadoOperacionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.EstadoOperacion;
+import soldimet.repository.EstadoOperacionRepository;
 
 /**
  * Service Implementation for managing {@link EstadoOperacion}.
@@ -38,6 +36,29 @@ public class EstadoOperacionService {
     }
 
     /**
+     * Partially update a estadoOperacion.
+     *
+     * @param estadoOperacion the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<EstadoOperacion> partialUpdate(EstadoOperacion estadoOperacion) {
+        log.debug("Request to partially update EstadoOperacion : {}", estadoOperacion);
+
+        return estadoOperacionRepository
+            .findById(estadoOperacion.getId())
+            .map(
+                existingEstadoOperacion -> {
+                    if (estadoOperacion.getNombreEstado() != null) {
+                        existingEstadoOperacion.setNombreEstado(estadoOperacion.getNombreEstado());
+                    }
+
+                    return existingEstadoOperacion;
+                }
+            )
+            .map(estadoOperacionRepository::save);
+    }
+
+    /**
      * Get all the estadoOperacions.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class EstadoOperacionService {
         log.debug("Request to get all EstadoOperacions");
         return estadoOperacionRepository.findAll();
     }
-
 
     /**
      * Get one estadoOperacion by id.

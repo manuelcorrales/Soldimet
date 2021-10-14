@@ -1,18 +1,17 @@
 package soldimet.domain;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A PagoEfectivo.
  */
 @Entity
 @Table(name = "pago_efectivo")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PagoEfectivo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,12 +20,12 @@ public class PagoEfectivo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)    @NotNull
-
+    @OneToOne(optional = false)
+    @NotNull
     @JoinColumn(unique = true)
     private FormaDePago formaDePago;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -35,19 +34,25 @@ public class PagoEfectivo implements Serializable {
         this.id = id;
     }
 
+    public PagoEfectivo id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public FormaDePago getFormaDePago() {
-        return formaDePago;
+        return this.formaDePago;
     }
 
     public PagoEfectivo formaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
+        this.setFormaDePago(formaDePago);
         return this;
     }
 
     public void setFormaDePago(FormaDePago formaDePago) {
         this.formaDePago = formaDePago;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -62,9 +67,11 @@ public class PagoEfectivo implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "PagoEfectivo{" +

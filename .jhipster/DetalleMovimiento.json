@@ -1,70 +1,67 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "tipoDetalleMovimiento",
-            "otherEntityName": "tipoDetalleMovimiento",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoDetalle",
-            "otherEntityRelationshipName": "detalleMovimiento"
-        },
-        {
-            "relationshipName": "articulo",
-            "otherEntityName": "articulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "descripcion",
-            "otherEntityRelationshipName": "detalleMovimiento"
-        },
-        {
-            "relationshipName": "pedidoRepuesto",
-            "otherEntityName": "pedidoRepuesto",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id",
-            "otherEntityRelationshipName": "detalleMovimiento"
-        },
-        {
-            "relationshipName": "presupuesto",
-            "otherEntityName": "presupuesto",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id",
-            "otherEntityRelationshipName": "detalleMovimiento"
-        },
-        {
-            "relationshipName": "medida",
-            "otherEntityName": "medidaArticulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "medida",
-            "otherEntityRelationshipName": "detalleMovimiento"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "valorUnitario",
-            "fieldType": "Float"
-        },
-        {
-            "fieldName": "cantidad",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": "0"
-        },
-        {
-            "fieldName": "descripcion",
-            "fieldType": "String"
-        }
-    ],
-    "changelogDate": "20171220194500",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "detalle_movimiento",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoDetalleMovimiento",
+      "otherEntityRelationshipName": "detalleMovimiento",
+      "relationshipValidateRules": "required",
+      "relationshipName": "tipoDetalleMovimiento",
+      "otherEntityField": "nombreTipoDetalle"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "articulo",
+      "otherEntityRelationshipName": "detalleMovimiento",
+      "relationshipName": "articulo",
+      "otherEntityField": "descripcion"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "pedidoRepuesto",
+      "otherEntityRelationshipName": "detalleMovimiento",
+      "relationshipName": "pedidoRepuesto"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "presupuesto",
+      "otherEntityRelationshipName": "detalleMovimiento",
+      "relationshipName": "presupuesto"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "medidaArticulo",
+      "otherEntityRelationshipName": "detalleMovimiento",
+      "relationshipName": "medida",
+      "otherEntityField": "medida"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "valorUnitario",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20171220194500",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "detalle_movimiento",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "DetalleMovimiento",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

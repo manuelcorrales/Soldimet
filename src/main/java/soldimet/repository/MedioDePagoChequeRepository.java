@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.MedioDePagoCheque;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.MedioDePagoCheque;
 
 /**
- * Spring Data  repository for the MedioDePagoCheque entity.
+ * Spring Data SQL repository for the MedioDePagoCheque entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface MedioDePagoChequeRepository extends JpaRepository<MedioDePagoCheque, Long> {
-
-}
+public interface MedioDePagoChequeRepository extends JpaRepository<MedioDePagoCheque, Long> {}

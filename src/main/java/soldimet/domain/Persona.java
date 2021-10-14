@@ -1,20 +1,18 @@
 package soldimet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Persona.
  */
 @Entity
 @Table(name = "persona")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Persona implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,7 +31,8 @@ public class Persona implements Serializable {
     @Column(name = "apellido")
     private String apellido;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "localidad" }, allowSetters = true)
+    @OneToOne
     @JoinColumn(unique = true)
     private Direccion direccion;
 
@@ -45,8 +44,7 @@ public class Persona implements Serializable {
     @JsonIgnoreProperties("personas")
     private User user;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
-    // remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -55,8 +53,13 @@ public class Persona implements Serializable {
         this.id = id;
     }
 
+    public Persona id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNumeroTelefono() {
-        return numeroTelefono;
+        return this.numeroTelefono;
     }
 
     public Persona numeroTelefono(String numeroTelefono) {
@@ -69,7 +72,7 @@ public class Persona implements Serializable {
     }
 
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
 
     public Persona nombre(String nombre) {
@@ -82,7 +85,7 @@ public class Persona implements Serializable {
     }
 
     public String getApellido() {
-        return apellido;
+        return this.apellido;
     }
 
     public Persona apellido(String apellido) {
@@ -95,11 +98,11 @@ public class Persona implements Serializable {
     }
 
     public Direccion getDireccion() {
-        return direccion;
+        return this.direccion;
     }
 
     public Persona direccion(Direccion direccion) {
-        this.direccion = direccion;
+        this.setDireccion(direccion);
         return this;
     }
 
@@ -108,11 +111,11 @@ public class Persona implements Serializable {
     }
 
     public EstadoPersona getEstadoPersona() {
-        return estadoPersona;
+        return this.estadoPersona;
     }
 
     public Persona estadoPersona(EstadoPersona estadoPersona) {
-        this.estadoPersona = estadoPersona;
+        this.setEstadoPersona(estadoPersona);
         return this;
     }
 
@@ -121,19 +124,19 @@ public class Persona implements Serializable {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public Persona user(User user) {
-        this.user = user;
+        this.setUser(user);
         return this;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -148,12 +151,18 @@ public class Persona implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
-        return "Persona{" + "id=" + getId() + ", numeroTelefono='" + getNumeroTelefono() + "'" + ", nombre='"
-                + getNombre() + "'" + ", apellido='" + getApellido() + "'" + "}";
+        return "Persona{" +
+            "id=" + getId() +
+            ", numeroTelefono='" + getNumeroTelefono() + "'" +
+            ", nombre='" + getNombre() + "'" +
+            ", apellido='" + getApellido() + "'" +
+            "}";
     }
 }

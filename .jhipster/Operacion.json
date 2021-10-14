@@ -1,38 +1,38 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "tipoParteMotor",
-            "otherEntityName": "tipoParteMotor",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreTipoParteMotor"
-        },
-        {
-            "relationshipName": "estadoOperacion",
-            "otherEntityName": "estadoOperacion",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreEstado"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "nombreOperacion",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "changelogDate": "20171214014359",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "operacion",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoParteMotor",
+      "otherEntityRelationshipName": "operacion",
+      "relationshipValidateRules": "required",
+      "relationshipName": "tipoParteMotor",
+      "otherEntityField": "nombreTipoParteMotor"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "estadoOperacion",
+      "otherEntityRelationshipName": "operacion",
+      "relationshipValidateRules": "required",
+      "relationshipName": "estadoOperacion",
+      "otherEntityField": "nombreEstado"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nombreOperacion",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20171214014359",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "operacion",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "Operacion",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

@@ -1,23 +1,25 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "persona",
-            "otherEntityName": "persona",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombre",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "cliente"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20171213234631",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "cliente",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "persona",
+      "otherEntityRelationshipName": "cliente",
+      "relationshipValidateRules": "required",
+      "relationshipName": "persona",
+      "otherEntityField": "nombre",
+      "ownerSide": true
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20171213234631",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "cliente",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "Cliente",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

@@ -1,17 +1,16 @@
 package soldimet.domain;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A MedidaArticulo.
  */
 @Entity
 @Table(name = "medida_articulo")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MedidaArticulo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -23,7 +22,7 @@ public class MedidaArticulo implements Serializable {
     @Column(name = "medida")
     private String medida;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -32,8 +31,13 @@ public class MedidaArticulo implements Serializable {
         this.id = id;
     }
 
+    public MedidaArticulo id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getMedida() {
-        return medida;
+        return this.medida;
     }
 
     public MedidaArticulo medida(String medida) {
@@ -44,7 +48,8 @@ public class MedidaArticulo implements Serializable {
     public void setMedida(String medida) {
         this.medida = medida;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -59,9 +64,11 @@ public class MedidaArticulo implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "MedidaArticulo{" +

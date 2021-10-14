@@ -1,31 +1,32 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [
-        {
-            "relationshipName": "banco",
-            "otherEntityName": "banco",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreBanco"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "numeroCheque",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "changelogDate": "20190401202736",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "no",
-    "entityTableName": "medio_de_pago_cheque",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "banco",
+      "otherEntityRelationshipName": "medioDePagoCheque",
+      "relationshipValidateRules": "required",
+      "relationshipName": "banco",
+      "otherEntityField": "nombreBanco"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "numeroCheque",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20190401202736",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "medio_de_pago_cheque",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "MedioDePagoCheque",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

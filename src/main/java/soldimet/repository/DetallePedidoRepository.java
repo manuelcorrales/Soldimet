@@ -1,17 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.DetallePedido;
-import soldimet.domain.EstadoDetallePedido;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.DetallePedido;
 
 /**
- * Spring Data  repository for the DetallePedido entity.
+ * Spring Data SQL repository for the DetallePedido entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Long> {
-
-}
+public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Long> {}

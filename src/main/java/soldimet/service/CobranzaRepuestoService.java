@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.CobranzaRepuesto;
-import soldimet.repository.CobranzaRepuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.CobranzaRepuesto;
+import soldimet.repository.CobranzaRepuestoRepository;
 
 /**
  * Service Implementation for managing {@link CobranzaRepuesto}.
@@ -38,6 +36,29 @@ public class CobranzaRepuestoService {
     }
 
     /**
+     * Partially update a cobranzaRepuesto.
+     *
+     * @param cobranzaRepuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<CobranzaRepuesto> partialUpdate(CobranzaRepuesto cobranzaRepuesto) {
+        log.debug("Request to partially update CobranzaRepuesto : {}", cobranzaRepuesto);
+
+        return cobranzaRepuestoRepository
+            .findById(cobranzaRepuesto.getId())
+            .map(
+                existingCobranzaRepuesto -> {
+                    if (cobranzaRepuesto.getValor() != null) {
+                        existingCobranzaRepuesto.setValor(cobranzaRepuesto.getValor());
+                    }
+
+                    return existingCobranzaRepuesto;
+                }
+            )
+            .map(cobranzaRepuestoRepository::save);
+    }
+
+    /**
      * Get all the cobranzaRepuestos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class CobranzaRepuestoService {
         log.debug("Request to get all CobranzaRepuestos");
         return cobranzaRepuestoRepository.findAll();
     }
-
 
     /**
      * Get one cobranzaRepuesto by id.

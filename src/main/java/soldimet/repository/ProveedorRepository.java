@@ -1,18 +1,12 @@
 package soldimet.repository;
-import soldimet.domain.Persona;
-import soldimet.domain.Proveedor;
-
-import java.util.List;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Proveedor;
 
 /**
- * Spring Data  repository for the Proveedor entity.
+ * Spring Data SQL repository for the Proveedor entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
-
-}
+public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {}

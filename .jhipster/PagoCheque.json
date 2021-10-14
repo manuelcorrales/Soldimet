@@ -1,42 +1,40 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "banco",
-            "otherEntityName": "banco",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreBanco"
-        },
-        {
-            "relationshipName": "formaDePago",
-            "otherEntityName": "formaDePago",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreFormaDePago",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "pagoCheque"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "numeroCheque",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "3"
-        }
-    ],
-    "changelogDate": "20171214014657",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "pago_cheque",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "formaDePago",
+      "otherEntityRelationshipName": "pagoCheque",
+      "relationshipValidateRules": "required",
+      "relationshipName": "formaDePago",
+      "otherEntityField": "nombreFormaDePago",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "banco",
+      "otherEntityRelationshipName": "pagoCheque",
+      "relationshipValidateRules": "required",
+      "relationshipName": "banco",
+      "otherEntityField": "nombreBanco"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "numeroCheque",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRulesMinlength": "3"
+    }
+  ],
+  "changelogDate": "20171214014657",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "pago_cheque",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "PagoCheque",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

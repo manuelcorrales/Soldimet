@@ -1,19 +1,21 @@
 package soldimet.domain;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import soldimet.utils.MathUtils;
+
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A HistorialPrecio.
  */
 @Entity
 @Table(name = "historial_precio")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class HistorialPrecio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,12 +28,12 @@ public class HistorialPrecio implements Serializable {
     @Column(name = "fecha_historial", nullable = false, columnDefinition = "DATE")
     private LocalDate fechaHistorial;
 
-    @OneToOne(optional = false)    @NotNull
-
+    @OneToOne(optional = false)
+    @NotNull
     @JoinColumn(unique = true)
     private PrecioRepuesto precioRepuesto;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -40,8 +42,13 @@ public class HistorialPrecio implements Serializable {
         this.id = id;
     }
 
+    public HistorialPrecio id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LocalDate getFechaHistorial() {
-        return fechaHistorial;
+        return this.fechaHistorial;
     }
 
     public HistorialPrecio fechaHistorial(LocalDate fechaHistorial) {
@@ -54,18 +61,19 @@ public class HistorialPrecio implements Serializable {
     }
 
     public PrecioRepuesto getPrecioRepuesto() {
-        return precioRepuesto;
+        return MathUtils.roundFloat(this.precioRepuesto);
     }
 
     public HistorialPrecio precioRepuesto(PrecioRepuesto precioRepuesto) {
-        this.precioRepuesto = precioRepuesto;
+        this.setPrecioRepuesto(precioRepuesto);
         return this;
     }
 
     public void setPrecioRepuesto(PrecioRepuesto precioRepuesto) {
         this.precioRepuesto = precioRepuesto;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -80,9 +88,11 @@ public class HistorialPrecio implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "HistorialPrecio{" +

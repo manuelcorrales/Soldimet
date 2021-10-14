@@ -1,31 +1,30 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "precioRepuesto",
-            "otherEntityName": "precioRepuesto",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "historialPrecio"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "fechaHistorial",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "changelogDate": "20171214003329",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "historial_precio",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "precioRepuesto",
+      "otherEntityRelationshipName": "historialPrecio",
+      "relationshipValidateRules": "required",
+      "relationshipName": "precioRepuesto",
+      "ownerSide": true
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "fechaHistorial",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20171214003329",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "historial_precio",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "HistorialPrecio",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

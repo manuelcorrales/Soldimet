@@ -1,18 +1,17 @@
 package soldimet.domain;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Marca.
  */
 @Entity
 @Table(name = "marca")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Marca implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +25,7 @@ public class Marca implements Serializable {
     @Column(name = "nombre_marca", nullable = false)
     private String nombreMarca;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -35,8 +34,13 @@ public class Marca implements Serializable {
         this.id = id;
     }
 
+    public Marca id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNombreMarca() {
-        return nombreMarca;
+        return this.nombreMarca;
     }
 
     public Marca nombreMarca(String nombreMarca) {
@@ -47,7 +51,8 @@ public class Marca implements Serializable {
     public void setNombreMarca(String nombreMarca) {
         this.nombreMarca = nombreMarca;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -62,9 +67,11 @@ public class Marca implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Marca{" +

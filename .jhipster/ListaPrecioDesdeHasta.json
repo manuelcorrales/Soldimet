@@ -1,30 +1,25 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "costoOperacion",
-            "otherEntityName": "costoOperacion",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "lista"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "fechaDesde",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "fechaHasta",
-            "fieldType": "LocalDate"
-        }
-    ],
-    "changelogDate": "20171214003754",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "lista_precio_desde_hasta",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "fechaDesde",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fechaHasta",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "changelogDate": "20171214003754",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "lista_precio_desde_hasta",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "ListaPrecioDesdeHasta",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

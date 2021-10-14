@@ -1,16 +1,14 @@
 package soldimet.service;
 
-import soldimet.domain.Articulo;
-import soldimet.repository.ArticuloRepository;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
+import soldimet.domain.Articulo;
+import soldimet.repository.ArticuloRepository;
 
 /**
  * Service Implementation for managing {@link Articulo}.
@@ -39,6 +37,41 @@ public class ArticuloService {
     }
 
     /**
+     * Partially update a articulo.
+     *
+     * @param articulo the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Articulo> partialUpdate(Articulo articulo) {
+        log.debug("Request to partially update Articulo : {}", articulo);
+
+        return articuloRepository
+            .findById(articulo.getId())
+            .map(
+                existingArticulo -> {
+                    if (articulo.getCodigoArticuloProveedor() != null) {
+                        existingArticulo.setCodigoArticuloProveedor(articulo.getCodigoArticuloProveedor());
+                    }
+                    if (articulo.getValor() != null) {
+                        existingArticulo.setValor(articulo.getValor());
+                    }
+                    if (articulo.getFechaCosto() != null) {
+                        existingArticulo.setFechaCosto(articulo.getFechaCosto());
+                    }
+                    if (articulo.getCostoProveedor() != null) {
+                        existingArticulo.setCostoProveedor(articulo.getCostoProveedor());
+                    }
+                    if (articulo.getFechaCostoProveedor() != null) {
+                        existingArticulo.setFechaCostoProveedor(articulo.getFechaCostoProveedor());
+                    }
+
+                    return existingArticulo;
+                }
+            )
+            .map(articuloRepository::save);
+    }
+
+    /**
      * Get all the articulos.
      *
      * @param pageable the pagination information.
@@ -49,7 +82,6 @@ public class ArticuloService {
         log.debug("Request to get all Articulos");
         return articuloRepository.findAll(pageable);
     }
-
 
     /**
      * Get one articulo by id.

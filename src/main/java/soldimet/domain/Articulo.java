@@ -1,22 +1,20 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import soldimet.utils.MathUtils;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import soldimet.utils.MathUtils;
 
 /**
  * A Articulo.
  */
 @Entity
 @Table(name = "articulo")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Articulo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,10 +50,10 @@ public class Articulo implements Serializable {
 
     @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
-    @JsonIgnoreProperties("articulos")
+    @JsonIgnoreProperties(value = { "tipoParteMotor" }, allowSetters = true)
     private TipoRepuesto tipoRepuesto;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -64,8 +62,13 @@ public class Articulo implements Serializable {
         this.id = id;
     }
 
+    public Articulo id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getCodigoArticuloProveedor() {
-        return codigoArticuloProveedor;
+        return this.codigoArticuloProveedor;
     }
 
     public Articulo codigoArticuloProveedor(String codigoArticuloProveedor) {
@@ -91,7 +94,7 @@ public class Articulo implements Serializable {
     }
 
     public LocalDate getFechaCosto() {
-        return fechaCosto;
+        return this.fechaCosto;
     }
 
     public Articulo fechaCosto(LocalDate fechaCosto) {
@@ -104,7 +107,7 @@ public class Articulo implements Serializable {
     }
 
     public Float getCostoProveedor() {
-        return costoProveedor;
+        return this.costoProveedor;
     }
 
     public Articulo costoProveedor(Float costoProveedor) {
@@ -117,7 +120,7 @@ public class Articulo implements Serializable {
     }
 
     public LocalDate getFechaCostoProveedor() {
-        return fechaCostoProveedor;
+        return this.fechaCostoProveedor;
     }
 
     public Articulo fechaCostoProveedor(LocalDate fechaCostoProveedor) {
@@ -130,11 +133,11 @@ public class Articulo implements Serializable {
     }
 
     public EstadoArticulo getEstado() {
-        return estado;
+        return this.estado;
     }
 
     public Articulo estado(EstadoArticulo estadoArticulo) {
-        this.estado = estadoArticulo;
+        this.setEstado(estadoArticulo);
         return this;
     }
 
@@ -143,11 +146,11 @@ public class Articulo implements Serializable {
     }
 
     public Marca getMarca() {
-        return marca;
+        return this.marca;
     }
 
     public Articulo marca(Marca marca) {
-        this.marca = marca;
+        this.setMarca(marca);
         return this;
     }
 
@@ -156,18 +159,19 @@ public class Articulo implements Serializable {
     }
 
     public TipoRepuesto getTipoRepuesto() {
-        return tipoRepuesto;
+        return this.tipoRepuesto;
     }
 
     public Articulo tipoRepuesto(TipoRepuesto tipoRepuesto) {
-        this.tipoRepuesto = tipoRepuesto;
+        this.setTipoRepuesto(tipoRepuesto);
         return this;
     }
 
     public void setTipoRepuesto(TipoRepuesto tipoRepuesto) {
         this.tipoRepuesto = tipoRepuesto;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -182,9 +186,11 @@ public class Articulo implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Articulo{" +

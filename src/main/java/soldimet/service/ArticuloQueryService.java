@@ -1,9 +1,7 @@
 package soldimet.service;
 
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,13 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import soldimet.domain.Articulo;
 import soldimet.domain.*; // for static metamodels
+import soldimet.domain.Articulo;
 import soldimet.repository.ArticuloRepository;
-import soldimet.service.dto.ArticuloCriteria;
+import soldimet.service.criteria.ArticuloCriteria;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Articulo} entities in the database.
@@ -75,18 +71,19 @@ public class ArticuloQueryService extends QueryService<Articulo> {
     }
 
     /**
-     * Function to convert ConsumerCriteria to a {@link Specification}
+     * Function to convert {@link ArticuloCriteria} to a {@link Specification}
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
-     */    
+     */
     protected Specification<Articulo> createSpecification(ArticuloCriteria criteria) {
         Specification<Articulo> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {
-                specification = specification.and(buildSpecification(criteria.getId(), Articulo_.id));
+                specification = specification.and(buildRangeSpecification(criteria.getId(), Articulo_.id));
             }
             if (criteria.getCodigoArticuloProveedor() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCodigoArticuloProveedor(), Articulo_.codigoArticuloProveedor));
+                specification =
+                    specification.and(buildStringSpecification(criteria.getCodigoArticuloProveedor(), Articulo_.codigoArticuloProveedor));
             }
             if (criteria.getValor() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getValor(), Articulo_.valor));
@@ -98,19 +95,32 @@ public class ArticuloQueryService extends QueryService<Articulo> {
                 specification = specification.and(buildRangeSpecification(criteria.getCostoProveedor(), Articulo_.costoProveedor));
             }
             if (criteria.getFechaCostoProveedor() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getFechaCostoProveedor(), Articulo_.fechaCostoProveedor));
+                specification =
+                    specification.and(buildRangeSpecification(criteria.getFechaCostoProveedor(), Articulo_.fechaCostoProveedor));
             }
             if (criteria.getEstadoId() != null) {
-                specification = specification.and(buildSpecification(criteria.getEstadoId(),
-                    root -> root.join(Articulo_.estado, JoinType.LEFT).get(EstadoArticulo_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getEstadoId(),
+                            root -> root.join(Articulo_.estado, JoinType.LEFT).get(EstadoArticulo_.id)
+                        )
+                    );
             }
             if (criteria.getMarcaId() != null) {
-                specification = specification.and(buildSpecification(criteria.getMarcaId(),
-                    root -> root.join(Articulo_.marca, JoinType.LEFT).get(Marca_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getMarcaId(), root -> root.join(Articulo_.marca, JoinType.LEFT).get(Marca_.id))
+                    );
             }
             if (criteria.getTipoRepuestoId() != null) {
-                specification = specification.and(buildSpecification(criteria.getTipoRepuestoId(),
-                    root -> root.join(Articulo_.tipoRepuesto, JoinType.LEFT).get(TipoRepuesto_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getTipoRepuestoId(),
+                            root -> root.join(Articulo_.tipoRepuesto, JoinType.LEFT).get(TipoRepuesto_.id)
+                        )
+                    );
             }
         }
         return specification;

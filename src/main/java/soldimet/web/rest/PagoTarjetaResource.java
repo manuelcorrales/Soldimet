@@ -1,23 +1,23 @@
 package soldimet.web.rest;
 
-import soldimet.domain.PagoTarjeta;
-import soldimet.service.PagoTarjetaService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.PagoTarjeta;
+import soldimet.repository.PagoTarjetaRepository;
+import soldimet.service.PagoTarjetaService;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.PagoTarjeta}.
@@ -35,8 +35,11 @@ public class PagoTarjetaResource {
 
     private final PagoTarjetaService pagoTarjetaService;
 
-    public PagoTarjetaResource(PagoTarjetaService pagoTarjetaService) {
+    private final PagoTarjetaRepository pagoTarjetaRepository;
+
+    public PagoTarjetaResource(PagoTarjetaService pagoTarjetaService, PagoTarjetaRepository pagoTarjetaRepository) {
         this.pagoTarjetaService = pagoTarjetaService;
+        this.pagoTarjetaRepository = pagoTarjetaRepository;
     }
 
     /**
@@ -53,36 +56,85 @@ public class PagoTarjetaResource {
             throw new BadRequestAlertException("A new pagoTarjeta cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PagoTarjeta result = pagoTarjetaService.save(pagoTarjeta);
-        return ResponseEntity.created(new URI("/api/pago-tarjetas/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/pago-tarjetas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /pago-tarjetas} : Updates an existing pagoTarjeta.
+     * {@code PUT  /pago-tarjetas/:id} : Updates an existing pagoTarjeta.
      *
+     * @param id the id of the pagoTarjeta to save.
      * @param pagoTarjeta the pagoTarjeta to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated pagoTarjeta,
      * or with status {@code 400 (Bad Request)} if the pagoTarjeta is not valid,
      * or with status {@code 500 (Internal Server Error)} if the pagoTarjeta couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/pago-tarjetas")
-    public ResponseEntity<PagoTarjeta> updatePagoTarjeta(@Valid @RequestBody PagoTarjeta pagoTarjeta) throws URISyntaxException {
-        log.debug("REST request to update PagoTarjeta : {}", pagoTarjeta);
+    @PutMapping("/pago-tarjetas/{id}")
+    public ResponseEntity<PagoTarjeta> updatePagoTarjeta(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody PagoTarjeta pagoTarjeta
+    ) throws URISyntaxException {
+        log.debug("REST request to update PagoTarjeta : {}, {}", id, pagoTarjeta);
         if (pagoTarjeta.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, pagoTarjeta.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!pagoTarjetaRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         PagoTarjeta result = pagoTarjetaService.save(pagoTarjeta);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, pagoTarjeta.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /pago-tarjetas/:id} : Partial updates given fields of an existing pagoTarjeta, field will ignore if it is null
+     *
+     * @param id the id of the pagoTarjeta to save.
+     * @param pagoTarjeta the pagoTarjeta to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated pagoTarjeta,
+     * or with status {@code 400 (Bad Request)} if the pagoTarjeta is not valid,
+     * or with status {@code 404 (Not Found)} if the pagoTarjeta is not found,
+     * or with status {@code 500 (Internal Server Error)} if the pagoTarjeta couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/pago-tarjetas/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<PagoTarjeta> partialUpdatePagoTarjeta(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody PagoTarjeta pagoTarjeta
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update PagoTarjeta partially : {}, {}", id, pagoTarjeta);
+        if (pagoTarjeta.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, pagoTarjeta.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!pagoTarjetaRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<PagoTarjeta> result = pagoTarjetaService.partialUpdate(pagoTarjeta);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, pagoTarjeta.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /pago-tarjetas} : get all the pagoTarjetas.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of pagoTarjetas in body.
      */
     @GetMapping("/pago-tarjetas")
@@ -114,6 +166,9 @@ public class PagoTarjetaResource {
     public ResponseEntity<Void> deletePagoTarjeta(@PathVariable Long id) {
         log.debug("REST request to delete PagoTarjeta : {}", id);
         pagoTarjetaService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

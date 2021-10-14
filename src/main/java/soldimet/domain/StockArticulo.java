@@ -1,19 +1,18 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A StockArticulo.
  */
 @Entity
 @Table(name = "stock_articulo")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class StockArticulo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,8 +48,13 @@ public class StockArticulo implements Serializable {
         this.id = id;
     }
 
+    public StockArticulo id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getCantidad() {
-        return cantidad;
+        return this.cantidad;
     }
 
     public StockArticulo cantidad(Integer cantidad) {
@@ -63,11 +67,11 @@ public class StockArticulo implements Serializable {
     }
 
     public MedidaArticulo getMedida() {
-        return medida;
+        return this.medida;
     }
 
     public StockArticulo medida(MedidaArticulo medidaArticulo) {
-        this.medida = medidaArticulo;
+        this.setMedida(medidaArticulo);
         return this;
     }
 
@@ -76,11 +80,11 @@ public class StockArticulo implements Serializable {
     }
 
     public Articulo getArticulo() {
-        return articulo;
+        return this.articulo;
     }
 
     public StockArticulo articulo(Articulo articulo) {
-        this.articulo = articulo;
+        this.setArticulo(articulo);
         return this;
     }
 
@@ -89,18 +93,19 @@ public class StockArticulo implements Serializable {
     }
 
     public Sucursal getSucursal() {
-        return sucursal;
+        return this.sucursal;
     }
 
     public StockArticulo sucursal(Sucursal sucursal) {
-        this.sucursal = sucursal;
+        this.setSucursal(sucursal);
         return this;
     }
 
     public void setSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -110,16 +115,16 @@ public class StockArticulo implements Serializable {
         if (!(o instanceof StockArticulo)) {
             return false;
         }
-        return id != null && id.equals(((StockArticulo) o).id) &&
-                medida != null && medida.equals(((StockArticulo) o).medida) &&
-                articulo != null && articulo.equals(((StockArticulo) o).articulo);
+        return id != null && id.equals(((StockArticulo) o).id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "StockArticulo{" +

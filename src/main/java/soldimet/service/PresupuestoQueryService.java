@@ -1,9 +1,7 @@
 package soldimet.service;
 
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,13 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import soldimet.domain.Presupuesto;
 import soldimet.domain.*; // for static metamodels
+import soldimet.domain.Presupuesto;
 import soldimet.repository.PresupuestoRepository;
-import soldimet.service.dto.PresupuestoCriteria;
+import soldimet.service.criteria.PresupuestoCriteria;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Presupuesto} entities in the database.
@@ -75,7 +71,7 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
     }
 
     /**
-     * Function to convert ConsumerCriteria to a {@link Specification}
+     * Function to convert {@link PresupuestoCriteria} to a {@link Specification}
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */
@@ -83,10 +79,11 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
         Specification<Presupuesto> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {
-                specification = specification.and(buildSpecification(criteria.getId(), Presupuesto_.id));
+                specification = specification.and(buildRangeSpecification(criteria.getId(), Presupuesto_.id));
             }
             if (criteria.getDescripcionDescuento() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDescripcionDescuento(), Presupuesto_.descripcionDescuento));
+                specification =
+                    specification.and(buildStringSpecification(criteria.getDescripcionDescuento(), Presupuesto_.descripcionDescuento));
             }
             if (criteria.getDescuento() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDescuento(), Presupuesto_.descuento));
@@ -113,24 +110,37 @@ public class PresupuestoQueryService extends QueryService<Presupuesto> {
                 specification = specification.and(buildSpecification(criteria.getModelo(), Presupuesto_.modelo));
             }
             if (criteria.getClienteId() != null) {
-                specification = specification.and(buildSpecification(criteria.getClienteId(),
-                    root -> root.join(Presupuesto_.cliente, JoinType.LEFT).get(Cliente_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getClienteId(), root -> root.join(Presupuesto_.cliente, JoinType.LEFT).get(Cliente_.id))
+                    );
             }
             if (criteria.getEstadoPresupuestoId() != null) {
-                specification = specification.and(buildSpecification(criteria.getEstadoPresupuestoId(),
-                    root -> root.join(Presupuesto_.estadoPresupuesto, JoinType.LEFT).get(EstadoPresupuesto_.id)));
-            }
-            if (criteria.getDetallePresupuestoId() != null) {
-                specification = specification.and(buildSpecification(criteria.getDetallePresupuestoId(),
-                    root -> root.join(Presupuesto_.detallePresupuestos, JoinType.LEFT).get(DetallePresupuesto_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getEstadoPresupuestoId(),
+                            root -> root.join(Presupuesto_.estadoPresupuesto, JoinType.LEFT).get(EstadoPresupuesto_.id)
+                        )
+                    );
             }
             if (criteria.getDocumentTypeId() != null) {
-                specification = specification.and(buildSpecification(criteria.getDocumentTypeId(),
-                    root -> root.join(Presupuesto_.documentType, JoinType.LEFT).get(DocumentationType_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getDocumentTypeId(),
+                            root -> root.join(Presupuesto_.documentType, JoinType.LEFT).get(DocumentationType_.id)
+                        )
+                    );
             }
             if (criteria.getSucursalId() != null) {
-                specification = specification.and(buildSpecification(criteria.getSucursalId(),
-                    root -> root.join(Presupuesto_.sucursal, JoinType.LEFT).get(Sucursal_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getSucursalId(),
+                            root -> root.join(Presupuesto_.sucursal, JoinType.LEFT).get(Sucursal_.id)
+                        )
+                    );
             }
         }
         return specification;

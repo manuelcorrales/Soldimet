@@ -1,14 +1,12 @@
 package soldimet.repository;
-import soldimet.domain.PagoTarjeta;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.PagoTarjeta;
 
 /**
- * Spring Data  repository for the PagoTarjeta entity.
+ * Spring Data SQL repository for the PagoTarjeta entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface PagoTarjetaRepository extends JpaRepository<PagoTarjeta, Long> {
-
-}
+public interface PagoTarjetaRepository extends JpaRepository<PagoTarjeta, Long> {}

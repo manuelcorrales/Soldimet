@@ -1,23 +1,23 @@
 package soldimet.web.rest;
 
-import soldimet.domain.TipoMovimiento;
-import soldimet.service.TipoMovimientoService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.TipoMovimiento;
+import soldimet.repository.TipoMovimientoRepository;
+import soldimet.service.TipoMovimientoService;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.TipoMovimiento}.
@@ -35,8 +35,11 @@ public class TipoMovimientoResource {
 
     private final TipoMovimientoService tipoMovimientoService;
 
-    public TipoMovimientoResource(TipoMovimientoService tipoMovimientoService) {
+    private final TipoMovimientoRepository tipoMovimientoRepository;
+
+    public TipoMovimientoResource(TipoMovimientoService tipoMovimientoService, TipoMovimientoRepository tipoMovimientoRepository) {
         this.tipoMovimientoService = tipoMovimientoService;
+        this.tipoMovimientoRepository = tipoMovimientoRepository;
     }
 
     /**
@@ -47,42 +50,92 @@ public class TipoMovimientoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tipo-movimientos")
-    public ResponseEntity<TipoMovimiento> createTipoMovimiento(@Valid @RequestBody TipoMovimiento tipoMovimiento) throws URISyntaxException {
+    public ResponseEntity<TipoMovimiento> createTipoMovimiento(@Valid @RequestBody TipoMovimiento tipoMovimiento)
+        throws URISyntaxException {
         log.debug("REST request to save TipoMovimiento : {}", tipoMovimiento);
         if (tipoMovimiento.getId() != null) {
             throw new BadRequestAlertException("A new tipoMovimiento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoMovimiento result = tipoMovimientoService.save(tipoMovimiento);
-        return ResponseEntity.created(new URI("/api/tipo-movimientos/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/tipo-movimientos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /tipo-movimientos} : Updates an existing tipoMovimiento.
+     * {@code PUT  /tipo-movimientos/:id} : Updates an existing tipoMovimiento.
      *
+     * @param id the id of the tipoMovimiento to save.
      * @param tipoMovimiento the tipoMovimiento to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tipoMovimiento,
      * or with status {@code 400 (Bad Request)} if the tipoMovimiento is not valid,
      * or with status {@code 500 (Internal Server Error)} if the tipoMovimiento couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/tipo-movimientos")
-    public ResponseEntity<TipoMovimiento> updateTipoMovimiento(@Valid @RequestBody TipoMovimiento tipoMovimiento) throws URISyntaxException {
-        log.debug("REST request to update TipoMovimiento : {}", tipoMovimiento);
+    @PutMapping("/tipo-movimientos/{id}")
+    public ResponseEntity<TipoMovimiento> updateTipoMovimiento(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody TipoMovimiento tipoMovimiento
+    ) throws URISyntaxException {
+        log.debug("REST request to update TipoMovimiento : {}, {}", id, tipoMovimiento);
         if (tipoMovimiento.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, tipoMovimiento.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!tipoMovimientoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         TipoMovimiento result = tipoMovimientoService.save(tipoMovimiento);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, tipoMovimiento.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /tipo-movimientos/:id} : Partial updates given fields of an existing tipoMovimiento, field will ignore if it is null
+     *
+     * @param id the id of the tipoMovimiento to save.
+     * @param tipoMovimiento the tipoMovimiento to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated tipoMovimiento,
+     * or with status {@code 400 (Bad Request)} if the tipoMovimiento is not valid,
+     * or with status {@code 404 (Not Found)} if the tipoMovimiento is not found,
+     * or with status {@code 500 (Internal Server Error)} if the tipoMovimiento couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/tipo-movimientos/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<TipoMovimiento> partialUpdateTipoMovimiento(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody TipoMovimiento tipoMovimiento
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update TipoMovimiento partially : {}, {}", id, tipoMovimiento);
+        if (tipoMovimiento.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, tipoMovimiento.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!tipoMovimientoRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<TipoMovimiento> result = tipoMovimientoService.partialUpdate(tipoMovimiento);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, tipoMovimiento.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /tipo-movimientos} : get all the tipoMovimientos.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tipoMovimientos in body.
      */
     @GetMapping("/tipo-movimientos")
@@ -114,6 +167,9 @@ public class TipoMovimientoResource {
     public ResponseEntity<Void> deleteTipoMovimiento(@PathVariable Long id) {
         log.debug("REST request to delete TipoMovimiento : {}", id);
         tipoMovimientoService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

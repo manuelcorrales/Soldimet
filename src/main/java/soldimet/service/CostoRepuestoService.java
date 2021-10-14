@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.CostoRepuesto;
-import soldimet.repository.CostoRepuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.CostoRepuesto;
+import soldimet.repository.CostoRepuestoRepository;
 
 /**
  * Service Implementation for managing {@link CostoRepuesto}.
@@ -38,6 +36,29 @@ public class CostoRepuestoService {
     }
 
     /**
+     * Partially update a costoRepuesto.
+     *
+     * @param costoRepuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<CostoRepuesto> partialUpdate(CostoRepuesto costoRepuesto) {
+        log.debug("Request to partially update CostoRepuesto : {}", costoRepuesto);
+
+        return costoRepuestoRepository
+            .findById(costoRepuesto.getId())
+            .map(
+                existingCostoRepuesto -> {
+                    if (costoRepuesto.getValor() != null) {
+                        existingCostoRepuesto.setValor(costoRepuesto.getValor());
+                    }
+
+                    return existingCostoRepuesto;
+                }
+            )
+            .map(costoRepuestoRepository::save);
+    }
+
+    /**
      * Get all the costoRepuestos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class CostoRepuestoService {
         log.debug("Request to get all CostoRepuestos");
         return costoRepuestoRepository.findAll();
     }
-
 
     /**
      * Get one costoRepuesto by id.

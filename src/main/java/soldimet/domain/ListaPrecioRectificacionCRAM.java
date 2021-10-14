@@ -1,24 +1,8 @@
 package soldimet.domain;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -27,7 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  */
 @Entity
 @Table(name = "lista_precio_rectificacioncram")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ListaPrecioRectificacionCRAM implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,8 +42,13 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
         this.id = id;
     }
 
+    public ListaPrecioRectificacionCRAM id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getNumeroGrupo() {
-        return numeroGrupo;
+        return this.numeroGrupo;
     }
 
     public ListaPrecioRectificacionCRAM numeroGrupo(Integer numeroGrupo) {
@@ -109,9 +98,11 @@ public class ListaPrecioRectificacionCRAM implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "ListaPrecioRectificacionCRAM{" + "id=" + getId() + ", numeroGrupo=" + getNumeroGrupo() + "}";

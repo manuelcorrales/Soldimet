@@ -1,21 +1,18 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A MedioDePago.
  */
 @Entity
 @Table(name = "medio_de_pago")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MedioDePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,7 +32,7 @@ public class MedioDePago implements Serializable {
     private MedioDePagoCheque medioDePagoCheque;
 
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -44,25 +41,17 @@ public class MedioDePago implements Serializable {
         this.id = id;
     }
 
-    public FormaDePago getFormaDePago() {
-        return formaDePago;
-    }
-
-    public MedioDePago formaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
+    public MedioDePago id(Long id) {
+        this.id = id;
         return this;
     }
 
-    public void setFormaDePago(FormaDePago formaDePago) {
-        this.formaDePago = formaDePago;
-    }
-
     public MedioDePagoCheque getMedioDePagoCheque() {
-        return medioDePagoCheque;
+        return this.medioDePagoCheque;
     }
 
     public MedioDePago medioDePagoCheque(MedioDePagoCheque medioDePagoCheque) {
-        this.medioDePagoCheque = medioDePagoCheque;
+        this.setMedioDePagoCheque(medioDePagoCheque);
         return this;
     }
 
@@ -70,8 +59,20 @@ public class MedioDePago implements Serializable {
         this.medioDePagoCheque = medioDePagoCheque;
     }
 
+    public FormaDePago getFormaDePago() {
+        return this.formaDePago;
+    }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    public MedioDePago formaDePago(FormaDePago formaDePago) {
+        this.setFormaDePago(formaDePago);
+        return this;
+    }
+
+    public void setFormaDePago(FormaDePago formaDePago) {
+        this.formaDePago = formaDePago;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -86,9 +87,11 @@ public class MedioDePago implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "MedioDePago{" +

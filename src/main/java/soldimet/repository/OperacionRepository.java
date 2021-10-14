@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.Operacion;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Operacion;
 
 /**
- * Spring Data  repository for the Operacion entity.
+ * Spring Data SQL repository for the Operacion entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OperacionRepository extends JpaRepository<Operacion, Long> {
-
-}
+public interface OperacionRepository extends JpaRepository<Operacion, Long> {}

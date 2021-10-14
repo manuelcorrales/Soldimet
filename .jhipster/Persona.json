@@ -1,53 +1,53 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "direccion",
-            "otherEntityName": "direccion",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "persona"
-        },
-        {
-            "relationshipName": "estadoPersona",
-            "otherEntityName": "estadoPersona",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "nombreEstado",
-            "otherEntityRelationshipName": "persona"
-        },
-        {
-            "relationshipName": "user",
-            "otherEntityName": "user",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "login",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "persona"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "numeroTelefono",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "nombre",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "apellido",
-            "fieldType": "String"
-        }
-    ],
-    "changelogDate": "20171214020013",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "persona",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": true,
-    "pagination": "pagination"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "direccion",
+      "otherEntityRelationshipName": "persona",
+      "relationshipName": "direccion",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "estadoPersona",
+      "otherEntityRelationshipName": "persona",
+      "relationshipName": "estadoPersona",
+      "otherEntityField": "nombreEstado"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "persona",
+      "relationshipName": "user",
+      "otherEntityField": "login"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "numeroTelefono",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "apellido",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20171214020013",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "persona",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination",
+  "name": "Persona",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

@@ -1,29 +1,30 @@
 package soldimet.web.rest;
 
-import soldimet.domain.StockArticulo;
-import soldimet.repository.StockArticuloRepository;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.StockArticulo;
+import soldimet.repository.StockArticuloRepository;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.StockArticulo}.
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class StockArticuloResource {
 
     private final Logger log = LoggerFactory.getLogger(StockArticuloResource.class);
@@ -53,36 +54,96 @@ public class StockArticuloResource {
             throw new BadRequestAlertException("A new stockArticulo cannot already have an ID", ENTITY_NAME, "idexists");
         }
         StockArticulo result = stockArticuloRepository.save(stockArticulo);
-        return ResponseEntity.created(new URI("/api/stock-articulos/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/stock-articulos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /stock-articulos} : Updates an existing stockArticulo.
+     * {@code PUT  /stock-articulos/:id} : Updates an existing stockArticulo.
      *
+     * @param id the id of the stockArticulo to save.
      * @param stockArticulo the stockArticulo to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stockArticulo,
      * or with status {@code 400 (Bad Request)} if the stockArticulo is not valid,
      * or with status {@code 500 (Internal Server Error)} if the stockArticulo couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/stock-articulos")
-    public ResponseEntity<StockArticulo> updateStockArticulo(@Valid @RequestBody StockArticulo stockArticulo) throws URISyntaxException {
-        log.debug("REST request to update StockArticulo : {}", stockArticulo);
+    @PutMapping("/stock-articulos/{id}")
+    public ResponseEntity<StockArticulo> updateStockArticulo(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody StockArticulo stockArticulo
+    ) throws URISyntaxException {
+        log.debug("REST request to update StockArticulo : {}, {}", id, stockArticulo);
         if (stockArticulo.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, stockArticulo.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!stockArticuloRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         StockArticulo result = stockArticuloRepository.save(stockArticulo);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, stockArticulo.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /stock-articulos/:id} : Partial updates given fields of an existing stockArticulo, field will ignore if it is null
+     *
+     * @param id the id of the stockArticulo to save.
+     * @param stockArticulo the stockArticulo to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated stockArticulo,
+     * or with status {@code 400 (Bad Request)} if the stockArticulo is not valid,
+     * or with status {@code 404 (Not Found)} if the stockArticulo is not found,
+     * or with status {@code 500 (Internal Server Error)} if the stockArticulo couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/stock-articulos/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<StockArticulo> partialUpdateStockArticulo(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody StockArticulo stockArticulo
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update StockArticulo partially : {}, {}", id, stockArticulo);
+        if (stockArticulo.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, stockArticulo.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!stockArticuloRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<StockArticulo> result = stockArticuloRepository
+            .findById(stockArticulo.getId())
+            .map(
+                existingStockArticulo -> {
+                    if (stockArticulo.getCantidad() != null) {
+                        existingStockArticulo.setCantidad(stockArticulo.getCantidad());
+                    }
+
+                    return existingStockArticulo;
+                }
+            )
+            .map(stockArticuloRepository::save);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, stockArticulo.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /stock-articulos} : get all the stockArticulos.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of stockArticulos in body.
      */
     @GetMapping("/stock-articulos")
@@ -114,6 +175,9 @@ public class StockArticuloResource {
     public ResponseEntity<Void> deleteStockArticulo(@PathVariable Long id) {
         log.debug("REST request to delete StockArticulo : {}", id);
         stockArticuloRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

@@ -1,16 +1,11 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -19,7 +14,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  */
 @Entity
 @Table(name = "motor")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Motor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,7 +28,12 @@ public class Motor implements Serializable {
     @Column(name = "marca_motor", length = 25, nullable = false)
     private String marcaMotor;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @OneToMany(mappedBy = "motor")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "motor" }, allowSetters = true)
+    private Set<Aplicacion> aplicacions = new HashSet<>();
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -42,8 +42,13 @@ public class Motor implements Serializable {
         this.id = id;
     }
 
+    public Motor id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getMarcaMotor() {
-        return marcaMotor;
+        return this.marcaMotor;
     }
 
     public Motor marcaMotor(String marcaMotor) {
@@ -54,7 +59,39 @@ public class Motor implements Serializable {
     public void setMarcaMotor(String marcaMotor) {
         this.marcaMotor = marcaMotor;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public Set<Aplicacion> getAplicacions() {
+        return this.aplicacions;
+    }
+
+    public Motor aplicacions(Set<Aplicacion> aplicacions) {
+        this.setAplicacions(aplicacions);
+        return this;
+    }
+
+    public Motor addAplicacion(Aplicacion aplicacion) {
+        this.aplicacions.add(aplicacion);
+        aplicacion.setMotor(this);
+        return this;
+    }
+
+    public Motor removeAplicacion(Aplicacion aplicacion) {
+        this.aplicacions.remove(aplicacion);
+        aplicacion.setMotor(null);
+        return this;
+    }
+
+    public void setAplicacions(Set<Aplicacion> aplicacions) {
+        if (this.aplicacions != null) {
+            this.aplicacions.forEach(i -> i.setMotor(null));
+        }
+        if (aplicacions != null) {
+            aplicacions.forEach(i -> i.setMotor(this));
+        }
+        this.aplicacions = aplicacions;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -69,9 +106,11 @@ public class Motor implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Motor{" +

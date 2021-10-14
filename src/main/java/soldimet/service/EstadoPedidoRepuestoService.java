@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.EstadoPedidoRepuesto;
-import soldimet.repository.EstadoPedidoRepuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.EstadoPedidoRepuesto;
+import soldimet.repository.EstadoPedidoRepuestoRepository;
 
 /**
  * Service Implementation for managing {@link EstadoPedidoRepuesto}.
@@ -38,6 +36,29 @@ public class EstadoPedidoRepuestoService {
     }
 
     /**
+     * Partially update a estadoPedidoRepuesto.
+     *
+     * @param estadoPedidoRepuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<EstadoPedidoRepuesto> partialUpdate(EstadoPedidoRepuesto estadoPedidoRepuesto) {
+        log.debug("Request to partially update EstadoPedidoRepuesto : {}", estadoPedidoRepuesto);
+
+        return estadoPedidoRepuestoRepository
+            .findById(estadoPedidoRepuesto.getId())
+            .map(
+                existingEstadoPedidoRepuesto -> {
+                    if (estadoPedidoRepuesto.getNombreEstado() != null) {
+                        existingEstadoPedidoRepuesto.setNombreEstado(estadoPedidoRepuesto.getNombreEstado());
+                    }
+
+                    return existingEstadoPedidoRepuesto;
+                }
+            )
+            .map(estadoPedidoRepuestoRepository::save);
+    }
+
+    /**
      * Get all the estadoPedidoRepuestos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class EstadoPedidoRepuestoService {
         log.debug("Request to get all EstadoPedidoRepuestos");
         return estadoPedidoRepuestoRepository.findAll();
     }
-
 
     /**
      * Get one estadoPedidoRepuesto by id.

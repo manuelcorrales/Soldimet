@@ -1,28 +1,28 @@
 package soldimet.web.rest;
 
-import soldimet.domain.MedidaArticulo;
-import soldimet.repository.MedidaArticuloRepository;
-import soldimet.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import soldimet.domain.MedidaArticulo;
+import soldimet.repository.MedidaArticuloRepository;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.MedidaArticulo}.
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class MedidaArticuloResource {
 
     private final Logger log = LoggerFactory.getLogger(MedidaArticuloResource.class);
@@ -52,36 +52,96 @@ public class MedidaArticuloResource {
             throw new BadRequestAlertException("A new medidaArticulo cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MedidaArticulo result = medidaArticuloRepository.save(medidaArticulo);
-        return ResponseEntity.created(new URI("/api/medida-articulos/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/medida-articulos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /medida-articulos} : Updates an existing medidaArticulo.
+     * {@code PUT  /medida-articulos/:id} : Updates an existing medidaArticulo.
      *
+     * @param id the id of the medidaArticulo to save.
      * @param medidaArticulo the medidaArticulo to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated medidaArticulo,
      * or with status {@code 400 (Bad Request)} if the medidaArticulo is not valid,
      * or with status {@code 500 (Internal Server Error)} if the medidaArticulo couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/medida-articulos")
-    public ResponseEntity<MedidaArticulo> updateMedidaArticulo(@RequestBody MedidaArticulo medidaArticulo) throws URISyntaxException {
-        log.debug("REST request to update MedidaArticulo : {}", medidaArticulo);
+    @PutMapping("/medida-articulos/{id}")
+    public ResponseEntity<MedidaArticulo> updateMedidaArticulo(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody MedidaArticulo medidaArticulo
+    ) throws URISyntaxException {
+        log.debug("REST request to update MedidaArticulo : {}, {}", id, medidaArticulo);
         if (medidaArticulo.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, medidaArticulo.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!medidaArticuloRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         MedidaArticulo result = medidaArticuloRepository.save(medidaArticulo);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, medidaArticulo.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /medida-articulos/:id} : Partial updates given fields of an existing medidaArticulo, field will ignore if it is null
+     *
+     * @param id the id of the medidaArticulo to save.
+     * @param medidaArticulo the medidaArticulo to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated medidaArticulo,
+     * or with status {@code 400 (Bad Request)} if the medidaArticulo is not valid,
+     * or with status {@code 404 (Not Found)} if the medidaArticulo is not found,
+     * or with status {@code 500 (Internal Server Error)} if the medidaArticulo couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/medida-articulos/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<MedidaArticulo> partialUpdateMedidaArticulo(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody MedidaArticulo medidaArticulo
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update MedidaArticulo partially : {}, {}", id, medidaArticulo);
+        if (medidaArticulo.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, medidaArticulo.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!medidaArticuloRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<MedidaArticulo> result = medidaArticuloRepository
+            .findById(medidaArticulo.getId())
+            .map(
+                existingMedidaArticulo -> {
+                    if (medidaArticulo.getMedida() != null) {
+                        existingMedidaArticulo.setMedida(medidaArticulo.getMedida());
+                    }
+
+                    return existingMedidaArticulo;
+                }
+            )
+            .map(medidaArticuloRepository::save);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, medidaArticulo.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /medida-articulos} : get all the medidaArticulos.
      *
-
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of medidaArticulos in body.
      */
     @GetMapping("/medida-articulos")
@@ -113,6 +173,9 @@ public class MedidaArticuloResource {
     public ResponseEntity<Void> deleteMedidaArticulo(@PathVariable Long id) {
         log.debug("REST request to delete MedidaArticulo : {}", id);
         medidaArticuloRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

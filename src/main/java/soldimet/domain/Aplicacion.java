@@ -1,19 +1,18 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Aplicacion.
  */
 @Entity
 @Table(name = "aplicacion")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Aplicacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,10 +33,10 @@ public class Aplicacion implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("aplicacions")
+    @JsonIgnoreProperties(value = { "aplicacions" }, allowSetters = true)
     private Motor motor;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -46,8 +45,13 @@ public class Aplicacion implements Serializable {
         this.id = id;
     }
 
+    public Aplicacion id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNombreAplicacion() {
-        return nombreAplicacion;
+        return this.nombreAplicacion;
     }
 
     public Aplicacion nombreAplicacion(String nombreAplicacion) {
@@ -60,7 +64,7 @@ public class Aplicacion implements Serializable {
     }
 
     public Integer getNumeroGrupo() {
-        return numeroGrupo;
+        return this.numeroGrupo;
     }
 
     public Aplicacion numeroGrupo(Integer numeroGrupo) {
@@ -73,18 +77,19 @@ public class Aplicacion implements Serializable {
     }
 
     public Motor getMotor() {
-        return motor;
+        return this.motor;
     }
 
     public Aplicacion motor(Motor motor) {
-        this.motor = motor;
+        this.setMotor(motor);
         return this;
     }
 
     public void setMotor(Motor motor) {
         this.motor = motor;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -99,9 +104,11 @@ public class Aplicacion implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Aplicacion{" +

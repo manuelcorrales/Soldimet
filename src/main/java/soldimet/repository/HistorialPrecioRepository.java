@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.HistorialPrecio;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.HistorialPrecio;
 
 /**
- * Spring Data  repository for the HistorialPrecio entity.
+ * Spring Data SQL repository for the HistorialPrecio entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface HistorialPrecioRepository extends JpaRepository<HistorialPrecio, Long> {
-
-}
+public interface HistorialPrecioRepository extends JpaRepository<HistorialPrecio, Long> {}

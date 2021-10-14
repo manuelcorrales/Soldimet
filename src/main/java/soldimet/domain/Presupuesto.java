@@ -1,26 +1,19 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import soldimet.utils.MathUtils;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Presupuesto.
  */
 @Entity
 @Table(name = "presupuesto")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Presupuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -63,7 +56,7 @@ public class Presupuesto implements Serializable {
 
     @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @NotNull
-    @JsonIgnoreProperties("presupuestos")
+    @JsonIgnoreProperties(value = { "persona" }, allowSetters = true)
     private Cliente cliente;
 
     @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
@@ -84,8 +77,7 @@ public class Presupuesto implements Serializable {
     @JsonIgnoreProperties("presupuestos")
     private Sucursal sucursal;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
-    // remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -94,8 +86,13 @@ public class Presupuesto implements Serializable {
         this.id = id;
     }
 
+    public Presupuesto id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getDescripcionDescuento() {
-        return descripcionDescuento;
+        return this.descripcionDescuento;
     }
 
     public Presupuesto descripcionDescuento(String descripcionDescuento) {
@@ -121,7 +118,7 @@ public class Presupuesto implements Serializable {
     }
 
     public LocalDate getFechaCreacion() {
-        return fechaCreacion;
+        return this.fechaCreacion;
     }
 
     public Presupuesto fechaCreacion(LocalDate fechaCreacion) {
@@ -134,7 +131,7 @@ public class Presupuesto implements Serializable {
     }
 
     public LocalDate getFechaAceptado() {
-        return fechaAceptado;
+        return this.fechaAceptado;
     }
 
     public Presupuesto fechaAceptado(LocalDate fechaAceptado) {
@@ -147,7 +144,7 @@ public class Presupuesto implements Serializable {
     }
 
     public LocalDate getFechaEntregado() {
-        return fechaEntregado;
+        return this.fechaEntregado;
     }
 
     public Presupuesto fechaEntregado(LocalDate fechaEntregado) {
@@ -173,10 +170,7 @@ public class Presupuesto implements Serializable {
     }
 
     public String getObservaciones() {
-        if (this.observaciones == null) {
-            return "";
-        }
-        return observaciones;
+        return this.observaciones;
     }
 
     public Presupuesto observaciones(String observaciones) {
@@ -188,8 +182,8 @@ public class Presupuesto implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public Boolean isSoldadura() {
-        return soldadura;
+    public Boolean getSoldadura() {
+        return this.soldadura;
     }
 
     public Presupuesto soldadura(Boolean soldadura) {
@@ -201,8 +195,8 @@ public class Presupuesto implements Serializable {
         this.soldadura = soldadura;
     }
 
-    public Boolean isModelo() {
-        return modelo;
+    public Boolean getModelo() {
+        return this.modelo;
     }
 
     public Presupuesto modelo(Boolean modelo) {
@@ -215,11 +209,11 @@ public class Presupuesto implements Serializable {
     }
 
     public Cliente getCliente() {
-        return cliente;
+        return this.cliente;
     }
 
     public Presupuesto cliente(Cliente cliente) {
-        this.cliente = cliente;
+        this.setCliente(cliente);
         return this;
     }
 
@@ -228,11 +222,11 @@ public class Presupuesto implements Serializable {
     }
 
     public EstadoPresupuesto getEstadoPresupuesto() {
-        return estadoPresupuesto;
+        return this.estadoPresupuesto;
     }
 
     public Presupuesto estadoPresupuesto(EstadoPresupuesto estadoPresupuesto) {
-        this.estadoPresupuesto = estadoPresupuesto;
+        this.setEstadoPresupuesto(estadoPresupuesto);
         return this;
     }
 
@@ -264,11 +258,11 @@ public class Presupuesto implements Serializable {
     }
 
     public DocumentationType getDocumentType() {
-        return documentType;
+        return this.documentType;
     }
 
     public Presupuesto documentType(DocumentationType documentationType) {
-        this.documentType = documentationType;
+        this.setDocumentType(documentationType);
         return this;
     }
 
@@ -277,11 +271,11 @@ public class Presupuesto implements Serializable {
     }
 
     public Sucursal getSucursal() {
-        return sucursal;
+        return this.sucursal;
     }
 
     public Presupuesto sucursal(Sucursal sucursal) {
-        this.sucursal = sucursal;
+        this.setSucursal(sucursal);
         return this;
     }
 
@@ -342,15 +336,24 @@ public class Presupuesto implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
-        return "Presupuesto{" + "id=" + getId() + ", descripcionDescuento='" + getDescripcionDescuento() + "'"
-                + ", descuento=" + getDescuento() + ", fechaCreacion='" + getFechaCreacion() + "'" + ", fechaAceptado='"
-                + getFechaAceptado() + "'" + ", fechaEntregado='" + getFechaEntregado() + "'" + ", importeTotal="
-                + getImporteTotal() + ", observaciones='" + getObservaciones() + "'" + ", soldadura='" + isSoldadura()
-                + "'" + ", modelo='" + isModelo() + "'" + "}";
+        return "Presupuesto{" +
+            "id=" + getId() +
+            ", descripcionDescuento='" + getDescripcionDescuento() + "'" +
+            ", descuento=" + getDescuento() +
+            ", fechaCreacion='" + getFechaCreacion() + "'" +
+            ", fechaAceptado='" + getFechaAceptado() + "'" +
+            ", fechaEntregado='" + getFechaEntregado() + "'" +
+            ", importeTotal=" + getImporteTotal() +
+            ", observaciones='" + getObservaciones() + "'" +
+            ", soldadura='" + getSoldadura() + "'" +
+            ", modelo='" + getModelo() + "'" +
+            "}";
     }
 }

@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.ListaPrecioDesdeHasta;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.ListaPrecioDesdeHasta;
 
 /**
- * Spring Data  repository for the ListaPrecioDesdeHasta entity.
+ * Spring Data SQL repository for the ListaPrecioDesdeHasta entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ListaPrecioDesdeHastaRepository extends JpaRepository<ListaPrecioDesdeHasta, Long> {
-
-}
+public interface ListaPrecioDesdeHastaRepository extends JpaRepository<ListaPrecioDesdeHasta, Long> {}

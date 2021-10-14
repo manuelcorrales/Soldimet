@@ -1,40 +1,39 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "estadoCobranzaOperacion",
-            "otherEntityName": "estadoCobranzaOperacion",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreEstado"
-        },
-        {
-            "relationshipName": "operacion",
-            "otherEntityName": "operacion",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreOperacion"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "cobranzaOperacion",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": 0
-        }
-    ],
-    "changelogDate": "20171221010950",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "cobranza_operacion",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "estadoCobranzaOperacion",
+      "otherEntityRelationshipName": "cobranzaOperacion",
+      "relationshipValidateRules": "required",
+      "relationshipName": "estadoCobranzaOperacion",
+      "otherEntityField": "nombreEstado"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "operacion",
+      "otherEntityRelationshipName": "cobranzaOperacion",
+      "relationshipValidateRules": "required",
+      "relationshipName": "operacion",
+      "otherEntityField": "nombreOperacion"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "cobranzaOperacion",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "changelogDate": "20171221010950",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "cobranza_operacion",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "CobranzaOperacion",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

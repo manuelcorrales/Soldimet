@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.FormaDePago;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.FormaDePago;
 
 /**
- * Spring Data  repository for the FormaDePago entity.
+ * Spring Data SQL repository for the FormaDePago entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface FormaDePagoRepository extends JpaRepository<FormaDePago, Long> {
-
-}
+public interface FormaDePagoRepository extends JpaRepository<FormaDePago, Long> {}

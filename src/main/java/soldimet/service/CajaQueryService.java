@@ -1,9 +1,7 @@
 package soldimet.service;
 
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,13 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import soldimet.domain.Caja;
 import soldimet.domain.*; // for static metamodels
+import soldimet.domain.Caja;
 import soldimet.repository.CajaRepository;
-import soldimet.service.dto.CajaCriteria;
+import soldimet.service.criteria.CajaCriteria;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Caja} entities in the database.
@@ -75,7 +71,7 @@ public class CajaQueryService extends QueryService<Caja> {
     }
 
     /**
-     * Function to convert ConsumerCriteria to a {@link Specification}
+     * Function to convert {@link CajaCriteria} to a {@link Specification}
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */
@@ -83,7 +79,7 @@ public class CajaQueryService extends QueryService<Caja> {
         Specification<Caja> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {
-                specification = specification.and(buildSpecification(criteria.getId(), Caja_.id));
+                specification = specification.and(buildRangeSpecification(criteria.getId(), Caja_.id));
             }
             if (criteria.getFecha() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getFecha(), Caja_.fecha));
@@ -104,8 +100,10 @@ public class CajaQueryService extends QueryService<Caja> {
                 specification = specification.and(buildRangeSpecification(criteria.getSaldoFisico(), Caja_.saldoFisico));
             }
             if (criteria.getSucursalId() != null) {
-                specification = specification.and(buildSpecification(criteria.getSucursalId(),
-                    root -> root.join(Caja_.sucursal, JoinType.LEFT).get(Sucursal_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getSucursalId(), root -> root.join(Caja_.sucursal, JoinType.LEFT).get(Sucursal_.id))
+                    );
             }
         }
         return specification;

@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.EstadoMovimiento;
-import soldimet.repository.EstadoMovimientoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.EstadoMovimiento;
+import soldimet.repository.EstadoMovimientoRepository;
 
 /**
  * Service Implementation for managing {@link EstadoMovimiento}.
@@ -38,6 +36,29 @@ public class EstadoMovimientoService {
     }
 
     /**
+     * Partially update a estadoMovimiento.
+     *
+     * @param estadoMovimiento the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<EstadoMovimiento> partialUpdate(EstadoMovimiento estadoMovimiento) {
+        log.debug("Request to partially update EstadoMovimiento : {}", estadoMovimiento);
+
+        return estadoMovimientoRepository
+            .findById(estadoMovimiento.getId())
+            .map(
+                existingEstadoMovimiento -> {
+                    if (estadoMovimiento.getNombreEstado() != null) {
+                        existingEstadoMovimiento.setNombreEstado(estadoMovimiento.getNombreEstado());
+                    }
+
+                    return existingEstadoMovimiento;
+                }
+            )
+            .map(estadoMovimientoRepository::save);
+    }
+
+    /**
      * Get all the estadoMovimientos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class EstadoMovimientoService {
         log.debug("Request to get all EstadoMovimientos");
         return estadoMovimientoRepository.findAll();
     }
-
 
     /**
      * Get one estadoMovimiento by id.

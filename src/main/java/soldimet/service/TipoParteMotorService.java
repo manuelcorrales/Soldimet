@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.TipoParteMotor;
-import soldimet.repository.TipoParteMotorRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.TipoParteMotor;
+import soldimet.repository.TipoParteMotorRepository;
 
 /**
  * Service Implementation for managing {@link TipoParteMotor}.
@@ -38,6 +36,29 @@ public class TipoParteMotorService {
     }
 
     /**
+     * Partially update a tipoParteMotor.
+     *
+     * @param tipoParteMotor the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<TipoParteMotor> partialUpdate(TipoParteMotor tipoParteMotor) {
+        log.debug("Request to partially update TipoParteMotor : {}", tipoParteMotor);
+
+        return tipoParteMotorRepository
+            .findById(tipoParteMotor.getId())
+            .map(
+                existingTipoParteMotor -> {
+                    if (tipoParteMotor.getNombreTipoParteMotor() != null) {
+                        existingTipoParteMotor.setNombreTipoParteMotor(tipoParteMotor.getNombreTipoParteMotor());
+                    }
+
+                    return existingTipoParteMotor;
+                }
+            )
+            .map(tipoParteMotorRepository::save);
+    }
+
+    /**
      * Get all the tipoParteMotors.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class TipoParteMotorService {
         log.debug("Request to get all TipoParteMotors");
         return tipoParteMotorRepository.findAll();
     }
-
 
     /**
      * Get one tipoParteMotor by id.

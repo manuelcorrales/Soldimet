@@ -1,22 +1,19 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import soldimet.utils.MathUtils;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Movimiento.
  */
 @Entity
 @Table(name = "movimiento")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Movimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +23,7 @@ public class Movimiento implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "fecha", nullable = false, columnDefinition = "DATE")
+    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
     @NotNull
@@ -39,7 +36,12 @@ public class Movimiento implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
 
-    @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = { "medioDePagoCheque", "formaDePago" }, allowSetters = true)
+    @OneToOne
+    @JoinColumn(unique = true)
+    private MedioDePago medioDePago;
+
+    @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties("movimientos")
     private EstadoMovimiento estado;
@@ -51,7 +53,7 @@ public class Movimiento implements Serializable {
 
     @ManyToOne(optional = false, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties("movimientos")
+    @JsonIgnoreProperties(value = { "persona", "sucursal" }, allowSetters = true)
     private Empleado empleado;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
@@ -75,8 +77,13 @@ public class Movimiento implements Serializable {
         this.id = id;
     }
 
+    public Movimiento id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LocalDate getFecha() {
-        return fecha;
+        return this.fecha;
     }
 
     public Movimiento fecha(LocalDate fecha) {
@@ -115,7 +122,7 @@ public class Movimiento implements Serializable {
     }
 
     public String getObservaciones() {
-        return observaciones;
+        return this.observaciones;
     }
 
     public Movimiento observaciones(String observaciones) {
@@ -127,12 +134,25 @@ public class Movimiento implements Serializable {
         this.observaciones = observaciones;
     }
 
+    public MedioDePago getMedioDePago() {
+        return this.medioDePago;
+    }
+
+    public Movimiento medioDePago(MedioDePago medioDePago) {
+        this.setMedioDePago(medioDePago);
+        return this;
+    }
+
+    public void setMedioDePago(MedioDePago medioDePago) {
+        this.medioDePago = medioDePago;
+    }
+
     public EstadoMovimiento getEstado() {
-        return estado;
+        return this.estado;
     }
 
     public Movimiento estado(EstadoMovimiento estadoMovimiento) {
-        this.estado = estadoMovimiento;
+        this.setEstado(estadoMovimiento);
         return this;
     }
 
@@ -141,11 +161,11 @@ public class Movimiento implements Serializable {
     }
 
     public TipoMovimiento getTipoMovimiento() {
-        return tipoMovimiento;
+        return this.tipoMovimiento;
     }
 
     public Movimiento tipoMovimiento(TipoMovimiento tipoMovimiento) {
-        this.tipoMovimiento = tipoMovimiento;
+        this.setTipoMovimiento(tipoMovimiento);
         return this;
     }
 
@@ -154,11 +174,11 @@ public class Movimiento implements Serializable {
     }
 
     public Empleado getEmpleado() {
-        return empleado;
+        return this.empleado;
     }
 
     public Movimiento empleado(Empleado empleado) {
-        this.empleado = empleado;
+        this.setEmpleado(empleado);
         return this;
     }
 
@@ -167,11 +187,11 @@ public class Movimiento implements Serializable {
     }
 
     public Caja getCaja() {
-        return caja;
+        return this.caja;
     }
 
     public Movimiento caja(Caja caja) {
-        this.caja = caja;
+        this.setCaja(caja);
         return this;
     }
 
@@ -180,11 +200,11 @@ public class Movimiento implements Serializable {
     }
 
     public SubCategoria getSubCategoria() {
-        return subCategoria;
+        return this.subCategoria;
     }
 
     public Movimiento subCategoria(SubCategoria subCategoria) {
-        this.subCategoria = subCategoria;
+        this.setSubCategoria(subCategoria);
         return this;
     }
 
@@ -192,19 +212,7 @@ public class Movimiento implements Serializable {
         this.subCategoria = subCategoria;
     }
 
-    public MedioDePago getMedioDePago() {
-        return medioDePago;
-    }
-
-    public Movimiento medioDePago(MedioDePago medioDePago) {
-        this.medioDePago = medioDePago;
-        return this;
-    }
-
-    public void setMedioDePago(MedioDePago medioDePago) {
-        this.medioDePago = medioDePago;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -219,9 +227,11 @@ public class Movimiento implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Movimiento{" +

@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.DetallePresupuesto;
-import soldimet.repository.DetallePresupuestoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.DetallePresupuesto;
+import soldimet.repository.DetallePresupuestoRepository;
 
 /**
  * Service Implementation for managing {@link DetallePresupuesto}.
@@ -38,6 +36,29 @@ public class DetallePresupuestoService {
     }
 
     /**
+     * Partially update a detallePresupuesto.
+     *
+     * @param detallePresupuesto the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<DetallePresupuesto> partialUpdate(DetallePresupuesto detallePresupuesto) {
+        log.debug("Request to partially update DetallePresupuesto : {}", detallePresupuesto);
+
+        return detallePresupuestoRepository
+            .findById(detallePresupuesto.getId())
+            .map(
+                existingDetallePresupuesto -> {
+                    if (detallePresupuesto.getImporte() != null) {
+                        existingDetallePresupuesto.setImporte(detallePresupuesto.getImporte());
+                    }
+
+                    return existingDetallePresupuesto;
+                }
+            )
+            .map(detallePresupuestoRepository::save);
+    }
+
+    /**
      * Get all the detallePresupuestos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class DetallePresupuestoService {
         log.debug("Request to get all DetallePresupuestos");
         return detallePresupuestoRepository.findAll();
     }
-
 
     /**
      * Get one detallePresupuesto by id.

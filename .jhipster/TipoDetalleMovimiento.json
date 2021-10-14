@@ -1,21 +1,22 @@
 {
-    "fluentMethods": true,
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "nombreTipoDetalle",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "3"
-        }
-    ],
-    "changelogDate": "20171214022205",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "tipo_detalle_movimiento",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nombreTipoDetalle",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRulesMinlength": "3"
+    }
+  ],
+  "changelogDate": "20171214022205",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "tipo_detalle_movimiento",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "TipoDetalleMovimiento",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

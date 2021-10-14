@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.DetalleMovimiento;
-import soldimet.repository.DetalleMovimientoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.DetalleMovimiento;
+import soldimet.repository.DetalleMovimientoRepository;
 
 /**
  * Service Implementation for managing {@link DetalleMovimiento}.
@@ -38,6 +36,35 @@ public class DetalleMovimientoService {
     }
 
     /**
+     * Partially update a detalleMovimiento.
+     *
+     * @param detalleMovimiento the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<DetalleMovimiento> partialUpdate(DetalleMovimiento detalleMovimiento) {
+        log.debug("Request to partially update DetalleMovimiento : {}", detalleMovimiento);
+
+        return detalleMovimientoRepository
+            .findById(detalleMovimiento.getId())
+            .map(
+                existingDetalleMovimiento -> {
+                    if (detalleMovimiento.getValorUnitario() != null) {
+                        existingDetalleMovimiento.setValorUnitario(detalleMovimiento.getValorUnitario());
+                    }
+                    if (detalleMovimiento.getCantidad() != null) {
+                        existingDetalleMovimiento.setCantidad(detalleMovimiento.getCantidad());
+                    }
+                    if (detalleMovimiento.getDescripcion() != null) {
+                        existingDetalleMovimiento.setDescripcion(detalleMovimiento.getDescripcion());
+                    }
+
+                    return existingDetalleMovimiento;
+                }
+            )
+            .map(detalleMovimientoRepository::save);
+    }
+
+    /**
      * Get all the detalleMovimientos.
      *
      * @return the list of entities.
@@ -47,7 +74,6 @@ public class DetalleMovimientoService {
         log.debug("Request to get all DetalleMovimientos");
         return detalleMovimientoRepository.findAll();
     }
-
 
     /**
      * Get one detalleMovimiento by id.

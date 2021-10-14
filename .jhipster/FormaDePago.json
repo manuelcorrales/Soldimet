@@ -1,21 +1,22 @@
 {
-    "fluentMethods": true,
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "nombreFormaDePago",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "3"
-        }
-    ],
-    "changelogDate": "20171214003147",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "forma_de_pago",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nombreFormaDePago",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRulesMinlength": "3"
+    }
+  ],
+  "changelogDate": "20171214003147",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "forma_de_pago",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "FormaDePago",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

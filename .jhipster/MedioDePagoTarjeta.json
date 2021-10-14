@@ -1,23 +1,24 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "ultimos4",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "4"
-        }
-    ],
-    "changelogDate": "20190401202429",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "no",
-    "entityTableName": "medio_de_pago_tarjeta",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "ultimos4",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRulesMinlength": "4"
+    }
+  ],
+  "changelogDate": "20190401202429",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "medio_de_pago_tarjeta",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "MedioDePagoTarjeta",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

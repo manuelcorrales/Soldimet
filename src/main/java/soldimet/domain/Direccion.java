@@ -1,19 +1,17 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Direccion.
  */
 @Entity
 @Table(name = "direccion")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Direccion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,7 +35,7 @@ public class Direccion implements Serializable {
     @JsonIgnoreProperties("direccions")
     private Localidad localidad;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -46,8 +44,13 @@ public class Direccion implements Serializable {
         this.id = id;
     }
 
+    public Direccion id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getCalle() {
-        return calle;
+        return this.calle;
     }
 
     public Direccion calle(String calle) {
@@ -60,7 +63,7 @@ public class Direccion implements Serializable {
     }
 
     public Integer getNumero() {
-        return numero;
+        return this.numero;
     }
 
     public Direccion numero(Integer numero) {
@@ -73,18 +76,19 @@ public class Direccion implements Serializable {
     }
 
     public Localidad getLocalidad() {
-        return localidad;
+        return this.localidad;
     }
 
     public Direccion localidad(Localidad localidad) {
-        this.localidad = localidad;
+        this.setLocalidad(localidad);
         return this;
     }
 
     public void setLocalidad(Localidad localidad) {
         this.localidad = localidad;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -99,9 +103,11 @@ public class Direccion implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Direccion{" +

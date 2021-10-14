@@ -1,48 +1,46 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "articulo",
-            "otherEntityName": "articulo",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "descripcion",
-            "otherEntityRelationshipName": "movimientoArticulo"
-        },
-        {
-            "relationshipName": "movimiento",
-            "otherEntityName": "movimiento",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id",
-            "otherEntityRelationshipName": "movimientoArticulo"
-        },
-        {
-            "relationshipName": "medida",
-            "otherEntityName": "medidaArticulo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "medida",
-            "otherEntityRelationshipName": "movimientoArticulo"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "cantidad",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": "1"
-        }
-    ],
-    "changelogDate": "20180616212130",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "movimiento_articulo",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "articulo",
+      "otherEntityRelationshipName": "movimientoArticulo",
+      "relationshipValidateRules": "required",
+      "relationshipName": "articulo",
+      "otherEntityField": "descripcion"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "movimiento",
+      "otherEntityRelationshipName": "movimientoArticulo",
+      "relationshipName": "movimiento"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "medidaArticulo",
+      "otherEntityRelationshipName": "movimientoArticulo",
+      "relationshipName": "medida",
+      "otherEntityField": "medida"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    }
+  ],
+  "changelogDate": "20180616212130",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "movimiento_articulo",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "MovimientoArticulo",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

@@ -1,18 +1,17 @@
 package soldimet.domain;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Banco.
  */
 @Entity
 @Table(name = "banco")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Banco implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,7 +24,7 @@ public class Banco implements Serializable {
     @Column(name = "nombre_banco", nullable = false)
     private String nombreBanco;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -34,8 +33,13 @@ public class Banco implements Serializable {
         this.id = id;
     }
 
+    public Banco id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNombreBanco() {
-        return nombreBanco;
+        return this.nombreBanco;
     }
 
     public Banco nombreBanco(String nombreBanco) {
@@ -46,7 +50,8 @@ public class Banco implements Serializable {
     public void setNombreBanco(String nombreBanco) {
         this.nombreBanco = nombreBanco;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -61,9 +66,11 @@ public class Banco implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Banco{" +

@@ -1,19 +1,21 @@
 {
-    "fluentMethods": true,
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "nombreBanco",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "changelogDate": "20171213233707",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "banco",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nombreBanco",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20171213233707",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "banco",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "Banco",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

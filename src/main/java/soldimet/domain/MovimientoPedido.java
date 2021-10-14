@@ -1,19 +1,18 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A MovimientoPedido.
  */
 @Entity
 @Table(name = "movimiento_pedido")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MovimientoPedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,12 +40,30 @@ public class MovimientoPedido implements Serializable {
         this.id = id;
     }
 
+    public MovimientoPedido id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Movimiento getMovimiento() {
+        return this.movimiento;
+    }
+
+    public MovimientoPedido movimiento(Movimiento movimiento) {
+        this.setMovimiento(movimiento);
+        return this;
+    }
+
+    public void setMovimiento(Movimiento movimiento) {
+        this.movimiento = movimiento;
+    }
+
     public PedidoRepuesto getPedidoRepuesto() {
-        return pedidoRepuesto;
+        return this.pedidoRepuesto;
     }
 
     public MovimientoPedido pedidoRepuesto(PedidoRepuesto pedidoRepuesto) {
-        this.pedidoRepuesto = pedidoRepuesto;
+        this.setPedidoRepuesto(pedidoRepuesto);
         return this;
     }
 
@@ -54,19 +71,7 @@ public class MovimientoPedido implements Serializable {
         this.pedidoRepuesto = pedidoRepuesto;
     }
 
-    public Movimiento getMovimiento() {
-        return movimiento;
-    }
-
-    public MovimientoPedido movimiento(Movimiento movimiento) {
-        this.movimiento = movimiento;
-        return this;
-    }
-
-    public void setMovimiento(Movimiento movimiento) {
-        this.movimiento = movimiento;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -81,9 +86,11 @@ public class MovimientoPedido implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "MovimientoPedido{" +

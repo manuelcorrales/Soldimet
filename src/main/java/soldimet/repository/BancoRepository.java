@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.Banco;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Banco;
 
 /**
- * Spring Data  repository for the Banco entity.
+ * Spring Data SQL repository for the Banco entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface BancoRepository extends JpaRepository<Banco, Long> {
-
-}
+public interface BancoRepository extends JpaRepository<Banco, Long> {}

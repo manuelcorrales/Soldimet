@@ -1,24 +1,19 @@
 package soldimet.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A PedidoRepuesto.
  */
 @Entity
 @Table(name = "pedido_repuesto")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PedidoRepuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,14 +46,14 @@ public class PedidoRepuesto implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("pedidoRepuestos")
+    @JsonIgnoreProperties(value = { "cliente", "estadoPresupuesto", "documentType", "sucursal" }, allowSetters = true)
     private Presupuesto presupuesto;
 
     @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE}, fetch= FetchType.EAGER)
     @JsonIgnoreProperties("pedidoRepuestos")
     private DocumentationType documentType;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -67,8 +62,13 @@ public class PedidoRepuesto implements Serializable {
         this.id = id;
     }
 
+    public PedidoRepuesto id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LocalDate getFechaCreacion() {
-        return fechaCreacion;
+        return this.fechaCreacion;
     }
 
     public PedidoRepuesto fechaCreacion(LocalDate fechaCreacion) {
@@ -81,7 +81,7 @@ public class PedidoRepuesto implements Serializable {
     }
 
     public LocalDate getFechaPedido() {
-        return fechaPedido;
+        return this.fechaPedido;
     }
 
     public PedidoRepuesto fechaPedido(LocalDate fechaPedido) {
@@ -94,7 +94,7 @@ public class PedidoRepuesto implements Serializable {
     }
 
     public LocalDate getFechaRecibo() {
-        return fechaRecibo;
+        return this.fechaRecibo;
     }
 
     public PedidoRepuesto fechaRecibo(LocalDate fechaRecibo) {
@@ -107,11 +107,11 @@ public class PedidoRepuesto implements Serializable {
     }
 
     public EstadoPedidoRepuesto getEstadoPedidoRepuesto() {
-        return estadoPedidoRepuesto;
+        return this.estadoPedidoRepuesto;
     }
 
     public PedidoRepuesto estadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto) {
-        this.estadoPedidoRepuesto = estadoPedidoRepuesto;
+        this.setEstadoPedidoRepuesto(estadoPedidoRepuesto);
         return this;
     }
 
@@ -143,11 +143,11 @@ public class PedidoRepuesto implements Serializable {
     }
 
     public Presupuesto getPresupuesto() {
-        return presupuesto;
+        return this.presupuesto;
     }
 
     public PedidoRepuesto presupuesto(Presupuesto presupuesto) {
-        this.presupuesto = presupuesto;
+        this.setPresupuesto(presupuesto);
         return this;
     }
 
@@ -156,18 +156,19 @@ public class PedidoRepuesto implements Serializable {
     }
 
     public DocumentationType getDocumentType() {
-        return documentType;
+        return this.documentType;
     }
 
     public PedidoRepuesto documentType(DocumentationType documentationType) {
-        this.documentType = documentationType;
+        this.setDocumentType(documentationType);
         return this;
     }
 
     public void setDocumentType(DocumentationType documentationType) {
         this.documentType = documentationType;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -182,9 +183,11 @@ public class PedidoRepuesto implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "PedidoRepuesto{" +

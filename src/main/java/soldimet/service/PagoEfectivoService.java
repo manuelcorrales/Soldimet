@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.PagoEfectivo;
-import soldimet.repository.PagoEfectivoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.PagoEfectivo;
+import soldimet.repository.PagoEfectivoRepository;
 
 /**
  * Service Implementation for managing {@link PagoEfectivo}.
@@ -38,6 +36,25 @@ public class PagoEfectivoService {
     }
 
     /**
+     * Partially update a pagoEfectivo.
+     *
+     * @param pagoEfectivo the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<PagoEfectivo> partialUpdate(PagoEfectivo pagoEfectivo) {
+        log.debug("Request to partially update PagoEfectivo : {}", pagoEfectivo);
+
+        return pagoEfectivoRepository
+            .findById(pagoEfectivo.getId())
+            .map(
+                existingPagoEfectivo -> {
+                    return existingPagoEfectivo;
+                }
+            )
+            .map(pagoEfectivoRepository::save);
+    }
+
+    /**
      * Get all the pagoEfectivos.
      *
      * @return the list of entities.
@@ -47,7 +64,6 @@ public class PagoEfectivoService {
         log.debug("Request to get all PagoEfectivos");
         return pagoEfectivoRepository.findAll();
     }
-
 
     /**
      * Get one pagoEfectivo by id.

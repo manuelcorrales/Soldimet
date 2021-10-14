@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.TipoMovimiento;
-import soldimet.repository.TipoMovimientoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.TipoMovimiento;
+import soldimet.repository.TipoMovimientoRepository;
 
 /**
  * Service Implementation for managing {@link TipoMovimiento}.
@@ -38,6 +36,29 @@ public class TipoMovimientoService {
     }
 
     /**
+     * Partially update a tipoMovimiento.
+     *
+     * @param tipoMovimiento the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<TipoMovimiento> partialUpdate(TipoMovimiento tipoMovimiento) {
+        log.debug("Request to partially update TipoMovimiento : {}", tipoMovimiento);
+
+        return tipoMovimientoRepository
+            .findById(tipoMovimiento.getId())
+            .map(
+                existingTipoMovimiento -> {
+                    if (tipoMovimiento.getNombreTipoMovimiento() != null) {
+                        existingTipoMovimiento.setNombreTipoMovimiento(tipoMovimiento.getNombreTipoMovimiento());
+                    }
+
+                    return existingTipoMovimiento;
+                }
+            )
+            .map(tipoMovimientoRepository::save);
+    }
+
+    /**
      * Get all the tipoMovimientos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class TipoMovimientoService {
         log.debug("Request to get all TipoMovimientos");
         return tipoMovimientoRepository.findAll();
     }
-
 
     /**
      * Get one tipoMovimiento by id.

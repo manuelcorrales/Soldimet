@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.PrecioRepuesto;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.PrecioRepuesto;
 
 /**
- * Spring Data  repository for the PrecioRepuesto entity.
+ * Spring Data SQL repository for the PrecioRepuesto entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface PrecioRepuestoRepository extends JpaRepository<PrecioRepuesto, Long> {
-
-}
+public interface PrecioRepuestoRepository extends JpaRepository<PrecioRepuesto, Long> {}

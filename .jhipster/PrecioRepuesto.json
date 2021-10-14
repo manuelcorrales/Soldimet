@@ -1,36 +1,33 @@
 {
-    "fluentMethods": true,
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "fecha",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "precioPrivado",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "min"
-            ],
-            "fieldValidateRulesMin": 0
-        },
-        {
-            "fieldName": "precioPublico",
-            "fieldType": "Float",
-            "fieldValidateRules": [
-                "required",
-                "min"
-            ],
-            "fieldValidateRulesMin": "0"
-        }
-    ],
-    "changelogDate": "20171214020356",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "precio_repuesto",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "precioPrivado",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "precioPublico",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "changelogDate": "20171214020356",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "precio_repuesto",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "PrecioRepuesto",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

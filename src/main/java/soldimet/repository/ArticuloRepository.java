@@ -1,14 +1,12 @@
 package soldimet.repository;
-import soldimet.domain.Articulo;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Articulo;
 
 /**
- * Spring Data  repository for the Articulo entity.
+ * Spring Data SQL repository for the Articulo entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {
-
-}
+public interface ArticuloRepository extends JpaRepository<Articulo, Long>, JpaSpecificationExecutor<Articulo> {}

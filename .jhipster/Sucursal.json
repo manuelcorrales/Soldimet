@@ -1,21 +1,23 @@
 {
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "nombreSucursal",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "changelogDate": "20181114003224",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "no",
-    "entityTableName": "sucursal",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nombreSucursal",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20181114003224",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "sucursal",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "Sucursal",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

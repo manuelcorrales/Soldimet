@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Cilindrada;
-import soldimet.repository.CilindradaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Cilindrada;
+import soldimet.repository.CilindradaRepository;
 
 /**
  * Service Implementation for managing {@link Cilindrada}.
@@ -38,6 +36,29 @@ public class CilindradaService {
     }
 
     /**
+     * Partially update a cilindrada.
+     *
+     * @param cilindrada the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Cilindrada> partialUpdate(Cilindrada cilindrada) {
+        log.debug("Request to partially update Cilindrada : {}", cilindrada);
+
+        return cilindradaRepository
+            .findById(cilindrada.getId())
+            .map(
+                existingCilindrada -> {
+                    if (cilindrada.getCantidadDeCilindros() != null) {
+                        existingCilindrada.setCantidadDeCilindros(cilindrada.getCantidadDeCilindros());
+                    }
+
+                    return existingCilindrada;
+                }
+            )
+            .map(cilindradaRepository::save);
+    }
+
+    /**
      * Get all the cilindradas.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class CilindradaService {
         log.debug("Request to get all Cilindradas");
         return cilindradaRepository.findAll();
     }
-
 
     /**
      * Get one cilindrada by id.

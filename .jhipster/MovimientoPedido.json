@@ -1,32 +1,31 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "pedidoRepuesto",
-            "otherEntityName": "pedidoRepuesto",
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipName": "movimiento",
-            "otherEntityName": "movimiento",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "movimientoPedido"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20180617234431",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "movimiento_pedido",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "movimiento",
+      "otherEntityRelationshipName": "movimientoPedido",
+      "relationshipValidateRules": "required",
+      "relationshipName": "movimiento",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "pedidoRepuesto",
+      "otherEntityRelationshipName": "movimientoPedido",
+      "relationshipValidateRules": "required",
+      "relationshipName": "pedidoRepuesto"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20180617234431",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "movimiento_pedido",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "MovimientoPedido",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

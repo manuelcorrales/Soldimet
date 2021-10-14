@@ -1,19 +1,17 @@
 package soldimet.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A MedioDePagoCheque.
  */
 @Entity
 @Table(name = "medio_de_pago_cheque")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MedioDePagoCheque implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,7 +29,7 @@ public class MedioDePagoCheque implements Serializable {
     @JsonIgnoreProperties("medioDePagoCheques")
     private Banco banco;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -40,8 +38,13 @@ public class MedioDePagoCheque implements Serializable {
         this.id = id;
     }
 
+    public MedioDePagoCheque id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNumeroCheque() {
-        return numeroCheque;
+        return this.numeroCheque;
     }
 
     public MedioDePagoCheque numeroCheque(String numeroCheque) {
@@ -54,18 +57,19 @@ public class MedioDePagoCheque implements Serializable {
     }
 
     public Banco getBanco() {
-        return banco;
+        return this.banco;
     }
 
     public MedioDePagoCheque banco(Banco banco) {
-        this.banco = banco;
+        this.setBanco(banco);
         return this;
     }
 
     public void setBanco(Banco banco) {
         this.banco = banco;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -80,9 +84,11 @@ public class MedioDePagoCheque implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "MedioDePagoCheque{" +

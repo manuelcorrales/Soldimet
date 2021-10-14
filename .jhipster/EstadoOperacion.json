@@ -1,21 +1,22 @@
 {
-    "fluentMethods": true,
-    "relationships": [],
-    "fields": [
-        {
-            "fieldName": "nombreEstado",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": "3"
-        }
-    ],
-    "changelogDate": "20171214002521",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "estado_operacion",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nombreEstado",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRulesMinlength": "3"
+    }
+  ],
+  "changelogDate": "20171214002521",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "estado_operacion",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "EstadoOperacion",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

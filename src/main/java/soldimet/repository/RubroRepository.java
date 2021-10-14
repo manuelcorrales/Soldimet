@@ -1,14 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.Rubro;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.Rubro;
 
 /**
- * Spring Data  repository for the Rubro entity.
+ * Spring Data SQL repository for the Rubro entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface RubroRepository extends JpaRepository<Rubro, Long> {
-}
+public interface RubroRepository extends JpaRepository<Rubro, Long> {}

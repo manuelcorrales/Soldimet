@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.EstadoDetallePedido;
-import soldimet.repository.EstadoDetallePedidoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.EstadoDetallePedido;
+import soldimet.repository.EstadoDetallePedidoRepository;
 
 /**
  * Service Implementation for managing {@link EstadoDetallePedido}.
@@ -38,6 +36,29 @@ public class EstadoDetallePedidoService {
     }
 
     /**
+     * Partially update a estadoDetallePedido.
+     *
+     * @param estadoDetallePedido the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<EstadoDetallePedido> partialUpdate(EstadoDetallePedido estadoDetallePedido) {
+        log.debug("Request to partially update EstadoDetallePedido : {}", estadoDetallePedido);
+
+        return estadoDetallePedidoRepository
+            .findById(estadoDetallePedido.getId())
+            .map(
+                existingEstadoDetallePedido -> {
+                    if (estadoDetallePedido.getNombreEstado() != null) {
+                        existingEstadoDetallePedido.setNombreEstado(estadoDetallePedido.getNombreEstado());
+                    }
+
+                    return existingEstadoDetallePedido;
+                }
+            )
+            .map(estadoDetallePedidoRepository::save);
+    }
+
+    /**
      * Get all the estadoDetallePedidos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class EstadoDetallePedidoService {
         log.debug("Request to get all EstadoDetallePedidos");
         return estadoDetallePedidoRepository.findAll();
     }
-
 
     /**
      * Get one estadoDetallePedido by id.

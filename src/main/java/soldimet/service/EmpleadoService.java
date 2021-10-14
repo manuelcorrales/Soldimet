@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Empleado;
-import soldimet.repository.EmpleadoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Empleado;
+import soldimet.repository.EmpleadoRepository;
 
 /**
  * Service Implementation for managing {@link Empleado}.
@@ -38,6 +36,25 @@ public class EmpleadoService {
     }
 
     /**
+     * Partially update a empleado.
+     *
+     * @param empleado the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Empleado> partialUpdate(Empleado empleado) {
+        log.debug("Request to partially update Empleado : {}", empleado);
+
+        return empleadoRepository
+            .findById(empleado.getId())
+            .map(
+                existingEmpleado -> {
+                    return existingEmpleado;
+                }
+            )
+            .map(empleadoRepository::save);
+    }
+
+    /**
      * Get all the empleados.
      *
      * @return the list of entities.
@@ -47,7 +64,6 @@ public class EmpleadoService {
         log.debug("Request to get all Empleados");
         return empleadoRepository.findAll();
     }
-
 
     /**
      * Get one empleado by id.

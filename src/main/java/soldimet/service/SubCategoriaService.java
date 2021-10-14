@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.SubCategoria;
-import soldimet.repository.SubCategoriaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.SubCategoria;
+import soldimet.repository.SubCategoriaRepository;
 
 /**
  * Service Implementation for managing {@link SubCategoria}.
@@ -38,6 +36,29 @@ public class SubCategoriaService {
     }
 
     /**
+     * Partially update a subCategoria.
+     *
+     * @param subCategoria the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<SubCategoria> partialUpdate(SubCategoria subCategoria) {
+        log.debug("Request to partially update SubCategoria : {}", subCategoria);
+
+        return subCategoriaRepository
+            .findById(subCategoria.getId())
+            .map(
+                existingSubCategoria -> {
+                    if (subCategoria.getNombreSubCategoria() != null) {
+                        existingSubCategoria.setNombreSubCategoria(subCategoria.getNombreSubCategoria());
+                    }
+
+                    return existingSubCategoria;
+                }
+            )
+            .map(subCategoriaRepository::save);
+    }
+
+    /**
      * Get all the subCategorias.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class SubCategoriaService {
         log.debug("Request to get all SubCategorias");
         return subCategoriaRepository.findAll();
     }
-
 
     /**
      * Get one subCategoria by id.

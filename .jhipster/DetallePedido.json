@@ -1,29 +1,24 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "detallePresupuesto",
-            "otherEntityName": "detallePresupuesto",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "detallePedido"
-        },
-        {
-            "relationshipName": "costoRepuesto",
-            "otherEntityName": "costoRepuesto",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "detallePedido"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20171214000606",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "detalle_pedido",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "detallePresupuesto",
+      "otherEntityRelationshipName": "detallePedido",
+      "relationshipValidateRules": "required",
+      "relationshipName": "detallePresupuesto",
+      "ownerSide": true
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20171214000606",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "detalle_pedido",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "DetallePedido",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

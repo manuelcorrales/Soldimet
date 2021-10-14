@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.CategoriaPago;
-import soldimet.repository.CategoriaPagoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.CategoriaPago;
+import soldimet.repository.CategoriaPagoRepository;
 
 /**
  * Service Implementation for managing {@link CategoriaPago}.
@@ -38,6 +36,29 @@ public class CategoriaPagoService {
     }
 
     /**
+     * Partially update a categoriaPago.
+     *
+     * @param categoriaPago the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<CategoriaPago> partialUpdate(CategoriaPago categoriaPago) {
+        log.debug("Request to partially update CategoriaPago : {}", categoriaPago);
+
+        return categoriaPagoRepository
+            .findById(categoriaPago.getId())
+            .map(
+                existingCategoriaPago -> {
+                    if (categoriaPago.getNombreCategoriaPago() != null) {
+                        existingCategoriaPago.setNombreCategoriaPago(categoriaPago.getNombreCategoriaPago());
+                    }
+
+                    return existingCategoriaPago;
+                }
+            )
+            .map(categoriaPagoRepository::save);
+    }
+
+    /**
      * Get all the categoriaPagos.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class CategoriaPagoService {
         log.debug("Request to get all CategoriaPagos");
         return categoriaPagoRepository.findAll();
     }
-
 
     /**
      * Get one categoriaPago by id.

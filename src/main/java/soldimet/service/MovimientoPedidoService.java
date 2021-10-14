@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.MovimientoPedido;
-import soldimet.repository.MovimientoPedidoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.MovimientoPedido;
+import soldimet.repository.MovimientoPedidoRepository;
 
 /**
  * Service Implementation for managing {@link MovimientoPedido}.
@@ -38,6 +36,25 @@ public class MovimientoPedidoService {
     }
 
     /**
+     * Partially update a movimientoPedido.
+     *
+     * @param movimientoPedido the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<MovimientoPedido> partialUpdate(MovimientoPedido movimientoPedido) {
+        log.debug("Request to partially update MovimientoPedido : {}", movimientoPedido);
+
+        return movimientoPedidoRepository
+            .findById(movimientoPedido.getId())
+            .map(
+                existingMovimientoPedido -> {
+                    return existingMovimientoPedido;
+                }
+            )
+            .map(movimientoPedidoRepository::save);
+    }
+
+    /**
      * Get all the movimientoPedidos.
      *
      * @return the list of entities.
@@ -47,7 +64,6 @@ public class MovimientoPedidoService {
         log.debug("Request to get all MovimientoPedidos");
         return movimientoPedidoRepository.findAll();
     }
-
 
     /**
      * Get one movimientoPedido by id.

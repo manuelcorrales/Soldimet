@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Rubro;
-import soldimet.repository.RubroRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Rubro;
+import soldimet.repository.RubroRepository;
 
 /**
  * Service Implementation for managing {@link Rubro}.
@@ -38,6 +36,29 @@ public class RubroService {
     }
 
     /**
+     * Partially update a rubro.
+     *
+     * @param rubro the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Rubro> partialUpdate(Rubro rubro) {
+        log.debug("Request to partially update Rubro : {}", rubro);
+
+        return rubroRepository
+            .findById(rubro.getId())
+            .map(
+                existingRubro -> {
+                    if (rubro.getNombreRubro() != null) {
+                        existingRubro.setNombreRubro(rubro.getNombreRubro());
+                    }
+
+                    return existingRubro;
+                }
+            )
+            .map(rubroRepository::save);
+    }
+
+    /**
      * Get all the rubros.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class RubroService {
         log.debug("Request to get all Rubros");
         return rubroRepository.findAll();
     }
-
 
     /**
      * Get one rubro by id.

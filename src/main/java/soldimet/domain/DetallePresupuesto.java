@@ -1,26 +1,18 @@
 package soldimet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import soldimet.utils.MathUtils;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A DetallePresupuesto.
  */
 @Entity
 @Table(name = "detalle_presupuesto")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DetallePresupuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,7 +28,7 @@ public class DetallePresupuesto implements Serializable {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties("detallePresupuestos")
+    @JsonIgnoreProperties(value = { "motor" }, allowSetters = true)
     private Aplicacion aplicacion;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -46,7 +38,7 @@ public class DetallePresupuesto implements Serializable {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties("detallePresupuestos")
+    @JsonIgnoreProperties(value = { "aplicacions" }, allowSetters = true)
     private Motor motor;
 
     @OneToMany(cascade = { CascadeType.ALL })
@@ -74,6 +66,11 @@ public class DetallePresupuesto implements Serializable {
         this.id = id;
     }
 
+    public DetallePresupuesto id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Float getImporte() {
         return MathUtils.roundFloat(this.importe);
     }
@@ -88,11 +85,11 @@ public class DetallePresupuesto implements Serializable {
     }
 
     public Aplicacion getAplicacion() {
-        return aplicacion;
+        return this.aplicacion;
     }
 
     public DetallePresupuesto aplicacion(Aplicacion aplicacion) {
-        this.aplicacion = aplicacion;
+        this.setAplicacion(aplicacion);
         return this;
     }
 
@@ -101,11 +98,11 @@ public class DetallePresupuesto implements Serializable {
     }
 
     public Cilindrada getCilindrada() {
-        return cilindrada;
+        return this.cilindrada;
     }
 
     public DetallePresupuesto cilindrada(Cilindrada cilindrada) {
-        this.cilindrada = cilindrada;
+        this.setCilindrada(cilindrada);
         return this;
     }
 
@@ -114,11 +111,11 @@ public class DetallePresupuesto implements Serializable {
     }
 
     public Motor getMotor() {
-        return motor;
+        return this.motor;
     }
 
     public DetallePresupuesto motor(Motor motor) {
-        this.motor = motor;
+        this.setMotor(motor);
         return this;
     }
 
@@ -150,11 +147,11 @@ public class DetallePresupuesto implements Serializable {
     }
 
     public TipoParteMotor getTipoParteMotor() {
-        return tipoParteMotor;
+        return this.tipoParteMotor;
     }
 
     public DetallePresupuesto tipoParteMotor(TipoParteMotor tipoParteMotor) {
-        this.tipoParteMotor = tipoParteMotor;
+        this.setTipoParteMotor(tipoParteMotor);
         return this;
     }
 
@@ -218,11 +215,16 @@ public class DetallePresupuesto implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
-        return "DetallePresupuesto{" + "id=" + getId() + ", importe=" + getImporte() + "}";
+        return "DetallePresupuesto{" +
+            "id=" + getId() +
+            ", importe=" + getImporte() +
+            "}";
     }
 }

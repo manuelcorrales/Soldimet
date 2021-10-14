@@ -1,15 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.DocumentationType;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.DocumentationType;
 
 /**
- * Spring Data  repository for the DocumentationType entity.
+ * Spring Data SQL repository for the DocumentationType entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface DocumentationTypeRepository extends JpaRepository<DocumentationType, Long> {
-
-}
+public interface DocumentationTypeRepository extends JpaRepository<DocumentationType, Long> {}

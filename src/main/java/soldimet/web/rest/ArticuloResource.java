@@ -1,14 +1,12 @@
 package soldimet.web.rest;
 
-import soldimet.domain.Articulo;
-import soldimet.service.ArticuloService;
-import soldimet.web.rest.errors.BadRequestAlertException;
-import soldimet.service.dto.ArticuloCriteria;
-import soldimet.service.ArticuloQueryService;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,16 +14,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import soldimet.domain.Articulo;
+import soldimet.repository.ArticuloRepository;
+import soldimet.service.ArticuloQueryService;
+import soldimet.service.ArticuloService;
+import soldimet.service.criteria.ArticuloCriteria;
+import soldimet.web.rest.errors.BadRequestAlertException;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link soldimet.domain.Articulo}.
@@ -43,10 +43,17 @@ public class ArticuloResource {
 
     private final ArticuloService articuloService;
 
+    private final ArticuloRepository articuloRepository;
+
     private final ArticuloQueryService articuloQueryService;
 
-    public ArticuloResource(ArticuloService articuloService, ArticuloQueryService articuloQueryService) {
+    public ArticuloResource(
+        ArticuloService articuloService,
+        ArticuloRepository articuloRepository,
+        ArticuloQueryService articuloQueryService
+    ) {
         this.articuloService = articuloService;
+        this.articuloRepository = articuloRepository;
         this.articuloQueryService = articuloQueryService;
     }
 
@@ -64,38 +71,86 @@ public class ArticuloResource {
             throw new BadRequestAlertException("A new articulo cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Articulo result = articuloService.save(articulo);
-        return ResponseEntity.created(new URI("/api/articulos/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/articulos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /articulos} : Updates an existing articulo.
+     * {@code PUT  /articulos/:id} : Updates an existing articulo.
      *
+     * @param id the id of the articulo to save.
      * @param articulo the articulo to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated articulo,
      * or with status {@code 400 (Bad Request)} if the articulo is not valid,
      * or with status {@code 500 (Internal Server Error)} if the articulo couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/articulos")
-    public ResponseEntity<Articulo> updateArticulo(@Valid @RequestBody Articulo articulo) throws URISyntaxException {
-        log.debug("REST request to update Articulo : {}", articulo);
+    @PutMapping("/articulos/{id}")
+    public ResponseEntity<Articulo> updateArticulo(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody Articulo articulo
+    ) throws URISyntaxException {
+        log.debug("REST request to update Articulo : {}, {}", id, articulo);
         if (articulo.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, articulo.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!articuloRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         Articulo result = articuloService.save(articulo);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, articulo.getId().toString()))
             .body(result);
     }
 
     /**
+     * {@code PATCH  /articulos/:id} : Partial updates given fields of an existing articulo, field will ignore if it is null
+     *
+     * @param id the id of the articulo to save.
+     * @param articulo the articulo to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated articulo,
+     * or with status {@code 400 (Bad Request)} if the articulo is not valid,
+     * or with status {@code 404 (Not Found)} if the articulo is not found,
+     * or with status {@code 500 (Internal Server Error)} if the articulo couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/articulos/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<Articulo> partialUpdateArticulo(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody Articulo articulo
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Articulo partially : {}, {}", id, articulo);
+        if (articulo.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, articulo.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!articuloRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<Articulo> result = articuloService.partialUpdate(articulo);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, articulo.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET  /articulos} : get all the articulos.
      *
-
      * @param pageable the pagination information.
-
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of articulos in body.
      */
@@ -108,11 +163,11 @@ public class ArticuloResource {
     }
 
     /**
-    * {@code GET  /articulos/count} : count all the articulos.
-    *
-    * @param criteria the criteria which the requested entities should match.
-    * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
-    */
+     * {@code GET  /articulos/count} : count all the articulos.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
     @GetMapping("/articulos/count")
     public ResponseEntity<Long> countArticulos(ArticuloCriteria criteria) {
         log.debug("REST request to count Articulos by criteria: {}", criteria);
@@ -142,6 +197,9 @@ public class ArticuloResource {
     public ResponseEntity<Void> deleteArticulo(@PathVariable Long id) {
         log.debug("REST request to delete Articulo : {}", id);
         articuloService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

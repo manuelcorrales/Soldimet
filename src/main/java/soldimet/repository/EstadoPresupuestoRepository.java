@@ -1,18 +1,12 @@
 package soldimet.repository;
 
-import soldimet.domain.EstadoPresupuesto;
-
-import java.util.List;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-
+import soldimet.domain.EstadoPresupuesto;
 
 /**
- * Spring Data  repository for the EstadoPresupuesto entity.
+ * Spring Data SQL repository for the EstadoPresupuesto entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface EstadoPresupuestoRepository extends JpaRepository<EstadoPresupuesto, Long> {
-
-}
+public interface EstadoPresupuestoRepository extends JpaRepository<EstadoPresupuesto, Long> {}

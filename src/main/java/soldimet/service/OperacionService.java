@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Operacion;
-import soldimet.repository.OperacionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Operacion;
+import soldimet.repository.OperacionRepository;
 
 /**
  * Service Implementation for managing {@link Operacion}.
@@ -38,6 +36,29 @@ public class OperacionService {
     }
 
     /**
+     * Partially update a operacion.
+     *
+     * @param operacion the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Operacion> partialUpdate(Operacion operacion) {
+        log.debug("Request to partially update Operacion : {}", operacion);
+
+        return operacionRepository
+            .findById(operacion.getId())
+            .map(
+                existingOperacion -> {
+                    if (operacion.getNombreOperacion() != null) {
+                        existingOperacion.setNombreOperacion(operacion.getNombreOperacion());
+                    }
+
+                    return existingOperacion;
+                }
+            )
+            .map(operacionRepository::save);
+    }
+
+    /**
      * Get all the operacions.
      *
      * @return the list of entities.
@@ -47,7 +68,6 @@ public class OperacionService {
         log.debug("Request to get all Operacions");
         return operacionRepository.findAll();
     }
-
 
     /**
      * Get one operacion by id.

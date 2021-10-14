@@ -1,18 +1,17 @@
 package soldimet.domain;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Rubro.
  */
 @Entity
 @Table(name = "rubro")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Rubro implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +25,7 @@ public class Rubro implements Serializable {
     @Column(name = "nombre_rubro", nullable = false)
     private String nombreRubro;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -35,8 +34,13 @@ public class Rubro implements Serializable {
         this.id = id;
     }
 
+    public Rubro id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNombreRubro() {
-        return nombreRubro;
+        return this.nombreRubro;
     }
 
     public Rubro nombreRubro(String nombreRubro) {
@@ -47,7 +51,8 @@ public class Rubro implements Serializable {
     public void setNombreRubro(String nombreRubro) {
         this.nombreRubro = nombreRubro;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -62,9 +67,11 @@ public class Rubro implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "Rubro{" +

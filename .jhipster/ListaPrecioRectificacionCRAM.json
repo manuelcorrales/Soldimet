@@ -1,30 +1,23 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "fechas",
-            "otherEntityName": "listaPrecioDesdeHasta",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "lista"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "numeroGrupo",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required",
-                "min",
-                "max"
-            ],
-            "fieldValidateRulesMin": "1",
-            "fieldValidateRulesMax": "25"
-        }
-    ],
-    "changelogDate": "20171214004029",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "lista_precio_rectificacioncram",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "numeroGrupo",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min", "max"],
+      "fieldValidateRulesMin": "1",
+      "fieldValidateRulesMax": "25"
+    }
+  ],
+  "changelogDate": "20171214004029",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "lista_precio_rectificacioncram",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "ListaPrecioRectificacionCRAM",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

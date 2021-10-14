@@ -1,15 +1,13 @@
 package soldimet.service;
 
-import soldimet.domain.Direccion;
-import soldimet.repository.DireccionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soldimet.domain.Direccion;
+import soldimet.repository.DireccionRepository;
 
 /**
  * Service Implementation for managing {@link Direccion}.
@@ -38,6 +36,32 @@ public class DireccionService {
     }
 
     /**
+     * Partially update a direccion.
+     *
+     * @param direccion the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Direccion> partialUpdate(Direccion direccion) {
+        log.debug("Request to partially update Direccion : {}", direccion);
+
+        return direccionRepository
+            .findById(direccion.getId())
+            .map(
+                existingDireccion -> {
+                    if (direccion.getCalle() != null) {
+                        existingDireccion.setCalle(direccion.getCalle());
+                    }
+                    if (direccion.getNumero() != null) {
+                        existingDireccion.setNumero(direccion.getNumero());
+                    }
+
+                    return existingDireccion;
+                }
+            )
+            .map(direccionRepository::save);
+    }
+
+    /**
      * Get all the direccions.
      *
      * @return the list of entities.
@@ -47,7 +71,6 @@ public class DireccionService {
         log.debug("Request to get all Direccions");
         return direccionRepository.findAll();
     }
-
 
     /**
      * Get one direccion by id.

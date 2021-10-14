@@ -1,23 +1,25 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "formaDePago",
-            "otherEntityName": "formaDePago",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombreFormaDePago",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "pagoEfectivo"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20171214014825",
-    "dto": "no",
-    "service": "serviceClass",
-    "entityTableName": "pago_efectivo",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "formaDePago",
+      "otherEntityRelationshipName": "pagoEfectivo",
+      "relationshipValidateRules": "required",
+      "relationshipName": "formaDePago",
+      "otherEntityField": "nombreFormaDePago",
+      "ownerSide": true
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20171214014825",
+  "dto": "no",
+  "service": "serviceClass",
+  "entityTableName": "pago_efectivo",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "PagoEfectivo",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

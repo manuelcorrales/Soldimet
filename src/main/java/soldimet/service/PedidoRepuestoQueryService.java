@@ -1,9 +1,7 @@
 package soldimet.service;
 
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,13 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import soldimet.domain.PedidoRepuesto;
 import soldimet.domain.*; // for static metamodels
+import soldimet.domain.PedidoRepuesto;
 import soldimet.repository.PedidoRepuestoRepository;
-import soldimet.service.dto.PedidoRepuestoCriteria;
+import soldimet.service.criteria.PedidoRepuestoCriteria;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link PedidoRepuesto} entities in the database.
@@ -75,15 +71,15 @@ public class PedidoRepuestoQueryService extends QueryService<PedidoRepuesto> {
     }
 
     /**
-     * Function to convert ConsumerCriteria to a {@link Specification}
+     * Function to convert {@link PedidoRepuestoCriteria} to a {@link Specification}
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
-     */    
+     */
     protected Specification<PedidoRepuesto> createSpecification(PedidoRepuestoCriteria criteria) {
         Specification<PedidoRepuesto> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {
-                specification = specification.and(buildSpecification(criteria.getId(), PedidoRepuesto_.id));
+                specification = specification.and(buildRangeSpecification(criteria.getId(), PedidoRepuesto_.id));
             }
             if (criteria.getFechaCreacion() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getFechaCreacion(), PedidoRepuesto_.fechaCreacion));
@@ -95,20 +91,31 @@ public class PedidoRepuestoQueryService extends QueryService<PedidoRepuesto> {
                 specification = specification.and(buildRangeSpecification(criteria.getFechaRecibo(), PedidoRepuesto_.fechaRecibo));
             }
             if (criteria.getEstadoPedidoRepuestoId() != null) {
-                specification = specification.and(buildSpecification(criteria.getEstadoPedidoRepuestoId(),
-                    root -> root.join(PedidoRepuesto_.estadoPedidoRepuesto, JoinType.LEFT).get(EstadoPedidoRepuesto_.id)));
-            }
-            if (criteria.getDetallePedidoId() != null) {
-                specification = specification.and(buildSpecification(criteria.getDetallePedidoId(),
-                    root -> root.join(PedidoRepuesto_.detallePedidos, JoinType.LEFT).get(DetallePedido_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getEstadoPedidoRepuestoId(),
+                            root -> root.join(PedidoRepuesto_.estadoPedidoRepuesto, JoinType.LEFT).get(EstadoPedidoRepuesto_.id)
+                        )
+                    );
             }
             if (criteria.getPresupuestoId() != null) {
-                specification = specification.and(buildSpecification(criteria.getPresupuestoId(),
-                    root -> root.join(PedidoRepuesto_.presupuesto, JoinType.LEFT).get(Presupuesto_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getPresupuestoId(),
+                            root -> root.join(PedidoRepuesto_.presupuesto, JoinType.LEFT).get(Presupuesto_.id)
+                        )
+                    );
             }
             if (criteria.getDocumentTypeId() != null) {
-                specification = specification.and(buildSpecification(criteria.getDocumentTypeId(),
-                    root -> root.join(PedidoRepuesto_.documentType, JoinType.LEFT).get(DocumentationType_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getDocumentTypeId(),
+                            root -> root.join(PedidoRepuesto_.documentType, JoinType.LEFT).get(DocumentationType_.id)
+                        )
+                    );
             }
         }
         return specification;

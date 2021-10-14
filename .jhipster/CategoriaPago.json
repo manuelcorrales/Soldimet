@@ -1,28 +1,23 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "subCategoria",
-            "otherEntityName": "subCategoria",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "categoriaPago"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "nombreCategoriaPago",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        }
-    ],
-    "changelogDate": "20171213234316",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "categoria_pago",
-    "databaseType": "sql",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nombreCategoriaPago",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20171213234316",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "categoria_pago",
+  "databaseType": "sql",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "CategoriaPago",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }

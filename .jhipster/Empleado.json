@@ -1,30 +1,33 @@
 {
-    "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipName": "persona",
-            "otherEntityName": "persona",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "nombre",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "empleado"
-        },
-        {
-            "relationshipName": "sucursal",
-            "otherEntityName": "sucursal",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "nombreSucursal"
-        }
-    ],
-    "fields": [],
-    "changelogDate": "20171214001419",
-    "dto": "no",
-    "searchEngine": false,
-    "service": "serviceClass",
-    "entityTableName": "empleado",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "persona",
+      "otherEntityRelationshipName": "empleado",
+      "relationshipValidateRules": "required",
+      "relationshipName": "persona",
+      "otherEntityField": "nombre",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "sucursal",
+      "otherEntityRelationshipName": "empleado",
+      "relationshipName": "sucursal",
+      "otherEntityField": "nombreSucursal"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20171214001419",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "empleado",
+  "jpaMetamodelFiltering": false,
+  "pagination": "no",
+  "name": "Empleado",
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Soldimet"]
 }
