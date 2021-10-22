@@ -1,10 +1,10 @@
+import { EventManager } from 'app/core/util/event-manager.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
 import { ClienteBorrarPopupService } from 'app/clientes/modal-borrar-cliente/cliente-modal-popup.service';
-import { Cliente } from 'app/shared/model/cliente.model';
+import { Cliente } from 'app/entities/cliente/cliente.model';
 import { ClientesService } from '../clientes.service';
 
 @Component({
@@ -12,16 +12,16 @@ import { ClientesService } from '../clientes.service';
   templateUrl: './cliente-borrar-dialog.component.html',
 })
 export class ClienteBorrarDialogComponent {
-  cliente: Cliente;
+  cliente!: Cliente;
 
-  constructor(private clienteService: ClientesService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+  constructor(private clienteService: ClientesService, public activeModal: NgbActiveModal, private eventManager: EventManager) {}
 
   clear() {
     this.activeModal.dismiss('cancel');
   }
 
   confirmDelete(id: number) {
-    this.clienteService.eliminarCliente(id).subscribe(response => {
+    this.clienteService.eliminarCliente(id).subscribe(() => {
       this.eventManager.broadcast({
         name: 'clienteListModification',
         content: 'Cliente eliminado',

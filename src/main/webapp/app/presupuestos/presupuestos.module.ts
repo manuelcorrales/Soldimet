@@ -5,7 +5,7 @@ import { PRESUPUESTOS_ROUTES } from 'app/presupuestos/presupuestos.route';
 import { RouterModule } from '@angular/router';
 import { NuevoPresupuestoComponent } from 'app/presupuestos/nuevo-presupuesto/nuevo-presupuesto.component';
 import { BrowserModule } from '@angular/platform-browser';
-import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 import { PresupuestosService } from 'app/presupuestos/presupuestos.service';
 import { ClientesNuevopresupuestoComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto/clientes-nuevopresupuesto.component';
 import { MotorNuevoPresupuestoComponent } from 'app/presupuestos/nuevo-presupuesto/clientes-nuevopresupuesto/motor-nuevo-presupuesto/motor-nuevo-presupuesto.component';
@@ -26,7 +26,7 @@ import { FeatureToggleModule } from 'ngx-feature-toggle';
     FeatureToggleModule,
     BrowserModule,
     FormsModule,
-    SoldimetSharedModule,
+    SharedModule,
     CommonModule,
     RouterModule.forChild(PRESUPUESTOS_ROUTES),
   ],

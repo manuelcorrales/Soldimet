@@ -8,7 +8,7 @@
     <!-- ID CLIENTE-->
     <div class="form-group" [hidden]="!cliente?.id">
       <label for="id">Número de cliente</label>
-      <input type="text" class="form-control" id="id" name="id" [(ngModel)]="cliente.id" readonly />
+      <input type="text" class="form-control" id="id" name="id" [(ngModel)]="cliente!.id" readonly />
     </div>
 
     <div class="form-group">
@@ -20,7 +20,7 @@
           class="form-control"
           name="nombre"
           id="field_nombre"
-          [(ngModel)]="persona.nombre"
+          [(ngModel)]="persona!.nombre"
           required
           minlength="3"
           maxlength="30"
@@ -43,7 +43,7 @@
           class="form-control"
           name="apellido"
           id="field_apellido"
-          [(ngModel)]="persona.apellido"
+          [(ngModel)]="persona!.apellido"
           required
           minlength="3"
           maxlength="30"
@@ -68,7 +68,7 @@
           class="form-control"
           name="telefono"
           id="field_telefono"
-          [(ngModel)]="persona.numeroTelefono"
+          [(ngModel)]="persona!.numeroTelefono"
           required
           minlength="3"
           maxlength="30"
@@ -84,19 +84,19 @@
     <div class="form-group">
       <!-- Calle -->
       <label class="form-control-label" for="field_calle">Calle</label>
-      <input type="text" class="form-control" name="calle" id="field_calle" [(ngModel)]="direccion.calle" />
+      <input type="text" class="form-control" name="calle" id="field_calle" [(ngModel)]="direccion!.calle" />
       <!-- Número -->
       <label class="form-control-label" for="field_numero">Numero</label>
-      <input type="number" class="form-control" name="numero" id="field_numero" [(ngModel)]="direccion.numero" />
+      <input type="number" class="form-control" name="numero" id="field_numero" [(ngModel)]="direccion!.numero" />
     </div>
     <div class="form-group">
       <!-- Departamento-->
       <div class="form-group">
         <label class="form-control-label" for="field_localidad">Localidad</label>
-        <select class="form-control" id="field_localidad" name="localidad" [(ngModel)]="direccion.localidad">
+        <select class="form-control" id="field_localidad" name="localidad" [(ngModel)]="direccion!.localidad">
           <option *ngIf="!editForm.value.localidad" [ngValue]="null" selected></option>
           <option
-            [ngValue]="localidadOption.id === direccion.localidad?.id ? direccion.localidad : localidadOption"
+            [ngValue]="localidadOption.id === direccion!.localidad?.id ? direccion!.localidad : localidadOption"
             *ngFor="let localidadOption of localidades; trackBy: trackLocalidadById"
           >
             {{ localidadOption.nombreLocalidad }}

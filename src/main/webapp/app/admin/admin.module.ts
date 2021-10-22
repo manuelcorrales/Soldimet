@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 /* jhipster-needle-add-admin-module-import - JHipster will add admin modules imports here */
 
 import { adminState } from 'app/admin/admin.route';
@@ -20,7 +20,7 @@ import { JhiFlagsComponent } from './flags/flags.component';
 
 @NgModule({
   imports: [
-    SoldimetSharedModule,
+    SharedModule,
     /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
     RouterModule.forChild(adminState),
   ],

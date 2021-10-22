@@ -49,7 +49,7 @@ public interface ExtendedPedidoRepuestoRepository extends PedidoRepuestoReposito
 
     public List<PedidoRepuesto> findByEstadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto);
 
-    public PedidoRepuesto findPedidoRepuestoByDetallePedidosIn(DetallePedido detallePedido);
+    public PedidoRepuesto findPedidoRepuestoByDetallePedidos(DetallePedido detallePedido);
 
     public Long countByEstadoPedidoRepuesto(EstadoPedidoRepuesto estadoPedidoRepuesto);
 }

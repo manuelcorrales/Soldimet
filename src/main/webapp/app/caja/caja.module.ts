@@ -5,7 +5,7 @@ import { CajaComponent } from 'app/caja/caja.component';
 import { CAJAS_ROUTE, CAJA_POPUP_ROUTES } from 'app/caja/caja.route';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 import { NuevoMovimientoComponent } from 'app/caja/nuevo-movimiento/nuevo-movimiento.component';
 import { BorrarMovimientoDialogComponent, BorrarMovimientoPopupComponent } from 'app/caja/borrar-movimiento/borrar-movimiento.component';
 import { BorrarMovimientoPopupService } from 'app/caja/borrar-movimiento/borrar-movimiento-popup.service';
@@ -18,7 +18,7 @@ import { NuevoMovimientoMedioDePagoComponent } from './nuevo-movimiento/nuevo-mo
 const CAJAS_ROUTES_ALL = [...CAJAS_ROUTE, ...CAJA_POPUP_ROUTES];
 
 @NgModule({
-  imports: [FormsModule, CommonModule, BrowserModule, SoldimetSharedModule, RouterModule.forRoot(CAJAS_ROUTES_ALL, { useHash: true })],
+  imports: [FormsModule, CommonModule, BrowserModule, SharedModule, RouterModule.forRoot(CAJAS_ROUTES_ALL, { useHash: true })],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [

@@ -1,26 +1,25 @@
 import { Component, Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { ClienteService } from 'app/entities/cliente';
-import { Cliente } from 'app/shared/model/cliente.model';
+import { Cliente } from 'app/entities/cliente/cliente.model';
+import { ClienteService } from 'app/entities/cliente/service/cliente.service';
 
 @Injectable()
 export class ClienteBorrarPopupService {
-  private ngbModalRef: NgbModalRef;
+  private ngbModalRef: NgbModalRef | null;
 
   constructor(private modalService: NgbModal, private router: Router, private clienteService: ClienteService) {
     this.ngbModalRef = null;
   }
 
   open(component: Component, id?: number | any): Promise<NgbModalRef> {
-    return new Promise<NgbModalRef>((resolve, reject) => {
-      const isOpen = this.ngbModalRef !== null;
-      if (isOpen) {
+    return new Promise<NgbModalRef>(resolve => {
+      if (this.ngbModalRef !== null) {
         resolve(this.ngbModalRef);
       }
       if (id) {
-        this.clienteService.find(id).subscribe(cliente => {
-          this.ngbModalRef = this.clienteModalRef(component, cliente.body);
+        this.clienteService.find(id).subscribe(res => {
+          this.ngbModalRef = this.clienteModalRef(component, res.body!);
           resolve(this.ngbModalRef);
         });
       } else {
@@ -36,11 +35,11 @@ export class ClienteBorrarPopupService {
     const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.cliente = cliente;
     modalRef.result.then(
-      result => {
+      () => {
         this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
         this.ngbModalRef = null;
       },
-      reason => {
+      () => {
         this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
         this.ngbModalRef = null;
       }

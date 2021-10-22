@@ -27,7 +27,7 @@ import soldimet.repository.EstadoPedidoRepuestoRepository;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class EstadoPedidoRepuestoResourceIT {
+public class EstadoPedidoRepuestoResourceIT {
 
     private static final String DEFAULT_NOMBRE_ESTADO = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_ESTADO = "BBBBBBBBBB";

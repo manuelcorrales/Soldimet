@@ -1,27 +1,27 @@
+import { AlertService } from 'app/core/util/alert.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Page } from 'app/dto/page/page';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { JhiAlertService } from 'ng-jhipster';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-base-filter-pageable',
   templateUrl: './base-filter-pageable.component.html',
 })
 export class BaseFilterPageableComponent<T> implements OnInit, OnDestroy {
-  searchMethod: Function;
   page = 1;
   pageSize = 15;
   totalItems = 0;
-  searchText;
+  searchText: string | undefined;
   content: T[] = [];
   searchableService: any;
   debounceTime = 300;
   searchChanged: Subject<string> = new Subject<string>();
-  searchChangeSubscription: Subscription;
-  alertService: JhiAlertService;
+  searchChangeSubscription: Subscription | undefined;
 
-  constructor() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor(protected alertService: AlertService) {}
 
   ngOnInit() {
     this.requestContent();
@@ -38,15 +38,15 @@ export class BaseFilterPageableComponent<T> implements OnInit, OnDestroy {
         this.totalItems = response.totalElements;
         this.content = response.content;
       },
-      error => this.onError(error.message)
+      (error: HttpErrorResponse) => this.onError(error)
     );
   }
 
-  onError(error) {
-    this.alertService.error(error.message, null, null);
+  onError(error: HttpErrorResponse) {
+    this.alertService.addAlert({ message: error.message, type: 'danger' });
   }
 
   ngOnDestroy() {
-    this.searchChangeSubscription.unsubscribe();
+    this.searchChangeSubscription?.unsubscribe();
   }
 }

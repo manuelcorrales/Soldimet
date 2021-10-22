@@ -566,9 +566,9 @@ public class ExpertoPresupuesto {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-        } finally {
-            return costosRepuestos;
         }
+
+        return costosRepuestos;
     }
 
     private Boolean tieneAccesoATodosLosPresupuestos(Empleado empleado) {
@@ -636,7 +636,7 @@ public class ExpertoPresupuesto {
         Cilindrada cilindrada = cilindradaRepository.getOne(cilindradaId);
         TipoParteMotor tipoParteMotor = tipoParteMotorRepository.getOne(tipoParteMotorId);
         TipoParteMotor tipoParte2 = tipoParteMotorRepository.findById(globales.tipoParteMotorYTapaID).get();
-        List<TipoParteMotor> tipos = new ArrayList();
+        List<TipoParteMotor> tipos = new ArrayList<>();
         tipos.add(tipoParteMotor);
         tipos.add(tipoParte2);
         List<TipoRepuesto> tipoRepuestos = tipoRepuestoRepository.findByTipoParteMotorIn(tipos);

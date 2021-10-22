@@ -10,7 +10,7 @@ export class Principal {
 
   constructor(private account: AccountService) {}
 
-  authenticate(identity) {
+  authenticate(identity: any) {
     this.userIdentity = identity;
     this.authenticated = identity !== null;
     this.authenticationState.next(this.userIdentity);
@@ -40,12 +40,8 @@ export class Principal {
     }
 
     return this.identity().then(
-      id => {
-        return Promise.resolve(id.authorities && id.authorities.includes(authority));
-      },
-      () => {
-        return Promise.resolve(false);
-      }
+      id => Promise.resolve(id.authorities?.includes(authority)),
+      () => Promise.resolve(false)
     );
   }
 
@@ -76,7 +72,7 @@ export class Principal {
         this.authenticationState.next(this.userIdentity);
         return this.userIdentity;
       })
-      .catch(err => {
+      .catch(() => {
         this.userIdentity = null;
         this.authenticated = false;
         this.authenticationState.next(this.userIdentity);

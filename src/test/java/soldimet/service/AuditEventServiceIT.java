@@ -2,7 +2,6 @@ package soldimet.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.jhipster.config.JHipsterProperties;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import soldimet.SoldimetApp;
 import soldimet.domain.PersistentAuditEvent;
 import soldimet.repository.PersistenceAuditEventRepository;
+import tech.jhipster.config.JHipsterProperties;
 
 /**
  * Integration tests for {@link AuditEventService}.

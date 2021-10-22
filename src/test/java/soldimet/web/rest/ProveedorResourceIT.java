@@ -28,7 +28,7 @@ import soldimet.repository.ProveedorRepository;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class ProveedorResourceIT {
+public class ProveedorResourceIT {
 
     private static final String DEFAULT_NOMBRE_PROVEEDOR = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_PROVEEDOR = "BBBBBBBBBB";

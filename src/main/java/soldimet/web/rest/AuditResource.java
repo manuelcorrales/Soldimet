@@ -1,7 +1,5 @@
 package soldimet.web.rest;
 
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -14,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import soldimet.service.AuditEventService;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for getting the {@link AuditEvent}s.

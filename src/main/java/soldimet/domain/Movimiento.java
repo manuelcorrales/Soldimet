@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import soldimet.utils.MathUtils;
 
 /**
  * A Movimiento.
@@ -36,8 +37,8 @@ public class Movimiento implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
 
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "medioDePagoCheque", "formaDePago" }, allowSetters = true)
-    @OneToOne
     @JoinColumn(unique = true)
     private MedioDePago medioDePago;
 
@@ -63,10 +64,6 @@ public class Movimiento implements Serializable {
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("movimientos")
     private SubCategoria subCategoria;
-
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @JoinColumn(unique = true)
-    private MedioDePago medioDePago;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

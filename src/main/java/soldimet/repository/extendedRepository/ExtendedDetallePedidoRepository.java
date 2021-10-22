@@ -15,5 +15,5 @@ import soldimet.repository.DetallePedidoRepository;
 public interface ExtendedDetallePedidoRepository extends DetallePedidoRepository {
     public Long countByEstadoDetallePedido(EstadoDetallePedido estado);
 
-    public DetallePedido findByCostoRepuestosIn(CostoRepuesto costoRepuesto);
+    public DetallePedido findByCostoRepuestos(CostoRepuesto costoRepuesto);
 }

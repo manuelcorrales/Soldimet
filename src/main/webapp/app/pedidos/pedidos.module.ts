@@ -16,7 +16,7 @@ import { PedidosService } from 'app/pedidos/pedidos-services';
 import { CostoRepuestoComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/costo-repuesto/costo-repuesto.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
@@ -26,7 +26,7 @@ const PEDIDOS_NEW_ROUTES_ALL = [...PEDIDOS_NEW_POPUP_ROUTE, ...PEDIDOS_SUBROUTES
   imports: [
     // NgxDatatableModule,
     FontAwesomeModule,
-    SoldimetSharedModule,
+    SharedModule,
     NgbModule,
     CommonModule,
     BrowserModule,

@@ -65,7 +65,7 @@ export class AccountService {
     return this.authenticationState.asObservable();
   }
 
-  private fetch(): Observable<Account> {
+  public fetch(): Observable<Account> {
     return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
   }
 

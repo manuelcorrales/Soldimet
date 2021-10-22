@@ -28,7 +28,7 @@ import soldimet.repository.DetallePedidoRepository;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class DetallePedidoResourceIT {
+public class DetallePedidoResourceIT {
 
     private static final String ENTITY_API_URL = "/api/detalle-pedidos";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";

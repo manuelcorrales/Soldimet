@@ -13,11 +13,6 @@
             placement="bottom"
             ngbTooltip="Filtrar por nombre, apellido o dirección"
           />
-          <span class="input-group-btn">
-            <button class="btn btn-light" type="button" (click)="searchChanged.next($event)">
-              <span><fa-icon icon="search"></fa-icon></span>
-            </button>
-          </span>
         </div>
         <!-- /input-group -->
       </div>
@@ -74,7 +69,6 @@
                   <button
                     type="submit"
                     [routerLink]="['/', { outlets: { popup: 'clientes/' + cliente.id + '/editar' } }]"
-                    replaceUrl="true"
                     class="btn btn-primary btn-sm"
                   >
                     <fa-icon icon="pen"></fa-icon>
@@ -83,7 +77,6 @@
                   <button
                     type="submit"
                     [routerLink]="['/', { outlets: { popup: 'clientes/' + cliente.id + '/eliminar' } }]"
-                    replaceUrl="true"
                     class="btn btn-danger btn-sm"
                   >
                     <fa-icon icon="trash"></fa-icon>

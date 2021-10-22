@@ -1,12 +1,16 @@
 package soldimet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import soldimet.utils.MathUtils;
 
 /**
  * A Presupuesto.
@@ -356,5 +360,14 @@ public class Presupuesto implements Serializable {
             ", soldadura='" + getSoldadura() + "'" +
             ", modelo='" + getModelo() + "'" +
             "}";
+    }
+
+    @JsonIgnore
+    public boolean isSoldadura() {
+        return this.soldadura;
+    }
+
+    public Boolean isModelo() {
+        return this.getModelo();
     }
 }

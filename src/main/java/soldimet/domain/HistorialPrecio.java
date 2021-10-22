@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import soldimet.utils.MathUtils;
 
 /**
  * A HistorialPrecio.
@@ -59,7 +58,7 @@ public class HistorialPrecio implements Serializable {
     }
 
     public PrecioRepuesto getPrecioRepuesto() {
-        return MathUtils.roundFloat(this.precioRepuesto);
+        return this.precioRepuesto;
     }
 
     public HistorialPrecio precioRepuesto(PrecioRepuesto precioRepuesto) {

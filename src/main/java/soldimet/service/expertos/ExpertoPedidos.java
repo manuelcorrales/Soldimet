@@ -122,11 +122,11 @@ public class ExpertoPedidos {
         // Si saque el articulo del stock, lo descuento
         descontarStock(costoRepuesto);
 
-        DetallePedido detallePedido = detallePedidoRepository.findByCostoRepuestosIn(costoRepuesto);
+        DetallePedido detallePedido = detallePedidoRepository.findByCostoRepuestos(costoRepuesto);
         detallePedido.addCostoRepuesto(costoRepuesto);
         detallePedido = this.transitionDetalle(detallePedido, null);
 
-        PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findPedidoRepuestoByDetallePedidosIn(detallePedido);
+        PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findPedidoRepuestoByDetallePedidos(detallePedido);
         EstadoPedidoRepuesto estadoPedidoRepuesto = this.transitionPedidoToPedido(pedidoRepuesto);
 
         if (estadoPedidoRepuesto != null) {
@@ -296,8 +296,8 @@ public class ExpertoPedidos {
 
     public CostoRepuesto recibirRepuesto(CostoRepuesto costoRepuesto) {
         try {
-            DetallePedido detallePedido = detallePedidoRepository.findByCostoRepuestosIn(costoRepuesto);
-            PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findPedidoRepuestoByDetallePedidosIn(detallePedido);
+            DetallePedido detallePedido = detallePedidoRepository.findByCostoRepuestos(costoRepuesto);
+            PedidoRepuesto pedidoRepuesto = pedidoRepuestoRepository.findPedidoRepuestoByDetallePedidos(detallePedido);
 
             for (DetallePedido detallePedido2 : pedidoRepuesto.getDetallePedidos()) {
                 if (detallePedido2.getId().equals(detallePedido.getId())) {

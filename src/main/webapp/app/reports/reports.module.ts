@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SoldimetSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 import { ReportesComponent } from 'app/reports/reportes.component';
 import { ReportesService } from 'app/reports/reportes.service';
 import { REPORTES_ROUTES } from 'app/reports/reportes.route';
@@ -36,7 +36,7 @@ export const CUSTOM_ERRORS: ErrorMessage[] = [
   ],
   imports: [
     NgxChartsModule,
-    SoldimetSharedModule,
+    SharedModule,
     CommonModule,
     RouterModule.forRoot(REPORTES_ROUTES),
     ReactiveFormsModule,

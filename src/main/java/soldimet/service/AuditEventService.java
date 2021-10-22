@@ -1,6 +1,5 @@
 package soldimet.service;
 
-import io.github.jhipster.config.JHipsterProperties;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soldimet.config.audit.AuditEventConverter;
 import soldimet.repository.PersistenceAuditEventRepository;
+import tech.jhipster.config.JHipsterProperties;
 
 /**
  * Service for managing audit events.

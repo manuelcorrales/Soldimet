@@ -1,7 +1,8 @@
+import { EventManager } from 'app/core/util/event-manager.service';
+import { AlertService } from 'app/core/util/alert.service';
+import { Cliente } from 'app/entities/cliente/cliente.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ClienteService } from 'app/entities/cliente/cliente.service';
-import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
-import { Cliente, ICliente } from 'app/shared/model/cliente.model';
+import { ClienteService } from 'app/entities/cliente/service/cliente.service';
 import { ClientesService } from 'app/clientes/clientes.service';
 import { Subscription } from 'rxjs';
 import { Principal } from 'app/core/auth/principal.service';
@@ -12,25 +13,24 @@ import { BaseFilterPageableComponent } from 'app/shared/base-filter-pageable/bas
   templateUrl: './clientes.component.html',
   styles: [],
 })
-export class ClientesComponent extends BaseFilterPageableComponent<ICliente> implements OnInit, OnDestroy {
-  clientes: ICliente[] = [];
-  totalClientes: ICliente[] = [];
+export class ClientesComponent extends BaseFilterPageableComponent<Cliente> implements OnInit, OnDestroy {
+  clientes: Cliente[] = [];
+  totalClientes: Cliente[] = [];
   currentAccount: any;
-  eventSubscriber: Subscription;
+  eventSubscriber: Subscription | null = null;
 
   page = 1;
   pageSize = 15;
 
   constructor(
     protected clienteService: ClienteService,
-    protected jhiAlertService: JhiAlertService,
-    private eventManager: JhiEventManager,
+    protected jhiAlertService: AlertService,
+    private eventManager: EventManager,
     private principal: Principal,
     private clientesService: ClientesService
   ) {
-    super();
+    super(jhiAlertService);
     this.searchableService = clientesService;
-    this.alertService = jhiAlertService;
   }
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class ClientesComponent extends BaseFilterPageableComponent<ICliente> imp
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.eventManager.destroy(this.eventSubscriber);
+    this.eventManager.destroy(this.eventSubscriber!);
   }
 
   trackId(index: number, item: Cliente) {
@@ -51,7 +51,7 @@ export class ClientesComponent extends BaseFilterPageableComponent<ICliente> imp
   }
 
   registerChangeInClientes() {
-    this.eventSubscriber = this.eventManager.subscribe('clienteListModification', response => this.requestContent());
+    this.eventSubscriber = this.eventManager.subscribe('clienteListModification', () => this.requestContent());
   }
 
   activarCliente(cliente: Cliente) {

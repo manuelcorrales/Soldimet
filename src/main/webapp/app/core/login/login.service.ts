@@ -6,15 +6,18 @@ import { AuthServerProvider } from 'app/core/auth/auth-jwt.service';
 export class LoginService {
   constructor(private accountService: AccountService, private authServerProvider: AuthServerProvider) {}
 
-  login(credentials, callback?) {
+  login(credentials: any, callback?: any) {
     const cb = callback || function () {};
 
     return new Promise((resolve, reject) => {
       this.authServerProvider.login(credentials).subscribe(
         data => {
-          this.accountService.identity(true).then(account => {
-            resolve(data);
-          });
+          this.accountService
+            .identity(true)
+            .toPromise()
+            .then(() => {
+              resolve(data);
+            });
           return cb();
         },
         err => {
@@ -24,10 +27,6 @@ export class LoginService {
         }
       );
     });
-  }
-
-  loginWithToken(jwt, rememberMe) {
-    return this.authServerProvider.loginWithToken(jwt, rememberMe);
   }
 
   logout() {

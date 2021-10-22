@@ -28,7 +28,7 @@ import soldimet.repository.TipoRepuestoRepository;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class TipoRepuestoResourceIT {
+public class TipoRepuestoResourceIT {
 
     private static final String DEFAULT_NOMBRE_TIPO_REPUESTO = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_TIPO_REPUESTO = "BBBBBBBBBB";

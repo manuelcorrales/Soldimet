@@ -1,39 +1,40 @@
+import { EventManager } from 'app/core/util/event-manager.service';
+import { AlertService } from 'app/core/util/alert.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LocalidadService } from 'app/entities/localidad/localidad.service';
 import { ActivatedRoute } from '@angular/router';
-import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
-import { PersonaService } from 'app/entities/persona/persona.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ClienteService } from 'app/entities/cliente/cliente.service';
-import { DireccionService } from 'app/entities/direccion/direccion.service';
-import { EstadoPersonaService } from 'app/entities/estado-persona';
 import { ClienteModalPopupService } from 'app/clientes/modal-nuevo-cliente/cliente-nuevo-popup-service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { ILocalidad, Localidad } from 'app/shared/model/localidad.model';
-import { Cliente } from 'app/shared/model/cliente.model';
-import { Persona } from 'app/shared/model/persona.model';
-import { Direccion } from 'app/shared/model/direccion.model';
-import { EstadoPersona } from 'app/shared/model/estado-persona.model';
 import { Observable } from 'rxjs';
+import { LocalidadService } from 'app/entities/localidad/service/localidad.service';
+import { EstadoPersonaService } from 'app/entities/estado-persona/service/estado-persona.service';
+import { Cliente } from 'app/entities/cliente/cliente.model';
+import { Persona } from 'app/entities/persona/persona.model';
+import { Direccion } from 'app/entities/direccion/direccion.model';
+import { Localidad } from 'app/entities/localidad/localidad.model';
+import { EstadoPersona } from 'app/entities/estado-persona/estado-persona.model';
+import { DireccionService } from 'app/entities/direccion/service/direccion.service';
+import { PersonaService } from 'app/entities/persona/service/persona.service';
+import { ClienteService } from 'app/entities/cliente/service/cliente.service';
 
 @Component({
   selector: 'jhi-modal-nuevo-cliente',
   templateUrl: './modal-nuevo-cliente.component.html',
 })
 export class ModalNuevoClienteComponent implements OnInit {
-  cliente: Cliente;
-  persona: Persona;
-  direccion: Direccion;
+  cliente: Cliente | null = null;
+  persona: Persona | null = null;
+  direccion: Direccion | null = null;
   isSaving = false;
-  localidades: Localidad[];
-  personas: Persona[];
+  localidades: Localidad[] | null = null;
+  personas: Persona[] | null = null;
 
   constructor(
     public activeModal: NgbActiveModal,
-    private jhiAlertService: JhiAlertService,
+    private alertService: AlertService,
     private clienteService: ClienteService,
     private personaService: PersonaService,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private localidadService: LocalidadService,
     private direccionService: DireccionService,
     private estadoPersonaService: EstadoPersonaService
@@ -44,15 +45,15 @@ export class ModalNuevoClienteComponent implements OnInit {
     }
     if (this.direccion == null) {
       this.direccion = new Direccion();
-      this.persona.direccion = this.direccion;
-      this.cliente.persona = this.persona;
+      this.persona!.direccion = this.direccion;
+      this.cliente.persona = this.persona!;
     }
   }
 
   ngOnInit() {
     this.isSaving = false;
     this.localidadService.query().subscribe(
-      (res: HttpResponse<ILocalidad[]>) => {
+      (res: HttpResponse<Localidad[]>) => {
         this.localidades = res.body;
       },
       (res: HttpErrorResponse) => this.onError(res.message)
@@ -65,7 +66,7 @@ export class ModalNuevoClienteComponent implements OnInit {
 
   save() {
     this.isSaving = true;
-    if (this.direccion.calle !== undefined || this.direccion.localidad !== undefined || this.direccion.numero !== undefined) {
+    if (this.direccion?.calle !== undefined || this.direccion?.localidad !== undefined || this.direccion?.numero !== undefined) {
       if (this.direccion.id !== undefined) {
         this.subscribeToSaveDireccionResponse(this.direccionService.update(this.direccion));
       } else {
@@ -80,18 +81,18 @@ export class ModalNuevoClienteComponent implements OnInit {
   private subscribeToSaveDireccionResponse(result: Observable<HttpResponse<Direccion>>) {
     result.subscribe(
       (res: HttpResponse<Direccion>) => this.onSaveDireccionSuccess(res.body),
-      (res: Response) => this.onSaveDireccionError()
+      () => this.onSaveDireccionError()
     );
   }
 
-  private onSaveDireccionSuccess(result: Direccion) {
-    this.persona.direccion = result;
+  private onSaveDireccionSuccess(result: Direccion | null) {
+    this.persona!.direccion = result;
     this.estadoPersonaService.find(1).subscribe((estado: HttpResponse<EstadoPersona>) => {
-      this.persona.estadoPersona = estado.body;
-      if (this.persona.id !== undefined) {
+      this.persona!.estadoPersona = estado.body;
+      if (this.persona?.id !== undefined) {
         this.subscribeToSavePersonaResponse(this.personaService.update(this.persona));
       } else {
-        this.subscribeToSavePersonaResponse(this.personaService.create(this.persona));
+        this.subscribeToSavePersonaResponse(this.personaService.create(this.persona!));
       }
     });
   }
@@ -102,17 +103,17 @@ export class ModalNuevoClienteComponent implements OnInit {
 
   private subscribeToSavePersonaResponse(result: Observable<HttpResponse<Persona>>) {
     result.subscribe(
-      (res: HttpResponse<Persona>) => this.onSavePersonaSuccess(res.body),
-      (res: Response) => this.onSavePersonaError()
+      (res: HttpResponse<Persona>) => this.onSavePersonaSuccess(res.body!),
+      () => this.onSavePersonaError()
     );
   }
 
   private onSavePersonaSuccess(result: Persona) {
-    this.cliente.persona = result;
-    if (this.cliente.id !== undefined) {
+    this.cliente!.persona = result;
+    if (this.cliente?.id !== undefined) {
       this.subscribeToSaveClienteResponse(this.clienteService.update(this.cliente));
     } else {
-      this.subscribeToSaveClienteResponse(this.clienteService.create(this.cliente));
+      this.subscribeToSaveClienteResponse(this.clienteService.create(this.cliente!));
     }
   }
 
@@ -122,8 +123,8 @@ export class ModalNuevoClienteComponent implements OnInit {
 
   private subscribeToSaveClienteResponse(result: Observable<HttpResponse<Cliente>>) {
     result.subscribe(
-      (res: HttpResponse<Cliente>) => this.onSaveClienteSuccess(res.body),
-      (res: Response) => this.onSaveClienteError()
+      (res: HttpResponse<Cliente>) => this.onSaveClienteSuccess(res.body!),
+      () => this.onSaveClienteError()
     );
   }
 
@@ -138,9 +139,10 @@ export class ModalNuevoClienteComponent implements OnInit {
   }
 
   private onError(error: any) {
-    this.jhiAlertService.error(error.message, null, null);
+    this.alertService.addAlert(error.message);
   }
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   trackLocalidadById(index: number, item: Localidad) {
     return item.id;
   }

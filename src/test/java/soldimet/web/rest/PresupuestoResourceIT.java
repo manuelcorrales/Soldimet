@@ -34,7 +34,7 @@ import soldimet.service.criteria.PresupuestoCriteria;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class PresupuestoResourceIT {
+public class PresupuestoResourceIT {
 
     private static final String DEFAULT_DESCRIPCION_DESCUENTO = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPCION_DESCUENTO = "BBBBBBBBBB";

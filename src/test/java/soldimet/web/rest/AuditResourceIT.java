@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import io.github.jhipster.config.JHipsterProperties;
 import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +24,7 @@ import soldimet.config.audit.AuditEventConverter;
 import soldimet.domain.PersistentAuditEvent;
 import soldimet.repository.PersistenceAuditEventRepository;
 import soldimet.service.AuditEventService;
+import tech.jhipster.config.JHipsterProperties;
 
 /**
  * Integration tests for the {@link AuditResource} REST controller.

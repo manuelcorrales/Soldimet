@@ -151,7 +151,7 @@ public interface ExtendedPresupuestoRepository extends PresupuestoRepository {
 
     public Long countByEstadoPresupuesto(EstadoPresupuesto estadoPresupuesto);
 
-    public Presupuesto findByDetallePresupuestosIn(DetallePresupuesto detallePresupuesto);
+    public Presupuesto findByDetallePresupuestos(DetallePresupuesto detallePresupuesto);
 
     public Presupuesto findFirstByDetallePresupuestosAplicacionIdAndDetallePresupuestosCilindradaIdAndModeloOrderByIdDesc(
         Long aplicacionId,

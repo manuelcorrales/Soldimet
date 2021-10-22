@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { ClientesComponent } from 'app/clientes/clientes.component';
 import { ClienteBorrarPopupComponent } from 'app/clientes/modal-borrar-cliente/cliente-borrar-dialog.component';
 import { ClienteModalPopupComponent } from 'app/clientes/modal-nuevo-cliente/modal-nuevo-cliente.component';
-import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 
 export const CLIENTES_ROUTE: Routes = [
   {

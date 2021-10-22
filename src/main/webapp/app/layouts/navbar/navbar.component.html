@@ -33,7 +33,7 @@
         </a>
       </li>
       <li class="nav-item" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active">
-        <a class="nav-link" routerLink="clientes" *jhiHasAnyAuthority="'ROLE_USER'" (click)="collapseNavbar()">
+        <a class="nav-link" routerLink="clientes" routerLinkActive="active" *jhiHasAnyAuthority="'ROLE_USER'" (click)="collapseNavbar()">
           <span>
             <fa-icon icon="users"></fa-icon>
             <span>Clientes</span>

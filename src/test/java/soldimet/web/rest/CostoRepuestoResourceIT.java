@@ -28,7 +28,7 @@ import soldimet.repository.CostoRepuestoRepository;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class CostoRepuestoResourceIT {
+public class CostoRepuestoResourceIT {
 
     private static final Float DEFAULT_VALOR = 0F;
     private static final Float UPDATED_VALOR = 1F;

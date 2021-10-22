@@ -1,4 +1,5 @@
 export class Account {
+  [x: string]: any;
   constructor(
     public activated: boolean,
     public authorities: string[],

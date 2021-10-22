@@ -33,7 +33,7 @@ import soldimet.service.criteria.ArticuloCriteria;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class ArticuloResourceIT {
+public class ArticuloResourceIT {
 
     private static final String DEFAULT_CODIGO_ARTICULO_PROVEEDOR = "AAAAAAAAAA";
     private static final String UPDATED_CODIGO_ARTICULO_PROVEEDOR = "BBBBBBBBBB";

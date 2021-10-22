@@ -1,3 +1,4 @@
+import { ClientesModule } from './clientes/clientes.module';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -36,6 +37,7 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
     // jhipster-needle-angular-add-module JHipster will add new module here
     EntityRoutingModule,
     AppRoutingModule,
+    ClientesModule,
     // Set this to true to enable service worker (PWA)
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,
