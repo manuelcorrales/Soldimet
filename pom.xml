@@ -965,7 +965,7 @@
         <profile>
             <id>webapp</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <dependencies>
             </dependencies>

@@ -1,0 +1,7 @@
+{
+    "docker-compose.files": [
+        "./compose/docker-compose.yml",
+        "./compose/local/docker-compose-local.yml"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
+}
