@@ -35,9 +35,9 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
     HomeModule,
     NgxUiLoaderModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
+    ClientesModule,
     EntityRoutingModule,
     AppRoutingModule,
-    ClientesModule,
     // Set this to true to enable service worker (PWA)
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,

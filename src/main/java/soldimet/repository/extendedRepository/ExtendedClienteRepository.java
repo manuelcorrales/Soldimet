@@ -15,8 +15,10 @@ import soldimet.repository.ClienteRepository;
 @SuppressWarnings("unused")
 @Repository
 public interface ExtendedClienteRepository extends ClienteRepository {
+    @EntityGraph(attributePaths = { "persona", "persona.direccion", "persona.direccion.localidad", "persona.estadoPersona" })
     List<Cliente> findClienteByPersonaIn(List<Persona> persona);
 
+    @EntityGraph(attributePaths = { "persona", "persona.direccion", "persona.direccion.localidad", "persona.estadoPersona" })
     Page<Cliente> findClienteByPersonaNombreContainsOrPersonaApellidoContainsOrPersonaDireccionCalleContainsOrderByIdDesc(
         String nombre,
         String apellido,

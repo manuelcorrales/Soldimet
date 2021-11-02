@@ -31,16 +31,14 @@ public class Persona implements Serializable {
     @Column(name = "apellido")
     private String apellido;
 
-    @JsonIgnoreProperties(value = { "localidad" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private Direccion direccion;
 
-    @ManyToOne
-    @JsonIgnoreProperties("personas")
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     private EstadoPersona estadoPersona;
 
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @JsonIgnoreProperties("personas")
     private User user;
 

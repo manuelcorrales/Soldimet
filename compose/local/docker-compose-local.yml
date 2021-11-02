@@ -38,6 +38,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://soldimet-mysql:3306/soldimet?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     ports:
       - '80:80'
+      - '5005:5005'
     volumes:
       - ../..:/home/soldimet
       - ${HOME}/.m2:/root/.m2

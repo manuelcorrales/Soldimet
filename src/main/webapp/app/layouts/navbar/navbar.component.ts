@@ -31,6 +31,8 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // eslint-disable-next-line no-console
+    console.log('configured routes: ', this.router.config);
     this.profileService.getProfileInfo().subscribe(profileInfo => {
       this.inProduction = profileInfo.inProduction;
       this.openAPIEnabled = profileInfo.openAPIEnabled;
