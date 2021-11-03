@@ -44,7 +44,7 @@ export class UserService {
     return this.http.get<DtoEmpleado>(this.empleadoResourceUrl + '/getEmpleadoActual');
   }
 
-  resetPassword(user: IUser): Observable<{ response: String }> {
-    return this.http.post<{ response: String }>(this.resetPasswordUrl, user.email);
+  resetPassword(user: IUser): Observable<{ response: string }> {
+    return this.http.post<{ response: string }>(this.resetPasswordUrl, user.email);
   }
 }

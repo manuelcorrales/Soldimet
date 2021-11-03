@@ -30,7 +30,6 @@ public class Motor implements Serializable {
 
     @OneToMany(mappedBy = "motor")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "motor" }, allowSetters = true)
     private Set<Aplicacion> aplicacions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

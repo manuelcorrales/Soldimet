@@ -1,9 +1,10 @@
+import { AlertService } from './../core/util/alert.service';
+import { EventManager } from './../core/util/event-manager.service';
 import { Component, OnInit } from '@angular/core';
 import { DTOStockRepuestoCabecera } from 'app/dto/dto-stock/dto-repuesto';
 import { BaseFilterPageableComponent } from '../shared/base-filter-pageable/base-filter-pageable.component';
 import { StockService } from './stock.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { JhiEventManager } from 'ng-jhipster';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,10 +15,10 @@ import { Subscription } from 'rxjs';
 export class StockComponent extends BaseFilterPageableComponent<DTOStockRepuestoCabecera> implements OnInit {
   eventSubscriber: Subscription;
 
-  constructor(protected _stockService: StockService, private eventManager: JhiEventManager) {
-    super();
+  constructor(protected alertService: AlertService, protected _stockService: StockService, private eventManager: EventManager) {
+    super(alertService);
     this.searchableService = _stockService;
-    this.eventSubscriber = this.eventManager.subscribe('stockArticuloListModification', response => this.requestContent());
+    this.eventSubscriber = this.eventManager.subscribe('stockArticuloListModification', () => this.requestContent());
   }
 
   ngOnInit() {

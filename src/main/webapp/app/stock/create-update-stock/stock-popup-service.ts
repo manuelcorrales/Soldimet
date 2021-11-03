@@ -1,28 +1,28 @@
+import { StockArticulo } from './../../entities/stock-articulo/stock-articulo.model';
+import { StockArticuloService } from './../../entities/stock-articulo/service/stock-articulo.service';
 import { Component, Injectable, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CreateUpdateStockComponent } from './create-update-stock.component';
-import { StockArticulo } from '../../shared/model/stock-articulo.model';
-import { StockArticuloService } from '../../entities/stock-articulo/stock-articulo.service';
 import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class StockModalPopupService {
-  private ngbModalRef: NgbModalRef;
+  private ngbModalRef: NgbModalRef | null;
 
   constructor(private modalService: NgbModal, private router: Router, private stockArticuloService: StockArticuloService) {
     this.ngbModalRef = null;
   }
 
   open(component: Component, id?: number | any): Promise<NgbModalRef> {
-    return new Promise<NgbModalRef>((resolve, reject) => {
+    return new Promise<NgbModalRef>(resolve => {
       const isOpen = this.ngbModalRef !== null;
       if (isOpen) {
-        resolve(this.ngbModalRef);
+        resolve(this.ngbModalRef!);
       }
       if (id) {
         this.stockArticuloService.find(id).subscribe((response: HttpResponse<StockArticulo>) => {
-          this.ngbModalRef = this.stockModalRef(component, response.body);
+          this.ngbModalRef = this.stockModalRef(component, response.body!);
           resolve(this.ngbModalRef);
         });
       } else {
@@ -38,11 +38,11 @@ export class StockModalPopupService {
     const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.stock = stock;
     modalRef.result.then(
-      result => {
+      () => {
         this.router.navigate(['/', { outlets: { popup: null } }], { replaceUrl: true });
         this.ngbModalRef = null;
       },
-      reason => {
+      () => {
         this.router.navigate(['/', { outlets: { popup: null } }], { replaceUrl: true });
         this.ngbModalRef = null;
       }

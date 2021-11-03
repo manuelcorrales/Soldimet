@@ -14,11 +14,6 @@
             placement="bottom"
             ngbTooltip="Filtrar por código de repuesto"
           />
-          <span class="input-group-btn">
-            <button class="btn btn-light" type="button" (click)="searchChanged.next($event)">
-              <span><fa-icon icon="search"></fa-icon></span>
-            </button>
-          </span>
         </div>
       </div>
       <div class="col-md-2">
@@ -55,7 +50,7 @@
             <ng-template #tipContent>
               Motores:
               <p *ngFor="let aplicacion of repuesto.aplicaciones">
-                <b>{{ aplicacion.motor.marcaMotor }}</b> - {{ aplicacion.nombreAplicacion }}
+                <b>{{ aplicacion.motor?.marcaMotor }}</b> - {{ aplicacion.nombreAplicacion }}
               </p>
             </ng-template>
             <th>{{ repuesto.id }}</th>
@@ -86,19 +81,18 @@
             <td>
               <button
                 type="submit"
-                class="btn btn-outline-primary"
+                class="btn btn-outline-info"
                 placement="top"
                 has-any-authority="['ROLE_USER']"
-                replaceUrl="true"
-                [routerLink]="['/', { outlets: { popup: 'stock/' + repuesto.id + '/editar' } }]"
+                [routerLink]="['/', { outlets: { popup: 'stock/' + repuesto.id + '/editar' }, replaceUrl: true }]"
                 ngbTooltip="Editar"
               >
                 <fa-icon icon="pen"></fa-icon>
               </button>
-              <button class="btn btn-outline-primary" placement="top" ngbTooltip="Sumar 1" (click)="addStock(repuesto)">
+              <button class="btn btn-outline-success" placement="top" ngbTooltip="Sumar 1" (click)="addStock(repuesto)">
                 <fa-icon icon="plus"></fa-icon>
               </button>
-              <button class="btn btn-outline-secondary" placement="top" ngbTooltip="Restar 1" (click)="minusStock(repuesto)">
+              <button class="btn btn-outline-danger" placement="top" ngbTooltip="Restar 1" (click)="minusStock(repuesto)">
                 <fa-icon icon="minus"></fa-icon>
               </button>
             </td>

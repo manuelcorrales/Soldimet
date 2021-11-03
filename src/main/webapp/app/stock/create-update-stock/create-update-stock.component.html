@@ -5,7 +5,7 @@
   </div>
 
   <div class="modal-body">
-    <div class="form-group" [hidden]="!editForm.get('id').value">
+    <div class="form-group" [hidden]="!editForm.get('id')!.value">
       <label for="id">ID</label>
       <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
     </div>
@@ -13,41 +13,41 @@
     <div class="form-group">
       <label class="form-control-label" for="field_sucursal">Sucursal</label>
       <select class="form-control" id="field_sucursal" name="sucursal" formControlName="sucursal">
-        <option *ngIf="!editForm.get('sucursal').value" [ngValue]="null" selected></option>
+        <option *ngIf="!editForm.get('sucursal')!.value" [ngValue]="null" selected></option>
         <option
-          [ngValue]="sucursalOption.id === editForm.get('sucursal').value?.id ? editForm.get('sucursal').value : sucursalOption"
-          *ngFor="let sucursalOption of sucursals; trackBy: trackSucursalById"
+          [ngValue]="sucursalOption.id === editForm.get('sucursal')!.value?.id ? editForm.get('sucursal')!.value : sucursalOption"
+          *ngFor="let sucursalOption of sucursalsSharedCollection; trackBy: trackSucursalById"
         >
           {{ sucursalOption.nombreSucursal }}
         </option>
       </select>
-      <div *ngIf="editForm.get('sucursal').invalid && (editForm.get('sucursal').dirty || editForm.get('sucursal').touched)">
-        <small class="form-text text-danger" *ngIf="editForm.get('sucursal').errors.required"> Requerido. </small>
+      <div *ngIf="editForm.get('sucursal')!.invalid && (editForm.get('sucursal')!.dirty || editForm.get('sucursal')!.touched)">
+        <small class="form-text text-danger" *ngIf="editForm.get('sucursal')!.errors?.required"> Requerido. </small>
       </div>
     </div>
 
     <div class="form-group">
       <label class="form-control-label" for="field_cantidad">Cantidad</label>
       <input type="number" class="form-control" name="cantidad" id="field_cantidad" formControlName="cantidad" />
-      <div *ngIf="editForm.get('cantidad').invalid && (editForm.get('cantidad').dirty || editForm.get('cantidad').touched)">
-        <small class="form-text text-danger" *ngIf="editForm.get('cantidad').errors.required"> Requerido. </small>
-        <small class="form-text text-danger" [hidden]="!editForm.get('cantidad')?.errors?.number"> Debe ser un número. </small>
+      <div *ngIf="editForm.get('cantidad')!.invalid && (editForm.get('cantidad')!.dirty || editForm.get('cantidad')!.touched)">
+        <small class="form-text text-danger" *ngIf="editForm.get('cantidad')!.errors?.required"> Requerido. </small>
+        <small class="form-text text-danger" [hidden]="!editForm.get('cantidad')!.errors?.number"> Debe ser un número. </small>
       </div>
     </div>
 
     <div class="form-group">
       <label class="form-control-label" for="field_medida">Medida</label>
       <select class="form-control" id="field_medida" name="medida" formControlName="medida">
-        <option *ngIf="!editForm.get('medida').value" [ngValue]="null" selected></option>
+        <option *ngIf="!editForm.get('medida')!.value" [ngValue]="null" selected></option>
         <option
-          [ngValue]="medidaArticuloOption.id === editForm.get('medida').value?.id ? editForm.get('medida').value : medidaArticuloOption"
-          *ngFor="let medidaArticuloOption of medidaarticulos; trackBy: trackMedidaArticuloById"
+          [ngValue]="medidaArticuloOption.id === editForm.get('medida')!.value?.id ? editForm.get('medida')!.value : medidaArticuloOption"
+          *ngFor="let medidaArticuloOption of medidaArticulosSharedCollection; trackBy: trackMedidaArticuloById"
         >
           {{ medidaArticuloOption.medida }}
         </option>
       </select>
-      <div *ngIf="editForm.get('medida').invalid && (editForm.get('medida').dirty || editForm.get('medida').touched)">
-        <small class="form-text text-danger" *ngIf="editForm.get('medida').errors.required"> Requerido. </small>
+      <div *ngIf="editForm.get('medida')!.invalid && (editForm.get('medida')!.dirty || editForm.get('medida')!.touched)">
+        <small class="form-text text-danger" *ngIf="editForm.get('medida')!.errors?.required"> Requerido. </small>
       </div>
     </div>
 
@@ -69,22 +69,22 @@
       <div class="invalid-feedback" *ngIf="searchFailed">No se encontraron resultados.</div>
       <div
         *ngIf="
-          editForm.get('repuestoProveedor').invalid &&
-          (editForm.get('repuestoProveedor').dirty || editForm.get('repuestoProveedor').touched)
+          editForm.get('repuestoProveedor')!.invalid &&
+          (editForm.get('repuestoProveedor')!.dirty || editForm.get('repuestoProveedor')!.touched)
         "
       >
-        <small class="form-text text-danger" *ngIf="editForm.get('repuestoProveedor').errors.required"> Requerido. </small>
+        <small class="form-text text-danger" *ngIf="editForm.get('repuestoProveedor')!.errors?.required"> Requerido. </small>
       </div>
     </div>
-    <div class="form-group" *ngIf="editForm.get('repuestoProveedor').value.articulo">
-      <p>Código Proveedor: {{ editForm.get('repuestoProveedor').value?.articulo?.codigoArticuloProveedor }}</p>
-      <p>Artículo: {{ editForm.get('repuestoProveedor').value?.articulo?.tipoRepuesto?.nombreTipoRepuesto }}</p>
-      <p>Marca Proveedor: {{ editForm.get('repuestoProveedor').value?.articulo?.marca?.nombreMarca }}</p>
+    <div class="form-group" *ngIf="editForm.get('repuestoProveedor')!.value.articulo">
+      <p>Código Proveedor: {{ editForm.get('repuestoProveedor')!.value?.articulo?.codigoArticuloProveedor }}</p>
+      <p>Artículo: {{ editForm.get('repuestoProveedor')!.value?.articulo?.tipoRepuesto?.nombreTipoRepuesto }}</p>
+      <p>Marca Proveedor: {{ editForm.get('repuestoProveedor')!.value?.articulo?.marca?.nombreMarca }}</p>
     </div>
-    <div class="form-group" *ngIf="editForm.get('articulo').value">
-      <p>Código Proveedor: {{ editForm.get('articulo').value?.codigoArticuloProveedor }}</p>
-      <p>Artículo: {{ editForm.get('articulo').value?.tipoRepuesto?.nombreTipoRepuesto }}</p>
-      <p>Marca Proveedor: {{ editForm.get('articulo').value?.marca?.nombreMarca }}</p>
+    <div class="form-group" *ngIf="editForm.get('articulo')!.value">
+      <p>Código Proveedor: {{ editForm.get('articulo')!.value?.codigoArticuloProveedor }}</p>
+      <p>Artículo: {{ editForm.get('articulo')!.value?.tipoRepuesto?.nombreTipoRepuesto }}</p>
+      <p>Marca Proveedor: {{ editForm.get('articulo')!.value?.marca?.nombreMarca }}</p>
     </div>
   </div>
 

@@ -23,21 +23,17 @@ public class CostoRepuestoProveedor implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = { "tipoParteMotor" }, allowSetters = true)
     private TipoRepuesto tipoRepuesto;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = { "motor" }, allowSetters = true)
     private Aplicacion aplicacion;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("costoRepuestoProveedors")
     private Cilindrada cilindrada;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "estado", "marca", "tipoRepuesto" }, allowSetters = true)
     private Articulo articulo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

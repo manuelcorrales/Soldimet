@@ -1,3 +1,4 @@
+import { RepuestosService } from 'app/repuestos/repuestos-services';
 import { StockComponent } from './stock.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -18,6 +19,6 @@ const STOCK_ROUTES_ALL = [...STOCK_ROUTES, ...STOCK_POPUP_ROUTE];
   declarations: [StockComponent, CreateUpdateStockComponent, StockModalPopupComponent],
   entryComponents: [StockComponent, CreateUpdateStockComponent],
   exports: [RouterModule],
-  providers: [StockService, StockModalPopupService],
+  providers: [RepuestosService, StockService, StockModalPopupService],
 })
 export class StockModule {}

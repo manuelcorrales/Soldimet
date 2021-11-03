@@ -41,16 +41,13 @@ public class Articulo implements Serializable {
 
     @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
-    @JsonIgnoreProperties("articulos")
     private EstadoArticulo estado;
 
     @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
-    @JsonIgnoreProperties("articulos")
     private Marca marca;
 
     @ManyToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @NotNull
-    @JsonIgnoreProperties(value = { "tipoParteMotor" }, allowSetters = true)
     private TipoRepuesto tipoRepuesto;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

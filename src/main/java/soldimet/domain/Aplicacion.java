@@ -31,9 +31,8 @@ public class Aplicacion implements Serializable {
     @Column(name = "numero_grupo", nullable = false)
     private Integer numeroGrupo;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
-    @JsonIgnoreProperties(value = { "aplicacions" }, allowSetters = true)
     private Motor motor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

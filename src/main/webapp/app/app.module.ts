@@ -27,6 +27,7 @@ import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { StockModule } from './stock/stock.module';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
     NgxUiLoaderModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     ClientesModule,
+    StockModule,
     EntityRoutingModule,
     AppRoutingModule,
     // Set this to true to enable service worker (PWA)

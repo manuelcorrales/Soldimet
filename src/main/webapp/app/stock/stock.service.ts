@@ -1,12 +1,12 @@
+import { StockArticulo } from './../entities/stock-articulo/stock-articulo.model';
+import { Articulo } from './../entities/articulo/articulo.model';
+import { MedidaArticulo } from './../entities/medida-articulo/medida-articulo.model';
 import { Injectable } from '@angular/core';
 import { SERVER_API_URL } from 'app/app.constants';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Page } from 'app/dto/page/page';
 import { DTOStockRepuestoCabecera } from 'app/dto/dto-stock/dto-repuesto';
-import { MedidaArticulo } from 'app/shared/model/medida-articulo.model';
-import { Articulo } from 'app/shared/model/articulo.model';
-import { StockArticulo } from 'app/shared/model/stock-articulo.model';
 
 @Injectable()
 export class StockService {
@@ -17,11 +17,9 @@ export class StockService {
 
   constructor(private http: HttpClient) {}
 
-  findByFilteredPage(text, page = 0, size = 15): Observable<Page<DTOStockRepuestoCabecera>> {
+  findByFilteredPage(text: string | null, page = 0, size = 15): Observable<Page<DTOStockRepuestoCabecera>> {
     let url = `${this.resourceUrlStock}${this.urlRepuestosCabecera}`;
-    if (page != null) {
-      url = `${this.resourceUrlStock}${this.urlRepuestosCabecera}/?page=${page}&size=${size}`;
-    }
+    url = `${this.resourceUrlStock}${this.urlRepuestosCabecera}/?page=${page}&size=${size}`;
     if (text != null) {
       url += `&filtro=${text}`;
     }
@@ -34,6 +32,7 @@ export class StockService {
   }
 
   buscarStock(medida: MedidaArticulo, articulo: Articulo): Observable<StockArticulo> {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const url = `${this.resourceUrlStock}${this.urlCheckStock}?medida_id=${medida.id}&articulo_id=${articulo.id}`;
     return this.http.get<StockArticulo>(url);
   }

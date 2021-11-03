@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { StockModalPopupComponent } from './create-update-stock/stock-popup-service';
 import { StockComponent } from './stock.component';
+import { UserRouteAccessService } from './../core/auth/user-route-access.service';
 
 export const STOCK_ROUTES: Routes = [
   {
