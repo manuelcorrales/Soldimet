@@ -4,11 +4,6 @@
       <div class="col-md-12">
         <div class="input-group custom-search-form">
           <input type="text" class="form-control" #searchBar (keydown.enter)="search(searchBar.value)" placeholder="Buscar pedido..." />
-          <span class="input-group-btn">
-            <button class="btn btn-light" type="button" (click)="search(searchBar.value)">
-              <span><fa-icon icon="search"></fa-icon></span>
-            </button>
-          </span>
         </div>
       </div>
     </div>
@@ -80,7 +75,6 @@
                 class="btn btn-info"
                 type="submit"
                 [routerLink]="['/', { outlets: { popup: 'pedidos/' + pedido.id } }]"
-                replaceUrl="true"
                 *ngIf="pedido.estado != 'Recibido' && pedido.estado != 'Cancelado'"
                 placement="top"
                 ngbTooltip="Operar pedido"

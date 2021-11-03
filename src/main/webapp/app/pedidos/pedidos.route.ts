@@ -1,7 +1,7 @@
+import { UserRouteAccessService } from './../core/auth/user-route-access.service';
 import { Routes } from '@angular/router';
 import { PedidosComponent } from 'app/pedidos/pedidos.component';
 import { PedidoPendienteModalPopupComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/pedido-pendiente.component';
-import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 
 export const PEDIDOS_SUBROUTES: Routes = [
   {

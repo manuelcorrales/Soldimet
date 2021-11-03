@@ -1,22 +1,21 @@
+import { PedidoRepuesto } from './../entities/pedido-repuesto/pedido-repuesto.model';
+import { EventManager } from './../core/util/event-manager.service';
 import { Component, OnInit, ViewChild, Injectable, ViewContainerRef } from '@angular/core';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
 import { PedidosService } from 'app/pedidos/pedidos-services';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
-import { JhiEventManager } from 'ng-jhipster';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jhi-pedidos',
   templateUrl: './pedidos.component.html',
-  styles: ['.pedidos-style.css'],
 })
 export class PedidosComponent implements OnInit {
   @ViewChild('toastr', { static: false })
-  toastrContainer: ViewContainerRef;
+  toastrContainer: ViewContainerRef | null = null;
 
-  eventSubscriber: Subscription;
+  eventSubscriber: Subscription | null = null;
 
   page = 1;
   pageSize = 25;
@@ -24,11 +23,11 @@ export class PedidosComponent implements OnInit {
   pedidos: DtoPedidoCabecera[] = [];
   totalPedidos: DtoPedidoCabecera[] = [];
 
-  constructor(private newPedidoService: PedidosService, private eventManager: JhiEventManager) {}
+  constructor(private newPedidoService: PedidosService, private eventManager: EventManager) {}
 
   ngOnInit() {
     this.loadPedidos();
-    this.eventSubscriber = this.eventManager.subscribe('pedidoListModification', response => this.loadPedidos());
+    this.eventSubscriber = this.eventManager.subscribe('pedidoListModification', () => this.loadPedidos());
   }
 
   loadPedidos() {
@@ -38,8 +37,6 @@ export class PedidosComponent implements OnInit {
       this.pedidos = pedidosOrdenados;
     });
   }
-
-  verPedido(id: number) {}
 
   _sortPedidos(a: DtoPedidoCabecera, b: DtoPedidoCabecera) {
     if (a.id < b.id) {
@@ -66,17 +63,17 @@ export class PedidosComponent implements OnInit {
 
 @Injectable()
 export class PedidoModalPopupService {
-  private ngbModalRef: NgbModalRef;
+  private ngbModalRef: NgbModalRef | null;
 
   constructor(private modalService: NgbModal, private router: Router, private pedidoService: PedidosService) {
     this.ngbModalRef = null;
   }
 
-  open(component: Component, id?: number | any): Promise<NgbModalRef> {
-    return new Promise<NgbModalRef>((resolve, reject) => {
+  open(component: Component, id: number): Promise<NgbModalRef> {
+    return new Promise<NgbModalRef>(resolve => {
       const isOpen = this.ngbModalRef !== null;
       if (isOpen) {
-        resolve(this.ngbModalRef);
+        resolve(this.ngbModalRef!);
       }
       this.pedidoService.getPedido(id).subscribe((pedido: PedidoRepuesto) => {
         this.ngbModalRef = this.pedidoModalRef(component, pedido);
@@ -89,11 +86,11 @@ export class PedidoModalPopupService {
     const modalRef = this.modalService.open(component, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.pedido = pedido;
     modalRef.result.then(
-      result => {
+      () => {
         this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
         this.ngbModalRef = null;
       },
-      reason => {
+      () => {
         this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
         this.ngbModalRef = null;
       }

@@ -1,10 +1,10 @@
+import { CostoRepuesto } from './../entities/costo-repuesto/costo-repuesto.model';
+import { PedidoRepuesto } from './../entities/pedido-repuesto/pedido-repuesto.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
-import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { DtoPedidoCabecera } from 'app/dto/dto-pedidos/dto-pedido-cabecera';
-import { CostoRepuesto } from 'app/shared/model/costo-repuesto.model';
 
 @Injectable()
 export class PedidosService {
@@ -25,7 +25,7 @@ export class PedidosService {
     return this.http.get<PedidoRepuesto[]>(urlLlamada);
   }
 
-  getPedido(pedidoId): Observable<PedidoRepuesto> {
+  getPedido(pedidoId: number): Observable<PedidoRepuesto> {
     const urlLlamada = `${this.resourceUrlPedidos}${this.urlGetPedido}${pedidoId}`;
     return this.http.get<PedidoRepuesto>(urlLlamada);
   }

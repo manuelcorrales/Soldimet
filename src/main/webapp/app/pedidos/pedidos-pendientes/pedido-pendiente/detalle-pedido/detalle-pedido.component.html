@@ -1,6 +1,6 @@
 <div class="">
   <h3>
-    <b>{{ detallePedido.detallePresupuesto.tipoParteMotor.nombreTipoParteMotor }}</b>
+    <b>{{ detallePedido.detallePresupuesto!.tipoParteMotor!.nombreTipoParteMotor! }}</b>
   </h3>
 </div>
 <div *ngFor="let costoRepuesto of getOrderedCostoRepuestos()">

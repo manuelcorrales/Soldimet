@@ -1,3 +1,4 @@
+import { PedidosModule } from './pedidos/pedidos.module';
 import { ClientesModule } from './clientes/clientes.module';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
@@ -37,6 +38,7 @@ import { StockModule } from './stock/stock.module';
     NgxUiLoaderModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     ClientesModule,
+    PedidosModule,
     StockModule,
     EntityRoutingModule,
     AppRoutingModule,

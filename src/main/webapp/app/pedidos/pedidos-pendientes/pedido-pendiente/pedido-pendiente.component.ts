@@ -1,28 +1,28 @@
+import { PedidoRepuesto } from './../../../entities/pedido-repuesto/pedido-repuesto.model';
+import { IMedidaArticulo } from './../../../entities/medida-articulo/medida-articulo.model';
+import { MedidaArticuloService } from './../../../entities/medida-articulo/service/medida-articulo.service';
+import { EventManager } from './../../../core/util/event-manager.service';
 import { Component, OnInit, ViewChildren, QueryList, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
-import { PedidoRepuesto } from 'app/shared/model/pedido-repuesto.model';
 import { PedidosService } from 'app/pedidos/pedidos-services';
-import { JhiEventManager } from 'ng-jhipster';
 import { ActivatedRoute } from '@angular/router';
 import { PedidoModalPopupService } from 'app/pedidos/pedidos.component';
 import { DetallePedidoNewComponent } from 'app/pedidos/pedidos-pendientes/pedido-pendiente/detalle-pedido/detalle-pedido.component';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { MedidaArticuloService } from 'app/entities/medida-articulo/medida-articulo.service';
 import { filter, map } from 'rxjs/operators';
-import { IMedidaArticulo } from 'app/shared/model/medida-articulo.model';
 
 @Component({
   selector: 'jhi-pedido-pendiente',
   templateUrl: './pedido-pendiente.component.html',
 })
 export class PedidoPendienteComponent implements OnInit {
-  pedido: PedidoRepuesto;
+  pedido!: PedidoRepuesto;
   @ViewChildren('detPed')
-  detallePedidoComponent: QueryList<DetallePedidoNewComponent>;
+  detallePedidoComponent: QueryList<DetallePedidoNewComponent> | undefined;
 
   @ViewChild('toastr', { static: false })
-  toastrContainer: ViewContainerRef;
+  toastrContainer: ViewContainerRef | undefined;
 
   isSaving = false;
   medidas: IMedidaArticulo[] = [];
@@ -30,7 +30,7 @@ export class PedidoPendienteComponent implements OnInit {
   constructor(
     private pedidosServices: PedidosService,
     private activeModal: NgbActiveModal,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private medidaService: MedidaArticuloService
   ) {}
 
@@ -40,7 +40,7 @@ export class PedidoPendienteComponent implements OnInit {
       .query()
       .pipe(
         filter((mayBeOk: HttpResponse<IMedidaArticulo[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IMedidaArticulo[]>) => response.body)
+        map((response: HttpResponse<IMedidaArticulo[]>) => response.body ?? [])
       )
       .subscribe((res: IMedidaArticulo[]) => (this.medidas = res));
   }
@@ -50,10 +50,14 @@ export class PedidoPendienteComponent implements OnInit {
     this.subscribeToSavePedido(this.pedidosServices.updatePedido(this.pedido));
   }
 
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
+
   private subscribeToSavePedido(result: Observable<HttpResponse<PedidoRepuesto>>) {
     result.subscribe(
-      (res: HttpResponse<PedidoRepuesto>) => this.onSavePedidoSuccess(res.body),
-      (res: Response) => this.onSavePedidoError()
+      (res: HttpResponse<PedidoRepuesto>) => this.onSavePedidoSuccess(res.body!),
+      () => this.onSavePedidoError()
     );
   }
 
@@ -66,10 +70,6 @@ export class PedidoPendienteComponent implements OnInit {
 
   private onSavePedidoError() {
     this.isSaving = false;
-  }
-
-  clear() {
-    this.activeModal.dismiss('cancel');
   }
 }
 

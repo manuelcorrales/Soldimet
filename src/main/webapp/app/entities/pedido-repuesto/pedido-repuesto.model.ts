@@ -1,3 +1,4 @@
+import { DetallePedido } from './../detalle-pedido/detalle-pedido.model';
 import * as dayjs from 'dayjs';
 import { IEstadoPedidoRepuesto } from 'app/entities/estado-pedido-repuesto/estado-pedido-repuesto.model';
 import { IPresupuesto } from 'app/entities/presupuesto/presupuesto.model';
@@ -11,6 +12,7 @@ export interface IPedidoRepuesto {
   estadoPedidoRepuesto?: IEstadoPedidoRepuesto;
   presupuesto?: IPresupuesto;
   documentType?: IDocumentationType | null;
+  detallePedidos?: DetallePedido[];
 }
 
 export class PedidoRepuesto implements IPedidoRepuesto {
@@ -21,7 +23,8 @@ export class PedidoRepuesto implements IPedidoRepuesto {
     public fechaRecibo?: dayjs.Dayjs | null,
     public estadoPedidoRepuesto?: IEstadoPedidoRepuesto,
     public presupuesto?: IPresupuesto,
-    public documentType?: IDocumentationType | null
+    public documentType?: IDocumentationType | null,
+    public detallePedidos?: DetallePedido[]
   ) {}
 }
 

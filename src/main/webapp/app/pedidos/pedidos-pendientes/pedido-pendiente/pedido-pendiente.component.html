@@ -1,20 +1,22 @@
 <form name="editForm" role="form" novalidate #editForm="ngForm">
   <div class="modal-header">
-    <h4 class="modal-title" id="myPedidoLabel">Pedido Nº: {{ pedido.id }}</h4>
+    <h4 class="modal-title" id="myPedidoLabel">Pedido Nº: {{ pedido!.id }}</h4>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
   </div>
   <div class="modal-body">
     <h5>
-      {{ pedido.presupuesto.detallePresupuestos[0]?.motor.marcaMotor }}
-      <span class="text-muted">{{ pedido.presupuesto.detallePresupuestos[0]?.aplicacion.nombreAplicacion }}</span>
+      {{ pedido!.presupuesto!.detallePresupuestos![0]?.motor?.marcaMotor }}
+      <span class="text-muted">{{ pedido!.presupuesto!.detallePresupuestos![0]?.aplicacion?.nombreAplicacion }}</span>
     </h5>
     <div class="row">
-      <div class="col">Presupuesto Nº: {{ pedido.presupuesto.id }}</div>
-      <div class="col">Fecha: {{ pedido.presupuesto.fechaCreacion }}</div>
-      <div class="col">Cliente: {{ pedido.presupuesto.cliente.persona.apellido }},{{ pedido.presupuesto.cliente.persona.nombre }}</div>
+      <div class="col">Presupuesto Nº: {{ pedido?.presupuesto?.id }}</div>
+      <div class="col">Fecha: {{ pedido?.presupuesto?.fechaCreacion }}</div>
+      <div class="col">
+        Cliente: {{ pedido?.presupuesto?.cliente?.persona?.apellido }},{{ pedido?.presupuesto?.cliente?.persona?.nombre }}
+      </div>
     </div>
     <hr style="height: 1px; background-color: #eaeff5" />
-    <div *ngFor="let detallePedido of pedido.detallePedidos">
+    <div *ngFor="let detallePedido of pedido?.detallePedidos">
       <jhi-detalle-pedido #detPed [detallePedido]="detallePedido" [medidas]="medidas"> </jhi-detalle-pedido>
       <hr style="height: 1px; background-color: #eaeff5" />
     </div>

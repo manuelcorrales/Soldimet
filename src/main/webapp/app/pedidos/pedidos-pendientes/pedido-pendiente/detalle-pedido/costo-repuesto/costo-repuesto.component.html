@@ -41,21 +41,21 @@
       <label>{{ costoRepuesto?.medidaArticulo?.medida }}</label>
     </div>
     <div class="col-md-2 text-center">
-      <label *ngIf="costoRepuesto.estado.nombreEstado != 'En Stock'">${{ costoRepuesto.valor }}</label>
-      <label *ngIf="costoRepuesto.estado.nombreEstado == 'En Stock'">{{ costoRepuesto.valor }} Un</label>
+      <label *ngIf="costoRepuesto.estado!.nombreEstado != 'En Stock'">${{ costoRepuesto.valor }}</label>
+      <label *ngIf="costoRepuesto.estado!.nombreEstado == 'En Stock'">{{ costoRepuesto.valor }} Un</label>
     </div>
   </ng-container>
-  <ng-container *ngIf="!isRecibido && !isStock && costoRepuesto.estado.nombreEstado != 'Recibido Parcial'; else recibidoTemplate">
+  <ng-container *ngIf="!isRecibido && !isStock && costoRepuesto.estado!.nombreEstado != 'Recibido Parcial'; else recibidoTemplate">
     <div class="col-md-2 text-center">
       <label class="alert-primary" role="alert" style="border-radius: 0.25rem">
-        {{ costoRepuesto.estado.nombreEstado }}
+        {{ costoRepuesto.estado!.nombreEstado }}
       </label>
     </div>
   </ng-container>
   <ng-template #recibidoTemplate>
     <div class="col-md-2 text-center">
       <label class="alert-success" role="alert" style="border-radius: 0.25rem">
-        {{ costoRepuesto.estado.nombreEstado }}
+        {{ costoRepuesto.estado!.nombreEstado }}
       </label>
     </div>
   </ng-template>

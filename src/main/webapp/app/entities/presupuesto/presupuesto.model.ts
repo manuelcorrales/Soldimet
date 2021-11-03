@@ -1,3 +1,4 @@
+import { DetallePresupuesto } from './../detalle-presupuesto/detalle-presupuesto.model';
 import * as dayjs from 'dayjs';
 import { ICliente } from 'app/entities/cliente/cliente.model';
 import { IEstadoPresupuesto } from 'app/entities/estado-presupuesto/estado-presupuesto.model';
@@ -17,6 +18,7 @@ export interface IPresupuesto {
   modelo?: boolean | null;
   cliente?: ICliente;
   estadoPresupuesto?: IEstadoPresupuesto;
+  detallePresupuestos?: DetallePresupuesto[];
   documentType?: IDocumentationType | null;
   sucursal?: ISucursal | null;
 }
@@ -36,6 +38,7 @@ export class Presupuesto implements IPresupuesto {
     public cliente?: ICliente,
     public estadoPresupuesto?: IEstadoPresupuesto,
     public documentType?: IDocumentationType | null,
+    public detallePresupuestos?: DetallePresupuesto[],
     public sucursal?: ISucursal | null
   ) {
     this.soldadura = this.soldadura ?? false;

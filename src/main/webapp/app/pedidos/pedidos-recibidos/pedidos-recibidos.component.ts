@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'jhi-pedidos-recibidos',
   templateUrl: './pedidos-recibidos.component.html',
   styles: [],
 })
-export class PedidosRecibidosComponent implements OnInit {
+export class PedidosRecibidosComponent {
   constructor() {}
-
-  ngOnInit() {}
 }
