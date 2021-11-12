@@ -8,15 +8,13 @@ services:
         reservations:
           memory: 512M
         limits:
-          memory: 4G
+          memory: 3G
     ports:
       - '9060:9060'
       - '9000:9000'
       - '8081:8081'
       - '4200:4200'
       - '3001:3001'
-    volumes:
-      - ../..:/home/node/app
     working_dir: /home/node/app
     command: "yarn start"
   soldimet-app-back:
@@ -27,7 +25,7 @@ services:
         reservations:
           memory: 512M
         limits:
-          memory: 4G
+          memory: 3G
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - 'SPRING_PROFILES_ACTIVE=dev,no-liquibase,api-docs'
@@ -40,7 +38,6 @@ services:
       - '80:80'
       - '5005:5005'
     volumes:
-      - ../..:/home/soldimet
       - ${HOME}/.m2:/root/.m2
     command: "mvn -P-webapp"
     depends_on:
