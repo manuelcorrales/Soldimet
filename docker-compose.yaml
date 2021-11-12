@@ -38,10 +38,8 @@ services:
     ports:
       - '80:80'
       - '5005:5005'
-    volumes:
-      - ${HOME}/.m2:/root/.m2
     working_dir: /home/app
-    command: "apt-get update && apt-get install -y --no-install-recommends  git-all && git clone https://github.com/manuelcorrales/Soldimet.git && cd Soldimet &&  ./mvnw -P-webapp -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+    command: "apt-get update && apt-get install -y --no-install-recommends  git-all && git clone https://github.com/manuelcorrales/Soldimet.git && cd Soldimet &&  ./mvnw -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -P-webapp"
     depends_on:
       soldimet-mysql:
         condition: service_healthy

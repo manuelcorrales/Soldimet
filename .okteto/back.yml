@@ -1,0 +1,9 @@
+name: soldimet-app-back
+image: adoptopenjdk/maven-openjdk11:latest
+command: bash
+sync:
+- .:/home/app
+forward:
+- 80:80
+- 5005:5005
+- 3306:3306

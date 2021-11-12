@@ -1,0 +1,14 @@
+name: soldimet-app-front
+image: node:14
+command: yarn start
+sync:
+- .:/home/node/Soldimet
+forward:
+  - 9060:9060
+  - 9000:9000
+  - 8081:8081
+  - 4200:4200
+  - 3001:3001
+  - 3306:3306
+
+
