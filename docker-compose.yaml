@@ -15,8 +15,8 @@ services:
       - '8081:8081'
       - '4200:4200'
       - '3001:3001'
-    working_dir: /home/node/app
-    command: "yarn start"
+    working_dir: /home/node
+    command: "apt-get update && apt-get install -y git-all && git clone https://github.com/manuelcorrales/Soldimet.git && cd Soldimet && yarn install && yarn start"
   soldimet-app-back:
     image: adoptopenjdk/maven-openjdk11:latest
     deploy:
@@ -27,6 +27,7 @@ services:
         limits:
           memory: 3G
     environment:
+      - DEBIAN_FRONTEND=noninteractive
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - 'SPRING_PROFILES_ACTIVE=dev,no-liquibase,api-docs'
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=false
@@ -39,7 +40,8 @@ services:
       - '5005:5005'
     volumes:
       - ${HOME}/.m2:/root/.m2
-    command: "mvn -P-webapp"
+    working_dir: /home/app
+    command: "apt-get update && apt-get install -y --no-install-recommends  git-all && git clone https://github.com/manuelcorrales/Soldimet.git && cd Soldimet &&  ./mvnw -P-webapp -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
     depends_on:
       soldimet-mysql:
         condition: service_healthy

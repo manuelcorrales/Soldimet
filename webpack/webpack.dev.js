@@ -18,11 +18,12 @@ module.exports = options =>
   webpackMerge(commonConfig({ env: ENV }), {
     devtool: 'eval-source-map',
     devServer: {
+      allowedHosts: 'all',
       contentBase: './target/classes/static/',
       proxy: [
         {
           context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth'],
-          target: `http${options.tls ? 's' : ''}://localhost:80`,
+          target: `http${options.tls ? 's' : ''}://soldimet-app-back:80`,
           secure: false,
           changeOrigin: options.tls,
         },
@@ -119,10 +120,11 @@ module.exports = options =>
       new BrowserSyncPlugin(
         {
           https: options.tls,
-          host: 'localhost',
+          host: '0.0.0.0',
+          disableHostCheck: true,
           port: 9000,
           proxy: {
-            target: `http${options.tls ? 's' : ''}://localhost:9060`,
+            target: `http${options.tls ? 's' : ''}://soldimet-app-front:9060`,
             proxyOptions: {
               changeOrigin: false, //pass the Host header to the backend unchanged  https://github.com/Browsersync/browser-sync/issues/430
             },
