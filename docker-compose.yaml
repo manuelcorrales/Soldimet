@@ -39,7 +39,7 @@ services:
       - '80:80'
       - '5005:5005'
     working_dir: /home/app
-    command: "apt-get update && apt-get install -y --no-install-recommends  git-all && git clone https://github.com/manuelcorrales/Soldimet.git && cd Soldimet &&  ./mvnw -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -P-webapp"
+    command: "apt-get update && apt-get install -y --no-install-recommends  git-all && git clone https://github.com/manuelcorrales/Soldimet.git && cd Soldimet &&  ./mvnw -P-webapp"
     depends_on:
       soldimet-mysql:
         condition: service_healthy

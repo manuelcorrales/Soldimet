@@ -1,0 +1,7 @@
+name: soldimet-mysql
+image: bash:latest
+command: bash
+forward:
+- 3306:3306
+persistentVolume:
+  enabled: false

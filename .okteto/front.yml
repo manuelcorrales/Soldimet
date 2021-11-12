@@ -1,14 +1,16 @@
 name: soldimet-app-front
 image: node:14
-command: yarn start
+command: cd Soldimet && yarn install && yarn start
 sync:
-- .:/home/node/Soldimet
+- ../.:/home/node/Soldimet
 forward:
   - 9060:9060
   - 9000:9000
   - 8081:8081
   - 4200:4200
   - 3001:3001
-  - 3306:3306
-
+persistentVolume:
+  enabled: true
+  storageClass: standard
+  size: 1Gi
 
